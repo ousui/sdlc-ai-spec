@@ -1,7 +1,7 @@
 ---
 title: "组件与模块 Components and Modules"
 status: draft
-scope: DSN Domain 固定模板、规则与专属 Gate
+scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
 
@@ -26,8 +26,8 @@ parent: ../200-dsn-spec.md
 
 适用性：
 
-- 新增或改变稳定 Component、Module 责任、所有权、依赖 Contract 或跨实现单元的职责分配时，存在独立设计义务则为 `required`；
-- 局部修改完全落在既有组件内且可以准确引用时，可以为 `embedded`；
+- 新增或改变稳定 Component、Module 责任、所有权、依赖 Contract 或跨实现单元的职责分配时为 `required`；
+- 局部修改完全落在既有组件内且不改变稳定责任或依赖 Contract 时，可以引用准确 Baseline 判定为 `n/a`；
 - 不涉及任何实现单元变化时，可以为 `n/a`；
 - 不得仅因为后续进入 IMP 就强制生成组件设计。
 - 普通模块内部代码修改、文件调整或新增 Controller，不改变稳定责任或依赖 Contract 时，不自动触发 `required`。
@@ -83,16 +83,14 @@ parent: ../200-dsn-spec.md
 - 组件图可以作为辅助材料，但固定表格是规范判定依据；
 - VFY Points 必须覆盖责任边界、关键依赖和状态所有权的可观察结果。
 
-专属 Gate：
+父 Gate 子检查：
+
+以下检查只在父 DSN Artifact Gate 中按 Check ID 登记一次，不写入 Domain 子文件。
 
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| DSN-DG-220-002 | Component 和 Module 类型、所属系统及责任明确 | pending |  |
-| DSN-DG-220-003 | 责任边界不存在明显缺口或冲突 | pending |  |
-| DSN-DG-220-004 | 关键依赖、协作目的和 Contract 引用明确 | pending |  |
-| DSN-DG-220-005 | 新增、修改、复用和移除项已登记 | pending |  |
-| DSN-DG-220-006 | 生命周期和状态所有权已按适用性处理 | pending |  |
-| DSN-DG-220-007 | 技术选型可以追踪至 Design Decision 或项目约束 | pending |  |
-| DSN-DG-220-009 | 设计粒度足以支持 PLN，但未提前拆分任务 | pending |  |
+| DSN-DG-220-001 | Component、Module、所属系统、责任、变化和所有权明确且无缺口或冲突 | pending |  |
+| DSN-DG-220-002 | 关键依赖、协作 Contract、生命周期和状态所有权完整一致 | pending |  |
+| DSN-DG-220-003 | 技术选择可追踪，设计粒度足以支持 PLN 与 VFY 且未提前拆任务 | pending |  |
 
 > Parent Spec: [Design Phase Spec](../200-dsn-spec.md)

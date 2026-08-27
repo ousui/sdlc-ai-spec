@@ -53,20 +53,23 @@ PLN Disposition 按 Core 固定顺序判断，并使用以下 Phase 专属条件
 
 | 类型 Type | 内容 Content |
 |---|---|
-| Input | 一个或多个可供下游使用的 REQ 或 DSN Artifact Revision，以及其未关闭 Exception |
+| Input | 一个或多个可供下游使用的 REQ 或 DSN Scope Input、与当前计划修正相关的冻结 VFY Return 或 RLS Issue Reference，以及未关闭 Exception |
 | Output | 一份固定 Markdown Plan Artifact，包含 Delivery Scope、Applicability 和 Work Items |
 
-直接 Input 只允许准确的 REQ 或 DSN Artifact Revision，其 Lifecycle Disposition 链必须可解析：
+Scope Input 只允许准确的 REQ 或 DSN Artifact Revision，其 Lifecycle Disposition 链必须可解析：
 
 - DSN 为 `required` 且已经形成 Artifact 时，PLN 引用 DSN，不重复把其已覆盖的 REQ 作为直接 Input；
 - DSN 为 `n/a` 或没有独立 Artifact 的 `embedded` 时，PLN 可以直接引用保存该 Disposition 和 Host 的 REQ；
-- 存在多个 Scope Input 时，必须按 Core Delivery Scope Aggregation Contract 执行聚合；v0.1 只纳入完整 Artifact，不在 PLN 选择部分 Item。
+- 存在多个 Scope Input 时，必须按 Core Delivery Scope Aggregation Contract 执行聚合；当前 Artifact Contract 只纳入完整 Artifact，不在 PLN 选择部分 Item。
+- `Return Phase=PLN` 的冻结 VFY Return，以及 Follow-up Disposition 为 `return_pln` 的冻结 RLS Issue Reference，是 Control Input，不是 Scope Input；其所属 Revision 必须进入 Front Matter `inputs`，但不得因此改变 Delivery Scope；
+- 每个 PLN Control Input 必须由受影响 Work Item 的 `Source References` 或 `Constraint References` 准确引用；删除、合并或保留原 Work Item 时，还必须由 Evidence 引用该 Return 或 Issue Reference 并说明处理依据；
+- 新 PLN Revision 只证明问题已在计划层处理。VFY Return 只有后续冻结 VFY 证明 Required Outcome 后才解决；RLS Issue 只有后续冻结 RLS 引用修订后的 Plan 并证明范围、顺序或协调结果已生效才解决，若同时改变产品则仍须先经过 IMP 与 VFY。
 
 ## Front Matter
 
 ```yaml
 ---
-contract: sdlc-ai-spec/artifact/v0.1
+contract: sdlc-ai-spec/artifact/v0.2
 phase: PLN
 id: PLN-20260824103000-01
 revision: 1
@@ -154,11 +157,17 @@ Work Item 使用唯一固定表格：
 | `interface` | API、事件、协议或其他稳定接口 |
 | `path` | 指定版本化资源内的文件或目录，格式为 `path:<resource-id>/<resource-relative-path>` |
 | `environment` | 开发、验证、预发布、生产等目标环境 |
-| `resource` | 代码库、数据存储、队列、配置、基础设施或其他独立资源 |
+| `resource` | 能形成不可变 Implementation Result 的版本化代码、配置、Schema、文档或其他产品资源 |
 
 多个 Scope Token 使用 `, ` 分隔、去重后按完整字符串升序排列；值必须使用项目或上游 DSN 中的准确名称，不能用“相关模块”“必要文件”等模糊描述，也不能填写 `None` 或 `N/A`。不同 Type 不自动证明互斥。
 
 每个 `Target Phase=IMP` 的 Work Item 必须为其修改的每个版本化资源包含一个 `resource:<versioned-resource-id>`；该 ID 使用 Core VCS Locator 定义的项目内唯一资源标识。修改多个版本化资源时必须全部列出。同一 Plan 内共享该 Token 的 IMP Work Item 必须形成一条确定的 `Depends On` 链，后继直接依赖前一个共享资源的 Work Item；无法确定顺序时保持 `pending`。
+
+当前内置 Spec 采用资源级保守冲突域；`path`、`module` 等 Token 只描述影响范围，不作为并行安全证明，因此可能牺牲同一资源内的并行度。项目只有在一个版本化单元能够独立捕获 Baseline、形成不可变 Result 并确定性集成时，才能把它登记为更小的 `resource`；否则按包含它的仓库或版本化资源串行。同一 Claim Provider 命名空间内的 Resource ID 必须使用项目注册的 canonical ID 且彼此不重叠；无法证明两个版本化单元不相交时，统一使用它们的最小共同上层 Resource。
+
+运行中的数据库、队列、外部服务和部署环境不是版本化 Implementation Result，不使用独立 `resource` Token；按事实使用 `component`、`interface` 或 `environment` 表达影响。其 Schema、配置或基础设施代码仍归属承载它们的版本化 `resource`，实际目标侧操作和状态由 RLS 记录。
+
+每个 `Target Phase=RLS` Work Item 必须在 Execution Scope 中包含且只包含一个 `environment:<release-target-id>`，该 ID 与后续 RLS `Release Target` 完全一致；相互独立的 Release Target 必须拆成不同 Work Item。该 Token 只负责 Target 归属与依赖，不表示环境本身是版本化 Result。
 
 ### Work Item 粒度
 
@@ -182,6 +191,13 @@ Work Item 的 `Source References` 是计划覆盖关系的唯一权威字段，�
 - `Constraint References` 必须覆盖影响当前 Work Item 的已知约束和未关闭 Exception；
 - Work Item 不得创造上游没有确认的新业务语义、设计选择或扩展范围；
 - 下游 Artifact 使用 `<PLN-ID>@<Revision>#<WI-ID>` 绑定实际结果，不以外部编号替代该引用。
+
+Work Item 不保存实时状态，其当前闭合结果由目标 Phase 的权威 Artifact 确定：
+
+- `Target Phase=IMP`：准确 WI Binding 对应的 IMP Revision 已冻结、Current Claim 为 `completed`，且 Completion Criteria 与 Expected Evidence 已由 Result、Check 和 Evidence 支持；
+- `Target Phase=VFY`：WI 已进入 VFY Method 的 Obligation References，映射 Method 已形成最终结果，并由 Conclusion、Evidence、Return 或 Exception 准确说明完成情况；
+- `Target Phase=RLS`：WI 已进入 Release Contract，并由 Release Item 或 Post-release Confirmation 的 Source References 映射；Release Conclusion 必须说明其完成情况；
+- 未满足的 Work Item 不得从下游记录中消失，必须保留 Return、Exception 或剩余风险；PLN 不为此增加状态字段。
 
 ### IMP 执行绑定
 
@@ -223,8 +239,8 @@ PLN 只保留其后的 Phase：
 
 - Lifecycle Applicability 必须与 Work Item、Exception 和 Delivery Scope 一致；
 - `required` Phase 必须具有 Work Item；
-- `embedded` Phase 必须引用已注册且可解析、已经实际承载该 Phase 结果的 Host；同一 Plan 的 `WI-ID` 不能作为结果 Host。当前 v0.1 没有为 IMP、VFY 或 RLS 注册此类 Host，因此 PLN 不得为这些 Phase 选择 `embedded`；
-- v0.1 的 IMP 只使用 `required`、`n/a` 或 `waived`，不使用 `embedded`；
+- `embedded` Phase 必须引用已注册且可解析、已经实际承载该 Phase 结果的 Host；同一 Plan 的 `WI-ID` 不能作为结果 Host。当前内置 Spec 没有为 IMP、VFY 或 RLS 注册此类 Host，因此 PLN 不得为这些 Phase 选择 `embedded`；
+- 当前内置 Spec 的 IMP 只使用 `required`、`n/a` 或 `waived`，不使用 `embedded`；
 - VFY Artifact 必须存在，不能整体标记为 `n/a` 或 `embedded`；
 - 发生实际发版或目标状态变化时 RLS Artifact 必须存在。
 
@@ -246,13 +262,13 @@ PLN 使用 Core Gate Checks，并增加以下 Phase Check：
 ```markdown
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| PLN-G-001 | 直接 Input、PLN Disposition、Delivery Scope 与 Aggregated Applicability 完整一致 | pending | |
-| PLN-G-002 | 纳入范围的执行义务、约束和 Exception 均由 Work Item 或合法 Disposition 覆盖，不存在孤立、重复或越界工作 | pending | |
+| PLN-G-001 | Scope Input、Return Control Input、PLN Disposition、Delivery Scope 与 Aggregated Applicability 完整一致 | pending | |
+| PLN-G-002 | 纳入范围的执行义务、约束、Exception 和 PLN Control Input 均由 Work Item、Evidence 或合法 Disposition 覆盖，不存在孤立、重复或越界工作 | pending | |
 | PLN-G-003 | Work Item 字段、粒度、Target Phase、Completion Criteria 和 Expected Evidence 足以独立判断 Outcome | pending | |
 | PLN-G-004 | Depends On 有效无环且不指向更晚 Phase；IMP Work Item 完整登记版本化资源，同一资源已形成确定依赖链 | pending | |
 | PLN-G-005 | Lifecycle Applicability、已注册 Host、Work Item 与责任角色完整一致 | pending | |
 | PLN-G-006 | PLN 未新增或静默改变 Requirement、Design 或 Delivery Scope | pending | |
-| PLN-G-007 | 每个 IMP Work Item 均可被独立绑定和完成，不需要在 IMP 中重新分组 | pending | |
+| PLN-G-007 | 每个 IMP Work Item 均可被独立绑定和完成；每个 VFY、RLS Work Item 均可由目标 Phase 的固定字段唯一映射和闭合，不需要下游重新分组 | pending | |
 ```
 
 PLN Gate Checks 都是 Contract Integrity Check，不允许直接标记为 `n/a` 或 `waived`。具体义务的 Waiver 通过 Lifecycle Applicability、Work Item 覆盖关系和 Exception 表达，Gate Check 只验证记录是否合规。

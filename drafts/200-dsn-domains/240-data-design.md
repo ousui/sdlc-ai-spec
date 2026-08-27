@@ -1,7 +1,7 @@
 ---
 title: "数据设计 Data Design"
 status: draft
-scope: DSN Domain 固定模板、规则与专属 Gate
+scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
 
@@ -22,7 +22,7 @@ parent: ../200-dsn-spec.md
 适用性：
 
 - 新增或改变持久化或共享数据、Schema、所有权、一致性或生命周期，或者改变共享或稳定 Cache Contract、所有权、失效规则或一致性时，通常为 `required`；
-- 完全复用现有数据模型且可以准确引用时，可以为 `embedded`；
+- 完全复用现有数据模型且当前变化没有数据设计义务时，可以引用准确 Baseline 判定为 `n/a`；
 - 仅涉及局部临时数据且不改变任何数据契约时，可以为 `n/a`；
 - 普通组件内部临时缓存不触发 Data Design；其实现归 Components、Performance 或 IMP，除非形成共享或稳定 Cache Contract；
 - 没有传统数据库不代表 `n/a`，事件状态、文件、缓存等仍可能需要 Data Design。
@@ -98,17 +98,14 @@ parent: ../200-dsn-spec.md
 - 原生 Schema 文件属于父 DSN Artifact Set，其语义变化触发父 DSN Revision 变化；
 - VFY Points 必须覆盖数据约束、一致性、生命周期和适用的转换结果。
 
-专属 Gate：
+父 Gate 子检查：
+
+以下检查只在父 DSN Artifact Gate 中按 Check ID 登记一次，不写入 Domain 子文件。
 
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| DSN-DG-240-002 | 数据对象、责任方和事实来源明确 | pending |  |
-| DSN-DG-240-003 | 每个数据对象具有唯一且有效的定义来源 | pending |  |
-| DSN-DG-240-004 | Inline 或原生数据定义完整且不存在冲突 | pending |  |
-| DSN-DG-240-005 | 标识、关系、基数及引用行为明确 | pending |  |
-| DSN-DG-240-006 | 存储、访问及适用的索引、分区或缓存明确 | pending |  |
-| DSN-DG-240-007 | 一致性、事务边界和冲突处理明确 | pending |  |
-| DSN-DG-240-008 | 保留、归档、删除和清理已按适用性处理 | pending |  |
-| DSN-DG-240-009 | Schema 演进、转换及 Migration 引用准确 | pending |  |
+| DSN-DG-240-001 | 数据对象、责任方、事实来源、唯一定义、标识和关系完整一致 | pending |  |
+| DSN-DG-240-002 | 存储访问、一致性、事务、冲突及适用的索引、分区或缓存明确 | pending |  |
+| DSN-DG-240-003 | 保留、删除、Schema 演进与迁移按适用性处理，并由 VFY Points 覆盖 | pending |  |
 
 > Parent Spec: [Design Phase Spec](../200-dsn-spec.md)

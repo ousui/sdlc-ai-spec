@@ -1,7 +1,7 @@
 ---
 title: "接口与集成 Interfaces and Integration"
 status: draft
-scope: DSN Domain 固定模板、规则与专属 Gate
+scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
 
@@ -21,7 +21,7 @@ parent: ../200-dsn-spec.md
 适用性：
 
 - 新增或改变接口、消息、事件、错误、版本或集成行为时，通常为 `required`；
-- 完全复用现有 Contract 且可以准确引用时，可以为 `embedded`；
+- 完全复用现有 Contract 且当前变化没有接口或集成设计义务时，可以引用准确 Baseline 判定为 `n/a`；
 - 不跨越任何系统或稳定组件边界时，可以为 `n/a`；
 - 使用客户端库本身不自动产生 Interface Domain，只有 Contract 发生设计变化时才适用。
 
@@ -89,16 +89,14 @@ parent: ../200-dsn-spec.md
 - 原生 Contract 文件属于父 DSN Artifact Set，其语义变化触发父 DSN Revision 变化；
 - VFY Points 必须覆盖 Contract、成功行为、错误行为和适用的兼容性结果。
 
-专属 Gate：
+父 Gate 子检查：
+
+以下检查只在父 DSN Artifact Gate 中按 Check ID 登记一次，不写入 Domain 子文件。
 
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| DSN-DG-230-002 | Contract 类型、提供方、消费方和用途明确 | pending |  |
-| DSN-DG-230-003 | 每个 Contract 具有唯一且有效的定义来源 | pending |  |
-| DSN-DG-230-004 | Inline 或原生数据结构完整且不存在冲突 | pending |  |
-| DSN-DG-230-005 | 成功、超时、幂等和交付语义已按适用性处理 | pending |  |
-| DSN-DG-230-006 | 错误条件及双方行为明确 | pending |  |
-| DSN-DG-230-007 | 安全绑定和引用准确 | pending |  |
-| DSN-DG-230-008 | 版本、兼容性和迁移引用准确 | pending |  |
+| DSN-DG-230-001 | Contract 类型、提供方、消费方、用途和唯一定义来源明确且一致 | pending |  |
+| DSN-DG-230-002 | 数据结构、成功、错误、超时、幂等和交付语义完整 | pending |  |
+| DSN-DG-230-003 | 安全、版本、兼容与迁移引用准确，并由 VFY Points 覆盖 | pending |  |
 
 > Parent Spec: [Design Phase Spec](../200-dsn-spec.md)

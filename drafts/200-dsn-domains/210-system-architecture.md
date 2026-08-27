@@ -1,7 +1,7 @@
 ---
 title: "系统与架构 System and Architecture"
 status: draft
-scope: DSN Domain 固定模板、规则与专属 Gate
+scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
 
@@ -21,8 +21,8 @@ parent: ../200-dsn-spec.md
 适用性：
 
 - 新增系统、服务、子系统或改变系统边界时，通常为 `required`；
-- 改变架构级依赖、系统或子系统责任、质量属性策略，或引入高成本演进约束时，存在独立设计义务则为 `required`；
-- 完全沿用已有架构且可以准确引用时，可以为 `embedded`；
+- 改变架构级依赖、系统或子系统责任、质量属性策略，或引入高成本演进约束时为 `required`；
+- 完全沿用已有架构且当前变化不存在架构义务时，可以引用准确 Baseline 判定为 `n/a`；
 - 纯内容修改或不存在任何结构影响时，可以为 `n/a`；
 - 不得仅因为 Requirement 涉及代码就自动判定为 `required`。
 
@@ -84,17 +84,14 @@ parent: ../200-dsn-spec.md
 - Domain 整体适用但某个子章节不适用时，使用父 Spec 的统一 `N/A — <客观原因>` 表示；
 - VFY Points 必须覆盖边界、关键关系和重要架构约束的可观察结果。
 
-专属 Gate：
+父 Gate 子检查：
+
+以下检查只在父 DSN Artifact Gate 中按 Check ID 登记一次，不写入 Domain 子文件。
 
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| DSN-DG-210-001 | Architecture Driver 已完整识别并具有准确来源 | pending |  |
-| DSN-DG-210-002 | 系统边界和外部依赖明确 | pending |  |
-| DSN-DG-210-003 | 系统或子系统责任清晰且不重叠 | pending |  |
-| DSN-DG-210-004 | 高层关系和依赖方向明确 | pending |  |
-| DSN-DG-210-005 | 新增、修改、复用和移除项已登记 | pending |  |
-| DSN-DG-210-006 | 约束、架构响应和权衡可以追踪至 Decision | pending |  |
-| DSN-DG-210-008 | 架构结果足以支持后续详细设计 | pending |  |
-| DSN-DG-210-011 | Architecture Driver 的 Stakeholder 和 Concern 已明确 | pending |  |
+| DSN-DG-210-001 | Architecture Driver、Stakeholder、Concern 和来源完整 | pending |  |
+| DSN-DG-210-002 | 系统边界、责任、外部依赖、高层关系和变化项明确且不冲突 | pending |  |
+| DSN-DG-210-003 | 约束、架构响应与权衡可追踪至 Decision，结果足以支持后续设计和 VFY | pending |  |
 
 > Parent Spec: [Design Phase Spec](../200-dsn-spec.md)

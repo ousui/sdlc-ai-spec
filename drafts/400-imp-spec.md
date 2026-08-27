@@ -45,7 +45,7 @@ IMP 不负责：
 | Input | 一个准确 Binding、其解析链、相关上游 Artifact Revision、已采用的前置 IMP Revision、项目 Spec、与当前范围相关的未关闭 Exception 和必要基线 |
 | Output | 一个 IMP Artifact、一个或多个 Implementation Result Item，以及支持检查和 Gate 的 Evidence |
 
-Front Matter 的 `inputs` 保存本次实际使用的全部直接上游 Artifact Reference，包括承载已采用前置 Result 的冻结 IMP Artifact，以及 Rework References 所属 Artifact；`IMP Binding Reference` 只保存唯一执行身份。两者用途不同，不得相互替代。
+Front Matter 的 `inputs` 保存本次实际使用的全部直接上游 Artifact Reference，包括承载已采用前置 Result 的可解析冻结 IMP Artifact，以及 Rework References 所属 Artifact；`IMP Binding Reference` 只保存唯一执行身份。两者用途不同，不得相互替代。唯一例外是下文严格限定的同一 IMP Artifact 控制恢复引用：它只进入 `Rework References`，不得进入 `inputs`。其他 Lineage 的失效前驱必须先恢复为新的可解析 Revision，不得以失效引用进入 `inputs`。
 
 ## IMP Binding
 
@@ -55,11 +55,11 @@ Front Matter 的 `inputs` 保存本次实际使用的全部直接上游 Artifact
 |---|---|---|
 | `required` | `<PLN-ID>@<Revision>#<WI-ID>` | Work Item 的 `Target Phase=IMP`，且可独立实施和确认完成 |
 | `n/a` | 最近且可供下游使用的完整 REQ 或 DSN Artifact Reference | 只有一个完整直接 Input 和一个原子 Implementation Outcome；REQ Goal / AC 或 DSN Change / VFY Point 能提供等价完成依据，不需要聚合、拆分或协调 |
-| `embedded` | 不允许 | 当前 v0.1 没有注册可实际承载 PLN 结果的 Host，不能用 Work Item 或自由文本代替 |
+| `embedded` | 不允许 | 当前内置 Spec 没有注册可实际承载 PLN 结果的 Host，不能用 Work Item 或自由文本代替 |
 | `waived` | 最近且可供下游使用的完整 REQ 或 DSN Artifact Reference | 有效 Exception 明确授权不执行独立 PLN，并且其作用域只对应一个原子 Implementation Outcome |
 | `pending` | 不允许 | 必须先返回上游完成判定 |
 
-本表描述的是“PLN 如何被处置后，required IMP 如何绑定”。v0.1 只要产生实际 Implementation Result，IMP 就必须为 `required` 并生成独立 Artifact；没有实现工作时为 `n/a`，经授权不实施时为 `waived`，当前不支持 IMP `embedded`。
+本表描述的是“PLN 如何被处置后，required IMP 如何绑定”。当前 Artifact Contract 只要产生实际 Implementation Result，IMP 就必须为 `required` 并生成独立 Artifact；没有实现工作时为 `n/a`，经授权不实施时为 `waived`，当前不支持 IMP `embedded`。
 
 直接绑定路径还必须满足：
 
@@ -97,7 +97,7 @@ Artifact 使用以下固定记录：
 | | | | | None |
 ```
 
-`Attempt` 和 `Owner` 是当前成功领取的快照，不重复写入由 Revision Index 派生的 `Claim State`。
+`Attempt` 和 `Owner` 是当前成功领取的快照。`Claim State` 只在 Claim Provider 中维护，不重复写入 Artifact。
 
 ## Claim Record
 
@@ -108,18 +108,20 @@ Claim Record 是执行控制记录，不是 Lifecycle Artifact，不修改冻结
 | `Binding Lineage Key` | 从准确 Binding Reference 派生的稳定唯一领取键 |
 | `IMP Binding Reference` | 当前 Attempt 使用的完整、带 Revision Binding |
 | `IMP Artifact ID` | 首次成功领取时分配；重新领取不得改变 |
-| `IMP Artifact Revision` | 当前 Attempt 唯一对应的 Revision；`active` 指向 open Revision，`completed` 指向 frozen Revision，`abandoned` 指向 abandoned Revision |
+| `IMP Artifact Revision` | 领取时预留且不可复用的目标 Revision；由 Owner 正常物化，或由已阻断旧 Owner 写入的项目授权恢复执行方仅为终结预留号而物化；只有按 Core 将 `revision-index.md` 行、目录和主文件固定骨架全部持久化并读回后才成为已分配 Revision；主文件创建失败时仅按 Core 的 `abandoned` 恢复特例终结预留号，不构成成功分配 |
 | `Attempt` | 首次领取为 `1`；每次从 `abandoned` 或 `completed` 重新激活时加 `1` |
-| `Claim State` | 只读派生值：对应 Revision Index 为 `open` 时是 `active`，`frozen` 时是 `completed`，`abandoned` 时是 `abandoned`；不独立存储或更新，没有 Claim Record 表示未领取 |
+| `Claim State` | Claim Provider 中的权威执行状态，只允许 `active`、`completed`、`abandoned`；没有 Claim Record 表示未领取 |
 | `Owner` | 当前 Attempt 的唯一执行 Owner |
 | `Execution Scope` | 当前 Attempt 原子领取的 Scope Token 集合，也是范围冲突判断依据 |
-| `Rework References` | `completed → active` 时必填的准确返工依据集合，只允许 VFY Return Reference、同 Lineage 的更新 Binding Reference，以及使当前输入或资源链失效的新前驱 IMP Result Reference；按 Core Reference Set 语法保存全部适用引用。同一返工序列的 abandoned 重试继承该集合，其他首次领取写 `None` |
-| `Abandoned By` | 只有对应 Revision 为 `abandoned` 时填写实际执行方，其他状态写 `N/A` |
-| `Abandoned At` | 只有对应 Revision 为 `abandoned` 时填写 RFC 3339 时间，其他状态写 `N/A` |
+| `Dependency Result References` | 领取时解析到的全部直接前驱 Current IMP Result Reference；没有前驱写 `None`。Provider 在 `complete` 的同一条件写入中递归复核这些 Result 及其已登记依赖链仍对应 Current `completed` Claim |
+| `Rework References` | `completed → active` 时必填的准确返工依据集合，只允许 VFY Return Reference、RLS Issue Reference、同 Lineage 的更新 Binding Reference、使当前输入或资源链失效的新前驱 IMP Result Reference，以及下文限定的同一 IMP Artifact 控制恢复引用；按 Core Reference Set 语法保存全部适用引用。同一返工序列的 abandoned 重试继承该集合，其他首次领取写 `None` |
+| `Abandoned By` | 只有 Claim State 为 `abandoned` 时填写实际执行方；可以是当前 Owner，也可以是已阻断旧 Owner 写入后的项目授权恢复执行方，其他状态写 `N/A` |
+| `Abandoned At` | 只有 Claim State 为 `abandoned` 时填写 RFC 3339 时间，其他状态写 `N/A` |
+| `Abandon Reason` | 只有 Claim State 为 `abandoned` 时填写。普通放弃与 Core Revision 原因一致；frozen 最终化失败恢复固定写作 `complete:<Provider error code>:<specific detail or stale reference>`，作为该失败的权威控制记录；其他状态写 `N/A` |
 
 `Responsible Role` 表示 PLN 中对 Outcome 负责的角色；`Owner` 表示当前实际执行方，两者不得混用。Owner 可以是人工、AI 或其他执行主体，核心 Contract 不据此判断合规性。
 
-由 Revision State 派生的 Claim 状态变化只有：
+Claim Provider 是项目内唯一的执行权来源；同一项目及 Resource 命名空间必须确定性解析到唯一 Provider，无法解析或解析到多个 Provider 时不得领取。Core Revision Index 只记录 Artifact 状态，不授予执行权。Claim 状态变化只有：
 
 ```text
 no record → active
@@ -129,42 +131,56 @@ abandoned → active
 completed → active
 ```
 
-这些变化描述 Binding Lineage 的 Current Claim 视图；`frozen` 或 `abandoned` Revision 从不重新打开，重新激活始终创建更大 Attempt 和新的 `open` Revision。
+这些变化描述 Binding Lineage 的 Current Claim 视图。同一 Lineage 中 `Attempt` 最大的记录是唯一 Current Claim；历史 Attempt 只保留事实，不参与当前执行权、依赖或资源链判断，也不自动回退。重新激活始终沿用 IMP Artifact ID，递增 Attempt 并预留新的目标 Revision。
 
-同一 Binding Lineage 中 `Attempt` 最大的记录是唯一 Current Claim；历史 Attempt 只保留事实，不参与当前状态、依赖或资源链判断，也不得自动回退。Claim Resolver 必须找到唯一最大 Attempt，并通过其 `IMP Artifact Revision` 解析对应 Revision Index；最大 Attempt 重复、Revision 不存在或映射不一致时解析失败。Revision 为 `abandoned` 时 `Abandoned By / At` 与 Revision Index 的 `Abandon Reason` 必须完整，其他状态两字段必须为 `N/A`。所有条件写入都必须同时比较 Binding Lineage、Attempt、IMP Revision、Owner 和当前 Revision State；新领取还必须在提交时确认 Lineage 尚未被领取，且当前全部其他 `active` Claim 不含相同 `resource:<versioned-resource-id>`。物理存储格式不影响该逻辑 Contract。
+Claim Resolver API 只定义以下四个逻辑操作，物理存储与锁实现不作规定：
+
+| 操作 Operation | Contract |
+|---|---|
+| `resolve` | 按 Binding 或 Lineage 返回唯一 Current Claim，不修改状态 |
+| `acquire` | 原子防止同 Lineage 重复领取和 Resource 冲突，并分配稳定 IMP Artifact ID、Attempt 与目标 Revision Reservation |
+| `abandon` | 只接受两个互斥入口：准确 Core Revision 已为 `abandoned` 的普通放弃；或准确 Core Revision 已为 `frozen`、同 Attempt 的 `complete` 已产生不能以相同条件成功的明确错误且 Reason 按固定格式记录错误的最终化失败恢复。两者都必须匹配 Lineage、Attempt、Revision、Expected Owner 和 `active` 状态，再原子更新 Claim 为 `abandoned` 并记录 Actor 与 Reason |
+| `complete` | 在 Artifact 已冻结且 Gate 通过后，按同一组条件递归复核已登记的 Dependency Result 及其依赖链仍对应 Current `completed` Claim，再幂等地将 `active` 更新为 `completed` |
 
 领取顺序固定为：
 
 1. 无副作用地解析 Binding、Lineage、Input、适用性链和现有 Claim；
-2. Current Claim 为 `active` 或 `completed` 时，只有请求 Binding 与规范化后的 Rework References 都与当前记录完全一致，才幂等返回现有 Attempt；任一不同都先按新请求校验。`active` 期间不同请求返回 mismatch；`completed` 后只有合法且不同的非空 Rework References 才可能启动新返工序列，Binding 更新时集合必须包含新 Binding，陈旧或不完整集合返回 mismatch。`abandoned` 只有收到合法的显式重试或新返工请求才继续；
+2. Current Claim 为 `active` 或 `completed` 时，只有请求 Binding、Dependency Result References 与规范化后的 Rework References 都与当前记录完全一致，才幂等返回现有 Attempt；任一不同都先按新请求校验。`active` 期间不同请求返回 mismatch；`completed` 后只有合法且不同的非空 Rework References 才可能启动新返工序列，Binding 或前驱更新时集合必须包含对应新引用，陈旧或不完整集合返回 mismatch。`abandoned` 只有收到合法的显式重试或新返工请求才继续；
 3. PLN 为 `required` 时，将 `Depends On` 的传递闭包展开为当前 Plan Revision 的准确 Binding；只有闭包内每个当前 Attempt 均为 `completed`、IMP Artifact Revision 可解析，且每条依赖边的后继 `inputs` 仍包含前驱 Current frozen IMP Revision 时才接受。当前 Work Item 登记直接采用的冻结 IMP Artifact、Result、Exception 和各 Resource 的 Baseline 来源；
 4. 直接 Binding 时收集完整上游与返工控制输入，并从准确 State Check Reference 重新检查 Dependency 已达到 Required State；存在未满足依赖、新范围、多个结果间顺序或协调义务时停止并返回 PLN；
 5. 仅对新领取或合法重新激活，在完整待登记 Input Set、前置 Result、Exception 和 Baseline 来源均已解析后，无副作用地执行 IMP Input Readiness Check Set；
-6. 无副作用地预检查不存在与其他 `active` Claim 相同的 `resource:<versioned-resource-id>`；其他 Scope Token 只用于范围与追踪，不作为 v0.1 Claim 冲突键；
-7. 以 Lineage 仍唯一、且全部 Resource 仍无其他 `active` Claim 为提交条件，原子地创建 Claim Attempt 记录和对应 `open` Revision，并写入准确 Binding Reference、Owner、Execution Scope 和 IMP Artifact Revision；条件失败时不创建任何 Claim、Artifact ID 或 Revision，并返回现有或冲突 Claim。首次领取同时分配唯一 IMP Artifact ID，重新激活时始终分配新的最大 Revision；`active` 由该 `open` Revision 派生；
-8. 在该 IMP Artifact 中保存成功的 Readiness 结果、Attempt、Owner、Rework References 和全部实际采用的直接上游 Artifact Reference；
-9. Claim 成功后、首次产品修改前，为每个已有 Resource 生成或复用准确不可变 Baseline Reference 并登记到当前 Revision；同资源前驱存在时 Baseline 必须等于其当前 Result Reference。全新 Resource 必须登记可复核的“不存在或尚未创建”依据，Baseline 固定为 `N/A`；目标已存在时不得按全新资源覆盖。捕获、依据或匹配失败时不得修改产品内容，必须将对应 Revision 从 `open` 条件更新为 `abandoned`，Claim 随之派生为 `abandoned`。
+6. 无副作用地预检查不存在与其他 `active` Claim 相同的 `resource:<versioned-resource-id>`；其他 Scope Token 只用于范围与追踪，不作为当前内置 Claim Contract 的冲突键；
+7. 以 Lineage 仍唯一、且全部 Resource 仍无其他 `active` Claim 为提交条件，在 Claim Provider 中原子创建 `active` Attempt，分配唯一 IMP Artifact ID、Attempt，并预留不可复用的目标 Revision；条件失败时不分配执行权，返回现有或冲突 Claim；
+8. 成功领取后，Owner 确认预留号等于 Core 已持久化最大 Revision 加 `1` 且不存在其他 `open` Revision，再按 Core 原子创建并读回该号的 `revision-index.md` 行、目录和主文件固定骨架，物化当前 IMP Artifact，写入成功的 Readiness 结果、Attempt、Owner、Rework References 与全部实际输入，并校验 Lineage、Binding、Artifact ID、Revision、Attempt 和 Owner 与 Claim 完全一致。完整分配、物化和校验成功前不得修改产品；
+9. 物化或校验失败时 fail closed：不修改产品；Owner，或已阻断旧 Owner 写入的项目授权恢复执行方，只能为终结该预留号而确保其按 Core 形成 `open` 索引行和目录，再将 Revision 更新为 `abandoned` 并记录准确原因；这是主文件创建失败时的恢复特例，不表示 Revision 已成功分配。确认成功后才能以同一原因对匹配的 `active` Claim 执行 `abandon`。恢复执行方不得补写实现内容或修改产品。任一步失败时 Claim 保持 `active` 并继续锁定 Lineage 与 Resource，使用相同条件恢复，不得重领或跳过预留号；
+10. 物化成功后、首次产品修改前，为每个已有 Resource 生成或复用准确不可变 Baseline Reference 并登记到当前 Revision；同资源前驱存在时 Baseline 必须等于其当前 Result Reference。全新 Resource 必须登记可复核的“不存在或尚未创建”依据，Baseline 固定为 `N/A`；目标已存在时不得按全新资源覆盖。捕获、依据或匹配失败时仍不得修改产品，并按第 9 步放弃 Claim。
 
 Readiness 未通过时不创建 Claim 或 IMP Artifact。成功领取与 Artifact ID 分配必须形成一个原子结果，不能先读取后无条件覆盖。
 
-- 遇到同一 Lineage 已有 `active` Claim 时，只有准确 Binding 与 Rework References 都相同才停止并返回现有 Owner、Attempt、IMP Artifact ID 和当前记录；任一不同都返回 mismatch，不得把返回结果解释为新请求已接受；
-- 遇到已有 `completed` Claim 时，Binding 与 Rework References 都相同则返回当前完成结果；只有合法且不同的非空 Rework References 明确要求同一 Lineage 继续实施时才允许重新激活，Binding 更新时该集合必须包含新的准确 Binding；
-- 同一 Owner 使用相同 Binding 与 Rework References 重复领取也只返回现有 Claim；任一不同仍按 mismatch 处理；
-- `active → abandoned` 只通过一次条件写入完成：匹配当前 Owner 和 Attempt，把 Revision Index 从 `open` 改为 `abandoned`、填写唯一 `Abandon Reason`，并填写 Claim Attempt 的 `Abandoned By / At`；任一写入失败时全部保持原值，不得释放执行权；
-- `abandoned → active` 必须显式发生，沿用 IMP Artifact ID、递增 Attempt 并分配新的最大 Revision，不复用旧 Owner 的 Revision；只有 Binding 和全部当前前驱 Result 均未改变时才属于原序列重试并继承原 Rework References，任一变化都必须以当前完整 Rework References 启动新序列；
+- 遇到同一 Lineage 已有 `active` Claim 时，只有准确 Binding、Dependency Result References 与 Rework References 都相同才停止并返回现有 Owner、Attempt、IMP Artifact ID 和当前记录；任一不同都返回 mismatch，不得把返回结果解释为新请求已接受；
+- 遇到已有 `completed` Claim 时，Binding、Dependency Result References 与 Rework References 都相同则返回当前完成结果；只有合法且不同的非空 Rework References 明确要求同一 Lineage 继续实施时才允许重新激活，Binding 或前驱更新时该集合必须包含对应新引用；
+- 同一 Owner 使用相同 Binding、Dependency Result References 与 Rework References 重复领取也只返回现有 Claim；任一不同仍按 mismatch 处理；
+- `active → abandoned` 只允许两个互斥入口：未冻结 Attempt 先把准确 Core Revision 终结为 `abandoned`，Claim 与 Revision 使用同一原因；或 frozen Attempt 在 `complete` 已返回不可同条件重试的明确错误后，保持 Revision 不变，并把准确错误码和细节写入 Claim `Abandon Reason`。两者都以 Expected Owner 匹配当前 Lineage、Attempt、Revision、Owner 和 `active` 状态，将实际 Actor、时间和原因条件写入；当前 Owner 自行放弃时 Actor 默认等于 Expected Owner；
+- `abandoned → active` 必须显式发生，沿用 IMP Artifact ID、递增 Attempt 并预留新的最大 Revision，不复用旧 Owner 的 Revision；只有 Binding 和全部当前前驱 Result 均未改变时才属于原序列重试并继承原 Rework References，任一变化都必须以当前完整 Rework References 启动新序列；
 - 每个重试都重新选择 Baseline：目标 Resource 未前进时可以复用原不可变 Baseline；已前进时必须以当前准确不可变状态为新 Baseline，丢弃旧可变视图并重新应用仍需保留的变化；无法确定性协调时返回 PLN 或 DSN；
-- `completed → active` 必须沿用 IMP Artifact ID、递增 Attempt、重新执行 Readiness，并从最近 frozen Revision 分配新的最大 Revision；
+- `completed → active` 必须沿用 IMP Artifact ID、递增 Attempt、重新执行 Readiness，并预留新的最大目标 Revision；
 - `completed → active` 处理原 Lineage 内的局部返工或同一稳定 Item 的新上游 Revision；Requirement、Design 或 Plan 变化必须先形成新的上游 Revision，Item 语义被替代时使用新 Lineage；
 - 相同 `Binding Lineage Key + Rework References` 只能启动一个返工序列；集合使用 Core 固定排序和去重规则，重复请求返回该序列的最新 Attempt。只有该 Attempt 已 `abandoned`、Binding 与全部当前前驱 Result 均未改变且显式重试时，才在同一序列追加 Attempt；任一因果引用变化时启动新序列，陈旧或指向其他 Lineage / Result 的请求必须拒绝；
-- 只有当前 Owner 和 Attempt 可以修改或完成对应 IMP Artifact 及当前 Claim 覆盖的产品内容；项目授权的恢复执行方只有在先阻断旧 Owner 写入后，才能按上述同一条件写入把匹配 Revision 更新为 `abandoned`；Claim 随之派生为 `abandoned`，不得自动超时接管；
+- 只有当前 `active` Claim 的 Owner，且对应 Revision 仍为 `open`、Artifact 物化已校验通过，才可修改对应 IMP Artifact 及 Claim 覆盖的产品内容；Revision 进入 `frozen` 或 `abandoned` 后立即失去写权限。项目授权的恢复执行方只有在先阻断旧 Owner 写入后，才可按第 9 步终结预留 Revision，或按 frozen 最终化失败入口释放匹配 Claim；调用时以旧 Owner 为 Expected Owner、恢复执行方为 Actor，不得补写实现、修改 frozen Artifact、修改产品或自动超时接管；
 - 不新增 `blocked` Claim State；等待输入时保持 `active`，释放执行权时显式改为 `abandoned`；
 - `completed` 必须以 IMP Artifact 已通过 Gate 并形成可解析 Revision 为依据。
 
-Claim Record 必须为每个 Attempt 保留准确 Binding Reference、IMP Revision、Owner、Execution Scope 和 Rework References；状态及变化从对应 Revision Index 解析，不得通过覆盖当前行删除先前领取事实。集合必须包含启动本序列时全部已变化的 Binding、前驱 Result 和有效 VFY Return；每个来源所属 Artifact 都必须进入 `inputs`。VFY Return Reference 固定使用 `<VFY-ID>@<Revision>#RET-ID`，并且只有在所属 VFY Revision 已冻结、`Return Phase=IMP`，且其 Subject References 包含当前 Binding Lineage 的 Result，或包含以该 Result 为传递输入的当前终端 Result 时才能触发返工。无法解析、仍为 open、指向其他 Phase 或无法沿 `inputs` 追踪到当前 Lineage 的 Return 不得接受。同一 Lineage 的更新 Binding 或使当前输入或资源链失效的新前驱 IMP Result 也可以作为返工依据。
+Claim Record 必须为每个 Attempt 保留准确 Binding Reference、IMP Revision、Owner、Execution Scope、Dependency Result References、Rework References 和 Claim State，不得通过覆盖当前记录删除先前领取事实。Rework References 必须包含启动本序列时全部已变化的 Binding、前驱 Result 和有效 Return；除同一 IMP Artifact 控制恢复引用外，每个来源所属 Artifact 都必须进入 `inputs`。
 
-Gate 前必须重新解析 `Depends On` 的完整传递闭包；只有闭包内全部 Current Claim、冻结 IMP Revision、Result 和依赖边仍连续有效，且当前 Attempt 直接登记的输入未变化时才可继续。任一祖先前驱形成新 Result 后，当前 Attempt 不得发布；应将匹配 Revision 从 `open` 条件更新为 `abandoned`，待依赖链按顺序恢复后，把全部已变化前驱 Result 纳入新的 Rework References 重新领取。
+VFY Return Reference 固定使用 `<VFY-ID>@<Revision>#RET-ID`。只有所属 VFY Revision 已冻结、`Return Phase=IMP`、Subject References 可追踪到当前 Lineage Result，且 Return 尚未被后续 VFY 解决时才能触发返工。Return 的 `IMP Binding Reference` 应与当前准确 Binding 相同；若上游 Revision 已更新，则必须保持同一 Binding Lineage，并在 Rework References 中同时包含该 Return 与更新后的准确 Binding。不同 Lineage 必须拒绝。
 
-Claim 的 Execution Scope 必须与 IMP Artifact Scope 一致，领取后不可变。v0.1 的 Result Changed Scope 只能使用 Claim Scope 中已有的准确 Token；更细文件位置保存在 Change Reference 或 Evidence。需要增加 Claim 未授权的 Scope Token 时必须停止并返回 PLN 或准确上游，不能在实施中覆盖 Claim。
+RLS Issue Reference 固定使用 `<RLS-ID>@<Revision>#<RLI-ID|RCF-ID>`。只有所属 RLS Revision 已冻结、Follow-up Disposition 为 `return_imp`、Release Conclusion 为 `failed`、`partial` 或 `cancelled`、该行及 Evidence 明确证明产品 Result 必须改变，且 Source References 可追踪到当前唯一 Lineage Result 时才能触发返工。无法唯一归属时必须使用 `return_pln`；环境、权限、发版重试或外部执行失败不得误作 IMP 返工。
+
+无法解析、仍为 open、指向其他 Lineage 或不能证明产品结果需要改变的 Return 必须拒绝。同一 Lineage 的更新 Binding 或使当前输入或资源链失效的新前驱 IMP Result 仍可作为返工依据。
+
+Gate 前必须重新解析 `Depends On` 的完整传递闭包；只有闭包内全部 Current Claim、冻结 IMP Revision、Result 和依赖边仍连续有效，且当前 Attempt 直接登记的输入未变化时才可继续。任一祖先前驱形成新 Result 后，当前 Attempt 不得发布；应先将已物化的 `open` Revision 更新为 `abandoned`，确认成功后再将匹配 Claim 放弃。待依赖链按顺序恢复后，把全部已变化前驱 Result 纳入新的 Rework References 重新领取。
+
+Claim 的 Execution Scope 必须与 IMP Artifact Scope 一致，领取后不可变。当前内置 Claim Contract 的 Result Changed Scope 只能使用 Claim Scope 中已有的准确 Token；更细文件位置保存在 Change Reference 或 Evidence。需要增加 Claim 未授权的 Scope Token 时必须停止并返回 PLN 或准确上游，不能在实施中覆盖 Claim。
 
 两类冲突分别判断：
 
@@ -202,6 +218,8 @@ Readiness Check Set 由实际把工作交给 IMP 的位置执行：
 
 IMP 使用五个 Activity，不建立子 Phase 或子 Artifact：
 
+IMP 的 Pre-execution Checklist 复用当前 Revision 已有内容：非空 Evaluation Contract Set、准确 Implementation Binding、Front Matter Inputs、Scope、全部为 `pass` 的 Input Readiness Check Set、Claim identity、每个 Resource 的不可变 Baseline，以及完整的 Implementation Method Contract。首次产品修改前必须按 Core 持久化、读回并保存 Evidence；缺少任一项只能继续分析或补全 Artifact，不得开始产品修改。
+
 | 活动 Activity | 主要动作 | 完成结果 |
 |---|---|---|
 | 接收 Accept | 解析 Binding、完成 Readiness 并原子领取 | 输入就绪且只有一个有效 Owner |
@@ -218,7 +236,7 @@ IMP 直接使用 Core Artifact Front Matter：
 
 ```yaml
 ---
-contract: sdlc-ai-spec/artifact/v0.1
+contract: sdlc-ai-spec/artifact/v0.2
 phase: IMP
 id: IMP-20260824143000-01
 revision: 1
@@ -516,9 +534,13 @@ Result Set 所有单元格都必须填写；可选值不存在时写 `N/A`。实
 
 每个 Attempt 的已有 Resource 必须使用由 Baseline 初始化的隔离或独占可变视图，全新 Resource 从已验证未创建的空目标初始化；Result 不得吸收其他 Claim 的变化。存在用户已有修改时，必须将其纳入完整 Baseline Snapshot，不得把 `HEAD` 误作实际 Baseline。全部实际变更只表示当前 Attempt 的 Result 相对该 Baseline 或空目标的差异，且 `Changed Scope` 必须是当前 Claim Execution Scope Token 的子集。VCS 对象必须在生命周期保留期内可解析，否则保存完整 Snapshot Member。
 
+Claim 前已存在、且被提议用来满足当前 Binding 的 commit、patch、bundle 或工作树变化只能作为 Candidate Material，不能直接吸入 Baseline 后以“本 Attempt 未改变”冒充当前 Result。正式 Attempt 必须从已声明的准确 Baseline 建立隔离视图，只重放 Claim Scope 内仍适用的候选变化，再执行当前 Method Contract、Checks 并登记新的不可变 Result。与当前 Binding 无关的用户既有修改仍按上一段纳入 Baseline；无法区分候选变化与真实基线时停止并补充 Evidence，不得倒签 Claim。
+
+唯一例外是 Core 控制恢复：旧冻结 IMP 在关闭递归 Input 解析后必须通过自身本地校验，其唯一失效原因是 Lifecycle Authority 或 Input 链不可解析；当前 Revision 与旧 Revision 的 Binding Lineage、准确 Binding Reference、规范化 Execution Scope，以及 Implementation Result 中的 ID、Resource、Baseline、Change、Result、Changed Scope、Steps 必须完全一致，被移除的失效 Input 不参与比较，并已通过现有 Claim 转换建立新 Attempt。该旧 Revision 以同一 IMP Artifact 的准确 Artifact Reference 进入 `Rework References`，只说明重激活原因并定位 Base candidate；它不进入 Front Matter `inputs`，也不提供 Authority。同一引用只启动一个返工序列。当前 Checklist 后必须逐项读回不可变 Resource，证明它与旧候选 Result 完全一致；任何未解决的 Return、失败事实或风险，只要可能改变当前 Binding 的 Outcome、Resource、Scope、Target、可观察行为或 Result 身份，就会使等价性不成立；任何与当前 Result 相关且无法由当前读回重建的外部状态或副作用同样使等价性不成立。只有当前权威 Scope 明确排除、且 Evidence 证明不影响上述等价维度的环境或流程失败，才不单独否定等价性；该限制仍必须准确记录，且不得用于支持产品、VFY 或 RLS `pass`。全部条件成立时，本 Attempt 可以准确登记 `Baseline Reference=Result Reference=<当前不可变状态>`、`Change Reference=N/A`、`Changed Scope=None`、`Approach Step References=None`，但仍须形成当前 Evidence、Checks、Gate 和 Final Confirmation，不继承旧 Result Authority。无法由当前读回证明的状态必须重放或重新执行。
+
 任一 `Depends On` 的 Current Result 在下游完成后发生变化，都会使所有仍引用旧 Result 的传递下游失去 VFY 就绪性；原 frozen Revision 保留为历史事实，但不能继续作为当前交付结果。受影响 Work Item 必须把全部已变化前驱 Result 纳入 Rework References，并按依赖顺序重新执行。VFY 开始前必须复核当前 Plan 的每条已执行依赖边：后继 `inputs` 包含前驱 Current frozen IMP Revision，且不存在尚未吸收的更新或 `active/abandoned` Attempt。
 
-同一 Plan 内多个 IMP Work Item 修改相同 Resource 时，必须按 PLN 的单一依赖链执行。当前 Work Item 通过 Gate 时只检查截至自身的已执行链前缀：所有同资源前驱的 Current Claim 均为 `completed` 且 Binding 匹配当前 Plan Revision；每条已执行边的后继 `inputs` 包含当前前驱冻结 IMP Revision；后继 Baseline 等于当前前驱 Result；当前候选 Result 完整；前缀中不存在尚未吸收的前驱更新或其他 `active/abandoned` Attempt。当前 Claim 在 Gate 时仍为 `active`，不检查尚未执行的后继；原子发布成功后才加入 completed 链。前驱形成新 Result 后，原后继不再是有效链尾，必须把全部已变化前驱 Result 纳入 Rework References，按依赖顺序重新执行受影响后继。VFY 开始前，所需整条链的 Current Claim 必须全部 `completed`、连续且只有一个有效链尾；VFY 只采用该终端 Result，不能自行合并或回退到旧链。
+同一 Plan 内多个 IMP Work Item 修改相同 Resource 时，必须按 PLN 的单一依赖链执行。当前 Work Item 通过 Gate 时只检查截至自身的已执行链前缀：所有同资源前驱的 Current Claim 均为 `completed` 且 Binding 匹配当前 Plan Revision；每条已执行边的后继 `inputs` 包含当前前驱冻结 IMP Revision；后继 Baseline 等于当前前驱 Result；当前候选 Result 完整；前缀中不存在尚未吸收的前驱更新或其他 `active/abandoned` Attempt。当前 Claim 在 Gate 时仍为 `active`，不检查尚未执行的后继；Artifact 冻结且 `complete` 成功后才加入 completed 链。前驱形成新 Result 后，原后继不再是有效链尾，必须把全部已变化前驱 Result 纳入 Rework References，按依赖顺序重新执行受影响后继。VFY 开始前，所需整条链的 Current Claim 必须全部 `completed`、连续且只有一个有效链尾；VFY 只采用该终端 Result，不能自行合并或回退到旧链。
 
 ## Implementation Checks
 
@@ -577,7 +599,7 @@ Implementation Checks 保存本次实际执行的局部检查，不建立平行 
 | Readiness 与 Approach | 解析 Binding、检查输入并形成连续实施方式 | 补充缺失的权威业务或设计决定 | AI 可系统执行，不能替代上游决策 |
 | 产品与测试资产实现 | 按已确认 Contract 编码、更新 Test 和执行局部检查 | 处理必须人工授权的环境或操作 | AI 适合完整实施和重复执行 |
 | 质量与范围控制 | 检查 Consideration、越界变化和 Result 完整性 | 对新范围、架构或风险作上游决定 | AI 可发现偏差，权威改变必须人工确认 |
-| 最终结果确认 | 整理 Result、Evidence 和 Gate | 审核关键结果并完成 Human Confirmation | Artifact 可信性需要独立责任确认 |
+| 最终结果确认 | 整理 Result、Evidence 和 Gate；满足 delegated 边界时执行独立客观复核 | 处理主观判断、Exception、风险接受和授权事项 | Final Confirmation 按 Core 选择 delegated 或 human，不固定为人工职责 |
 
 ## Gate
 
@@ -586,10 +608,10 @@ IMP 使用 Core Gate Checks，并增加以下 Phase Check：
 ```markdown
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| IMP-G-001 | Binding Lineage、准确 Binding Reference、Input、Attempt、IMP Revision 和 Claim 一致有效；`Depends On` 传递闭包的全部当前结果与依赖边连续有效，Readiness 全部通过 | pending | |
+| IMP-G-001 | Binding Lineage、准确 Binding Reference、Input、Dependency Result References、Rework References、Attempt、IMP Revision 和 Claim 一致有效；`Depends On` 传递闭包的全部当前结果与依赖边连续有效，Readiness 全部通过 | pending | |
 | IMP-G-002 | 实现只覆盖一个原子 Outcome，未重组 Work Item、超出不可变 Claim Scope 或违反依赖 | pending | |
-| IMP-G-003 | 七项 Implementation Consideration、连续 Approach 和必要 Method Block 完整一致，未新增 Requirement、Design 或 Plan 决策 | pending | |
-| IMP-G-004 | 实际实现、上游约束和完成依据一致；Result Set 对 Claim 中每个 Resource 恰有一行并以不可变 Result 唯一确定，截至当前 Work Item 的同资源链前缀连续有效 | pending | |
+| IMP-G-003 | 七项 Implementation Consideration、连续 Approach、必要 Method Block 与首次产品修改前的 Pre-execution 读回 Evidence 完整一致，未新增 Requirement、Design 或 Plan 决策 | pending | |
+| IMP-G-004 | 实际实现、上游约束和 Work Item Completion Criteria / Expected Evidence 一致；Result Set 对 Claim 中每个 Resource 恰有一行并以不可变 Result 唯一确定，截至当前 Work Item 的同资源链前缀连续有效 | pending | |
 | IMP-G-005 | 所有适用 Implementation Check 已完成，Result 与 Basis 准确 | pending | |
 | IMP-G-006 | 当前 Artifact 已完整登记可供 VFY 解析的 Result、未关闭 Exception 和必要 Evidence，不存在阻塞输入 | pending | |
 ```
@@ -600,14 +622,20 @@ IMP Gate Checks 都是 Contract Integrity Check，只允许 `pending`、`pass` �
 
 ## 最终化顺序
 
-IMP 先按 Core 最终化 Contract 完成冻结前的全部内容、检查、确认和摘要，再执行一次条件原子发布：仅当 Binding Lineage、Attempt、IMP Revision、Claim Owner 和 `Depends On` 传递闭包的全部当前结果与依赖边仍然匹配时，把 Revision Index 从 `open` 改为 `frozen`；Claim 随之唯一派生为 `completed`。
+IMP 先按 Core 最终化 Contract 完成全部内容、检查、确认和摘要，再按固定顺序完成两个独立写入：
 
-- Gate 未通过时可以在当前 open Revision 内修正并重新检查，Claim 保持 `active`；
-- 发布成功后 Revision 与派生 Claim 同时可供下游解析；Claim 不存在独立状态写入，因此不会形成 `frozen + active` 中间状态；
-- 下游解析 IMP Revision 时，除 Core Resolver 外还必须确认唯一 Current Claim 指向该 Revision，Binding Lineage、Attempt 和 IMP Revision 完全匹配，且由 `frozen` 派生为 `completed`；孤立的 frozen Revision 不能放行；
-- 发布失败时 Revision 保持 `open`、Claim 仍派生为 `active`，不产生部分发布；按相同条件重复执行必须返回同一完成结果；
-- 当前 Owner 明确放弃，或项目授权恢复执行方按 Claim 规则完成接管前处置时，使用 Claim 规定的同一条件写入更新 Revision `open → abandoned`、`Abandon Reason` 和 `Abandoned By / At`，Claim 同步派生为 `abandoned`；
+1. 只有 Binding Lineage、Attempt、IMP Revision、Claim Owner 和 `Depends On` 传递闭包仍然匹配，且 Gate 已通过时，才按 Core Contract 把 Revision Index 从 `open` 冻结为 `frozen`；
+2. 冻结成功后，重新解析直接前驱 Current Result，并以同一 Lineage、Attempt、Revision、Owner 和准确 Dependency Result References 调用 Claim Provider `complete`；Provider 在同一事务中递归复核每个前驱及其已登记依赖链仍为对应 Revision 的 Current `completed` Claim，再 CAS `active → completed`。
+
+- Gate 未通过时可在当前 `open` Revision 内修正并重新检查，Claim 保持 `active`；
+- Revision 已冻结、Claim 仍为 `active` 是允许的短暂中间状态；该 Claim 继续锁定 Lineage 和 Resource，不允许新 Owner；
+- `complete` CAS 成功后，frozen Revision 与 `completed` Claim 才可供下游使用；下游必须确认 Current Claim 的 Binding Lineage、Attempt、Artifact ID、Revision 和 Dependency Result References 完全匹配。前驱在完成后形成新 Attempt 时，该结果立即失去当前有效性并按返工规则处理；
+- `complete` CAS 失败且 Provider 仍解析到相同 `active` Claim、全部依赖仍准确时，不重新冻结或重写 Artifact，使用相同条件重试；
+- 若 frozen Revision 的 `complete` 因依赖失效或条件不再成立而不能以相同条件成功，必须保留该 Revision 的不可变失败现场，并把准确 Provider 错误码与细节按 `complete:<code>:<detail>` 写入 Claim `Abandon Reason`，再以原 Owner或明确授权的恢复主体把匹配 Claim CAS `active → abandoned`；frozen Revision 保持历史 Snapshot，但不得供下游使用，随后按 Claim 返工规则创建新 Attempt 与新 Revision；
+- 未冻结 Attempt 的放弃必须先将准确预留 Revision 终结为 `abandoned` 并记录原因，再 CAS Claim `active → abandoned`；frozen Attempt 只允许用于上一条最终化失败恢复，不能作为普通取消手段；任一 Claim 终结失败时 Claim 保持 `active`；
 - 不创建第二个 IMP Artifact，也不重新分配 Binding。
+
+PLN 为 `required` 时，只有匹配 WI 的冻结 IMP Revision 与 `completed` Current Claim 同时存在，且 Work Item 的 Completion Criteria 与 Expected Evidence 已由当前 Result、Check 和 Evidence 支持，该 IMP Work Item 才算当前完成。`active`、`abandoned`、`open` 或“已冻结但 Claim 仍为 active”都不完成 Work Item；后续合法返工重新激活 Claim 后，旧完成结果只保留为历史事实。
 
 ## 内部编号
 
@@ -630,7 +658,7 @@ IMP 先按 Core 最终化 Contract 完成冻结前的全部内容、检查、确
 
 ## 当前未定义
 
-- Claim Record 的文件路径、存储介质、条件更新和锁实现；
+- Claim Provider 的文件路径、存储介质、条件更新和锁实现；
 - Owner 的项目级身份格式；
 - Project Extension 注册额外 Result Locator 和 Implementation Check 的实现方式；
 - RLS 外部平台适配和自动 Evidence 采集方式。

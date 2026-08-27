@@ -1,7 +1,7 @@
 ---
 title: "可观测性与可运维性 Observability and Operability"
 status: draft
-scope: DSN Domain 固定模板、规则与专属 Gate
+scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
 
@@ -22,7 +22,7 @@ parent: ../200-dsn-spec.md
 适用性：
 
 - 需要独立设计新的 Metric、Log 语义、Trace、Event、Alert、Health Check、Runbook 要求或运行操作时，通常为 `required`；
-- 现有日志和运行规范完整覆盖，或简单要求可以准确承载在其他 required Domain 时，可以为 `embedded`；
+- 现有日志和运行规范完整覆盖且当前变化没有新增或改变相关义务时，可以引用准确 Baseline 判定为 `n/a`；
 - 没有新增或改变任何诊断、告警、健康检查或运行操作时，可以为 `n/a`；
 - 实际存在需要但经授权决定跳过时，必须使用 `waived`；
 - Domain 为 `required` 不表示必须引入新的日志、指标、追踪、检索或告警平台；
@@ -92,19 +92,14 @@ parent: ../200-dsn-spec.md
 - 本 Domain 不记录实际告警、长期运行操作结果或运行期 Evidence；
 - VFY Points 必须覆盖信号语义、关联、健康检查、告警和受控运行操作。
 
-专属 Gate：
+父 Gate 子检查：
+
+以下检查只在父 DSN Artifact Gate 中按 Check ID 登记一次，不写入 Domain 子文件。
 
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| DSN-DG-420-001 | 适用的可观测与运维目标已完整识别并具有准确来源 | pending |  |
-| DSN-DG-420-002 | Domain Disposition 未与是否引入新平台混淆 | pending |  |
-| DSN-DG-420-003 | 每个 Signal 具有明确语义、来源、用途和使用方 | pending |  |
-| DSN-DG-420-004 | 指标维度、敏感信息、保留和高基数已按适用性处理 | pending |  |
-| DSN-DG-420-005 | 关联标识和传播范围明确 | pending |  |
-| DSN-DG-420-006 | 健康与就绪检查具有确定通过和失败语义 | pending |  |
-| DSN-DG-420-007 | Alert 条件、窗口、级别和依据准确 | pending |  |
-| DSN-DG-420-008 | 每个 Alert 具有接收方和可执行动作 | pending |  |
-| DSN-DG-420-009 | Operational Action 的权限、安全性和结果明确 | pending |  |
-| DSN-DG-420-010 | Runbook 触发、目标、升级和完成条件明确 | pending |  |
+| DSN-DG-420-001 | 可观测与运维目标、Signal 的语义、来源、用途、上下文和敏感性处理完整 | pending |  |
+| DSN-DG-420-002 | 健康、就绪、Alert、响应和 Operational Action 具有确定条件、责任和结果 | pending |  |
+| DSN-DG-420-003 | Runbook 与 VFY Points 完整，且未因适用而无依据引入新平台 | pending |  |
 
 > Parent Spec: [Design Phase Spec](../200-dsn-spec.md)

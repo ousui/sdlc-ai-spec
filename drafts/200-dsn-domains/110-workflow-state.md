@@ -1,7 +1,7 @@
 ---
 title: "流程与状态 Workflow and State"
 status: draft
-scope: DSN Domain 固定模板、规则与专属 Gate
+scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
 
@@ -11,11 +11,10 @@ parent: ../200-dsn-spec.md
 
 适用性：
 
-- 新增或改变业务规则、计算规则、资格判断、决策逻辑、不变量、多步骤流程、状态变化、角色协作、审批、异步处理、重试、取消或恢复时，存在独立设计义务则为 `required`；
-- 简单行为已经由其他 required Domain 完整表达且可以准确追踪时，可以为 `embedded`；
+- 新增或改变业务规则、计算规则、资格判断、决策逻辑、不变量、多步骤流程、状态变化、角色协作、审批、异步处理、重试、取消或恢复时为 `required`；
 - Requirement 不引入任何业务行为、规则、计算、决策、不变量、流程或状态影响时，可以为 `n/a`；
-- 不得因为流程简单、参与者不准备阅读或接受 AI 设计而判定为 `n/a`。
-- 迁移旧态、目标态、共存和切换流程以 `Compatibility and Migration` 为权威来源；迁移流程义务被其完整承载时，本 Domain 为 `embedded`，完全不存在流程、规则或状态义务时才为 `n/a`；只有存在独立业务或角色流程时，本 Domain 才单独为 `required`。
+- 不得因为流程简单、已在其他 Domain 提及、参与者不准备阅读或接受 AI 设计而判定为 `n/a`；
+- 仅存在迁移旧态、目标态、共存和切换义务时，以 `Compatibility and Migration` 为权威来源；若仍涉及业务规则、角色流程或状态语义，本 Domain 也为 `required`。
 
 固定专属模板：
 
@@ -80,14 +79,14 @@ parent: ../200-dsn-spec.md
 - 重试、取消、超时、失败和恢复按 Requirement 影响填写，不适用时不得虚构；
 - VFY Points 必须能够覆盖关键流程、状态转换和异常结果。
 
-专属 Gate：
+父 Gate 子检查：
+
+以下检查只在父 DSN Artifact Gate 中按 Check ID 登记一次，不写入 Domain 子文件。
 
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| DSN-DG-110-002 | 参与者、触发、前置条件及其 Flow References 明确且可解析 | pending |  |
-| DSN-DG-110-003 | Flow、Step、Transition 及主流程、替代流程和异常流程已按适用性处理 | pending |  |
-| DSN-DG-110-004 | State ID、状态含义、转换和终止条件明确 | pending |  |
-| DSN-DG-110-005 | 规则与不变量可追踪 | pending |  |
-| DSN-DG-110-006 | 异常和恢复具有确定结果 | pending |  |
+| DSN-DG-110-001 | 参与者、触发、前置条件、Flow、Step 和 Transition 完整、可解析且具有确定终点 | pending |  |
+| DSN-DG-110-002 | 适用的状态、规则、计算、决策和不变量语义明确且可追踪 | pending |  |
+| DSN-DG-110-003 | 适用的异常、重试、取消与恢复具有确定结果，并由 VFY Points 覆盖 | pending |  |
 
 > Parent Spec: [Design Phase Spec](../200-dsn-spec.md)

@@ -12,7 +12,7 @@ DSN 将已确认的 Requirement 转换为可实施、可验证的设计结果。
 
 DSN 不是单指架构设计、概要设计或详细设计，而是这些设计活动的统一承载 Phase。它负责提前发现问题、明确边界、记录设计选择，并防止后续实施偏离 Requirement。
 
-DSN 是高判断密度的 Phase，但 Spec 不限定由人工还是 AI 生成设计。关键选择和边界必须显式记录，最终确认者对已接受的设计结果和风险负责；是否逐项阅读不改变该责任。
+DSN 是高判断密度的 Phase，但 Spec 不限定由人工还是 AI 生成设计。关键选择、边界与风险由具备相应权限的决策者负责；Final Confirmation 只确认当前 Artifact 与 Gate，是否逐项阅读不改变决策责任。
 
 ## Phase 边界
 
@@ -20,15 +20,14 @@ DSN 负责：
 
 - 将 Requirement 映射为明确的设计边界；
 - 记录关键 Design Decision、候选方案和选择依据；
-- 确定适用的 Design Domain；
+- 判断全部注册 Design Domain 的适用性；
 - 形成可以被 PLN、IMP 和 VFY 使用的设计结果；
 - 发现 Requirement 中的缺失、冲突或不可实现内容。
 
 DSN 不负责：
 
 - 静默修改 Requirement 目标、范围或 Acceptance Criteria；
-- 拆分具体实施任务；
-- 制定执行排期；
+- 拆分具体实施任务或制定执行排期；
 - 编写实现代码；
 - 给出最终交付结论。
 
@@ -57,7 +56,7 @@ DSN 不强制一项 Requirement 对应一个 Design。
 
 ```yaml
 ---
-contract: sdlc-ai-spec/artifact/v0.1
+contract: sdlc-ai-spec/artifact/v0.2
 phase: DSN
 id: DSN-20260823150010-01
 revision: 1
@@ -68,11 +67,15 @@ inputs:
 ---
 ```
 
-DSN 必须至少绑定一个准确的 Requirement Revision。输入为 `ready_with_exception` 时，DSN 必须逐项处理与当前 Design Scope 相交的上游未关闭 Exception，并将其记为 `carried`，或用 Evidence 证明不相交、已 `resolved` / `superseded`；无法确定是否相交时仍按相关处理。
+DSN 必须至少绑定一个准确的 Requirement Revision。输入为 `ready_with_exception` 时，DSN 必须处理与当前 Scope 相交的未关闭 Exception：在当前 Artifact 的 Exceptions 中记为 `carried`，或用 Evidence 证明不相交、已 `resolved` / `superseded`；无法判断时仍按相关处理。
+
+- `Return Phase=DSN` 的冻结 VFY Return，以及 Follow-up Disposition 为 `return_dsn` 的冻结 RLS Issue Reference，是 Control Input，不是 Scope Input；其所属 Revision 必须进入 Front Matter `inputs`；
+- Control Input 不自动改变 Design Scope。实际修正必须由受影响的 Change、Decision、Domain 设计或 Evidence 准确引用；确认需要改变 Requirement 或 Delivery Scope 时返回 REQ；
+- 新 DSN Revision 只证明问题已在设计层处理；只有后续冻结 VFY Revision 采用修正后的当前 Subject 并证明对应 Required Outcome 后，该问题才算解决。
 
 ## 固定模板
 
-DSN 使用“主文件 + Domain 子文件”的 Artifact Set。主文件负责总览、追踪、决策、适用性和 Gate；详细设计只写入适用 Domain 的子文件。
+DSN 使用“主设计总纲 + required Domain 子文件”的 Artifact Set。主文件是唯一总览和 Gate；Domain 子文件只承载该领域的详细设计。
 
 ```markdown
 # <设计标题>
@@ -87,15 +90,15 @@ DSN 使用“主文件 + Domain 子文件”的 Artifact Set。主文件负责�
 
 ## 设计决策 Design Decisions
 
-## 设计关注评估 Design Concern Assessment
-
 ## 设计总纲 Design Index
 
-<固定全量 Domain 矩阵>
+<固定 16 行 Design Applicability Matrix>
+
+### 复合 Domain 子领域适用性 Composite Domain Subdomain Applicability
+
+<固定 5 行 Composite Domain Subdomain Applicability>
 
 ## 产物集清单 Artifact Set Manifest
-
-## 领域明细记录 Domain Detail Records
 
 ## 待确认项 Open Items
 
@@ -108,9 +111,9 @@ DSN 使用“主文件 + Domain 子文件”的 Artifact Set。主文件负责�
 ## 门禁 Gate
 ```
 
-推荐阅读顺序为：摘要与边界 → 方案与决策 → 全量 Domain 索引 → 按需打开 Domain 子文件 → 控制和 Gate。
+推荐阅读顺序为：摘要与边界 → 基线与变化 → 决策 → 16 行 Domain Matrix 与 5 行复合 Domain 子领域表 → 按需打开 required Domain 子文件 → Gate。
 
-Domain 子文件不设置强制阅读对象。参与者按需要选择阅读范围；未逐项阅读不改变 Domain 的适用性、完成状态、Gate 要求，也不减轻最终确认者对结果和风险的责任。
+参与者可以按需要选择阅读 Domain 子文件；未逐项阅读不改变 Domain 的适用性、完成状态和最终确认责任。
 
 ## DSN Artifact Set
 
@@ -124,60 +127,36 @@ artifacts/200-dsn/DSN-20260823150010-01/
         │   ├── 110-workflow-state.md
         │   ├── 210-system-architecture.md
         │   └── ...
-        ├── controls/
-        │   └── domain-gates.md
         └── assets/
 ```
 
 规则：
 
-- `<DSN-ID>.md` 是唯一主要 Artifact，也是总纲和索引；
-- 只为 `required` Domain 创建子文件；
+- `<DSN-ID>.md` 是唯一主要 Artifact、总纲、索引和 Gate；
+- 只为 `required` Domain 创建子文件；当前内置 Spec 不开放 Domain `embedded`；
 - Domain 子文件属于父 DSN Artifact Set，不分配独立 Artifact ID 或 Revision；
-- 存在 `required`、`embedded` 或历史 DGR 时创建唯一 `controls/domain-gates.md`，集中保存全部完整 DGR；它是 control member，不是 Domain 子文件；
-- Domain 子文件的语义变化会触发父 DSN Revision 变化；
+- Domain 子文件的语义变化触发父 DSN Revision 变化；
 - 图片、图表、Schema 和其他原生文件放入 `assets/`，并由 Domain 子文件引用；
-- Domain 如果需要独立复用、评审或 Revision，应创建新的 DSN Artifact，而不是继续作为子文件。
-- 主文件的 Artifact Set Manifest 必须列出全部 Domain 子文件和 Supporting Artifact；frozen Revision 通过 Manifest 固定其成员关系和内容摘要。
+- Domain 如果需要独立复用、评审或 Revision，应创建新的 DSN Artifact；
+- Artifact Set Manifest 必须列出全部 Domain 子文件和 Supporting Member，并固定其原始字节 SHA-256；
+- Gate 结果只保存在父主文件；open Revision 直接重跑，frozen Revision 按 Core 创建新 Revision。
 
 ## 核心章节
 
-以下章节不得删除或标记为 `n/a`：
+以下章节不得删除或标记为 `n/a`：Summary、Scope、Design Baseline and Change、Requirement Traceability、Design Index、Artifact Set Manifest、Open Items、Evidence、Exceptions、Lifecycle Applicability 和 Gate。
 
-- Summary；
-- Scope；
-- Design Baseline and Change；
-- Requirement Traceability；
-- Design Decisions；
-- Design Concern Assessment；
-- Design Index；
-- Artifact Set Manifest；
-- Domain Detail Records；
-- Open Items；
-- Evidence；
-- Exceptions；
-- Lifecycle Applicability；
-- Gate。
-
-固定章节始终保留，但允许的内容基数不同：
-
-| 章节类型 | 章节 | 规则 |
-|---|---|---|
-| `required_nonempty` | Summary、Scope、Design Baseline and Change、Requirement Traceability、Design Index、Artifact Set Manifest、Lifecycle Applicability、Gate | 必须包含支持当前 DSN 的有效内容 |
-| `empty_allowed` | Design Decisions、Design Concern Assessment、Domain Detail Records、Open Items、Evidence、Exceptions | 没有条目时使用本节或 Core 规定的唯一空表示，不得创建伪记录 |
-
-`empty_allowed` 表示合法空集合，不表示该章节 Disposition 为 `n/a`。Design Decisions、Design Concern Assessment 或 Domain Detail Records 无条目时，章节正文固定写作 `None — <客观原因>`；Core 已定义空行的章节继续使用 Core 表格。Lifecycle Applicability 必须始终逐项填写。
+Design Decisions 没有条目时固定写作 `None — <客观原因>`；不得为满足模板虚构决策。Core 已定义空行的章节继续使用 Core 空表示。
 
 ## Design Baseline and Change
 
 DSN 必须明确当前状态、目标状态和两者之间的设计变化，避免 PLN、IMP 或 VFY 重新猜测范围。
 
 ```markdown
-| Change Type | Current Baseline Reference | Target State Summary | Impact Summary |
+| Change Type | Current Baseline References | Target State Summary | Impact Summary |
 |---|---|---|---|
 | incremental | | | |
 
-| Change ID | Object or Boundary | Change | Baseline Reference | Baseline State | Target State | Affected Domains |
+| Change ID | Object or Boundary | Change | Baseline References | Baseline State | Target State | Affected Domains |
 |---|---|---|---|---|---|---|
 | CHG-001 | | modify | | | | |
 ```
@@ -189,13 +168,14 @@ DSN 必须明确当前状态、目标状态和两者之间的设计变化，避�
 - `new` 可以将 Current Baseline 标记为 `N/A`，但必须说明不存在有效基线的原因；
 - `incremental` 的 Baseline 与 Change Set 必须足以还原 Target State；
 - `reuse` 必须引用准确基线，并记录其对当前 Requirement 的适配结论和 Evidence；
-- Project Context Contract 未定义前，Baseline 使用不可变 Artifact Reference 或 Evidence，不得引用会静默变化的描述；
-- 当前 Scope 内的 Change Set 必须完整枚举；未列入 Change Set 的 Baseline 内容保持不变；
-- 每个 Change Item 必须具有准确 Baseline Reference；`new` 项使用 `N/A` 并说明没有既有对象；
+- Project Context Contract 未定义前，Baseline 使用不可变 Artifact Reference、Core VCS Locator（只用于版本化产品内容）或 Evidence；可移动引用无效；
+- 当前 Scope 内的 Change Set 必须完整枚举，未列入 Change Set 的 Baseline 内容保持不变；
 - `Scope + Baseline + Change Set` 必须唯一确定 Target State；
-- `Impact Summary` 只是从 Change Set、Concern Assessment 和 Design Applicability Matrix 派生的阅读摘要，不得引入这些结构化记录中不存在的新影响；
-- Change Set 只描述设计对象和变化，不包含任务、顺序、工期或实施负责人。
-- 当 DSN 是直接 Binding 来源、建议 `PLN=n/a/waived` 且 `IMP=required` 时，每个 Change Item 的 `Object or Boundary` 必须使用 PLN Scope Token 语法；全部 Change Item 的并集是直接 IMP Execution Scope，且必须只包含一个 `resource:<versioned-resource-id>`。无法确定、涉及多个版本化 Resource 或需要协调时，PLN 必须为 `required`。
+- `Target State Summary` 只是该唯一结果的阅读摘要，不是独立权威来源；多个 DSN 的 Target State 共同进入 Delivery Scope 时必须可共同成立，冲突进入阻塞 Open Item；
+- `Impact Summary` 是 Change Set 与 Matrix 的阅读摘要，不得引入新的影响；
+- Change Set 只描述设计对象和变化，不包含任务、顺序、工期或实施负责人；
+- 两处 `Affected Domains` 都使用固定 Catalog Code `DOM-<DOMAIN-NO>`，按 Design Index 顺序以 `, ` 分隔；该字段是分类集合，不是 Member Reference。只有 `required` Domain 的内容位置才使用完整 `DSN-ID@Revision/DOM-<DOMAIN-NO>`；
+- 当 DSN 是直接 Binding 来源、建议 `PLN=n/a/waived` 且 `IMP=required` 时，每个 Change Item 的 `Object or Boundary` 使用 PLN Scope Token；全部 Change Item 的并集只能包含一个 `resource:<versioned-resource-id>`，否则 PLN 必须为 `required`。
 
 ## Requirement Traceability
 
@@ -207,15 +187,12 @@ DSN 必须明确当前状态、目标状态和两者之间的设计变化，避�
 
 规则：
 
-- 每个 Requirement Item 必须至少关联一个稳定 Design Item 或 Member Reference；
-- 当前 DSN Scope 内的每个 Acceptance Criterion 必须能够追踪到 Design Item 和后续 VFY Objective；无需独立 Design Item 时，`Design Item or Member References` 填写 `N/A`，`N/A Reason` 填写客观原因，但仍必须映射 VFY Objective；正常映射的 `N/A Reason` 固定写 `N/A`；
-- `Source References` 可以引用 Requirement、Acceptance Criterion、Goal（含 Intended Use）、Affected Party 中的 Stakeholder Need、Constraint 或 Baseline；Operational Context 只作为补充 Evidence 或 Constraint，不单独充当 Validation 目标；
-- 不需要设计的 Requirement Item 必须明确说明原因；
+- 当前 DSN Scope 内的每个 Requirement Item 必须至少关联一个稳定 Design Item 或 Member Reference；
+- 当前 Scope 内的每个 Acceptance Criterion 必须映射到 Design Item 和后续 VFY Objective；无需独立 Design Item 时填写准确 `N/A Reason`，但仍须映射 VFY Objective；
 - 多值字段使用 Core Reference Set；跨 Artifact 引用使用准确 `Artifact ID@Revision#Item ID`；
-- v0.1 不允许用可改名的 Markdown 标题或自然语言章节名充当引用；跨文件设计结果使用完整 Member Reference，文件内结果使用已分配 Item ID；
 - Design Item、Decision 和 VFY Point 必须能够反向查到 Requirement、Acceptance Criterion、Goal、约束或准确 Baseline；
 - 无上游来源或 Baseline 依据的孤立设计内容不能通过 Gate；
-- DSN 不得创建未经过 REQ 确认的新业务规则。
+- DSN 不得创建未经 REQ 确认的新业务规则。
 
 ## Design Decisions
 
@@ -228,207 +205,117 @@ DSN 必须明确当前状态、目标状态和两者之间的设计变化，避�
 规则：
 
 - Design Decision 使用 `DEC-001` 顺序编号；
-- 不得只写最终方案而完全不记录依据；
-- 强制约束必须引用 Requirement 或 Evidence；
-- 设计偏好不得伪装成 Requirement；
-- 所有需要比较和确认的技术选型统一记录为 Design Decision；
-- 选型结果由受影响的 Domain 引用同一个 `DEC-ID`，不得在多个 Domain 重复选择过程；
-- 项目规范已经强制指定的技术属于既有约束，只需准确引用，不得虚构候选方案重新比较；
-- `Affected Domains` 使用注册表中的英文标准名，以 `, ` 分隔、去重并按 Design Applicability Matrix 固定顺序排列；同一选型影响多个 Domain 时必须完整列出；
-- Project Context Contract 闭合后，已生效且会被后续重复使用的项目级 Decision，可以由 Context 登记完整 `DSN-ID@Revision#DEC-ID` 引用；原 DSN 仍是唯一权威来源；
-- Design Pattern 不是独立 Domain，Pattern 名称本身也不是选择依据；
-- 局部、可逆且不影响稳定边界或质量属性的实现方式，可以留给 IMP 在项目约束内决定；
-- 改变系统、组件、稳定 Contract、扩展点或质量属性的 Pattern，必须记录为 Design Decision；
-- 存在可行的直接实现时，应将其作为候选方案；选择更复杂方案时，选择依据必须说明直接实现为何不足以及新增代价；
-- 项目规范已经强制采用的 Pattern 属于既有约束，只需准确引用，不得重复进行虚假选型；
-- 只有存在真实选择时才创建新 Decision，不得为了通过模板虚构候选方案；没有新 Decision 时使用本 Spec 的唯一 `None — <客观原因>` 空表示，并在原因中引用覆盖当前设计的既有 Decision 或强制约束。
-- 一个 DSN Artifact 至少包含一个可追踪的 Design Result；当 REQ 与准确 Baseline 已完整确定结果，且不存在独立设计选择、边界变化、动态规则或质量影响时，DSN 应为 `n/a`，不创建空 DSN。固定静态内容只是该情形的一个示例。
+- 不得只写最终方案而不记录选择依据；
+- 强制约束必须引用 Requirement 或 Evidence，设计偏好不得伪装成 Requirement；
+- 技术选型统一记录为 Design Decision，并由受影响 Domain 引用同一个 `DEC-ID`；
+- 项目规范已经强制指定的技术属于既有约束，只需准确引用；
+- Design Pattern 不是独立 Domain；只有改变系统、组件、稳定 Contract、扩展点或质量属性时才记录为 Decision；
+- 局部、可逆且不影响稳定边界或质量属性的实现方式留给 IMP；
+- 存在直接实现时，应将其作为候选方案；选择更复杂方案时必须说明直接实现为何不足以及新增代价；
+- 只有存在真实选择时才创建 Decision；
+- 一个 DSN Artifact 至少包含一个可追踪 Design Result。若 REQ 与准确 Baseline 已完整确定结果且不存在设计义务，DSN 应为 `n/a`，不创建空 DSN。
 
 ## Scope and Simplicity
 
-- 每项设计内容必须追踪到 Requirement、准确 Baseline 或已确认约束；Project Context Contract 闭合前，Context 不能作为可验证来源，只能改用不可变 Artifact Reference 或 Evidence；
+- 每项设计内容必须追踪到 Requirement、准确 Baseline 或已确认约束；
 - 不得增加未被要求的功能、配置能力、扩展点或抽象层；
-- 不得顺手重构、替换或优化当前范围之外的内容；
-- 发现相邻问题时，只有其阻塞当前目标或改变当前风险时才能进入当前 DSN，否则仅报告，不纳入设计；
-- 存在歧义、缺失或多种合理解释时必须显式记录，不得静默选择后继续扩张；
+- 不得顺手重构、替换或优化范围外内容；
+- 相邻问题只有阻塞当前目标或改变当前风险时才进入当前 DSN，否则只报告；
+- 歧义、缺失或多种合理解释必须显式记录，不得静默选择后扩张；
 - 采用比直接实现更复杂的方案时，必须说明简单方案为何不足；
 - 每项关键 Design Decision 必须具有对应 VFY Point；
-- 最小设计表示满足全部 Requirement 和适用质量约束的最小充分设计，不表示省略必要的安全、可靠性或验证工作。
+- 最小设计是满足 Requirement 和适用质量约束的最小充分设计，不表示省略必要的安全、可靠性或验证工作。
 
-## Design Concern Assessment
+## 设计适用性矩阵 Design Applicability Matrix
 
-先记录影响事实，再依据 Core Disposition 顺序生成 Design Applicability Matrix，避免同一事实在不同执行过程中被直接解释成不同 Disposition。
+主文件必须保留下列 16 行，顺序、中文名称和英文标准名称不得改变。
 
-```markdown
-| Concern ID | Category | Source Reference | Related Change or Design Reference | Concern or Changed Object | Impact | Baseline Reference | Deviation | Mapped Domains | Evidence Reference |
-|---|---|---|---|---|---|---|---|---|---|
-| CON-001 | contract | REQ-...@1#R-001 | CHG-001 | | yes | | | Interfaces and Integration | EVD-001 |
-```
-
-规则：
-
-- `Category` 使用 `behavior`、`interaction`、`structure`、`contract`、`data`、`quality`、`runtime`、`verification` 或 `other`；
-- `Impact` 使用 `yes`、`no` 或 `unknown`；`unknown` 形成阻塞 Open Item；
-- `Related Change or Design Reference` 引用 `CHG-ID`、`DEC-ID`、`DDR-ID`、Domain Item、Member Reference 或准确 Baseline；没有新 Change 的复用型 Concern 使用 Baseline 或 Member Reference，不引用自然语言章节名；
-- 已由 Requirement、Change 或 Decision 直接表达且能够作为 Matrix Basis 的影响不再重复创建 Concern；只有跨领域、存在歧义、无法直接表达或需要独立评估的影响才创建记录。没有独立 Concern 时使用统一空表示；
-- `Mapped Domains` 使用注册表英文标准名，以 `, ` 分隔、去重并按 Matrix 固定顺序排列；`yes` 必须映射到一个或多个已注册 Domain，无法映射时只填写 `unsupported` 并阻塞 Gate；
-- Baseline 已完整覆盖且无偏差时，相关 Domain 可以为 `embedded`；存在独立新增设计义务或 Baseline 偏差时为 `required`；
-- Concern Assessment 记录 Applicability 的输入事实和分类；Change Set 记录权威设计变化，Requirement Traceability 记录其来源与 VFY 去向，不再维护重复的 Impact Register。
-
-## Design Applicability Matrix
-
-| 分组 Group | 设计领域 Design Domain | 处置 Disposition | 完成状态 Completion | 责任角色 Responsible Role | 内容引用 Content Reference | 适用性依据引用 Applicability Basis References | Domain Gate Record Reference |
+| 分组 Group | 设计领域 Design Domain | 处置 Disposition | 完成状态 Completion | 责任角色 Responsible Role | 内容引用 Content Reference | 适用性依据引用 Applicability Basis References | 不适用或豁免说明 N/A or Waiver Reason |
 |---|---|---|---|---|---|---|---|
-| 行为设计 Behavior | 流程与状态 Workflow and State | pending | not_started | | | | |
-| 行为设计 Behavior | 用户体验与交互 UX and Interaction | pending | not_started | | | | |
-| 行为设计 Behavior | 界面与内容 UI and Content | pending | not_started | | | | |
-| 行为设计 Behavior | 可访问性与国际化 Accessibility and Internationalization | pending | not_started | | | | |
-| 技术设计 Technical | 系统与架构 System and Architecture | pending | not_started | | | | |
-| 技术设计 Technical | 组件与模块 Components and Modules | pending | not_started | | | | |
-| 技术设计 Technical | 接口与集成 Interfaces and Integration | pending | not_started | | | | |
-| 技术设计 Technical | 数据设计 Data Design | pending | not_started | | | | |
-| 质量属性 Quality | 安全、隐私与合规 Security, Privacy and Compliance | pending | not_started | | | | |
-| 质量属性 Quality | 性能与容量 Performance and Capacity | pending | not_started | | | | |
-| 质量属性 Quality | 可靠性与恢复 Reliability and Recovery | pending | not_started | | | | |
-| 质量属性 Quality | 兼容与迁移 Compatibility and Migration | pending | not_started | | | | |
-| 质量属性 Quality | 可维护性与扩展性 Maintainability and Extensibility | pending | not_started | | | | |
-| 运行设计 Operations | 部署与配置 Deployment and Configuration | pending | not_started | | | | |
-| 运行设计 Operations | 可观测性与可运维性 Observability and Operability | pending | not_started | | | | |
-| 验证设计 Verification | 可验证性与 VFY 策略 Verifiability and VFY Strategy | pending | not_started | | | | |
+| 行为设计 Behavior | 流程与状态 Workflow and State | pending | not_started | | N/A | | Pending |
+| 行为设计 Behavior | 用户体验与交互 UX and Interaction | pending | not_started | | N/A | | Pending |
+| 行为设计 Behavior | 界面与内容 UI and Content | pending | not_started | | N/A | | Pending |
+| 行为设计 Behavior | 可访问性与国际化 Accessibility and Internationalization | pending | not_started | | N/A | | Pending |
+| 技术设计 Technical | 系统与架构 System and Architecture | pending | not_started | | N/A | | Pending |
+| 技术设计 Technical | 组件与模块 Components and Modules | pending | not_started | | N/A | | Pending |
+| 技术设计 Technical | 接口与集成 Interfaces and Integration | pending | not_started | | N/A | | Pending |
+| 技术设计 Technical | 数据设计 Data Design | pending | not_started | | N/A | | Pending |
+| 质量属性 Quality | 安全、隐私与合规 Security, Privacy and Compliance | pending | not_started | | N/A | | Pending |
+| 质量属性 Quality | 性能与容量 Performance and Capacity | pending | not_started | | N/A | | Pending |
+| 质量属性 Quality | 可靠性与恢复 Reliability and Recovery | pending | not_started | | N/A | | Pending |
+| 质量属性 Quality | 兼容与迁移 Compatibility and Migration | pending | not_started | | N/A | | Pending |
+| 质量属性 Quality | 可维护性与扩展性 Maintainability and Extensibility | pending | not_started | | N/A | | Pending |
+| 运行设计 Operations | 部署与配置 Deployment and Configuration | pending | not_started | | N/A | | Pending |
+| 运行设计 Operations | 可观测性与可运维性 Observability and Operability | pending | not_started | | N/A | | Pending |
+| 验证设计 Verification | 可验证性与 VFY 策略 Verifiability and VFY Strategy | pending | not_started | | N/A | | Pending |
 
-固定章节名、分组名、Domain 名、公共字段和公共枚举同时提供中文名称与英文标准名称；Domain 专属说明以中文为主，保留稳定英文术语，不要求逐句双语复制。
+### Disposition 与 Completion
 
-本矩阵是 `sdlc-ai-spec` 的设计承载分类，不声称穷尽任何外部质量模型。发现无法映射到已注册 Domain 的设计或质量关注时，必须进入阻塞 Open Item，直到映射到现有 Domain 或由后续扩展机制登记。
+当前 Artifact Contract 的 Domain Disposition 只允许 `required`、`n/a`、`waived` 或 `pending`。不开放 `embedded`，避免跨文件 Host、内容摘要和主文件摘要形成循环；确需复用既有设计时，通过 Baseline Reference 减少重复内容，但只要当前变化仍有设计义务，该 Domain 就是 `required`。
 
-### Completion
-
-| 值 Value | 含义 Meaning |
-|---|---|
-| `not_started` | 尚未开始 |
-| `in_progress` | 正在设计 |
-| `complete` | 必填内容完整、适用规则满足且 Domain Gate 已关闭 |
-| `not_applicable` | Domain 客观不适用 |
-| `waived` | Domain 适用但经授权未执行 |
-
-Completion 是根据 Disposition、Content Reference 和 Domain Gate 派生的状态，不由生成者自由选择：
-
-| 条件 Condition | Completion |
-|---|---|
-| Disposition 为 `pending` | `not_started` |
-| `required` 且尚无 `DOM-ID`，或 `embedded` 且尚无有效 `DDR-ID` | `not_started` |
-| 复合 Domain 为 `n/a` 或 `waived`，但尚无有效 `DDR-ID` | `in_progress` |
-| 已有 Content Reference，但 Domain Gate 为 `pending`、`fail`，或任一绑定 Digest 已失效 | `in_progress` |
-| `required` 或 `embedded`，且 Domain Gate 为 `pass` 或 `pass_with_exception` | `complete` |
-| Disposition 为 `n/a`，且复合 Domain 已有有效 DDR 或当前 Domain 非复合 | `not_applicable` |
-| Disposition 为 `waived`，且复合 Domain 已有有效 DDR 或当前 Domain 非复合 | `waived` |
-
-### 一致性规则
-
-- `required` 最终必须对应 `complete`，Content Reference 填写完整 `DSN-ID@Revision/DOM-<DOMAIN-NO>` Member Reference；
-- `embedded` 最终必须对应 `complete`，Content Reference 填写完整 `DSN-ID@Revision#DDR-<DOMAIN-NO>-001` Item Reference；具体 Host 只在 DDR 保存；
-- `n/a` 必须对应 `not_applicable`：非复合 Domain 的 Content Reference 填写 `N/A`，复合 Domain 填写完整 `DSN-ID@Revision#DDR-<DOMAIN-NO>-001` Item Reference；Applicability Basis References 保存客观依据；
-- `waived` 必须对应 `waived`：非复合 Domain 的 Content Reference 填写 `N/A`，复合 Domain 填写完整 `DSN-ID@Revision#DDR-<DOMAIN-NO>-001` Item Reference；Applicability Basis References 必须引用有效 Exception；
-- `pending`、`not_started` 或 `in_progress` 不能进入 `ready` 或 `ready_with_exception`；
-- `required` 和 `embedded` Domain 必须填写 Matrix 的 `Responsible Role`；Host Owner 只能作为确定该角色的依据，不能替代该字段；
-- 所有核心 Domain 必须在矩阵中恰好出现一次；
-- 核心 Domain 不允许删除或改名；
-- Domain 适用性由 Requirement 和影响范围决定，不能因为参与者选择不阅读、不熟悉该领域或直接接受 AI 设计而标记为 `n/a`；
-- 责任角色表示对设计结果和下游衔接负责，不表示该角色必须逐项阅读 Domain 子文件；
-- 责任角色是 Design Owner，不自动成为 PLN 或 IMP 的任务负责人；
-- 最终确认表示确认者接受当前 Artifact Set 及其风险，不表示所有 Domain 内容均经过人工逐行审阅；
-- 项目扩展 Domain 必须有中英文名称和固定子模板；
-- Applicability Basis References 保存 Disposition 的输入依据：优先引用 `CON-ID` 或 `CHG-ID`，也可以引用 Requirement、Baseline、Evidence 或 Exception，并使用 Core Reference Set；
-- Domain Gate Record Reference 是派生字段：只有 `required` 或 `embedded` 填写 `DGR-ID`；`n/a` 和 `waived` 填写 `N/A`，不得在 Matrix 复制逐项 Gate Evidence；
-- Domain Gate 为 `fail` 时，Completion 仍为 `in_progress`，同时父 Artifact Gate 必须为 `fail`；只有有效的 `pass` 或 `pass_with_exception` 才能派生 `complete`。
-
-### 产物集清单 Artifact Set Manifest
-
-```markdown
-| Member ID | Type | Domain | Domain Spec Reference or Digest | Path or Reference | Media Type | Purpose | Design Input Digest | SHA-256 Digest | Empty Reason |
-|---|---|---|---|---|---|---|---|---|---|
-| DGC-001 | control | Multiple | N/A | controls/domain-gates.md | text/markdown | Domain Gate Records | N/A | | N/A |
-| DOM-110 | domain | Workflow and State | drafts/200-dsn-domains/110-workflow-state.md@sha256:... | domains/110-workflow-state.md | text/markdown | | | | |
-```
-
-Manifest 只登记父 DSN 之外的 Artifact Set 成员。DSN 注册 `DOM-<DOMAIN-NO>` 作为 Domain Member ID、`DGC-001` 作为全部 DGR 的 control member，其他 Supporting Artifact 继续使用 `SUP-001`；同一逻辑成员跨 Revision 保持 ID。Domain Markdown 不再包含 Gate，`Design Input Digest` 与其原始字节 SHA-256 相同；图片、Schema 和其他不含 Gate 派生内容的成员也使用原始字节 SHA-256；control member 是 Gate 派生结果，Design Input Digest 固定为 `N/A`。Domain Member 必须填写其 Spec 的 Spec Reference，其他成员填 `N/A`。
-
-`DGC-001` 在首次 Domain Gate Attempt 前登记并在计算 Parent Design Input Digest 时保留，原始 SHA-256 暂时留空；全部 DGR 完成后再填写。只要当前或历史 DGR 存在，该成员就不得删除。frozen Revision 中的路径或引用、Spec、Design Input Digest 和原始字节 SHA-256 必须固定；无成员时按 Core 空清单规则填写。
-
-### 领域明细记录 Domain Detail Records
-
-`embedded` 不创建 Domain 子文件，但必须在主文件中保存一个固定 Domain Detail Record Block；准确 Host 只作为引用，不能代替该记录。非 `required` 的复合 Domain 使用一个 Block，并按子规范固定顺序为每个 Subdomain 保存一行，不在 Matrix 单元格中拼接自由文本：
-
-```markdown
-### DDR-<DOMAIN-NO>-001
-
-| Domain Spec Reference or Digest | Domain or Subdomain | Disposition | Obligation or Impact | Applicability Basis References | Baseline or Host Reference | Host Content Digest | Deviation or N/A Reason | VFY Point References | Exception References |
-|---|---|---|---|---|---|---|---|---|---|
-| drafts/200-dsn-domains/230-interfaces-integration.md@sha256:... | Interfaces and Integration | embedded | | CON-001 | | | none | | |
-
-| Supporting Member Reference | Purpose |
-|---|---|
-| DSN-...@1/SUP-001 | |
-
-<仅当 Domain Spec 明确定义额外 embedded 表时追加；不得自由增加字段>
-```
+| Disposition | 使用条件 | Completion | Content Reference | 说明字段 |
+|---|---|---|---|---|
+| `pending` | 事实不足，暂不能判断 | `not_started` | `N/A` | `Pending — <OI-ID>` |
+| `required` | 当前变化存在该领域设计义务 | `not_started` / `in_progress` / `complete` | 完整 `DSN-ID@Revision/DOM-<DOMAIN-NO>` | `N/A` |
+| `n/a` | 当前变化客观不存在该领域义务 | `not_applicable` | `N/A` | 客观原因 |
+| `waived` | 义务存在但经授权不执行 | `waived` | `N/A` | 有效 `EX-ID` 与原因 |
 
 规则：
 
-- Domain Detail Record ID 使用 `DDR-<DOMAIN-NO>-001`，在父 DSN Artifact 内稳定且不得复用；每个简单 `embedded` Domain 创建一个 Block，每个非 `required` 的复合 Domain 也只创建一个 Block；
-- 复合 Domain Block 必须包含子规范登记的全部 Subdomain，每个 Subdomain 恰好一行并按子规范固定顺序排列；不得为每个 Subdomain 再创建相互冲突的 DDR ID；
-- 每个 Block 从 `### DDR-...` 标题开始，到下一个三级或更高层级标题之前结束；整个 Block 使用 UTF-8、LF 且无 BOM 的原有字节计算 Domain Control Input Digest；
-- v0.1 的 Host 只允许指向另一不可变 Artifact 的完整 Item Reference、当前 Artifact Set 中已登记 Design Input Digest 的 Member，或具有内容摘要的不可变外部引用；
-- 父 DSN 主文件中的章节或 Item 不能作为 Host：当前 Contract 未定义不引入摘要循环的主文件 Item Digest。若设计结果只存在于父主文件，应将内容移入已登记 Member 并引用，或把该 Domain 改为 `required`；
-- `Host Content Digest` 使用被引用 Artifact Item 所属 Revision 的 Control Input Digest、Member 的 Design Input Digest，或外部不可变内容摘要；
-- 所有参与该 embedded 设计的 Supporting Member 必须在 Block 内使用完整 Member Reference 并按 Member ID 升序登记；其 Design Input Digest 只从 Manifest 解析，不在 DDR 重复维护；
-- `embedded` 只有在 Block 完整覆盖适用义务、没有未处理偏差、VFY Point 可追踪且同版 Domain Gate 已关闭时才能标记为 `complete`；
-- 复合 Domain 的 `n/a` Subdomain 保存原因和 Evidence，`waived` Subdomain 保存 Exception；聚合 Domain 为 `required` 时使用 Domain 子文件中字段相同的 Subdomain Control Record，其他聚合结果使用父主文件的单一 DDR Block；非复合顶层 Domain 的 `n/a` 或 `waived` 只在 Matrix 保存，不创建 Detail Block；
-- 通用 DDR 表是 `embedded` 的默认最小 Contract，因为实际设计结果必须已由准确 Host 完整承载；Domain Spec 只有在通用字段不足时才增加固定 embedded 表；
-- 需要记录新的 Domain 专属设计内容、但 Domain Spec 没有固定 embedded 字段时，该 Domain 必须改为 `required`，不得自由增加字段；当前 Verifiability Domain 明确定义了额外最小表。
+- 必须按 Core 固定顺序判断 Disposition，不能因为工作量小、不熟悉或不准备阅读而判定 `n/a`；
+- `required` 无子文件时为 `not_started`，子文件已创建但内容或父 Gate 子检查未完成时为 `in_progress`，全部完成且子检查通过时为 `complete`；
+- `n/a` 必须有准确 Basis Reference 和客观原因；
+- `waived` 必须引用父 DSN Exceptions 中有效的 `active` 或 `carried` Exception；
+- `pending` 必须引用 Open Item，不能通过 Gate；
+- Responsible Role 只在 `required` 时必填，表示确保内容完整的责任，不规定实际作者；
+- 不得创建未注册 Domain、自由增列或删除固定行；无法映射的关注进入阻塞 Open Item；
+- Matrix 是顶层 Domain 适用性和完成状态的唯一权威；顶层原因、Exception 和 Content Reference 不在其他控制表重复登记。140 与 310 的子领域处置只保存在紧随 Matrix 的固定 Composite Domain Subdomain Applicability 表，不在 Domain 子文件重复。
 
-### Parent Design Input Digest
+### 复合 Domain 子领域适用性 Composite Domain Subdomain Applicability
 
-Parent Design Input Digest 在执行任何 Domain Gate 前计算，按 Core Control Input Digest 的文本规则处理父 DSN 主文件，并使用以下额外规则：
+主文件固定保留下列 5 行，使 140 和 310 即使聚合为 `n/a`、`waived` 或 `pending`，逐子领域判断仍可复核。
 
-1. Design Applicability Matrix 的 `Completion` 和 `Domain Gate Record Reference` 单元格视为空值；Disposition、Content Reference、Applicability Basis References 等设计输入仍保留；
-2. Artifact Set Manifest 的 `SHA-256 Digest` 单元格视为空值，`Design Input Digest`、Domain Spec Reference 和其他成员字段仍保留；`DGC-001` 行必须已经登记且其 Design Input Digest 为 `N/A`；
-3. 其他主文件内容均保留原有顺序和字节。
+| 复合 Domain 分类码 Composite Domain Catalog Code | 子领域 Subdomain | Disposition | Applicability Basis References | 不适用、豁免或待确认说明 N/A, Waiver or Pending Reason | Exception References |
+|---|---|---|---|---|---|
+| DOM-140 | 可访问性 Accessibility | pending | | Pending — <OI-ID> | N/A |
+| DOM-140 | 国际化 Internationalization | pending | | Pending — <OI-ID> | N/A |
+| DOM-310 | 安全 Security | pending | | Pending — <OI-ID> | N/A |
+| DOM-310 | 隐私 Privacy | pending | | Pending — <OI-ID> | N/A |
+| DOM-310 | 合规 Compliance | pending | | Pending — <OI-ID> | N/A |
 
-任一 Domain、Host、Schema、原型或其他设计输入发生变化，其 Design Input Digest 或父文件内容随之变化，所有绑定旧 Parent Design Input Digest 的 Domain Gate Record 均失效。
+规则：
 
-### Domain Gate Control Member
+- 行、名称和顺序固定，不得删除、重排或拆成多个表；
+- Disposition 只使用 `required`、`n/a`、`waived` 或 `pending`；
+- `required` 必须填写准确 Basis，说明写 `N/A`，Exception 写 `None`；
+- `n/a` 必须填写准确 Basis 与客观原因，Exception 写 `N/A`；
+- `waived` 必须填写准确 Basis、原因和父 DSN 中有效的 Exception Reference；
+- `pending` 必须引用阻塞 Open Item，不能通过 Gate；
+- DOM-140 和 DOM-310 的顶层 Matrix Disposition 分别由其固定行按 `pending → required → waived → n/a` 取第一个满足的结果；子领域 Waiver 即使未成为顶层 Disposition，仍必须传播到父 Exceptions。只有不存在 `fail`、`pending` 且其他必要 Check 均已关闭时，父 Artifact 才按 Core 由该未关闭 Exception 派生 `ready_with_exception`。
 
-所有 `required` 和 `embedded` Domain 的完整 Gate Record 固定保存在 `DGC-001` 对应的 `controls/domain-gates.md`；Domain 子文件只保存设计输入。文件使用以下结构：
+## 产物集清单 Artifact Set Manifest
+
+Artifact Set Manifest 是 Core Supporting Artifact Manifest 的 DSN 扩展，不再另建第二份清单。
 
 ```markdown
-# Domain Gate Records
-
-## DGR-<DOMAIN-NO>-001
-
-| Gate Record ID | Parent DSN Revision | Parent Design Input Digest | Domain Evaluation Contract Set | Domain Control Input Digest | Result | Exception References | Evaluator | Evaluated At |
+| Member ID | Type | Domain | Domain Spec Reference or Digest | Path or Reference | Media Type | Purpose | SHA-256 Digest | Empty Reason |
 |---|---|---|---|---|---|---|---|---|
-| DGR-<DOMAIN-NO>-001 | 1 | | | | pending | None | | |
-
-| Check ID | Result | Evidence or Notes |
-|---|---|---|
-| DSN-DG-<DOMAIN-NO>-<CHECK-NO> | pending | |
+| DOM-110 | domain | Workflow and State | drafts/200-dsn-domains/110-workflow-state.md@sha256:... | domains/110-workflow-state.md | text/markdown | Domain Design | | N/A |
+| SUP-001 | supporting | Multiple | N/A | assets/flow.svg | image/svg+xml | Design Diagram | | N/A |
 ```
 
 规则：
 
-- Domain Gate Record Reference 必须指向完整记录，不能只填写聚合结果或单条 Evidence；
-- 每次重新执行 Domain Gate 都分配下一个 `DGR-<DOMAIN-NO>-<NNN>`，旧 Attempt 保留在 control member 中，不能原地改写为新结果；
-- 完整记录必须包含该 Domain 全部适用 Check ID、逐项结果和 Evidence；
-- `Domain Evaluation Contract Set` 至少包含 Core Spec、DSN Phase Spec 和当前 Domain Spec；实际启用的 Extension Contract 也必须加入，并使用 Core Reference Set 语法；
-- Parent Design Input Digest 只保留已登记、原始 SHA 留空的 `DGC-001` Manifest 行；全部 DGR 写入后刷新 control member 原始 SHA，最终 Artifact Control Input Digest 通过 Manifest 绑定它，因此记录变化会使人工确认和父 Artifact Gate 失效；
-- Design Applicability Matrix 对 `required` 和 `embedded` 只引用 `DGR-ID`；逐项 Evidence 只由 Gate Check 引用，避免多处复制；
-- 每个 Domain 全局编号最大的 DGR 是唯一 Current Attempt；只有它同时匹配当前 Parent DSN Revision、Parent Design Input Digest、Domain Evaluation Contract Set 和 Domain Control Input Digest 时才有效；
-- Matrix 只能引用 Current Attempt。最新 Attempt 的输入组合不匹配、Result 为 `fail` 或 `pending` 时，Domain Gate 无效；不得向后搜索或恢复更早的 `pass`，重新执行必须分配更大的 DGR ID；
-- 任一 Current Domain Gate 为 `pass_with_exception`，或任一 Subdomain 存在未关闭 Waiver，其 Exception 必须进入 Parent Exception Set，父 Gate 只能为 `pass_with_exception`。
+- Manifest 只登记父主文件以外的真实成员；
+- required Domain 使用固定 `DOM-<DOMAIN-NO>`，Supporting Member 使用 `SUP-001` 顺序编号；
+- Domain Member 必须填写对应 Domain Spec Reference；其他 Member 填 `N/A`；
+- `SHA-256 Digest` 对成员原始字节计算；父 Artifact 的 Core Control Input Digest 通过 Manifest 绑定全部成员；
+- frozen Revision 的成员关系、路径、Domain Spec 和摘要必须固定；
+- 无成员时使用 Core 空清单规则。由于存在 DSN 时 Verifiability Domain 固定为 required，DSN Artifact Set 至少包含一个 Domain Member。
 
 ## Domain 子文件
 
-每个 `required` Domain 使用相同的精简外壳，具体设计结果使用该 Domain 的固定专属模板：
+每个 `required` Domain 使用相同外壳，Domain Spec 只定义 `Design Result` 内的固定专属表格和规则。
 
 ```markdown
 # <中文名称 English Name>
@@ -438,15 +325,16 @@ Parent Design Input Digest 在执行任何 Domain Gate 前计算，按 Core Cont
 | 父 DSN ID Parent DSN ID | DSN-... |
 | Requirement References | REQ-...@1#R-001 |
 | Decision References | DEC-001 |
-| Supporting Member References | None |
 
-<当前 Domain 的固定专属模板，从 Design Result 开始>
+<当前 Domain Spec 的固定专属模板，从 `## 设计结果 Design Result` 开始>
 
 ## 约束与影响 Constraints and Impact
 
-| 类型 | 内容 | 影响的下游 Phase |
-|---|---|---|
-| | | |
+| ID | 类型 Type | 内容 Content | 影响的下游 Phase Affected Downstream Phase | Reference |
+|---|---|---|---|---|
+| CIM-<DOMAIN-NO>-001 | constraint | | IMP | |
+
+以下 `VFY Points` 区块只适用于 110 至 420 Domain。510 已在专属 `VFY Objectives` 中直接汇总其他 required Domain 的 VFY Points，不再创建重复的 `VFP-510-*`。
 
 ## VFY 要点 VFY Points
 
@@ -454,46 +342,33 @@ Parent Design Input Digest 在执行任何 Domain Gate 前计算，按 Core Cont
 |---|---|---|---|---|
 | VFP-<DOMAIN-NO>-001 | | | | |
 
+## 证据引用 Evidence References
+
+| Evidence or Member Reference | Supports Item References | Purpose |
+|---|---|---|
+| None | N/A | No domain-specific Evidence references |
 ```
 
 规则：
 
-- 只创建 Disposition 为 `required` 的 Domain 子文件；
-- Domain 子文件按照 Design Applicability Matrix 的固定顺序编号；
-- `embedded` 通过矩阵引用 DDR，不重复完整 Domain 模板；DDR 保存适用义务、Host、偏差和 VFY Point；所有完整 DGR 只保存在 `DGC-001`；
-- 非复合 Domain 的 `n/a` 只在矩阵说明原因；复合 Domain 的 `n/a` 还必须在主文件创建单一 DDR Block，按固定子领域顺序保存各自原因与 Evidence；两者都不创建 Domain 子文件；
-- 非复合 Domain 的 `waived` 只在矩阵引用 Exception；复合 Domain 的 `waived` 还必须在主文件创建单一 DDR Block，按固定子领域顺序保存各自 Disposition 与 Exception；两者都不创建 Domain 子文件；
-- Domain 子文件不得重复 Summary、Scope 和候选方案；
-- 候选方案与选择依据统一记录在主文件 Design Decisions；
-- Domain 子文件必须显式记录稳定父 `DSN-ID`；准确 Revision 及成员摘要由父 Artifact Set Manifest 绑定，不只依赖目录关系；
-- Domain 中所有 Item ID 在父 DSN Artifact Set 内必须唯一，跨 Artifact 引用使用 `DSN-ID@Revision#Item-ID`；
-- VFY Point ID 使用 `VFP-<DOMAIN-NO>-<NNN>`，例如 `VFP-110-001`；
-- VFY Points 只描述需要观察的结果，不提前指定测试工具和执行计划；
-- DGR `Result` 使用 Aggregate Gate Result：`pending`、`pass`、`pass_with_exception` 或 `fail`；Domain 整体 `n/a` 和 `waived` 只保存在 Design Index，不伪装为 Domain Gate `pass`；
-- Gate Record ID 使用 `DGR-<DOMAIN-NO>-001`；每次重新执行都分配下一个 ID，旧 Attempt 作为历史记录保留且不得覆盖；Current Attempt 与 Matrix 引用使用上文相同的确定规则；
-- Domain 子文件的 Domain Control Input Digest 对完整原始字节计算；embedded Domain 继续对完整 DDR Block 计算；
-- `required` 或 `embedded` Domain 只有在 Current Attempt 不存在 `pending` 或 `fail`，且已绑定父 Revision、Parent Design Input Digest、当前 Domain Evaluation Contract Set 和 Domain Control Input Digest 时才能标记为 `complete`；
-- Parent Design Input Digest、Domain 内容、Domain Evaluation Contract Set 或 Domain Control Input Digest 任一变化后，旧 Gate Record 失效；
-- Domain Gate 为 `pass_with_exception` 时，Exception References 不得为空，并按父 Gate 聚合规则传播；
-- Domain 与 Subdomain 的 Exception 都使用父 DSN 主文件中的 `EX-ID`；Domain 子文件不得建立第二套 Exception 表；
-- 所有 `DSN-DG-<DOMAIN-NO>-<NNN>` 都是 Contract Integrity Check，只允许 `pass`、`fail` 或 `pending`。DGR 只为顶层 `required` 或 `embedded` Domain 生成；其中的内容 Check 只检查未被豁免的 Domain/Subdomain 义务，复合 Domain 内的 `n/a` 子领域只检查原因与 Evidence，`waived` 子领域只检查有效 Exception。顶层 `n/a` 或 `waived` 不生成 DGR，由 `DSN-G-007` 检查；不得把单个 Gate Check 直接标为 `n/a` 或 `waived`；
-- 不得创建未注册 Domain 子文件。
+- 只创建 Matrix 中 `required` 的 Domain 子文件；`n/a`、`waived` 和 `pending` 不创建；
+- Domain 子文件按照 Matrix 固定编号和文件名；
+- Domain 子文件不得重复 Summary、Scope、候选方案、Open Items、Exceptions 或 Gate；
+- 候选方案与选择依据只记录在父主文件 Design Decisions；
+- Domain 子文件必须记录稳定父 `DSN-ID`，准确 Revision 和成员摘要由 Manifest 绑定；
+- Relation 中的复数字段使用 Core Reference Set；没有 Design Decision 时 `Decision References` 写 `None`；
+- Domain Item ID 在父 Artifact Set 内必须唯一；跨 Artifact 引用使用完整 `DSN-ID@Revision#Item-ID`；
+- 110 至 420 Domain 的 VFY Point 使用 `VFP-<DOMAIN-NO>-<NNN>`；只描述需要观察的结果，不提前指定测试工具和执行计划；510 不创建 `VFP-510-*`；
+- Evidence 只保存在父 DSN Evidence 表或 Supporting Member，子文件仅引用，不复制 Evidence 元数据；
+- 没有 Domain 专属 Evidence 引用时只保留固定 `None` 行；存在引用时删除该行；
+- Domain 整体 required 但某个固定子章节不适用时保留标题并写 `N/A — <客观原因>`；不得保留空白占位行；
+- 140 与 310 是复合 Domain。逐子领域处置始终保存在父主文件的固定 Composite Domain Subdomain Applicability 表；顶层为 `required` 时创建一个 Domain 子文件承载详细设计，其他处置不创建子文件。
 
-Domain 整体适用但某个可选子章节不适用时，保留该子章节标题，以固定文本 `N/A — <客观原因>` 代替整张空表。仅个别非 Reference 字段不适用时，该单元格写作 `N/A — <客观原因>`；Reference 字段继续按 Core 固定为精确 `N/A`，原因由相邻 Reason 字段或当前子章节文本承载。当同一行的固定枚举已唯一决定互斥字段不适用时，互斥字段也可以只写 `N/A`，原因由该枚举承担。不得保留空白占位行或把原因任意写入其他字段。
+### 复合 Domain 子领域规则
 
-### Parent Exception Set
-
-Parent Exception Set 是父 DSN 主文件 `Exceptions` 表中全部 `active` 和 `carried` 的本地 `EX-ID`，去重后按编号升序排列。它是确定性派生集合，不另建第二张人工维护的表。
-
-- 与当前 Design Scope 相交的上游未关闭 Exception 必须先在父表建立 `carried` 记录并保存 Origin Exception Reference；只有可确定性证明不相交的记录可以排除，无法确定时仍按相关处理；
-- Matrix、DDR 和 Current DGR 只能引用父表中可解析的 `EX-ID`；Current DGR 的 Exception References 必须恰好包含该 Domain Attempt 所涉及的未关闭 Exception；
-- Domain、Subdomain 或具体设计义务的 Waiver 必须进入 Parent Exception Set；一般性 DSN Exception 也按同一状态规则进入该集合；
-- Human Confirmation 和最终 Artifact Gate Summary 都绑定同一个 Parent Exception Set。任何集合变化都会使旧确认和汇总失效；
-- `resolved` 或 `superseded` 记录保留在父表中，但不进入当前集合。
+140 与 310 的固定 Subdomain 只在父主文件表中判断和聚合，不创建子领域 Artifact、Gate、摘要或历史记录。顶层为 `required` 时，同一个 Domain 子文件只填写实际 required 的详细设计；`n/a` 或 `waived` 子领域对应的固定章节按统一 `N/A — <客观原因或 Exception>` 表示，不重复处置字段。
 
 ## 核心 Domain 子规范
-
-主文件只定义 DSN 公共 Contract、Domain 注册表和聚合 Gate。各 Domain 的适用性、固定模板、规则及专属 Gate 分别保存在以下子规范中。
 
 | 顺序 Order | 分组 Group | 设计领域 Design Domain | 子规范 Domain Spec |
 |---|---|---|---|
@@ -514,26 +389,19 @@ Parent Exception Set 是父 DSN 主文件 `Exceptions` 表中全部 `active` 和
 | 420 | 运行设计 Operations | 可观测性与可运维性 Observability and Operability | [420-observability-operability.md](200-dsn-domains/420-observability-operability.md) |
 | 510 | 验证设计 Verification | 可验证性与 VFY 策略 Verifiability and VFY Strategy | [510-verifiability-vfy-strategy.md](200-dsn-domains/510-verifiability-vfy-strategy.md) |
 
-所有子规范均受本文件中的 Artifact Set、Disposition、Completion、Scope and Simplicity 以及主 Gate 约束；子规范不得重定义这些公共语义。
-
-各 Domain 的 Applicability 仍按 Core 固定顺序判断；子规范中的“通常 required”只表示存在潜在独立设计义务，不能覆盖有效 `embedded` Host。DSN Artifact 的最终 Evaluation Contract Set 必须绑定本注册表全部 Domain Spec，确保 `n/a`、`waived` 与适用 Domain 使用同一组规则；单个 DGR 仍只绑定当前 Domain Spec。
+所有子规范受本文件的 Scope、Disposition、Matrix、Artifact Set 和父 Gate 约束。最终 Evaluation Contract Set 绑定 Core Spec、DSN Spec、16 个 Domain Spec 以及实际启用的 Extension Contract，确保 required、n/a 与 waived 使用同一组适用性规则。
 
 ## DSN 最终化顺序
 
-DSN 在 Core 通用最终化顺序内使用以下确定步骤：
+DSN 使用 Core Revision 和 Gate 机制完成重跑，不保存 Phase 内的 Attempt 历史：
 
-1. 冻结本次设计输入，并分配稳定的 `DDR-ID` 和 Member ID；
-2. 计算所有 Domain、Host 与 Supporting Member 的 Design Input Digest；Domain Markdown 和其他不含 Gate 派生内容的成员均使用原始字节摘要；
-3. 刷新 Manifest 的 Design Input Digest，并计算 Parent Design Input Digest；
-4. 为每个顶层 `required` 或 `embedded` Domain 执行逐项 Gate，先分配下一个 `DGR-ID` 再保存完整 DGR；DGR 只能引用步骤 1 至 3 已登记的 Evidence 与 Exception；
-5. 选择每个顶层 `required` 或 `embedded` Domain 的 Current Attempt，由其派生 Completion 和 Matrix 中的 DGR Reference；顶层 `n/a` 或 `waived` 不选择 Attempt。Parent Exception Set 始终从父 Exceptions 表的 `active`、`carried` 记录派生，并校验每个 Current DGR 的 Exception References 是其准确子集；
-6. 刷新并验证 Manifest 的最终原始字节 SHA-256；
-7. 执行 Core 与 DSN Check，`CORE-G-009` 暂时保持 `pending`；
-8. 计算最终父 Artifact Control Input Digest；
-9. 按 Core 计算 Check Set Result Digest，人工确认两个 Digest、Evaluation Contract Set 及全部未关闭 Exception；
-10. 关闭 `CORE-G-009`，聚合唯一 Artifact Gate Summary 并派生 Status；只在结果为 `pass` 或 `pass_with_exception` 时冻结 Snapshot，其他结果保持 open，并在冻结前复核全部摘要和映射。
-
-步骤 1 至 8 中发现需要新增或修改设计内容、Evidence、Exception 或其他被摘要覆盖的输入时，当前 DGR 只保留为历史 Attempt，返回步骤 2 后重新计算，并在下一次步骤 4 分配更大的 DGR ID；不得只重写 Digest、Completion 或 Gate Result。
+1. 完成本次 Scope、Baseline、Change、Decision 和 Requirement Traceability；
+2. 按固定顺序判断 16 个 Domain 的 Disposition；先填写 140、310 的 5 行子领域表并聚合对应顶层结果，再完成 Matrix；
+3. 只创建 required Domain 子文件，完成其 Design Result、Constraints and Impact 与 Evidence References；110 至 420 Domain 另外完成 VFY Points，510 以 VFY Objectives 作为汇总结果；
+4. 刷新 Artifact Set Manifest 并验证每个成员 SHA-256；
+5. 在父 Gate 中依次登记 Core Check、DSN Check，以及每个 required Domain Spec 的全部子检查；每个 Check ID 只出现一次；
+6. 按 Core 计算 Control Input Digest 与 Check Set Result Digest，完成 Final Confirmation，聚合唯一 Artifact Gate Summary 并派生 Status；
+7. 内容或规则变化时，open Revision 直接重跑；ready / ready_with_exception 已冻结后按 Core 创建新 Revision。
 
 ## Lifecycle Applicability
 
@@ -546,7 +414,7 @@ DSN 在 Core 通用最终化顺序内使用以下确定步骤：
 | RLS | pending | N/A | Pending — <OI-ID> |
 ```
 
-该表只记录当前 DSN 覆盖范围对后续 Phase 的建议，不负责排期、任务分配，也不能覆盖同一交付范围内其他 Artifact 的判断。多个完整 Scope Input 共同交付时，按 Core Delivery Scope Aggregation Contract 执行并将 PLN 标记为 `required`。
+该表只记录当前 DSN Scope 对后续 Phase 的建议，不负责排期和任务分配。多个完整 Scope Input 共同交付时，按 Core Delivery Scope Aggregation Contract 执行，并将 PLN 标记为 `required`。
 
 ## AI 与人工协作 AI and Human Collaboration
 
@@ -556,27 +424,39 @@ DSN 在 Core 通用最终化顺序内使用以下确定步骤：
 |---|---|---|---|
 | Baseline 与 Domain 分析 | 发现现状、影响范围和跨 Domain 关系 | 确认关键现状和业务限制 | AI 擅长全量关联，人工掌握隐含约束 |
 | 方案与影响比较 | 生成候选、分析一致性和代价 | 决定架构、接口、数据和体验取舍 | 关键设计决定需要权威与责任 |
-| 详细设计 | 按 Domain 模板形成可追踪设计 | 重点评审高风险或主观领域 | AI 提高完整度，人工校准方向和风险 |
-| Gate 与缺口检查 | 检查追踪、冲突、VFY Point 和复杂度 | 确认 Exception 与最终设计 | AI 适合一致性检查，风险接受必须人工完成 |
+| 详细设计 | 按 required Domain 模板形成可追踪设计 | 重点评审高风险或主观领域 | AI 提高完整度，人工校准方向和风险 |
+| Gate 与缺口检查 | 检查追踪、冲突、VFY Point 和复杂度；满足 delegated 边界时执行独立客观复核 | 作出设计取舍并确认 Exception 与风险 | Final Confirmation 不替代权威设计或风险决策 |
 
 ## Gate
 
 ```markdown
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| DSN-G-001 | 直接 Input 至少包含一个准确 Requirement Revision，且当前 Design Scope 与 Input 一致 | pending | |
+| DSN-G-001 | Scope Input 至少包含一个准确 Requirement Revision，VFY Return 与 `return_dsn` RLS Issue Reference 已准确承接，且 Design Scope 与 Control Input 一致 | pending | |
 | DSN-G-002 | Design Boundary、Current Baseline、Target State 和 Change Set 完整且可还原 | pending | |
-| DSN-G-003 | Requirement、Acceptance Criteria、Design Item、Decision 与 VFY Objective 双向可追踪，不存在孤立项或被静默修改的 Requirement | pending | |
-| DSN-G-004 | Summary、Design Decisions 与各 Domain 设计结果一致，不存在重复权威来源 | pending | |
-| DSN-G-005 | Change、独立 Concern 与 Design Applicability Matrix 映射完整一致，不存在未处理的 unsupported concern | pending | |
-| DSN-G-006 | required 和 embedded Domain 的责任角色、Content、Current DGR、摘要绑定、Completion 及固定 N/A 表示完整一致 | pending | |
-| DSN-G-007 | Domain 与 Subdomain 的 n/a、waived、Exception 和 Parent Exception Set 完整一致 | pending | |
+| DSN-G-003 | 当前 DSN Scope 内的 Requirement、Acceptance Criteria、Design Item、Decision 与 VFY Objective 双向可追踪，不存在孤立项或静默修改 | pending | |
+| DSN-G-004 | Summary、Design Decisions、Matrix 与 Domain 设计结果一致，不存在重复权威来源 | pending | |
+| DSN-G-005 | 16 个 Domain 均已依据其 Spec 判断 Disposition，不存在 pending 或未注册 Domain | pending | |
+| DSN-G-006 | required Domain 均有唯一子文件、Manifest 成员和完整内容；n/a 与 waived 均有有效依据 | pending | |
+| DSN-G-007 | 复合 Domain 的固定子领域表与父 Matrix、Exception 一致 | pending | |
 | DSN-G-008 | 各 Design Domain 不存在冲突、重复定义或相互矛盾的边界 | pending | |
 | DSN-G-009 | 所有设计均在当前范围内，复杂度必要，未引入推测性能力或未授权相邻改动 | pending | |
 | DSN-G-010 | Lifecycle Applicability、Host、Basis 和已注册 Host Contract 完整一致 | pending | |
+
+<按 Design Applicability Matrix 固定顺序，展开每个 required Domain Spec 注册的 DSN-DG-<DOMAIN-NO>-<CHECK-NO> 行>
 ```
 
-Artifact Gate 先包含 Core Gate Checks，再包含以上 DSN Gate Checks；之后按 Core Spec 固定顺序保存 Human Confirmation 和唯一 Artifact Gate Summary，不得只修改 Front Matter `status`。DSN Gate Checks 均为 Contract Integrity Check，不允许直接标记为 `n/a` 或 `waived`；Domain 或具体设计义务的 Waiver 由 Design Index、Domain Detail Record 和 Exception 表达，Gate Check 只验证这些记录是否合规。
+Artifact Gate 先包含 Core Gate Checks，再包含 DSN Gate Checks，随后只展开 required Domain 的子检查，最后按 Core 保存 Final Confirmation 和唯一 Artifact Gate Summary。
+
+规则：
+
+- Domain 子检查是父 Artifact Gate 的普通 subordinate rows，不是独立 Gate；
+- 每个适用 Check ID 在当前 Revision 只登记一次，不创建平行记录或历史编号；
+- Domain 子检查使用与父 Gate 相同的 `Result` 和 `Evidence or Notes` 字段；
+- open Revision 重跑时直接刷新当前 Check 结果；frozen Revision 的任何变化都创建新 Revision；
+- 父 Gate 严格按 Core 固定优先级聚合：任一 required Domain 子检查为 `fail` 时结果为 `fail`；不存在 `fail` 但仍有 `pending` 时结果为 `pending`；全部必要 Check 关闭后才按未关闭 Exception 派生 `pass` 或 `pass_with_exception`；
+- `waived` 只通过 Matrix 与父 Exceptions 表表达，Contract Integrity Check 仍必须实际执行；
+- Final Confirmation 和 Artifact Gate Summary 绑定 Core 定义的同一 Control Input Digest、Evaluation Contract Set、Check Set Result Digest 和未关闭 Exception 集合。
 
 ## 内部编号
 
@@ -584,15 +464,13 @@ Artifact Gate 先包含 Core Gate Checks，再包含以上 DSN Gate Checks；之
 |---|---|
 | Change Item | `CHG-001` |
 | Design Decision | `DEC-001` |
-| Design Concern | `CON-001` |
-| Domain Detail Record | `DDR-<DOMAIN-NO>-001` |
-| Domain Gate Control Member | `DGC-001` |
-| Domain Gate Record Attempt | `DGR-<DOMAIN-NO>-001` |
+| Domain Constraint or Impact | `CIM-<DOMAIN-NO>-001` |
 | Domain VFY Point | `VFP-<DOMAIN-NO>-001` |
 | Open Item | `OI-001` |
 | Evidence | `EVD-001` |
 | Exception | `EX-001` |
 | DSN Gate Check | `DSN-G-001` |
+| Domain Subordinate Check | `DSN-DG-<DOMAIN-NO>-001` |
 
 ## 当前未定义
 

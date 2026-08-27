@@ -18,17 +18,21 @@ REQ 描述目标、行为、规则、质量要求和强制约束，不提前决�
 
 | 项目 Item | 要求 Requirement |
 |---|---|
-| Input | 任意形式的原始需求、可追溯资料或上游 Artifact |
+| Input | 任意形式的原始需求、可追溯资料、上游 Artifact，以及与当前需求修正相关的冻结 VFY Return 或 RLS Issue Reference 控制输入 |
 | Output | 一个主要 Markdown Requirement Artifact 及可选 Supporting Artifact |
 | 必要下游条件 | Artifact 达到 `ready` 或经授权的 `ready_with_exception` |
 
 短输入直接保存原文；长输入保存不可变引用或 Evidence。没有上游 Artifact 时，Front Matter 中的 `inputs` 可以为空，原始输入仍必须在正文保留。
 
+- `Return Phase=REQ` 的冻结 VFY Return，以及 Follow-up Disposition 为 `return_req` 的冻结 RLS Issue Reference，是 Control Input，不是 Scope Input；其所属 Revision 必须进入 Front Matter `inputs`，并由 Source Input 使用准确引用承接；
+- Control Input 不自动改变 Delivery Scope。对目标、Requirement 或 Acceptance Criteria 的实际修正必须由对应条目和 Evidence 准确引用；确认需要改变 Scope 时按正常 REQ 规则显式修订；
+- 新 REQ Revision 只证明问题已在需求层处理；只有后续冻结 VFY Revision 采用修正后的当前 Subject 并证明对应 Required Outcome 后，该问题才算解决。
+
 ## Front Matter
 
 ```yaml
 ---
-contract: sdlc-ai-spec/artifact/v0.1
+contract: sdlc-ai-spec/artifact/v0.2
 phase: REQ
 id: REQ-20260823143025-01
 revision: 1
@@ -87,7 +91,7 @@ inputs: []
 ```markdown
 | ID | Type | Content or Immutable Reference | Evidence Reference |
 |---|---|---|---|
-| SRC-001 | text | | |
+| SRC-001 | text | | N/A |
 ```
 
 - 短内容直接保留原文；
@@ -96,7 +100,7 @@ inputs: []
 - 多个来源必须明确区分；
 - Source Input 使用 `SRC-001` 顺序编号，ID 创建后不得重新排序或复用；
 - `Type` 使用 `text`、`document`、`conversation`、`incident`、`artifact` 或 `other`；使用 `other` 时说明具体类型；
-- 非内联原文必须给出不可变引用或对应 Evidence；
+- `Content or Immutable Reference` 必须填写内联原文或不可变引用；`Evidence Reference` 对完整内联原文和可直接解析的 `Type=artifact` 固定写 `N/A`，其他非内联来源必须填写一个对应 `EVD-ID`，不得留空；
 - `Type=artifact` 时必须使用完整 Artifact Reference，并在 Front Matter `inputs` 中登记同一引用；Front Matter 中每个 Input 也必须由一个 Source row 承接，正文 Source 与依赖图不得指向不同 Revision。
 
 ## 目标与成功条件
@@ -174,6 +178,7 @@ Scope Token Set 使用 PLN 固定语法，必须且只能包含一个 `resource:
 - 设计偏好不能伪装为 `constraint`；
 - 新发现的业务规则必须先进入 REQ，不得由下游静默补充。
 - Requirements 表中的每一项都是当前 REQ Scope 的正式义务；尚未纳入本次范围的可选想法放入 Out of Scope，不再用优先级暗示可以静默跳过。
+- 生命周期执行动作不是产品 Requirement：规划、实现、验证、发版和目标回读分别由 Lifecycle Applicability 与对应 Phase Artifact 约束，不得为了要求某个 Phase 执行而创建产品 Requirement。
 
 ## 验收条件
 
@@ -189,6 +194,7 @@ Scope Token Set 使用 PLN 固定语法，必须且只能包含一个 `resource:
 - 每个 Requirement Item 至少关联一个 Acceptance Criterion；
 - 一个 Acceptance Criterion 可以覆盖多个 Requirement Item；
 - 条件和预期结果必须可由 VFY 方法检查；
+- 具体发版动作、发版流程是否完成、版本或 Manifest 等发布记录不写入 Acceptance Criteria；产品在目标场景中的可观察行为、可用性和运行约束仍属于 Requirement / Acceptance Criteria，由 VFY 判断，确实只能在正式 Release Target 检查时再以 VFY Method、Exception 和 RLS Post-release Confirmation 承接；
 - 不在 REQ 中指定不必要的测试工具或实现方式。
 
 ## 依赖
@@ -209,14 +215,14 @@ Scope Token Set 使用 PLN 固定语法，必须且只能包含一个 `resource:
 | full | |
 ```
 
-Profile 选择依据直接使用 Core Lifecycle Profile 的固定检查项。生成过程可以推荐并说明依据，最终 Human Confirmation 统一确认整个 Artifact，不建立第二套确认记录。`full`、`lite`、`hotfix` 不直接决定后续 Phase；最终以逐项 Disposition 为准。`Selected Profile` 必须与 Front Matter `profile` 一致。
+Profile 选择依据直接使用 Core Lifecycle Profile 的固定检查项。生成过程可以推荐并说明依据，最终 Final Confirmation 统一确认整个 Artifact，不建立第二套确认记录。`full`、`lite`、`hotfix` 不直接决定后续 Phase；最终以逐项 Disposition 为准。`Selected Profile` 必须与 Front Matter `profile` 一致。
 
 ## Open Items
 
 ```markdown
-| ID | 所需输入或待确认决策 Needed Input or Decision | 预期来源 Expected Source | 被阻塞项 Blocked References | 是否阻塞 Blocking | 状态 State | 解决结果或证据 Resolution or Evidence |
-|---|---|---|---|---|---|---|
-| None | No open items | N/A | N/A | N/A | none | N/A |
+| ID | 所需输入或待确认决策 Needed Input or Decision | 预期来源 Expected Source | 被阻塞项 Blocked References | 状态 State | 解决结果或证据 Resolution or Evidence |
+|---|---|---|---|---|---|
+| None | No open items | N/A | N/A | none | N/A |
 ```
 
 字段、枚举和 Status 派生遵循 Core Open Items Contract；`ready` 或 `ready_with_exception` 不允许存在未解决的阻塞项。
@@ -253,7 +259,7 @@ REQ 提供初始适用性判断。后续 Phase 可以依据新增事实调整，
 ```markdown
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| REQ-G-001 | 原始输入完整保留，正文 Source 与 Front Matter Input 一致 | pending | |
+| REQ-G-001 | 原始输入、VFY Return 与 `return_req` RLS Issue Reference 完整保留，正文 Source、Scope 与 Front Matter Input 一致 | pending | |
 | REQ-G-002 | 当前问题、目标、预期用途和成功条件明确且可观察 | pending | |
 | REQ-G-003 | In Scope、Out of Scope、Affected Parties 和 Dependencies 完整且使用合法空表示；直接 IMP 时 Scope Token 与依赖检查来源准确 | pending | |
 | REQ-G-004 | Requirement 原子、明确、属于当前 Scope，且未混入非必要设计方案 | pending | |
@@ -263,7 +269,7 @@ REQ 提供初始适用性判断。后续 Phase 可以依据新增事实调整，
 | REQ-G-008 | Lifecycle Applicability 的 Disposition、已注册 Host 和判断依据完整一致 | pending | |
 ```
 
-Artifact Gate 先包含 Core Gate Checks，再包含以上 REQ Gate Checks；之后按 Core Spec 固定顺序保存 Human Confirmation 和唯一 Artifact Gate Summary，不得只修改 Front Matter `status`。REQ Gate Checks 均为 Contract Integrity Check，不允许直接标记为 `n/a` 或 `waived`；具体义务的 Waiver 通过 Lifecycle Applicability 或已注册子义务的 Disposition 与 Exception 表达，REQ Gate 只检查其记录是否合规。
+Artifact Gate 先包含 Core Gate Checks，再包含以上 REQ Gate Checks；之后按 Core Spec 固定顺序保存 Final Confirmation 和唯一 Artifact Gate Summary，不得只修改 Front Matter `status`。REQ Gate Checks 均为 Contract Integrity Check，不允许直接标记为 `n/a` 或 `waived`；具体义务的 Waiver 通过 Lifecycle Applicability 或已注册子义务的 Disposition 与 Exception 表达，REQ Gate 只检查其记录是否合规。
 
 ## 内部编号
 

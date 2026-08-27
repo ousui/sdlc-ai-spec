@@ -1,7 +1,7 @@
 ---
 title: "安全、隐私与合规 Security, Privacy and Compliance"
 status: draft
-scope: DSN Domain 固定模板、规则与专属 Gate
+scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
 
@@ -22,38 +22,29 @@ parent: ../200-dsn-spec.md
 
 适用性：
 
-- Security、Privacy 和 Compliance 在文件内分别判断 Disposition；
+- Security、Privacy 和 Compliance 按本 Spec 分别判断 Disposition；
 - 子领域先分别判定，再按固定聚合规则形成 Domain Disposition；
 - 涉及身份、权限、外部暴露、敏感操作、Secret、信任边界或滥用风险时，Security 通常为 `required`；
 - 新增或改变个人数据、敏感数据的收集、使用、共享或生命周期时，Privacy 通常为 `required`；
 - Requirement 或可验证项目基线指定法律、合同、行业或组织义务时，Compliance 通常为 `required`；
-- 已有控制完整覆盖且可以准确引用时，可以为 `embedded`；
+- 已有控制完整覆盖且当前变化没有新增或改变相关义务时，可以引用准确 Baseline 判定相应子领域为 `n/a`；
 - 紧急并不代表 `n/a`，适用但经授权跳过时必须使用 `waived`。
 
 聚合规则：
 
 1. 任一子领域为 `pending` 时，本 Domain 为 `pending`；
 2. 否则任一子领域为 `required` 时，本 Domain 为 `required`；
-3. 否则任一子领域为 `embedded` 时，本 Domain 为 `embedded`；
-4. 否则任一子领域为 `waived` 时，本 Domain 为 `waived`；
-5. 仅当全部子领域为 `n/a` 时，本 Domain 才为 `n/a`。
+3. 否则任一子领域为 `waived` 时，本 Domain 为 `waived`；
+4. 仅当全部子领域为 `n/a` 时，本 Domain 才为 `n/a`。
 
-子领域 Waiver 即使未成为聚合后的 Domain Disposition，也必须独立关联 Exception，并使父 DSN 进入 `ready_with_exception`。
+子领域 Waiver 即使未成为聚合后的 Domain Disposition，也必须独立关联并传播到父 DSN Exceptions。只有不存在 `fail`、`pending` 且其他必要 Check 均已关闭时，父 DSN 才按 Core 由该未关闭 Exception 派生 `ready_with_exception`。
 
-每个子领域始终保存固定 Subdomain Control Record。本 Domain 为 `required` 时全部记录保存在 Domain 子文件并进入 Domain Control Input Digest；其他 Disposition 时按父 Spec 的同字段单一 DDR Block 保存在主文件。`embedded` 子领域记录 Host 与摘要，`n/a` 记录原因与 Evidence，`waived` 记录 Exception 引用。
+三个子领域的处置始终记录在父 DSN 主文件的固定 Composite Domain Subdomain Applicability 表；顶层 Domain 为 `required` 时才创建本 Domain 子文件承载详细设计。
 
 固定专属模板：
 
 ```markdown
 ## 设计结果 Design Result
-
-### 子领域控制记录 Subdomain Control Records
-
-| Domain Spec Reference or Digest | Domain or Subdomain | Disposition | Obligation or Impact | Applicability Basis References | Baseline or Host Reference | Host Content Digest | Deviation or N/A Reason | VFY Point References | Exception References |
-|---|---|---|---|---|---|---|---|---|---|
-| drafts/200-dsn-domains/310-security-privacy-compliance.md@sha256:... | Security | pending | | | | | | | |
-| drafts/200-dsn-domains/310-security-privacy-compliance.md@sha256:... | Privacy | pending | | | | | | | |
-| drafts/200-dsn-domains/310-security-privacy-compliance.md@sha256:... | Compliance | pending | | | | | | | |
 
 ### 资产与信任边界 Assets and Trust Boundaries
 
@@ -100,9 +91,7 @@ parent: ../200-dsn-spec.md
 
 规则：
 
-- 子领域 Disposition 使用统一的 `required`、`embedded`、`n/a`、`waived` 或 `pending`；
-- 三行顺序固定为 Security、Privacy、Compliance；不得删除、重排或拆成多个控制表；
-- `embedded` 必须准确引用已有控制，`waived` 必须引用主文件中的 Exception；
+- Security、Privacy 与 Compliance 的 Disposition、Basis、原因和 Exception 只记录在父 DSN 主文件，不在本文件复制；
 - 执行主体可以辅助识别威胁、隐私影响和合规候选项；法律适用性、Waiver 和剩余风险只能由授权人工角色确认；
 - 不得为了填充模板虚构资产、威胁、法律、标准版本、司法辖区或合规义务；
 - 每个适用威胁必须关联有效 Control，或登记为剩余风险并关联 Decision 或 Exception；
@@ -114,18 +103,15 @@ parent: ../200-dsn-spec.md
 - 完整 Threat Model、风险评估和合规矩阵可以作为 Supporting Artifact；
 - VFY Points 必须覆盖适用的威胁、控制、访问、隐私和合规结果。
 
-专属 Gate：
+父 Gate 子检查：
+
+以下检查只在父 DSN Artifact Gate 中按 Check ID 登记一次，不写入 Domain 子文件。
 
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| DSN-DG-310-001 | 三个子领域均已判断 Disposition | pending |  |
-| DSN-DG-310-002 | 适用的可验证项目安全、隐私与合规基线已覆盖 | pending |  |
-| DSN-DG-310-003 | 适用且未豁免的资产、保护目标和信任边界明确 | pending |  |
-| DSN-DG-310-004 | 适用且未豁免的威胁和滥用场景已识别 | pending |  |
-| DSN-DG-310-005 | 适用且未豁免的威胁具有 Control 或剩余风险记录 | pending |  |
-| DSN-DG-310-006 | 适用且未豁免的身份、认证、授权和拒绝行为明确 | pending |  |
-| DSN-DG-310-007 | 适用且未豁免的隐私目的、最小化和 Lifecycle 引用准确 | pending |  |
-| DSN-DG-310-008 | 适用且未豁免的合规义务、范围、Control 和 Evidence 准确 | pending |  |
-| DSN-DG-310-009 | 适用且未豁免的剩余风险具有 Decision 或 Exception，并明确责任方 | pending |  |
+| DSN-DG-310-001 | 三个子领域的 Disposition、依据、N/A 原因和 Exception 完整一致 | pending |  |
+| DSN-DG-310-002 | 适用的资产、保护目标、信任边界、威胁、访问与 Control 完整，真实 Secret 未写入 | pending |  |
+| DSN-DG-310-003 | 适用的隐私目的、最小化、Lifecycle 和合规义务映射准确 | pending |  |
+| DSN-DG-310-004 | 剩余风险具有 Decision 或 Exception、责任方和 VFY Points | pending |  |
 
 > Parent Spec: [Design Phase Spec](../200-dsn-spec.md)

@@ -1,7 +1,7 @@
 ---
 title: "用户体验与交互 UX and Interaction"
 status: draft
-scope: DSN Domain 固定模板、规则与专属 Gate
+scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
 
@@ -18,11 +18,10 @@ parent: ../200-dsn-spec.md
 
 适用性：
 
-- Requirement 改变用户目标、任务路径、动作顺序、反馈语义、交互状态或中断恢复路径时，存在独立设计义务则为 `required`；
-- 交互极简单且已经由其他 required Domain 完整表达并准确追踪时，可以为 `embedded`；
+- Requirement 改变用户目标、任务路径、动作顺序、反馈语义、交互状态或中断恢复路径时为 `required`；
 - 纯系统间处理、后台任务且用户无感知时，可以为 `n/a`；
-- 仅改变已确定的静态文案或视觉表达且不存在交互义务时，本 Domain 为 `n/a`；存在简单交互义务且由 `UI and Content` 完整承载时，本 Domain 为 `embedded`；
-- 不得因为沿用现有交互、参与者不准备阅读或接受 AI 设计而直接判定为 `n/a`。
+- 仅改变已确定的静态文案或视觉表达且不存在交互义务时为 `n/a`；
+- 沿用现有交互且当前变化没有新增或改变交互义务时，可以引用准确 Baseline 判定为 `n/a`；不得因为交互简单、已在其他 Domain 提及、参与者不准备阅读或接受 AI 设计而判定为 `n/a`。
 
 固定专属模板：
 
@@ -87,15 +86,14 @@ parent: ../200-dsn-spec.md
 - 原型图和交互图可以作为辅助材料，但固定表格是规范判定依据；
 - VFY Points 必须覆盖关键旅程、交互状态、输入反馈和恢复路径。
 
-专属 Gate：
+父 Gate 子检查：
+
+以下检查只在父 DSN Artifact Gate 中按 Check ID 登记一次，不写入 Domain 子文件。
 
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| DSN-DG-120-002 | 用户、场景、目标和成功条件明确 | pending |  |
-| DSN-DG-120-003 | Journey 的 User or Goal References 可解析，Step、Transition、入口、完成条件和完成后去向明确 | pending |  |
-| DSN-DG-120-004 | 关键用户动作均有确定的系统反馈 | pending |  |
-| DSN-DG-120-005 | 适用的交互状态已覆盖 | pending |  |
-| DSN-DG-120-006 | 输入约束、校验时机和修正路径明确 | pending |  |
-| DSN-DG-120-007 | 中断和恢复路径已按适用性处理 | pending |  |
+| DSN-DG-120-001 | 用户、场景、目标、入口、Journey、Transition 和完成条件完整且可追踪 | pending |  |
+| DSN-DG-120-002 | 关键动作的反馈、交互状态、输入约束和修正路径明确 | pending |  |
+| DSN-DG-120-003 | 适用的中断与恢复路径完整，并由 VFY Points 覆盖 | pending |  |
 
 > Parent Spec: [Design Phase Spec](../200-dsn-spec.md)

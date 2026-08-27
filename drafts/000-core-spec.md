@@ -11,7 +11,7 @@ scope: 已确认的通用术语、生命周期与 Artifact Contract
 ## 核心原则
 
 - Spec 只判断产物、证据和 Gate 是否符合要求，不区分由人工还是 AI 完成。
-- Artifact 可以由人工、AI 或其他执行主体生成和检查；Spec 不限定作者。业务目标、风险接受和最终确认由有责任的人工角色承担。
+- Artifact 可以由人工、AI 或其他执行主体生成和检查；Spec 不限定作者。业务取舍、主观产品判断、Exception、风险接受及外部动作授权仍由有责任的人工或外部权威承担；满足本节严格边界时，Artifact 的最终合规确认可以委托给独立 Reviewer。
 - 每个 Phase 使用固定模板和字段，允许自然语言不同，但不允许结构、枚举和语义边界漂移。
 - 缺少必要输入时进入 `waiting_input`，不得猜测事实后生成形式上的合格产物。
 - Lifecycle Profile 只提供默认建议，逐项 Disposition 才是最终执行依据。
@@ -38,6 +38,7 @@ scope: 已确认的通用术语、生命周期与 Artifact Contract
 | 修订解析器 | Revision Resolver | `Revision Resolver` | 将准确 Artifact Reference 解析到不可变 Revision Snapshot 的规则 |
 | 修订索引 | Revision Index | `Revision Index` | 保存 Revision 分配与冻结状态的最小索引 |
 | 修订快照 | Revision Snapshot | `Revision Snapshot` | 已冻结且可被准确解析的 Artifact Revision |
+| 执行前清单 | Pre-execution Checklist | `Pre-execution Checklist` | 正式 action 前必须已绑定规则、持久化并读回的当前 Phase 固定字段集合；不是独立 Artifact、状态或 Gate |
 | 质量保证 | Quality Assurance | `QA` | 由 Check Set、Evidence 和 Gate 承载的跨 Phase 质量保证，不作为独立 Phase |
 | 验证与确认 | Verification & Validation | `VFY` | 判断产物是否符合上游要求，并满足预期用途 |
 | 发版 | Release | `RLS` | 将准确的已验证结果发布到约定目标，确认目标侧状态并形成发版结论 |
@@ -100,11 +101,19 @@ DSN-20260823150010-01
 - `NN` 为同一秒内从 `01` 开始的顺序号；
 - ID 在项目范围内唯一；创建时先分配并持久化 ID，再生成内容；
 - 发生并发冲突时递增 `NN` 后重新分配，不得覆盖已有 Artifact；
-- 重新执行必须携带已有 Artifact ID，不重新分配；
+- 重新执行必须携带已有 Artifact ID，不重新分配；只有满足下述“身份命名空间恢复”全部条件时，才允许为同一 Scope 和义务分配新的恢复 Artifact ID；
 - ID 一经分配不得修改、转移或复用；
 - 主要文件名必须为 `<Artifact ID>.md`；
 - 不依赖目录位置、文件顺序、标题或内容相似度识别 Artifact；
 - 同一文字输入不代表同一业务身份，未指定 ID 时不得自动覆盖疑似相同 Artifact。
+
+身份命名空间恢复 Identity Namespace Recovery 只处理一种不可原地修复的控制故障：同一 Artifact 已物化的历史 Revision 将同一稳定 Item、Member 或 Evidence ID 分配给不同逻辑角色，且历史冻结或状态改变 Evidence 不能改写，使任何后续 Revision 都无法同时满足稳定 ID Contract。它不是普通重试、内容返工或规避失败 Gate 的方式。
+
+- 旧 Artifact 必须以新的最大 Revision 或已经存在的当前最大 Revision 准确记录冲突、实际状态和 `fail` Gate，并在 Revision Index 中 `abandoned`；既有状态改变和 Evidence 不得删除；
+- 新 Artifact 使用新的唯一 ID、Revision 1 和 `Base Revision=None`，在 Evidence 中准确引用旧 Artifact 的最终失败 Revision、Revision Index 摘要和不可修复原因；旧 Artifact 不是 Input，也不提供 Gate、Final Confirmation、Result、Conclusion 或其他 Authority；
+- 新 Artifact 必须保持相同 Phase、完整 Scope、义务和适用目标，重新绑定全部有效直接 Input，并按当前 Contract 重新持久化、读回和执行全部适用控制；已有执行对象状态只能作为重新捕获的 Baseline，不得伪装成新 Artifact 的 Result；
+- 同一旧 Artifact、Phase、Scope 和适用目标只能分配一个恢复 Artifact ID。恢复 Artifact 后续失败时继续创建其新最大 Revision，不得再次分配新 ID；
+- 若冲突可以通过不改写历史的新 Revision、未使用 ID 或准确 Member 延续解决，则不得使用本恢复路径。
 
 引用语法固定为：
 
@@ -141,7 +150,7 @@ Spec 路径使用 `/` 分隔，不得以 `/`、`./` 或 `../` 开头；同一文
 
 ```yaml
 ---
-contract: sdlc-ai-spec/artifact/v0.1
+contract: sdlc-ai-spec/artifact/v0.2
 phase: REQ
 id: REQ-20260823143025-01
 revision: 1
@@ -166,11 +175,11 @@ inputs: []
 ## Revision
 
 - 新 Artifact 从 `revision: 1` 开始。
-- 新 Revision 固定为该 Artifact 已持久化最大 Revision 加 `1`；分配必须先于新内容写入并保证原子性；
+- 新 Revision 固定为该 Artifact 已持久化最大 Revision 加 `1`；成功分配必须满足 Revision Resolver 对索引行、目录和主文件固定骨架的完整物化规则；
 - 发生并发冲突时重新读取最大 Revision 后再分配，不得覆盖、跳回或复用已有 Revision；
 - `draft` 或 `waiting_input` 期间修改，不增加 Revision。
-- `failed` Artifact 在形成可供下游使用的快照前修正，可以沿用当前 Revision；修改后当前 Check、Gate Summary 和 Human Confirmation 立即失效并重置为 `pending`，Status 按阻塞事实回到 `draft` 或 `waiting_input`。Core 不要求保存 open Revision 的中间失败尝试；确需留痕时登记为 Evidence 或由项目扩展规定。
-- `ready` 或 `ready_with_exception` Revision 冻结后，任何内容、Input、Manifest、Phase Spec Binding、Check、Gate Summary、Human Confirmation 或 Status 需要更新时，都必须先创建新 Revision 并回到 `draft`；不以“语义是否变化”作为例外。
+- `failed` Artifact 在形成可供下游使用的快照前修正，可以沿用当前 Revision；修改后当前 Check、Gate Summary 和 Final Confirmation 立即失效并重置为 `pending`，Status 按阻塞事实回到 `draft` 或 `waiting_input`。Core 不要求保存 open Revision 的中间失败尝试；确需留痕时登记为 Evidence 或由项目扩展规定。
+- `ready` 或 `ready_with_exception` Revision 冻结后，任何内容、Input、Manifest、Phase Spec Binding、Check、Gate Summary、Final Confirmation 或 Status 需要更新时，都必须先创建新 Revision 并回到 `draft`；不以“语义是否变化”作为例外。
 - 下游使用 `Artifact ID@Revision` 精确绑定上游。
 - 当前交付范围选择采用新的上游 Revision 时，仍绑定旧 Revision 的相关下游 Artifact 必须重新检查；仅仅存在一个新 Revision，不会使既有精确引用自动失效。
 - `ready` 或 `ready_with_exception` Revision 必须形成不可变快照，且能够通过 `Artifact ID@Revision` 唯一解析；不得只保留被后续 Revision 覆盖的当前文件。
@@ -203,22 +212,31 @@ Revision 在引用和 Front Matter 中仍使用不补零的正整数；目录补
 
 - `State` 只允许 `open`、`frozen` 或 `abandoned`；合法变化只有 `open → frozen` 和 `open → abandoned`，终态不能重新打开；
 - 一个 Artifact 同时最多存在一个 `open` Revision；新 Revision 是索引内最大 Revision 加 `1`；
-- `Base Revision` 为 `None` 或同一 Artifact 已存在的 `frozen` Revision；选择旧 Base 仍必须创建新的最大 Revision；
-- Revision 分配、索引行和目录创建必须形成一个原子结果；失败后可以继续完成或标记为 `abandoned`，编号不得删除或复用；
+- `Base Revision` 为 `None` 或同一 Artifact 已存在的 `frozen` Revision；它只定位新 Revision 的内容来源，不是 Input 或 Authority；选择旧 Base 仍必须创建新的最大 Revision；
+- Revision 分配只有在索引行、目录，以及包含 Front Matter 与当前 Phase 固定章节骨架的主文件均已持久化并读回后才成功；多文件操作必须在同一排他临界区内紧邻完成，期间不得释放执行权。失败后可以继续完成或标记为 `abandoned`，编号不得删除或复用；
+- Phase 执行控制若在 Core 分配前预留目标 Revision，该预留号必须等于当前已持久化最大 Revision 加 `1`，且不得跳过或复用。正常执行前必须先按上一条物化完整分配结果；若主文件创建失败，只能在仍持有执行权时确保索引行和目录存在，再将该 Revision 更新为 `abandoned`。任一步失败时继续保留执行权并重试恢复；
+- `open` 与 `frozen` Revision 必须存在主文件。若失败发生在主文件创建前，只有证明未改变执行对象状态时，`abandoned` Revision 才可以只保留索引行、目录和准确 Abandon Reason，且不得被解析为 Artifact。状态改变已经发生或无法排除时，必须保留原始日志或目标读回；后续同 Phase 恢复 Revision 必须承接这些 Evidence、记录实际状态，并按该 Phase 规则选择或恢复 Baseline 后再执行；即使不再执行，也必须形成可最终化的准确记录；
+- `Artifact Gate Summary.Evaluation Contract Set` 在 `Gate Result=pending` 时就是当前 `open` Revision 的 Phase Spec Binding。正式 action 前必须非空、持久化并读回；CLI 或默认快照 fallback 只可校验尚未开始正式 action 的草稿结构，不能为既有正式 Result、Evidence 或 Target effect 事后选择规则版本；
+- 会改变产品、受控验证环境或测试数据、Release Target、外部系统等执行对象状态，或形成正式 VFY Evidence 的 Phase action，只能在当前 `open` Revision 主文件和 Phase Spec 定义的 Pre-execution Checklist 已持久化并读回后开始。该 Checklist 复用当前 Phase 的固定字段，不默认新增平行状态或表；此前输出只能作为候选材料，事后补录不能追溯满足该控制。为建立此前提而进行、且已由 Core 或 Phase 单独规定顺序的 Artifact、Revision Index 和 Claim 等控制记录写入不属于本条所称执行对象状态改变，仍须遵守各自的原子性和顺序；
+- Pre-execution 读回复用 Evidence 和 Supporting Artifact Manifest 保存不可变读回文件，至少记录 Artifact Reference、Observed At、准确 Evaluation Contract Set 和 Phase 固定 Checklist 的字段和值，并在 Manifest 登记文件 SHA-256。Checklist 或 Contract Set 变化后，旧读回文件下的正式输出不得继续作为当前 Result 或 Evidence，必须重新读回并重执行或独立复核；已经发生的状态改变仍是事实，不能降为候选材料；
 - 时间使用 RFC 3339；`abandoned` 必须填写原因，其他不适用字段写 `N/A`；
 - Revision Index 是 Resolver 元数据，不属于 Lifecycle Artifact，不进入 Artifact Set Manifest、Evidence 或 Gate Digest；
-- Snapshot 内容完成并通过最终一致性检查后，最后将索引状态更新为 `frozen`；该更新是通用发布条件。Phase Spec 若定义与其他控制记录耦合的原子发布，则全部条件同时满足后才允许下游解析。
+- Snapshot 内容完成并通过最终一致性检查后，最后将索引状态更新为 `frozen`；该更新是通用发布条件。Phase Spec 若定义其他耦合最终化条件，则全部条件满足后才允许下游解析。
 
 解析准确 Artifact Reference 时：
 
 1. 根据 Phase Code 定位 Artifact 根目录，并在 Revision Index 中找到唯一 Revision 行；
 2. 下游 Input 只接受 `frozen`，再定位对应六位 Revision 目录；
 3. 主文件的 `id`、`revision` 和 `status` 必须匹配，且 `status` 只能为 `ready` 或 `ready_with_exception`；
-4. 按现有 Contract 验证 Manifest、成员摘要、Control Input Digest、Evaluation Contract Set、当前 Check Set Result Digest、Human Confirmation、Gate Summary，以及 Phase Spec 注册的耦合发布控制记录；
+4. 按该 Revision 自身绑定的 Evaluation Contract Set 验证 Manifest、成员摘要、Control Input Digest、当前 Check Set Result Digest、Final Confirmation、Gate Summary，以及 Phase Spec 注册的耦合发布控制记录，并以每个 Input 自身的 Contract 递归验证完整 Input 链；不得使用下游当前 Spec 重新解释已冻结 Artifact；
 5. Member Reference 通过 Manifest 解析；Item Reference 按 Phase 或 Domain 固定模板解析到唯一 Item 定义；
 6. 任一条件不满足即解析失败，不得自动改用最新、其他或旧 Revision。
 
+不同 Spec Snapshot 可以通过准确 Artifact Reference 衔接，但下游必须支持上游 Front Matter 声明的 Artifact Contract 版本。兼容矩阵固定为：`artifact/v0.1` 下游只读取 `artifact/v0.1` Input；`artifact/v0.2` 下游可以读取 `artifact/v0.1` 或 `artifact/v0.2` Input。读取 v0.1 时只消费由其自身 Evaluation Contract Set 冻结并按原 Snapshot 解析有效的 Authority，不用 v0.2 重新解释历史确认。相同 Artifact Contract 版本表示 Core Reference、Item 和 Lifecycle 语义保持输入兼容；破坏这些语义的 Spec 变化必须升级 Artifact Contract，并由下游提供明确兼容规则，否则 Input Readiness 失败。兼容性必须对每条直接和传递 Input 边分别检查，不能由缓存或顶层版本推断跳过。
+
 需要重新采用旧 Revision 内容时，以其作为 `Base Revision` 创建新的最大 Revision 并重新执行 Gate；旧 Revision 不能重新打开或原地修改。
+
+冻结 Revision 后若发现其自身或直接、传递 Input 无法解析，其字节和索引仍是不改写的历史冻结记录，但不能继续作为 Input，也不能为其 Item、Member、Evidence 或 Result 提供 Authority。恢复必须从最早失效的上游开始，依次创建各 Artifact 的新最大 Revision；只有 Artifact 稳定 ID 命名空间本身满足前述不可修复条件时，才改用唯一的 Identity Namespace Recovery Artifact。`Base Revision` 只允许作为同一 Artifact 的内容来源，Recovery Artifact 的首个 Revision 固定为 `Base Revision=None`。新 Revision 或 Recovery Artifact 必须绑定完整、当前可解析且兼容的直接 Input；失效引用不得保留，也不得在没有当前 Authority 覆盖相同 Scope 和义务时静默删除。复制内容或旧字节只属于 Candidate Material，必须按当前 Contract 重新登记、复核和通过 Gate。旧 Claim 的历史记录保留，但其执行权、Result Authority，以及旧 Gate、Final Confirmation、Exception、Method Result、Conclusion 和 RLS 结论均不继承；产品字节相同不能替代当前 Authority。
 
 ## Artifact 状态
 
@@ -237,8 +255,8 @@ Revision 在引用和 Front Matter 中仍使用不补零的正整数；目录补
 | 条件 Condition | Check 或 Gate 处理 | Artifact Status |
 |---|---|---|
 | 已确认引用无效、事实冲突、任一必要 Check 为 `fail`，或人工明确拒绝 | Artifact Gate 为 `fail` | `failed` |
-| 不存在 `fail`，但至少一个 Open Item 为 `Blocking=yes` 且 `State=open` | 对应 Check 保持 `pending`，Artifact Gate 为 `pending` | `waiting_input` |
-| 不存在上述输入阻塞，但检查或人工确认尚未完成 | Artifact Gate 为 `pending` | `draft` |
+| 不存在 `fail`，但至少一个 Open Item 为 `State=open` | 其 `Blocked References` 对应 Check 保持 `pending`，Artifact Gate 为 `pending` | `waiting_input` |
+| 不存在上述输入阻塞，但检查或最终确认尚未完成 | Artifact Gate 为 `pending` | `draft` |
 | 所有必要 Check 已关闭，且存在有效、未关闭的 Waiver | Artifact Gate 为 `pass_with_exception` | `ready_with_exception` |
 | 所有必要 Check 已关闭，且不存在有效、未关闭的 Waiver | Artifact Gate 为 `pass` | `ready` |
 
@@ -263,7 +281,7 @@ Profile 选择依据至少包括：
 - 是否存在未知依赖或明显不确定性；
 - 验收边界是否明确。
 
-执行主体或工具可以依据固定检查项推荐 Profile 并说明原因；人工负责最终确认。项目扩展可以增加已注册、带版本的 Profile，但不能改变核心 Disposition 语义。
+执行主体或工具可以依据固定检查项推荐 Profile 并说明原因；Profile 选择由人工确认。项目扩展可以增加已注册、带版本的 Profile，但不能改变核心 Disposition 语义。
 
 ## Disposition
 
@@ -274,6 +292,8 @@ Profile 选择依据至少包括：
 | `n/a` | 客观不适用 |
 | `waived` | 原本适用，但经授权主动跳过 |
 | `pending` | 尚未决定 |
+
+所有作为 Contract 控制值的枚举——包括 Disposition、Result、State、Conclusion、Mode 和 Follow-up Disposition——必须直接填写 Spec 定义的规范裸值，不使用 Markdown 强调、链接、HTML 或其他展示包装。展示格式不能把未知值变为合法值，也不能隐藏 `waived`、`pending` 或失败状态。
 
 规则：
 
@@ -339,7 +359,7 @@ Artifact 存在图片、Schema、日志、报告或其他独立成员时，必�
 ## Exceptions
 
 ```markdown
-| ID | State | Origin Exception Reference | 作用域或被跳过义务 Scope or Skipped Obligation | 原因 Reason | 已知风险 Known Risk | 补偿措施 Compensating Control | 批准记录 Approver, Role and Time | 复查条件 Revisit Condition | 下游限制 Downstream Obligation | 解决或替代引用 Resolution or Superseding Reference |
+| ID | State | Origin Exception Reference | 作用域或被跳过义务 Scope or Skipped Obligation | 原因 Reason | 已知风险 Known Risk | 补偿措施 Compensating Control | 批准记录 Approver, Role and Time | 复查条件 Revisit Condition | 下游限制 Downstream Obligation | 解决或替代引用 Resolution or Superseding References |
 |---|---|---|---|---|---|---|---|---|---|---|
 | None | none | N/A | N/A | No Exceptions | N/A | N/A | N/A | N/A | N/A | N/A |
 ```
@@ -351,10 +371,11 @@ Artifact 存在图片、Schema、日志、报告或其他独立成员时，必�
 - 被豁免义务的 Disposition 为 `waived`；只有对应 Spec 明确允许豁免的专属 Check 才可以记为 `waived`，Contract Integrity Check 仍必须实际通过；
 - `State` 使用 `active`、`carried`、`resolved` 或 `superseded`：当前 Artifact 新批准且仍有效为 `active`，从上游承接且仍有效为 `carried`；
 - `carried` 必须填写准确的上游 `Artifact-ID@Revision#EX-ID`；`active` 的 Origin 填写 `N/A`；
-- `resolved` 必须引用解决 Evidence 或 Artifact，`superseded` 必须引用替代它的 Exception；
+- `resolved` 必须引用一个或多个可解析的解决 Evidence、Item 或已冻结 Artifact：当前 Artifact Set 内使用已登记裸 Item ID，跨 Artifact 使用指向冻结 Revision 的完整引用；`superseded` 必须且只能引用一个已存在、不同于自身的替代 Exception；该字段统一使用 Core Reference Set 语法；
 - 合法状态变化为 `active/carried → resolved/superseded`；关闭后不得重新打开同一 ID，需要重新接受风险时创建新 Exception 并引用原记录；
 - `active` 和 `carried` 属于未关闭 Exception，必须进入 Artifact Gate Summary，并派生 `ready_with_exception`；
 - 下游必须继续引用其当前 Scope 所涉及的尚未关闭 Exception；当前 Artifact 只覆盖直接 Input 的部分范围时，只有能够由 `Scope or Skipped Obligation` 和当前固定追踪关系确定性证明不相交的 Exception 才可排除，无法确定时仍按相关处理；不得仅通过改写 `State` 关闭风险；
+- 同一早期 Exception 经多个直接 Input 分别承接时，当前内置 Spec 将每个直接 Input 的当前未关闭 Exception Reference 视为独立承接义务，分别创建 `carried` 行，不沿 Origin 链自动合并；只有全部相关直接 Input 的义务已由其中一个直接 Input 的冻结 Artifact 形成唯一汇总 Exception，且其他直接 Input 不再保留独立的相关未关闭 Exception 时，才承接该唯一直接引用；
 - 无 Exception 时只保留上表唯一 `None` 行；`State=none` 只允许用于该行。存在 Exception 时删除 `None` 行。
 
 ## Gate
@@ -374,18 +395,18 @@ Artifact 存在图片、Schema、日志、报告或其他独立成员时，必�
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
 | CORE-G-001 | Contract、Artifact ID、Revision 和 Revision Index 一致有效 | pending | |
-| CORE-G-002 | 已声明的 Input Reference 存在、已冻结且可准确解析 | pending | |
+| CORE-G-002 | 已声明的 Input Reference 存在、已冻结，能按自身 Evaluation Contract Set 解析，且 Artifact Contract 版本与当前下游兼容 | pending | |
 | CORE-G-003 | 模板、必填字段、Manifest 成员集及成员摘要完整一致 | pending | |
 | CORE-G-004 | Disposition 与内容、Host、Evidence 一致 | pending | |
-| CORE-G-005 | Evidence Index 完整，引用可解析并支持对应结论 | pending | |
+| CORE-G-005 | Evidence Index 完整，引用可解析并支持对应结论；存在正式 action 时包含适用的 Pre-execution 读回 Evidence | pending | |
 | CORE-G-006 | 必要输入缺口均已唯一登记；最终化时不存在未解决的阻塞项 | pending | |
 | CORE-G-007 | 直接 Input 中与当前纳入范围相关的未关闭 Exception 已被 carried，或有 Evidence 证明不相交、resolved / superseded；当前 Exception 记录和授权有效 | pending | |
 | CORE-G-008 | QA Check Set 与 Evaluation Contract Set 一致，全部应执行 Check 均已唯一登记 | pending | |
-| CORE-G-009 | 已完成人工最终确认，且确认记录绑定当前 Revision、Control Input Digest、Evaluation Contract Set 与 Check Set Result Digest | pending | |
+| CORE-G-009 | 已完成最终确认，且确认记录绑定当前 Revision、Control Input Digest、Evaluation Contract Set 与 Check Set Result Digest | pending | |
 
 ### QA Check Set
 
-QA 复用现有 Check、Evidence、Gate 和 Human Confirmation，不创建独立 QA Artifact、Phase、Manifest、Status 或平行 Ruleset。
+QA 复用现有 Check、Evidence、Gate 和 Final Confirmation，不创建独立 QA Artifact、Phase、Manifest、Status 或平行 Ruleset。
 
 每个 Artifact 的 QA Check Set 由以下内容确定性组成：
 
@@ -396,11 +417,11 @@ QA 复用现有 Check、Evidence、Gate 和 Human Confirmation，不创建独立
 
 QA Check Set 是逻辑集合，不新增正文表格。每个当前应执行 Check 必须恰好登记一次；存在历史 Attempt 时，Phase Spec 必须确定唯一 Current Attempt，只有其 Check 行进入 QA Check Set，历史行不参与重复判断或摘要。`pass` 必须有可复核 Evidence 或确定性说明，`fail` 必须记录失败事实，`pending` 表示尚未完成。`n/a` 或 `waived` 只有对应 Spec 明确允许时才可使用；QA Check Set 不能整体豁免，具体义务继续通过 Exception 处理。
 
-Gate 按 Core → Phase → Domain Matrix → Extension 的固定顺序聚合 QA Check Set。Gate Summary 决定 Artifact 是否可以进入下游，Human Confirmation 确认结论和未关闭风险；VFY 判断产品是否符合 Requirement、Design 和预期用途，不代替各 Phase 的 QA。
+Gate 按 Core → Phase → Domain Matrix → Extension 的固定顺序聚合 QA Check Set。Gate Summary 决定 Artifact 是否可以进入下游，Final Confirmation 确认当前 Artifact 与 Gate 结论；VFY 判断产品是否符合 Requirement、Design 和预期用途，不代替各 Phase 的 QA。
 
 ### Control Input Digest
 
-Gate 和人工确认必须绑定实际被检查的内容，不能只绑定可在草稿期继续修改的 Revision。
+Gate 和 Final Confirmation 必须绑定实际被检查的内容，不能只绑定可在草稿期继续修改的 Revision。
 
 `Control Input Digest` 按以下固定方式计算：
 
@@ -417,20 +438,18 @@ Gate 和人工确认必须绑定实际被检查的内容，不能只绑定可在
 3. 对每个目标数据单元格，保留左右分隔符，把两者之间的全部原始字节替换为一个 ASCII 空格；其他字节完全不变；
 4. Digest 自身单元格也使用同一替换规则；投影完成后直接对结果字节计算 SHA-256，不再由 Markdown 解析器重新序列化。
 
-Domain Gate 的 `Domain Control Input Digest` 必须由 Phase Spec 固定输入范围，并排除全部 Gate Attempt、Gate Summary 和其他 Gate 派生字段；Artifact Gate 在全部 Domain Gate 关闭后计算父 Artifact 的 Control Input Digest。
+任何参与摘要的内容或成员发生变化，旧逐项检查、Gate Summary 和 Final Confirmation 都立即失效；不得复制旧结果后仅更新摘要。
 
-任何参与摘要的内容或成员发生变化，旧逐项检查、Gate Summary 和 Human Confirmation 都立即失效；不得复制旧结果后仅更新摘要。
-
-每个 Phase Gate 必须使用稳定 Check ID。全部 Check 在人工确认前形成唯一 `Check Set Result Digest`：
+每个 Phase Gate 必须使用稳定 Check ID。全部 Check 在最终确认前形成唯一 `Check Set Result Digest`：
 
 1. 选择 QA Check Set 中除 `CORE-G-009` 外每个 Check 的当前完整 Markdown 数据行；subordinate 只选择 Phase Spec 确定的唯一 Current Attempt；缺失、当前重复或 Result 为 `pending` 时摘要无效；
 2. 按 Core → Phase → subordinate → Extension 排序，每组内按 Check ID 升序；每行保持原始 UTF-8 字节并追加一个 LF；
 3. 对连接后的字节计算 SHA-256，写作 `sha256:<64 位小写十六进制>`；
-4. 任一当前 Check 行的 Result 或 Evidence or Notes 变化都会使旧 Check Set Result Digest 失效；Current subordinate record 的其他字段通过 Control Input Digest 绑定，并使旧 Human Confirmation 失效。
+4. 任一当前 Check 行的 Result 或 Evidence or Notes 变化都会使旧 Check Set Result Digest 失效；Current subordinate record 的其他字段通过 Control Input Digest 绑定，并使旧 Final Confirmation 失效。
 
-`CORE-G-009` 由匹配当前 Revision、Control Input Digest、Evaluation Contract Set 和 Check Set Result Digest 的 Human Confirmation 关闭，因此不进入该摘要，避免自引用。
+`CORE-G-009` 由匹配当前 Revision、Control Input Digest、Evaluation Contract Set 和 Check Set Result Digest 的 Final Confirmation 关闭，因此不进入该摘要，避免自引用。
 
-最终 Artifact Gate Summary 聚合 Core、Phase 及适用的 Domain Gate，并保存以下唯一汇总记录：
+最终 Artifact Gate Summary 聚合 Core、Phase、subordinate 与 Extension Check，并保存以下唯一汇总记录：
 
 ```markdown
 | Evaluated Revision | Control Input Digest | Evaluation Contract Set | Check Set Result Digest | Gate Result | Exception References | Evaluator | Evaluated At |
@@ -440,25 +459,48 @@ Domain Gate 的 `Domain Control Input Digest` 必须由 Phase Spec 固定输入�
 
 Aggregate Gate Result 使用 `pending`、`pass`、`pass_with_exception` 或 `fail`。所有必要 Check 为 `pass` 或具有有效理由的 `n/a`，且没有 Waiver 时为 `pass`；存在有效 Waiver 时只能为 `pass_with_exception`；存在 `fail` 时为 `fail`；其余为 `pending`。
 
-`Evaluation Contract Set` 必须使用固定 Reference Set 语法，列出本次 Gate 实际执行的全部不可变规则来源：至少包含 Core Spec 和当前 Phase Spec；复合 Artifact 还包含适用的 Domain Spec，实际启用的 Extension Contract 也必须加入。版本机制未闭合前，每个元素固定写作 `<仓库相对 Spec 路径>@sha256:<64 位小写十六进制>`。集合变化时，未冻结 Revision 立即失效旧 Gate 与 Human Confirmation 并在当前 Revision 重跑；已冻结 Revision 必须创建新 Revision。
+`Evaluation Contract Set` 必须使用固定 Reference Set 语法，列出本次 Gate 实际执行的全部不可变规则来源：至少包含 Core Spec 和当前 Phase Spec；复合 Artifact 还包含适用的 Domain Spec，实际启用的 Extension Contract 也必须加入。版本机制未闭合前，每个元素固定写作 `<仓库相对 Spec 路径>@sha256:<64 位小写十六进制>`。`Gate Result=pending` 时允许先只填写该字段作为 Phase Spec Binding，其他摘要在最终化时补齐。集合变化时，未冻结 Revision 立即失效旧 Gate、Final Confirmation 和旧规则下的正式 action 输出，并按 Pre-execution 规则重新处理；已冻结 Revision 必须创建新 Revision。
+
+同一 Artifact 的内置 Core、Phase 和 Domain Contract 必须来自同一 Spec Snapshot；Extension Contract 不受该目录约束，但仍须以不可变 Spec Reference 明确绑定。不同 Artifact 可以分别绑定不同 Snapshot，并按跨 Snapshot 输入兼容规则衔接。
 
 `CORE-G-001` 至 `CORE-G-009` 都是 Contract Integrity Check，不可标记为 `n/a` 或 `waived`。Phase Spec 必须明确允许豁免的专属 Check；未声明时只允许 `pass`、`fail` 或 `pending`。
 
-人工确认使用固定记录，并绑定被确认的 Revision、Control Input Digest、Evaluation Contract Set 与 Check Set Result Digest：
+最终确认使用固定记录，并绑定被确认的 Revision、Control Input Digest、Evaluation Contract Set 与 Check Set Result Digest：
 
 ```markdown
-| Revision | Control Input Digest | Evaluation Contract Set | Check Set Result Digest | Result | Confirmer | Role | Accepted Exception References | Confirmed At |
-|---|---|---|---|---|---|---|---|---|
-| 1 | | | | pending | | | None | |
+| Revision | Control Input Digest | Evaluation Contract Set | Check Set Result Digest | Result | Mode | Confirmer | Role | Authority Reference | Accepted Exception References | Confirmed At |
+|---|---|---|---|---|---|---|---|---|---|---|
+| 1 | | | | pending | | | | None | None | |
 ```
 
-Human Confirmation `Result` 使用 `pending`、`approved` 或 `rejected`。只有 `approved` 可以满足人工确认 Gate Check。
+Final Confirmation `Result` 使用 `pending`、`approved` 或 `rejected`。非 `pending` 时 `Mode` 必须为 `human` 或 `delegated`；只有 `approved` 可以满足最终确认 Gate Check。`human` 使用项目实际授权角色，`Authority Reference` 引用本次人工确认依据；业务取舍、主观 UI / UX 且没有真实人工 Method Evidence、生产或外部或不可逆动作及其权限、Exception 和风险接受必须使用 `human` 或既有外部权威，不能委托给模型。
 
-Human Confirmation 为 `approved` 时，`Accepted Exception References` 必须与将写入当前 Artifact Gate Summary 的全部 `active` 和 `carried` Exception 集合完全一致；缺失、额外或过期引用均不能关闭 `CORE-G-009`。
+`Authority Reference` 固定写作 `<项目相对路径>@sha256:<64 位小写十六进制>`，指向已持久化的确认或委托记录；路径不得越出项目，摘要必须匹配原始字节。
 
-Revision、Control Input Digest、Evaluation Contract Set 或 Check Set Result Digest 变化后，旧 Gate 汇总和人工确认不得自动沿用。
+`delegated` 只允许在其余 Check 全部关闭、Open Items 为 `None`、没有 `active/carried` Exception、没有 `waived`、Gate 只能聚合为 `pass` 时使用。Role 固定为 `Delegated Independent Reviewer`；Confirmer 必须如实填写独立 review execution 或 agent ID，不得填写 `User` 或任何虚构人工身份；`Authority Reference` 的记录必须同时保存准确委托依据、独立复核执行、当前 Revision 与四项绑定摘要。Reviewer 不得创建或修改该 Revision，不得是 IMP Claim Owner、产品 Result 执行者、VFY Method 执行者或 RLS effect executor。委托确认只关闭 Artifact 合规确认，不授予产品修改、验证环境操作、发版、生产、外部或其他 action 权限。
 
-Artifact 最终化顺序固定为：冻结当前待检查内容并计算 Phase 定义的前置 Input Digest → 关闭适用的 subordinate checks → 更新派生字段和最终成员摘要 → 执行 Core 与 Phase Check（暂不关闭 `CORE-G-009`）→ 计算最终 Control Input Digest 与 Check Set Result Digest → 完成人工确认 → 关闭 `CORE-G-009` → 聚合唯一 Artifact Gate Summary → 按固定映射派生并写入 Artifact Status。只有 Aggregate Gate Result 为 `pass` 或 `pass_with_exception` 时，才固化 Revision 目录并将 Revision Index 更新为 `frozen`；`fail` 写入 `failed`，`pending` 写入 `draft` 或 `waiting_input`，Revision 均保持 `open` 以便修正。Gate Result 与 Status 必须在同一次最终化尝试中写入；冻结前再检查 Revision、摘要、Gate Result 与 Status 一致。复合 Artifact 的 Phase Spec 必须进一步固定前置摘要与成员刷新的顺序。
+参与委托确认交叉检查的执行身份字段——Final Confirmation Confirmer、Authority Reviewer / Reviewed Executor、IMP Claim Owner、VFY Method Executor 和 RLS Executor——每项只能填写一个稳定身份 token，格式为 `[A-Za-z0-9][A-Za-z0-9._:/@%+#-]*`。Markdown 行内代码只影响显示，比较前移除最外层反引号；不得用逗号、空格或展示格式在一个字段内合并多个身份。多人或多组件共同执行时，填写本次实际负责的统一执行、流水线或运行 ID，人员分工另由项目 Evidence 保存。
+
+`delegated` 的 Authority 文件不进入当前 Artifact Supporting Manifest，避免摘要自引用；文件使用以下最小固定记录。`artifact` 保存准确 Artifact Reference；`decision` 固定为 `approved`；`decided_at` 使用 RFC 3339；`Delegation Basis` 必须是可复用的项目相对 `path@sha256` 授权记录。表内 Reviewer 必须与 Final Confirmation 一致，Reviewed Executor 必须是不同的执行身份，三项摘要必须与当前 Final Confirmation 一致，`Independence` 与 `Excluded Authority` 使用下列固定集合。Validator 只对 Artifact 已有执行身份字段做交叉校验并验证声明绑定，不能从本地文件密码学证明真实人员或 agent 身份；身份真实性依赖执行平台和项目审计信任边界。Artifact 没有权威执行身份字段时同样由该外部边界保证，不得宣称 Validator 已证明创作者身份。`human` Authority 只需满足项目相对路径与原始字节摘要，不强制使用此表。
+
+```markdown
+---
+contract: sdlc-ai-spec/final-confirmation-authority/v0.1
+artifact: <ARTIFACT-ID>@<Revision>
+decision: approved
+decided_at: <RFC3339>
+---
+
+| Delegation Basis | Reviewer Identity | Reviewer Role | Reviewed Executor Identity | Independence | Control Input Digest | Evaluation Contract Set | Check Set Result Digest | Excluded Authority |
+|---|---|---|---|---|---|---|---|---|
+| <项目相对授权路径>@sha256:<摘要> | <独立复核执行 ID> | Delegated Independent Reviewer | <被复核执行 ID> | fresh_read, recomputed, separate_execution_identity | <当前摘要> | <当前规则集合> | <当前摘要> | business_or_design_choice, exception_or_risk_acceptance, external_action_or_side_effect, external_permission_or_authorization, subjective_or_human_experience_judgment |
+```
+
+Final Confirmation 为 `approved` 时，`Accepted Exception References` 必须与将写入当前 Artifact Gate Summary 的全部 `active` 和 `carried` Exception 集合完全一致；`delegated` 时两者都必须为 `None`。缺失、额外或过期引用均不能关闭 `CORE-G-009`。
+
+Revision、Control Input Digest、Evaluation Contract Set 或 Check Set Result Digest 变化后，旧 Gate 汇总和最终确认不得自动沿用。
+
+Artifact 最终化顺序固定为：冻结当前待检查内容并计算 Phase 定义的前置 Input Digest → 关闭适用的 subordinate checks → 更新派生字段和最终成员摘要 → 执行 Core 与 Phase Check（暂不关闭 `CORE-G-009`）→ 计算最终 Control Input Digest 与 Check Set Result Digest → 完成 Final Confirmation → 关闭 `CORE-G-009` → 聚合唯一 Artifact Gate Summary → 按固定映射派生并写入 Artifact Status。只有 Aggregate Gate Result 为 `pass` 或 `pass_with_exception` 时，才固化 Revision 目录并将 Revision Index 更新为 `frozen`；`fail` 写入 `failed`，`pending` 写入 `draft` 或 `waiting_input`，Revision 通常保持 `open` 以便修正。只有适用的 Core 或 Phase 规则明确要求保留已经发生的 action 或控制失败，并通过新最大 Revision 或 Identity Namespace Recovery Artifact 继续时，才可在准确保存状态、Evidence 和 `fail` Gate 后将当前 `open` Revision 更新为 `abandoned`；不得借此规避失败 Gate 或删除既有 Evidence。Gate Result 与 Status 必须在同一次最终化尝试中写入；冻结前再检查 Revision、摘要、Gate Result 与 Status 一致。复合 Artifact 的 Phase Spec 必须进一步固定前置摘要与成员刷新的顺序。
 
 ## Lifecycle Applicability
 
@@ -485,7 +527,7 @@ Artifact 最终化顺序固定为：冻结当前待检查内容并计算 Phase �
 - 跳过未生成独立 Artifact 的 Phase 后，下一个 `required` Phase 必须绑定最近的可用上游 Artifact Revision，并保留完整 Disposition、Host 和 Exception 解析链；
 - 跳过后只有在下一个 `required` Phase 的 Input Readiness 能由现有固定字段、准确引用和执行时不可变基线确定性满足时才可继续；否则必须返回需要补齐该契约的上游 Phase，PLN 缺少原子执行依据时必须改为 `required`；
 - 每个实际生成的 Phase Artifact 都必须执行完整 QA Check Set 和 Artifact Gate；
-- 所有 Artifact 都需要人工确认。
+- 所有 Artifact 都需要 Final Confirmation；只有满足委托边界时可使用 `delegated`。
 
 ### Delivery Scope Aggregation
 
@@ -495,7 +537,7 @@ Delivery Scope Aggregation 解决多个完整的直接上游 Artifact 共同进�
 - 同一已选 Binding 范围内的前置 Implementation Result、Rework Artifact、Evidence 或其他控制输入不因数量单独触发聚合；若其引入新 Outcome、范围或协调义务，则成为 Scope Input；
 - 只有一个 Scope Input 时，不因聚合要求强制创建 PLN；
 - 存在多个 Scope Input 时必须执行聚合，PLN Disposition 必须为 `required`；
-- v0.1 的 Scope Input 只允许纳入完整 Artifact，不支持只选择其中部分 Item；需要独立交付部分范围时，先由上游形成边界完整的独立 Artifact，避免在 PLN 猜测 Requirement、Decision、Dependency、VFY Point 和 Exception 的闭包；
+- 当前 Artifact Contract 的 Scope Input 只允许纳入完整 Artifact，不支持只选择其中部分 Item；需要独立交付部分范围时，先由上游形成边界完整的独立 Artifact，避免在 PLN 猜测 Requirement、Decision、Dependency、VFY Point 和 Exception 的闭包；
 - PLN 因其他规划义务为 `required` 时，无论 Input 数量多少都保留以下固定章节；
 - Delivery Scope 使用 PLN 的 Artifact ID、Revision、Status 和 Gate，不建立 `delivery_scope_id` 或平行状态。
 
@@ -536,14 +578,14 @@ pending → required → embedded → waived → n/a
 - 任一来源为 `pending` 时，聚合结果为 `pending`，PLN 不能通过 Gate；
 - 不存在 `pending` 时，任一来源为 `required` 则结果为 `required`；否则任一来源为 `embedded` 则为 `embedded`；否则任一来源为 `waived` 则为 `waived`；全部为 `n/a` 时才为 `n/a`；
 - Basis References 必须包含参与该 Phase 聚合的全部直接 Source Artifact References；
-- Host References 汇总全部 `embedded` 来源的 Host，Exception References 汇总全部与当前 Delivery Scope 相交的 `waived` 来源 Exception；即使最终结果被 `required` 覆盖也不得丢失，无法确定是否相交时必须纳入；
+- Host References 汇总全部 `embedded` 来源的 Host，Exception References 按准确直接来源引用汇总全部与当前 Delivery Scope 相交的 `waived` 来源 Exception，不沿 Origin 链自动合并；即使最终结果被 `required` 覆盖也不得丢失，无法确定是否相交时必须纳入；
 - `embedded` 结果必须至少有一个 Host Reference，任何 `waived` 来源都必须有 Exception Reference，`n/a` 必须可从来源解析客观原因；
 - 来源事实无效或相互冲突时不能用优先级掩盖，必须进入阻塞 Open Item；
 - Delivery Scope 或聚合结果变化后，按普通 PLN 内容变化处理 Revision、Gate 和下游重新检查。
 
 ## 固定正文骨架
 
-每个 Phase 在以下骨架中加入自身固定章节：
+以下骨架只定义必须保留的通用章节和默认顺序；完整章节顺序以对应 Phase Spec 的固定模板为唯一权威。
 
 ```markdown
 # <Artifact Title>
@@ -569,25 +611,28 @@ pending → required → embedded → waived → n/a
 
 除终点 RLS 外，每个 Phase 都必须保留 `Lifecycle Applicability`；RLS 没有下游 Phase，因此在固定骨架中删除该章节。`Summary`、`Scope`、`Evidence` 和 `Gate` 为所有 Artifact 的核心章节，不得删除或标记为 `n/a`；非终点 Phase 的 `Lifecycle Applicability` 同样不得删除或标记为 `n/a`。
 
+正文只记录当前 Revision 的业务内容和控制依据，不复制由其他权威字段派生、且会随最终化变化的当前控制状态。`Summary`、`Scope` 和 `Open Items` 不得复述 Front Matter `status`、Revision Index `State`、Final Confirmation `Result`、逐项 Check Result 或 Artifact Gate Result；需要说明控制边界时只引用对应权威章节，不抄写其当前值。这样 open Revision 最终化时不需要同步修改多份状态描述，冻结 Snapshot 也不会保留相互矛盾的状态文字。
+
 ### Open Items Contract
 
 所有 Phase 的 `Open Items` 使用同一固定表格：
 
 ```markdown
-| ID | 所需输入或待确认决策 Needed Input or Decision | 预期来源 Expected Source | 被阻塞项 Blocked References | 是否阻塞 Blocking | 状态 State | 解决结果或证据 Resolution or Evidence |
-|---|---|---|---|---|---|---|
-| None | No open items | N/A | N/A | N/A | none | N/A |
+| ID | 所需输入或待确认决策 Needed Input or Decision | 预期来源 Expected Source | 被阻塞项 Blocked References | 状态 State | 解决结果或证据 Resolution or Evidence |
+|---|---|---|---|---|---|
+| None | No open items | N/A | N/A | none | N/A |
 ```
 
 规则：
 
 - Open Item ID 使用 `OI-001` 顺序编号，在当前 Artifact 内稳定且不得复用；
-- 实际 Open Item 的 `Blocking` 只使用 `yes` 或 `no`，`State` 只使用 `open` 或 `resolved`；`Blocking=no` 只用于不影响当前 Artifact 最终化、但需要显式保留给下游或后续 Revision 的问题；
+- 实际 Open Item 的 `State` 只使用 `open` 或 `resolved`；所有未解决 Open Item 都阻塞其 `Blocked References`，不影响当前 Artifact 最终化的想法、提醒或未来事项不进入 Open Items；
 - `Open Items` 记录尚未获得的事实、澄清或外部决策；Artifact 内部尚未完成的编写或检查工作由 Gate `pending` 表达，不创建伪输入项；
-- 每个已知但尚未提供的必要 Input 或事实必须恰好对应一条 `Blocking=yes, State=open` 记录；v0.1 的 `Blocked References` 只使用稳定 Check ID，按 `, ` 分隔、去重和升序，并作为该关系的唯一权威来源；
+- 每个已知但尚未提供、且仍会影响当前 Revision 合法结论或控制流的必要 Input 或事实，必须恰好对应一条 `State=open` 记录；当前 Artifact Contract 的 `Blocked References` 必须非空，只使用稳定 Check ID，按 `, ` 分隔、去重和升序，并作为阻塞关系的唯一权威来源；
+- Phase Spec 明确注册的失败早停可以把仅影响未执行义务、但不会推翻已确认 fail 或改变 Return 归因的输入缺口转为当前 Revision 的 `resolved`；Resolution 必须引用 fail、Return 和 Evidence，明确输入尚未取得、只是不再阻塞当前失败检查点，并登记后续 Revision 对仍适用义务的重新评估要求。该处置不表示输入已提供、义务已完成或正常下游已获准；Phase Spec 必须保留未执行结果并禁止其进入正常下游；
 - 每条阻塞记录必须对应真实缺口；同一缺口不得拆成重复记录以改变 Status；
-- 任一 `Blocking=yes` 且 `State=open` 的记录确定性派生 `waiting_input`；没有此类记录而 Gate 尚未关闭时派生 `draft`；
-- `resolved` 必须填写可解析的 Resolution 或 Evidence；删除记录或把 `Blocking` 改为 `no` 不能替代解决；
+- 不存在已确认的 `fail` 或人工拒绝时，任一 `State=open` 的记录确定性派生 `waiting_input`；存在 `fail` 或拒绝时仍按 Artifact Status 的固定优先级派生 `failed`；没有此类记录而 Gate 尚未关闭时派生 `draft`；
+- `resolved` 必须填写可解析的 Resolution 或 Evidence；删除记录或清空 `Blocked References` 不能替代解决；
 - `ready` 或 `ready_with_exception` 不允许存在未解决的阻塞项；无记录时只保留上表唯一 `None` 行，`State=none` 只允许用于该行。
 
 ## AI 与人工协作指导
@@ -596,8 +641,8 @@ pending → required → embedded → waived → n/a
 
 - 该表属于 Phase 执行指导，不进入生成的 Lifecycle Artifact 模板；
 - 每个 Phase 保留 3 至 5 行与自身直接相关的内容，不建立完整职责矩阵；
-- Spec 合规性仍只由 Artifact、Evidence、Check、Gate 和 Human Confirmation 判断，不以 AI 使用、人工投入或固定比例作为条件；
-- AI 可以分析、生成、执行和提出建议；业务语义、关键设计取舍、风险接受和最终确认仍由具有相应权威的人工决定；
+- Spec 合规性仍只由 Artifact、Evidence、Check、Gate 和 Final Confirmation 判断，不以 AI 使用、人工投入或固定比例作为条件；
+- AI 可以分析、生成、执行和提出建议；业务语义、关键设计取舍和风险接受仍由具有相应权威的人工决定；只有满足本节委托边界的 Artifact 合规确认可由独立 Reviewer 完成。
 - 项目扩展可以加强角色或审批要求，但不能降低核心 Contract。
 
 ## Project Initialization and Context
@@ -616,7 +661,7 @@ pending → required → embedded → waived → n/a
 ## 当前规划边界
 
 - Revision Snapshot 与 Revision Resolver 的逻辑 Contract 已定义；本阶段不实现解析工具。
-- 最低 QA 逻辑 Contract 已由 Check Set、Evidence、Gate 和 Human Confirmation 闭合；本阶段不创建独立 QA 产物或实现工具。
+- 最低 QA 逻辑 Contract 已由 Check Set、Evidence、Gate 和 Final Confirmation 闭合；本阶段不创建独立 QA 产物或实现工具。
 - PLN Phase 模板由 `drafts/300-pln-spec.md` 单独定义；本 Core 只保留通用 Delivery Scope Aggregation Contract，不重复 Phase 规则。
 - IMP Binding、领取、实施方法、结果、检查与 Gate Contract 由 `drafts/400-imp-spec.md` 定义；Claim 存储和额外 Result Locator 的实现仍未定义。
 - VFY Phase 模板由 `drafts/500-vfy-spec.md` 定义；本 Core 不重复其 Target、Method、Conclusion 和 Return 规则。

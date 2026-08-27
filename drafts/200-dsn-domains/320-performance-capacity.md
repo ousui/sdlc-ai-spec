@@ -1,7 +1,7 @@
 ---
 title: "性能与容量 Performance and Capacity"
 status: draft
-scope: DSN Domain 固定模板、规则与专属 Gate
+scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
 
@@ -21,8 +21,8 @@ parent: ../200-dsn-spec.md
 适用性：
 
 - 改变关键路径、外部依赖、查询、缓存、并发、数据量或资源消耗时，先判断是否超出现有基线适用范围或产生实质工作负载、资源包络或质量目标偏差；存在独立设计义务时才为 `required`；
-- 存在明确 SLA、SLO、吞吐量、延迟或容量要求，且尚无准确 Host 完整承载设计响应时，为 `required`；
-- 现有性能基线完整覆盖，且没有实质工作负载、资源包络或质量目标偏差时，可以为 `embedded`；
+- 存在明确 SLA、SLO、吞吐量、延迟或容量要求，且当前变化需要设计响应时，为 `required`；
+- 现有性能基线完整覆盖，且没有实质工作负载、资源包络或质量目标偏差时，可以引用准确 Baseline 判定为 `n/a`；
 - 不存在有意义的性能或容量影响时，可以为 `n/a`；
 - 明显存在性能影响但缺少目标值时，不能标记为 `n/a`，必须返回 REQ 补充或进入 `waiting_input`；
 - 紧急而经授权跳过性能设计时必须使用 `waived`。
@@ -83,16 +83,14 @@ parent: ../200-dsn-spec.md
 - 监控数据、压测报告和容量报表可以作为 Supporting Artifact；
 - VFY Points 必须覆盖目标工作负载、性能指标、容量限制和降级行为。
 
-专属 Gate：
+父 Gate 子检查：
+
+以下检查只在父 DSN Artifact Gate 中按 Check ID 登记一次，不写入 Domain 子文件。
 
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| DSN-DG-320-002 | 工作负载、峰值、并发和数据量具有来源 | pending |  |
-| DSN-DG-320-003 | 性能目标包含指标、单位、统计口径和窗口 | pending |  |
-| DSN-DG-320-004 | 容量模型、余量和限制具有计算或 Evidence | pending |  |
-| DSN-DG-320-005 | 估算项明确标识且不存在虚假精度 | pending |  |
-| DSN-DG-320-006 | 资源预算和潜在瓶颈已按适用性处理 | pending |  |
-| DSN-DG-320-007 | 扩展或优化策略可以追踪至 Decision | pending |  |
-| DSN-DG-320-008 | 过载、降级和恢复条件明确 | pending |  |
+| DSN-DG-320-001 | 工作负载和性能目标具有来源、指标、单位、口径与窗口，未知值未被编造 | pending |  |
+| DSN-DG-320-002 | 容量、余量、资源和瓶颈具有计算或 Evidence，估算不含虚假精度 | pending |  |
+| DSN-DG-320-003 | 扩展、优化、过载、降级与恢复策略可追踪，并由 VFY Points 覆盖 | pending |  |
 
 > Parent Spec: [Design Phase Spec](../200-dsn-spec.md)

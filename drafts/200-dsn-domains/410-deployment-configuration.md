@@ -1,7 +1,7 @@
 ---
 title: "部署与配置 Deployment and Configuration"
 status: draft
-scope: DSN Domain 固定模板、规则与专属 Gate
+scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
 
@@ -22,7 +22,7 @@ parent: ../200-dsn-spec.md
 适用性：
 
 - 新增或改变部署单元、环境、拓扑、配置、Secret、资源或部署策略时，通常为 `required`；
-- 完全沿用现有部署能力且可以准确引用时，可以为 `embedded`；
+- 完全沿用现有部署能力且当前变化没有运行或配置设计义务时，可以引用准确 Baseline 判定为 `n/a`；
 - 不存在任何运行或配置影响时，可以为 `n/a`；
 - 发生实际发版不代表本 Domain 必须为 `required`，RLS 可以复用既有部署设计；
 - 环境或配置事实不明确时必须进入 `waiting_input`，不得猜测默认值、地址或资源规格。
@@ -98,17 +98,14 @@ parent: ../200-dsn-spec.md
 - 本 Domain 不记录实际部署日志、执行结果或长期 Runbook；
 - VFY Points 必须覆盖部署单元、配置解析、就绪条件、迁移和失败行为。
 
-专属 Gate：
+父 Gate 子检查：
+
+以下检查只在父 DSN Artifact Gate 中按 Check ID 登记一次，不写入 Domain 子文件。
 
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| DSN-DG-410-002 | 部署单元、版本来源、Runtime 和责任方明确 | pending |  |
-| DSN-DG-410-003 | 每个部署范围具有唯一且有效的定义来源 | pending |  |
-| DSN-DG-410-004 | 环境差异和外部依赖明确 | pending |  |
-| DSN-DG-410-005 | 运行拓扑与资源、可靠性和安全目标一致 | pending |  |
-| DSN-DG-410-006 | Configuration Contract 完整且不存在猜测值 | pending |  |
-| DSN-DG-410-007 | Secret 只记录引用和管理方式，不包含真实值 | pending |  |
-| DSN-DG-410-008 | 部署策略、成功条件和失败处理明确 | pending |  |
-| DSN-DG-410-009 | 初始化或迁移顺序、幂等和 Evidence 明确 | pending |  |
+| DSN-DG-410-001 | 部署单元、版本来源、环境、Runtime、责任方和定义来源完整 | pending |  |
+| DSN-DG-410-002 | 拓扑、依赖、配置和 Secret 管理完整一致，不含猜测值或真实凭据 | pending |  |
+| DSN-DG-410-003 | 部署、初始化与迁移的顺序、幂等、成功和失败行为明确，并由 VFY Points 覆盖 | pending |  |
 
 > Parent Spec: [Design Phase Spec](../200-dsn-spec.md)

@@ -1,7 +1,7 @@
 ---
 title: "可维护性与扩展性 Maintainability and Extensibility"
 status: draft
-scope: DSN Domain 固定模板、规则与专属 Gate
+scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
 
@@ -20,9 +20,9 @@ parent: ../200-dsn-spec.md
 
 适用性：
 
-- Requirement 明确需要插件、Provider、跨编程语言实现或多种可替换技术实现，且尚无准确 Host 完整承载扩展模型时，为 `required`；
+- Requirement 明确需要插件、Provider、跨编程语言实现或多种可替换技术实现，且当前变化需要设计扩展模型时，为 `required`；
 - 存在明确的模块化、复用、可分析、可修改等维护目标，或可以由 Requirement 或 Evidence 证明的持续变化压力时，存在独立设计义务则为 `required`；
-- 项目已有固定扩展模型并且完整覆盖时，可以为 `embedded`；
+- 项目已有固定扩展模型并完整覆盖，且当前变化没有新增或改变扩展义务时，可以引用准确 Baseline 判定为 `n/a`；
 - 普通局部实现且没有新的维护或扩展边界时，可以为 `n/a`；
 - 不得为了未来可能需求而虚构扩展点、接口或抽象层。
 
@@ -95,19 +95,14 @@ parent: ../200-dsn-spec.md
 - 不要求列出每个源文件、类或函数，除非它们本身构成稳定维护边界；
 - VFY Points 必须覆盖默认实现、适用扩展实现、选择机制和依赖约束。
 
-专属 Gate：
+父 Gate 子检查：
+
+以下检查只在父 DSN Artifact Gate 中按 Check ID 登记一次，不写入 Domain 子文件。
 
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| DSN-DG-350-001 | 适用的维护压力与变化驱动已完整识别并具有准确来源 | pending |  |
-| DSN-DG-350-002 | 稳定核心、可变区域和禁止影响明确 | pending |  |
-| DSN-DG-350-003 | 每个 Extension Point 具有现实需求和 Contract | pending |  |
-| DSN-DG-350-004 | 默认实现或其 N/A 原因明确 | pending |  |
-| DSN-DG-350-005 | 当前需要的实现及适用条件明确 | pending |  |
-| DSN-DG-350-006 | 注册、选择和依赖规则明确 | pending |  |
-| DSN-DG-350-007 | 不存在推测性实现或无依据抽象 | pending |  |
-| DSN-DG-350-008 | 演进、兼容和移除规则准确 | pending |  |
-| DSN-DG-350-009 | 维护文档、诊断和 VFY 引用完整 | pending |  |
-| DSN-DG-350-012 | 适用的可维护性目标具有设计响应和 VFY 引用 | pending |  |
+| DSN-DG-350-001 | 维护压力、变化驱动、稳定核心、可变区域和目标具有准确来源 | pending |  |
+| DSN-DG-350-002 | 现实需要的 Extension Point、Contract、实现、注册和依赖规则完整 | pending |  |
+| DSN-DG-350-003 | 不存在推测性抽象；演进、兼容、移除、诊断和 VFY 设计完整 | pending |  |
 
 > Parent Spec: [Design Phase Spec](../200-dsn-spec.md)

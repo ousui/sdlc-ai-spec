@@ -1,7 +1,7 @@
 ---
 title: "界面与内容 UI and Content"
 status: draft
-scope: DSN Domain 固定模板、规则与专属 Gate
+scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
 
@@ -19,10 +19,10 @@ parent: ../200-dsn-spec.md
 
 适用性：
 
-- 新增或改变展示位置、信息层级、界面元素、状态呈现、动态内容来源或适配规则，且存在独立设计义务时为 `required`；
-- 完全复用已有界面且无需任何展示变化，并能够准确引用现有设计时，可以为 `embedded`；
+- 新增或改变展示位置、信息层级、界面元素、状态呈现、动态内容来源或适配规则时为 `required`；
+- 完全复用已有界面且没有任何展示变化时，可以引用准确 Baseline 判定为 `n/a`；
 - 没有用户界面和用户可见内容影响时，可以为 `n/a`；
-- DSN 因其他变化存在、但精确文案已由 REQ 与准确 Host 完整确定时，本 Domain 可以为 `embedded`；只有仍需决定承载位置、状态、动态规则或回退时才为 `required`；
+- 仅替换已由 REQ 准确确定的静态文案，且承载位置、状态、动态规则和回退均无设计义务时，DSN 整体可以为 `n/a`；否则本 Domain 为 `required`；
 - 当整个 Requirement 的结果已由 REQ 与准确 Baseline 完整确定，且不存在独立设计义务时，DSN 整体可以为 `n/a`；不得为满足本模板虚构 Design Decision。
 
 固定专属模板：
@@ -80,15 +80,14 @@ parent: ../200-dsn-spec.md
 - 原型、截图和设计源文件可以作为辅助材料，但固定表格是规范判定依据；
 - VFY Points 必须覆盖变化的页面、元素、状态呈现和内容。
 
-专属 Gate：
+父 Gate 子检查：
+
+以下检查只在父 DSN Artifact Gate 中按 Check ID 登记一次，不写入 Domain 子文件。
 
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| DSN-DG-130-002 | 新增或变化的页面和承载位置明确 | pending |  |
-| DSN-DG-130-003 | 信息层级和可见条件明确 | pending |  |
-| DSN-DG-130-004 | 新增或变化的界面元素已登记 | pending |  |
-| DSN-DG-130-005 | 适用的交互状态具有对应呈现 | pending |  |
-| DSN-DG-130-006 | 静态内容准确，动态内容来源和回退明确 | pending |  |
-| DSN-DG-130-007 | 适配条件和不变约束已按适用性处理 | pending |  |
+| DSN-DG-130-001 | 变化的页面、承载位置、信息层级、可见条件和界面元素完整 | pending |  |
+| DSN-DG-130-002 | 交互状态具有一致呈现，静态内容准确，动态内容来源与回退明确 | pending |  |
+| DSN-DG-130-003 | 适用的适配条件和不变约束明确，并由 VFY Points 覆盖 | pending |  |
 
 > Parent Spec: [Design Phase Spec](../200-dsn-spec.md)

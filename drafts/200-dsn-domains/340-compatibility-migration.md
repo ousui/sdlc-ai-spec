@@ -1,7 +1,7 @@
 ---
 title: "兼容与迁移 Compatibility and Migration"
 status: draft
-scope: DSN Domain 固定模板、规则与专属 Gate
+scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
 
@@ -24,7 +24,7 @@ parent: ../200-dsn-spec.md
 
 - 改变 Interface、Schema、Data、Config 或 Runtime，且影响已有消费者或已有状态时，通常为 `required`；
 - 新旧版本需要并行运行或分阶段切换时，为 `required`；
-- 变化完全兼容且已有规则完整覆盖时，可以为 `embedded`；
+- 变化完全兼容且不需要新增或改变兼容与迁移规则时，可以引用准确 Baseline 判定为 `n/a`；
 - 全新且隔离的能力，不存在旧版本、旧数据或既有消费者时，可以为 `n/a`；
 - 无法确认现有消费者、版本或数据规模时，必须进入 `waiting_input`，不得猜测；
 - 紧急直接切换而经授权跳过必要兼容设计时必须使用 `waived`。
@@ -90,17 +90,14 @@ parent: ../200-dsn-spec.md
 - API Diff、Schema Diff、数据盘点和消费者清单可以作为 Supporting Artifact；
 - VFY Points 必须覆盖兼容组合、迁移映射、切换条件、失败处理和移除条件。
 
-专属 Gate：
+父 Gate 子检查：
+
+以下检查只在父 DSN Artifact Gate 中按 Check ID 登记一次，不写入 Domain 子文件。
 
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| DSN-DG-340-002 | 受影响对象、当前状态和目标状态明确 | pending |  |
-| DSN-DG-340-003 | 已有消费者、版本和数据状态具有 Evidence | pending |  |
-| DSN-DG-340-004 | 兼容矩阵覆盖所有适用组合 | pending |  |
-| DSN-DG-340-005 | 每项变化具有兼容结论和判断依据 | pending |  |
-| DSN-DG-340-006 | 共存状态、进入条件和退出条件明确 | pending |  |
-| DSN-DG-340-007 | 迁移映射、校验和异常处理完整 | pending |  |
-| DSN-DG-340-008 | 切换、失败停止点和可逆性明确 | pending |  |
-| DSN-DG-340-009 | 废弃、移除和残留清理条件明确 | pending |  |
+| DSN-DG-340-001 | 受影响对象、消费者、版本、数据及当前和目标状态具有 Evidence | pending |  |
+| DSN-DG-340-002 | 兼容矩阵、结论、共存和迁移映射完整一致 | pending |  |
+| DSN-DG-340-003 | 切换、校验、异常停止、可逆性、废弃与清理条件明确，并由 VFY Points 覆盖 | pending |  |
 
 > Parent Spec: [Design Phase Spec](../200-dsn-spec.md)

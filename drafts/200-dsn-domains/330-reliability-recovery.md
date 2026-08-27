@@ -1,7 +1,7 @@
 ---
 title: "可靠性与恢复 Reliability and Recovery"
 status: draft
-scope: DSN Domain 固定模板、规则与专属 Gate
+scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
 
@@ -23,10 +23,10 @@ parent: ../200-dsn-spec.md
 适用性：
 
 - 改变关键能力、故障语义、恢复边界、数据丢失风险，或现有机制不能覆盖新的状态、外部依赖或异步行为时，存在独立设计义务则为 `required`；
-- 存在服务可用性 Availability、连续性、RTO 或 RPO 要求，且尚无准确 Host 完整承载设计响应时，为 `required`；
-- 现有可靠性机制完整覆盖且行为没有变化时，可以为 `embedded`；
+- 存在服务可用性 Availability、连续性、RTO 或 RPO 要求，且当前变化需要设计响应时，为 `required`；
+- 现有可靠性机制完整覆盖且行为没有变化时，可以引用准确 Baseline 判定为 `n/a`；
 - 不存在有意义的故障或恢复影响时，可以为 `n/a`；
-- 仅迁移过程的停止、恢复或降级由 `Compatibility and Migration` 承载；存在迁移可靠性义务且被其完整覆盖时，本 Domain 为 `embedded`，完全不存在稳态或迁移可靠性义务时才为 `n/a`；只有稳态关键能力、故障语义或恢复边界也发生变化时才独立设计 Reliability；
+- 仅迁移过程的停止、恢复或降级由 `Compatibility and Migration` 承载；若稳态关键能力、故障语义或恢复边界也发生变化，本 Domain 为 `required`；
 - 缺少必要恢复目标时不得编造，必须返回 REQ 补充或进入 `waiting_input`；
 - 紧急而经授权跳过可靠性设计时必须使用 `waived`。
 
@@ -91,16 +91,14 @@ parent: ../200-dsn-spec.md
 - 本 Domain 只定义恢复设计，不在此展开长期 Runbook 的逐步操作；
 - VFY Points 必须覆盖适用的 Failure Mode、Control、恢复目标和数据一致性结果。
 
-专属 Gate：
+父 Gate 子检查：
+
+以下检查只在父 DSN Artifact Gate 中按 Check ID 登记一次，不写入 Domain 子文件。
 
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| DSN-DG-330-002 | 关键能力、承载对象和依赖明确 | pending |  |
-| DSN-DG-330-003 | 适用的 Failure Mode 和影响范围已识别 | pending |  |
-| DSN-DG-330-004 | 每个 Failure Mode 具有 Control 或父 Decision / Exception 引用 | pending |  |
-| DSN-DG-330-005 | 可用性、RTO 和 RPO 具有准确来源 | pending |  |
-| DSN-DG-330-006 | 恢复流程、责任方和完成条件明确 | pending |  |
-| DSN-DG-330-007 | 数据或状态恢复及一致性检查明确 | pending |  |
-| DSN-DG-330-008 | 降级和恢复正常条件已按适用性处理 | pending |  |
+| DSN-DG-330-001 | 关键能力、依赖、Failure Mode、影响及 Control 或 Exception 完整 | pending |  |
+| DSN-DG-330-002 | 可用性、RTO、RPO 和恢复目标具有准确来源，未知值未被编造 | pending |  |
+| DSN-DG-330-003 | 恢复、状态一致性、降级与恢复正常条件明确，并由 VFY Points 覆盖 | pending |  |
 
 > Parent Spec: [Design Phase Spec](../200-dsn-spec.md)

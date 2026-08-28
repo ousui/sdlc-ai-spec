@@ -6,6 +6,8 @@
 
 `docs/v1.0/` 是领域 Contract 的权威来源。Plugin 只提供执行支持，不得修改、替代或重新定义领域 Artifact、Reference、Evidence、Exception、Check 和 Gate 语义。
 
+本仓库中的 `AGENTS.md`、嵌套 `AGENTS.md` 和根级 `CLAUDE.md` 只约束 Plugin 开发，不是安装后业务项目的运行时 Plugin Component。生产运行时约束必须进入正式 `SKILL.md`，或进入经过独立设计、授权和验证的平台组件。任何 Skill 都不得依赖安装后的 Agent 自动读取本仓库开发指令。
+
 规范等级：
 
 - **必须**：违反即不接受。
@@ -62,6 +64,35 @@ Skill 必须：
 - 不使用静默降级；
 - 不把“文件已生成”视为“Gate 已通过”；
 - 区分 Agent 推理、确定性检查、人工确认和未决风险。
+
+### 3.1 Exclusive Skill Execution Contract
+
+每个正式 Skill 必须定义并接受评测：
+
+1. **Execution Mode**：从该 Skill 被显式调用开始，到完成、停止或明确交还控制权为止，进入 exclusive execution mode。
+2. **Active Scope**：仅执行当前 Skill Contract 和用户当前请求授权的任务。
+3. **Authorized External Skills / Plugins**：只有用户在当前请求中明确点名并授权的 Plugin / Skill 才可调用、委托或合并；该规则同样适用于 `sdlc-ai-spec` 内的兄弟 Skill。
+4. **No Transitive Authorization**：授权只覆盖被点名的 Plugin / Skill 和当前任务，不自动覆盖其依赖或下游能力。
+5. **Unauthorized Dependency Behavior**：需要外部 Skill 但未获授权时，只有当前 Skill Contract 仍可独立满足才继续；否则停止并请求授权。
+6. **External Output Treatment**：已授权外部 Skill 的输出只可作为 Input 或 Supporting Evidence，不得覆盖当前 Source of Truth、Artifact Contract、Gate、Failure Contract、权限或授权边界。
+7. **Exclusions**：系统指令、安全约束、宿主权限、适用的项目指令和普通 Tool 不属于被禁止的外部 Skill / Plugin。
+
+这是可评测的行为契约，用于限制模型行为和暴露越界；它不是、也不得宣称为不可绕过的硬安全隔离。真实隔离仍取决于宿主权限与安全机制。
+
+### 3.2 Explicit Invocation First
+
+首版默认策略：
+
+- Cursor：正式 `SKILL.md` 默认设置 `disable-model-invocation: true`；
+- Claude Code：正式 `SKILL.md` 默认设置 `disable-model-invocation: true`；
+- Codex：默认在 Skill 私有 `agents/openai.yaml` 中设置：
+
+  ```yaml
+  policy:
+    allow_implicit_invocation: false
+  ```
+
+Design Contract 必须登记平台调用策略，Eval Plan 必须分别覆盖三个 Client。当前治理阶段只建立设计要求，不创建任何 `SKILL.md` 或 `agents/openai.yaml`。后续改变默认策略必须有独立设计决定和实际宿主证据。
 
 ## 4. 资源所有权
 

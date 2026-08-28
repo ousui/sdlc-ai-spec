@@ -6,7 +6,7 @@
 
 ## 当前阶段
 
-跨 Agent Plugin 骨架、Skill 开发流程和 Agent 开发约束已经建立，尚未创建正式 Skill。
+跨 Agent Plugin 骨架、Skill 开发流程、开发期与运行时边界、Exclusive Skill Execution Contract 和 Agent 开发约束已经建立，尚未创建正式 Skill。
 
 ## 已完成内容
 
@@ -23,6 +23,11 @@
 - 建立 `skills/AGENTS.md`，约束 Skill 实现、资源、触发和 Eval。
 - 建立 `docs/plugin-development/AGENTS.md`，约束 Work Item、Template、Compatibility 和 Handoff。
 - 建立根级 `CLAUDE.md`，只导入根级 `AGENTS.md`。
+- 明确仓库 `AGENTS.md`、嵌套 `AGENTS.md` 和根级 `CLAUDE.md` 只用于开发，不是安装后的运行时 Plugin Component。
+- 建立 Exclusive Skill Execution Contract：显式调用后保持独占执行，其他 Skill / Plugin 必须由用户在当前请求中逐项授权，授权不传递。
+- 明确外部 Skill 输出只可作为 Input 或 Supporting Evidence，不得覆盖当前 Contract、Gate、权限或授权边界。
+- 登记首版 Explicit Invocation First 策略：Cursor / Claude Code 使用 `disable-model-invocation: true`，Codex 使用 `policy.allow_implicit_invocation: false`。
+- Design 和 Eval 模板已经加入 Interoperability Contract、独占执行案例、三端调用策略验证和实际外部 Invocation 记录要求。
 - 尚未创建正式或占位 Skill。
 
 ## 当前目录结构
@@ -80,6 +85,10 @@ docs/plugin-development/work-items/<skill-name>/
 11. Claude Code 通过 `CLAUDE.md` 导入根级 `AGENTS.md`；处理子目录时仍显式读取最近的嵌套 `AGENTS.md`。
 12. 同一个 Skill 的同一阶段只允许一个写入 Owner；`HANDOFF.md` 保持单写者。
 13. 新提交必须使用 `Blade <blade@breaklegsquad.com>` 作为 Author 和 Committer。
+14. 开发期指令文件不进入安装后运行时；生产约束必须进入正式 `SKILL.md` 或独立设计的平台组件。
+15. 正式 Skill 从显式调用到完成、停止或交还控制权期间执行 Exclusive Skill Execution Contract。
+16. Exclusive Skill Execution Contract 是可评测的行为契约，不是不可绕过的硬安全隔离。
+17. 首版 Skill 默认显式调用；改变默认值必须有独立设计决定和实际宿主证据。
 
 ## 当前验证结果
 
@@ -88,6 +97,7 @@ docs/plugin-development/work-items/<skill-name>/
 - Agent 约束分为全仓、`skills/` 和 `docs/plugin-development/` 三个作用域。
 - 当前没有任何 `SKILL.md`，因此三端 Skill Discovery、显式调用和行为验证仍为 `Pending first skill`。
 - 本阶段只增加开发约束，不改变领域 Spec 或兼容性矩阵结论。
+- 本阶段没有创建 `SKILL.md` 或 `agents/openai.yaml`，也没有执行三端安装或运行时验证。
 
 ## 当前 Git 状态摘要
 
@@ -99,6 +109,7 @@ docs/plugin-development/work-items/<skill-name>/
 ## 已知风险
 
 - `AGENTS.md` 属于行为指导，不是客户端强制安全机制；外部写入和权限仍需宿主配置与人工审查。
+- Exclusive Skill Execution Contract 只能通过行为评测发现偏差，不能替代宿主级隔离、权限控制或安全机制。
 - 模板本身不能证明后续 Skill 设计正确，首个真实工作包仍需 Maintainer 审批。
 - Creator 工具可能引入平台偏好或扩大范围，必须受 Design Contract 约束。
 - 三端对 Skill Front Matter、发现和自动触发的差异尚未通过真实 Skill 验证。
@@ -107,7 +118,7 @@ docs/plugin-development/work-items/<skill-name>/
 
 ## 下一次唯一工作包
 
-C1 — 确认第一个正式 Skill 的目标，只完成该 Skill 的 `DESIGN.md` 和 `EVAL-PLAN.md`，不创建 `SKILL.md`。
+C1 — 确认第一个正式 Skill，只创建该 Skill 的 `DESIGN.md` 和 `EVAL-PLAN.md`，不创建 `SKILL.md`。
 
 ## 下一次明确不处理
 

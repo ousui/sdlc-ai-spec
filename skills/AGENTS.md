@@ -4,6 +4,8 @@
 
 本文件适用于 `skills/**`。它补充根目录 `AGENTS.md`，不替代领域 Spec、Plugin 开发标准或当前 Skill 的 Design Contract。
 
+本文件只约束仓库内的 Skill 开发，不是安装后业务项目的运行时组件。运行时必须遵守的约束必须写入正式 `SKILL.md`，或写入经过独立设计、授权和验证的平台组件；Skill 不得依赖运行时 Agent 自动读取本文件。
+
 在修改任意 Skill 前，必须读取：
 
 - 根目录 `AGENTS.md`；
@@ -33,6 +35,7 @@
 ```text
 skills/<skill-name>/
 ├── SKILL.md
+├── agents/        # 按已批准设计保存平台私有元数据
 ├── references/    # 按需
 ├── scripts/       # 按需
 ├── assets/        # 按需
@@ -62,6 +65,28 @@ Skill 的名称和描述必须支持准确发现，并与 Design 中的正向、
 - 通过平台专有字段改变三端共享语义。
 
 触发不足或误触发应通过 Eval 证据修正，不凭直觉堆叠关键词。
+
+### 4.1 Explicit Invocation First
+
+首版默认只允许显式调用：
+
+- Cursor 与 Claude Code 共用的正式 `SKILL.md` 默认设置 `disable-model-invocation: true`；
+- Codex 默认在 Skill 私有 `agents/openai.yaml` 中设置 `policy.allow_implicit_invocation: false`。
+
+只有已批准的 Design Contract、对应平台适配工作包和实际 Eval 证据才能改变默认值。`design` 阶段只登记要求，不创建上述运行时文件。
+
+### 4.2 Exclusive Skill Execution Contract
+
+每个正式 Skill 必须把以下行为写入 Design Contract、`SKILL.md` 和 Eval：
+
+- 从显式调用开始，到完成、停止或交还控制权为止保持 exclusive execution mode；
+- 未经用户在当前请求中明确点名并授权，不调用、委托给或合并任何其他 Plugin 或 Skill，包括本 Plugin 的兄弟 Skill；
+- 对一个 Plugin / Skill 的授权不扩展到其他能力或传递依赖；
+- 需要但未获授权的外部 Skill 时，仅在当前 Contract 可独立满足时继续，否则停止并请求授权；
+- 已授权外部输出只作为 Input 或 Supporting Evidence，不能改变当前 Source of Truth、Artifact Contract、Gate、Failure Contract、权限或授权边界；
+- 系统、安全、宿主权限、适用的项目指令和普通 Tool 不属于被禁止的外部 Skill / Plugin。
+
+这是可评测的行为契约，不是不可绕过的硬安全隔离。实现不得使用“沙箱”“强隔离”等未经宿主机制证明的表述。
 
 ## 5. 输入、输出与失败行为
 
@@ -130,6 +155,7 @@ Script 必须：
 - 边界或冲突；
 - with-skill；
 - without-skill。
+- 是否实际发生其他 Skill / Plugin Invocation，以及其名称、授权依据和用途。
 
 禁止：
 
@@ -151,4 +177,5 @@ Script 必须：
 - Script 和 Fixture 的实际检查已运行；
 - 没有修改三个平台 Manifest，除非当前阶段明确为对应 Adapter；
 - 没有修改 `docs/v1.0/`；
+- Exclusive Skill Execution Contract 和三端显式调用策略均有可判定 Eval；
 - `HANDOFF.md` 只登记一个下一工作包。

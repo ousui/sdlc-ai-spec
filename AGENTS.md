@@ -6,6 +6,8 @@
 
 本文件只约束 Agent 的工作方式，不是领域 Contract，也不替代 `docs/v1.0/`、Skill Design Contract、Eval Plan 或平台官方规范。
 
+本仓库中的根级和嵌套 `AGENTS.md`，以及根级 `CLAUDE.md`，只用于开发本 Plugin。它们不是 Plugin 安装到业务项目后的运行时组件。生产运行时必须遵守的约束必须进入正式 `SKILL.md`，或进入经过独立设计、授权和验证的平台组件；后续 Skill 不得依赖安装后的 Agent 自动读取本仓库的开发指令。
+
 处理任意路径前，必须显式查找并读取从仓库根目录到目标路径之间所有适用的 `AGENTS.md`。更深目录的规则可以收窄或补充本文件，但不得放宽本文件中的领域完整性、安全、证据和外部写入边界。
 
 Claude Code 通过根目录 `CLAUDE.md` 导入本文件。由于 Claude Code 不原生读取 `AGENTS.md`，在处理子目录时仍必须显式读取最近的嵌套 `AGENTS.md`。
@@ -91,6 +93,28 @@ One Shared Skill Source + Three Thin Native Manifests
 - 只被一个 Skill 使用的资源保留在该 Skill 内；至少两个真实使用者出现后才可以提升为 Plugin 共享资源。
 - 不使用作者本机绝对路径，不依赖固定 shell 工作目录，不通过脆弱的多层 `../` 访问其他 Skill 私有资源。
 - 没有确定性操作需求，不创建 Script；没有外部能力需求，不创建 MCP；没有自动触发刚需，不创建 Hook。
+
+### 6.1 Exclusive Skill Execution Contract
+
+每个正式 Skill 的 Design Contract、实现和 Eval 必须共同保证：
+
+- 从该 Skill 被显式调用开始，到完成、停止或明确交还控制权为止，进入 exclusive execution mode；
+- 未经用户在当前请求中明确点名并授权，不得调用、委托给或合并任何其他 Plugin 或 Skill，包括 `sdlc-ai-spec` 内的兄弟 Skill；
+- 授权只覆盖被点名的 Plugin / Skill 和当前任务，不自动覆盖其传递依赖；
+- 需要外部 Skill 但未获授权时，只有当前 Skill Contract 仍可独立满足才可以继续，否则必须停止并请求授权；
+- 获得授权的外部 Skill 输出只可作为 Input 或 Supporting Evidence，不得覆盖当前 Source of Truth、Artifact Contract、Gate、Failure Contract、权限或授权边界；
+- 系统指令、安全约束、宿主权限、适用的项目指令和普通 Tool 不属于本条禁止的外部 Skill / Plugin。
+
+这是必须通过 Eval 验证的行为契约，不得描述为不可绕过的硬安全隔离。
+
+### 6.2 Explicit Invocation First
+
+首版正式 Skill 默认采用显式调用：
+
+- Cursor 与 Claude Code：正式 `SKILL.md` 默认设置 `disable-model-invocation: true`；
+- Codex：默认在 Skill 私有 `agents/openai.yaml` 中设置 `policy.allow_implicit_invocation: false`。
+
+这些平台字段必须先登记在 Skill Design Contract 和 Eval Plan 中，再在后续获授权的实现或适配阶段创建并验证；不得在 `design` 阶段提前创建 `SKILL.md` 或 `agents/openai.yaml`。
 
 ## 7. 证据、状态与兼容性
 

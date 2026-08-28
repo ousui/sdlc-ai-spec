@@ -60,7 +60,29 @@
 
 `<如何在不重复询问已知信息的前提下处理真正阻塞的歧义>`
 
-## 5. Input Contract
+## 5. Skill / Plugin Interoperability Contract
+
+| Field | Contract |
+|---|---|
+| Execution Mode | `exclusive execution mode from explicit invocation until completion, stop, or control handoff` |
+| Active Scope | `<当前 Skill Contract 与当前请求授权的任务>` |
+| Authorized External Skills / Plugins | `<用户在当前请求中明确点名并授权的名称与用途；默认为 None>` |
+| Unauthorized Dependency Behavior | `<当前 Contract 可独立满足时继续；否则停止并请求授权>` |
+| Sibling Skill Policy | `<默认禁止调用、委托给或合并 sdlc-ai-spec 兄弟 Skill，除非当前请求明确授权>` |
+| External Output Treatment | `<仅作为 Input 或 Supporting Evidence；不得覆盖当前 Contract 或授权边界>` |
+| Runtime Enforcement Level | `evaluable behavioral contract; not a non-bypassable security isolation` |
+| Platform Invocation Policy | `<Cursor / Claude Code / Codex 的显式调用配置与验证方式>` |
+
+必须满足：
+
+- 对一个 Plugin / Skill 的授权不自动扩展到传递依赖；
+- 外部输出不得改变当前 Source of Truth、Artifact Contract、Gate、Failure Contract、权限或授权边界；
+- 系统指令、安全约束、宿主权限、适用的项目指令和普通 Tool 不属于被禁止的外部 Skill / Plugin；
+- 首版 Cursor 与 Claude Code 的正式 `SKILL.md` 默认使用 `disable-model-invocation: true`；
+- 首版 Codex 默认在 Skill 私有 `agents/openai.yaml` 使用 `policy.allow_implicit_invocation: false`；
+- Design 阶段只登记这些要求，不创建 `SKILL.md` 或 `agents/openai.yaml`。
+
+## 6. Input Contract
 
 | ID | Input | Required | Source | Validation | Missing Behavior |
 |---|---|---:|---|---|---|
@@ -72,7 +94,7 @@
 - 缺失行为必须明确为停止、形成待确认项、生成受限状态产物或其他已登记方式；
 - 不依赖上一会话的隐式上下文。
 
-## 6. Output Contract
+## 7. Output Contract
 
 | ID | Output | Format / Location | Required Content | Success Condition | Consumer |
 |---|---|---|---|---|---|
@@ -85,7 +107,7 @@
 - 需要人工确认的事项；
 - 未解决风险。
 
-## 7. Workflow Contract
+## 8. Workflow Contract
 
 按最少步骤描述稳定工作流：
 
@@ -97,7 +119,7 @@
 
 不得把实现细节、平台安装步骤或未来扩展混入领域工作流。
 
-## 8. Failure Contract
+## 9. Failure Contract
 
 | Failure | Detection | Required Behavior | Forbidden Fallback |
 |---|---|---|---|
@@ -111,7 +133,7 @@
 - 如何避免静默降级；
 - 如何保证失败不会被描述为成功。
 
-## 9. 权限与副作用
+## 10. 权限与副作用
 
 | Capability | Required | Scope | Authorization |
 |---|---:|---|---|
@@ -129,11 +151,15 @@
 - 破坏性 Git 操作；
 - 读取与当前工作无关的敏感信息。
 
-## 10. 资源边界
+## 11. 资源边界
 
 ### `SKILL.md`
 
 `<只保留触发、核心工作流、输入输出和必要约束>`
+
+### `agents/openai.yaml`
+
+`<Codex 显式调用策略；没有获授权的 Codex 适配工作包时写 Not created in this stage>`
 
 ### `references/`
 
@@ -151,7 +177,7 @@
 
 `<是否已有第二个真实使用者；没有则不得提升到 Plugin 根级>`
 
-## 11. Portability Contract
+## 12. Portability Contract
 
 | Concern | Portable Core | Cursor Adapter | Claude Code Adapter | Codex Adapter |
 |---|---|---|---|---|
@@ -162,7 +188,7 @@
 
 平台差异不得改变输出 Artifact、失败语义或领域完成条件。
 
-## 12. Eval Plan
+## 13. Eval Plan
 
 对应文件：
 
@@ -176,8 +202,11 @@
 - 至少 1 个必要输入缺失案例；
 - 至少 1 个边界或冲突案例；
 - 至少 1 组 with-skill / without-skill 对比。
+- 覆盖未授权外部 Skill、单一授权不传递、缺少授权时停止或请求授权、外部输出不改变当前 Contract；
+- 分别验证 Cursor、Claude Code 和 Codex 的显式调用策略；
+- 记录每次运行是否实际发生其他 Skill / Plugin Invocation。
 
-## 13. Definition of Done — Design
+## 14. Definition of Done — Design
 
 - [ ] 单一职责明确。
 - [ ] In Scope 和 Out of Scope 不重叠。
@@ -185,18 +214,21 @@
 - [ ] 必要输入和缺失行为明确。
 - [ ] 输出、成功和失败条件可判定。
 - [ ] 权限和副作用满足最小权限。
-- [ ] `SKILL.md`、references、scripts、assets 边界明确。
+- [ ] Skill / Plugin Interoperability Contract 全部字段可判定。
+- [ ] Exclusive Skill Execution Contract 不被描述为硬安全隔离。
+- [ ] 三端显式调用默认策略已登记。
+- [ ] `SKILL.md`、`agents/openai.yaml`、references、scripts、assets 边界明确。
 - [ ] Eval Plan 足以验证触发和行为。
 - [ ] 不存在阻塞实现的 Open Item。
 - [ ] 本阶段没有创建正式 `SKILL.md`。
 
-## 14. Open Items
+## 15. Open Items
 
 | ID | Question / Missing Decision | Blocks | Expected Source | Status |
 |---|---|---|---|---|
 | None | No blocking open items | N/A | N/A | closed |
 
-## 15. 确认记录
+## 16. 确认记录
 
 | Role | Decision | Basis |
 |---|---|---|

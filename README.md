@@ -30,6 +30,14 @@
 
 处理任意子目录前，Agent 必须读取根级和目标路径适用的全部 `AGENTS.md`。
 
+这些 `AGENTS.md` 和根级 `CLAUDE.md` 只用于开发本 Plugin，不是安装后业务项目的运行时组件。生产运行时约束必须进入正式 `SKILL.md` 或经过独立设计的平台组件。
+
+## Skill 运行边界
+
+后续正式 Skill 默认只允许显式调用，并从调用开始到完成、停止或交还控制权期间进入 exclusive execution mode。未经用户在当前请求中明确点名并授权，不调用其他 Plugin 或 Skill，包括本 Plugin 的兄弟 Skill；授权不自动覆盖传递依赖。
+
+这是需要实际评测的行为契约，不是不可绕过的硬安全隔离。Cursor、Claude Code 和 Codex 的显式调用配置将在首个正式 Skill 的后续实现与适配阶段分别创建和验证。
+
 ## 当前状态
 
 当前版本：`0.1.0`

@@ -9,6 +9,10 @@
 - Defined stage isolation, source authority, evidence, Git identity, external-write, and parallel-session constraints.
 - Added a transparent, stage-gated Skill development workflow.
 - Added reusable Skill Design Contract and Eval Plan templates.
+- Defined the development-time versus installed-runtime boundary for repository instructions.
+- Added the Exclusive Skill Execution Contract and non-transitive external Skill authorization rules.
+- Registered explicit-invocation defaults for Cursor, Claude Code, and Codex as future Skill design requirements.
+- Added interoperability and per-client invocation cases to the Design and Eval templates without recording unexecuted results.
 - Added a copyable entry prompt for design-only Skill sessions.
 - No production Skill was created.
 

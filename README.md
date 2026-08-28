@@ -21,11 +21,20 @@
 
 三端共同使用根目录下唯一的 `skills/` 源码目录。
 
+## Agent 开发指令
+
+- 根目录 [`AGENTS.md`](AGENTS.md) 规定全仓工作包、领域完整性、安全、证据、Git 和并行会话边界。
+- [`skills/AGENTS.md`](skills/AGENTS.md) 规定正式 Skill 的实现、资源和评测约束。
+- [`docs/plugin-development/AGENTS.md`](docs/plugin-development/AGENTS.md) 规定工作包、模板、兼容性和 Handoff 的维护约束。
+- 根目录 `CLAUDE.md` 仅导入 `AGENTS.md`，为 Claude Code 提供同一权威指令，不维护第二份规则。
+
+处理任意子目录前，Agent 必须读取根级和目标路径适用的全部 `AGENTS.md`。
+
 ## 当前状态
 
 当前版本：`0.1.0`
 
-已完成跨 Agent Plugin 工程初始化，尚无正式 Skill。Skill Discovery、显式调用和行为兼容性将在首个真实 Skill 创建后分别验证。
+已完成跨 Agent Plugin 工程初始化和 Skill 开发流程初始化，尚无正式 Skill。Skill Discovery、显式调用和行为兼容性将在首个真实 Skill 创建后分别验证。
 
 ## 文档入口
 

@@ -4,6 +4,9 @@
 
 ## Unreleased
 
+- Added repository-wide and path-scoped `AGENTS.md` guardrails.
+- Added a minimal `CLAUDE.md` bridge that imports the root `AGENTS.md`.
+- Defined stage isolation, source authority, evidence, Git identity, external-write, and parallel-session constraints.
 - Added a transparent, stage-gated Skill development workflow.
 - Added reusable Skill Design Contract and Eval Plan templates.
 - Added a copyable entry prompt for design-only Skill sessions.

@@ -28,6 +28,7 @@
 - 明确外部 Skill 输出只可作为 Input 或 Supporting Evidence，不得覆盖当前 Contract、Gate、权限或授权边界。
 - 登记首版 Explicit Invocation First 策略：Cursor / Claude Code 使用 `disable-model-invocation: true`，Codex 使用 `policy.allow_implicit_invocation: false`。
 - Design 和 Eval 模板已经加入 Interoperability Contract、独占执行案例、三端调用策略验证和实际外部 Invocation 记录要求。
+- 已将 `blade-cdn/sdlc-ai-spec` 固定为唯一权威远程仓库；`ousui/sdlc-ai-spec` 仅保留为停止同步的历史仓库。
 - 尚未创建正式或占位 Skill。
 
 ## 当前目录结构
@@ -89,6 +90,7 @@ docs/plugin-development/work-items/<skill-name>/
 15. 正式 Skill 从显式调用到完成、停止或交还控制权期间执行 Exclusive Skill Execution Contract。
 16. Exclusive Skill Execution Contract 是可评测的行为契约，不是不可绕过的硬安全隔离。
 17. 首版 Skill 默认显式调用；改变默认值必须有独立设计决定和实际宿主证据。
+18. 唯一权威远程仓库为 `blade-cdn/sdlc-ai-spec`；旧 `ousui/sdlc-ai-spec` 不得用于后续写入、发布或当前版本判断。
 
 ## 当前验证结果
 
@@ -105,6 +107,7 @@ docs/plugin-development/work-items/<skill-name>/
 - Skill framework 检查点：`5a5bc50`。
 - 精确分支、HEAD 和工作树状态以当前会话执行的 Git 命令为准。
 - Agent 不得根据本节推断工作树始终干净。
+- 权威远端：`git@github.com:blade-cdn/sdlc-ai-spec.git`。
 
 ## 已知风险
 

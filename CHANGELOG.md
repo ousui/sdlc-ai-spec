@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Declared `blade-cdn/sdlc-ai-spec` as the sole canonical development and release repository; retired `ousui/sdlc-ai-spec` from future updates.
+
 - Added repository-wide and path-scoped `AGENTS.md` guardrails.
 - Added a minimal `CLAUDE.md` bridge that imports the root `AGENTS.md`.
 - Defined stage isolation, source authority, evidence, Git identity, external-write, and parallel-session constraints.

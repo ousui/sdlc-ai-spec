@@ -8,6 +8,19 @@
 
 本仓库中的 `AGENTS.md`、嵌套 `AGENTS.md` 和根级 `CLAUDE.md` 只约束 Plugin 开发，不是安装后业务项目的运行时 Plugin Component。生产运行时约束必须进入正式 `SKILL.md`，或进入经过独立设计、授权和验证的平台组件。任何 Skill 都不得依赖安装后的 Agent 自动读取本仓库开发指令。
 
+## 1.1 权威仓库
+
+本项目唯一权威代码与发布仓库是：
+
+```text
+blade-cdn/sdlc-ai-spec
+git@github.com:blade-cdn/sdlc-ai-spec.git
+```
+
+`ousui/sdlc-ai-spec` 是已停止同步的历史仓库，不得作为当前开发、兼容性、发布或安装依据。所有仓库链接、远端配置、发布记录和后续 Plugin 元数据必须使用 `blade-cdn/sdlc-ai-spec`。
+
+远程写入获授权时，执行前仍必须检查实际 Fetch / Push 目标和 Git URL rewrite；仓库名称正确但有效路由错误时不得继续。
+
 规范等级：
 
 - **必须**：违反即不接受。

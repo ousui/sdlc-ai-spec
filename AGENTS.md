@@ -156,6 +156,29 @@ One Shared Skill Source + Three Thin Native Manifests
 - 不自动安装全局依赖，不修改用户级或系统级 Agent 配置；
 - 不写入密钥、Token、Cookie、私钥或真实账号信息。
 
+### 8.1 权威仓库与远程目标
+
+本项目唯一权威远程仓库固定为：
+
+- Repository：`blade-cdn/sdlc-ai-spec`
+- Fetch / Push URL：`git@github.com:blade-cdn/sdlc-ai-spec.git`
+
+`ousui/sdlc-ai-spec` 已停止同步，只可作为历史记录来源，不得：
+
+- 作为当前分支、版本、规范、Plugin 或 Skill 的 Source of Truth；
+- 接收新的 commit、push、tag、PR、Release 或 Marketplace 发布；
+- 用其较旧内容覆盖或回灌当前权威仓库；
+- 在文档、Manifest、安装说明或自动化中继续登记为当前仓库。
+
+任何 fetch、pull、push、tag、PR 或 Release 操作前，必须确认：
+
+1. `git config --get remote.origin.url` 指向上述权威 URL；
+2. `git config --get-all remote.origin.pushurl` 为空或仅指向上述权威 URL；
+3. Git `insteadOf`、SSH Host Alias 或其他 URL rewrite 没有把有效目标路由到 `ousui`、`goedgecloud` 或其他仓库；
+4. 当前远端分支是本工作包预期的基线。
+
+无法确定实际远端目标时必须停止，不得尝试性 push。
+
 Git commit、push、tag、PR、Release、Marketplace、消息发送和其他远程副作用都需要当前工作包的明确授权。
 
 当 commit 已获授权时：

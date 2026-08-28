@@ -2,6 +2,16 @@
 
 `sdlc-ai-spec` 定义软件研发与变更交付过程中统一的 Artifact、Reference、Evidence、Exception、Check 和 Gate，并逐步提供对应的跨 Agent Plugin 执行支持。
 
+## 权威仓库
+
+当前唯一维护和发布仓库：
+
+```text
+git@github.com:blade-cdn/sdlc-ai-spec.git
+```
+
+`ousui/sdlc-ai-spec` 已停止同步，不再接收更新，也不作为当前版本或安装来源。
+
 ## Spec 与 Plugin
 
 - `docs/v1.0/` 是当前稳定的领域规范。

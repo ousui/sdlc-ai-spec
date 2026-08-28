@@ -1,0 +1,6 @@
+{
+  "name": "sdlc-ai-spec",
+  "version": "0.1.0",
+  "description": "Execution support for the sdlc-ai-spec software development and change delivery standard.",
+  "skills": "./skills/"
+}

@@ -1,10 +1,11 @@
 ---
 title: Design Phase Spec
-status: draft
+status: stable
+version: "1.0"
 scope: 已确认的 DSN 边界、结构与 Design Applicability Matrix
 ---
 
-# Design Phase Spec（草稿）
+# Design Phase Spec
 
 ## Phase 目标
 
@@ -56,11 +57,12 @@ DSN 不强制一项 Requirement 对应一个 Design。
 
 ```yaml
 ---
-contract: sdlc-ai-spec/artifact/v0.2
+contract: sdlc-ai-spec/artifact/v1
 phase: DSN
 id: DSN-20260823150010-01
 revision: 1
 status: draft
+context: CTX-20260828143025-01@1
 profile: full
 inputs:
   - REQ-20260823143025-01@1
@@ -168,7 +170,7 @@ DSN 必须明确当前状态、目标状态和两者之间的设计变化，避�
 - `new` 可以将 Current Baseline 标记为 `N/A`，但必须说明不存在有效基线的原因；
 - `incremental` 的 Baseline 与 Change Set 必须足以还原 Target State；
 - `reuse` 必须引用准确基线，并记录其对当前 Requirement 的适配结论和 Evidence；
-- Project Context Contract 未定义前，Baseline 使用不可变 Artifact Reference、Core VCS Locator（只用于版本化产品内容）或 Evidence；可移动引用无效；
+- Baseline 必须从 Front Matter 绑定的 CTX Revision 解析适用 Resource、Component、Rule、Environment 和 Constraint；版本化产品内容的具体状态使用不可变 Artifact Reference、Core VCS Locator 或 Evidence，任何可移动引用都无效；
 - 当前 Scope 内的 Change Set 必须完整枚举，未列入 Change Set 的 Baseline 内容保持不变；
 - `Scope + Baseline + Change Set` 必须唯一确定 Target State；
 - `Target State Summary` 只是该唯一结果的阅读摘要，不是独立权威来源；多个 DSN 的 Target State 共同进入 Delivery Scope 时必须可共同成立，冲突进入阻塞 Open Item；
@@ -255,7 +257,7 @@ DSN 必须明确当前状态、目标状态和两者之间的设计变化，避�
 
 | Disposition | 使用条件 | Completion | Content Reference | 说明字段 |
 |---|---|---|---|---|
-| `pending` | 事实不足，暂不能判断 | `not_started` | `N/A` | `Pending — <OI-ID>` |
+| `pending` | 事实不足，暂不能判断 | `not_started` | `N/A` | `Pending — <OPI-ID>` |
 | `required` | 当前变化存在该领域设计义务 | `not_started` / `in_progress` / `complete` | 完整 `DSN-ID@Revision/DOM-<DOMAIN-NO>` | `N/A` |
 | `n/a` | 当前变化客观不存在该领域义务 | `not_applicable` | `N/A` | 客观原因 |
 | `waived` | 义务存在但经授权不执行 | `waived` | `N/A` | 有效 `EX-ID` 与原因 |
@@ -277,11 +279,11 @@ DSN 必须明确当前状态、目标状态和两者之间的设计变化，避�
 
 | 复合 Domain 分类码 Composite Domain Catalog Code | 子领域 Subdomain | Disposition | Applicability Basis References | 不适用、豁免或待确认说明 N/A, Waiver or Pending Reason | Exception References |
 |---|---|---|---|---|---|
-| DOM-140 | 可访问性 Accessibility | pending | | Pending — <OI-ID> | N/A |
-| DOM-140 | 国际化 Internationalization | pending | | Pending — <OI-ID> | N/A |
-| DOM-310 | 安全 Security | pending | | Pending — <OI-ID> | N/A |
-| DOM-310 | 隐私 Privacy | pending | | Pending — <OI-ID> | N/A |
-| DOM-310 | 合规 Compliance | pending | | Pending — <OI-ID> | N/A |
+| DOM-140 | 可访问性 Accessibility | pending | | Pending — <OPI-ID> | N/A |
+| DOM-140 | 国际化 Internationalization | pending | | Pending — <OPI-ID> | N/A |
+| DOM-310 | 安全 Security | pending | | Pending — <OPI-ID> | N/A |
+| DOM-310 | 隐私 Privacy | pending | | Pending — <OPI-ID> | N/A |
+| DOM-310 | 合规 Compliance | pending | | Pending — <OPI-ID> | N/A |
 
 规则：
 
@@ -300,7 +302,7 @@ Artifact Set Manifest 是 Core Supporting Artifact Manifest 的 DSN 扩展，不
 ```markdown
 | Member ID | Type | Domain | Domain Spec Reference or Digest | Path or Reference | Media Type | Purpose | SHA-256 Digest | Empty Reason |
 |---|---|---|---|---|---|---|---|---|
-| DOM-110 | domain | Workflow and State | drafts/200-dsn-domains/110-workflow-state.md@sha256:... | domains/110-workflow-state.md | text/markdown | Domain Design | | N/A |
+| DOM-110 | domain | Workflow and State | docs/v1.0/200-dsn-domains/110-workflow-state.md@sha256:... | domains/110-workflow-state.md | text/markdown | Domain Design | | N/A |
 | SUP-001 | supporting | Multiple | N/A | assets/flow.svg | image/svg+xml | Design Diagram | | N/A |
 ```
 
@@ -389,7 +391,7 @@ Artifact Set Manifest 是 Core Supporting Artifact Manifest 的 DSN 扩展，不
 | 420 | 运行设计 Operations | 可观测性与可运维性 Observability and Operability | [420-observability-operability.md](200-dsn-domains/420-observability-operability.md) |
 | 510 | 验证设计 Verification | 可验证性与 VFY 策略 Verifiability and VFY Strategy | [510-verifiability-vfy-strategy.md](200-dsn-domains/510-verifiability-vfy-strategy.md) |
 
-所有子规范受本文件的 Scope、Disposition、Matrix、Artifact Set 和父 Gate 约束。最终 Evaluation Contract Set 绑定 Core Spec、DSN Spec、16 个 Domain Spec 以及实际启用的 Extension Contract，确保 required、n/a 与 waived 使用同一组适用性规则。
+所有子规范受本文件的 Scope、Disposition、Matrix、Artifact Set 和父 Gate 约束。最终 Evaluation Contract Set 绑定 Core Spec、DSN Spec 和 16 个 Domain Spec，确保 required、n/a 与 waived 使用同一组适用性规则。
 
 ## DSN 最终化顺序
 
@@ -408,10 +410,10 @@ DSN 使用 Core Revision 和 Gate 机制完成重跑，不保存 Phase 内的 At
 ```markdown
 | Phase | Disposition | Host | 判断依据 Basis |
 |---|---|---|---|
-| PLN | pending | N/A | Pending — <OI-ID> |
-| IMP | pending | N/A | Pending — <OI-ID> |
+| PLN | pending | N/A | Pending — <OPI-ID> |
+| IMP | pending | N/A | Pending — <OPI-ID> |
 | VFY | required | N/A | VFY Artifact 为固定控制点 |
-| RLS | pending | N/A | Pending — <OI-ID> |
+| RLS | pending | N/A | Pending — <OPI-ID> |
 ```
 
 该表只记录当前 DSN Scope 对后续 Phase 的建议，不负责排期和任务分配。多个完整 Scope Input 共同交付时，按 Core Delivery Scope Aggregation Contract 执行，并将 PLN 标记为 `required`。
@@ -466,14 +468,8 @@ Artifact Gate 先包含 Core Gate Checks，再包含 DSN Gate Checks，随后只
 | Design Decision | `DEC-001` |
 | Domain Constraint or Impact | `CIM-<DOMAIN-NO>-001` |
 | Domain VFY Point | `VFP-<DOMAIN-NO>-001` |
-| Open Item | `OI-001` |
+| Open Item | `OPI-001` |
 | Evidence | `EVD-001` |
 | Exception | `EX-001` |
 | DSN Gate Check | `DSN-G-001` |
 | Domain Subordinate Check | `DSN-DG-<DOMAIN-NO>-001` |
-
-## 当前未定义
-
-- Design Domain 项目扩展的注册方式；
-- 大型 Supporting Design Artifact 的最终目录结构；
-- 后续 Project Bootstrap Contract：Project Context 的固定模板、状态、Revision 和更新复用规则；定义前只使用不可变 Artifact Reference 或 Evidence，不阻塞当前 DSN Contract。

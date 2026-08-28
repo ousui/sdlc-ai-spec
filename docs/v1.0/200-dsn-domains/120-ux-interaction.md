@@ -1,6 +1,7 @@
 ---
 title: "用户体验与交互 UX and Interaction"
-status: draft
+status: stable
+version: "1.0"
 scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
@@ -21,7 +22,7 @@ parent: ../200-dsn-spec.md
 - Requirement 改变用户目标、任务路径、动作顺序、反馈语义、交互状态或中断恢复路径时为 `required`；
 - 纯系统间处理、后台任务且用户无感知时，可以为 `n/a`；
 - 仅改变已确定的静态文案或视觉表达且不存在交互义务时为 `n/a`；
-- 沿用现有交互且当前变化没有新增或改变交互义务时，可以引用准确 Baseline 判定为 `n/a`；不得因为交互简单、已在其他 Domain 提及、参与者不准备阅读或接受 AI 设计而判定为 `n/a`。
+- 沿用现有交互且当前变化没有新增或改变交互义务时，可以引用准确 Baseline 判定为 `n/a`；不得因为交互简单、已在其他 Domain 提及、参与者选择不阅读或直接接受既有设计而判定为 `n/a`。
 
 固定专属模板：
 

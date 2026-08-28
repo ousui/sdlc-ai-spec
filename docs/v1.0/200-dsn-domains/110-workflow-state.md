@@ -1,6 +1,7 @@
 ---
 title: "流程与状态 Workflow and State"
-status: draft
+status: stable
+version: "1.0"
 scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
@@ -13,7 +14,7 @@ parent: ../200-dsn-spec.md
 
 - 新增或改变业务规则、计算规则、资格判断、决策逻辑、不变量、多步骤流程、状态变化、角色协作、审批、异步处理、重试、取消或恢复时为 `required`；
 - Requirement 不引入任何业务行为、规则、计算、决策、不变量、流程或状态影响时，可以为 `n/a`；
-- 不得因为流程简单、已在其他 Domain 提及、参与者不准备阅读或接受 AI 设计而判定为 `n/a`；
+- 不得因为流程简单、已在其他 Domain 提及、参与者选择不阅读或直接接受既有设计而判定为 `n/a`；
 - 仅存在迁移旧态、目标态、共存和切换义务时，以 `Compatibility and Migration` 为权威来源；若仍涉及业务规则、角色流程或状态语义，本 Domain 也为 `required`。
 
 固定专属模板：

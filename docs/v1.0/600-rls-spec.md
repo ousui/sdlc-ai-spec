@@ -1,14 +1,15 @@
 ---
 title: Release Phase Spec
-status: draft
+status: stable
+version: "1.0"
 scope: 最小 RLS 发版合约、上线后确认、结论与 Gate
 ---
 
-# Release Phase Spec（草稿）
+# Release Phase Spec
 
 RLS 将已经完成 VFY 的准确结果发到一个约定目标，记录实际执行和目标侧状态，并形成一份可追溯的上线报告。
 
-RLS 只回答四个问题：发什么、发到哪里；有哪些变化和必要操作；实际执行结果怎样；上线后必要确认是否通过。长期运行不属于本 Phase，也不建立独立 OPS Phase。
+RLS 只回答四个问题：发什么、发到哪里；有哪些变化和必要操作；实际执行结果怎样；上线后必要确认是否通过。长期运行不属于本 Phase，也不建立独立运行阶段。
 
 ## Phase 目标与边界
 
@@ -16,7 +17,7 @@ RLS 负责：
 
 - 绑定一个完整 Scope、准确 Result、冻结 VFY 和一个 Release Target；
 - 汇总本次实际变化、注意事项及必要的应用、SQL、配置、数据或人工操作；
-- 记录 AI、人工、CI/CD、Jenkins、DBA、运维或其他执行方返回的实际结果；
+- 记录人工、自动化流水线、交付平台、数据管理或运维执行方返回的实际结果；
 - 确认目标版本、必要状态和基本可用性，形成发版结论。
 
 RLS 不负责：
@@ -60,11 +61,12 @@ RLS 使用 Core Artifact Front Matter：
 
 ```yaml
 ---
-contract: sdlc-ai-spec/artifact/v0.2
+contract: sdlc-ai-spec/artifact/v1
 phase: RLS
 id: RLS-20260825160000-01
 revision: 1
 status: draft
+context: CTX-20260828143025-01@1
 profile: full
 inputs:
   - PLN-20260825130000-01@1
@@ -259,7 +261,7 @@ RLS 使用 Core Gate Checks，并只增加以下 Phase Check：
 ```markdown
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| RLS-G-001 | Release Contract 准确绑定冻结 VFY、结果、目标和目标基线；VFY 不含 pending Method Disposition、Method Result、Target 或固定 Conclusion，且正式 Target effect 前的 Pre-execution 读回 Evidence 完整，不存在范围或结果漂移 | pending | |
+| RLS-G-001 | Context 与 Release Contract 准确绑定冻结 VFY、结果、目标和目标基线；VFY 不含 pending Method Disposition、Method Result、Target 或固定 Conclusion，且正式 Target effect 前的 Pre-execution 读回 Evidence 完整，不存在范围或结果漂移 | pending | |
 | RLS-G-002 | 所有适用 Release Item、RLS Work Item、VFY Target 下游义务和 Post-release Confirmation 均已覆盖；RCF 准入字段完整且未降低原判定口径，结果、Follow-up Disposition、Evidence 与 Exception 状态一致，且不存在必要 pending | pending | |
 | RLS-G-003 | Release Conclusion 与实际目标状态一致，未完成事项、RLS Issue Reference 和剩余风险均未隐藏 | pending | |
 ```
@@ -268,12 +270,12 @@ RLS Gate Checks 都是 Contract Integrity Check，只允许 `pending`、`pass` �
 
 ## 最终化
 
-- RLS 的 Pre-execution Checklist 直接使用当前 Revision 的非空 Evaluation Contract Set、Release Contract、全部适用 Release Item 的动作、来源、前置条件和执行方，以及全部 Post-release Confirmation 的 Confirmation、Expected、执行方和 Evidence 获取方式；首次 Target effect 前必须按 Core 持久化、读回并保存 Evidence，不新增第二套清单；
+- RLS 的 Pre-execution Checklist 直接使用当前 Revision 的非空 Evaluation Contract Set、Front Matter Context、Release Contract、全部适用 Release Item 的动作、来源、前置条件和执行方，以及全部 Post-release Confirmation 的 Confirmation、Expected、执行方和 Evidence 获取方式；首次 Target effect 前必须按 Core 持久化、读回并保存 Evidence，不新增第二套清单；
 - 发版前和执行中，当前 Revision 保持 `draft` 或 `waiting_input`，同一 Markdown 作为发版清单；
 - 发版结束、失败或取消后补全实际结果，再按 Core 完成 Gate、Final Confirmation 和 Snapshot 冻结；
 - 不生成第二份上线报告；冻结 RLS Artifact 就是最终 Release Record；
 - 对相同有效 Input、Release Reference、Scope、Result、Target 和发版义务的实际重试创建新 Revision，并按当前事实重新捕获 Target Baseline 与 Approval or Trigger Reference；只有既有 RLS Artifact 的稳定 ID 命名空间满足 Core Identity Namespace Recovery 的不可修复条件时，才创建新的唯一 RLS Artifact ID。该 Recovery Artifact 使用 Revision 1、`Base Revision=None` 和相同稳定发版身份，保存旧 Artifact 最终失败 Evidence，不继承旧 Gate、Final Confirmation 或 RLS Authority，并重新完成 Pre-execution 读回、实际执行和目标侧确认；Target 已精确匹配时允许记录 no-op，不为制造新结果重写 Target。Scope 或 Result 改变时返回上游，独立 Target 使用独立 RLS Artifact；
-- 项目可以通过 Extension 增加审批、职责分离、发布窗口、灰度、平台适配和专项合规，但不能删除准确 Result、实际执行和目标侧确认这三项底线。
+- 项目既有交付机制可以增加审批、职责分离、发布窗口、灰度、平台适配和专项合规，但不能删除准确 Result、实际执行和目标侧确认这三项底线。
 
 ## 内部编号
 
@@ -281,7 +283,7 @@ RLS Gate Checks 都是 Contract Integrity Check，只允许 `pending`、`pass` �
 |---|---|
 | Release Item | `RLI-001` |
 | Post-release Confirmation | `RCF-001` |
-| Open Item | `OI-001` |
+| Open Item | `OPI-001` |
 | Evidence | `EVD-001` |
 | Exception | `EX-001` |
 | Gate Check | `RLS-G-001` |

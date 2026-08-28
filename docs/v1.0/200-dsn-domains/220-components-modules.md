@@ -1,6 +1,7 @@
 ---
 title: "组件与模块 Components and Modules"
-status: draft
+status: stable
+version: "1.0"
 scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
@@ -70,7 +71,7 @@ parent: ../200-dsn-spec.md
 
 规则：
 
-- `Type` 使用 `component`、`module`、`service`、`library` 或项目扩展的已注册类型；
+- `Type` 使用 `component`、`module`、`service`、`library` 或 `other`；
 - `Change` 使用 `new`、`changed`、`reused` 或 `removed`；
 - 每个 Component 和 Module 必须具有单一、清晰的主要责任；
 - Responsibility Boundaries 必须同时说明负责和明确不负责的关键内容；

@@ -1,6 +1,7 @@
 ---
 title: "数据设计 Data Design"
-status: draft
+status: stable
+version: "1.0"
 scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
@@ -83,7 +84,7 @@ parent: ../200-dsn-spec.md
 
 规则：
 
-- `Type` 使用 `entity`、`document`、`event_state`、`file`、`cache`、`reference` 或项目扩展的已注册类型；
+- `Type` 使用 `entity`、`document`、`event_state`、`file`、`cache`、`reference` 或 `other`；
 - `Change` 使用 `new`、`changed`、`reused` 或 `removed`；
 - `Source of Truth` 表示业务或系统事实的权威来源，不表示 Schema 文件位置；
 - `Definition Mode` 使用 `native` 或 `inline`；

@@ -1,6 +1,7 @@
 ---
 title: "部署与配置 Deployment and Configuration"
-status: draft
+status: stable
+version: "1.0"
 scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
@@ -85,10 +86,10 @@ parent: ../200-dsn-spec.md
 
 - `Change` 使用 `new`、`changed`、`reused` 或 `removed`；
 - `Definition Mode` 使用 `native` 或 `inline`；
-- 使用 `native` 时，Dockerfile、Compose、Kubernetes、Helm、Terraform 等原生文件可以作为部署细节来源，Markdown 不重复抄写字段；
+- 使用 `native` 时，项目已有的部署、配置或基础设施定义文件可以作为细节来源，Markdown 不重复抄写字段；
 - 核心 Spec 不强制使用容器、云平台或特定部署工具；
 - Configuration 必须明确类型、作用域、必填性、默认值、来源、优先级和生效方式；
-- `Apply Mode` 使用 `startup`、`dynamic`、`restart` 或项目扩展的已注册类型；
+- `Apply Mode` 使用 `startup`、`dynamic`、`restart` 或 `other`；
 - 不得记录真实 Secret、Token、密码、私钥或生产凭据；
 - 默认值、资源规格和环境差异必须引用 Requirement、Decision、可验证项目基线或 Evidence，不得猜测；
 - Runtime Topology 必须与 Performance、Reliability 和 Security Design 一致；

@@ -1,10 +1,11 @@
 ---
 title: Plan Phase Spec
-status: draft
+status: stable
+version: "1.0"
 scope: 已确认的 PLN 边界、Delivery Scope 与 Work Item Contract
 ---
 
-# Plan Phase Spec（草稿）
+# Plan Phase Spec
 
 ## Phase 目标
 
@@ -69,11 +70,12 @@ Scope Input 只允许准确的 REQ 或 DSN Artifact Revision，其 Lifecycle Dis
 
 ```yaml
 ---
-contract: sdlc-ai-spec/artifact/v0.2
+contract: sdlc-ai-spec/artifact/v1
 phase: PLN
 id: PLN-20260824103000-01
 revision: 1
 status: draft
+context: CTX-20260828143025-01@1
 profile: full
 inputs:
   - DSN-20260823150010-01@1
@@ -232,9 +234,9 @@ PLN 只保留其后的 Phase：
 ```markdown
 | Phase | Disposition | Host | 判断依据 Basis |
 |---|---|---|---|
-| IMP | pending | N/A | Pending — <OI-ID> |
+| IMP | pending | N/A | Pending — <OPI-ID> |
 | VFY | required | N/A | VFY Artifact 为固定控制点 |
-| RLS | pending | N/A | Pending — <OI-ID> |
+| RLS | pending | N/A | Pending — <OPI-ID> |
 ```
 
 - Lifecycle Applicability 必须与 Work Item、Exception 和 Delivery Scope 一致；
@@ -279,11 +281,3 @@ PLN Gate Checks 都是 Contract Integrity Check，不允许直接标记为 `n/a`
 |---|---|
 | Work Item | `WI-001` |
 | Gate Check | `PLN-G-001` |
-
-## 当前未定义
-
-- Work Item 的详细执行进度；最低领取状态由 `drafts/400-imp-spec.md` 定义；
-- 外部执行对象或跟踪对象的映射格式；
-- 优先级、估算、排期、预算和具体人员分配；
-- RLS 外部发布平台和 Evidence 的自动映射方式；
-- Project Extension 如何增加项目专属规划字段。

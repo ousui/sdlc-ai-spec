@@ -1,6 +1,7 @@
 ---
 title: "可维护性与扩展性 Maintainability and Extensibility"
-status: draft
+status: stable
+version: "1.0"
 scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
@@ -14,9 +15,9 @@ parent: ../200-dsn-spec.md
 - 负责已确认的可维护性目标、维护压力、变化边界、扩展点和多实现模型；
 - Component 的当前责任由 `Components and Modules` 承载；
 - 精确扩展 Contract 由 `Interfaces and Integration` 承载；
-- 命名、格式、代码风格和分支规范等项目级规则由可验证项目基线或 Project Extension 承载；
+- 命名、格式、代码风格和分支规范等项目级规则由准确 Project Context Rule 或其他可验证项目基线承载；
 - 测试方法由 VFY Strategy 承载，本 Domain 只记录扩展实现必须满足的验证约束；
-- 当前 Domain 描述被研发产品自身的扩展设计，不定义 `sdlc-ai-spec` 的 Project Extension 机制。
+- 当前 Domain 只描述被研发产品自身的扩展设计。
 
 适用性：
 
@@ -83,10 +84,10 @@ parent: ../200-dsn-spec.md
 规则：
 
 - 每个维护或变化驱动必须具有 Requirement 或 Evidence，不得根据想象创建未来需求；
-- `Concern` 使用 `modularity`、`reusability`、`analyzability`、`modifiability` 或项目扩展的已注册值；没有明确目标时不得为了覆盖术语而虚构指标；
+- `Concern` 使用 `modularity`、`reusability`、`analyzability`、`modifiability` 或 `other`；没有明确目标时不得为了覆盖术语而虚构指标；
 - 每个 Extension Point 必须关联至少一个有效 Driver 和稳定 Contract；
 - 存在默认实现时必须准确记录；不存在默认实现时填写 `N/A` 和原因，不得虚构；
-- `Type` 使用 `built_in`、`project`、`external` 或项目扩展的已注册类型；
+- `Type` 使用 `built_in`、`project`、`external` 或 `other`；
 - `Change` 使用 `new`、`changed`、`reused` 或 `removed`；
 - 只设计当前需要的实现，不得预先创建没有 Requirement 的实现变体；
 - 注册、选择和依赖机制必须明确，不得依赖未记录的隐式约定；

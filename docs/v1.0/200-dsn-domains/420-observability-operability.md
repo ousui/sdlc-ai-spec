@@ -1,6 +1,7 @@
 ---
 title: "可观测性与可运维性 Observability and Operability"
-status: draft
+status: stable
+version: "1.0"
 scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---
@@ -88,7 +89,7 @@ parent: ../200-dsn-spec.md
 - Operational Action 必须定义权限、输入、幂等性、成功条件、失败结果和审计要求；
 - 现有 Logger、Metric、Trace、Alert 和运行平台优先通过可验证项目基线或 Evidence 引用；
 - Dashboard、Alert Rule、Telemetry Config 和 Runbook 可以作为 Supporting Artifact；
-- 核心 Spec 不强制使用 ELK 或任何特定日志、指标、追踪和告警平台；
+- 核心 Spec 不强制使用任何特定日志、指标、追踪或告警平台；
 - 本 Domain 不记录实际告警、长期运行操作结果或运行期 Evidence；
 - VFY Points 必须覆盖信号语义、关联、健康检查、告警和受控运行操作。
 

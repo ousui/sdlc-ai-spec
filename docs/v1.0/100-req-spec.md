@@ -1,10 +1,11 @@
 ---
 title: Requirement Phase Spec
-status: draft
+status: stable
+version: "1.0"
 scope: 已确认的 REQ Artifact 结构与 Gate
 ---
 
-# Requirement Phase Spec（草稿）
+# Requirement Phase Spec
 
 ## Phase 目标
 
@@ -32,11 +33,12 @@ REQ 描述目标、行为、规则、质量要求和强制约束，不提前决�
 
 ```yaml
 ---
-contract: sdlc-ai-spec/artifact/v0.2
+contract: sdlc-ai-spec/artifact/v1
 phase: REQ
 id: REQ-20260823143025-01
 revision: 1
 status: draft
+context: CTX-20260828143025-01@1
 profile: full
 inputs: []
 ---
@@ -80,7 +82,7 @@ inputs: []
 
 所有固定章节必须保留。达到 `ready` 或 `ready_with_exception` 前，`Summary`、`Source Input`、`Goal and Success`、`Scope`、`Requirements`、`Acceptance Criteria`、`Lifecycle Profile`、`Lifecycle Applicability` 和 `Gate` 必须具有有效内容；`Affected Parties`、`Dependencies` 及 Core 通用章节允许使用各自唯一的 `None` 空表示。普通章节不使用 Lifecycle Disposition。
 
-`draft` 或 `waiting_input` 中，`Pending — <OI-ID>` 只用于自由文本单元格或章节正文。ID、枚举、Reference、Front Matter 等 typed value 未确认时保留固定表头但不创建对应正式数据行，由 Open Item 的 `Blocked References` 指向阻塞该位置的稳定 Gate Check ID；不得留歧义空白、使用非法占位值或猜测补全。
+`draft` 或 `waiting_input` 中，`Pending — <OPI-ID>` 只用于自由文本单元格或章节正文。ID、枚举、Reference、Front Matter 等 typed value 未确认时保留固定表头但不创建对应正式数据行，由 Open Item 的 `Blocked References` 指向阻塞该位置的稳定 Gate Check ID；不得留歧义空白、使用非法占位值或猜测补全。
 
 ## 摘要
 
@@ -232,11 +234,11 @@ Profile 选择依据直接使用 Core Lifecycle Profile 的固定检查项。生
 ```markdown
 | Phase | Disposition | Host | 判断依据 Basis |
 |---|---|---|---|
-| DSN | pending | N/A | Pending — <OI-ID> |
-| PLN | pending | N/A | Pending — <OI-ID> |
-| IMP | pending | N/A | Pending — <OI-ID> |
+| DSN | pending | N/A | Pending — <OPI-ID> |
+| PLN | pending | N/A | Pending — <OPI-ID> |
+| IMP | pending | N/A | Pending — <OPI-ID> |
 | VFY | required | N/A | VFY Artifact 为固定控制点 |
-| RLS | pending | N/A | Pending — <OI-ID> |
+| RLS | pending | N/A | Pending — <OPI-ID> |
 ```
 
 REQ 提供初始适用性判断。后续 Phase 可以依据新增事实调整，但必须说明与上游判断不同的原因。
@@ -281,13 +283,7 @@ Artifact Gate 先包含 Core Gate Checks，再包含以上 REQ Gate Checks；之
 | Requirement Item | `R-001` |
 | Acceptance Criterion | `AC-001` |
 | Dependency | `DEP-001` |
-| Open Item | `OI-001` |
+| Open Item | `OPI-001` |
 | Evidence | `EVD-001` |
 | Exception | `EX-001` |
 | Gate Check | `REQ-G-001` |
-
-## 当前未定义
-
-- Lifecycle Profile 的项目扩展注册格式；
-- REQ 生成入口和执行工具；
-- 原始长输入快照的最终目录约定。

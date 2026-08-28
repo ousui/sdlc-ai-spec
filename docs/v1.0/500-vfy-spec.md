@@ -1,10 +1,11 @@
 ---
 title: VFY Phase Spec
-status: draft
+status: stable
+version: "1.0"
 scope: Verification and Validation Phase 固定模板、执行边界与 Gate
 ---
 
-# VFY Phase Spec（草稿）
+# VFY Phase Spec
 
 VFY 对准确、不可变的产品结果执行或复核适用方法，证明其是否符合已确认的 Requirement、Design 和预期用途，并形成可供返工或发版判断使用的结论。
 
@@ -50,11 +51,12 @@ VFY 使用 Core Artifact Front Matter：
 
 ```yaml
 ---
-contract: sdlc-ai-spec/artifact/v0.2
+contract: sdlc-ai-spec/artifact/v1
 phase: VFY
 id: VFY-20260824160000-01
 revision: 1
 status: draft
+context: CTX-20260828143025-01@1
 profile: full
 inputs:
   - DSN-20260824120000-01@1
@@ -220,13 +222,13 @@ VFY Method 使用一个简短索引：
 - Evidence Requirement:
 ```
 
-- `Executor Identity` 记录实际执行该 Method 的人员、agent 或自动化执行 ID；Artifact Contract v0.2 的 `required` Method 必须按 Core 填写一个稳定执行身份 token；
+- `Executor Identity` 记录实际执行该 Method 的稳定执行身份；`required` Method 必须按 Core 填写一个可追踪的执行身份 token；
 - `Method Detail` 记录适用的 Test Level、Objective、Execution Mode、环境或范围，不增加顶层枚举；
 - `Procedure or Basis` 必须足以重复执行或复核，不绑定无必要的具体工具；
 - `Pass Criteria or References` 必须明确可判定，不得只写“正常”或“符合预期”；
 - `Evidence Requirement` 说明支持 `pass` 或 `fail` 所需的最小 Evidence。
 
-VFY 的 Pre-execution Checklist 由当前 Revision 的非空 Evaluation Contract Set、Input and Result Set、Target 与 Traceability、完整 Method Index 和适用 Method Detail 组成。正式执行会改变隔离环境、测试数据或形成正式 Evidence 的 Method 前，必须按 Core 持久化、读回并保存 Evidence；此前输出只能作为候选材料，必须在 Checklist 建立后按当前 Subject 和 Method Contract 独立执行或复核。
+VFY 的 Pre-execution Checklist 由当前 Revision 的非空 Evaluation Contract Set、Front Matter Context、Input and Result Set、Target 与 Traceability、完整 Method Index 和适用 Method Detail 组成。正式执行会改变隔离环境、测试数据或形成正式 Evidence 的 Method 前，必须按 Core 持久化、读回并保存 Evidence；此前输出只能作为候选材料，必须在 Checklist 建立后按当前 Subject 和 Method Contract 独立执行或复核。
 
 不可解析 Artifact 及其 Evidence Reference 不能作为当前 Input、`evidence_source` 或 Basis，其底层不可变字节也只能作为 Candidate Material。需要采用这些字节时，必须在当前 Checklist 读回后以新 Supporting Member 和摘要重新登记，按当前 Subject、Target 与 Method Contract 独立执行或复核，并形成新的 Evidence 和 Method Result。旧字节复核只能证明本次可观察内容，不能重新证明旧环境、时间、执行动作或外部副作用；无法由当前读回重建时必须重新执行。旧 Evidence、Method Result、Conclusion、Gate、Final Confirmation、Return 或 RLS 结论均不提供当前 Authority。
 
@@ -248,7 +250,7 @@ VFY 只保留限制的最小处置规则：
 - 限制不能被解释为 `n/a`；
 - 确认只能在正式 Release Target 执行且当前发版需要继续时，该 Method 在当前 VFY Revision 使用 `waived`、保留完整 Method Detail 并关联有效 Exception，Exception 必须登记准确的 RLS 下游义务；
 - Exception 只授权其明确范围和下游义务，Target 不能记为 `pass`；
-- 实际发版、流量、停止或恢复机制由 RLS 或项目扩展定义，不在 VFY 展开。
+- 实际发版、流量、停止或恢复机制由 RLS 或项目既有交付机制处理，不在 VFY 展开。
 
 ### 失败检查点早停 Failure Checkpoint Early Stop
 
@@ -364,7 +366,7 @@ VFY 直接使用 Core Evidence Contract，并增加以下要求：
 ```markdown
 | Phase | Disposition | Host | 判断依据 Basis |
 |---|---|---|---|
-| RLS | pending | N/A | Pending — <OI-ID> |
+| RLS | pending | N/A | Pending — <OPI-ID> |
 ```
 
 - RLS Disposition 表示是否存在正式发版或目标状态变化，不表示当前产品已经具备发版资格；产品 Conclusion 为 fail 时不能通过修改 Disposition 掩盖结果；
@@ -393,7 +395,7 @@ VFY 使用 Core Gate Checks，并增加以下 Phase Check：
 ```markdown
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| VFY-G-001 | Input、Scope Source、完整 PLN IMP Work Item Set、Current completed Claim、Subject 和当前终端 Result 完整、准确且可解析 | pending | |
+| VFY-G-001 | Context、Input、Scope Source、完整 PLN IMP Work Item Set、Current completed Claim、Subject 和当前终端 Result 完整、准确且可解析 | pending | |
 | VFY-G-002 | 权威 Target Set 推导完整，不存在遗漏、重复或 VFY 自行新增的目标 | pending | |
 | VFY-G-003 | 每个 Method 的 Purpose 与 Target 相容，Target、Subject、上游 VFP / VFM / VPC / VEC、适用 VFY Work Item、Return、类型、Disposition、通过条件、Evidence Requirement 与正式执行前的 Pre-execution 读回 Evidence 映射完整一致 | pending | |
 | VFY-G-004 | 所有 Method 已形成准确结果，实际 Subject 与 Contract 一致，Evidence 足以支持对应结果；失败检查点早停时，未执行 required Method 的 Method Result pending、fail 与 Return 映射完整准确，且不存在 pending Method Disposition | pending | |
@@ -424,13 +426,7 @@ VFY Gate Checks 都是 Contract Integrity Check，只允许 `pending`、`pass` �
 | Verification Conclusion | `CON-VER` |
 | Validation Conclusion | `CON-VAL` |
 | Return | `RET-001` |
-| Open Item | `OI-001` |
+| Open Item | `OPI-001` |
 | Evidence | `EVD-001` |
 | Exception | `EX-001` |
 | Gate Check | `VFY-G-001` |
-
-## 当前未定义
-
-- VFY 与外部测试平台的自动 Evidence 适配；
-- Project Extension 注册项目专属环境、数据、命令和工具适配的实现方式；
-- VFY 自动化入口和执行工具。

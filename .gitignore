@@ -177,39 +177,21 @@ target/
 **/*.rs.bk
 *.pdb
 
-# Agent, assistant, MCP, plugin, and Skill local state
-# Keep shareable files such as AGENTS.md, SKILL.md, rules, manifests, and .codex/ccpm.
-**/.agents/cache/
-**/.agents/logs/
-**/.agents/runs/
-**/.agents/sessions/
-**/.agents/tmp/
-**/.codex/cache/
-**/.codex/log/
-**/.codex/logs/
-**/.codex/sessions/
-**/.codex/archived_sessions/
-**/.codex/shell_snapshots/
-**/.codex/tmp/
-**/.codex/worktrees/
-**/.codex/*.local.*
+# Project-local AI tool and agent directories
+# The repository keeps tool-neutral plugin source only; host installation output stays local.
+/.codex/
+/.claude/
+/.cursor/
+/.agent/
+/.agents/
+/.continue/
+/.gemini/
+/.windsurf/
+
+# Generated plugin, MCP, Skill, and assistant state
 **/.codex-plugin/cache/
 **/.codex-plugin/dist/
 **/.codex-plugin/tmp/
-**/.claude/settings.local.json
-**/.claude/cache/
-**/.claude/logs/
-**/.claude/sessions/
-**/.claude/tmp/
-**/.cursor/cache/
-**/.cursor/index/
-**/.continue/cache/
-**/.continue/index/
-**/.continue/sessions/
-**/.gemini/cache/
-**/.gemini/tmp/
-**/.windsurf/cache/
-**/.windsurf/index/
 **/.aider.chat.history.md
 **/.aider.input.history
 **/.aider.tags.cache.*

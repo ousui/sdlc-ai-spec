@@ -1,10 +1,11 @@
 ---
 title: Implementation Phase Spec
-status: draft
+status: stable
+version: "1.0"
 scope: 已确认的 IMP Binding、领取、实施方法、结果、检查与 Gate Contract
 ---
 
-# Implementation Phase Spec（草稿）
+# Implementation Phase Spec
 
 > 本文件只定义 IMP 的通用 Artifact 与控制边界，不规定具体编程语言、工具、平台或执行者。
 
@@ -205,7 +206,7 @@ Readiness Check Set 由实际把工作交给 IMP 的位置执行：
 | IMP-RDY-003 | 目标、验收依据及完成依据足以判断实施完成；有 Work Item 时使用 Completion Criteria / Expected Evidence，直接 Binding 使用 REQ Goal / AC 或 DSN Change / VFY Point 的等价依据 | pending | |
 | IMP-RDY-004 | 当前 Attempt 各版本化资源的 Baseline 来源、捕获方式、Target、输入输出和 Execution Scope 明确且一致；全新资源具有可复核的未创建依据，同资源前驱存在时能够准确继承其 Result | pending | |
 | IMP-RDY-005 | 七项 Implementation Consideration 可以分类，适用项具有权威上游语义或设计 | pending | |
-| IMP-RDY-006 | Requirement、Decision、Constraint、Dependency 和 Exception 可追踪；可变 Dependency 可以在领取时确定性复核，且没有阻塞 Open Item | pending | |
+| IMP-RDY-006 | 当前 Context、Requirement、Decision、Constraint、Dependency 和 Exception 可追踪；可变 Dependency 可以在领取时确定性复核，且没有阻塞 Open Item | pending | |
 ```
 
 - Result 只允许 `pending`、`pass` 或 `fail`；
@@ -218,7 +219,7 @@ Readiness Check Set 由实际把工作交给 IMP 的位置执行：
 
 IMP 使用五个 Activity，不建立子 Phase 或子 Artifact：
 
-IMP 的 Pre-execution Checklist 复用当前 Revision 已有内容：非空 Evaluation Contract Set、准确 Implementation Binding、Front Matter Inputs、Scope、全部为 `pass` 的 Input Readiness Check Set、Claim identity、每个 Resource 的不可变 Baseline，以及完整的 Implementation Method Contract。首次产品修改前必须按 Core 持久化、读回并保存 Evidence；缺少任一项只能继续分析或补全 Artifact，不得开始产品修改。
+IMP 的 Pre-execution Checklist 复用当前 Revision 已有内容：非空 Evaluation Contract Set、准确 Implementation Binding、Front Matter Context 与 Inputs、Scope、全部为 `pass` 的 Input Readiness Check Set、Claim identity、每个 Resource 的不可变 Baseline，以及完整的 Implementation Method Contract。首次产品修改前必须按 Core 持久化、读回并保存 Evidence；缺少任一项只能继续分析或补全 Artifact，不得开始产品修改。
 
 | 活动 Activity | 主要动作 | 完成结果 |
 |---|---|---|
@@ -236,11 +237,12 @@ IMP 直接使用 Core Artifact Front Matter：
 
 ```yaml
 ---
-contract: sdlc-ai-spec/artifact/v0.2
+contract: sdlc-ai-spec/artifact/v1
 phase: IMP
 id: IMP-20260824143000-01
 revision: 1
 status: draft
+context: CTX-20260828143025-01@1
 profile: full
 inputs:
   - PLN-20260824120000-01@1
@@ -527,7 +529,6 @@ Implementation Result 使用一个固定集合：
 - VCS Locator 固定写作 `vcs:<resource>@<immutable-revision>`，其中 `<resource>` 必须与当前行 `Resource` 完全一致，Revision 必须是完整不可变对象 ID；
 - Patch、完整快照或生成文件可以使用完整 Member Reference，并由 Supporting Artifact Manifest 保存 SHA-256；未提交的版本化内容可以使用持久 VCS Tree / Object 或完整 Snapshot Member；
 - 分支、可移动 Tag、`latest`、`current`、当前工作树、单独路径或无摘要临时文件不能作为准确 Result；
-- 项目扩展可以注册其他不可变 Result Locator，但不能放宽唯一解析要求；注册机制闭合前不得使用未定义格式；
 - 下游引用某个结果单元时使用 `<IMP-ID>@<Revision>#<RES-ID>`。
 
 Result Set 所有单元格都必须填写；可选值不存在时写 `N/A`。实际变化行的 `Changed Scope` 必须包含 `resource:<Resource>`，其他值只使用当前 Claim 中已有的准确 Scope Token；沿用行按前述规则写 `None`。`path:<resource-id>/<resource-relative-path>` 的 `resource-id` 必须与当前行 `Resource` 相同。更细位置写入 Change Reference 或 Evidence；`Approach Step References` 使用 Core Reference Set，沿用行写 `None`。
@@ -582,7 +583,7 @@ Implementation Checks 保存本次实际执行的局部检查，不建立平行 
 | Phase | Disposition | Host | 判断依据 Basis |
 |---|---|---|---|
 | VFY | required | N/A | VFY Artifact 为固定控制点 |
-| RLS | pending | N/A | Pending — <OI-ID> |
+| RLS | pending | N/A | Pending — <OPI-ID> |
 ```
 
 - VFY 固定为 `required`；
@@ -608,7 +609,7 @@ IMP 使用 Core Gate Checks，并增加以下 Phase Check：
 ```markdown
 | Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
 |---|---|---|---|
-| IMP-G-001 | Binding Lineage、准确 Binding Reference、Input、Dependency Result References、Rework References、Attempt、IMP Revision 和 Claim 一致有效；`Depends On` 传递闭包的全部当前结果与依赖边连续有效，Readiness 全部通过 | pending | |
+| IMP-G-001 | Context、Binding Lineage、准确 Binding Reference、Input、Dependency Result References、Rework References、Attempt、IMP Revision 和 Claim 一致有效；`Depends On` 传递闭包的全部当前结果与依赖边连续有效，Readiness 全部通过 | pending | |
 | IMP-G-002 | 实现只覆盖一个原子 Outcome，未重组 Work Item、超出不可变 Claim Scope 或违反依赖 | pending | |
 | IMP-G-003 | 七项 Implementation Consideration、连续 Approach、必要 Method Block 与首次产品修改前的 Pre-execution 读回 Evidence 完整一致，未新增 Requirement、Design 或 Plan 决策 | pending | |
 | IMP-G-004 | 实际实现、上游约束和 Work Item Completion Criteria / Expected Evidence 一致；Result Set 对 Claim 中每个 Resource 恰有一行并以不可变 Result 唯一确定，截至当前 Work Item 的同资源链前缀连续有效 | pending | |
@@ -655,10 +656,3 @@ PLN 为 `required` 时，只有匹配 WI 的冻结 IMP Revision 与 `completed` 
 | Implementation Check | `CHK-001` |
 | Readiness Check | `IMP-RDY-001` |
 | Gate Check | `IMP-G-001` |
-
-## 当前未定义
-
-- Claim Provider 的文件路径、存储介质、条件更新和锁实现；
-- Owner 的项目级身份格式；
-- Project Extension 注册额外 Result Locator 和 Implementation Check 的实现方式；
-- RLS 外部平台适配和自动 Evidence 采集方式。

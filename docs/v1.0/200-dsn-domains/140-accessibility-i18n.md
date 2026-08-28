@@ -1,6 +1,7 @@
 ---
 title: "可访问性与国际化 Accessibility and Internationalization"
-status: draft
+status: stable
+version: "1.0"
 scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md
 ---

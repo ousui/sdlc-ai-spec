@@ -209,3 +209,12 @@ Skill 能被发现或调用，不等于其行为正确。
 - 没有分发需求，不建设 Marketplace。
 - 没有更新需求，不建设更新器。
 - 没有评测证据，不提升兼容性声明。
+
+## 10. 关联流程文件
+
+- [Skill 开发流程](SKILL-DEVELOPMENT-WORKFLOW.md)
+- [Skill Design Contract 模板](templates/SKILL-DESIGN-CONTRACT.md)
+- [Skill Eval Plan 模板](templates/SKILL-EVAL-PLAN.md)
+- [开始 Skill 设计会话](prompts/START-SKILL-DESIGN-SESSION.md)
+
+这些文件用于重复开发 Skill，但不得替代当前 Skill 绑定的领域 Source of Truth。

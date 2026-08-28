@@ -33,4 +33,8 @@
 - [Plugin 开发标准](docs/plugin-development/DEVELOPMENT.md)
 - [兼容性矩阵](docs/plugin-development/COMPATIBILITY.md)
 - [开发交接](docs/plugin-development/HANDOFF.md)
+- [Skill 开发流程](docs/plugin-development/SKILL-DEVELOPMENT-WORKFLOW.md)
+- [Skill Design Contract 模板](docs/plugin-development/templates/SKILL-DESIGN-CONTRACT.md)
+- [Skill Eval Plan 模板](docs/plugin-development/templates/SKILL-EVAL-PLAN.md)
+- [开始 Skill 设计会话](docs/plugin-development/prompts/START-SKILL-DESIGN-SESSION.md)
 - [共享 Skills 目录说明](skills/README.md)

@@ -2,6 +2,13 @@
 
 本文件记录 `sdlc-ai-spec` Plugin 的重要变更。Plugin Version 与领域 Spec Version 独立管理。
 
+## Unreleased
+
+- Added a transparent, stage-gated Skill development workflow.
+- Added reusable Skill Design Contract and Eval Plan templates.
+- Added a copyable entry prompt for design-only Skill sessions.
+- No production Skill was created.
+
 ## 0.1.0 - 2026-08-28
 
 - Initialized Cursor, Claude Code, and Codex native plugin manifests.

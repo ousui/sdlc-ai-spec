@@ -108,8 +108,8 @@ Claim Record 是执行控制记录，不是 Lifecycle Artifact，不修改冻结
 |---|---|
 | `Binding Lineage Key` | 从准确 Binding Reference 派生的稳定唯一领取键 |
 | `IMP Binding Reference` | 当前 Attempt 使用的完整、带 Revision Binding |
-| `IMP Artifact ID` | 首次成功领取时分配；重新领取不得改变 |
-| `IMP Artifact Revision` | 领取时预留且不可复用的目标 Revision；由 Owner 通过 `allocate revision` 建立 Revision Control Record 与最小 Canonical Revision Payload 骨架，或由已阻断旧 Owner 写入的项目授权恢复执行方仅为终结预留号而恢复；只有完整 Payload 已通过 `write open revision` 持久化并以 `read revision` 读回后才成为已分配 Revision；写入或读回失败时仅按 Core 的 `abandon revision` 恢复特例终结预留号，不构成成功分配 |
+| `IMP Artifact ID` | 由 Claim Provider 在首次成功 `acquire` 时分配；它是稳定 IMP Artifact ID 的唯一分配 Authority，重新领取不得改变 |
+| `IMP Artifact Revision` | Claim Provider 在当前 `acquire` 中分配并登记的准确目标 Revision Reservation；Artifact Store 的 `allocate revision` 只采用该准确值建立 open Revision Control Record。该 Control Record 不是 Canonical Revision Payload 或可供下游使用的 Artifact Revision；只有完整 Payload 已通过第一次 `write open revision` 原子持久化，并在该操作成功前完成完整读回验证后，才成为 materialized open Revision；后续才可执行独立的 `read revision` |
 | `Attempt` | 首次领取为 `1`；每次从 `abandoned` 或 `completed` 重新激活时加 `1` |
 | `Claim State` | Claim Provider 中的权威执行状态，只允许 `active`、`completed`、`abandoned`；没有 Claim Record 表示未领取 |
 | `Owner` | 当前 Attempt 的唯一执行 Owner |
@@ -122,7 +122,7 @@ Claim Record 是执行控制记录，不是 Lifecycle Artifact，不修改冻结
 
 `Responsible Role` 表示 PLN 中对 Outcome 负责的角色；`Owner` 表示当前实际执行方，两者不得混用。Owner 可以是人工、AI 或其他执行主体，核心 Contract 不据此判断合规性。
 
-Claim Provider 是项目内唯一的执行权来源；同一项目及 Resource 命名空间必须确定性解析到唯一 Provider，无法解析或解析到多个 Provider 时不得领取。Claim Provider 与 Artifact Store 是不同 Authority：前者控制 Binding Lineage 与 Resource 的执行权，后者保存 Canonical Artifact Revision；Artifact Store 的 Revision Control Record 不授予执行权。Claim 状态变化只有：
+Claim Provider 是项目内唯一的执行权来源，也是稳定 IMP Artifact ID 和当前 Claim Attempt 目标 Revision Reservation 的唯一分配 Authority；同一项目及 Resource 命名空间必须确定性解析到唯一 Provider，无法解析或解析到多个 Provider 时不得领取。Claim Provider 的 `acquire` 同时登记准确的 Binding Lineage、IMP Artifact ID、Attempt、Owner 与目标 Revision Reservation。Claim Provider 与 Artifact Store 是不同 Authority：前者控制 Binding Lineage 与 Resource 的执行权并分配上述 IMP 身份，后者只采用和校验 Claim 的准确值并保存 Canonical Artifact Revision；Artifact Store 不得为同一 IMP Binding Lineage 生成第二个 Artifact ID，也不得为同一 Claim Attempt 选择第二个 Revision Number，Revision Control Record 也不授予执行权。Claim 状态变化只有：
 
 ```text
 no record → active
@@ -139,7 +139,7 @@ Claim Resolver API 只定义以下四个逻辑操作，物理存储与锁实现�
 | 操作 Operation | Contract |
 |---|---|
 | `resolve` | 按 Binding 或 Lineage 返回唯一 Current Claim，不修改状态 |
-| `acquire` | 原子防止同 Lineage 重复领取和 Resource 冲突，并分配稳定 IMP Artifact ID、Attempt 与目标 Revision Reservation |
+| `acquire` | 原子防止同 Lineage 重复领取和 Resource 冲突，并同时分配和登记准确的稳定 IMP Artifact ID、Attempt、Owner 与目标 Revision Reservation |
 | `abandon` | 只接受两个互斥入口：准确 Revision 已通过 Artifact Store `abandon revision` 转为 `abandoned` 的普通放弃；或准确 Revision 已为 `frozen`、同 Attempt 的 `complete` 已产生不能以相同条件成功的明确错误且 Reason 按固定格式记录错误的最终化失败恢复。两者都必须匹配 Lineage、Attempt、Revision、Expected Owner 和 `active` 状态，再原子更新 Claim 为 `abandoned` 并记录 Actor 与 Reason |
 | `complete` | 在 Artifact 已冻结且 Gate 通过后，按同一组条件递归复核已登记的 Dependency Result 及其依赖链仍对应 Current `completed` Claim，再幂等地将 `active` 更新为 `completed` |
 
@@ -151,23 +151,29 @@ Claim Resolver API 只定义以下四个逻辑操作，物理存储与锁实现�
 4. 直接 Binding 时收集完整上游与返工控制输入，并从准确 State Check Reference 重新检查 Dependency 已达到 Required State；存在未满足依赖、新范围、多个结果间顺序或协调义务时停止并返回 PLN；
 5. 仅对新领取或合法重新激活，在完整待登记 Input Set、前置 Result、Exception 和 Baseline 来源均已解析后，无副作用地执行 IMP Input Readiness Check Set；
 6. 无副作用地预检查不存在与其他 `active` Claim 相同的 `resource:<versioned-resource-id>`；其他 Scope Token 只用于范围与追踪，不作为当前内置 Claim Contract 的冲突键；
-7. 以 Lineage 仍唯一、且全部 Resource 仍无其他 `active` Claim 为提交条件，在 Claim Provider 中原子创建 `active` Attempt，分配唯一 IMP Artifact ID、Attempt，并预留不可复用的目标 Revision；条件失败时不分配执行权，返回现有或冲突 Claim；
-8. 成功领取后，Owner 确认预留号等于 Artifact Lineage 内已持久化最大 Revision 加 `1` 且不存在其他 `open` Revision，再依次执行 `allocate artifact`（仅首次 Lineage）、`allocate revision`、`write open revision` 和 `read revision`，原子物化当前 IMP Artifact 的完整 Canonical Revision Payload。Payload 必须包含 primary Canonical Blob、全部本地 Member、Member 元数据与 Manifest 闭包，并写入成功的 Readiness 结果、Attempt、Owner、Rework References 与全部实际输入；读回后校验 Lineage、Binding、Artifact ID、Revision、Attempt 和 Owner 与 Claim 完全一致。完整分配、持久化、读回和校验成功前不得修改产品；
-9. 物化或校验失败时 fail closed：不修改产品；Owner，或已阻断旧 Owner 写入的项目授权恢复执行方，只能为终结该预留号而确保其 Revision Control Record 与最小 Payload 骨架存在，再对准确 `open` Revision 执行 `abandon revision` 并记录准确原因；这是写入或读回失败时的恢复特例，不表示 Revision 已成功分配。确认成功后才能以同一原因对匹配的 `active` Claim 执行 `abandon`。恢复执行方不得补写实现内容或修改产品。任一步失败时 Claim 保持 `active` 并继续锁定 Lineage 与 Resource，使用相同条件恢复，不得重领或跳过预留号；
+7. 以 Lineage 仍唯一、且全部 Resource 仍无其他 `active` Claim 为提交条件，在 Claim Provider 中原子创建 `active` Attempt，同时分配并登记准确的唯一 IMP Artifact ID、Attempt、Owner 与不可复用的目标 Revision Reservation；条件失败时不分配执行权，返回现有或冲突 Claim；
+8. 成功领取后，Owner 使用同一 active Claim 的准确值依次执行 `allocate artifact`、`allocate revision`、第一次 `write open revision` 和后续 `read revision`。`allocate artifact` 必须校验 Binding Lineage、Attempt、Owner 与 Artifact ID：尚未登记时原子登记 Claim 的准确 ID，已按同一 ID 绑定同一 IMP Lineage 时幂等成功，ID 或 Lineage 任一交叉冲突时明确失败且不得生成替代 ID。`allocate revision` 必须采用 Claim 的准确 Reservation：未登记时校验它等于 Lineage 内已持久化最大 Revision 加 `1` 且不存在其他 `open` Revision，再只建立 open Revision Control Record；同一 Claim 和 Lineage 的准确 Reservation 重复请求幂等，已被其他 Revision 占用、存在其他 `open` Revision 或 Lineage 不一致时明确失败且不得改选 Revision。第一次 `write open revision` 必须在一个原子 Store transaction 中写入包含 primary Canonical Blob、全部本地 Member、稳定 Member 身份、Member 元数据、逐项 SHA-256 与 Manifest-Member closure 的完整 Payload，并写入成功的 Readiness 结果、Attempt、Owner、Rework References 与全部实际输入；该操作成功前必须完整读回并校验 Lineage、Binding、Artifact ID、Revision、Attempt 和 Owner 与 Claim 完全一致，成功后才成为 materialized open Revision。随后执行独立的 `read revision` 复核；完整分配、物化和后续读回全部成功前不得修改产品；
+9. 任一 Store 登记、物化、读回或校验失败都 fail closed，Claim 保持 `active`，准确 Artifact ID、Attempt、Owner 与 Revision Reservation 不变，并继续锁定 Lineage 和 Resource；不得重新 `acquire`、分配新 Artifact ID、改选或跳过预留 Revision，也不得修改产品。恢复边界固定为：
+   - Claim 已成功但 Store 尚未登记 Artifact 时，只能以相同条件重试准确的 `allocate artifact`。需要放弃时，必须在 Store 恢复可用后依次幂等登记 Claim 中的准确 Artifact ID、使用准确 Revision Reservation 创建 Revision Control Record、对该准确 open Control Record 执行 `abandon revision`，再使用同一原因对匹配 active Claim 执行 `abandon`；
+   - 准确 IMP Artifact ID 已与其他 Lineage 冲突时停止恢复并报告项目 Authority 解决身份冲突；不得自动分配新 ID、释放或覆盖 Claim；
+   - `allocate revision` 事务未提交时不存在 Revision Control Record，只能以同一 Claim 和 Reservation 重试；
+   - Revision Control Record 已建立但第一次 `write open revision` 事务未提交时，可以使用同一 Claim 和 Reservation 重试第一次完整写入，或先对该 Control Record 执行 `abandon revision`，再以同一原因 `abandon` Claim；
+   - `read revision` 失败时不得把不完整或无法验证的内容当作成功；完整 Payload 已写入但无法验证时，必须保留 Revision Control Record 和实际内容，以明确原因执行 `abandon revision`，再以同一原因 `abandon` Claim；
+   - Owner 以外的项目授权恢复执行方只有在先阻断旧 Owner 写入后，才可按上述固定顺序终结准确 Reservation；不得补写实现内容或修改产品。任一步未完成时 Claim 继续保持 `active`；
 10. 完整 Payload 物化并读回成功后、首次产品修改前，为每个已有 Resource 生成或复用准确不可变 Baseline Reference 并登记到当前 Revision；同资源前驱存在时 Baseline 必须等于其当前 Result Reference。全新 Resource 必须登记可复核的“不存在或尚未创建”依据，Baseline 固定为 `N/A`；目标已存在时不得按全新资源覆盖。捕获、依据或匹配失败时仍不得修改产品，并按第 9 步放弃 Claim。
 
-Readiness 未通过时不创建 Claim 或 IMP Artifact。成功领取与 Artifact ID 分配必须形成一个原子结果，不能先读取后无条件覆盖。
+Readiness 未通过时不创建 Claim 或 IMP Artifact。成功领取与准确 Artifact ID、Attempt、Owner、Revision Reservation 的分配和登记必须形成 Claim Provider 中的一个原子结果，不能先读取后无条件覆盖；Artifact Store 只幂等采用并校验该结果。
 
 - 遇到同一 Lineage 已有 `active` Claim 时，只有准确 Binding、Dependency Result References 与 Rework References 都相同才停止并返回现有 Owner、Attempt、IMP Artifact ID 和当前记录；任一不同都返回 mismatch，不得把返回结果解释为新请求已接受；
 - 遇到已有 `completed` Claim 时，Binding、Dependency Result References 与 Rework References 都相同则返回当前完成结果；只有合法且不同的非空 Rework References 明确要求同一 Lineage 继续实施时才允许重新激活，Binding 或前驱更新时该集合必须包含对应新引用；
 - 同一 Owner 使用相同 Binding、Dependency Result References 与 Rework References 重复领取也只返回现有 Claim；任一不同仍按 mismatch 处理；
-- `active → abandoned` 只允许两个互斥入口：未冻结 Attempt 先对准确 `open` Revision 执行 `abandon revision`，Claim 与 Revision 使用同一原因；或 frozen Attempt 在 `complete` 已返回不可同条件重试的明确错误后，保持 Revision 不变，并把准确错误码和细节写入 Claim `Abandon Reason`。两者都以 Expected Owner 匹配当前 Lineage、Attempt、Revision、Owner 和 `active` 状态，将实际 Actor、时间和原因条件写入；当前 Owner 自行放弃时 Actor 默认等于 Expected Owner；
+- `active → abandoned` 只允许两个互斥入口：未冻结 Attempt 先对尚未物化的准确 open Revision Control Record 或已经物化的准确 `open` Revision 执行 `abandon revision`，Claim 与 Revision 使用同一原因；或 frozen Attempt 在 `complete` 已返回不可同条件重试的明确错误后，保持 Revision 不变，并把准确错误码和细节写入 Claim `Abandon Reason`。两者都以 Expected Owner 匹配当前 Lineage、Attempt、Revision、Owner 和 `active` 状态，将实际 Actor、时间和原因条件写入；当前 Owner 自行放弃时 Actor 默认等于 Expected Owner；
 - `abandoned → active` 必须显式发生，沿用 IMP Artifact ID、递增 Attempt 并预留新的最大 Revision，不复用旧 Owner 的 Revision；只有 Binding 和全部当前前驱 Result 均未改变时才属于原序列重试并继承原 Rework References，任一变化都必须以当前完整 Rework References 启动新序列；
 - 每个重试都重新选择 Baseline：目标 Resource 未前进时可以复用原不可变 Baseline；已前进时必须以当前准确不可变状态为新 Baseline，丢弃旧可变视图并重新应用仍需保留的变化；无法确定性协调时返回 PLN 或 DSN；
 - `completed → active` 必须沿用 IMP Artifact ID、递增 Attempt、重新执行 Readiness，并预留新的最大目标 Revision；
 - `completed → active` 处理原 Lineage 内的局部返工或同一稳定 Item 的新上游 Revision；Requirement、Design 或 Plan 变化必须先形成新的上游 Revision，Item 语义被替代时使用新 Lineage；
 - 相同 `Binding Lineage Key + Rework References` 只能启动一个返工序列；集合使用 Core 固定排序和去重规则，重复请求返回该序列的最新 Attempt。只有该 Attempt 已 `abandoned`、Binding 与全部当前前驱 Result 均未改变且显式重试时，才在同一序列追加 Attempt；任一因果引用变化时启动新序列，陈旧或指向其他 Lineage / Result 的请求必须拒绝；
-- 只有当前 `active` Claim 的 Owner，且对应 Revision 仍为 `open`、完整 Payload 物化与读回已校验通过，才可通过 `write open revision` 修改对应 IMP Artifact，并修改 Claim 覆盖的产品内容；Revision 进入 `frozen` 或 `abandoned` 后立即失去写权限。项目授权的恢复执行方只有在先阻断旧 Owner 写入后，才可按第 9 步终结预留 Revision，或按 frozen 最终化失败入口释放匹配 Claim；调用时以旧 Owner 为 Expected Owner、恢复执行方为 Actor，不得补写实现、修改 frozen Artifact、修改产品或自动超时接管；
+- 只有当前 `active` Claim 的 Owner 才可把准确 open Revision Control Record 作为第一次 `write open revision` 的目标；完整 Payload 物化并读回校验通过后，仍只有该 Owner 可通过后续 `write open revision` 修改对应 IMP Artifact，并修改 Claim 覆盖的产品内容。Revision 进入 `frozen` 或 `abandoned` 后立即失去写权限。项目授权的恢复执行方只有在先阻断旧 Owner 写入后，才可按第 9 步终结预留 Revision，或按 frozen 最终化失败入口释放匹配 Claim；调用时以旧 Owner 为 Expected Owner、恢复执行方为 Actor，不得补写实现、修改 frozen Artifact、修改产品或自动超时接管；
 - 不新增 `blocked` Claim State；等待输入时保持 `active`，释放执行权时显式改为 `abandoned`；
 - `completed` 必须以 IMP Artifact 已通过 Gate 并形成可解析 Revision 为依据。
 

@@ -48,6 +48,8 @@ target_spec: docs/v1.1
 - SQLite 不可用、损坏或事务失败时 fail closed；
 - 不静默降级到文件、系统临时目录或 `.sdlc/tmp/`。
 
+IMP 的 Claim Provider 不是第二个 Artifact Store：它是稳定 IMP Artifact ID 和当前 Claim Attempt 目标 Revision Reservation 的唯一分配 Authority。Claim Provider 的 `acquire` 同时登记准确的 Binding Lineage、Artifact ID、Attempt、Owner 与 Reservation；Local SQLite Store 只幂等采用并校验这些准确值，不得为同一 IMP Binding Lineage 生成第二个 Artifact ID，也不得为同一 Claim Attempt 选择第二个 Revision Number。没有 Claim Contract 的其他 Artifact 仍由 Store 正常分配 ID 和 Revision。
+
 ## 3. Canonical Revision Payload
 
 `Canonical Revision Payload` 是 Artifact Store 的逻辑存储单元，不是新的 Artifact 字段、Reference 类型、Status、Gate、数据库表或领域 Artifact。一个完整 Payload 必须包含：
@@ -79,6 +81,8 @@ SQLite 至少保存：
 
 数据库物理表名、列名、索引、PRAGMA、WAL 和 Migration 属于后续实现，不进入 v1.1 Domain Spec。首版不把每个 Requirement、Acceptance Criteria、Evidence 或 Gate Check 全部规范化为关系表；查询或索引结构不得成为并行 Authority。
 
+`allocate revision` 不创建 Payload，只创建 `State=open` 的 Revision Control Record。完整 Payload 首次成功写入并读回前，该记录只是 Store Control Reservation，不是 Canonical Revision Payload、Lifecycle Artifact 或可供下游使用的 Artifact Revision。
+
 ## 4. 最小事务与 Reference 语义
 
 后续 `artifact-store-spec.md` 只定义当前 SQLite 实现真正需要的逻辑操作：
@@ -93,14 +97,23 @@ SQLite 至少保存：
 - `resolve exact reference`；
 - `verify digest`。
 
-其中以下现有操作都作用于完整 Canonical Revision Payload，而不是只作用于主要 Canonical Blob：
+分配操作保持以下边界：
 
-- `read revision`：读取并验证主要 Canonical Blob、全部本地 Member、Manifest-Member closure 以及每份原始字节的 SHA-256。缺少成员、存在未登记成员、Member ID 重复、摘要不匹配或 Manifest 无法唯一闭合时必须失败；
-- `write open revision`：在一个 SQLite transaction 中一致写入当前 `open` Revision 的主要 Canonical Blob、本地 Member、Member 元数据与 Manifest 闭包。不得留下主要 Blob 已更新但 Member 未更新，或 Member 已写入但 Manifest 未登记的部分成功状态；
+- `allocate artifact`：没有 Claim Contract 时由 Store 正常分配；IMP 必须接收并校验 active Claim 中准确的 Binding Lineage、Attempt、Owner 与 Artifact ID，未登记时原子登记，同一 ID 与 Lineage 重复时幂等成功，ID 或 Lineage 冲突时明确失败且不生成替代 ID；
+- `allocate revision`：没有 Claim Contract 时由 Store 正常选择当前最大 Revision 加 `1`；IMP 必须采用并校验 Claim 的准确目标 Revision Reservation，同一准确 Reservation 重复时幂等，存在其他 `open` Revision、Reservation 被占用或 Lineage 不一致时明确失败且不改选 Revision；该操作只创建并读回 Revision Control Record。
+
+完整 Payload 首次写入前，open Revision Control Record 只可作为第一次 `write open revision` 的目标，或通过 `abandon revision` 终结；不得被 `read revision` 当作 Canonical Artifact 读取、被 `resolve exact reference` 解析、执行 Artifact Gate、Final Confirmation 或 `freeze revision`，也不得被下游作为 Context、Input、Item 或 Member Authority。
+
+以下内容操作作用于完整 Canonical Revision Payload，而不是只作用于主要 Canonical Blob：
+
+- `read revision`：只读取已经物化的 Revision，并验证主要 Canonical Blob、全部本地 Member、Manifest-Member closure 以及每份原始字节的 SHA-256。只有 Control Reservation、缺少成员、存在未登记成员、Member ID 重复、摘要不匹配或 Manifest 无法唯一闭合时必须失败；
+- `write open revision`：第一次写入在一个 SQLite transaction 中为准确的 open Revision Control Record 同时写入完整主要 Canonical Blob、本地 Member、稳定 Member 身份、Member 元数据、逐项 SHA-256 与 Manifest 闭包，并在操作成功前完整读回验证；只有成功后才成为 materialized open Revision。后续写入继续以完整 Payload 为原子单位，不得留下主要 Blob 已更新但 Member 未更新，或 Member 已写入但 Manifest 未登记的部分成功状态；
 - `freeze revision`：只有主要 Blob 与全部本地 Member 均已持久化并读回、Manifest 与本地 Member 集合完全一致、所有 SHA-256 均验证通过，且既有领域 Gate 与 Final Confirmation 条件成立后才允许冻结。Frozen Revision 的主要 Blob 原始字节、全部本地 Member 原始字节、成员集合、稳定 Member 身份和摘要均不可修改；增加、删除、替换或修改必须进入新的最大 `open` Revision；
 - `verify digest`：同时验证主要 Canonical Blob SHA-256、每个本地 Member SHA-256，以及 Manifest 成员集合与实际存储成员集合完全一致。不得只验证主要 Blob 后将整个 Revision 报告为完整。
 
-所有写操作必须在 SQLite transaction 中完成。分配、写入、冻结和放弃不能留下可被误认为成功的部分状态；失败必须返回明确结果并保持 fail closed。
+`abandon revision` 可以终结尚未写入 Payload 的准确 open Revision Control Record，也可以终结已经物化完整 Payload 的准确 open Revision；两种情况都保留 Revision Number 和 Abandon Reason，不删除、不复用 Revision，也不提供下游 Authority。
+
+所有写操作必须在 SQLite transaction 中完成。分配、写入、冻结和放弃不能留下可被误认为成功的部分状态；失败必须返回明确结果并保持 fail closed。`materialized` 只描述完整 Payload 已成功写入并读回，不新增 Revision State 或数据库字段。
 
 现有准确 Reference 语法保持不变：
 

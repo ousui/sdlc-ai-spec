@@ -133,6 +133,8 @@ DSN-20260823150010-01
 - 不依赖目录位置、文件顺序、标题或内容相似度识别 Artifact；
 - 同一文字输入不代表同一业务身份，未指定 ID 时不得自动覆盖疑似相同 Artifact。
 
+没有 Claim Contract 的 Artifact 继续由 Artifact Store 按上述规则分配 ID 和 Revision。IMP 的稳定 Artifact ID 与当前 Claim Attempt 的目标 Revision Reservation 只由 Claim Provider 的 `acquire` 分配；该原子结果同时登记准确的 Binding Lineage、Artifact ID、Attempt、Owner 与 Revision Reservation。Artifact Store 的 `allocate artifact` 和 `allocate revision` 只采用并校验这些准确值，不得为同一 IMP Binding Lineage 生成第二个 Artifact ID，也不得为同一 Claim Attempt 选择第二个 Revision Number。准确 IMP Artifact ID 与其他 Lineage 冲突时必须 fail closed 并交由项目 Authority 解决，不得自动分配恢复 ID、释放 Claim 或覆盖既有身份。
+
 身份命名空间恢复 Identity Namespace Recovery 只处理一种不可原地修复的控制故障：同一 Artifact 已物化的历史 Revision 将同一稳定 Item、Member 或 Evidence ID 分配给不同逻辑角色，且历史冻结或状态改变 Evidence 不能改写，使任何后续 Revision 都无法同时满足稳定 ID Contract。它不是普通重试、内容返工或规避失败 Gate 的方式。
 
 - 旧 Artifact 必须以新的最大 Revision 或已经存在的当前最大 Revision 准确记录冲突、实际状态和 `fail` Gate，并在 Revision Control Record 中标记为 `abandoned`；既有状态改变和 Evidence 不得删除；
@@ -206,7 +208,7 @@ inputs: []
 ## Revision
 
 - 新 Artifact 从 `revision: 1` 开始。
-- 新 Revision 固定为该 Artifact 已持久化最大 Revision 加 `1`；成功分配必须通过 Artifact Store 建立 Revision Control Record 与最小 Canonical Revision Payload 骨架，并完成 read-after-write；
+- 新 Revision 固定为该 Artifact 已持久化最大 Revision 加 `1`；成功分配只通过 Artifact Store 建立准确的 `State=open` Revision Control Record，并完成该 Control Record 的 read-after-write；
 - 发生并发冲突时重新读取最大 Revision 后再分配，不得覆盖、跳回或复用已有 Revision；
 - `draft` 或 `waiting_input` 期间修改，不增加 Revision。
 - `failed` Artifact 在形成可供下游使用的快照前修正，可以沿用当前 Revision；修改后当前 Check、Gate Summary 和 Final Confirmation 立即失效并重置为 `pending`，Status 按阻塞事实回到 `draft` 或 `waiting_input`。Core 不要求保存 open Revision 的中间失败尝试；确需留痕时登记为 Evidence。
@@ -218,7 +220,7 @@ inputs: []
 
 ### Artifact Store 与准确 Reference 解析
 
-每个 Artifact ID 对应一个 Artifact Lineage。每个 Revision 由一个 Revision Control Record 和一个完整 Canonical Revision Payload 表达。Revision 在 Reference 和 Front Matter 中继续使用不补零的正整数，不建立 `current`、`working` 或 `latest` 别名。
+每个 Artifact ID 对应一个 Artifact Lineage。`allocate revision` 先为目标 Revision 建立 Revision Control Record；只有完整 Canonical Revision Payload 首次成功写入并读回后，该记录和 Payload 才共同表达 materialized Revision。Revision 在 Reference 和 Front Matter 中继续使用不补零的正整数，不建立 `current`、`working` 或 `latest` 别名。
 
 Revision Control Record 保留以下既有字段和语义：
 
@@ -235,20 +237,24 @@ Canonical Revision Payload 必须包含 primary Canonical Blob 原始字节、�
 - `State` 只允许 `open`、`frozen` 或 `abandoned`；合法变化只有 `open → frozen` 和 `open → abandoned`，终态不能重新打开；
 - 一个 Artifact 同时最多存在一个 `open` Revision；新 Revision 是 Lineage 内已持久化最大 Revision 加 `1`；
 - `Base Revision` 为 `None` 或同一 Artifact 已存在的 `frozen` Revision；它只定位新 Revision 的内容来源，不是 Input 或 Authority；选择旧 Base 仍必须创建新的最大 Revision；
-- Revision 分配只有在 Artifact Store 通过 `allocate revision` 建立 Revision Control Record 与最小 Canonical Revision Payload 骨架，并读回验证后才成功；写入必须通过 `write open revision` 在一个 Store transaction 中一致保存 primary Blob、全部本地 Member、Member 元数据和 Manifest，不允许部分成功；
-- Phase 执行控制若在 Core 分配前预留目标 Revision，该预留号必须等于当前已持久化最大 Revision 加 `1`，且不得跳过或复用。正常执行前必须完成 `allocate revision`、`write open revision` 与 `read revision`；物化失败只能对准确的 `open` Revision 执行 `abandon revision`，任一步失败时继续保留执行权并重试恢复；
-- `open` 与 `frozen` Revision 必须具有完整 Canonical Revision Payload。只有证明未改变执行对象状态时，不完整的 `open` Payload 才可直接放弃且不得被解析为 Artifact；状态改变已经发生或无法排除时，必须先保留原始日志或目标读回，后续同 Phase 恢复 Revision 必须承接这些 Evidence、记录实际状态，并按该 Phase 规则选择或恢复 Baseline 后再执行；
+- `allocate revision` 只原子建立并读回准确的 `State=open` Revision Control Record，不创建 Canonical Revision Payload。完整 Payload 首次写入前，该记录只是 open Store Control Reservation，不是 Lifecycle Artifact、可供下游使用的 Artifact Revision、Gate 或 Final Confirmation 对象；
+- 没有 Claim Contract 的 Artifact 由 Store 分配当前最大 Revision 加 `1`。Phase 执行控制已预留目标 Revision 时，Store 必须采用并校验该准确值；对 IMP，Claim Provider 是目标 Revision Reservation 的唯一分配 Authority，Store 不得改选其他 Revision。预留号必须等于当前已持久化最大 Revision 加 `1`，且不得跳过或复用；
+- open Revision Control Record 在完整 Payload 首次成功写入前，只允许作为第一次 `write open revision` 的准确目标，或通过 `abandon revision` 终结；不得被 `read revision` 当作 Canonical Artifact 读取、被 `resolve exact reference` 解析、执行 Artifact Gate、Final Confirmation 或 `freeze revision`，也不得被下游作为 Context、Input、Item 或 Member Authority；
+- 第一次 `write open revision` 必须在一个原子 Store transaction 中同时保存完整 primary Blob、全部 locally owned Member、稳定 Member 身份、Member 元数据、逐项 SHA-256 和形成 Manifest-Member closure 的 Manifest，不允许部分成功；成功前必须完整读回并验证。只有该操作成功后才称为 materialized open Revision；`materialized` 只是描述，不是新的 Revision State 或正式字段；
+- 后续 `write open revision` 只能修改准确的 materialized open Revision，并继续原子保存和读回完整 Canonical Revision Payload；`read revision` 只接受已经物化且完整的 Revision，任何缺失或不一致都必须失败，不得返回部分内容；
+- `allocate revision` 事务未提交时不存在 Revision Control Record，只能以相同准确条件重试。Control Record 已建立但第一次完整写入未提交时，可以重试同一完整写入或对该记录执行 `abandon revision`；完整 Payload 已写入但无法验证时，必须保留 Control Record 和实际内容，并按明确原因执行 `abandon revision`，不得把无法验证的内容当作成功；
+- `abandon revision` 可以终结尚未写入 Payload 的准确 open Revision Control Record，也可以终结已经物化完整 Payload 的准确 open Revision；两种情况都保留 Revision Number 和 Abandon Reason，不删除、不复用 Revision，也不提供下游 Authority；
 - `Artifact Gate Summary.Evaluation Contract Set` 在 `Gate Result=pending` 时就是当前 `open` Revision 的 Spec Binding。正式 action 前必须非空、随完整 Payload 持久化并读回；工具默认快照只可校验尚未开始正式 action 的草稿结构，不能为既有正式 Result、Evidence 或 Target effect 事后选择规则版本；
 - 会改变产品、受控验证环境或测试数据、Release Target、外部系统等执行对象状态，或形成正式 VFY Evidence 的 Phase action，只能在当前 `open` Revision 的完整 Payload 和 Phase Spec 定义的 Pre-execution Checklist 已持久化并读回后开始。该 Checklist 复用当前 Phase 的固定字段，不默认新增平行状态或表；此前输出只能作为候选材料，事后补录不能追溯满足该控制。为建立此前提而进行、且已由 Core 或 Phase 单独规定顺序的 Store Control Record 和 Claim 等控制写入不属于本条所称执行对象状态改变，仍须遵守各自原子性和顺序；
 - Pre-execution 读回复用 Evidence 和 Supporting Artifact Manifest 保存不可变读回内容，至少记录 Artifact Reference、Observed At、准确 Evaluation Contract Set 和 Phase 固定 Checklist 的字段和值，并在 Manifest 登记 Member SHA-256。Checklist 或 Contract Set 变化后，旧读回内容下的正式输出不得继续作为当前 Result 或 Evidence，必须重新读回并重执行或独立复核；已经发生的状态改变仍是事实，不能降为候选材料；
 - 时间使用 RFC 3339；`abandoned` 必须填写原因，其他不适用字段写 `N/A`；
 - Revision Control Record 是 Artifact Store 控制元数据，不属于 Lifecycle Artifact，不进入 Artifact Set Manifest、Evidence 或 Gate Digest；
-- Snapshot 内容完成并通过最终一致性检查后，最后执行逻辑 `freeze revision`。只有 primary Blob、全部本地 Member、Manifest-Member closure、逐项摘要、既有 Gate 与 Final Confirmation 全部通过并读回一致时才可转为 `frozen`；当前专属 Spec 若定义其他耦合最终化条件，则全部条件满足后才允许下游解析。
+- Snapshot 内容完成并通过最终一致性检查后，最后执行逻辑 `freeze revision`。只有当前 `open` Revision 已物化，且 primary Blob、全部本地 Member、Manifest-Member closure、逐项摘要、既有 Gate 与 Final Confirmation 全部通过并读回一致时才可转为 `frozen`；当前专属 Spec 若定义其他耦合最终化条件，则全部条件满足后才允许下游解析。
 
 解析准确 Artifact Reference 时：
 
 1. 使用 Artifact ID 在当前 Canonical Store 中定位唯一 Artifact Lineage，并找到指定 Revision 的唯一 Revision Control Record；
-2. 下游 Input 只接受 `frozen`，并通过 `read revision` 读取完整 Canonical Revision Payload；
+2. 只有 Control Reservation、尚未物化或 Payload 不完整时立即失败；下游 Input 只接受 `frozen`，并通过 `read revision` 读取完整 Canonical Revision Payload；
 3. primary Canonical Blob 的 `id`、`revision` 和 `status` 必须匹配，且 `status` 只能为 `ready` 或 `ready_with_exception`；
 4. 验证全部本地 Member、稳定身份、Media Type、Manifest-Member closure、逐 Blob / Member SHA-256、Control Input Digest、当前 Check Set Result Digest、Final Confirmation、Gate Summary，以及专属 Spec 注册的耦合发布控制记录；Lifecycle Artifact 还必须解析其 Context Reference，并以每个 Input 自身的 Contract 递归验证完整 Input 链；不得使用下游当前 Spec 重新解释已冻结 Artifact；
 5. Member Reference 通过 Manifest 解析；Item Reference 按 Project Context、Phase 或 Domain 固定模板解析到唯一 Item 定义；
@@ -480,7 +486,7 @@ Gate 和 Final Confirmation 必须绑定实际被检查的内容，不能只绑�
 
 Aggregate Gate Result 使用 `pending`、`pass`、`pass_with_exception` 或 `fail`。所有必要 Check 为 `pass` 或具有有效理由的 `n/a`，且没有 Waiver 时为 `pass`；存在有效 Waiver 时只能为 `pass_with_exception`；存在 `fail` 时为 `fail`；其余为 `pending`。
 
-`Evaluation Contract Set` 必须使用固定 Reference Set 语法，列出本次 Gate 实际执行的全部不可变规则来源。全部 v1.1 Canonical Artifact 必须包含 Core Spec 和 `docs/v1.1/artifact-store-spec.md@sha256:7de6fb26835da7ceedb38ada064be39276eeedeaf52892523d59d649c09009c6`；CTX Artifact 还必须包含 Project Context Spec；Lifecycle Artifact 还必须包含当前 Phase Spec，复合 Artifact 还包含适用的 Domain Spec。Lifecycle Artifact 通过 Front Matter `context` 解析 CTX 自身的 Evaluation Contract Set，不把 Project Context Spec 重复加入当前 Phase 的集合。每个元素固定写作 `<仓库相对 Spec 路径>@sha256:<64 位小写十六进制>`。`Gate Result=pending` 时允许先只填写该字段作为当前 Spec Binding，其他摘要在最终化时补齐。集合变化时，未冻结 Revision 立即失效旧 Gate、Final Confirmation 和旧规则下的正式 action 输出，并按 Pre-execution 规则重新处理；已冻结 Revision 必须创建新 Revision。
+`Evaluation Contract Set` 必须使用固定 Reference Set 语法，列出本次 Gate 实际执行的全部不可变规则来源。全部 v1.1 Canonical Artifact 必须包含 Core Spec 和 `docs/v1.1/artifact-store-spec.md@sha256:09fe467614b6ea36ceb9b29336d34e0cb59cc8276ac0d98ba9117a4e6c8ccf7d`；CTX Artifact 还必须包含 Project Context Spec；Lifecycle Artifact 还必须包含当前 Phase Spec，复合 Artifact 还包含适用的 Domain Spec。Lifecycle Artifact 通过 Front Matter `context` 解析 CTX 自身的 Evaluation Contract Set，不把 Project Context Spec 重复加入当前 Phase 的集合。每个元素固定写作 `<仓库相对 Spec 路径>@sha256:<64 位小写十六进制>`。`Gate Result=pending` 时允许先只填写该字段作为当前 Spec Binding，其他摘要在最终化时补齐。集合变化时，未冻结 Revision 立即失效旧 Gate、Final Confirmation 和旧规则下的正式 action 输出，并按 Pre-execution 规则重新处理；已冻结 Revision 必须创建新 Revision。
 
 同一 Artifact 的 Core、当前 Project Context 或 Phase Contract，以及适用 Domain Contract 必须来自同一 Spec Snapshot。不同 Artifact 可以分别绑定不同 Snapshot，并按跨 Snapshot 输入兼容规则衔接。
 

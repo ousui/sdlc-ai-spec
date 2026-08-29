@@ -27,7 +27,18 @@ git@github.com:blade-cdn/sdlc-ai-spec.git
 - **应该**：默认遵守；偏离时必须记录依据。
 - **可以**：按实际需要采用。
 
-## 2. 总体架构
+## 2. 文档与 Skill 语言
+
+- 面向维护者的开发文档、Design Contract、Eval Plan、
+  `SKILL.md` 正文和 References 默认使用中文。
+- 文件名、目录名、Front Matter 字段、Schema 字段、ID、
+  Reference、枚举、状态值、命令和代码符号保持规范定义的英文形式。
+- 固定领域术语可以采用“中文 English”并列写法。
+- `name` 必须使用 lowercase kebab-case，并与 Skill 目录名一致。
+- `description` 可以使用中文。
+- 不得维护含义相同但可能漂移的中英文两份正文。
+
+## 3. 总体架构
 
 项目采用：
 
@@ -53,7 +64,7 @@ One Shared Skill Source + Three Thin Native Manifests
 4. 平台专有 Rules、Hooks、Agents、Commands 或 MCP 只有在真实需求和验证证据存在时才可以增加。
 5. 不为未来可能出现的需求提前创建空目录或抽象层。
 
-## 3. Skill Contract
+## 4. Skill Contract
 
 每个 Skill 必须只承担一个稳定、可描述的工作流，并明确：
 
@@ -78,7 +89,7 @@ Skill 必须：
 - 不把“文件已生成”视为“Gate 已通过”；
 - 区分 Agent 推理、确定性检查、人工确认和未决风险。
 
-### 3.1 Exclusive Skill Execution Contract
+### 4.1 Exclusive Skill Execution Contract
 
 每个正式 Skill 必须定义并接受评测：
 
@@ -92,7 +103,7 @@ Skill 必须：
 
 这是可评测的行为契约，用于限制模型行为和暴露越界；它不是、也不得宣称为不可绕过的硬安全隔离。真实隔离仍取决于宿主权限与安全机制。
 
-### 3.2 Explicit Invocation First
+### 4.2 Explicit Invocation First
 
 首版默认策略：
 
@@ -107,9 +118,9 @@ Skill 必须：
 
 Design Contract 必须登记平台调用策略，Eval Plan 必须分别覆盖三个 Client。当前治理阶段只建立设计要求，不创建任何 `SKILL.md` 或 `agents/openai.yaml`。后续改变默认策略必须有独立设计决定和实际宿主证据。
 
-## 4. 资源所有权
+## 5. 资源所有权
 
-### 4.1 Skill 私有资源
+### 5.1 Skill 私有资源
 
 只被一个 Skill 使用的资源必须放在该 Skill 目录中：
 
@@ -124,7 +135,7 @@ skills/<skill-name>/
 
 其他 Skill 不得通过 `../` 跨目录直接调用该 Skill 的私有脚本或引用材料。
 
-### 4.2 Plugin 共享资源
+### 5.2 Plugin 共享资源
 
 只有出现两个或以上真实使用者后，才可以把资源提升为 Plugin 级共享资源。
 
@@ -138,7 +149,7 @@ lib/
 
 没有真实的第二个使用者时，不得为了“以后可能复用”提前建立公共层。
 
-### 4.3 Script
+### 5.3 Script
 
 Script 应该用于解析、格式转换、Schema 校验、Artifact 检查、Diff 分析和其他确定性工作。
 
@@ -155,7 +166,7 @@ Script 必须：
 - 不自动修改用户级或系统级配置；
 - 不执行未经授权的远程写入。
 
-## 5. Skill 开发阶段
+## 6. Skill 开发阶段
 
 每个 Skill 固定分为以下阶段：
 
@@ -167,15 +178,15 @@ Script 必须：
 
 每个会话必须只处理一个阶段，达到停止条件后结束，不自动进入下一阶段。
 
-### 5.1 design
+### 6.1 design
 
 只形成 Skill Design Contract 和初始评测案例，不创建正式实现。
 
-### 5.2 implement
+### 6.2 implement
 
 只依据已经确认的设计实现最小版本，不重新发散整体架构。
 
-### 5.3 evaluate
+### 6.3 evaluate
 
 分别验证：
 
@@ -190,15 +201,15 @@ Script 必须：
 
 Skill 能被发现或调用，不等于其行为正确。
 
-### 5.4 adapt
+### 6.4 adapt
 
 一次只适配一个明确 Agent 和运行载体。平台适配不得改变共享 Skill 的领域语义。
 
-### 5.5 review
+### 6.5 review
 
 独立检查设计一致性、领域语义、路径、权限、安全、兼容性和评测证据。默认只报告问题，除非当前工作包明确授权修改。
 
-## 6. 会话与变更控制
+## 7. 会话与变更控制
 
 每次开发会话必须明确：
 
@@ -219,7 +230,15 @@ Skill 能被发现或调用，不等于其行为正确。
 4. 记录已验证、未验证和已知限制；
 5. 只登记下一个工作包，不展开后续全部阶段。
 
-## 7. 安全与写入边界
+## 8. 正式 Skill 分支规则
+
+- 每个正式 Skill 应使用独立的 `skill/<skill-name>` 分支。
+- 未完成 review 的 Skill 不得直接合入 `main`。
+- 每个阶段应形成独立提交。
+- Agent 不得在没有当前工作包授权时切换分支、合并或 rebase。
+- `main` 只接受已完成阶段检查和独立 review 的结果。
+
+## 9. 安全与写入边界
 
 默认禁止：
 
@@ -234,7 +253,7 @@ Skill 能被发现或调用，不等于其行为正确。
 
 外部写入必须获得当前工作包中的明确授权。
 
-## 8. 兼容性与版本
+## 10. 兼容性与版本
 
 - Plugin Version 与领域 Spec Version 必须独立管理。
 - Plugin 必须明确声明其兼容的领域 Spec。
@@ -244,7 +263,7 @@ Skill 能被发现或调用，不等于其行为正确。
 - 三端公共元数据应该保持一致；平台特有字段可以不同。
 - 兼容性结果统一记录在 `COMPATIBILITY.md`。
 
-## 9. 简约原则
+## 11. 简约原则
 
 - 没有外部服务，不引入 MCP。
 - 没有自动触发刚需，不引入 Hook。
@@ -254,7 +273,7 @@ Skill 能被发现或调用，不等于其行为正确。
 - 没有更新需求，不建设更新器。
 - 没有评测证据，不提升兼容性声明。
 
-## 10. 关联流程文件
+## 12. 关联流程文件
 
 - [Skill 开发流程](SKILL-DEVELOPMENT-WORKFLOW.md)
 - [Skill Design Contract 模板](templates/SKILL-DESIGN-CONTRACT.md)

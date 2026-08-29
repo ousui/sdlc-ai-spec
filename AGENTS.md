@@ -79,7 +79,18 @@ design → implement → evaluate → adapt → review
 - 历史 Validator、旧版本实现或自然语言“看起来正确”不得作为 v1.0 兼容证明。
 - `SHA256SUMS` 仅在验证冻结 Spec Snapshot 或发布兼容性时按需使用，不是日常 Plugin 开发的固定 Gate。
 
-## 6. Plugin 架构边界
+## 6. 文档与 Skill 语言
+
+- 面向维护者的开发文档、Design Contract、Eval Plan、
+  `SKILL.md` 正文和 References 默认使用中文。
+- 文件名、目录名、Front Matter 字段、Schema 字段、ID、
+  Reference、枚举、状态值、命令和代码符号保持规范定义的英文形式。
+- 固定领域术语可以采用“中文 English”并列写法。
+- `name` 必须使用 lowercase kebab-case，并与 Skill 目录名一致。
+- `description` 可以使用中文。
+- 不得维护含义相同但可能漂移的中英文两份正文。
+
+## 7. Plugin 架构边界
 
 固定架构：
 ```text
@@ -94,7 +105,7 @@ One Shared Skill Source + Three Thin Native Manifests
 - 不使用作者本机绝对路径，不依赖固定 shell 工作目录，不通过脆弱的多层 `../` 访问其他 Skill 私有资源。
 - 没有确定性操作需求，不创建 Script；没有外部能力需求，不创建 MCP；没有自动触发刚需，不创建 Hook。
 
-### 6.1 Exclusive Skill Execution Contract
+### 7.1 Exclusive Skill Execution Contract
 
 每个正式 Skill 的 Design Contract、实现和 Eval 必须共同保证：
 
@@ -107,7 +118,7 @@ One Shared Skill Source + Three Thin Native Manifests
 
 这是必须通过 Eval 验证的行为契约，不得描述为不可绕过的硬安全隔离。
 
-### 6.2 Explicit Invocation First
+### 7.2 Explicit Invocation First
 
 首版正式 Skill 默认采用显式调用：
 
@@ -116,7 +127,7 @@ One Shared Skill Source + Three Thin Native Manifests
 
 这些平台字段必须先登记在 Skill Design Contract 和 Eval Plan 中，再在后续获授权的实现或适配阶段创建并验证；不得在 `design` 阶段提前创建 `SKILL.md` 或 `agents/openai.yaml`。
 
-## 7. 证据、状态与兼容性
+## 8. 证据、状态与兼容性
 
 必须区分：
 - 已验证事实；
@@ -145,7 +156,7 @@ One Shared Skill Source + Three Thin Native Manifests
 
 失败、跳过、未运行和工具不可用必须明确报告；禁止静默 fallback 或把部分成功描述为完整成功。
 
-## 8. 变更、Git 与外部写入
+## 9. 变更、Git 与外部写入
 
 默认必须：
 - 只修改当前工作包白名单中的路径；
@@ -156,7 +167,7 @@ One Shared Skill Source + Three Thin Native Manifests
 - 不自动安装全局依赖，不修改用户级或系统级 Agent 配置；
 - 不写入密钥、Token、Cookie、私钥或真实账号信息。
 
-### 8.1 权威仓库与远程目标
+### 9.1 权威仓库与远程目标
 
 本项目唯一权威远程仓库固定为：
 
@@ -189,7 +200,15 @@ Git commit、push、tag、PR、Release、Marketplace、消息发送和其他远�
 - 无法保证身份时停止，不得用错误账户代替；
 - 不为修改署名而重写既有历史，除非用户明确授权。
 
-## 9. Codex App 与并行会话
+## 10. 正式 Skill 分支规则
+
+- 每个正式 Skill 应使用独立的 `skill/<skill-name>` 分支。
+- 未完成 review 的 Skill 不得直接合入 `main`。
+- 每个阶段应形成独立提交。
+- Agent 不得在没有当前工作包授权时切换分支、合并或 rebase。
+- `main` 只接受已完成阶段检查和独立 review 的结果。
+
+## 11. Codex App 与并行会话
 
 并行仅用于只读研究，或写入路径完全不相交、阶段和责任明确的工作包。
 
@@ -203,7 +222,7 @@ Git commit、push、tag、PR、Release、Marketplace、消息发送和其他远�
 
 不得仅因为 Codex App 支持多 Agent 就自动拆分任务。并行价值不明确时保持单会话。
 
-## 10. 验证与完成报告
+## 12. 验证与完成报告
 
 完成前至少：
 1. 运行当前阶段明确要求的检查；
@@ -223,7 +242,7 @@ Git commit、push、tag、PR、Release、Marketplace、消息发送和其他远�
 
 不得用长篇未来计划替代当前结果。
 
-## 11. 必须停止的情况
+## 13. 必须停止的情况
 
 遇到以下任一情况，停止写入并报告：
 - Source of Truth 冲突或不足以作出当前阶段决定；

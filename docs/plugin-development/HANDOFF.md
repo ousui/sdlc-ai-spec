@@ -6,7 +6,7 @@
 
 ## 当前阶段
 
-跨 Agent Plugin 骨架、Skill 开发流程、开发期与运行时边界、Exclusive Skill Execution Contract 和 Agent 开发约束已经建立，尚未创建正式 Skill。
+C1 `design` 已完成：候选 Skill `sdlc-project-context` 的 Design Contract 与 Eval Plan 均为 `ready`，没有阻塞 Open Item，等待 Maintainer 明确批准。尚未创建正式 Skill，也未进入 `implement`。
 
 ## 已完成内容
 
@@ -29,6 +29,9 @@
 - 登记首版 Explicit Invocation First 策略：Cursor / Claude Code 使用 `disable-model-invocation: true`，Codex 使用 `policy.allow_implicit_invocation: false`。
 - Design 和 Eval 模板已经加入 Interoperability Contract、独占执行案例、三端调用策略验证和实际外部 Invocation 记录要求。
 - 已将 `blade-cdn/sdlc-ai-spec` 固定为唯一权威远程仓库；`ousui/sdlc-ai-spec` 仅保留为停止同步的历史仓库。
+- 建立 `sdlc-project-context` Design Contract，覆盖 `create / revise / check`、CTX Identity、Revision、Context Reference、Basis、Open Items、权限和失败边界。
+- 建立 `sdlc-project-context` Eval Plan，覆盖正向与负向调用、完整与缺失输入、Revision 更新、冲突边界、with-skill / without-skill、Exclusive Skill Execution 和三端显式调用策略。
+- `sdlc-project-context` Design Status 为 `ready`，Maintainer Decision 保持 `pending`。
 - 尚未创建正式或占位 Skill。
 
 ## 当前目录结构
@@ -57,6 +60,10 @@
 │       ├── templates/
 │       │   ├── SKILL-DESIGN-CONTRACT.md
 │       │   └── SKILL-EVAL-PLAN.md
+│       ├── work-items/
+│       │   └── sdlc-project-context/
+│       │       ├── DESIGN.md
+│       │       └── EVAL-PLAN.md
 │       └── prompts/
 │           └── START-SKILL-DESIGN-SESSION.md
 ├── README.md
@@ -97,14 +104,18 @@ docs/plugin-development/work-items/<skill-name>/
 - 三个原生 Manifest 已完成静态检查。
 - Skill 开发流程、Design Contract、Eval Plan 和设计会话入口已经建立。
 - Agent 约束分为全仓、`skills/` 和 `docs/plugin-development/` 三个作用域。
+- `sdlc-project-context` Design Contract 已覆盖 C1 要求，状态为 `ready`，Open Items 为 `None`。
+- `sdlc-project-context` Eval Plan 已定义可判定案例，但尚未执行 Eval，也未创建 Fixture 或 `EVAL-RESULTS.md`。
 - 当前没有任何 `SKILL.md`，因此三端 Skill Discovery、显式调用和行为验证仍为 `Pending first skill`。
-- 本阶段只增加开发约束，不改变领域 Spec 或兼容性矩阵结论。
+- C1 只增加 Work Item 设计文档，不改变领域 Spec、Manifest 或兼容性矩阵结论。
 - 本阶段没有创建 `SKILL.md` 或 `agents/openai.yaml`，也没有执行三端安装或运行时验证。
 
 ## 当前 Git 状态摘要
 
 - Plugin scaffold 检查点：`e724a94`。
 - Skill framework 检查点：`5a5bc50`。
+- C1 开始基线：`2d07179443dfbf16c6bcff22380c1fd67daa9660`，分支 `main`。
+- 当前 `git status --short` 显示 `docs/plugin-development/HANDOFF.md` 已修改，`docs/plugin-development/work-items/` 为未跟踪；本会话没有 commit 或 push。
 - 精确分支、HEAD 和工作树状态以当前会话执行的 Git 命令为准。
 - Agent 不得根据本节推断工作树始终干净。
 - 权威远端：`git@github.com:blade-cdn/sdlc-ai-spec.git`。
@@ -116,12 +127,14 @@ docs/plugin-development/work-items/<skill-name>/
 - 模板本身不能证明后续 Skill 设计正确，首个真实工作包仍需 Maintainer 审批。
 - Creator 工具可能引入平台偏好或扩大范围，必须受 Design Contract 约束。
 - 三端对 Skill Front Matter、发现和自动触发的差异尚未通过真实 Skill 验证。
+- `sdlc-project-context` 尚未获得 Maintainer `approved`，不得据 `ready` 自动进入实现。
+- CTX 确定性工具、路径解析和三端调用策略目前只有设计边界，没有实现或运行证据。
 - 过早创建 Skill Authoring 元 Skill 会固化未经实际验证的步骤。
 - 并行 Codex 会话如果没有路径隔离，仍可能造成 Handoff 或共享文件冲突。
 
 ## 下一次唯一工作包
 
-C1 — 确认第一个正式 Skill，只创建该 Skill 的 `DESIGN.md` 和 `EVAL-PLAN.md`，不创建 `SKILL.md`。
+C2 — Maintainer 审查并明确批准或拒绝 `sdlc-project-context` 的 `DESIGN.md` 与 `EVAL-PLAN.md`；未写入 `approved` 前不得进入 `implement`。
 
 ## 下一次明确不处理
 
@@ -129,5 +142,6 @@ C1 — 确认第一个正式 Skill，只创建该 Skill 的 `DESIGN.md` 和 `EVA
 - 不创建 Script、Reference、Asset 或 Eval Result。
 - 不修改三个平台 Manifest。
 - 不进行平台安装、适配或兼容性验证。
+- 不自动进入 `implement`、`evaluate`、`adapt` 或 `review`。
 - 不创建 Skill Authoring 元 Skill。
 - 不执行 Marketplace、发布或未经当前工作包授权的其他外部写入。

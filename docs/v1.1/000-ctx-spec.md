@@ -113,7 +113,7 @@ Revision Control Record 复用 Core 固定结构：
 - `ready` 或 `ready_with_exception` 冻结后不得原地修改；
 - 没有有效内容变化时不得创建空 Revision；
 - 不建立 `current`、`latest` 或可移动副本。
-- Revision 分配、open Revision 写入、读回、冻结、放弃和准确解析使用 Artifact Store Spec 的对应逻辑操作；只有完整 Canonical Revision Payload 已原子持久化并读回后，分配或写入才成功。
+- Revision 分配、open Revision 写入、读回、冻结、放弃和准确解析使用 Artifact Store Spec 的对应逻辑操作；`allocate revision` 只在 Revision Control Record 已建立并读回后完成控制预留，不形成可读取、可解析或可执行 Gate 的 CTX Revision。只有第一次 `write open revision` 已将完整 Canonical Revision Payload 原子持久化，并由 `read revision` 完整读回验证后，该 `open` Revision 才完成物化，可进入 CTX Check、Final Confirmation、Gate 与 `freeze revision`。
 
 ## Context Reference
 

@@ -6,12 +6,12 @@
 |---|---|
 | Skill Name | `sdlc-project-context` |
 | Stage | `design` |
-| Status | `ready` |
+| Status | `draft` |
 | Intended Plugin | `sdlc-ai-spec` |
 | Domain Source of Truth | `docs/v1.0/core-spec.md`, `docs/v1.0/000-ctx-spec.md` |
 | Work Package | `docs/plugin-development/work-items/sdlc-project-context/` |
 
-`ready` 表示 Design Definition of Done 已满足且没有阻塞 Open Item，不表示 Maintainer 已批准，也不授权进入 `implement`。
+`draft` 表示 Artifact Store Contract、Projection Contract 尚未进入正式 v1.1 Source of Truth，当前 Persistence 与路径假设不能批准；阻塞项关闭前不得进入 `implement`。
 
 ## 2. 问题与用户结果
 
@@ -330,17 +330,17 @@ Codex 适配时使用 Skill 私有 `skills/sdlc-project-context/agents/openai.ya
 - [x] 三端 Explicit Invocation First 默认策略已登记。
 - [x] `SKILL.md`、`agents/openai.yaml`、references、scripts、assets、fixtures 和 Eval Results 边界明确。
 - [x] Eval Plan 足以验证触发、行为、隔离与三端调用策略。
-- [x] 不存在阻塞实现的 Open Item。
+- [ ] 不存在阻塞实现的 Open Item。
 - [x] 本阶段没有创建正式 `SKILL.md`。
 
 ## 19. Open Items
 
 | ID | Question / Missing Decision | Blocks | Expected Source | Status |
 |---|---|---|---|---|
-| None | No blocking open items | N/A | N/A | closed |
+| OI-001 | Artifact Store Contract、Projection Contract 尚未进入正式 v1.1 Source of Truth；在 `docs/v1.1/` Spec Snapshot 完成前，当前 Persistence 与路径假设不能批准 | Design approval、`implement` | `docs/architecture/artifact-store-and-projection.md` 与待创建的 `docs/v1.1/` Spec Snapshot | open |
 
 ## 20. 确认记录
 
 | Role | Decision | Basis |
 |---|---|---|
-| Maintainer | `pending` | Design 已达到 `ready`，等待 Maintainer 明确批准；Agent 不自行写入 `approved` |
+| Maintainer | `pending` | Design 已回退为 `draft`；`OI-001` 关闭前不得批准或进入 `implement` |

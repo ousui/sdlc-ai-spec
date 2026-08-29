@@ -64,6 +64,13 @@ One Shared Skill Source + Three Thin Native Manifests
 4. 平台专有 Rules、Hooks、Agents、Commands 或 MCP 只有在真实需求和验证证据存在时才可以增加。
 5. 不为未来可能出现的需求提前创建空目录或抽象层。
 
+### 3.1 当前 Artifact Store 实现决定
+
+- 当前 Plugin 只支持 Local SQLite Store，固定路径为项目根目录下的 `.sdlc/store.sqlite3`。
+- 不需要 Provider 配置；当前不建设多 Provider 框架。
+- Skill 不得直接散落 SQL。后续实现必须通过一个最小的 Plugin 内部 `ArtifactStore` 模块访问数据库。
+- SQLite Schema、Migration 与模块实现必须由后续独立工作包设计、实现和验证；本文件不预先定义。
+
 ## 4. Skill Contract
 
 每个 Skill 必须只承担一个稳定、可描述的工作流，并明确：

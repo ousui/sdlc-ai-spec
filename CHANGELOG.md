@@ -4,6 +4,7 @@
 
 ## Unreleased
 
+- Replaced the multi-provider storage architecture and v1.1 Delta Plan with a Local SQLite-only Canonical Store decision at `.sdlc/store.sqlite3`; retained Human Review View as a non-authoritative Plugin Projection.
 - Declared `blade-cdn/sdlc-ai-spec` as the sole canonical development and release repository; retired `ousui/sdlc-ai-spec` from future updates.
 
 - Added repository-wide and path-scoped `AGENTS.md` guardrails.

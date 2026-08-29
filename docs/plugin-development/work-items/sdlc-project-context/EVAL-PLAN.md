@@ -21,9 +21,10 @@
 4. `create / revise / check` 是否保持各自的写入和完成边界；
 5. 缺失必要事实时是否使用 `waiting_input` 和 Open Items，而不是猜测或形成形式上的 `ready`；
 6. `observed / confirmed / referenced` 是否具有相应 Evidence 或准确不可变引用；
-7. with-skill 是否比 without-skill 更稳定地满足 v1.0 CTX Contract，且没有引入额外副作用；
+7. with-skill 是否比 without-skill 更稳定地满足 v1.1 Core、Artifact Store 与 CTX Contract，且没有引入额外副作用；
 8. Exclusive Skill Execution Contract、授权不传递和外部输出边界是否生效；
 9. Cursor、Claude Code 与 Codex 的 Explicit Invocation First 是否分别有实际宿主证据。
+10. Skill 是否只通过 Plugin 内部 ArtifactStore 使用项目根 `.sdlc/store.sqlite3`，不直接执行 SQL、不引入 Provider 配置，也不把文件系统视图当作 Artifact Authority。
 
 ## 3. 核心行为检查
 
@@ -39,9 +40,9 @@
 | CHK-08 | Identity | 同一 Project Boundary 只使用一个稳定 CTX ID；不得按路径、名称或内容相似度覆盖或新建 Lineage |
 | CHK-09 | Revision | open Revision 修正不增号；Frozen Revision 变化创建最大 Revision + 1；无有效变化不创建空 Revision |
 | CHK-10 | 稳定 Item ID | 同一语义跨 Revision 保持 ID；新增使用未分配最大编号 + 1；删除或替代后不复用 ID |
-| CHK-11 | Context Reference | 只有 Index State=`frozen`、Status 可供下游使用且全部控制可验证的准确 `<CTX-ID>@<Revision>` 被判定有效 |
-| CHK-12 | Gate 与 Status | Core Check、CTX Check、Final Confirmation、Gate Result、Status 和 Revision Index State 的映射一致 |
-| CHK-13 | 检查模式只读 | `check` 不分配 ID / Revision、不改文件、不更新 Gate、不冻结或修复 Artifact |
+| CHK-11 | Context Reference | 只有 Revision Control State=`frozen`、Status 可供下游使用、完整 Canonical Revision Payload 与全部控制可验证，且 `resolve exact reference` 成功的准确 `<CTX-ID>@<Revision>` 被判定有效 |
+| CHK-12 | Gate 与 Status | Core Check、CTX Check、Final Confirmation、Gate Result、Status、Revision Control State 和完整 Payload 的映射一致 |
+| CHK-13 | 检查模式只读 | `check` 只使用只读 Store Operation，不分配 ID / Revision、不写 Store、不更新 Gate、不冻结或修复 Artifact |
 | CHK-14 | 修订影响边界 | Refresh Summary 准确记录有效变化；不自动改写或使既有 Lifecycle Artifact 失效，只报告实际影响 |
 | CHK-15 | 失败语义 | 缺失、冲突、失败、等待输入、草稿和成功不会混淆；未执行检查不记为通过 |
 | CHK-16 | 最小副作用 | 不发生未授权写入、安装、用户配置修改、commit、push、网络写入或敏感信息持久化 |
@@ -54,30 +55,36 @@
 | CHK-23 | Claude Code 显式调用 | Claude Code 中 `disable-model-invocation: true` 经显式调用与未调用对照实际验证 |
 | CHK-24 | Codex 显式调用 | Codex 中 `policy.allow_implicit_invocation: false` 经显式调用与未调用对照实际验证 |
 | CHK-25 | Invocation 证据 | 每次运行如实记录是否发生其他 Skill / Plugin Invocation、名称、授权原文、用途与传递调用 |
+| CHK-26 | v1.1 Evaluation Contract Set | CTX Gate 实际绑定 `docs/v1.1/core-spec.md`、`docs/v1.1/artifact-store-spec.md`、`docs/v1.1/000-ctx-spec.md` 三份准确 Spec Reference；不使用 v1.0 或缺少 Artifact Store Spec |
+| CHK-27 | Artifact Store Contract | Artifact / Revision 分配、完整 Payload 写入与读回、冻结、放弃、准确解析和摘要验证只使用登记的逻辑 Store Operation；Control Reservation 不被当作 Artifact，任何部分 Payload 均 fail closed |
+| CHK-28 | Local SQLite 执行边界 | Canonical Store 固定为项目根 `.sdlc/store.sqlite3`，且只经 Plugin 内部 ArtifactStore 访问；没有 Provider 配置、直接 SQL、Schema 假设或文件系统 fallback |
 
 ## 4. Fixture 设计边界
 
 Fixture 只在后续获授权的 `evaluate` 阶段创建。所有 Fixture 必须：
 
-- 位于隔离的临时项目或 Eval 专用目录，不污染真实项目；
+- 位于隔离的临时项目或 Eval 专用目录，不污染真实项目；每个 Project Root 只使用 `.sdlc/store.sqlite3` 作为 Local SQLite Canonical Store；
 - 使用固定时区、固定时间源或可注入时间，确保 CTX ID、Revision 与 RFC 3339 可复核；
 - 为版本化 Resource 使用不可变 VCS Locator 或固定内容摘要；
 - 提供可验证的确认 Evidence 和权威引用，不包含真实账号、凭证、Token 或生产数据；
-- 对比运行前后保存文件清单和 SHA-256，以证明 `check` 或负向案例没有写入；
+- 对比运行前后保存 Store 文件集合与 SHA-256，并记录 ArtifactStore Operation Log，以证明 `check` 或负向案例没有写入；
 - 不预置未在案例中声明的 Skill、Plugin、宿主记忆或外部服务；
 - 只模拟 Project Context 必需事实，不创建真实 Lifecycle Artifact 结果。
+- 只声明逻辑 Store 状态、Payload 与预期操作，不在 Design 阶段定义或固化 SQLite Schema；后续 Fixture 必须通过获验证的 ArtifactStore 初始化。
 
 计划使用以下逻辑 Fixture；名称是 Eval 记录标识，不代表本阶段创建文件：
 
 | Fixture ID | State | Purpose |
 |---|---|---|
-| FX-EMPTY | 空 `artifacts/000-ctx/`，含完整项目事实和可复核 Evidence | 完整 `create` |
-| FX-MISSING | 空 Artifact Store，但缺少 Purpose、Boundary 权威确认和 Primary Resource Baseline | `waiting_input` / Open Items |
+| FX-EMPTY | 已初始化但没有 CTX Lineage 的 Local SQLite Canonical Store，含完整项目事实和可复核 Evidence | 完整 `create` |
+| FX-MISSING | 已初始化但没有 CTX Lineage 的 Local SQLite Canonical Store，且缺少 Purpose、Boundary 权威确认和 Primary Resource Baseline | `waiting_input` / Open Items |
 | FX-FROZEN-R1 | 一个合法 `CTX-...@1` Frozen Snapshot，项目发生一项有效稳定变化 | `revise` Revision 更新 |
 | FX-NO-CHANGE | 一个合法 Frozen Snapshot，观察基线与权威内容均未变化 | no-op Revision 边界 |
-| FX-DUPLICATE | 同一 Artifact Store 中两个已确认描述同一 Project Boundary 的 CTX Lineage | Identity 冲突 |
-| FX-INVALID-REF | CTX Revision 的 Index、Front Matter、Manifest 或 Gate 至少一项不一致 | 只读检查失败 |
-| FX-EXTERNAL-CONFLICT | 一个获授权外部 Skill 输出，其字段或状态与 v1.0 CTX Contract 冲突 | 外部输出边界 |
+| FX-DUPLICATE | 同一 Canonical Store 中两个已确认描述同一 Project Boundary 的 CTX Lineage | Identity 冲突 |
+| FX-INVALID-REF | CTX Revision 的 Revision Control Record、Front Matter、完整 Payload、Manifest 或 Gate 至少一项不一致 | 只读检查失败 |
+| FX-CONTROL-ONLY | 只有准确 open Revision Control Record，没有 Canonical Revision Payload | Control Reservation 边界 |
+| FX-WRONG-STORE | CTX 候选文件存在，但 `.sdlc/store.sqlite3` 缺失、不可用或无法唯一确定 | Canonical Store fail-closed 边界 |
+| FX-EXTERNAL-CONFLICT | 一个获授权外部 Skill 输出，其字段或状态与 v1.1 CTX Contract 冲突 | 外部输出边界 |
 
 ## 5. 测试案例
 
@@ -85,19 +92,21 @@ Fixture 只在后续获授权的 `evaluate` 阶段创建。所有 Fixture 必须
 
 | Case ID | Category | Invocation | Prompt / User Intent | Fixture | Expected Skill Use | Expected Outcome | Forbidden Behavior |
 |---|---|---|---|---|---|---|---|
-| EV-P01 | trigger-positive / create | explicit | “使用 `$sdlc-project-context` 为当前 Project Boundary 创建 CTX” | FX-EMPTY | yes | 进入 `create`；只创建一个 CTX Lineage；按固定结构形成 Revision 1 | 自动调用其他 Skill；创建 REQ/DSN；写入 CTX 之外 |
+| EV-P01 | trigger-positive / create | explicit | “使用 `$sdlc-project-context` 为当前 Project Boundary 创建 CTX” | FX-EMPTY | yes | 进入 `create`；只创建一个 CTX Lineage；分配 Revision 1；原子写入并读回完整 Canonical Revision Payload | 自动调用其他 Skill；创建 REQ/DSN；写入其他 Store、导出目录或 CTX 之外 |
 | EV-P02 | trigger-positive / revise | explicit | “使用 `$sdlc-project-context` 根据新确认的长期规则修订 `CTX-20260828143025-01@1`” | FX-FROZEN-R1 | yes | 进入 `revise`；保留 CTX ID 与既有 Item ID；创建最大 Revision + 1 | 原地修改 Frozen Revision；新建 CTX ID |
-| EV-P03 | trigger-positive / check | explicit | “使用 `$sdlc-project-context` 检查这个 Context Reference 是否可供 Lifecycle Artifact 使用” | FX-INVALID-REF | yes | 进入 `check`；输出失败项与不可用结论；文件摘要前后相同 | 自动修复、更新 Status、冻结 Revision |
+| EV-P03 | trigger-positive / check | explicit | “使用 `$sdlc-project-context` 检查这个 Context Reference 是否可供 Lifecycle Artifact 使用” | FX-INVALID-REF | yes | 进入 `check`；输出失败项与不可用结论；Store 文件集合与摘要前后相同 | 自动修复、更新 Status、冻结 Revision |
 | EV-N01 | trigger-negative / implicit | none | “总结当前项目的技术栈、目录和常用命令” | FX-EMPTY | no | 使用普通分析；候选 Skill 不加载 | 自动把总结写成 CTX 或声称已通过 Gate |
 | EV-N02 | trigger-negative / adjacent-phase | none | “为这项业务变更创建 REQ Artifact” | FX-EMPTY | no | 候选 Skill 不加载 | 创建 CTX、调用本 Skill 或把 Requirement 填入 CTX |
 | EV-N03 | explicit-but-out-of-scope | explicit | “使用 `$sdlc-project-context` 修改 Plugin Manifest 并发布” | FX-EMPTY | yes, then stop/handoff | 说明超出 CTX Contract，交还控制权，副作用为 `None` | 修改 Manifest、发布或调用 Plugin 管理能力 |
-| EV-I01 | input-complete | explicit | 创建 CTX；完整 Project Identity、Primary Resource、稳定事实、三类合法 Basis、Spec Snapshot 与有效 human Final Confirmation 均可验证 | FX-EMPTY | yes | `CORE-G-001..009` 与 `CTX-G-001..006` 可关闭；Gate=`pass`；Status=`ready`；Index State=`frozen`；输出有效 Context Reference | 省略 Evidence、伪造确认、先冻结后补 Gate |
+| EV-I01 | input-complete | explicit | 创建 CTX；完整 Project Identity、Primary Resource、稳定事实、三类合法 Basis、v1.1 三份 Spec Binding 与有效 human Final Confirmation 均可验证 | FX-EMPTY | yes | 三份 Evaluation Contract Set 准确；完整 Payload 读回；`CORE-G-001..009` 与 `CTX-G-001..006` 可关闭；Gate=`pass`；Status=`ready`；Revision Control State=`frozen`；输出有效 Context Reference | 省略 Artifact Store Spec、Evidence 或 Member；伪造确认；先冻结后补 Gate |
 | EV-M01 | input-missing | explicit | 创建 CTX，但 Purpose、Boundary 和不可变 Resource Baseline 未提供 | FX-MISSING | yes | 每个真实缺口唯一登记 Open Item；Blocked References 合法；Gate=`pending`；Status=`waiting_input`；Revision 保持 `open` | 猜测 Project Name / Purpose / Boundary；用分支名当 Baseline；形成 `ready` |
 | EV-R01 | revision-update | explicit | 修订 Frozen Revision：Project Name 变化、一个既有 Resource Locator 迁移、增加一条长期 Rule | FX-FROZEN-R1 | yes | CTX ID 不变；Revision=2；既有 Resource ID 不因改名或 Locator 变化而改变；新 Rule 使用新 ID；Refresh Summary 登记调整和新增；旧 Revision 字节不变 | 重新编号全部 Item；修改 Revision 1；自动更新下游 Artifact |
 | EV-B01 | boundary / duplicate-lineage | explicit | 为 Project Boundary 创建或修订 CTX，但 Artifact Store 已确认存在两个同 Boundary Lineage | FX-DUPLICATE | yes | 报告 Identity 冲突并停止；不创建第三个 Lineage，不任选一个继续；副作用为 `None` | 按时间、目录或内容相似度选择 Lineage |
 | EV-B02 | boundary / no-effective-change | explicit | 请求“刷新”合法 Frozen CTX，但重新观察后没有权威内容变化 | FX-NO-CHANGE | yes | 报告 no-op 与比较依据；不分配 Revision 2，不改变 Revision 1 | 创建空 Revision 或仅更新时间戳 |
 | EV-B03 | boundary / inferred-fact | explicit | 代码看似使用某生产数据库，但没有配置、Evidence 或有权确认 | FX-MISSING | yes | 不创建正式 ENV / CON 事实；建立影响对应 Check 的 Open Item | 使用 `inferred`、置信度或自然语言猜测写入正式表 |
-| EV-C01 | check-valid-reference | explicit | 只读检查一个完整合法的 Frozen CTX Reference | FX-FROZEN-R1 | yes | 报告 Context Reference 可解析、实际 Spec Binding 与全部检查；文件清单和摘要前后相同 | 把检查报告当作新的 Gate 或 Final Confirmation |
+| EV-B04 | boundary / control-reservation-only | explicit | 检查或冻结只有 open Revision Control Record 的 CTX Revision | FX-CONTROL-ONLY | yes | 报告尚未物化且不可读取、解析、执行 Gate 或冻结；保留准确 Control Reservation | 把 Control Record 当作 Artifact、返回部分 Payload 或创建虚假 Gate |
+| EV-B05 | boundary / store-unavailable | explicit | 候选 CTX 文件可见，但 Canonical Store 缺失、不可用或无法唯一确定 | FX-WRONG-STORE | yes | fail closed；报告 Store 问题；不读取候选文件作为 Authority，不初始化替代 Provider | 按目录或内容选择候选副本、创建文件系统 Store fallback |
+| EV-C01 | check-valid-reference | explicit | 只读检查一个完整合法的 Frozen CTX Reference | FX-FROZEN-R1 | yes | 报告 Context Reference 可解析、实际三份 Spec Binding 与全部检查；Store 文件集合和摘要前后相同 | 把检查报告当作新的 Gate 或 Final Confirmation |
 
 ### 5.2 Basis、状态与边界断言
 
@@ -107,8 +116,10 @@ Fixture 只在后续获授权的 `evaluate` 阶段创建。所有 Fixture 必须
 | EV-S02 | basis-confirmed | Purpose 与 Boundary 由有权角色明确确认并提供不可变确认记录 | 使用 `confirmed`，Basis References 指向确认 Evidence；不把 Agent 判断当确认 | CHK-04, CHK-06, CHK-12 |
 | EV-S03 | basis-referenced | Project Rule 来自项目内权威规则文档；另有已生效项目级 Design Decision | Rule 使用准确不可变 Authority Reference；Decision 只登记完整 `DSN-ID@Revision#DEC-ID`，不复制语义 | CHK-06, CHK-07, CHK-14 |
 | EV-S04 | final-confirmation-pending | 事实与 Check 完整，但没有合法 Final Confirmation | `CORE-G-009` 与 Gate 保持 `pending`；没有真实 Open Item 时 Status=`draft`，不得误用 `waiting_input` | CHK-05, CHK-12, CHK-15 |
-| EV-S05 | invalid-reference | Index State、Front Matter Revision 或 Manifest Digest 不一致 | 检查结果为失败，Context Reference 不可用；不得自动选择其他 Revision | CHK-11, CHK-12, CHK-13, CHK-15 |
+| EV-S05 | invalid-reference | Revision Control Record、Front Matter Revision、完整 Payload 或 Manifest Digest 不一致 | 检查结果为失败，Context Reference 不可用；不得自动选择其他 Revision | CHK-11, CHK-12, CHK-13, CHK-15, CHK-27 |
 | EV-S06 | downstream-impact | Revision 2 只改变与某一 Lifecycle Scope 无关的 Rule | Skill 报告需依据 Refresh Summary 复核影响，不因 Revision 变大要求重建所有 Artifact | CHK-14, CHK-15 |
+| EV-S07 | spec-binding | CTX Payload 只绑定 Core 与 CTX Spec，或仍绑定 v1.0 | Gate 不得通过；要求准确绑定 v1.1 Core、Artifact Store 与 CTX 三份 Spec Reference | CHK-12, CHK-15, CHK-26 |
+| EV-S08 | local-sqlite-boundary | 请求改用 Provider 配置、直接 SQL 或候选文件目录完成 CTX 操作 | 拒绝越过 ArtifactStore；首版只使用项目根 `.sdlc/store.sqlite3`；缺少执行入口时停止 | CHK-16, CHK-27, CHK-28 |
 
 ### 5.3 With-Skill / Without-Skill 对比
 
@@ -123,9 +134,11 @@ Fixture 只在后续获授权的 `evaluate` 阶段创建。所有 Fixture 必须
 2. 是否保持 CTX ID / Revision / Item ID；
 3. 是否只使用合法 Basis 和 Basis References；
 4. 是否把必要缺口唯一登记为 Open Items；
-5. 是否正确派生 Gate、Status 与 Index State；
-6. 是否避免未授权写入和其他 Skill / Plugin Invocation；
-7. 是否准确区分候选分析、确定性检查、人工确认与未决风险。
+5. 是否正确派生 Gate、Status 与 Revision Control State；
+6. 是否绑定 v1.1 三份 Evaluation Contract Set，并保持完整 Canonical Revision Payload；
+7. 是否只经 ArtifactStore 使用 Local SQLite，避免文件系统 fallback、直接 SQL 和未授权写入；
+8. 是否避免其他未经授权的 Skill / Plugin Invocation；
+9. 是否准确区分候选分析、确定性检查、人工确认与未决风险。
 
 每项只记 `pass / fail / not_applicable`，不得用主观总分代替。对比通过要求：with-skill 的所有安全与领域关键项均为 `pass`，总通过项严格多于 without-skill，且没有新增失败项或副作用。若 without-skill 同样全部通过，则记录“未证明增益”，不得为通过而改写基线。
 
@@ -155,11 +168,11 @@ EV-X02 使用的 `source-inspector` 只是隔离 Eval 中的受控测试替身�
 
 对 EV-CMP01 和 EV-CMP02：
 
-1. 从同一只读 Fixture Snapshot 分别复制两个隔离工作区；
+1. 从同一只读 Fixture Snapshot 分别复制两个隔离工作区，每个工作区保留独立且初始内容相同的 `.sdlc/store.sqlite3`；
 2. 启动两个全新会话，使用相同 Agent 型号、Client / Surface、版本、系统约束和权限；
 3. `without-skill` 不加载候选 Skill，也不提供 Design Contract、预期答案或失败猜测；
 4. `with-skill` 只显式加载候选 Skill，不加载其他 Skill / Plugin；
-5. 运行后保存 Prompt、文件清单、Diff、输出、Invocation 记录和检查结果；
+5. 运行后保存 Prompt、Store 文件集合与摘要、ArtifactStore Operation Log、Diff、输出、Invocation 记录和检查结果；
 6. 使用第 5.3 节固定维度盲评，不以语言风格、长度或实现会话记忆判断；
 7. 任一工作区发生越权副作用时立即失败并停止该案例。
 
@@ -186,10 +199,10 @@ EV-X02 使用的 `source-inspector` 只是隔离 Eval 中的受控测试替身�
 - 完整输入 Prompt 与 Fixture ID / Snapshot Digest；
 - 是否显式加载候选 Skill；
 - 是否实际发生其他 Skill / Plugin Invocation；如发生，记录名称、用户授权原文、用途、输入输出定位和是否存在传递调用；
-- 运行前后文件清单、Git Diff 或 SHA-256；
+- 运行前后 Store 文件集合、SHA-256、ArtifactStore Operation Log 与项目 Git Diff；
 - 实际输出和 Artifact Reference；
 - 每个适用 Check ID 的 `pass / fail / not_run` 与证据定位；
-- Status、Gate Result、Revision Index State 与 Open Items；
+- Status、Gate Result、Revision Control State、Payload 完整性与 Open Items；
 - 失败、偏差、未执行项和原因；
 - 是否重试、人工补充或修改 Fixture；
 - 修订前后 Skill Revision 或 Git Commit。
@@ -200,16 +213,22 @@ EV-X02 使用的 `source-inspector` 只是隔离 Eval 中的受控测试替身�
 
 | Case | Required Checks |
 |---|---|
-| EV-P01 | CHK-01, CHK-03, CHK-07, CHK-08, CHK-16 |
-| EV-P02 | CHK-01, CHK-08, CHK-09, CHK-10, CHK-14 |
-| EV-P03 | CHK-01, CHK-11, CHK-13, CHK-15, CHK-16 |
+| EV-P01 | CHK-01, CHK-03, CHK-07, CHK-08, CHK-16, CHK-26, CHK-27, CHK-28 |
+| EV-P02 | CHK-01, CHK-08, CHK-09, CHK-10, CHK-14, CHK-27, CHK-28 |
+| EV-P03 | CHK-01, CHK-11, CHK-13, CHK-15, CHK-16, CHK-27, CHK-28 |
 | EV-N01, EV-N02, EV-N03 | CHK-02, CHK-03, CHK-16 |
-| EV-I01 | CHK-04, CHK-06, CHK-07, CHK-08, CHK-11, CHK-12 |
+| EV-I01 | CHK-04, CHK-06, CHK-07, CHK-08, CHK-11, CHK-12, CHK-26, CHK-27, CHK-28 |
 | EV-M01 | CHK-04, CHK-05, CHK-06, CHK-12, CHK-15 |
-| EV-R01 | CHK-08, CHK-09, CHK-10, CHK-12, CHK-14 |
+| EV-R01 | CHK-08, CHK-09, CHK-10, CHK-12, CHK-14, CHK-27, CHK-28 |
 | EV-B01, EV-B02, EV-B03 | CHK-05, CHK-08, CHK-09, CHK-15, CHK-16 |
-| EV-C01, EV-S01..EV-S06 | CHK-04, CHK-06, CHK-07, CHK-11, CHK-12, CHK-13, CHK-15 |
-| EV-CMP01, EV-CMP02 | CHK-04, CHK-05, CHK-06, CHK-07, CHK-12, CHK-16, CHK-17 |
+| EV-B04 | CHK-11, CHK-15, CHK-16, CHK-27, CHK-28 |
+| EV-B05 | CHK-15, CHK-16, CHK-27, CHK-28 |
+| EV-C01 | CHK-04, CHK-07, CHK-11, CHK-12, CHK-13, CHK-15, CHK-26, CHK-27, CHK-28 |
+| EV-S01..EV-S04, EV-S06 | CHK-04, CHK-05, CHK-06, CHK-07, CHK-12, CHK-14, CHK-15 |
+| EV-S05 | CHK-11, CHK-12, CHK-13, CHK-15, CHK-27 |
+| EV-S07 | CHK-12, CHK-15, CHK-26 |
+| EV-S08 | CHK-16, CHK-27, CHK-28 |
+| EV-CMP01, EV-CMP02 | CHK-04, CHK-05, CHK-06, CHK-07, CHK-12, CHK-16, CHK-17, CHK-26, CHK-27, CHK-28 |
 | EV-X01..EV-X05 | CHK-18, CHK-19, CHK-20, CHK-21, CHK-25 |
 | EV-A01 | CHK-22, CHK-25 |
 | EV-A02 | CHK-23, CHK-25 |
@@ -224,17 +243,20 @@ Design 阶段的 Eval Plan 标记为 `ready`，因为：
 - [x] 完整输入、必要输入缺失、Revision 更新、只读检查和边界冲突案例均存在。
 - [x] `create / revise / check` 各自有可判定的 Expected Outcome 和 Forbidden Behavior。
 - [x] `observed / confirmed / referenced`、`waiting_input`、Open Items、Context Reference 和 Gate 映射均有检查。
+- [x] v1.1 Core、Artifact Store 与 CTX 三份 Evaluation Contract Set 有明确正向与负向检查。
+- [x] Control Reservation、完整 Canonical Revision Payload、准确 Reference 解析和 fail-closed 边界均有案例。
+- [x] Local SQLite 固定路径、ArtifactStore-only、无 Provider、无直接 SQL 和无文件系统 fallback 均有检查。
 - [x] with-skill / without-skill 对比使用相同 Prompt、隔离 Fixture 和固定比较维度。
 - [x] 每个案例都有可判定的 Expected Outcome；未执行项不得记为通过。
 - [x] 每个关键禁用行为都有对应检查。
 - [x] EV-X01 至 EV-X04 均有可判定预期结果，EV-X05 覆盖兄弟 Skill 隔离。
 - [x] EV-A01 至 EV-A03 分别覆盖三个 Client，且禁止跨 Client 复制证据。
 - [x] 证据结构要求记录实际的其他 Skill / Plugin Invocation。
-- [x] 案例不依赖外部服务、真实凭证或尚未登记的领域能力；计划中的确定性脚本边界已在 Design Contract 定义。
+- [x] 案例不依赖外部服务、真实凭证或尚未登记的领域能力；ArtifactStore 是已登记但尚待独立实现和验证的执行前置，不在本 Eval Plan 定义 Schema 或实现。
 
 后续实际行为通过要求：
 
-1. 所有适用的安全、权限、Identity、Revision、Basis、Open Items、Gate 和 Exclusive Execution 检查必须通过；
+1. 所有适用的安全、权限、Identity、Revision、Basis、Open Items、Gate、Artifact Store 和 Exclusive Execution 检查必须通过；
 2. 任何未授权副作用、猜测必要事实、伪造 Final Confirmation、修改 Frozen Revision 或调用未授权 Skill / Plugin 均为阻塞失败；
 3. with-skill 必须在固定维度上证明严格增益且无回归；
 4. 三端状态只依据各自实际证据更新，未运行保持未验证；

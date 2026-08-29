@@ -1,0 +1,93 @@
+---
+title: "流程与状态 Workflow and State"
+status: draft
+version: "1.1"
+scope: DSN Domain 适用性、固定模板与父 Gate 子检查
+parent: ../200-dsn-spec.md
+---
+
+# 流程与状态 Workflow and State
+
+文件名：`110-workflow-state.md`
+
+适用性：
+
+- 新增或改变业务规则、计算规则、资格判断、决策逻辑、不变量、多步骤流程、状态变化、角色协作、审批、异步处理、重试、取消或恢复时为 `required`；
+- Requirement 不引入任何业务行为、规则、计算、决策、不变量、流程或状态影响时，可以为 `n/a`；
+- 不得因为流程简单、已在其他 Domain 提及、参与者选择不阅读或直接接受既有设计而判定为 `n/a`；
+- 仅存在迁移旧态、目标态、共存和切换义务时，以 `Compatibility and Migration` 为权威来源；若仍涉及业务规则、角色流程或状态语义，本 Domain 也为 `required`。
+
+固定专属模板：
+
+```markdown
+## 设计结果 Design Result
+
+### 参与者与触发 Participants and Triggers
+
+| ID | 参与者或系统 Actor or System | 触发 Trigger | 前置条件 Preconditions | 预期结果 Expected Result | Flow References |
+|---|---|---|---|---|---|
+| ACT-001 | | | | | FLW-001 |
+
+### 流程 Flow
+
+| Flow ID | Step ID | 类型 Type | 执行者 Actor | 输入或事件 Input or Event | 行为 Action | 结果或状态 Result or State |
+|---|---|---|---|---|---|---|
+| FLW-001 | FST-001 | main | | | | |
+
+### 流程转换 Flow Transitions
+
+| Transition ID | Flow ID | From Step | Condition or Event | To Step or Terminal | Priority |
+|---|---|---|---|---|---|
+| TRN-001 | FLW-001 | FST-001 | | terminal | 1 |
+
+### 状态与转换 States and Transitions
+
+| State ID | 状态 State | 含义 Meaning | 进入条件 Entry Condition | 是否终止 Terminal |
+|---|---|---|---|---|
+| WST-001 | | | | |
+
+### 状态转换 State Transitions
+
+| Transition ID | From State | Condition or Event | To State | Action or Effect | Priority |
+|---|---|---|---|---|---|
+| STT-001 | WST-001 | | WST-001 | | 1 |
+
+### 业务规则、决策与不变量 Business Rules, Decisions and Invariants
+
+| ID | 类型 Type | 输入 Input | 条件 Condition | 结果 Result | 优先级或冲突处理 Priority or Conflict Handling | 来源 Source | 违反时处理 Violation Handling |
+|---|---|---|---|---|---|---|---|
+| RUL-001 | rule | | | | | | |
+
+### 异常与恢复 Exceptions and Recovery
+
+| 条件 Condition | 发现方式 Detection | 处理 Handling | 最终结果或状态 Final Result or State |
+|---|---|---|---|
+| | | | |
+```
+
+规则：
+
+- `Type` 使用 `main`、`alternate` 或 `exception`；
+- Business Rule `Type` 使用 `rule`、`calculation`、`eligibility`、`decision` 或 `invariant`；
+- Flow 使用 `FLW-001`，Step 使用 `FST-001`，Flow Transition 使用 `TRN-001`，State 使用 `WST-001`，State Transition 使用 `STT-001` 顺序编号；同一 Flow 的每个 Step 和 Flow Transition 必须引用同一 Flow ID；
+- 每条参与者与触发记录必须通过 `Flow References` 引用其启动的一个或多个 Flow ID；多值引用使用 Core Reference Set，不能靠表格顺序或文字相似度推断；
+- 每个非终止 Step 至少有一条 Transition；`From Step` 和 `To Step` 必须可解析到同一 Flow，终止路径使用 `terminal`；同一来源存在多条可满足转换时以正整数 `Priority` 明确顺序；
+- 每个 State Transition 的 From/To State 必须可解析；同一来源存在多条可满足转换时同样使用正整数 `Priority`；
+- 图示可以作为辅助材料，但固定表格是规范判定依据；
+- Domain 整体适用但某个子章节不适用时，使用父 Spec 的统一 `N/A — <客观原因>` 表示；
+- 流程步骤必须明确执行者、输入或事件、行为以及结果；
+- 状态必须含义唯一，并明确允许的转换和终止状态；
+- 重试、取消、超时、失败和恢复按 Requirement 影响填写，不适用时不得虚构；
+- VFY Points 必须能够覆盖关键流程、状态转换和异常结果。
+
+父 Gate 子检查：
+
+以下检查只在父 DSN Artifact Gate 中按 Check ID 登记一次，不写入 Domain 子文件。
+
+| Check ID | 检查项 Check | 结果 Result | 证据或说明 Evidence or Notes |
+|---|---|---|---|
+| DSN-DG-110-001 | 参与者、触发、前置条件、Flow、Step 和 Transition 完整、可解析且具有确定终点 | pending |  |
+| DSN-DG-110-002 | 适用的状态、规则、计算、决策和不变量语义明确且可追踪 | pending |  |
+| DSN-DG-110-003 | 适用的异常、重试、取消与恢复具有确定结果，并由 VFY Points 覆盖 | pending |  |
+
+> Parent Spec: [Design Phase Spec](../200-dsn-spec.md)

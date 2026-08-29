@@ -6,48 +6,51 @@
 
 ## 当前阶段
 
-Storage Architecture Scope Correction 已完成。原多 Provider、分布式 Store 架构和对应 v1.1 Delta Plan 已被 SQLite-only 决策替换。
+SQLite-only Delta Plan 独立审查结果为 `PASS WITH REQUIRED CHANGES`。唯一必修问题 `SQLITE-DELTA-001` 已按完整 Canonical Revision Payload 修正，当前等待定向、独立、只读验证。
 
 当前架构固定：
 
 - 当前 Plugin 只支持项目根目录下的 `.sdlc/store.sqlite3`；
-- Local SQLite Store 是当前唯一 Canonical Artifact Store；
+- Local SQLite Store 是当前唯一 Canonical Artifact Store，其 Authority 对象是包含主要 Canonical Blob、全部本地 Member 及 Manifest-Member closure 的完整 Canonical Revision Payload；
 - v1.1 只计划新增 `artifact-store-spec.md`；
-- Human Review View 是 Plugin Projection，不是正式领域 Artifact；
+- Human Review View 是 Plugin Projection，不包含完整 Member 闭包，也不是正式领域 Artifact 或 Authority；
 - 当前未创建 `docs/v1.1/`，也未实现 SQLite、Projection 或 Skill。
 
 候选 Skill `sdlc-project-context` 的 Design Status 继续为 `draft`。在 SQLite-only v1.1 Source of Truth 完成前不得批准或实现。
 
 ## 本工作包已完成
 
-- 重写 `docs/architecture/artifact-store-and-projection.md`，删除多 Store 与分布式设计，固定 Local SQLite Authority、最小 Store Contract、Runtime Workspace、Candidate Material 和 Human Review View 边界。
-- 重写 `docs/architecture/v1.1-spec-delta-plan.md`，只保留一个新增正式 Spec，并把 v1.1 正式 Spec 数量修正为 25。
-- 保留逐文件影响矩阵；Core、CTX、DSN、IMP 只解除物理目录耦合，其他 Phase 与 Domain Spec 只计划必要版本和引用更新。
-- 在 `docs/plugin-development/DEVELOPMENT.md` 登记 SQLite-only 实现决定和单一 `ArtifactStore` 模块边界。
-- 更新 `CHANGELOG.md`，记录本次架构收敛。
+- 记录 SQLite-only Delta Plan 独立审查结论为 `PASS WITH REQUIRED CHANGES`。
+- 在架构文档和 Delta Plan 中关闭 `SQLITE-DELTA-001`：Store 层最小 `read revision`、`write open revision`、`freeze revision` 与 `verify digest` 现在都覆盖主要 Canonical Blob、全部本地 Member、稳定 Member 身份、原始字节 SHA-256 和 Manifest-Member closure。
+- 明确 DSN Domain Member 与本地 Supporting Member 必须保留原始字节、稳定身份和摘要；外部不可变 Reference 继续保留既有准确 Reference、摘要与访问边界，不要求复制进 SQLite。
+- 保持 SQLite-only、25 份正式 Spec、29 个总文件和不新增 Projection Spec 的既有边界。
+- `DOC-FRESHNESS-001` 已修正；用户确认当前工作包输入基线 `main@07441bcab98bba4b8436e0f3e2eb001e639006d2` 已 push，开始时本地 `HEAD` 与 `origin/main` 一致。
+- `sdlc-project-context` 继续保持 `draft`，未批准、未实现任何 Skill。
 
 ## 已确定决策
 
 - 一个项目只有一个本地 Canonical Store，固定为 `<project-root>/.sdlc/store.sqlite3`。
 - 不增加 Store 或 Provider 配置文件，不建设多 Provider 框架。
-- Canonical Authority 是 SQLite 中保存的准确 Canonical Revision；Review、临时和导出文件不具有 Authority。
-- Canonical 内容保持完整 Markdown/YAML Blob，并保存 Canonical Blob SHA-256。
+- Canonical Authority 是 SQLite 中保存的完整 Canonical Revision Payload；Review、临时和导出文件不具有 Authority。
+- Canonical Revision Payload 是 Store 层逻辑存储单元，不新增 Artifact 字段、Reference 类型、Status、Gate、Manifest 字段、数据库表或领域 Artifact。
+- Payload 保持完整主要 Markdown/YAML Blob、全部本地 Member 原始字节、稳定 Member 身份、既有元数据、逐 Member SHA-256 与现有 Manifest 闭包。
+- 外部不可变 Reference 不是本地 Member 原始字节，但其准确 Reference、摘要和访问边界必须保留。
 - v1.1 的 `artifact-store-spec.md` 只定义最小逻辑 Store Contract，不定义 SQLite Schema。
 - Human Review View 的格式、映射 Schema 与编辑器适配留到 Skill 实现阶段。
 - v1.0 的 Artifact Contract ID、字段、ID、Revision、Reference、Status、Gate 与 Final Confirmation 保持不变。
 
 ## 当前验证结果
 
-- 工作包输入基线为 `main@e23b982aa80d545f88c6fb0dfb3cd0e5229190bf`，开始时 `git status --short` 为空。
-- Origin Fetch / Push 指向 `git@github.com:blade-cdn/sdlc-ai-spec.git`；有效 SSH Host 为 `github.com`。
-- 修改范围仅为本工作包五个白名单文档。
+- 工作包输入基线为 `main@07441bcab98bba4b8436e0f3e2eb001e639006d2`，开始时 `git status --short` 为空，本地 `HEAD...origin/main` 为 `0 0`。
+- `git remote -v` 显示 Origin Fetch / Push URL 为 `git@github-goedge-blade:blade-cdn/sdlc-ai-spec.git`；本工作包未重新验证 Alias 路由，也未执行远程操作。
+- 修改范围仅为本工作包四个白名单文档。
 - `docs/v1.0/`、`skills/`、三个平台 Manifest 均无变化。
-- 未创建 `docs/v1.1/`、`.sdlc/`、SQLite 数据库、Schema、Script 或 Skill。
-- 已执行内容边界检查、完整 Diff 审查与 `git diff --check`。
+- 未创建 `docs/v1.1/`、`.sdlc/`、SQLite 数据库、Schema、Script 或 Skill；未新增 Store 操作或额外摘要概念。
+- 已执行闭包语义检查、完整 Diff 审查与 `git diff --check`。
 
 ## 当前 Git 状态摘要
 
-- 本工作包本地提交主题为 `docs(architecture): simplify storage to local sqlite`。
+- 本工作包本地提交主题为 `docs(architecture): complete canonical revision payload`。
 - Author 与 Committer 均为 `Blade <blade@breaklegsquad.com>`。
 - 提交完成后 `git status --short` 为空。
 - 未执行 push、tag、PR、Release、Marketplace 或其他远程写入。
@@ -55,12 +58,13 @@ Storage Architecture Scope Correction 已完成。原多 Provider、分布式 St
 ## 已知限制与风险
 
 - 当前文件仍是架构决策和 Delta Plan，不是正式 v1.1 Source of Truth，也没有 SQLite 运行证据。
+- `SQLITE-DELTA-001` 修正尚待一次定向、独立、只读验证；验证通过前不得创建 `docs/v1.1/`。
 - SQLite Schema、Migration、备份、恢复、具体 Projection 格式和 `ArtifactStore` 模块尚未设计或实现。
 - `sdlc-project-context` 仍可能包含基于旧 Source of Truth 的 draft 内容；本工作包未修改其 Design 或 Eval Plan。
 - 三端 Skill 行为兼容性继续为 `Pending first skill`。
 
 ## 下一唯一工作包
 
-对收敛后的 SQLite-only v1.1 Delta Plan 进行独立、只读审查。
+对 `SQLITE-DELTA-001` 的修正进行一次定向、独立、只读验证；验证只检查完整 Revision Payload / Member 闭包是否已准确关闭。
 
-审查只判断架构与 Delta Plan 的完整性、领域兼容性、单一 Authority、逐文件影响和边界一致性，不修改文件。审查通过前不得创建 `docs/v1.1/**`，不得批准或实现 `sdlc-project-context`，不得实现 SQLite、`ArtifactStore`、Projection、迁移工具或 Skill。
+验证不修改文件。通过后才允许创建 `docs/v1.1/**`；通过前不得批准或实现 `sdlc-project-context`，不得实现 SQLite、`ArtifactStore`、Projection、迁移工具或 Skill。

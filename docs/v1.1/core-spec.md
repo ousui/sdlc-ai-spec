@@ -1,6 +1,6 @@
 ---
 title: sdlc-ai-spec 核心 Spec
-status: draft
+status: stable
 version: "1.1"
 scope: 已确认的通用术语、Project Context、生命周期与 Artifact Contract
 ---
@@ -486,7 +486,7 @@ Gate 和 Final Confirmation 必须绑定实际被检查的内容，不能只绑�
 
 Aggregate Gate Result 使用 `pending`、`pass`、`pass_with_exception` 或 `fail`。所有必要 Check 为 `pass` 或具有有效理由的 `n/a`，且没有 Waiver 时为 `pass`；存在有效 Waiver 时只能为 `pass_with_exception`；存在 `fail` 时为 `fail`；其余为 `pending`。
 
-`Evaluation Contract Set` 必须使用固定 Reference Set 语法，列出本次 Gate 实际执行的全部不可变规则来源。全部 v1.1 Canonical Artifact 必须包含 Core Spec 和 `docs/v1.1/artifact-store-spec.md@sha256:09fe467614b6ea36ceb9b29336d34e0cb59cc8276ac0d98ba9117a4e6c8ccf7d`；CTX Artifact 还必须包含 Project Context Spec；Lifecycle Artifact 还必须包含当前 Phase Spec，复合 Artifact 还包含适用的 Domain Spec。Lifecycle Artifact 通过 Front Matter `context` 解析 CTX 自身的 Evaluation Contract Set，不把 Project Context Spec 重复加入当前 Phase 的集合。每个元素固定写作 `<仓库相对 Spec 路径>@sha256:<64 位小写十六进制>`。`Gate Result=pending` 时允许先只填写该字段作为当前 Spec Binding，其他摘要在最终化时补齐。集合变化时，未冻结 Revision 立即失效旧 Gate、Final Confirmation 和旧规则下的正式 action 输出，并按 Pre-execution 规则重新处理；已冻结 Revision 必须创建新 Revision。
+`Evaluation Contract Set` 必须使用固定 Reference Set 语法，列出本次 Gate 实际执行的全部不可变规则来源。全部 v1.1 Canonical Artifact 必须包含 Core Spec 和 `docs/v1.1/artifact-store-spec.md@sha256:b340ca2a38dfe0f7409acaa8f9ac559e8872bed44725037889528e3d167d4764`；CTX Artifact 还必须包含 Project Context Spec；Lifecycle Artifact 还必须包含当前 Phase Spec，复合 Artifact 还包含适用的 Domain Spec。Lifecycle Artifact 通过 Front Matter `context` 解析 CTX 自身的 Evaluation Contract Set，不把 Project Context Spec 重复加入当前 Phase 的集合。每个元素固定写作 `<仓库相对 Spec 路径>@sha256:<64 位小写十六进制>`。`Gate Result=pending` 时允许先只填写该字段作为当前 Spec Binding，其他摘要在最终化时补齐。集合变化时，未冻结 Revision 立即失效旧 Gate、Final Confirmation 和旧规则下的正式 action 输出，并按 Pre-execution 规则重新处理；已冻结 Revision 必须创建新 Revision。
 
 同一 Artifact 的 Core、当前 Project Context 或 Phase Contract，以及适用 Domain Contract 必须来自同一 Spec Snapshot。不同 Artifact 可以分别绑定不同 Snapshot，并按跨 Snapshot 输入兼容规则衔接。
 

@@ -1,6 +1,6 @@
 ---
 title: Artifact Store Spec
-status: draft
+status: stable
 version: "1.1"
 scope: Canonical Artifact Revision 的逻辑存储、完整 Payload、状态控制与准确解析
 ---

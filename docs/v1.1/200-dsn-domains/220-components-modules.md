@@ -1,6 +1,6 @@
 ---
 title: "组件与模块 Components and Modules"
-status: draft
+status: stable
 version: "1.1"
 scope: DSN Domain 适用性、固定模板与父 Gate 子检查
 parent: ../200-dsn-spec.md

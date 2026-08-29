@@ -1,6 +1,6 @@
 ---
 title: VFY Phase Spec
-status: draft
+status: stable
 version: "1.1"
 scope: Verification and Validation Phase 固定模板、执行边界与 Gate
 ---

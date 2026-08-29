@@ -1,6 +1,6 @@
 ---
 title: Implementation Phase Spec
-status: draft
+status: stable
 version: "1.1"
 scope: 已确认的 IMP Binding、领取、实施方法、结果、检查与 Gate Contract
 ---

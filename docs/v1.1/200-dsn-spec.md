@@ -1,6 +1,6 @@
 ---
 title: Design Phase Spec
-status: draft
+status: stable
 version: "1.1"
 scope: 已确认的 DSN 边界、结构与 Design Applicability Matrix
 ---
@@ -299,7 +299,7 @@ Artifact Set Manifest 是 Core Supporting Artifact Manifest 的 DSN 扩展，不
 ```markdown
 | Member ID | Type | Domain | Domain Spec Reference or Digest | Path or Reference | Media Type | Purpose | SHA-256 Digest | Empty Reason |
 |---|---|---|---|---|---|---|---|---|
-| DOM-110 | domain | Workflow and State | docs/v1.1/200-dsn-domains/110-workflow-state.md@sha256:... | domains/110-workflow-state.md | text/markdown | Domain Design | | N/A |
+| DOM-110 | domain | Workflow and State | docs/v1.1/200-dsn-domains/110-workflow-state.md@sha256:816a9c5144fa2980e5d9675c6b74bed74a7bb07c9cacab655a9ce57c64790f0c | domains/110-workflow-state.md | text/markdown | Domain Design | | N/A |
 | SUP-001 | supporting | Multiple | N/A | assets/flow.svg | image/svg+xml | Design Diagram | | N/A |
 ```
 

@@ -1,6 +1,8 @@
-# sdlc-ai-spec v1.1 Draft 概览
+# sdlc-ai-spec v1.1 概览
 
 > **核心定位：**建立覆盖软件研发与变更交付过程的统一 Spec。Spec 规定产物和完成标准，AI 是可选的提效手段。
+
+v1.1 已完成独立 Spec Review 和 Maintainer Finalization，是当前稳定 Spec Snapshot，也是当前 Plugin 开发的稳定 Source of Truth。v1.0 保留为不可变的历史 Snapshot；已冻结的 v1.0 Artifact 继续按其原 `Evaluation Contract Set` 解释。
 
 ## 1. 要解决的问题
 

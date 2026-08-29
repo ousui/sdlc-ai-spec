@@ -14,7 +14,8 @@ git@github.com:blade-cdn/sdlc-ai-spec.git
 
 ## Spec 与 Plugin
 
-- `docs/v1.0/` 是当前稳定的领域规范。
+- `docs/v1.1/` 是当前稳定的领域 Contract，新 Plugin 和 Skill 开发默认绑定该 Snapshot。
+- `docs/v1.0/` 保留为冻结、只读的历史 Snapshot；已冻结的 v1.0 Artifact 仍按其原 `Evaluation Contract Set` 解释。
 - Plugin 用于辅助形成、检查和使用标准 Artifact。
 - Plugin 不得改变领域规范的字段、语义或 Gate。
 - 规范不要求必须使用 AI；人工、AI 或其他执行主体使用同一完成标准。
@@ -56,7 +57,8 @@ git@github.com:blade-cdn/sdlc-ai-spec.git
 
 ## 文档入口
 
-- [v1.0 规范索引](docs/v1.0/README.md)
+- [v1.1 当前稳定规范索引](docs/v1.1/README.md)
+- [v1.0 历史规范索引](docs/v1.0/README.md)
 - [Plugin 开发标准](docs/plugin-development/DEVELOPMENT.md)
 - [兼容性矩阵](docs/plugin-development/COMPATIBILITY.md)
 - [开发交接](docs/plugin-development/HANDOFF.md)

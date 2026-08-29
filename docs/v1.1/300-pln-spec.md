@@ -1,6 +1,6 @@
 ---
 title: Plan Phase Spec
-status: draft
+status: stable
 version: "1.1"
 scope: 已确认的 PLN 边界、Delivery Scope 与 Work Item Contract
 ---

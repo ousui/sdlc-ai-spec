@@ -4,8 +4,9 @@
 
 ## Unreleased
 
-- Closed v1.1 Draft Review findings `V11-DR-MAJ-001` and `V11-DR-MAJ-002` by making the Claim Provider the sole IMP ID and Revision Reservation allocator, and by separating Revision Control Reservation from the first atomic full-Payload write; v1.1 remains draft pending targeted re-review.
-- Created the draft sdlc-ai-spec v1.1 snapshot with a provider-neutral Artifact Store Contract and preserved v1 Artifact semantics; independent Review and stable finalization remain pending.
+- Finalized sdlc-ai-spec v1.1 as the current stable Spec Snapshot and switched Plugin development to the v1.1 Source of Truth.
+- Closed v1.1 Review findings `V11-DR-MAJ-001` and `V11-DR-MAJ-002` by making the Claim Provider the sole IMP ID and Revision Reservation allocator, and by separating Revision Control Reservation from the first atomic full-Payload write.
+- Created the sdlc-ai-spec v1.1 review snapshot with a provider-neutral Artifact Store Contract and preserved v1 Artifact semantics.
 - Clarified that Local SQLite Canonical Revision authority covers the primary Canonical Blob and the complete locally owned Manifest-Member closure.
 - Replaced the multi-provider storage architecture and v1.1 Delta Plan with a Local SQLite-only Canonical Store decision at `.sdlc/store.sqlite3`; retained Human Review View as a non-authoritative Plugin Projection.
 - Declared `blade-cdn/sdlc-ai-spec` as the sole canonical development and release repository; retired `ousui/sdlc-ai-spec` from future updates.

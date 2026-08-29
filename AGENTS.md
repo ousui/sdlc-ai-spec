@@ -4,7 +4,7 @@
 
 本文件适用于整个仓库。目标是把稳定的 `sdlc-ai-spec` 领域 Contract 转化为可审查、可验证、可跨 Agent 运行的 Plugin 与 Skills，同时防止会话漂移、范围膨胀、静默降级和未经授权的写入。
 
-本文件只约束 Agent 的工作方式，不是领域 Contract，也不替代 `docs/v1.0/`、Skill Design Contract、Eval Plan 或平台官方规范。
+本文件只约束 Agent 的工作方式，不是领域 Contract，也不替代当前稳定的 `docs/v1.1/`、Skill Design Contract、Eval Plan 或平台官方规范。
 
 本仓库中的根级和嵌套 `AGENTS.md`，以及根级 `CLAUDE.md`，只用于开发本 Plugin。它们不是 Plugin 安装到业务项目后的运行时组件。生产运行时必须遵守的约束必须进入正式 `SKILL.md`，或进入经过独立设计、授权和验证的平台组件；后续 Skill 不得依赖安装后的 Agent 自动读取本仓库的开发指令。
 
@@ -17,7 +17,7 @@ Claude Code 通过根目录 `CLAUDE.md` 导入本文件。由于 Claude Code 不
 不同问题使用不同权威来源：
 | Concern | Source of Truth |
 |---|---|
-| 领域术语、Artifact、Reference、Evidence、Exception、Check、Gate | `docs/v1.0/core-spec.md` 与当前工作包明确列出的 Phase / Domain Spec |
+| 领域术语、Artifact、Reference、Evidence、Exception、Check、Gate | `docs/v1.1/core-spec.md` 与当前工作包明确列出的 Phase / Domain Spec |
 | Plugin 工程规则 | `docs/plugin-development/DEVELOPMENT.md` |
 | Skill 阶段流转 | `docs/plugin-development/SKILL-DEVELOPMENT-WORKFLOW.md` |
 | 当前状态和下一工作包 | `docs/plugin-development/HANDOFF.md` |
@@ -26,7 +26,7 @@ Claude Code 通过根目录 `CLAUDE.md` 导入本文件。由于 Claude Code 不
 | 三端兼容性声明 | `docs/plugin-development/COMPATIBILITY.md` 与可复现运行证据 |
 | 平台机制与字段 | 对应平台当前官方文档和实际宿主验证 |
 
-`docs/v1.0/README.md`、`overview.md` 和 `ai-human-collaboration.md` 用于导航或说明，不得替代正式 Evaluation Contract Set。
+`docs/v1.1/README.md`、`overview.md` 和 `ai-human-collaboration.md` 用于导航或说明，不得替代正式 Evaluation Contract Set。`docs/v1.0/` 中的对应文件只用于历史 Snapshot 导航与说明。
 
 当来源冲突、无法解析或与当前工作包不一致时：
 1. 不自行合并出“折中语义”；
@@ -71,12 +71,13 @@ design → implement → evaluate → adapt → review
 不得在同一会话中自动进入下一阶段。不得以“后续再补”为理由越过阶段转换条件。
 
 ## 5. 领域完整性
-- `docs/v1.0/` 默认只读。只有明确的 Spec 修订工作包才可以修改。
+- `docs/v1.1/` 默认只读。只有明确的 Spec 修订工作包才可以修改。
+- `docs/v1.0/` 是冻结、只读的历史 Snapshot，不得修改或用当前 Spec 重新解释。
 - Plugin 和 Skill 不得重定义、弱化或增加领域字段、枚举、Reference、Disposition、Gate 或责任边界。
 - 必要事实缺失时必须使用领域已登记的 `waiting_input`、Open Item、失败或受限状态；不得猜测事实后形成形式上的成功。
 - 业务意图、主观取舍、风险接受、Exception 和外部授权不得由模型自行批准。
 - 同一事实必须保持单一权威来源；其他文件只能引用，不得复制后形成平行 Contract。
-- 历史 Validator、旧版本实现或自然语言“看起来正确”不得作为 v1.0 兼容证明。
+- 历史 Validator、旧版本实现或自然语言“看起来正确”不得作为当前 v1.1 兼容证明；已冻结的 v1.0 Artifact 仍只按其原 Evaluation Contract Set 解释。
 - `SHA256SUMS` 仅在验证冻结 Spec Snapshot 或发布兼容性时按需使用，不是日常 Plugin 开发的固定 Gate。
 
 ## 6. 文档与 Skill 语言

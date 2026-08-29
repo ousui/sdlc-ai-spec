@@ -1,6 +1,6 @@
 ---
 title: Release Phase Spec
-status: draft
+status: stable
 version: "1.1"
 scope: 最小 RLS 发版合约、上线后确认、结论与 Gate
 ---

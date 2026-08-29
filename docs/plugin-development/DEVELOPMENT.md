@@ -4,7 +4,7 @@
 
 本文件规定本仓库中跨 Agent Plugin、Skill 及其辅助资源的工程规则。
 
-`docs/v1.0/` 是领域 Contract 的权威来源。Plugin 只提供执行支持，不得修改、替代或重新定义领域 Artifact、Reference、Evidence、Exception、Check 和 Gate 语义。
+`docs/v1.1/` 是当前稳定领域 Contract 的权威来源，新 Plugin 和 Skill 开发默认绑定该 Snapshot。`docs/v1.0/` 保留为冻结、只读的历史 Snapshot；已冻结的 v1.0 Artifact 仍按其原 `Evaluation Contract Set` 解释。Plugin 只提供执行支持，不得修改、替代或重新定义领域 Artifact、Reference、Evidence、Exception、Check 和 Gate 语义。
 
 本仓库中的 `AGENTS.md`、嵌套 `AGENTS.md` 和根级 `CLAUDE.md` 只约束 Plugin 开发，不是安装后业务项目的运行时 Plugin Component。生产运行时约束必须进入正式 `SKILL.md`，或进入经过独立设计、授权和验证的平台组件。任何 Skill 都不得依赖安装后的 Agent 自动读取本仓库开发指令。
 

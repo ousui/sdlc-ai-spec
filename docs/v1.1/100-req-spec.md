@@ -1,6 +1,6 @@
 ---
 title: Requirement Phase Spec
-status: draft
+status: stable
 version: "1.1"
 scope: 已确认的 REQ Artifact 结构与 Gate
 ---

@@ -1,6 +1,6 @@
 ---
 title: Project Context Spec
-status: draft
+status: stable
 version: "1.1"
 scope: Project Context 的结构、Revision、引用、刷新与 Gate
 ---

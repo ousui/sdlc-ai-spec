@@ -1,14 +1,14 @@
 ---
-title: sdlc-ai-spec v1.1 Draft
-status: draft
+title: sdlc-ai-spec v1.1
+status: stable
 version: "1.1"
 ---
 
-# sdlc-ai-spec v1.1 Draft
+# sdlc-ai-spec v1.1
 
-本目录是 sdlc-ai-spec v1.1 Draft Spec Snapshot。它只解除 Artifact Contract 与固定文件系统布局的耦合，保留 v1 Artifact、Reference、Status、Revision State、Check、Gate、Final Confirmation、Phase 和 Domain 业务语义。
+本目录是当前稳定的 sdlc-ai-spec v1.1 Spec Snapshot。它只解除 Artifact Contract 与固定文件系统布局的耦合，保留 v1 Artifact、Reference、Status、Revision State、Check、Gate、Final Confirmation、Phase 和 Domain 业务语义。
 
-当前 Draft 尚未成为当前稳定规范，也尚未供 Plugin 或 Skill 声明正式兼容。只有完成独立 Spec Review 和 Maintainer Finalization 后，才可以将该 Snapshot 标记为 `stable`；此前 Plugin 的稳定 Source of Truth 仍为 v1.0。
+v1.1 已完成独立 Spec Review 和 Maintainer Finalization，当前 Plugin 的稳定 Source of Truth 已切换为本 Snapshot。`docs/v1.0/` 保留为不可变的历史 Snapshot；已冻结的 v1.0 Artifact 仍按其原 `Evaluation Contract Set` 解释。
 
 ## 阅读顺序
 
@@ -59,4 +59,4 @@ cd docs/v1.1
 shasum -c SHA256SUMS
 ```
 
-当前摘要只证明 Draft Review Snapshot 的 25 份正式 Spec 未发生字节漂移，不表示 v1.1 已经 `stable`、已发布或已成为 Plugin 兼容基线。
+当前摘要证明稳定 Snapshot 的 25 份正式 Spec 未发生字节漂移；它不替代 Plugin 或 Skill 的独立实现与兼容性证据。

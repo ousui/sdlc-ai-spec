@@ -17,6 +17,12 @@ from .canonical import (
     parse_reference_set,
     sha256_bytes,
 )
+from .control_inputs import (
+    ControlInputError,
+    ControlInputResolver,
+    RLSIssueControlInput,
+    VFYReturnControlInput,
+)
 from .envelopes import (
     EnvelopeValidationError,
     INVOCATION_CONTRACT,
@@ -43,6 +49,8 @@ from .source_lock import (
 __all__ = [
     "CanonicalFormatError",
     "ContractSource",
+    "ControlInputError",
+    "ControlInputResolver",
     "EnvelopeValidationError",
     "FrozenArtifactAuthorityVerifier",
     "FrozenAuthorityVerificationError",
@@ -52,8 +60,10 @@ __all__ = [
     "PhaseHandler",
     "REGISTRY_CONTRACT",
     "RESULT_CONTRACT",
+    "RLSIssueControlInput",
     "SOURCE_LOCK_CONTRACT",
     "SourceLockError",
+    "VFYReturnControlInput",
     "authority_reference",
     "build_source_lock",
     "compute_check_set_result_digest",

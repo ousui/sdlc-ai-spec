@@ -18,7 +18,8 @@
 - 读取 `skills/_shared/contracts/registry.json` 中登记的运行合约；
 - 解析正式 Runtime 使用的受限 Canonical Markdown/YAML 子集；
 - 确定性计算 Control Input Digest 与 Check Set Result Digest；
-- 验证已冻结上游 Artifact 的持久化 Authority 绑定。
+- 验证已冻结上游 Artifact 的持久化 Authority 绑定；
+- 只读解析跨阶段 VFY Return 与 RLS Issue Control Input。
 
 ## Frozen Artifact Authority
 
@@ -33,14 +34,35 @@
 它不得用于 `freeze_revision`。新 Revision 的业务事实、Phase Check、Exception、
 Final Confirmation 和 Gate 仍由当前 Phase 私有 Domain Validator 负责。
 
+## Cross-phase Control Inputs
+
+`ControlInputResolver` 只处理两个已注册的跨阶段返工入口：
+
+- 冻结 VFY Revision 中的准确 `#RET-NNN`；
+- 冻结 RLS Revision 中的准确 `#RLI-NNN` 或 `#RCF-NNN`。
+
+调用方必须提供准确 Item Reference 和期望目标 Phase。Resolver 先验证所属冻结
+Artifact Authority，再读取固定控制表并验证：
+
+- VFY Return 的 `Return Phase` 与期望 Phase 一致；
+- RLS Issue 的 `Follow-up Disposition` 与 `return_<phase>` 一致；
+- Return / Issue 行在当前 Artifact 中恰好出现一次；
+- 必要 Source、Target、Method、Subject、Evidence、Observed Gap 与 Required Outcome
+  不为空；
+- RLS 行的 Result 允许形成相应 `return_*` 路由。
+
+Resolver 不改变 Delivery Scope、不判断问题已经解决、不执行目标 Phase Skill，也不
+自动选择最新或相似 Artifact。
+
 ## 非职责
 
 - 不读取 `docs/**` 执行业务流程；
 - 不判断 CTX、REQ、DSN 等领域事实；
 - 不重新执行上游 Phase 的业务 Check；
+- 不把接收 Control Input 解释为问题已解决；
 - 不创建 Artifact ID、Revision 或 SQLite Schema；
 - 不替代 Phase Builder、Domain Validator 或 ArtifactStore；
 - 不联网、不安装依赖、不执行 Git 或外部写入。
 
 正式 Skill 可以依赖本 Package，但不得复制其 Envelope、Source Lock、Canonical
-解析、摘要计算、上游 Authority 校验或路由逻辑。
+解析、摘要计算、上游 Authority、Control Input 校验或路由逻辑。

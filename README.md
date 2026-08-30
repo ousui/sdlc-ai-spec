@@ -34,6 +34,18 @@ tests/                自动化测试
 
 三个 Agent 共用根目录 `skills/`，平台入口保持轻量。
 
+## Codex Marketplace 安装
+
+将仓库添加为 Codex Marketplace，再安装其中的 `sdlc-ai-spec` Plugin：
+
+```bash
+codex plugin marketplace add <marketplace-source> --ref main
+codex plugin add sdlc-ai-spec@sdlc-ai-spec
+```
+
+Marketplace 元数据位于 `.agents/plugins/marketplace.json`，Plugin 展示与运行入口位于
+`.codex-plugin/plugin.json`；实际仓库 Source 以 Marketplace 元数据为准。
+
 ## Phase Skill 命名
 
 | Phase | Skill Name | 说明 |

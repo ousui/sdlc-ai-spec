@@ -1,0 +1,21 @@
+{
+  "name": "sdlc-ai-spec",
+  "interface": {
+    "displayName": "SDLC AI Spec"
+  },
+  "plugins": [
+    {
+      "name": "sdlc-ai-spec",
+      "source": {
+        "source": "url",
+        "url": "git@github.com:blade-cdn/sdlc-ai-spec.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

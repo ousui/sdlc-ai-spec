@@ -12,15 +12,15 @@
 
 ## 当前矩阵
 
-验证日期：2026-08-28
+验证日期：2026-08-31
 
 | Client | Surface | Tested Version | Manifest | Manifest Validation | Skill Discovery | Explicit Invocation | Behavior Validation | Status | Evidence | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|
-| Cursor | IDE | Unknown | `.cursor-plugin/plugin.json` | Local static checks | Pending | Pending | Pending | `Pending first skill` | JSON、路径和公共元数据检查 | 尚未执行本地宿主加载 |
-| Cursor | CLI | Unknown | `.cursor-plugin/plugin.json` | Unknown | Unknown | Unknown | Unknown | `Unknown` | None | CLI 可用性与插件行为需单独验证 |
-| Claude Code | CLI | Local installed version | `.claude-plugin/plugin.json` | Native validator previously passed with optional metadata warning | Pending | Pending | Pending | `Pending first skill` | `claude plugin validate` 与本地静态检查 | 尚无正式 Skill |
-| Codex | CLI | Local installed version | `.codex-plugin/plugin.json` | Local static checks | Pending | Pending | Pending | `Pending first skill` | JSON、路径和公共元数据检查 | 当前未发现独立 Manifest 校验子命令 |
-| Codex | Desktop / App | Unknown | `.codex-plugin/plugin.json` | Local static checks | Pending | Pending | Pending | `Pending first skill` | JSON、路径和公共元数据检查 | Marketplace 或宿主安装尚未建立 |
+| Cursor | IDE | Unknown | `.cursor-plugin/plugin.json` | Local static checks | Pending | Pending | Pending | `Pending first skill` | Runtime Contract Validator、JSON、路径和官方 schema 字段检查 | Marketplace 元数据已建立；尚未执行本地宿主加载 |
+| Cursor | CLI | Unknown | `.cursor-plugin/plugin.json` | Local static checks | Unknown | Unknown | Unknown | `Pending first skill` | Runtime Contract Validator、JSON、路径和官方 schema 字段检查 | Marketplace 元数据已建立；CLI 可用性与插件行为需单独验证 |
+| Claude Code | CLI | `2.1.204` | `.claude-plugin/plugin.json` | Native validator passed with warning and local static checks | Pending | Pending | Pending | `Pending first skill` | `claude plugin validate`、Runtime Contract Validator、JSON 与路径检查 | Marketplace 元数据已建立；严格校验受既有根级 `CLAUDE.md` 未作为 Plugin Context 加载的警告阻塞，尚未执行远程安装 |
+| Codex | CLI | Local installed version | `.codex-plugin/plugin.json` | Local static checks | Pending | Pending | Pending | `Pending first skill` | Runtime Contract Validator、JSON、路径和 Plugin Creator schema 字段检查 | Marketplace 元数据已建立；Plugin Creator 自动校验器受本机缺少 PyYAML 阻塞，远程安装待仓库推送后验证 |
+| Codex | Desktop / App | Unknown | `.codex-plugin/plugin.json` | Local static checks | Pending | Pending | Pending | `Pending first skill` | Runtime Contract Validator、JSON、路径和 Plugin Creator schema 字段检查 | Marketplace 元数据已建立；Plugin Creator 自动校验器受本机缺少 PyYAML 阻塞，尚未执行宿主安装与发现验证 |
 
 ## 证据要求
 

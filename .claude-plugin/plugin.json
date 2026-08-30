@@ -1,6 +1,19 @@
 {
   "name": "sdlc-ai-spec",
+  "displayName": "SDLC AI Spec",
   "version": "0.1.0",
-  "description": "Execution support for the sdlc-ai-spec software development and change delivery standard.",
+  "description": "为软件研发与变更交付提供本地优先的 SDLC 规范、共享运行合约与执行基础。",
+  "author": {
+    "name": "Blade",
+    "url": "https://github.com/blade-cdn"
+  },
+  "homepage": "https://github.com/blade-cdn/sdlc-ai-spec",
+  "repository": "git@github.com:blade-cdn/sdlc-ai-spec.git",
+  "keywords": [
+    "codex",
+    "sdlc",
+    "software-delivery",
+    "artifact"
+  ],
   "skills": "./skills/"
 }

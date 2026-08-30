@@ -183,7 +183,10 @@ target/
 /.claude/
 /.cursor/
 /.agent/
-/.agents/
+/.agents/*
+# Codex Marketplace metadata is repository source, not host installation state.
+!/.agents/plugins/
+!/.agents/plugins/marketplace.json
 /.continue/
 /.gemini/
 /.windsurf/

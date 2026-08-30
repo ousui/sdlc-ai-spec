@@ -39,6 +39,18 @@
 - `ArtifactCatalog` 提供 Artifact Lineage 与 Revision Control 列表 Projection。
 - Catalog 不提供 Artifact Authority，未来供 `sdlc-status` 查询层使用。
 
+### Native Marketplace Adapters
+
+- Codex：`.codex-plugin/plugin.json` 与 `.agents/plugins/marketplace.json`
+- Cursor：`.cursor-plugin/plugin.json` 与 `.cursor-plugin/marketplace.json`
+- Claude Code：`.claude-plugin/plugin.json` 与 `.claude-plugin/marketplace.json`
+- Cursor 与 Claude Code 只映射各自原生 schema 支持的 Codex 基准字段，不重新解释、
+  改写或补充 Plugin 内容。
+- Marketplace 与 Plugin 中文描述已建立，仓库 Source 使用 Maintainer 当前明确指定的
+  分发地址；固定远端只保存在分发元数据中。
+- 远程安装、Skill Discovery 与行为验证尚未执行；当前状态仍为
+  `Pending first skill`。
+
 ## 固定命名
 
 - Phase Skill：`sdlc-NNN-xxx`

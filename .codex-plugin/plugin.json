@@ -1,6 +1,35 @@
 {
   "name": "sdlc-ai-spec",
   "version": "0.1.0",
-  "description": "Execution support for the sdlc-ai-spec software development and change delivery standard.",
-  "skills": "./skills/"
+  "description": "为软件研发与变更交付提供本地优先的 SDLC 规范、共享运行合约与执行基础。",
+  "author": {
+    "name": "Blade",
+    "url": "https://github.com/blade-cdn"
+  },
+  "homepage": "https://github.com/blade-cdn/sdlc-ai-spec",
+  "repository": "git@github.com:blade-cdn/sdlc-ai-spec.git",
+  "keywords": [
+    "codex",
+    "sdlc",
+    "software-delivery",
+    "artifact"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SDLC AI Spec",
+    "shortDescription": "本地优先的软件研发与变更交付规范",
+    "longDescription": "围绕 Artifact、Reference、Evidence、Exception、Check 和 Gate 提供稳定领域规范、自包含运行合约、共享 ArtifactStore 与阶段执行基础，支持在 Codex 中逐步构建可验证的软件交付流程。",
+    "developerName": "Blade",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/blade-cdn/sdlc-ai-spec",
+    "defaultPrompt": [
+      "说明 sdlc-ai-spec 的 Artifact、Reference、Evidence、Check 与 Gate 模型。",
+      "检查当前仓库的 SDLC 规范与 Runtime 边界。"
+    ],
+    "brandColor": "#10A37F"
+  }
 }

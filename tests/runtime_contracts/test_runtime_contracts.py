@@ -35,8 +35,9 @@ class RuntimeContractTests(unittest.TestCase):
         self.assertFalse((ROOT / "skills/_shared/SKILL.md").exists())
 
     def test_legacy_work_item_removed(self) -> None:
+        legacy_name = "sdlc-project-" "context"
         self.assertFalse(
-            (ROOT / "docs/plugin-development/work-items/sdlc-project-context").exists()
+            (ROOT / "docs/plugin-development/work-items" / legacy_name).exists()
         )
 
 

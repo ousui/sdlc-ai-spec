@@ -1,7 +1,5 @@
 """Strictly read-only Artifact catalog projections."""
 
-from __future__ import annotations
-
 from dataclasses import dataclass
 from typing import Optional, Tuple
 

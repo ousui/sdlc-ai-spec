@@ -1,0 +1,31 @@
+{
+  "contract": "sdlc-ai-spec/runtime-contract-registry/v1",
+  "contract_version": "1",
+  "contracts": [
+    {
+      "contract_id": "sdlc-ai-spec/runtime/artifact-store/v1",
+      "contract_version": "1",
+      "resource": "packages/sdlc_artifact_store/CONTRACT.md"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/runtime/artifact/v1",
+      "contract_version": "1",
+      "resource": "skills/_shared/contracts/artifact-runtime.md"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/runtime/kernel/v1",
+      "contract_version": "1",
+      "resource": "packages/sdlc_runtime/CONTRACT.md"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/runtime/phase/v1",
+      "contract_version": "1",
+      "resource": "skills/_shared/contracts/phase-runtime.md"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/runtime/skill-execution/v1",
+      "contract_version": "1",
+      "resource": "skills/_shared/contracts/skill-execution.md"
+    }
+  ]
+}

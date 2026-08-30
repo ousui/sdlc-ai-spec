@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sdlc-ai-spec/runtime-source-lock/v1",
+  "title": "SDLC Runtime Source Lock",
+  "type": "object",
+  "required": [
+    "contract",
+    "contracts"
+  ],
+  "properties": {
+    "contract": {
+      "const": "sdlc-ai-spec/runtime-source-lock/v1"
+    },
+    "contracts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "contract_id",
+          "contract_version",
+          "sha256"
+        ],
+        "properties": {
+          "contract_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contract_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,24 +1,22 @@
-# Shared Skill Runtime Contracts
+# Shared Skill Runtime
 
-本目录保存多个正式 Phase Skill 安装后共同遵守的 Runtime Contract。
+本目录保存多个正式 Skill 共同遵守的安装后运行合约与 Schema。
 
 ```text
-_shared/
+skills/_shared/
 ├── contracts/
+│   ├── registry.json
 │   ├── skill-execution.md
 │   ├── artifact-runtime.md
 │   └── phase-runtime.md
 └── schemas/
     ├── invocation.schema.json
-    └── result.schema.json
+    ├── result.schema.json
+    └── source-lock.schema.json
 ```
 
-规则：
-
-- 不创建 `SKILL.md`；
-- 不是可调用 Skill；
-- 不读取 `docs/**`；
-- 不包含某个阶段的业务字段；
-- 正式 Skill 可以直接加载这些共享 Contract；
-- 业务 Skill 不得读取兄弟 Skill 的私有目录；
-- Shared Contract 变化必须检查所有正式 Skill 和 Eval。
+- 本目录不得包含 `SKILL.md`，不能作为可调用 Skill；
+- `registry.json` 是共享 Runtime Contract ID / Version 的唯一登记表；
+- 正式 Skill 可以读取本目录，但不得读取兄弟业务 Skill 私有目录；
+- `docs/v1.x/**` 只用于设计、构建和审查，不是运行时依赖；
+- 构建期使用 `packages/sdlc_runtime` 生成并验证 Skill 私有 `source-lock.json`。

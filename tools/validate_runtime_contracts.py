@@ -11,18 +11,22 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 SELF = Path(__file__).resolve()
 SKILL_NAME_RE = re.compile(r"^sdlc-[0-9]{3}-[a-z0-9]+(?:-[a-z0-9]+)*$")
+UTILITY_NAME_RE = re.compile(r"^sdlc-[a-z0-9]+(?:-[a-z0-9]+)*$")
 FRONT_MATTER_NAME_RE = re.compile(r"^name:\s*(\S+)\s*$", re.MULTILINE)
 FRONT_MATTER_DESCRIPTION_RE = re.compile(r"^description:\s*(.+)\s*$", re.MULTILINE)
 CHINESE_RE = re.compile(r"[\u4e00-\u9fff]")
 
 REQUIRED = [
     "skills/_shared/README.md",
+    "skills/_shared/contracts/registry.json",
     "skills/_shared/contracts/skill-execution.md",
     "skills/_shared/contracts/artifact-runtime.md",
     "skills/_shared/contracts/phase-runtime.md",
     "skills/_shared/schemas/invocation.schema.json",
     "skills/_shared/schemas/result.schema.json",
+    "skills/_shared/schemas/source-lock.schema.json",
     "packages/sdlc_artifact_store/CONTRACT.md",
+    "packages/sdlc_runtime/CONTRACT.md",
 ]
 
 FORBIDDEN_REPOSITORY_BINDINGS = [
@@ -63,8 +67,10 @@ def main() -> int:
         fail("skills/_shared must not be a callable Skill")
 
     for relative in (
+        "skills/_shared/contracts/registry.json",
         "skills/_shared/schemas/invocation.schema.json",
         "skills/_shared/schemas/result.schema.json",
+        "skills/_shared/schemas/source-lock.schema.json",
     ):
         with (ROOT / relative).open("r", encoding="utf-8") as handle:
             json.load(handle)
@@ -92,25 +98,21 @@ def main() -> int:
             if forbidden in text:
                 fail(f"hard-coded repository binding remains: {path.relative_to(ROOT)}")
 
-    skills_root = ROOT / "skills"
-    for directory in skills_root.iterdir():
-        if not directory.is_dir() or directory.name.startswith("_"):
-            continue
-        if not SKILL_NAME_RE.fullmatch(directory.name):
-            fail(f"invalid formal Skill directory name: {directory.name}")
-        skill_file = directory / "SKILL.md"
-        if not skill_file.is_file():
-            fail(f"formal Skill missing SKILL.md: {directory.name}")
-        text = skill_file.read_text(encoding="utf-8")
-        name_match = FRONT_MATTER_NAME_RE.search(text)
-        description_match = FRONT_MATTER_DESCRIPTION_RE.search(text)
-        if not name_match or name_match.group(1) != directory.name:
-            fail(f"Skill front matter name mismatch: {directory.name}")
-        if not description_match or not CHINESE_RE.search(description_match.group(1)):
-            fail(f"Skill description must contain clear Chinese text: {directory.name}")
-
+    sys.path.insert(0, str(ROOT))
     sys.path.insert(0, str(ROOT / "packages"))
-    from sdlc_artifact_store import ArtifactStore  # type: ignore
+    from sdlc_artifact_store import ArtifactCatalog, ArtifactStore, ContextLineageRegistry  # type: ignore
+    from sdlc_runtime import registry_sources  # type: ignore
+
+    registry_path = ROOT / "skills/_shared/contracts/registry.json"
+    registry = registry_sources(ROOT, registry_path)
+    ids = [item.contract_id for item in registry]
+    if len(ids) != len(set(ids)):
+        fail("runtime contract IDs are not unique")
+    if ids != sorted(ids):
+        fail("runtime contract registry is not sorted")
+    for item in registry:
+        if item.contract_version != "1":
+            fail(f"unsupported runtime contract version: {item.contract_id}")
 
     for operation in (
         "initialize",
@@ -125,12 +127,35 @@ def main() -> int:
     ):
         if not hasattr(ArtifactStore, operation):
             fail(f"ArtifactStore missing public operation: {operation}")
+    for public_type in (ArtifactCatalog, ContextLineageRegistry):
+        if not isinstance(public_type.__name__, str):
+            fail("runtime public type is invalid")
+
+    skills_root = ROOT / "skills"
+    formal_skills = 0
+    for directory in skills_root.iterdir():
+        if not directory.is_dir() or directory.name.startswith("_"):
+            continue
+        formal_skills += 1
+        if not (
+            SKILL_NAME_RE.fullmatch(directory.name)
+            or UTILITY_NAME_RE.fullmatch(directory.name)
+        ):
+            fail(f"invalid formal Skill directory name: {directory.name}")
+        skill_file = directory / "SKILL.md"
+        if not skill_file.is_file():
+            fail(f"formal Skill missing SKILL.md: {directory.name}")
+        text = skill_file.read_text(encoding="utf-8")
+        name_match = FRONT_MATTER_NAME_RE.search(text)
+        description_match = FRONT_MATTER_DESCRIPTION_RE.search(text)
+        if not name_match or name_match.group(1) != directory.name:
+            fail(f"Skill front matter name mismatch: {directory.name}")
+        if not description_match or not CHINESE_RE.search(description_match.group(1)):
+            fail(f"Skill description must contain clear Chinese text: {directory.name}")
 
     print("runtime contract validation: PASS")
-    print("formal skills:", sum(
-        1 for p in skills_root.iterdir()
-        if p.is_dir() and not p.name.startswith("_")
-    ))
+    print("runtime contracts:", len(registry))
+    print("formal skills:", formal_skills)
     return 0
 
 

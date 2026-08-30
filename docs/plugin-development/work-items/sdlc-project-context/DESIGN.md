@@ -347,4 +347,4 @@ Skill 私有脚本预期为 `None`。确定性的 Store 读写、原子事务、
 
 | Role | Decision | Basis |
 |---|---|---|
-| Maintainer | `pending` | Design 已达到 `ready`，但尚未收到 Maintainer 明确批准；不得自行标记 `approved` 或进入 `implement` |
+| Maintainer | `rejected` | 1. `check` 模式声明只读，但当前流程可能通过 `initialize` 建立 Canonical Store，存在未授权写入歧义。<br>2. 当前设计没有清楚区分用于确定 Project Root、Canonical Store 和 CTX Lineage 的 Execution Target Boundary，与 CTX Artifact 内可能尚未确认的 Project Boundary 业务字段；前者缺失时不得分配 Artifact，后者缺失时才可以在已确定目标的 materialized open Revision 中形成 Open Item 和 `waiting_input`。<br>3. Eval Plan 尚未独立覆盖 materialized open Revision 原地修订且不增加 Revision、`pass_with_exception / ready_with_exception`、delegated Final Confirmation，以及 abandoned Revision 的 `check` 行为。 |

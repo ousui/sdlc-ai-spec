@@ -9,7 +9,8 @@
 - v1.1 已完成独立 Review、Maintainer Finalization 和远端同步；25 份正式 Spec 均为 `status: stable`、`version: "1.1"`。
 - `sdlc-project-context` 当前仍处于 `design`。
 - `DESIGN.md` 与 `EVAL-PLAN.md` 已切换到 v1.1 Core、Artifact Store 与 Project Context 三份 Source of Truth。
-- Design 状态为 `ready`，阻塞 Open Item 为零；Maintainer 决定仍为 `pending`，尚未 `approved`。
+- `DESIGN.md` 与 `EVAL-PLAN.md` 的文档状态仍为 `ready`；Maintainer 已明确记录决定为 `rejected`，当前 Design 未获批准，不得进入 `implement`。
+- 下一阶段内工作包固定为 `design-fix`，完成修订并重新达到审批条件前不得再次请求实现授权。
 
 ## 当前设计结论
 
@@ -21,25 +22,26 @@
 
 ## 当前验证结果
 
-- `DESIGN.md` 与 `EVAL-PLAN.md` 的 Design DoD 和通过标准完整，状态均为 `ready`，没有写入虚假 Eval Result。
-- 旧文件系统 Artifact Store 权威路径与 v1.0 正向 Source of Truth 已从当前工作包移除；保留的 v1.0 仅用于明确禁止旧绑定的负向检查。
-- `docs/v1.0/**`、`skills/**`、三个平台 Manifest 与其他工作包无变化。
-- 本轮只修改 `DESIGN.md`、`EVAL-PLAN.md` 与本文件；`git diff --check` 通过。
+- Maintainer 的 `rejected` 决定及三项 Basis 已写入 `DESIGN.md` 确认记录；Design 正文和 Eval 案例正文未修改。
+- 本审批工作包只修改 `DESIGN.md` 的确认记录与本文件；`EVAL-PLAN.md`、`docs/v1.0/**`、`skills/**`、三个平台 Manifest 与其他工作包无变化。
+- 未写入 Eval Result，也未把此前 `ready` 或 Review 意见解释为 Maintainer approval。
 
 ## 未实现与已知限制
 
 - 未创建 `SKILL.md`、`agents/openai.yaml`、Fixture、`EVAL-RESULTS.md` 或任何其他 Skill。
 - 未实现 SQLite Schema、Migration、`ArtifactStore` 模块、Projection、Human Review View 或文件导出。
 - 未执行 Skill 行为 Eval 或三端宿主验证；三端 Skill 行为兼容性继续为 `Pending first skill`。
-- Design `ready` 不是 Maintainer `approved`，不得据此进入 `implement`。
 - 未创建新的领域字段、状态、操作、Check、Gate、Contract ID、Provider、远程能力或数据库 Schema。
+- `check` 与 `initialize` 的只读边界仍存在未授权写入歧义。
+- Execution Target Boundary 与 CTX 内 Project Boundary 业务字段尚未清楚分离，Artifact 分配和 `waiting_input` 的前置条件仍不充分。
+- Eval Plan 尚未独立覆盖 materialized open Revision 原地修订且不增加 Revision、`pass_with_exception / ready_with_exception`、delegated Final Confirmation 和 abandoned Revision 的 `check` 行为。
 
 ## Git 与远端状态
 
-- v1.1 Finalization 提交 `73a2da2055a85df3d1715f4c49301c9162d65c18` 已 push；本工作包开始时 `HEAD`、`main` 与 `origin/main` 一致，工作树干净。
-- 当前 worktree 使用 detached HEAD；本 `design` 工作包只创建一个本地提交，`main` 与 `origin/main` 保持在上述 Finalization 基线。
-- Origin 权威目标仍为 `git@github.com:blade-cdn/sdlc-ai-spec.git`；本工作包不执行 push、tag、PR、Release、Marketplace 或其他远程写入。
+- 本审批工作包开始时，当前 worktree 位于 `main`，`HEAD`、`main` 与 `origin/main` 均为 `80701bb15c24713bf63de8dbc7dda05b11b61aae`，工作树干净；此前 detached HEAD 与 `73a2da2` 基线描述已过期。
+- 本审批工作包完成后只创建一个本地提交；`main` 比 `origin/main` 领先 1 个提交，工作树干净。
+- Origin 权威目标为 `git@github.com:blade-cdn/sdlc-ai-spec.git`；未执行 push、tag、PR、Release、Marketplace 或其他远程写入。
 
 ## 下一唯一工作包
 
-由 Maintainer 审查并明确决定是否批准 `sdlc-project-context` 的 `ready` Design Contract 与 Eval Plan，只记录审批决定和必要 Handoff；不得创建 `SKILL.md`、SQLite Schema、`ArtifactStore` 实现或进入 `implement`。
+`design-fix`：只修订 `sdlc-project-context` 的 `DESIGN.md` 与 `EVAL-PLAN.md`，消除已记录的三项拒绝 Basis，并按实际结果更新本文件。该工作包不得创建 `SKILL.md`、SQLite Schema、`ArtifactStore` 实现、Fixture 或 `EVAL-RESULTS.md`，不得执行行为 Eval、平台适配或进入 `implement`；完成后只能重新提交 Maintainer 审批。

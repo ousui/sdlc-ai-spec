@@ -16,6 +16,7 @@ python3 -m unittest discover -s tests -p 'test_*.py' -v
 - Contract Registry 与 Source Lock 集合、排序、版本和摘要；
 - Canonical Markdown/YAML、固定表格与摘要算法；
 - Frozen Artifact Authority 的 human / delegated、stale、tampered 与缺失文件路径；
+- VFY Return 与 RLS RLI / RCF Control Input 的准确 Phase 路由、唯一行和失败边界；
 - CTX Boundary Key 原子保留、重复幂等和只读发现；
 - Artifact Catalog 只读列表；
 - 既有 ArtifactStore 全部回归测试。

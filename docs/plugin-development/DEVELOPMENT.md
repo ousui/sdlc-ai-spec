@@ -68,8 +68,13 @@ One Shared Skill Source + Three Thin Native Manifests
 
 - 当前 Plugin 只支持 Local SQLite Store，固定路径为项目根目录下的 `.sdlc/store.sqlite3`。
 - 不需要 Provider 配置；当前不建设多 Provider 框架。
-- Skill 不得直接散落 SQL。后续实现必须通过一个最小的 Plugin 内部 `ArtifactStore` 模块访问数据库。
-- SQLite Schema、Migration 与模块实现必须由后续独立工作包设计、实现和验证；本文件不预先定义。
+- 唯一共享实现为 `packages/sdlc_artifact_store/`；稳定 Python facade 对应 Artifact Store Spec 的九个逻辑操作，Schema Version 初始固定为 `1`。
+- 共享 CLI 为 `scripts/sdlc_artifact_store.py`，使用显式 `--project-root` 和单个 JSON 输入/输出协议；完整接口、Payload 和错误码见 [组件文档](components/artifact-store/README.md)。
+- Skill 不得直接执行 SQL、复制该模块、拥有私有 SQLite Schema，或通过 `../` 调用兄弟 Skill 私有脚本；只能使用共享 Python API 或共享 CLI。
+- `create / revise` 使用 `ArtifactStore.open_read_write(project_root)`，并在准确写入授权内显式调用 `initialize`；不得把打开 facade 当作隐式初始化。
+- `check` 使用 `ArtifactStore.open_read_only(project_root)`；该入口不调用 `initialize`，不创建 `.sdlc/`、数据库、Schema、Migration、journal/WAL/cache/log 或其他持久化状态，Store 或 Schema 缺失时明确失败。
+- `freeze_revision` 与权威 `resolve_exact_reference` 必须由 Phase Skill 提供绑定准确 Reference 和当前 Payload 的领域 verifier；Store 不判断业务事实、Gate、Exception 或 Final Confirmation。
+- 当前只支持 Schema 首次创建和版本一致性验证；Schema 缺失、损坏或版本不匹配时 fail closed，不自动迁移未知 Schema。
 
 ## 4. Skill Contract
 

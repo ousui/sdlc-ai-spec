@@ -6,42 +6,51 @@
 
 ## 当前阶段
 
-- v1.1 已完成独立 Review、Maintainer Finalization 和远端同步；25 份正式 Spec 均为 `status: stable`、`version: "1.1"`。
-- `sdlc-project-context` 的 `approval` 工作包已完成，本轮未进入 `implement`。
-- `DESIGN.md` 状态为 `approved`；`EVAL-PLAN.md` 保持 `ready`，Design 阻塞 Open Item 为零。
-- Maintainer 已明确批准当前 Design Contract 与 Eval Plan；决定与 Basis 已记录在 `DESIGN.md` 确认记录中。
-- 下一唯一工作包为 `implement`；必须由新会话根据已批准 Design 确认准确白名单与 DoD 后开始。
+- v1.1 仍是当前稳定 Source of Truth；本次 Foundation 未修改 `docs/v1.0/**` 或 `docs/v1.1/**`。
+- 一次性的 Plugin Foundation 工作包已实现共享 Local SQLite `ArtifactStore`；它不是 Skill，也没有进入 `sdlc-project-context implement`。
+- `sdlc-project-context` 的 `DESIGN.md` 保持 `approved`，`EVAL-PLAN.md` 保持 `ready`，阻塞 Open Item 为零。
+- 下一唯一工作包恢复为 `sdlc-project-context implement`；必须在新会话中只依据已批准 Design 推进。
 
-## 当前设计结论
+## ArtifactStore Foundation 完成状态
 
-- CTX Artifact Authority 是当前 Project Boundary 的唯一 Canonical Store；首版物理执行只支持项目根 `.sdlc/store.sqlite3`，Skill 只通过后续独立实现并验证的 Plugin 内部 `ArtifactStore` 模块访问。
-- `create / revise` 可在准确写入授权内执行可能建立 Store 的 `initialize`；`check` 禁止调用 `initialize`，只能验证已经存在的 Canonical Store 并调用读取性 Store Operation。
-- `check` 为绝对只读；`.sdlc/`、`store.sqlite3` 或所需 Schema 不存在时报告失败，不创建、迁移、修复或写入任何持久化状态，不使用文件系统 fallback。
-- Execution Target Boundary 只是用于唯一选定 Project Root、Canonical Store Locator 和适用时 CTX Lineage / Revision 的执行前置，不是新的 Artifact 或 CTX 字段。它未确定时不初始化 Store、不分配 Artifact / Revision，也不用 Open Item 掩盖选目标歧义。
-- CTX `Project Identity.Boundary` 是已选定项目的正式业务字段。只有 Execution Target Boundary 已唯一确定，但该字段或其他必要 Context 事实缺合法 Basis 时，`create / revise` 才可在准确 materialized open Revision 中登记 Open Item 并派生 `waiting_input`。
-- Eval Plan 现在独立覆盖 materialized open Revision 原地 revise 且不增 Revision、Exception / human Final Confirmation / `pass_with_exception / ready_with_exception` 一致性、delegated Final Confirmation，以及 materialized `abandoned` Revision 的只读检查与不可作为 Context Authority。
+- 唯一实现：`packages/sdlc_artifact_store/`；共享 CLI：`scripts/sdlc_artifact_store.py`。
+- 物理 Store 固定为 `<project-root>/.sdlc/store.sqlite3`；Schema Version 固定为 `1`。
+- Python facade 已实现九个逻辑操作：`initialize`、`allocate_artifact`、`allocate_revision`、`read_revision`、`write_open_revision`、`freeze_revision`、`abandon_revision`、`resolve_exact_reference`、`verify_digest`。
+- `open_read_write` 与 `open_read_only` 已分离；严格只读入口使用 SQLite read-only URI，不调用 initialize，不创建或修复任何持久化状态。
+- 完整 Payload 包含 primary raw bytes、Artifact Status / Media Type / SHA-256、locally owned Members、稳定 ID / Canonical Name / Media Type / SHA-256、Canonical Manifest raw bytes 及本地 Member closure。
+- Control Reservation 与 materialized Revision 已分离；同一 Artifact 最多一个 open Revision；Revision 单调且不复用；frozen 不可写；abandoned 保留编号、原因和已有历史 Payload 但不提供 Authority。
+- `write_open_revision` 使用单个 SQLite transaction、完整读回、摘要/closure 验证和 generation conflict，拒绝部分成功与 last-write-wins。
+- IMP 只提供采用外部准确 Artifact ID / Revision Reservation 的最小参数与幂等/冲突校验；未实现 Claim Provider。
+- `freeze_revision` 与权威 `resolve_exact_reference` 缺少领域 verifier、verifier 拒绝或 stale 时均 fail closed；当前未实现 CTX 专属 verifier。
+- `.sdlc/.gitignore` 固定为 `*`；initialize 不修改项目根 `.gitignore`，检测到 `.sdlc` 已有 Git-tracked 内容时停止且不改 Git Index。
 
 ## 当前验证结果
 
-- 批准写入前已核对 `DESIGN.md` 为 `ready`、Maintainer Decision 为 `pending`、Open Items 为唯一已关闭 `None` 行，满足当前批准 Gate。
-- 已核对 `EVAL-PLAN.md` 只定义可判定案例、检查与通过条件，没有伪造执行结果。
-- Maintainer 当前请求已明确对准 `sdlc-project-context` 的 `DESIGN.md` 与 `EVAL-PLAN.md`，并使用确定的批准决定与四项 Basis。
-- 已对照 `docs/v1.1/core-spec.md`、`docs/v1.1/artifact-store-spec.md` 与 `docs/v1.1/000-ctx-spec.md` 复核批准边界；三份 Source of Truth 未修改。
-- 未执行 Skill 行为 Eval、ArtifactStore 测试或三端宿主验证；本工作包只在 `DESIGN.md` 与本文件记录批准，三端行为兼容性继续为 `Pending first skill`。
+- Python：`3.14.7`。
+- `python3 -m compileall packages scripts`：通过。
+- `python3 -m unittest discover -s tests -p 'test_*.py' -v`：34 个测试全部通过，0 failure，0 error。
+- 严格只读案例已验证 `.sdlc` / 数据库缺失时不创建；已有 Store 读取前后文件集合和 SHA-256 不变，未产生 journal/WAL/SHM 或旁车文件。
+- 自动化覆盖 30 类指定场景，并增加 Schema 损坏、generation conflict、Git-tracked `.sdlc` 和 CLI verifier error 边界。
+- 无第三方依赖、无网络调用、无安装行为；全部 Store 测试使用 `tempfile` 隔离项目。
+- 详细证据见 `docs/plugin-development/components/artifact-store/TEST-RESULTS.md`。
 
 ## 未实现与已知限制
 
-- 未创建 `SKILL.md`、`agents/openai.yaml`、Fixture、`EVAL-RESULTS.md` 或任何其他 Skill。
-- 未实现 SQLite Schema、Migration、`ArtifactStore` 模块、Projection、Human Review View 或文件导出。
-- 未新增领域字段、状态、Store Operation、Check、Gate、Contract ID、Provider、远程能力或数据库 Schema。
-- 新增 Eval Fixture 仅是逻辑设计标识，未创建任何 Fixture 文件或运行结果。
+- 未创建或修改任何 `SKILL.md`、`agents/openai.yaml`、Fixture、`EVAL-RESULTS.md`、三个平台 Manifest 或 Plugin Version。
+- 未实现 CTX / REQ / DSN 等领域 validator；deterministic fake verifier 只证明内部 protocol 的通过、拒绝和 stale 路径。
+- 未执行 `sdlc-project-context` 正式行为 Eval、Codex adapt、独立 review 或三端宿主验证；兼容性仍为 `Pending first skill`。
+- 未实现 Projection、Human Review View、Projection Import、Candidate Material、远程 Store、多 Provider、自动 Migration framework 或文件系统 fallback。
+- 未做多进程压力/性能基准；当前并发证据限于 SQLite 原子事务、唯一索引和 generation conflict 自动化测试。
 
 ## Git 与远端状态
 
-- 本 `approval` 工作包开始时位于 `main@7cfc4ea572b80c68462937a66a2b68cbcc93c8dc`，`origin/main` 与 HEAD 一致，工作树干净。
-- 本 `approval` 工作包已创建一个本地提交；完成后工作树干净，`main` 领先 `origin/main` 1 个本地提交。
-- Origin 的 Fetch / Push 权威配置为 `git@github.com:blade-cdn/sdlc-ai-spec.git`；实际 SSH rewrite 仅将 `blade-cdn` 路由到对应 Host Alias，未路由到其他仓库。未执行 push、tag、PR、Release、Marketplace 或其他远程写入。
+- Foundation 开始基线为 `main@496328e25d8bdd4fa3f0aea7be21dd725c08ebbd`；开始时 HEAD、本地 `origin/main` 与远端 `refs/heads/main` 一致，工作树干净。
+- Origin Fetch / Push 配置均为 `git@github.com:blade-cdn/sdlc-ai-spec.git`；有效 rewrite 为 `git@github-goedge-blade:blade-cdn/sdlc-ai-spec.git`，SSH Alias 的实际 hostname 为 `github.com`，未路由到其他仓库。
+- Foundation 由当前 `main` HEAD 的本地 `feat(store)` 提交承载；交接时 `git status --short` 必须为空，`main` 仅领先 `origin/main` 1 个本地提交。
+- 未执行 push、merge、tag、PR、Release、Marketplace 或其他远程写入。
 
 ## 下一唯一工作包
 
-`implement`：仅依据已批准的 `sdlc-project-context` Design Contract 实现最小共享 Skill。开始前必须在新会话中确认唯一产物、准确写入白名单、ArtifactStore 依赖的处理边界、DoD 与停止条件。该工作包不执行行为 Eval、平台适配、review、push、发布或 Marketplace 写入，不在实现中重新定义 Design 或 v1.1 领域 Contract。
+`sdlc-project-context implement`：仅依据已批准 Design 实现 CTX Payload builder、CTX domain validator、`SKILL.md` 和 Design 已批准的最小运行逻辑。
+
+该 implement 必须使用共享 `packages/sdlc_artifact_store/`，不得创建 Skill 私有 Store、私有 Schema 或直接 SQL，不重新设计 Schema。只完成 implement 生产者自检并路由后续 `evaluate`；不进入正式 Eval、adapt、review、push、发布或 Marketplace 写入，也不修改稳定 v1.1 Contract、已批准 Design 或 Eval Plan。

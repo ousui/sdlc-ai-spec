@@ -19,6 +19,7 @@ packages/sdlc_artifact_store/catalog.py
 - 解析正式 Runtime 使用的受限 Canonical Markdown/YAML；
 - 计算 Control Input Digest 与 Check Set Result Digest；
 - 验证已冻结上游 Artifact 的持久化 Authority 绑定；
+- 解析冻结 VFY Return 与 RLS Issue Control Input；
 - 原子发现或保留 Project Boundary 对应的唯一 CTX Lineage；
 - 提供严格只读 Artifact Catalog，供未来 `sdlc-status` 查询层使用。
 
@@ -27,6 +28,8 @@ packages/sdlc_artifact_store/catalog.py
 - 设计规范仍位于 `docs/v1.x/**`，生产 Runtime 不读取这些文档；
 - `FrozenArtifactAuthorityVerifier` 只验证已经冻结的上游 Authority，不重新执行
   Phase 业务 Check，也不得用于冻结新 Revision；
+- `ControlInputResolver` 只验证已注册的 Return / Issue 路由，不改变 Scope、不判断
+  问题解决，也不调用目标 Phase Skill；
 - 当前 Phase 的 Builder、Domain Validator、Exception、Final Confirmation 和 Gate
   仍由当前 Skill 私有 Runtime 负责；
 - `ContextLineageRegistry` 只保存调用方提供的 `sha256:<hex>` Boundary Key，
@@ -49,6 +52,22 @@ resolved = store.resolve_exact_reference("CTX-...@1", verifier=verifier)
 该入口验证 Store 的 frozen / ready 状态、Payload 完整性、Gate、Final
 Confirmation、Control Input Digest、Check Set Result Digest 与 Authority Reference。
 它只证明已冻结记录的持久化 Authority 绑定，不替代生成该 Artifact 时的领域验证。
+
+## Consuming Return / Issue Control Inputs
+
+```python
+from packages.sdlc_runtime import ControlInputResolver
+
+resolver = ControlInputResolver(project_root)
+control = resolver.resolve_for_phase(
+    store,
+    "VFY-...@1#RET-001",
+    "REQ",
+)
+```
+
+同一入口也支持冻结 RLS 的 `#RLI-NNN` 与 `#RCF-NNN`。调用方必须提供准确
+Reference 和目标 Phase；Resolver 不扫描相似内容，不自动选择最新 Revision。
 
 ## CTX 原子绑定
 

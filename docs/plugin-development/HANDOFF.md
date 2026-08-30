@@ -7,10 +7,10 @@
 ## 当前阶段
 
 - v1.1 已完成独立 Review、Maintainer Finalization 和远端同步；25 份正式 Spec 均为 `status: stable`、`version: "1.1"`。
-- `sdlc-project-context` 仍处于 `design`；本次唯一 `design-fix` 工作包已完成，未进入 `approval` 或 `implement`。
-- `DESIGN.md` 与 `EVAL-PLAN.md` 状态均为 `ready`，Design 阻塞 Open Item 为零。
-- 上一次 Maintainer `rejected` 的三项 Basis 已通过 Design / Eval 修订响应；当前 Maintainer Decision 为 `pending`，不得解释为已批准。
-- 下一阶段内工作包唯一为 `approval`；获得 Maintainer 当前明确决定前不得进入 `implement`。
+- `sdlc-project-context` 的 `approval` 工作包已完成，本轮未进入 `implement`。
+- `DESIGN.md` 状态为 `approved`；`EVAL-PLAN.md` 保持 `ready`，Design 阻塞 Open Item 为零。
+- Maintainer 已明确批准当前 Design Contract 与 Eval Plan；决定与 Basis 已记录在 `DESIGN.md` 确认记录中。
+- 下一唯一工作包为 `implement`；必须由新会话根据已批准 Design 确认准确白名单与 DoD 后开始。
 
 ## 当前设计结论
 
@@ -23,11 +23,11 @@
 
 ## 当前验证结果
 
-- 已对照 `docs/v1.1/core-spec.md`、`docs/v1.1/artifact-store-spec.md` 与 `docs/v1.1/000-ctx-spec.md` 复核上述修订；三份 Source of Truth 未修改。
-- `DESIGN.md` 的 Design DoD 已重新检查；Open Items 仍为唯一 `None` 行，当前 Maintainer Decision 为 `pending`。
-- `EVAL-PLAN.md` 已增加独立 Fixture 设计、Case、Check 和 Case-to-Check 追踪；所有新增 Expected Outcome 与 Forbidden Behavior 可判定。
-- 已执行 `git diff --check`、完整 Diff 和路径白名单检查；只有本次授权的三份 Markdown 文件变化，`docs/v1.0/**` 无变化。
-- 未执行 Skill 行为 Eval、ArtifactStore 测试或三端宿主验证；本工作包只修订 Design / Eval Plan，三端行为兼容性继续为 `Pending first skill`。
+- 批准写入前已核对 `DESIGN.md` 为 `ready`、Maintainer Decision 为 `pending`、Open Items 为唯一已关闭 `None` 行，满足当前批准 Gate。
+- 已核对 `EVAL-PLAN.md` 只定义可判定案例、检查与通过条件，没有伪造执行结果。
+- Maintainer 当前请求已明确对准 `sdlc-project-context` 的 `DESIGN.md` 与 `EVAL-PLAN.md`，并使用确定的批准决定与四项 Basis。
+- 已对照 `docs/v1.1/core-spec.md`、`docs/v1.1/artifact-store-spec.md` 与 `docs/v1.1/000-ctx-spec.md` 复核批准边界；三份 Source of Truth 未修改。
+- 未执行 Skill 行为 Eval、ArtifactStore 测试或三端宿主验证；本工作包只在 `DESIGN.md` 与本文件记录批准，三端行为兼容性继续为 `Pending first skill`。
 
 ## 未实现与已知限制
 
@@ -38,10 +38,10 @@
 
 ## Git 与远端状态
 
-- 本工作包开始时位于 `main@38c33e6c9346bd961f1267308bb1ab0a0c7f5248`，`origin/main=80701bb15c24713bf63de8dbc7dda05b11b61aae`，工作树干净，`main` 领先 `origin/main` 1 个本地提交。
-- 本 `design-fix` 工作包完成后创建一个本地提交；完成后工作树干净，`main` 领先 `origin/main` 2 个本地提交。
-- Origin 权威配置为 `git@github.com:blade-cdn/sdlc-ai-spec.git`；未执行 push、tag、PR、Release、Marketplace 或其他远程写入。
+- 本 `approval` 工作包开始时位于 `main@7cfc4ea572b80c68462937a66a2b68cbcc93c8dc`，`origin/main` 与 HEAD 一致，工作树干净。
+- 本 `approval` 工作包已创建一个本地提交；完成后工作树干净，`main` 领先 `origin/main` 1 个本地提交。
+- Origin 的 Fetch / Push 权威配置为 `git@github.com:blade-cdn/sdlc-ai-spec.git`；实际 SSH rewrite 仅将 `blade-cdn` 路由到对应 Host Alias，未路由到其他仓库。未执行 push、tag、PR、Release、Marketplace 或其他远程写入。
 
 ## 下一唯一工作包
 
-`approval`：Maintainer 只对当前 `sdlc-project-context` 的 `DESIGN.md` 与 `EVAL-PLAN.md` 作出明确 `approved` 或 `rejected` 决定，并按实际决定更新确认记录与本文件。该工作包不创建 `SKILL.md`、`agents/openai.yaml`、SQLite Schema、`ArtifactStore` 实现、Fixture 或 `EVAL-RESULTS.md`，不执行行为 Eval、平台适配、`implement`、push 或其他远程写入。
+`implement`：仅依据已批准的 `sdlc-project-context` Design Contract 实现最小共享 Skill。开始前必须在新会话中确认唯一产物、准确写入白名单、ArtifactStore 依赖的处理边界、DoD 与停止条件。该工作包不执行行为 Eval、平台适配、review、push、发布或 Marketplace 写入，不在实现中重新定义 Design 或 v1.1 领域 Contract。

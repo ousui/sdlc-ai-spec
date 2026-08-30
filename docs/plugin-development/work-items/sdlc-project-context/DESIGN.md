@@ -6,13 +6,13 @@
 |---|---|
 | Skill Name | `sdlc-project-context` |
 | Stage | `design` |
-| Status | `ready` |
+| Status | `approved` |
 | Intended Plugin | `sdlc-ai-spec` |
 | Domain Source of Truth | `docs/v1.1/core-spec.md`, `docs/v1.1/artifact-store-spec.md`, `docs/v1.1/000-ctx-spec.md` |
 | Plugin Execution Boundary | `docs/plugin-development/DEVELOPMENT.md` §3.1：Local SQLite + Plugin 内部 `ArtifactStore` |
 | Work Package | `docs/plugin-development/work-items/sdlc-project-context/` |
 
-`ready` 只表示 Design Definition of Done 已满足且没有阻塞 Open Item，可以提交 Maintainer 审批；不表示 `approved`，也不授权进入 `implement`。
+`approved` 表示 Design Definition of Done 已满足、阻塞 Open Item 为零，且 Maintainer 已对本 Design Contract 与 Eval Plan 作出明确批准。本记录只授权将下一唯一工作包设为 `implement`，不表示本阶段已进入实现。
 
 ## 2. 问题与用户结果
 
@@ -359,5 +359,5 @@ Skill 私有脚本预期为 `None`。确定性的 Store 读写、原子事务、
 
 | Role | Decision | Basis |
 |---|---|---|
-| Maintainer (current) | `pending` | `design-fix` 已针对上述三项拒绝 Basis 修订 Design 与 Eval Plan；等待新的 Maintainer approval，本记录不构成自动批准。 |
+| Maintainer (current) | `approved` | Maintainer 明确批准当前 `ready` 的 `DESIGN.md` 与 `EVAL-PLAN.md`：`check` 模式已明确为绝对只读且不创建 Store；Execution Target Boundary 与 CTX `Project Identity.Boundary` 字段缺失已明确区分；四类缺失 Eval 案例已补齐；Design DoD 满足且阻塞 Open Item 为零。 |
 | Maintainer (previous review) | `rejected` | 1. `check` 模式声明只读，但原流程可能通过 `initialize` 建立 Canonical Store。<br>2. 原设计没有清楚区分 Execution Target Boundary 与 CTX Artifact 内 `Project Identity.Boundary` 业务字段。<br>3. 原 Eval Plan 缺少 materialized open Revision 原地 revise、Exception / Final Confirmation / `pass_with_exception / ready_with_exception`、delegated Final Confirmation 和 abandoned Revision 检查案例。 |

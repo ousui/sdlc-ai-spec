@@ -42,7 +42,7 @@
 - 读取并绑定 `docs/v1.1/core-spec.md`、`docs/v1.1/artifact-store-spec.md` 与 `docs/v1.1/000-ctx-spec.md` 的准确 Spec Reference。
 - 收集、分类和验证 Project Identity、Resource、Technology、Engineering Entry、Project Topology、Project Rule、Environment 与 Constraint。
 - 为正式 Context 数据登记 `observed`、`confirmed` 或 `referenced` Basis 和可解析的 Basis References。
-- 通过 Artifact Store Spec 登记的逻辑 Store Operation 初始化或验证 Canonical Store，分配 CTX Artifact / Revision，并读写、冻结、放弃或准确解析 CTX Revision；不得用目录、文件名或导出副本代替 Store Authority。
+- 通过 Artifact Store Spec 登记的逻辑 Store Operation 处理 Canonical Store：`create / revise` 可在写入授权内执行可能建立 Store 的 `initialize`；`check` 只允许验证已经存在的 Store 并调用只读操作。Artifact / Revision 分配、读写、冻结、放弃和准确解析仍必须遵守各自模式边界；不得用目录、文件名或导出副本代替 Store Authority。
 - 保持 CTX Identity、Revision、Item ID、Evidence ID、Supporting Artifact ID、Exception ID 和 Open Item ID 的稳定性。
 - 生成或修订包含 CTX primary Canonical Blob、全部 locally owned Member、稳定 Member 身份、元数据、逐项摘要和 Manifest-Member closure 的完整 Canonical Revision Payload。
 - 按 Core 与 CTX Gate 映射派生 `draft / waiting_input / failed / ready / ready_with_exception`。
@@ -86,16 +86,16 @@
 
 - 已显式调用但未说明 `create / revise / check` 时，先根据请求中的目标动作和目标 Artifact 判定；不能唯一判定时只询问一个阻塞问题，不写入。
 - 用户要求“检查并修复”时，将 `check` 和 `revise` 分开：先说明检查是只读，只有用户明确授权修订且目标 Lineage 唯一时才进入 `revise`。
-- 无法唯一确定 Project Root、Canonical Store、Project Boundary 或目标 Lineage 时，不按名称、路径、导出内容或相似度猜测，也不分配或修改 Artifact；只有目标 Lineage 已安全确定但 CTX 内必要事实尚待确认时，才在 materialized open Revision 登记 Open Item 并保持 `waiting_input`。检查模式只报告无法判定。
+- 无法唯一确定 Execution Target Boundary（本次操作的 Project Root、准确 Canonical Store，以及适用时的 CTX Lineage / Revision）时，不按名称、路径、导出内容或相似度猜测，也不初始化 Store、分配或修改 Artifact。只有 Execution Target Boundary 已唯一确定，但 CTX `Project Identity` 中的 `Boundary` 或其他必要业务字段尚缺合法 Basis 时，`create / revise` 才可以物化准确 open Revision，登记 Open Item 并保持 `waiting_input`；`check` 始终只读报告。
 - 用户显式调用本 Skill 但请求完全超出范围时，说明边界并交还控制权，不自动调用其他 Skill。
 
 ## 5. 三种用户意图边界
 
 | Intent | Preconditions | Allowed Mutation | Identity / Revision Behavior | Completion Boundary |
 |---|---|---|---|---|
-| `create` | Project Boundary 可确定；当前项目唯一 Canonical Store 可初始化或验证；不存在同一 Boundary 的 CTX Lineage；Store 写入已由当前请求授权 | 只可通过逻辑 Store Operation 分配一个新 CTX Lineage 和 Revision 1，并写入完整 Canonical Revision Payload | 分配新 `CTX-<YYYYMMDDHHMMSS>-<NN>`；Revision 1；`Base Revision=None`；Control Reservation 与 Payload 明确分离 | 完整 Payload 已原子写入并读回，形成 materialized open Revision；只有全部 Gate 与 Final Confirmation 满足时才可冻结 |
+| `create` | Execution Target Boundary 可确定；当前项目唯一 Canonical Store 可初始化或验证；已确认该 Store 中不存在 CTX Lineage；Store 写入已由当前请求授权 | 只可通过逻辑 Store Operation 分配一个新 CTX Lineage 和 Revision 1，并写入完整 Canonical Revision Payload | 分配新 `CTX-<YYYYMMDDHHMMSS>-<NN>`；Revision 1；`Base Revision=None`；Control Reservation 与 Payload 明确分离 | 完整 Payload 已原子写入并读回，形成 materialized open Revision；只有全部 Gate 与 Final Confirmation 满足时才可冻结 |
 | `revise` | 目标 CTX ID、Base Revision 和 Revision Control Record 可准确解析；写入已由当前请求授权 | 只可通过 `write open revision` 修改唯一 materialized open Revision，或在 Frozen Revision 后分配并物化新的最大 Revision | 不改变 CTX ID；open Revision 原地修正不增号；Frozen Revision 后使用最大 Revision + 1；无有效变化不分配空 Revision | Refresh Summary 准确登记变化；不自动改写下游 Context Reference |
-| `check` | CTX ID 与 Revision 或准确 Context Reference 可由 Canonical Store 唯一解析 | 默认只调用只读 Store Operation；不修复、不分配 ID、不改变 Gate、Status 或 Revision State | 按指定 Revision 原样检查；不得回退到 `latest/current`、阅读视图或其他 Revision | 输出可判定的检查报告；报告不构成 Artifact Gate 或 Final Confirmation |
+| `check` | Execution Target Boundary 与准确 CTX ID / Revision 已唯一确定；项目根 `.sdlc/store.sqlite3` 及所需 Schema 已存在 | 绝对只读；禁止调用可建立 Store 的 `initialize`，只能通过 ArtifactStore 的只读执行路径调用 `read revision / resolve exact reference / verify digest`；不创建 `.sdlc/`、`store.sqlite3`、Schema、Migration、旁车文件或任何持久化状态 | 按指定 Revision 原样检查；Store、数据库、Schema 不存在或不可用时直接报告失败；不得回退到 `latest/current`、阅读视图或其他 Revision | 输出可判定的检查报告；报告不构成 Artifact Gate 或 Final Confirmation；持久化副作用为 `None` |
 
 补充规则：
 
@@ -103,6 +103,15 @@
 - `ready` 或 `ready_with_exception` Revision 冻结后，任何内容或控制字段变化都必须创建新 Revision；排版或文字修正也不例外。
 - 项目重命名、目录迁移或仓库地址变化不改变 CTX ID。只有 Project Boundary 明确拆分为独立项目时，新项目分别创建 CTX ID。
 - 已确认同一 Canonical Store 中存在两个描述同一 Project Boundary 的 CTX Lineage 时属于冲突，不得选择其中一个继续或再创建第三个 Lineage。
+
+### 5.1 Execution Target Boundary 与 CTX Project Boundary 字段
+
+| Concern | 含义 | 确定时点与证据 | 缺失行为 |
+|---|---|---|---|
+| Execution Target Boundary | 执行层用来唯一选定本次操作对象的边界：准确 Project Root、固定 Canonical Store Locator `.sdlc/store.sqlite3`，以及 `revise / check` 的准确 CTX Lineage / Revision；`create` 没有既有目标 Lineage | 在任何 Store 初始化、Artifact / Revision 分配或 Payload 写入之前，由当前请求的准确目标与项目根唯一确定；`create` 可在此后按授权初始化该准确 Store，但必须在 Artifact 分配前读回确认 Store 中没有 CTX Lineage；它是执行前置，不是新 Artifact、CTX 字段或 Domain Contract | fail closed；不初始化 Store，不分配 Artifact / Revision，不创建 materialized open Revision，也不登记用于掩盖选目标歧义的 Open Item |
+| CTX `Project Identity.Boundary` | Project Context Spec 已定义的正式 Context 业务字段，描述已选定项目的长期 Project Boundary | Execution Target Boundary 已唯一确定后，依据 `confirmed` Evidence 或当前 Spec 允许的准确 Basis 写入 CTX primary Blob；不从项目路径或 Store 位置自动推导其业务内容 | 只有 `create / revise` 且 Execution Target Boundary 已确定时，才可在准确 materialized open Revision 中登记一条真实 Open Item，阻塞 `CTX-G-002`，并在无 fail 时派生 `waiting_input`；`check` 仍只报告现有缺口 |
+
+Execution Target Boundary 的唯一性不代表 CTX `Boundary` 字段已获合法 Basis；CTX 字段缺失也不能反向授权 Skill 在多个项目、Store 或 Lineage 之间选择。
 
 ## 6. Skill / Plugin Interoperability Contract
 
@@ -130,9 +139,9 @@
 |---|---|---:|---|---|---|
 | IN-01 | Operation Intent：`create / revise / check` | yes | 当前用户请求 | 必须与目标和授权相容且可唯一判定 | 停止写入并询问一个阻塞问题 |
 | IN-02 | Domain Source of Truth | yes | Plugin 内 `docs/v1.1/core-spec.md`、`docs/v1.1/artifact-store-spec.md`、`docs/v1.1/000-ctx-spec.md` | 三份文件可读；计算准确 SHA-256；Evaluation Contract Set 完整且规则无冲突 | 停止，不使用历史记忆、v1.0、旧 Validator 或实现细节代替 |
-| IN-03 | Project Root、Canonical Store 与 Project Boundary | create/revise: yes; check: target-dependent | 用户提供的目标、项目配置、ArtifactStore `initialize` 结果、权威文档 | Project Root 唯一；首版物理 Store 固定为项目根 `.sdlc/store.sqlite3`；Boundary / Lineage 可安全定界；不得用目录名、文件扫描或候选副本猜测 | Store 无法唯一确定、不可用或损坏时 fail closed；不改用文件副本；目标已定但必要 Boundary 事实待确认时登记 Open Item 并派生 `waiting_input` |
-| IN-04 | 目标 CTX Identity 与 Revision 状态 | revise/check: yes; create: absence evidence | ArtifactStore 的 Revision Control Record、`read revision` / `resolve exact reference` 结果、用户提供的准确 Reference | Artifact ID、Revision、State、Status、完整 Payload、摘要与 Reference 唯一一致；检查是否已有同 Boundary Lineage | 不创建或覆盖；只有 Control Reservation 或 Payload 不完整时失败；确认冲突时失败 |
-| IN-05 | Project Identity：Project Name、Purpose、Boundary、Primary Resource Reference | ready: yes | `confirmed` Evidence，或 Primary Resource 的 `observed` Evidence | 四个固定字段非 `None / N/A`；Basis 与引用合法 | 不猜测；每个真实缺口唯一登记 Open Item，Status=`waiting_input` |
+| IN-03 | Execution Target Boundary | yes | 当前用户请求的准确目标、项目根、已有 Canonical Store / Revision Control Record 和准确 Reference | Project Root 与项目根 `.sdlc/store.sqlite3` Locator 唯一；`revise / check` 已唯一锁定已有 Store、Lineage 和 Revision；`create` 在准确 Store 可能建立或验证后、Artifact 分配前读回确认其中无 CTX Lineage；不得用目录名、文件扫描或候选副本猜测 | fail closed；不初始化 Store、不分配 Artifact / Revision、不写入 Payload，不用 Open Item 代替目标选择 |
+| IN-04 | 目标 CTX Identity 与 Revision 状态 | revise/check: yes; create: absence evidence | ArtifactStore 的 Revision Control Record、`read revision` / `resolve exact reference` 结果、用户提供的准确 Reference | Artifact ID、Revision、State、Status、完整 Payload、摘要与 Reference 唯一一致；`create` 检查已选定 Store 中是否已有 CTX Lineage | 不创建或覆盖；只有 Control Reservation 或 Payload 不完整时失败；确认冲突时失败 |
+| IN-05 | CTX Project Identity：Project Name、Purpose、`Boundary`、Primary Resource Reference | ready: yes | `confirmed` Evidence，或 Primary Resource 的 `observed` Evidence | Execution Target Boundary 已先行唯一确定；四个固定字段非 `None / N/A`；Basis 与引用合法；CTX `Boundary` 字段不由路径或 Store 位置自动推导 | `create / revise` 在目标已唯一确定时，对每个真实缺口唯一登记 Open Item，Status=`waiting_input`；`check` 只读报告；不猜测 |
 | IN-06 | Resource Registry 与不可变 Baseline | ready: yes | 可重复观察的 Resource 状态、权威引用或确认 Evidence | 至少一个 `Role=primary`；Locator 唯一可解析；版本化 Resource 有不可变 Baseline Reference | 建立 Open Item；不能用可移动分支、`latest/current` 代替 |
 | IN-07 | 适用的长期 Technology、Engineering Entry、Topology、Rule、Environment、Constraint | applicable facts: yes | 代码、配置、工具结果、项目状态、权威文档或有权确认者 | 只保留后续重复使用的稳定内容；适用性和 Basis 可证明 | 未知且影响 Gate 时建立 Open Item；客观不存在时使用带 Basis 的唯一 `None` 行 |
 | IN-08 | Basis References 与 Evidence | yes for every formal Context datum | 本地可验证结果、确认记录、准确不可变引用 | `observed` 引用 Evidence；`confirmed` 引用确认 Evidence；`referenced` 使用准确不可变引用 | 候选推断不进入正式数据；转为 Open Item |
@@ -140,7 +149,7 @@
 | IN-10 | Final Confirmation 与权限依据 | only for finalization | 项目实际授权角色或符合 Core 委托边界的独立 Reviewer 记录 | 绑定当前 Revision、Control Input Digest、Evaluation Contract Set、Check Set Result Digest；Authority Reference 可解析 | Gate 保持 `pending`；若只是确认尚未完成则 Status=`draft`，不伪造人工身份 |
 | IN-11 | 写入授权 | create/revise: yes; check: no | 当前用户请求与宿主权限 | 授权覆盖准确项目与 CTX Artifact Store；不推断远程写入权限 | 不写入；报告被阻塞的目标和所需授权 |
 | IN-12 | 外部 Skill / Plugin 授权 | no | 当前用户请求 | 必须逐项点名并限定用途；不接受传递授权 | 默认为 `None`；能独立完成则继续，否则停止请求授权 |
-| IN-13 | ArtifactStore 执行入口 | create/revise/check: yes | 后续独立工作包实现并验证的 Plugin 内部 `ArtifactStore` 模块 | 仅支持 Local SQLite；覆盖所需逻辑 Store Operation；Skill 不接触 SQL、Schema 或 Migration；读写后均可验证准确结果 | 模块缺失、操作不受支持或读回失败时停止；不得直接 SQL、扫描目录或建立文件系统 fallback |
+| IN-13 | ArtifactStore 执行入口 | create/revise/check: yes | 后续独立工作包实现并验证的 Plugin 内部 `ArtifactStore` 模块 | 仅支持 Local SQLite；`create / revise` 可在授权内调用可能建立 Store 的 `initialize`；`check` 必须使用不会创建或迁移任何持久化状态的严格只读执行路径，且只调用读取性 Store Operation；Skill 不接触 SQL、Schema 或 Migration；读写后均可验证准确结果 | 模块缺失、操作不受支持或读回失败时停止；`check` 中 `.sdlc/`、数据库或 Schema 不存在均报告失败，不得创建、迁移或修复；所有模式都不得直接 SQL、扫描目录或建立文件系统 fallback |
 
 Input Contract 不依赖上一会话的隐式记忆。会话中已知但尚未持久化、无法形成合法 Basis 的信息只能作为候选材料。
 
@@ -166,9 +175,9 @@ Input Contract 不依赖上一会话的隐式记忆。会话中已知但尚未�
 
 ## 9. Workflow Contract
 
-1. **进入独占模式并定界**：确认 `$sdlc-project-context` 被显式调用，判定 `create / revise / check`，记录当前授权、目标 Project Boundary、项目根、固定 Local SQLite Store 和 External Skill / Plugin 授权清单。
+1. **进入独占模式并定界**：确认 `$sdlc-project-context` 被显式调用，判定 `create / revise / check`，记录当前授权、Execution Target Boundary、固定 Local SQLite Store 和 External Skill / Plugin 授权清单。Execution Target Boundary 未唯一确定时立即停止，不初始化 Store、不分配 Artifact / Revision；此前置不等同于 CTX `Project Identity.Boundary` 已具备合法 Basis。
 2. **绑定规则**：从 Plugin 根定位并读取准确 Core Spec、Artifact Store Spec 与 Project Context Spec，计算包含三者的 Evaluation Contract Set；规则缺失、不可读或冲突时停止。
-3. **初始化并解析 Store Authority**：只通过 Plugin 内部 ArtifactStore 对项目根 `.sdlc/store.sqlite3` 执行 `initialize`，验证当前 Boundary 只有一个 Canonical Store。`create` 证明不存在同 Boundary Lineage；`revise` 通过 Store 解析唯一 Lineage 和 Base Revision；`check` 锁定准确 Revision，不使用目录扫描、阅读视图或可移动别名。
+3. **建立或只读验证 Store Authority**：只通过 Plugin 内部 ArtifactStore 处理项目根 `.sdlc/store.sqlite3`。`create / revise` 可在准确写入授权内执行可能建立 Store 的 `initialize`；`create` 还必须证明已选定 Store 中不存在 CTX Lineage，`revise` 必须解析唯一 Lineage 和 Base Revision。`check` 禁止调用 `initialize`，不得创建 `.sdlc/`、`store.sqlite3`、Schema、Migration、侧车文件或其他持久化状态；只能用 ArtifactStore 严格只读执行路径验证已存在的 Store 并调用读取性 Store Operation。Store、数据库或所需 Schema 不存在、不可用或损坏时，`check` 直接报告失败，且不使用目录扫描、阅读视图或可移动别名。
 4. **分配并物化 open Revision**：仅 `create / revise` 执行。先用 `allocate artifact` / `allocate revision` 原子建立并读回身份与 Revision Control Record，再用 `write open revision` 原子写入完整 Canonical Revision Payload 并以 `read revision` 完整读回。Control Reservation 不得被当作 CTX Revision；无法验证时按 Artifact Store Spec 重试准确写入或执行 `abandon revision`，编号不得删除或复用。
 5. **收集并分类事实**：只读取当前 Boundary 和请求必要的本地资料。将正式数据分类为 `observed / confirmed / referenced`，生成对应 Evidence 或准确引用；不稳定推断留作候选材料。
 6. **处理缺口与冲突**：缺少必要事实时建立唯一 Open Item，并在无 fail 时派生 `waiting_input`；已确认冲突、无效引用或 Check 失败时记录 Evidence、Gate `fail` 和 `failed`；不通过 Exception 把未知变成已知。
@@ -189,7 +198,7 @@ Input Contract 不依赖上一会话的隐式记忆。会话中已知但尚未�
 - 新 CTX Revision 不自动改写或使既有 Lifecycle Artifact 失效；采用新 Revision 时，根据 Refresh Summary 只修订最早实际受影响的 Lifecycle Artifact。
 - 有效 Context Reference 固定为 `<CTX-ID>@<Revision>`，并要求 Revision Control State=`frozen`、Status 可供下游使用、完整 Canonical Revision Payload 与控制结构可验证。
 - Item Reference 固定为 `<CTX-ID>@<Revision>#<Item-ID>`；不得用路径、宿主适配文件、`latest`、`current` 或内容相似度替代。
-- `check` 可以检查 open、frozen 或 abandoned 记录，但只有满足有效 Context Reference 的 Revision 才报告为可供 Lifecycle Artifact 使用。
+- `check` 可以只读检查 open、frozen 或 abandoned 记录；materialized `abandoned` Revision 的完整历史 Payload 可通过 `read revision` 验证，但 `resolve exact reference` 必须失败，它不得作为 Context、Input、Item、Member、Gate、Final Confirmation 或其他 Authority。只有满足有效 Context Reference 的 Revision 才报告为可供 Lifecycle Artifact 使用。
 
 ## 11. Basis Contract
 
@@ -219,10 +228,11 @@ Input Contract 不依赖上一会话的隐式记忆。会话中已知但尚未�
 | Failure | Detection | Required Behavior | Forbidden Fallback |
 |---|---|---|---|
 | Source of Truth 缺失或冲突 | Spec 文件不可读、摘要不可计算，或 Core、Artifact Store 与 CTX 语义无法同时满足 | 停止受影响工作；报告路径、冲突和所需权威；不创建或最终化 Artifact | 使用记忆、旧 Validator、常识或折中语义代替 |
-| Operation Intent 或目标不唯一 | 无法唯一判定模式、Project Boundary、Artifact Store、CTX ID 或 Revision | 不写入；请求一个阻塞输入；可在已分配的合法 open Revision 中登记 Open Item | 按名称、目录、最新时间或内容相似度选择目标 |
-| 必要事实未提供 | Project Identity、Primary Resource、Baseline、适用长期事实或 Basis 缺失 | 建立 Open Item，Gate=`pending`，Status=`waiting_input`；保留已验证部分 | 猜测事实、使用自由占位或形成 `ready` |
+| Operation Intent 或 Execution Target Boundary 不唯一 | 无法唯一判定模式、Project Root、Canonical Store、目标 CTX Lineage 或 Revision | fail closed；不初始化 Store，不分配 Artifact / Revision，不创建 materialized open Revision；请求一个能唯一定界执行目标的阻塞输入 | 按名称、目录、最新时间或内容相似度选择目标；用 CTX Open Item 掩盖选目标歧义 |
+| CTX 必要业务字段未提供 | Execution Target Boundary 已唯一确定，但 Project Identity、Primary Resource、Baseline、适用长期事实或 Basis 缺失 | `create / revise` 在准确 materialized open Revision 中建立 Open Item，Gate=`pending`，Status=`waiting_input`，并保留已验证部分；`check` 只读报告现有缺口 | 猜测事实、使用自由占位、形成 `ready`，或把字段缺失当作切换执行目标的授权 |
 | 已确认冲突或无效引用 | 同 Boundary 多 Lineage、Locator 冲突、Reference 不可解析、Check=`fail` | 保存 Evidence；Gate=`fail`，Status=`failed`；检查模式报告失败 | 当作待输入、忽略冲突或选择方便的 Lineage |
-| Canonical Store 不唯一、不可用或损坏 | `initialize` 无法唯一确定项目 Store，或读回、完整性校验失败 | fail closed；报告准确项目与 Store 问题；恢复 Canonical Store 后再继续 | 改用目录、导出文件、缓存、临时材料或其他候选内容 |
+| Canonical Store 不唯一、不可用或损坏 | `create / revise` 的 `initialize` 无法唯一建立或验证项目 Store，或任何模式的读回、完整性校验失败 | fail closed；报告准确项目与 Store 问题；恢复 Canonical Store 后再继续 | 改用目录、导出文件、缓存、临时材料或其他候选内容 |
+| `check` 的 Store、数据库或 Schema 不存在 | 项目根 `.sdlc/`、`store.sqlite3` 或只读 ArtifactStore 所需 Schema 缺失 | 只读报告失败，持久化副作用为 `None` | 调用 `initialize`，创建目录或数据库，创建/迁移/修复 Schema，写入 migration marker、journal/WAL、cache、log 或其他持久化状态 |
 | Revision 分配或物化中断 | Control Record 未提交、只有 Control Reservation、完整 Payload 未原子提交或完整读回失败 | 按 Artifact Store Spec 重试同一准确写入；无法验证时保留编号和实际内容并准确 `abandon revision` | 删除或复用编号、返回部分 Payload、覆盖既有内容或留下伪 Artifact |
 | Frozen Revision 被要求原地修改 | 目标 Revision Control State=`frozen` | 分配新最大 Revision；保持 Frozen Snapshot 不变 | 原地编辑、重开 Frozen Revision、只更新阅读视图冒充 Revision |
 | 修订没有有效内容变化 | Base 与候选内容在权威字段上无变化 | 不创建空 Revision；报告 no-op 和比较依据 | 为显示进度增加 Revision |
@@ -241,9 +251,9 @@ Input Contract 不依赖上一会话的隐式记忆。会话中已知但尚未�
 | Capability | Required | Scope | Authorization |
 |---|---:|---|---|
 | Read local files | yes | 当前 Project Boundary、Plugin 内三份 Source of Truth，以及用户提供的准确 Evidence | 当前请求允许的项目读取；敏感信息按最小必要读取 |
-| Read Local SQLite Store | yes | 仅项目根 `.sdlc/store.sqlite3`，通过 Plugin 内部 ArtifactStore 逻辑操作 | 当前请求允许的项目读取；`check` 使用只读操作，不直接 SQL |
+| Read Local SQLite Store | yes | 仅项目根 `.sdlc/store.sqlite3`，通过 Plugin 内部 ArtifactStore 逻辑操作 | 当前请求允许的项目读取；`check` 使用严格只读执行路径，不调用 `initialize`、不直接 SQL，Store / 数据库 / Schema 缺失时不创建 |
 | Write Local SQLite Store | create/revise: yes; check: no | 仅项目根 `.sdlc/store.sqlite3`，通过 Plugin 内部 ArtifactStore 原子事务 | `create / revise` 的明确用户意图；不写其他 Provider、导出目录或阅读视图 |
-| Execute local commands | yes | 只读发现、SHA-256、结构校验和经 ArtifactStore 暴露的逻辑 Store Operation | 当前项目内普通 Tool；不安装依赖、不修改全局配置、不直接执行 SQL |
+| Execute local commands | yes | 只读发现、SHA-256、结构校验和经 ArtifactStore 暴露的逻辑 Store Operation | 当前项目内普通 Tool；`check` 命令必须不创建、不迁移、不修复持久化状态；不安装依赖、不修改全局配置、不直接执行 SQL |
 | Network read | no by default | 只有用户明确提供且当前 Basis 必须使用的权威来源 | 每个外部来源按当前请求授权；结果仍需不可变引用或摘要 |
 | External write | no | None | 未纳入本 Skill Contract；即使用户授权外部读取也不含写入 |
 | Invoke other Skill / Plugin | no by default | 仅用户当前请求逐项点名的能力和用途 | explicit only; no transitive authorization |
@@ -320,6 +330,8 @@ Skill 私有脚本预期为 `None`。确定性的 Store 读写、原子事务、
 - [x] In Scope 和 Out of Scope 不重叠。
 - [x] 应触发和不应触发场景可区分。
 - [x] `create / revise / check` 三种意图边界可判定。
+- [x] `check` 的绝对只读边界明确；Store、数据库或 Schema 缺失时失败，不创建任何持久化状态。
+- [x] Execution Target Boundary 与 CTX `Project Identity.Boundary` 字段的前置、缺失行为和 Artifact 分配边界已分离。
 - [x] 必要输入和缺失行为明确。
 - [x] 输出、成功和失败条件可判定。
 - [x] CTX Identity、Revision、冻结和 Context Reference 边界明确。
@@ -347,4 +359,5 @@ Skill 私有脚本预期为 `None`。确定性的 Store 读写、原子事务、
 
 | Role | Decision | Basis |
 |---|---|---|
-| Maintainer | `rejected` | 1. `check` 模式声明只读，但当前流程可能通过 `initialize` 建立 Canonical Store，存在未授权写入歧义。<br>2. 当前设计没有清楚区分用于确定 Project Root、Canonical Store 和 CTX Lineage 的 Execution Target Boundary，与 CTX Artifact 内可能尚未确认的 Project Boundary 业务字段；前者缺失时不得分配 Artifact，后者缺失时才可以在已确定目标的 materialized open Revision 中形成 Open Item 和 `waiting_input`。<br>3. Eval Plan 尚未独立覆盖 materialized open Revision 原地修订且不增加 Revision、`pass_with_exception / ready_with_exception`、delegated Final Confirmation，以及 abandoned Revision 的 `check` 行为。 |
+| Maintainer (current) | `pending` | `design-fix` 已针对上述三项拒绝 Basis 修订 Design 与 Eval Plan；等待新的 Maintainer approval，本记录不构成自动批准。 |
+| Maintainer (previous review) | `rejected` | 1. `check` 模式声明只读，但原流程可能通过 `initialize` 建立 Canonical Store。<br>2. 原设计没有清楚区分 Execution Target Boundary 与 CTX Artifact 内 `Project Identity.Boundary` 业务字段。<br>3. 原 Eval Plan 缺少 materialized open Revision 原地 revise、Exception / Final Confirmation / `pass_with_exception / ready_with_exception`、delegated Final Confirmation 和 abandoned Revision 检查案例。 |

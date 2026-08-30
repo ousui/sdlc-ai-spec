@@ -7,41 +7,41 @@
 ## 当前阶段
 
 - v1.1 已完成独立 Review、Maintainer Finalization 和远端同步；25 份正式 Spec 均为 `status: stable`、`version: "1.1"`。
-- `sdlc-project-context` 当前仍处于 `design`。
-- `DESIGN.md` 与 `EVAL-PLAN.md` 已切换到 v1.1 Core、Artifact Store 与 Project Context 三份 Source of Truth。
-- `DESIGN.md` 与 `EVAL-PLAN.md` 的文档状态仍为 `ready`；Maintainer 已明确记录决定为 `rejected`，当前 Design 未获批准，不得进入 `implement`。
-- 下一阶段内工作包固定为 `design-fix`，完成修订并重新达到审批条件前不得再次请求实现授权。
+- `sdlc-project-context` 仍处于 `design`；本次唯一 `design-fix` 工作包已完成，未进入 `approval` 或 `implement`。
+- `DESIGN.md` 与 `EVAL-PLAN.md` 状态均为 `ready`，Design 阻塞 Open Item 为零。
+- 上一次 Maintainer `rejected` 的三项 Basis 已通过 Design / Eval 修订响应；当前 Maintainer Decision 为 `pending`，不得解释为已批准。
+- 下一阶段内工作包唯一为 `approval`；获得 Maintainer 当前明确决定前不得进入 `implement`。
 
 ## 当前设计结论
 
-- CTX Artifact Authority 是当前 Project Boundary 的唯一 Canonical Store，不再假设 `artifacts/000-ctx/`、Revision Index 文件或 Revision 目录构成 Authority。
-- CTX 的 Evaluation Contract Set 必须包含 `docs/v1.1/core-spec.md`、`docs/v1.1/artifact-store-spec.md` 和 `docs/v1.1/000-ctx-spec.md` 的准确 Spec Reference。
-- Artifact / Revision 分配、完整 Canonical Revision Payload 写入与读回、冻结、放弃、准确解析和摘要验证只通过 Artifact Store Spec 登记的逻辑 Store Operation 完成。
-- 首版物理执行仅支持项目根 `.sdlc/store.sqlite3`；Skill 只通过后续独立实现并验证的 Plugin 内部 `ArtifactStore` 模块访问，不直接 SQL，不引入 Provider 配置或文件系统 fallback。
-- Eval Plan 已覆盖 Control Reservation、完整 Payload、三份 Spec Binding、Local SQLite 边界、Store fail-closed、with-skill / without-skill、Exclusive Execution 和三端显式调用。
+- CTX Artifact Authority 是当前 Project Boundary 的唯一 Canonical Store；首版物理执行只支持项目根 `.sdlc/store.sqlite3`，Skill 只通过后续独立实现并验证的 Plugin 内部 `ArtifactStore` 模块访问。
+- `create / revise` 可在准确写入授权内执行可能建立 Store 的 `initialize`；`check` 禁止调用 `initialize`，只能验证已经存在的 Canonical Store 并调用读取性 Store Operation。
+- `check` 为绝对只读；`.sdlc/`、`store.sqlite3` 或所需 Schema 不存在时报告失败，不创建、迁移、修复或写入任何持久化状态，不使用文件系统 fallback。
+- Execution Target Boundary 只是用于唯一选定 Project Root、Canonical Store Locator 和适用时 CTX Lineage / Revision 的执行前置，不是新的 Artifact 或 CTX 字段。它未确定时不初始化 Store、不分配 Artifact / Revision，也不用 Open Item 掩盖选目标歧义。
+- CTX `Project Identity.Boundary` 是已选定项目的正式业务字段。只有 Execution Target Boundary 已唯一确定，但该字段或其他必要 Context 事实缺合法 Basis 时，`create / revise` 才可在准确 materialized open Revision 中登记 Open Item 并派生 `waiting_input`。
+- Eval Plan 现在独立覆盖 materialized open Revision 原地 revise 且不增 Revision、Exception / human Final Confirmation / `pass_with_exception / ready_with_exception` 一致性、delegated Final Confirmation，以及 materialized `abandoned` Revision 的只读检查与不可作为 Context Authority。
 
 ## 当前验证结果
 
-- Maintainer 的 `rejected` 决定及三项 Basis 已写入 `DESIGN.md` 确认记录；Design 正文和 Eval 案例正文未修改。
-- 本审批工作包只修改 `DESIGN.md` 的确认记录与本文件；`EVAL-PLAN.md`、`docs/v1.0/**`、`skills/**`、三个平台 Manifest 与其他工作包无变化。
-- 未写入 Eval Result，也未把此前 `ready` 或 Review 意见解释为 Maintainer approval。
+- 已对照 `docs/v1.1/core-spec.md`、`docs/v1.1/artifact-store-spec.md` 与 `docs/v1.1/000-ctx-spec.md` 复核上述修订；三份 Source of Truth 未修改。
+- `DESIGN.md` 的 Design DoD 已重新检查；Open Items 仍为唯一 `None` 行，当前 Maintainer Decision 为 `pending`。
+- `EVAL-PLAN.md` 已增加独立 Fixture 设计、Case、Check 和 Case-to-Check 追踪；所有新增 Expected Outcome 与 Forbidden Behavior 可判定。
+- 已执行 `git diff --check`、完整 Diff 和路径白名单检查；只有本次授权的三份 Markdown 文件变化，`docs/v1.0/**` 无变化。
+- 未执行 Skill 行为 Eval、ArtifactStore 测试或三端宿主验证；本工作包只修订 Design / Eval Plan，三端行为兼容性继续为 `Pending first skill`。
 
 ## 未实现与已知限制
 
 - 未创建 `SKILL.md`、`agents/openai.yaml`、Fixture、`EVAL-RESULTS.md` 或任何其他 Skill。
 - 未实现 SQLite Schema、Migration、`ArtifactStore` 模块、Projection、Human Review View 或文件导出。
-- 未执行 Skill 行为 Eval 或三端宿主验证；三端 Skill 行为兼容性继续为 `Pending first skill`。
-- 未创建新的领域字段、状态、操作、Check、Gate、Contract ID、Provider、远程能力或数据库 Schema。
-- `check` 与 `initialize` 的只读边界仍存在未授权写入歧义。
-- Execution Target Boundary 与 CTX 内 Project Boundary 业务字段尚未清楚分离，Artifact 分配和 `waiting_input` 的前置条件仍不充分。
-- Eval Plan 尚未独立覆盖 materialized open Revision 原地修订且不增加 Revision、`pass_with_exception / ready_with_exception`、delegated Final Confirmation 和 abandoned Revision 的 `check` 行为。
+- 未新增领域字段、状态、Store Operation、Check、Gate、Contract ID、Provider、远程能力或数据库 Schema。
+- 新增 Eval Fixture 仅是逻辑设计标识，未创建任何 Fixture 文件或运行结果。
 
 ## Git 与远端状态
 
-- 本审批工作包开始时，当前 worktree 位于 `main`，`HEAD`、`main` 与 `origin/main` 均为 `80701bb15c24713bf63de8dbc7dda05b11b61aae`，工作树干净；此前 detached HEAD 与 `73a2da2` 基线描述已过期。
-- 本审批工作包完成后只创建一个本地提交；`main` 比 `origin/main` 领先 1 个提交，工作树干净。
-- Origin 权威目标为 `git@github.com:blade-cdn/sdlc-ai-spec.git`；未执行 push、tag、PR、Release、Marketplace 或其他远程写入。
+- 本工作包开始时位于 `main@38c33e6c9346bd961f1267308bb1ab0a0c7f5248`，`origin/main=80701bb15c24713bf63de8dbc7dda05b11b61aae`，工作树干净，`main` 领先 `origin/main` 1 个本地提交。
+- 本 `design-fix` 工作包完成后创建一个本地提交；完成后工作树干净，`main` 领先 `origin/main` 2 个本地提交。
+- Origin 权威配置为 `git@github.com:blade-cdn/sdlc-ai-spec.git`；未执行 push、tag、PR、Release、Marketplace 或其他远程写入。
 
 ## 下一唯一工作包
 
-`design-fix`：只修订 `sdlc-project-context` 的 `DESIGN.md` 与 `EVAL-PLAN.md`，消除已记录的三项拒绝 Basis，并按实际结果更新本文件。该工作包不得创建 `SKILL.md`、SQLite Schema、`ArtifactStore` 实现、Fixture 或 `EVAL-RESULTS.md`，不得执行行为 Eval、平台适配或进入 `implement`；完成后只能重新提交 Maintainer 审批。
+`approval`：Maintainer 只对当前 `sdlc-project-context` 的 `DESIGN.md` 与 `EVAL-PLAN.md` 作出明确 `approved` 或 `rejected` 决定，并按实际决定更新确认记录与本文件。该工作包不创建 `SKILL.md`、`agents/openai.yaml`、SQLite Schema、`ArtifactStore` 实现、Fixture 或 `EVAL-RESULTS.md`，不执行行为 Eval、平台适配、`implement`、push 或其他远程写入。

@@ -8,7 +8,7 @@
 - Added a stable Runtime Contract Registry and Source Lock Schema under `skills/_shared/`.
 - Added an atomic CTX Project Boundary lineage registry and a strictly read-only Artifact Catalog.
 - Reserved `sdlc-status` as the cross-lifecycle read-only status utility name.
-- Standardized self-contained runtime contracts and removed legacy `sdlc-project-context` work items.
+- Standardized self-contained runtime contracts and removed the legacy CTX work item.
 - Implemented the shared Local SQLite ArtifactStore with Schema v1, nine logical operations, a JSON CLI, verifier binding, and automated tests.
 - Finalized sdlc-ai-spec v1.1 as the current stable Spec Snapshot and switched Plugin development to the v1.1 Source of Truth.
 - Closed v1.1 Review findings `V11-DR-MAJ-001` and `V11-DR-MAJ-002` by making the Claim Provider the sole IMP ID and Revision Reservation allocator, and by separating Revision Control Reservation from the first atomic full-Payload write.

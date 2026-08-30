@@ -5,12 +5,8 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 from pathlib import Path
 
-from packages.sdlc_artifact_store import (
-    ArtifactStore,
-    ContextLineageRegistry,
-    InvalidInputError,
-    ReadOnlyError,
-)
+from packages.sdlc_artifact_store import ArtifactStore, InvalidInputError, ReadOnlyError
+from packages.sdlc_artifact_store.context_lineage import ContextLineageRegistry
 
 
 def boundary_key(value: str) -> str:

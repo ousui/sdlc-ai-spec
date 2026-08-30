@@ -3,14 +3,16 @@
 from __future__ import annotations
 
 import re
+import time
 from dataclasses import dataclass
 from datetime import datetime
 from typing import Optional
 
-from .errors import DatabaseError, InvalidInputError
+from .errors import ConflictError, DatabaseError, InvalidInputError
 from .sqlite_store import ArtifactStore
 
 BOUNDARY_KEY_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
+_MAX_LOCK_RETRIES = 8
 
 _CREATE_TABLE_SQL = """
 CREATE TABLE IF NOT EXISTS ctx_lineage_bindings (
@@ -92,8 +94,24 @@ class ContextLineageRegistry:
         self.store._ensure_write()
         boundary_key = self._validate_boundary_key(boundary_key)
         moment = self.store._resolve_moment(now)
-        created_at = moment.isoformat(timespec="seconds")
+        for attempt in range(_MAX_LOCK_RETRIES):
+            try:
+                return self._reserve_once(boundary_key, moment)
+            except DatabaseError as exc:
+                if "database is locked" not in str(exc).lower():
+                    raise
+                if attempt + 1 == _MAX_LOCK_RETRIES:
+                    raise ConflictError(
+                        "Concurrent CTX Lineage reservation did not settle; "
+                        "retry the same Boundary Key"
+                    ) from exc
+                time.sleep(0.01 * (attempt + 1))
+        raise AssertionError("unreachable")
 
+    def _reserve_once(
+        self, boundary_key: str, moment: datetime
+    ) -> ContextLineageBinding:
+        created_at = moment.isoformat(timespec="seconds")
         with self.store._transaction() as connection:
             connection.execute(_CREATE_TABLE_SQL)
             row = connection.execute(

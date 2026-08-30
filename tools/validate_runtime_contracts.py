@@ -100,7 +100,9 @@ def main() -> int:
 
     sys.path.insert(0, str(ROOT))
     sys.path.insert(0, str(ROOT / "packages"))
-    from sdlc_artifact_store import ArtifactCatalog, ArtifactStore, ContextLineageRegistry  # type: ignore
+    from sdlc_artifact_store import ArtifactStore  # type: ignore
+    from sdlc_artifact_store.catalog import ArtifactCatalog  # type: ignore
+    from sdlc_artifact_store.context_lineage import ContextLineageRegistry  # type: ignore
     from sdlc_runtime import registry_sources  # type: ignore
 
     registry_path = ROOT / "skills/_shared/contracts/registry.json"

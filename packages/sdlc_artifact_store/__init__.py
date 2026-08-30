@@ -1,7 +1,5 @@
 """Shared Local SQLite ArtifactStore public API."""
 
-from .catalog import ArtifactCatalog, ArtifactSummary
-from .context_lineage import ContextLineageBinding, ContextLineageRegistry
 from .errors import (
     ArtifactStoreError,
     ConflictError,
@@ -39,17 +37,13 @@ from .sqlite_store import ArtifactStore, SCHEMA_VERSION, compute_sha256
 
 __all__ = [
     "ArtifactAllocation",
-    "ArtifactCatalog",
     "ArtifactStore",
     "ArtifactStoreError",
-    "ArtifactSummary",
     "CanonicalManifest",
     "CanonicalMember",
     "CanonicalRevisionPayload",
     "ClaimReservation",
     "ConflictError",
-    "ContextLineageBinding",
-    "ContextLineageRegistry",
     "ControlReservationError",
     "DatabaseError",
     "DigestVerification",

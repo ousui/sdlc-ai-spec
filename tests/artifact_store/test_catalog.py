@@ -3,7 +3,8 @@ import unittest
 from datetime import datetime, timezone
 from pathlib import Path
 
-from packages.sdlc_artifact_store import ArtifactCatalog, ArtifactStore, InvalidInputError
+from packages.sdlc_artifact_store import ArtifactStore, InvalidInputError
+from packages.sdlc_artifact_store.catalog import ArtifactCatalog
 
 
 class ArtifactCatalogTests(unittest.TestCase):

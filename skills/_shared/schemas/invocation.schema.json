@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sdlc-ai-spec/runtime-invocation/v1",
+  "title": "SDLC Phase Runtime Invocation",
+  "type": "object",
+  "required": [
+    "contract",
+    "operation",
+    "project_root",
+    "inputs"
+  ],
+  "properties": {
+    "contract": {
+      "const": "sdlc-ai-spec/runtime-invocation/v1"
+    },
+    "operation": {
+      "enum": [
+        "create",
+        "revise",
+        "check"
+      ]
+    },
+    "project_root": {
+      "type": "string",
+      "minLength": 1
+    },
+    "artifact_reference": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "inputs": {
+      "type": "object"
+    },
+    "confirmations": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "options": {
+      "type": "object",
+      "properties": {
+        "dry_run": {
+          "type": "boolean",
+          "default": false
+        }
+      },
+      "additionalProperties": true
+    }
+  },
+  "additionalProperties": false
+}

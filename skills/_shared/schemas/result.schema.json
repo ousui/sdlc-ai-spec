@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sdlc-ai-spec/runtime-result/v1",
+  "title": "SDLC Phase Runtime Result",
+  "type": "object",
+  "required": [
+    "contract",
+    "ok",
+    "operation",
+    "status",
+    "artifact",
+    "gate",
+    "open_items",
+    "warnings",
+    "errors",
+    "next_action"
+  ],
+  "properties": {
+    "contract": {
+      "const": "sdlc-ai-spec/runtime-result/v1"
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "operation": {
+      "enum": [
+        "create",
+        "revise",
+        "check"
+      ]
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "action_required",
+        "blocked",
+        "failed"
+      ]
+    },
+    "artifact": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "revision": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "revision_state": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "artifact_status": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "reference": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "gate": {
+      "type": "object",
+      "required": [
+        "result",
+        "failed_checks"
+      ],
+      "properties": {
+        "result": {
+          "enum": [
+            "pending",
+            "pass",
+            "pass_with_exception",
+            "fail"
+          ]
+        },
+        "failed_checks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "open_items": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1
+          },
+          "details": {}
+        },
+        "additionalProperties": false
+      }
+    },
+    "next_action": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        },
+        "requires_user": {
+          "type": "boolean"
+        },
+        "command": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "requires_user"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

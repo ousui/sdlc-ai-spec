@@ -2,180 +2,149 @@
 
 ## 1. 适用范围
 
-本文件适用于 `skills/**`。它补充根目录 `AGENTS.md`，不替代领域 Spec、Plugin 开发标准或当前 Skill 的 Design Contract。
+本文件适用于 `skills/**`，补充根级 `AGENTS.md`。
 
-本文件只约束仓库内的 Skill 开发，不是安装后业务项目的运行时组件。运行时必须遵守的约束必须写入正式 `SKILL.md`，或写入经过独立设计、授权和验证的平台组件；Skill 不得依赖运行时 Agent 自动读取本文件。
+运行时必须遵守的规则应写入正式 `SKILL.md`、Skill 私有资源或
+`skills/_shared/**`；不得依赖安装后读取本文件。
 
-在修改任意 Skill 前，必须读取：
-
-- 根目录 `AGENTS.md`；
-- `docs/plugin-development/DEVELOPMENT.md`；
-- `docs/plugin-development/SKILL-DEVELOPMENT-WORKFLOW.md`；
-- `docs/plugin-development/HANDOFF.md`；
-- 当前 Skill 的 `DESIGN.md` 和 `EVAL-PLAN.md`；
-- Design 明确绑定的最小领域 Source of Truth。
-
-## 2. 实现准入
-
-创建或修改正式 `SKILL.md` 前必须同时满足：
-
-- 当前工作包阶段为 `implement`、`evaluate`、`adapt` 或明确授权的修复阶段；
-- `DESIGN.md` 状态至少为 `ready`；
-- Maintainer 确认记录为 `approved`；
-- 阻塞 Open Item 为零；
-- `EVAL-PLAN.md` 可判定；
-- 当前写入白名单包含目标 Skill 路径。
-
-条件不满足时不得先写实现再补设计。
-
-## 3. Skill 结构与单一职责
-
-正式 Skill 使用：
+## 2. 目录角色
 
 ```text
-skills/<skill-name>/
-├── SKILL.md
-├── agents/        # 按已批准设计保存平台私有元数据
-├── references/    # 按需
-├── scripts/       # 按需
-├── assets/        # 按需
-└── evals/         # 按需
+skills/
+├── _shared/                    多 Skill 共同运行合约；不得有 SKILL.md
+└── sdlc-NNN-xxx/               正式 Phase Skill
 ```
 
-必须：
+正式 Skill 结构：
 
-- 目录名使用稳定的 lowercase-hyphen 名称；
-- 一个 Skill 只实现 Design Contract 中一个稳定用户意图；
-- `SKILL.md` 保持短小，承载触发、核心流程、输入输出、失败语义和必要约束；
-- 详细领域规则通过 `references/` 按需加载，不把完整 Spec 复制进 `SKILL.md`；
-- 所有路径使用仓库相对或 Skill 相对路径；
-- 不创建无业务价值的示例、Hello 或占位 Skill；
-- 不把多个 Lifecycle Phase 粗暴合并为一个“大而全” Skill。
+```text
+skills/sdlc-NNN-xxx/
+├── SKILL.md
+├── agents/
+│   └── openai.yaml             按适配阶段创建
+├── references/
+│   ├── contract.md
+│   └── source-lock.json
+├── assets/
+├── scripts/
+└── evals/
+```
 
-## 4. Trigger Contract
+目录按需创建，不允许空占位目录。
 
-Skill 的名称和描述必须支持准确发现，并与 Design 中的正向、负向场景一致。
+## 3. 命名
 
-不得：
+正式 Phase Skill 必须匹配：
 
-- 使用“处理所有研发工作”“任何情况下均应调用”等无边界描述；
-- 为提高召回率而吞并相邻 Skill 意图；
-- 把显式命令场景伪装为可靠自动触发；
-- 在未评测前声称自动触发稳定；
-- 通过平台专有字段改变三端共享语义。
+```regex
+^sdlc-[0-9]{3}-[a-z0-9]+(?:-[a-z0-9]+)*$
+```
 
-触发不足或误触发应通过 Eval 证据修正，不凭直觉堆叠关键词。
+- 目录名与 Front Matter `name` 完全一致；
+- `name` 使用英文；
+- `description` 使用清晰中文，说明做什么、何时显式调用；
+- 一个 Skill 只实现一个阶段 Contract。
 
-### 4.1 Explicit Invocation First
+## 4. 实现准入
 
-首版默认只允许显式调用：
+创建正式 `SKILL.md` 前必须满足：
 
-- Cursor 与 Claude Code 共用的正式 `SKILL.md` 默认设置 `disable-model-invocation: true`；
-- Codex 默认在 Skill 私有 `agents/openai.yaml` 中设置 `policy.allow_implicit_invocation: false`。
+- Work Item 已存在；
+- Design=`approved`；
+- 阻塞 Open Item=0；
+- Eval Plan 可判定；
+- 当前 Handoff 阶段允许实现；
+- 写入白名单包含准确 Skill 路径。
 
-只有已批准的 Design Contract、对应平台适配工作包和实际 Eval 证据才能改变默认值。`design` 阶段只登记要求，不创建上述运行时文件。
+不得先实现再补设计。
 
-### 4.2 Exclusive Skill Execution Contract
+## 5. Spec 与 Runtime
 
-每个正式 Skill 必须把以下行为写入 Design Contract、`SKILL.md` 和 Eval：
+- `docs/v1.x/**` 只用于 design、build、review 和 source-lock 生成。
+- 正式运行时不得读取 `docs/v1.x/**`。
+- Skill 必须把必要规则固化到自身 Contract、Asset、Script 或共享 Runtime。
+- `source-lock.json` 记录构建来源的 Contract ID、版本和摘要，不保存运行时文档路径。
+- 不把完整 Spec 复制进 `SKILL.md`。
+- 删除 `docs/**` 后必须通过 Runtime Independence Test。
 
-- 从显式调用开始，到完成、停止或交还控制权为止保持 exclusive execution mode；
-- 未经用户在当前请求中明确点名并授权，不调用、委托给或合并任何其他 Plugin 或 Skill，包括本 Plugin 的兄弟 Skill；
-- 对一个 Plugin / Skill 的授权不扩展到其他能力或传递依赖；
-- 需要但未获授权的外部 Skill 时，仅在当前 Contract 可独立满足时继续，否则停止并请求授权；
-- 已授权外部输出只作为 Input 或 Supporting Evidence，不能改变当前 Source of Truth、Artifact Contract、Gate、Failure Contract、权限或授权边界；
-- 系统、安全、宿主权限、适用的项目指令和普通 Tool 不属于被禁止的外部 Skill / Plugin。
+## 6. 共享合约
 
-这是可评测的行为契约，不是不可绕过的硬安全隔离。实现不得使用“沙箱”“强隔离”等未经宿主机制证明的表述。
+所有正式 Skill 必须遵守：
 
-## 5. 输入、输出与失败行为
+- `skills/_shared/contracts/skill-execution.md`
+- Artifact Skill 还必须遵守：
+  `skills/_shared/contracts/artifact-runtime.md`
+- Phase Runtime 还必须遵守：
+  `skills/_shared/contracts/phase-runtime.md`
 
-Skill 必须：
+`skills/_shared/**` 是唯一允许业务 Skill跨目录读取的共享指令区域。
+不得读取其他 `skills/sdlc-*/` 的私有内容。
 
-- 只使用已提供、可解析或经授权读取的输入；
-- 缺少必要事实时执行 Design 登记的等待、Open Item、失败或受限输出；
-- 不从文件名、相似内容、历史会话或模型常识猜测业务身份；
-- 明确区分生成结果、Validator 结果、人工确认和未解决风险；
-- 不把 Artifact 已生成视为 Gate 已通过；
-- 不在下游 Skill 中静默补造上游领域决定；
-- 不把失败、部分完成或未知状态描述为成功。
+## 7. Skill 与程序职责
 
-## 6. References、Scripts 与 Assets
+Agent / `SKILL.md` 负责：
 
-### References
+- 识别用户意图；
+- 收集和组织候选事实；
+- 解释 Open Item、失败和下一动作；
+- 请求必要人工确认。
 
-- 每个 Reference 必须有明确使用条件；
-- 优先引用权威文件，不复制形成第二份 Contract；
-- 避免深层引用链；`SKILL.md` 应能直接定位所需 Reference；
-- 不默认加载与当前场景无关的全部 Phase 或 Domain Spec。
+Skill Runtime Script 负责：
 
-### Scripts
+- 标准参数校验；
+- Builder / Validator 编排；
+- 结构化输入输出；
+- ArtifactStore 调用顺序；
+- 错误码与退出码。
 
-只有确定性、可重复的操作才使用 Script，例如解析、Schema 校验、引用检查或格式转换。
+共享 Package 负责：
+
+- SQLite、事务、ID、Revision、摘要、Member closure 和准确解析。
+
+不得让 Agent 手工串联多个低级 Store CLI 命令形成业务事务。
+
+## 8. 触发与独占执行
+
+首版默认显式调用：
+
+- Cursor / Claude Code：`disable-model-invocation: true`
+- Codex：`policy.allow_implicit_invocation: false`
+
+正式 Skill 必须：
+
+- 从显式调用到完成保持 exclusive execution mode；
+- 不调用兄弟 Skill；
+- 不把授权传递给其他能力；
+- 输入不足时按 Contract 停止、等待或形成 Open Item；
+- 不静默补造上游决定。
+
+## 9. Script 与 Asset
 
 Script 必须：
 
-- 非交互式并使用明确退出码；
-- 可从非固定工作目录调用；
-- 不自动联网、安装依赖或修改全局配置；
-- 不吞错、不伪造成功；
-- 结构化输出稳定，诊断信息清楚；
-- 默认不修改领域 Artifact；需要写入时必须由 Skill Contract 明确授权；
-- 具有对应测试或 Fixture 后才作为 Gate 证据使用。
+- Python 标准库优先；
+- 非交互式；
+- 输入输出稳定；
+- 明确退出码；
+- 不联网、不安装依赖、不吞错；
+- 不依赖固定 CWD；
+- 有自动化测试。
 
-### Assets
+Asset 只保存模板和静态资源，不保存结果、Secret 或虚构事实。
 
-- 只保存模板、静态资源或明确输入样例；
-- 不把评测结果、临时输出或用户敏感数据当作 Asset；
-- 不在 Asset 中预填虚构业务事实。
+## 10. Eval
 
-## 7. 可移植性
+每个 Skill 至少验证：
 
-共享 Skill 是 Portable Core。
-
-必须：
-
-- 不依赖 Cursor、Claude Code 或 Codex 独有命令才能完成核心工作流；
-- 平台增强缺失时仍保留明确的显式调用路径；
-- 不在共享 `SKILL.md` 中写死插件安装位置；
-- 不以一个平台的成功证明另外两个平台兼容；
-- 平台适配只处理发现、元数据、路径和宿主能力，不改变输出 Contract 或失败语义。
-
-## 8. Eval 约束
-
-评测必须依据当前 `EVAL-PLAN.md`，并使用全新会话或隔离上下文。
-
-至少分别记录：
-
-- 应触发；
-- 不应触发；
-- 显式调用；
+- 显式正向调用；
+- 未调用和负向场景；
 - 完整输入；
 - 缺失输入；
-- 边界或冲突；
-- with-skill；
-- without-skill。
-- 是否实际发生其他 Skill / Plugin Invocation，以及其名称、授权依据和用途。
+- 边界/冲突；
+- with-skill / without-skill；
+- Runtime Independence；
+- 共享合约遵守；
+- 未授权兄弟 Skill 不被调用；
+- 对应 Client 的真实 Discovery / Invocation / Behavior。
 
-禁止：
-
-- 在设计或实现会话中用残留上下文冒充 Skill 能力；
-- 修改预期结果以迁就实际失败；
-- 只保留成功运行；
-- 把人工提示补充后的结果记为自动触发成功；
-- 为尚未执行的 Case 填写 `pass`；
-- 用截图或总结替代可复现输入、输出定位和版本信息。
-
-## 9. 完成前检查
-
-结束本阶段前必须确认：
-
-- 实现没有超出 Design Contract；
-- 没有复制领域 Spec 或其他 Skill；
-- 私有资源没有被提升为无依据的共享层；
-- 所有相对路径和引用可解析；
-- Script 和 Fixture 的实际检查已运行；
-- 没有修改三个平台 Manifest，除非当前阶段明确为对应 Adapter；
-- 没有修改 `docs/v1.0/`；
-- Exclusive Skill Execution Contract 和三端显式调用策略均有可判定 Eval；
-- `HANDOFF.md` 只登记一个下一工作包。
+未执行的案例不得写成通过。

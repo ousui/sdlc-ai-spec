@@ -1,69 +1,82 @@
 # sdlc-ai-spec
 
-`sdlc-ai-spec` 定义软件研发与变更交付过程中统一的 Artifact、Reference、Evidence、Exception、Check 和 Gate，并逐步提供对应的跨 Agent Plugin 执行支持。
+`sdlc-ai-spec` 定义软件研发与变更交付中的 Artifact、Reference、Evidence、
+Exception、Check 和 Gate，并提供对应的 Agent Plugin 执行支持。
 
-## 权威仓库
+## Spec 与 Runtime
 
-当前唯一维护和发布仓库：
+项目采用两层模型：
 
 ```text
-git@github.com:blade-cdn/sdlc-ai-spec.git
+docs/v1.x/**
+    设计、审查和追溯来源
+          ↓
+skills/** + packages/** + scripts/**
+    安装后的自包含执行 Runtime
 ```
 
-`ousui/sdlc-ai-spec` 已停止同步，不再接收更新，也不作为当前版本或安装来源。
+正式 Skill 运行时不读取 `docs/v1.x/**`。规范文档用于设计和验证 Skill；
+发布后的 SOP、共享运行合约、模板和确定性程序随 Plugin 一起分发。
 
-## Spec 与 Plugin
+## Plugin 结构
 
-- `docs/v1.1/` 是当前稳定的领域 Contract，新 Plugin 和 Skill 开发默认绑定该 Snapshot。
-- `docs/v1.0/` 保留为冻结、只读的历史 Snapshot；已冻结的 v1.0 Artifact 仍按其原 `Evaluation Contract Set` 解释。
-- Plugin 用于辅助形成、检查和使用标准 Artifact。
-- Plugin 不得改变领域规范的字段、语义或 Gate。
-- 规范不要求必须使用 AI；人工、AI 或其他执行主体使用同一完成标准。
+```text
+.cursor-plugin/       Cursor 入口
+.claude-plugin/       Claude Code 入口
+.codex-plugin/        Codex 入口
+skills/               正式 Skill 与共享运行合约
+packages/             共享确定性组件
+scripts/              运行时 CLI
+tools/                构建期工具（按需）
+docs/                 规范与开发治理
+tests/                自动化测试
+```
 
-## 目标 Agent
+三个 Agent 共用根目录 `skills/`，平台入口保持轻量。
 
-项目当前为三个宿主维护原生 Plugin 入口：
+## Phase Skill 命名
 
-| Agent | Manifest |
-|---|---|
-| Cursor | `.cursor-plugin/plugin.json` |
-| Claude Code | `.claude-plugin/plugin.json` |
-| Codex | `.codex-plugin/plugin.json` |
+| Phase | Skill Name | 说明 |
+|---:|---|---|
+| 000 | `sdlc-000-ctx` | Project Context |
+| 100 | `sdlc-100-req` | Requirement |
+| 200 | `sdlc-200-dsn` | Design |
+| 300 | `sdlc-300-pln` | Plan |
+| 400 | `sdlc-400-imp` | Implementation |
+| 500 | `sdlc-500-vfy` | Verification |
+| 600 | `sdlc-600-rls` | Release |
 
-三端共同使用根目录下唯一的 `skills/` 源码目录。
+`name` 使用英文稳定标识，`description` 和正文默认使用中文。
 
-## Agent 开发指令
+## Shared Runtime
 
-- 根目录 [`AGENTS.md`](AGENTS.md) 规定全仓工作包、领域完整性、安全、证据、Git 和并行会话边界。
-- [`skills/AGENTS.md`](skills/AGENTS.md) 规定正式 Skill 的实现、资源和评测约束。
-- [`docs/plugin-development/AGENTS.md`](docs/plugin-development/AGENTS.md) 规定工作包、模板、兼容性和 Handoff 的维护约束。
-- 根目录 `CLAUDE.md` 仅导入 `AGENTS.md`，为 Claude Code 提供同一权威指令，不维护第二份规则。
+多个 Skill 共同遵守的安装后合约位于：
 
-处理任意子目录前，Agent 必须读取根级和目标路径适用的全部 `AGENTS.md`。
+```text
+skills/_shared/
+```
 
-这些 `AGENTS.md` 和根级 `CLAUDE.md` 只用于开发本 Plugin，不是安装后业务项目的运行时组件。生产运行时约束必须进入正式 `SKILL.md` 或经过独立设计的平台组件。
+共享 Local SQLite ArtifactStore 位于：
 
-## Skill 运行边界
+```text
+packages/sdlc_artifact_store/
+```
 
-后续正式 Skill 默认只允许显式调用，并从调用开始到完成、停止或交还控制权期间进入 exclusive execution mode。未经用户在当前请求中明确点名并授权，不调用其他 Plugin 或 Skill，包括本 Plugin 的兄弟 Skill；授权不自动覆盖传递依赖。
-
-这是需要实际评测的行为契约，不是不可绕过的硬安全隔离。Cursor、Claude Code 和 Codex 的显式调用配置将在首个正式 Skill 的后续实现与适配阶段分别创建和验证。
+业务 Skill 不依赖兄弟 Skill，不直接 SQL，不重复实现 Store。
 
 ## 当前状态
 
-当前版本：`0.1.0`
-
-已完成跨 Agent Plugin 工程初始化和 Skill 开发流程初始化，尚无正式 Skill。Skill Discovery、显式调用和行为兼容性将在首个真实 Skill 创建后分别验证。
+- 稳定领域规范保留在 `docs/v1.1/`；
+- Local SQLite ArtifactStore Foundation 已实现并通过自动化测试；
+- 共享 Skill Runtime Contract 已建立；
+- `main` 不包含任何正式 Phase Skill 或历史 CTX Work Item；
+- 下一步从 `skill/sdlc-000-ctx` 分支重新设计第一个 Skill。
 
 ## 文档入口
 
-- [v1.1 当前稳定规范索引](docs/v1.1/README.md)
-- [v1.0 历史规范索引](docs/v1.0/README.md)
 - [Plugin 开发标准](docs/plugin-development/DEVELOPMENT.md)
-- [兼容性矩阵](docs/plugin-development/COMPATIBILITY.md)
-- [开发交接](docs/plugin-development/HANDOFF.md)
 - [Skill 开发流程](docs/plugin-development/SKILL-DEVELOPMENT-WORKFLOW.md)
-- [Skill Design Contract 模板](docs/plugin-development/templates/SKILL-DESIGN-CONTRACT.md)
-- [Skill Eval Plan 模板](docs/plugin-development/templates/SKILL-EVAL-PLAN.md)
-- [开始 Skill 设计会话](docs/plugin-development/prompts/START-SKILL-DESIGN-SESSION.md)
-- [共享 Skills 目录说明](skills/README.md)
+- [当前 Handoff](docs/plugin-development/HANDOFF.md)
+- [兼容性矩阵](docs/plugin-development/COMPATIBILITY.md)
+- [共享 Runtime 合约](skills/_shared/README.md)
+- [ArtifactStore 组件](docs/plugin-development/components/artifact-store/README.md)

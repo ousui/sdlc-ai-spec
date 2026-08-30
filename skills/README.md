@@ -1,22 +1,45 @@
-# Shared Skills Source
+# Skills Runtime
 
-本目录是 Cursor、Claude Code 和 Codex 共用的唯一 Skill 权威源码目录。
-
-每个正式 Skill 使用以下结构：
+本目录是正式 Skill 与共享运行合约的唯一源码目录。
 
 ```text
-skills/<skill-name>/
-├── SKILL.md
-├── scripts/       # 可选：仅供该 Skill 使用的确定性脚本
-├── references/    # 可选：按需加载的详细参考材料
-├── assets/        # 可选：模板、静态资源或示例输入
-└── evals/         # 可选：该 Skill 的评测案例与结果
+skills/
+├── _shared/
+│   ├── contracts/
+│   └── schemas/
+└── sdlc-NNN-xxx/
+    ├── SKILL.md
+    ├── agents/
+    ├── references/
+    ├── assets/
+    ├── scripts/
+    └── evals/
 ```
 
-规则：
+## Shared Runtime
 
-- 当前目录尚无正式 Skill。
-- 不创建示例、Hello 或其他无业务价值的占位 Skill。
-- Skill 必须先完成设计，再进入实现和评测。
-- Skill 私有资源保留在自己的目录内。
-- 不在 `.cursor-plugin/`、`.claude-plugin/` 或 `.codex-plugin/` 下复制 Skill。
+`_shared/` 保存多个正式 Skill 安装后共同遵守的 Contract 和 JSON Schema。
+
+- `_shared/` 不包含 `SKILL.md`；
+- 它不是可调用 Skill；
+- 正式 Skill 可以读取 `_shared/`；
+- 业务 Skill 不得读取其他业务 Skill 的私有目录。
+
+## Phase Names
+
+```text
+sdlc-000-ctx
+sdlc-100-req
+sdlc-200-dsn
+sdlc-300-pln
+sdlc-400-imp
+sdlc-500-vfy
+sdlc-600-rls
+```
+
+目录名和 Front Matter `name` 使用英文；`description` 与正文默认使用中文。
+
+## Runtime Independence
+
+正式 Skill 运行时不读取 `docs/**`。设计来源通过 `source-lock.json`
+固化为版本和摘要；真正执行所需规则必须存在于 Skill Runtime 或共享组件中。

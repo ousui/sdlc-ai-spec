@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+SELF = Path(__file__).resolve()
 SKILL_NAME_RE = re.compile(r"^sdlc-[0-9]{3}-[a-z0-9]+(?:-[a-z0-9]+)*$")
 FRONT_MATTER_NAME_RE = re.compile(r"^name:\s*(\S+)\s*$", re.MULTILINE)
 FRONT_MATTER_DESCRIPTION_RE = re.compile(r"^description:\s*(.+)\s*$", re.MULTILINE)
@@ -80,7 +81,7 @@ def main() -> int:
                     fail(f"runtime dependency on design docs: {path.relative_to(ROOT)}")
 
     for path in ROOT.rglob("*"):
-        if not path.is_file() or ".git" in path.parts:
+        if not path.is_file() or path.resolve() == SELF or ".git" in path.parts:
             continue
         if path.suffix.lower() not in {".md", ".py", ".json", ".yaml", ".yml"}:
             continue

@@ -248,7 +248,7 @@ design → approval → implement → evaluate → adapt → review → finalize
 
 ```bash
 python3 -m compileall packages scripts
-python3 scripts/validate_runtime_contracts.py
+python3 tools/validate_runtime_contracts.py
 python3 -m unittest discover -s tests -p 'test_*.py' -v
 git diff --check
 ```

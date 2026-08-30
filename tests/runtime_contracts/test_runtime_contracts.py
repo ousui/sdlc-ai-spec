@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parents[2]
 class RuntimeContractTests(unittest.TestCase):
     def test_validator_passes(self) -> None:
         result = subprocess.run(
-            [sys.executable, str(ROOT / "scripts/validate_runtime_contracts.py")],
+            [sys.executable, str(ROOT / "tools/validate_runtime_contracts.py")],
             cwd=ROOT,
             text=True,
             capture_output=True,

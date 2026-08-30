@@ -16,5 +16,5 @@ jobs:
         with:
           python-version: "3.12"
       - run: python3 -m compileall packages scripts
-      - run: python3 scripts/validate_runtime_contracts.py
+      - run: python3 tools/validate_runtime_contracts.py
       - run: python3 -m unittest discover -s tests -p 'test_*.py' -v

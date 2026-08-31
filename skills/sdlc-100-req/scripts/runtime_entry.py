@@ -27,6 +27,26 @@ def _load_base_runtime():
 base = _load_base_runtime()
 
 
+def _gate_row(
+    *,
+    revision: int,
+    control_digest: str,
+    check_digest: str,
+    gate_result: str,
+    exceptions: Sequence[str],
+) -> Mapping[str, str]:
+    return {
+        "revision": str(revision),
+        "control_digest": control_digest,
+        "evaluation_set": base._evaluation_contract_set(),
+        "check_digest": check_digest,
+        "gate_result": gate_result,
+        "exceptions": base._reference_text(exceptions),
+        "evaluator": "sdlc-100-req-runtime",
+        "evaluated_at": base._iso(),
+    }
+
+
 def _build(
     self,
     *,
@@ -100,56 +120,71 @@ def _build(
     )
 
     final_valid = False
+    final_row = None
+    gate_row = None
     if final_confirmation is not None and not failed and not blocking_pending:
-        final_row = self._final_confirmation(
-            artifact_id=artifact_id,
-            revision=revision,
-            context_reference=context_reference,
-            control_inputs=control_inputs,
-            requirement=requirement,
-            final_confirmation=final_confirmation,
-            control_digest=control_digest,
-            check_digest=check_digest,
-            active_exceptions=analysis.active_exceptions,
-        )
-        checks["CORE-G-009"] = base.CheckOutcome(
-            "pass", "Final Confirmation 绑定当前 Revision 与摘要"
-        )
-        gate = "pass_with_exception" if analysis.active_exceptions else "pass"
-        status = (
-            "ready_with_exception" if analysis.active_exceptions else "ready"
-        )
-        gate_row = {
-            "revision": str(revision),
-            "control_digest": control_digest,
-            "evaluation_set": base._evaluation_contract_set(),
-            "check_digest": check_digest,
-            "gate_result": gate,
-            "exceptions": base._reference_text(
-                [
-                    f"{artifact_id}@{revision}#{item}"
-                    for item in analysis.active_exceptions
-                ]
-            ),
-            "evaluator": "sdlc-100-req-runtime",
-            "evaluated_at": base._iso(),
-        }
-        raw = self._render(
-            artifact_id=artifact_id,
-            revision=revision,
-            status=status,
-            context_reference=context_reference,
-            control_inputs=control_inputs,
-            analysis=analysis,
-            checks=checks,
-            final_row=final_row,
-            gate_row=gate_row,
-            members=members,
-        )
-        if base.compute_control_input_digest(raw) != control_digest:
-            raise base.RequirementRuntimeError(
-                "Finalization changed Control Input Digest"
+        try:
+            final_row = self._final_confirmation(
+                artifact_id=artifact_id,
+                revision=revision,
+                context_reference=context_reference,
+                control_inputs=control_inputs,
+                requirement=requirement,
+                final_confirmation=final_confirmation,
+                control_digest=control_digest,
+                check_digest=check_digest,
+                active_exceptions=analysis.active_exceptions,
             )
+        except base.RequirementRuntimeError as exc:
+            checks["CORE-G-009"] = base.CheckOutcome("fail", str(exc))
+            failed = sorted(set(failed) | {"CORE-G-009"})
+            status = "failed"
+            gate = "fail"
+            gate_row = _gate_row(
+                revision=revision,
+                control_digest=control_digest,
+                check_digest=check_digest,
+                gate_result="fail",
+                exceptions=(),
+            )
+        else:
+            checks["CORE-G-009"] = base.CheckOutcome(
+                "pass", "Final Confirmation 绑定当前 Revision 与摘要"
+            )
+            gate = "pass_with_exception" if analysis.active_exceptions else "pass"
+            status = (
+                "ready_with_exception" if analysis.active_exceptions else "ready"
+            )
+            exception_refs = [
+                f"{artifact_id}@{revision}#{item}"
+                for item in analysis.active_exceptions
+            ]
+            gate_row = _gate_row(
+                revision=revision,
+                control_digest=control_digest,
+                check_digest=check_digest,
+                gate_result=gate,
+                exceptions=exception_refs,
+            )
+            final_valid = True
+
+    raw = self._render(
+        artifact_id=artifact_id,
+        revision=revision,
+        status=status,
+        context_reference=context_reference,
+        control_inputs=control_inputs,
+        analysis=analysis,
+        checks=checks,
+        final_row=final_row,
+        gate_row=gate_row,
+        members=members,
+    )
+    if base.compute_control_input_digest(raw) != control_digest:
+        raise base.RequirementRuntimeError(
+            "Finalization changed Control Input Digest"
+        )
+    if not failed and not blocking_pending:
         if (
             base.compute_check_set_result_digest(base.parse_canonical_artifact(raw))
             != check_digest
@@ -157,20 +192,6 @@ def _build(
             raise base.RequirementRuntimeError(
                 "Finalization changed Check Set Result Digest"
             )
-        final_valid = True
-    else:
-        raw = self._render(
-            artifact_id=artifact_id,
-            revision=revision,
-            status=status,
-            context_reference=context_reference,
-            control_inputs=control_inputs,
-            analysis=analysis,
-            checks=checks,
-            final_row=None,
-            gate_row=None,
-            members=members,
-        )
 
     return base.BuildResult(
         raw_bytes=raw,

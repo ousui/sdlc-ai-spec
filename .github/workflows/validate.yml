@@ -18,4 +18,5 @@ jobs:
       - run: python3 -m compileall packages scripts skills/sdlc-100-req/scripts
       - run: python3 tools/validate_runtime_contracts.py
       - run: python3 tools/validate_sdlc_100_req_source_lock.py
+      - run: python3 tools/test_sdlc_100_req_runtime_independence.py
       - run: python3 -m unittest discover -s tests -p 'test_*.py' -v

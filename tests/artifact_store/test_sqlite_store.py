@@ -591,6 +591,7 @@ class ArtifactStoreTestCase(unittest.TestCase):
             "sqlite3",
             "subprocess",
             "sys",
+            "threading",
             "typing",
             "urllib",
             "errors",

@@ -1,0 +1,6 @@
+interface:
+  display_name: SDLC Project Context
+  short_description: 显式创建、修订或检查准确的 CTX Revision
+  default_prompt: 使用 $sdlc-000-ctx 处理一个明确的 create、revise 或 check 操作，并严格遵守只读与写入授权边界。
+policy:
+  allow_implicit_invocation: false

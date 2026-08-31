@@ -1,0 +1,54 @@
+{
+  "contract": "devsdlc/skill-evaluation/v1",
+  "skill": "sdlc-100-req",
+  "branch": "skill/sdlc-100-req",
+  "main_baseline": "a0ca56769d12cec5d6d6d76e1f63c2fd1f5c1030",
+  "main_precedence_merge": "c69e1f37118e84905bd7b2de1163fb608082a986",
+  "evaluated_commit": "58885cb6d83ab9ac36979295f58b808ac41a496a",
+  "verdict": "PASS",
+  "portable_runtime": "Verified",
+  "codex": "Partial",
+  "cursor": "Unknown",
+  "claude_code": "Unknown",
+  "runtime_contracts": 5,
+  "formal_skills": 2,
+  "source_lock_contracts": 8,
+  "runtime_independence": {
+    "result": "PASS",
+    "docs_copied": 0,
+    "external_dependencies_installed": 0
+  },
+  "tests": {
+    "command": "python3 -m unittest discover -s tests -p 'test_*.py' -v",
+    "count": 118,
+    "failures": 0,
+    "errors": 0
+  },
+  "ci": {
+    "provider": "github-actions",
+    "run_id": 33358330282,
+    "result": "success"
+  },
+  "cases": {
+    "EV-C01": "PASS",
+    "EV-C02": "PASS",
+    "EV-C03": "PASS",
+    "EV-R01": "PASS",
+    "EV-R02": "PASS",
+    "EV-R03": "PASS",
+    "EV-K01": "PASS",
+    "EV-K02": "PASS",
+    "EV-F01": "PASS",
+    "EV-F02": "PASS",
+    "EV-F03": "PASS",
+    "EV-I01": "PASS",
+    "EV-I02": "PASS",
+    "EV-I03": "PASS",
+    "EV-X01": "PASS",
+    "EV-X02": "PASS_STATIC_CONTRACT",
+    "EV-X03": "PASS",
+    "EV-S01": "PASS",
+    "EV-P01": "PARTIAL_EXPECTED"
+  },
+  "blocking_findings": []
+}

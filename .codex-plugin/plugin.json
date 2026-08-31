@@ -6,8 +6,8 @@
     "name": "Blade",
     "url": "https://github.com/blade-cdn"
   },
-  "homepage": "https://github.com/blade-cdn/sdlc-ai-spec",
-  "repository": "git@github.com:blade-cdn/sdlc-ai-spec.git",
+  "homepage": "https://github.com/goedgecloud/sdlc-ai-spec",
+  "repository": "git@github.com:goedgecloud/sdlc-ai-spec.git",
   "keywords": [
     "codex",
     "sdlc",
@@ -25,7 +25,7 @@
       "Read",
       "Write"
     ],
-    "websiteURL": "https://github.com/blade-cdn/sdlc-ai-spec",
+    "websiteURL": "https://github.com/goedgecloud/sdlc-ai-spec",
     "defaultPrompt": [
       "说明 sdlc-ai-spec 的 Artifact、Reference、Evidence、Check 与 Gate 模型。",
       "检查当前仓库的 SDLC 规范与 Runtime 边界。"

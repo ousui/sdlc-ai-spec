@@ -36,9 +36,9 @@ REQUIRED = [
 ]
 
 FORBIDDEN_REPOSITORY_BINDINGS = [
-    "git@github.com:blade-cdn/sdlc-ai-spec.git",
+    "git@github.com:goedgecloud/sdlc-ai-spec.git",
     "git@github.com:ousui/sdlc-ai-spec.git",
-    "blade-cdn/sdlc-ai-spec 是唯一",
+    "goedgecloud/sdlc-ai-spec 是唯一",
     "ousui/sdlc-ai-spec 是唯一",
 ]
 

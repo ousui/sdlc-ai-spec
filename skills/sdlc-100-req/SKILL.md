@@ -16,7 +16,7 @@ disable-model-invocation: true
 2. 明确 `operation=create|revise|check`、绝对 `project_root` 和准确 Reference。
 3. create/revise 收集完整结构化候选输入，并单独取得 Artifact Store 写入授权。
 4. 不把推测写成正式 Requirement；缺口进入 Open Item。
-5. 通过本 Skill 的 `scripts/runtime_entry.py` 执行确定性 Builder、Validator、Final Confirmation 和 ArtifactStore 编排。
+5. 通过本 Skill 的 `scripts/runtime_final.py` 执行确定性 Builder、Validator、Final Confirmation、语义复核和 ArtifactStore 编排。
 6. check 严格只读，不 initialize、不修复、不创建旁车文件。
 7. 只解释 Runtime 返回的结构化事实；不得把写入成功描述为 Gate 通过。
 8. 运行时不得读取 `docs/**`，不得直接 SQL，不得调用其他业务 Skill。
@@ -51,7 +51,7 @@ disable-model-invocation: true
 从任意 CWD 调用：
 
 ```bash
-python3 <plugin-root>/skills/sdlc-100-req/scripts/runtime_entry.py < request.json
+python3 <plugin-root>/skills/sdlc-100-req/scripts/runtime_final.py < request.json
 ```
 
 Runtime stdout 只输出一个 JSON Result Envelope。非零退出码表示协议或运行错误；stderr 不作为正常输出协议。

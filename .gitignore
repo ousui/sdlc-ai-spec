@@ -211,3 +211,5 @@ target/
 *.lcov
 report.xml
 junit.xml
+
+*.local.md

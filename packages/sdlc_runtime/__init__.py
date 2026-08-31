@@ -1,8 +1,10 @@
 """Shared runtime kernel for all sdlc-ai-spec Phase Skills."""
 
-from .authority import (
+from .authority import FrozenAuthorityVerificationError
+from .authority_compat import (
     FrozenArtifactAuthorityVerifier,
-    FrozenAuthorityVerificationError,
+    compute_ctx_check_set_result_digest,
+    compute_ctx_control_input_digest,
 )
 from .canonical import (
     CanonicalFormatError,
@@ -90,6 +92,8 @@ __all__ = [
     "build_source_lock",
     "compute_check_set_result_digest",
     "compute_control_input_digest",
+    "compute_ctx_check_set_result_digest",
+    "compute_ctx_control_input_digest",
     "error_result",
     "exact_artifact_reference",
     "execute_phase",

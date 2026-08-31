@@ -8,7 +8,7 @@
       "name": "sdlc-ai-spec",
       "source": {
         "source": "url",
-        "url": "git@github.com:blade-cdn/sdlc-ai-spec.git",
+        "url": "git@github.com:goedgecloud/sdlc-ai-spec.git",
         "ref": "main"
       },
       "policy": {

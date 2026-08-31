@@ -28,9 +28,11 @@ def _load_entry():
 
 
 entry = _load_entry()
+from cleanup_fix import apply_cleanup_fix  # noqa: E402
 from review_fixes import apply_review_fixes  # noqa: E402
 
 apply_review_fixes(entry.base)
+apply_cleanup_fix(entry.base)
 
 RequirementHandler = entry.base.RequirementHandler
 RequirementVerifier = entry.base.RequirementVerifier

@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sdlc-ai-spec/runtime/skill-command/v1",
+  "title": "Normalized SDLC Skill Command",
+  "type": "object",
+  "required": [
+    "contract",
+    "skill",
+    "skill_version",
+    "command",
+    "project_root",
+    "artifact_reference",
+    "decision_policy",
+    "write_policy",
+    "dry_run",
+    "output",
+    "request_text",
+    "help_topic",
+    "warnings"
+  ],
+  "properties": {
+    "contract": {
+      "const": "sdlc-ai-spec/runtime/skill-interface/v1"
+    },
+    "skill": {"type": "string", "minLength": 1},
+    "skill_version": {"type": "string", "minLength": 1},
+    "command": {"type": "string", "minLength": 1},
+    "project_root": {"type": ["string", "null"]},
+    "artifact_reference": {"type": ["string", "null"]},
+    "decision_policy": {"enum": ["user", "model", "experiment"]},
+    "write_policy": {"enum": ["auto", "confirm", "deny"]},
+    "dry_run": {"type": "boolean"},
+    "output": {"enum": ["summary", "json", "debug"]},
+    "request_text": {"type": "string"},
+    "help_topic": {"type": ["string", "null"]},
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["code", "message"],
+        "properties": {
+          "code": {"type": "string", "minLength": 1},
+          "message": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

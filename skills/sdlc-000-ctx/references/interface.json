@@ -1,0 +1,25 @@
+{
+  "contract": "sdlc-ai-spec/runtime/skill-interface/v1",
+  "skill": "sdlc-000-ctx",
+  "skill_version": "1.0.0",
+  "default_command": "auto",
+  "commands": [
+    {"name": "auto", "description": "根据唯一工作区、已有 CTX 和请求意图自动选择 create、revise 或 check。", "writes": true},
+    {"name": "create", "description": "扫描当前项目并创建项目上下文 CTX。", "writes": true},
+    {"name": "revise", "description": "修订准确 CTX Revision；open 原地修订，frozen 创建新 Revision。", "writes": true},
+    {"name": "check", "description": "严格只读检查准确 CTX Revision。", "writes": false},
+    {"name": "help", "description": "显示用途、默认行为、公共参数和写入边界。", "writes": false},
+    {"name": "version", "description": "显示 Skill Version 与 Interface Contract。", "writes": false},
+    {"name": "commands", "description": "列出本 Skill 支持的命令。", "writes": false},
+    {"name": "examples", "description": "显示常用调用示例。", "writes": false}
+  ],
+  "examples": [
+    "/sdlc-000-ctx",
+    "/sdlc-000-ctx create",
+    "/sdlc-000-ctx --create",
+    "/sdlc-000-ctx --command=create",
+    "/sdlc-000-ctx check -r CTX-20260831120000-01@1",
+    "/sdlc-000-ctx --operation=revise --reference=CTX-20260831120000-01@1",
+    "/sdlc-000-ctx --dry-run --output=debug"
+  ]
+}

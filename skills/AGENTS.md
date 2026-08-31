@@ -4,8 +4,7 @@
 
 本文件适用于 `skills/**`，补充根级 `AGENTS.md`。
 
-运行时必须遵守的规则应写入正式 `SKILL.md`、Skill 私有资源或
-`skills/_shared/**`；不得依赖安装后读取本文件。
+运行时必须遵守的规则应写入正式 `SKILL.md`、Skill 私有资源或 `skills/_shared/**`；不得依赖安装后读取本文件。
 
 ## 2. 目录角色
 
@@ -23,6 +22,7 @@ skills/sdlc-NNN-xxx/
 ├── agents/
 │   └── openai.yaml             按适配阶段创建
 ├── references/
+│   ├── interface.json          用户命令、版本和示例
 │   ├── contract.md
 │   └── source-lock.json
 ├── assets/
@@ -72,22 +72,36 @@ skills/sdlc-NNN-xxx/
 所有正式 Skill 必须遵守：
 
 - `skills/_shared/contracts/skill-execution.md`
-- Artifact Skill 还必须遵守：
-  `skills/_shared/contracts/artifact-runtime.md`
-- Phase Runtime 还必须遵守：
-  `skills/_shared/contracts/phase-runtime.md`
+- `skills/_shared/contracts/skill-interface.md`
+- Artifact Skill 还必须遵守：`skills/_shared/contracts/artifact-runtime.md`
+- Phase Runtime 还必须遵守：`skills/_shared/contracts/phase-runtime.md`
 
-`skills/_shared/**` 是唯一允许业务 Skill跨目录读取的共享指令区域。
-不得读取其他 `skills/sdlc-*/` 的私有内容。
+`skills/_shared/**` 是唯一允许业务 Skill 跨目录读取的共享指令区域。不得读取其他 `skills/sdlc-*/` 的私有内容。
 
-## 7. Skill 与程序职责
+## 7. 用户接口
+
+每个正式 Skill 必须：
+
+- 提供 `references/interface.json`；
+- 裸调用可用，默认 `operation=auto`；
+- 提供 `help / version / commands / examples`；
+- 使用共享 `packages/sdlc_runtime/skill_args.py`，不得实现第二套不兼容解析器；
+- 支持 GNU 长参数、单字符短参数和 Contract 定义的兼容别名；
+- 未知参数、缺值和冲突必须失败关闭；
+- 自动读取工作区并完成确定性默认值；
+- 只有存在真实业务决策、多候选无确定最优解或高影响副作用时才询问用户；
+- 默认隐藏 Evidence ID、Digest、Manifest 和内部 Runtime JSON；
+- 标准项目内写入遵守 `write_policy`，Git 与外部写入始终单独授权。
+
+## 8. Skill 与程序职责
 
 Agent / `SKILL.md` 负责：
 
 - 识别用户意图；
-- 收集和组织候选事实；
+- 解析用户命令并解决默认值；
+- 读取工作区、收集和组织候选事实；
 - 解释 Open Item、失败和下一动作；
-- 请求必要人工确认。
+- 提供推荐并请求必要人工决策。
 
 Skill Runtime Script 负责：
 
@@ -99,11 +113,12 @@ Skill Runtime Script 负责：
 
 共享 Package 负责：
 
+- 用户参数归一化；
 - SQLite、事务、ID、Revision、摘要、Member closure 和准确解析。
 
 不得让 Agent 手工串联多个低级 Store CLI 命令形成业务事务。
 
-## 8. 触发与独占执行
+## 9. 触发与独占执行
 
 首版默认显式调用：
 
@@ -118,7 +133,7 @@ Skill Runtime Script 负责：
 - 输入不足时按 Contract 停止、等待或形成 Open Item；
 - 不静默补造上游决定。
 
-## 9. Script 与 Asset
+## 10. Script 与 Asset
 
 Script 必须：
 
@@ -132,15 +147,19 @@ Script 必须：
 
 Asset 只保存模板和静态资源，不保存结果、Secret 或虚构事实。
 
-## 10. Eval
+## 11. Eval
 
 每个 Skill 至少验证：
 
-- 显式正向调用；
-- 未调用和负向场景；
-- 完整输入；
-- 缺失输入；
-- 边界/冲突；
+- 裸调用与 `operation=auto`；
+- 所有声明命令、长参数、短参数和兼容别名；
+- help、version、commands、examples；
+- 默认值、显式覆盖、未知参数、冲突与引号错误；
+- 唯一推断、多候选决策、推荐理由；
+- `decision_policy` 和 `write_policy` 全路径；
+- `summary / json / debug`；
+- 显式正向调用、未调用和负向场景；
+- 完整输入、缺失输入、边界/冲突；
 - with-skill / without-skill；
 - Runtime Independence；
 - 共享合约遵守；

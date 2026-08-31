@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Added the shared Skill Interface Contract, deterministic argument parser, command metadata, help/version/commands/examples, default resolution, decision policies, write policies, and summary/json/debug output modes.
+- Upgraded `sdlc-000-ctx` and `sdlc-100-req` so bare invocation can resolve standard operations without exposing Evidence IDs or Runtime JSON to users.
 - Added read-only cross-phase VFY Return and RLS Issue Control Input resolution to the shared Runtime Kernel.
 - Added canonical artifact parsing, digest calculation, and generic frozen upstream Authority verification to the shared Runtime Kernel.
 - Added the shared Runtime Kernel for invocation/result envelopes, Phase operation routing, and build-time source locks.

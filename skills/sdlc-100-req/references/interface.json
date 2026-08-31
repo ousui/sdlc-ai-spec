@@ -1,0 +1,25 @@
+{
+  "contract": "sdlc-ai-spec/runtime/skill-interface/v1",
+  "skill": "sdlc-100-req",
+  "skill_version": "1.0.0",
+  "default_command": "auto",
+  "commands": [
+    {"name": "auto", "description": "根据唯一工作区、CTX、已有 REQ 和请求意图自动选择 create、revise 或 check。", "writes": true},
+    {"name": "create", "description": "基于准确 frozen CTX 创建需求 REQ。", "writes": true},
+    {"name": "revise", "description": "修订准确 REQ Revision；open 原地修订，frozen 创建新 Revision。", "writes": true},
+    {"name": "check", "description": "严格只读检查准确 REQ Revision。", "writes": false},
+    {"name": "help", "description": "显示用途、默认行为、公共参数和写入边界。", "writes": false},
+    {"name": "version", "description": "显示 Skill Version 与 Interface Contract。", "writes": false},
+    {"name": "commands", "description": "列出本 Skill 支持的命令。", "writes": false},
+    {"name": "examples", "description": "显示常用调用示例。", "writes": false}
+  ],
+  "examples": [
+    "/sdlc-100-req",
+    "/sdlc-100-req create -- 让已授权用户导出当前筛选结果",
+    "/sdlc-100-req --create -p /workspace/project",
+    "/sdlc-100-req -c=create -- 新增审计导出能力",
+    "/sdlc-100-req check -r REQ-20260831130000-01@1",
+    "/sdlc-100-req --operation=revise --reference=REQ-20260831130000-01@1",
+    "/sdlc-100-req -h"
+  ]
+}

@@ -33,6 +33,22 @@ from .envelopes import (
     validate_result,
 )
 from .phase import PhaseHandler, execute_phase
+from .skill_command import normalize_command_aliases, parse_skill_command
+from .skill_args import (
+    ArgumentWarning,
+    INTERFACE_CONTRACT,
+    META_COMMANDS,
+    SkillArgumentError,
+    SkillCommand,
+    SkillInterfaceSpec,
+    load_skill_interface,
+    parse_skill_arguments,
+    render_commands,
+    render_examples,
+    render_help,
+    render_version,
+    skill_interface_from_mapping,
+)
 from .source_lock import (
     ContractSource,
     REGISTRY_CONTRACT,
@@ -47,6 +63,7 @@ from .source_lock import (
 )
 
 __all__ = [
+    "ArgumentWarning",
     "CanonicalFormatError",
     "ContractSource",
     "ControlInputError",
@@ -54,7 +71,9 @@ __all__ = [
     "EnvelopeValidationError",
     "FrozenArtifactAuthorityVerifier",
     "FrozenAuthorityVerificationError",
+    "INTERFACE_CONTRACT",
     "INVOCATION_CONTRACT",
+    "META_COMMANDS",
     "OPERATIONS",
     "ParsedCanonicalArtifact",
     "PhaseHandler",
@@ -62,6 +81,9 @@ __all__ = [
     "RESULT_CONTRACT",
     "RLSIssueControlInput",
     "SOURCE_LOCK_CONTRACT",
+    "SkillArgumentError",
+    "SkillCommand",
+    "SkillInterfaceSpec",
     "SourceLockError",
     "VFYReturnControlInput",
     "authority_reference",
@@ -72,13 +94,22 @@ __all__ = [
     "exact_artifact_reference",
     "execute_phase",
     "load_registry",
+    "load_skill_interface",
     "parse_canonical_artifact",
     "parse_front_matter",
     "parse_markdown_tables",
     "parse_reference_set",
+    "normalize_command_aliases",
+    "parse_skill_arguments",
+    "parse_skill_command",
     "registry_sources",
+    "render_commands",
+    "render_examples",
+    "render_help",
+    "render_version",
     "sha256_bytes",
     "sha256_file",
+    "skill_interface_from_mapping",
     "validate_invocation",
     "validate_result",
     "validate_source_lock_shape",

@@ -20,7 +20,7 @@ sdlc-600-rls
 sdlc-status
 ```
 
-Plugin Namespace 会将其与开发辅助插件的 `$sdlc-worker:sdlc-status` 区分。
+Plugin Namespace 会将其与开发辅助插件的 `$devsdlc:devsdlc-status` 区分。
 
 每个正式 Skill 使用：
 
@@ -29,11 +29,36 @@ skills/<skill-name>/
 ├── SKILL.md
 ├── scripts/
 ├── references/
+│   ├── interface.json
+│   ├── contract.md
+│   └── source-lock.json
 ├── assets/
 ├── agents/
 └── evals/
 ```
 
-共享运行规则位于 `skills/_shared/`；该目录没有 `SKILL.md`，不是可调用 Skill。
-正式 Runtime 不读取 `docs/**`。业务 Skill 不依赖兄弟业务 Skill，但可以使用
-`skills/_shared/**` 与 `packages/**`。
+## 统一调用
+
+推荐：
+
+```text
+/<skill> [command] [options] [-- free-form request]
+```
+
+裸调用默认 `operation=auto`。全部 Skill 统一支持：
+
+```text
+-h --help
+-V --version
+--commands
+--examples
+-o --operation
+-p --project-root
+-r --reference
+-d --decision-policy
+-w --write-policy
+-n --dry-run
+-f --output
+```
+
+共享运行规则位于 `skills/_shared/`；该目录没有 `SKILL.md`，不是可调用 Skill。正式 Runtime 不读取 `docs/**`。业务 Skill 不依赖兄弟业务 Skill，但可以使用 `skills/_shared/**` 与 `packages/**`。

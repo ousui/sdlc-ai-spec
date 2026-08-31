@@ -1,4 +1,45 @@
 {
   "contract": "sdlc-ai-spec/runtime-source-lock/v1",
-  "contracts": []
+  "contracts": [
+    {
+      "contract_id": "sdlc-ai-spec/runtime/artifact-store/v1",
+      "contract_version": "1",
+      "sha256": "500f2d327dfd734974d73eda2857ca2e3663ceaf6f8c48a92b925612cf25fc81"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/runtime/artifact/v1",
+      "contract_version": "1",
+      "sha256": "8e86f76153d6e7309647daa4edbdd05c0083c2ddda135279d35bd98f40a17f3c"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/runtime/kernel/v1",
+      "contract_version": "1",
+      "sha256": "0ec065370ea9d05083d5527a4fc44bf28b0376b8b1ea7e0e684e17c6c06a5ad7"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/runtime/phase/v1",
+      "contract_version": "1",
+      "sha256": "0ef203f6de99f055cbf2e9c06f927ea827be31ad3b700d2c2760e4cc42c76eb3"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/runtime/skill-execution/v1",
+      "contract_version": "1",
+      "sha256": "b05f03cc1987c9eed431040e2f5626880cbc07e44e5a9c48d93fdbc8cd352bc7"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/artifact-store/v1.1",
+      "contract_version": "1.1",
+      "sha256": "b340ca2a38dfe0f7409acaa8f9ac559e8872bed44725037889528e3d167d4764"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/core/v1.1",
+      "contract_version": "1.1",
+      "sha256": "1eefa7a138f2d221140137a5fac0f5429b7f847273fe9d70e891ace6c3b7a89b"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/requirement/v1.1",
+      "contract_version": "1.1",
+      "sha256": "13907cab3f1a9a5575d0d292901dc532f2a1c15f5b345f4fa8b7e20b137ed3f0"
+    }
+  ]
 }

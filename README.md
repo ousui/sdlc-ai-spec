@@ -80,9 +80,11 @@ packages/sdlc_artifact_store/
 
 - 稳定领域规范保留在 `docs/v1.1/`；
 - Local SQLite ArtifactStore Foundation 已实现并通过自动化测试；
-- 共享 Skill Runtime Contract 已建立；
-- `main` 不包含任何正式 Phase Skill 或历史 CTX Work Item；
-- 下一步从 `skill/sdlc-000-ctx` 分支重新设计第一个 Skill。
+- 共享 Skill Runtime Contract、Frozen Artifact Authority 与跨阶段 Control Input Resolver
+  已建立；
+- 第一个正式 Phase Skill `sdlc-000-ctx` 已实现、评测、完成 Codex CLI TUI 适配与独立
+  Review，并获 Maintainer 最终接受；
+- Cursor、Claude Code 与 Codex Desktop / App 尚未完成行为验证。
 
 ## 文档入口
 

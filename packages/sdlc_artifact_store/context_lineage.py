@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Optional
 
 from .errors import ArtifactStoreError, DatabaseError, InvalidInputError
-from .sqlite_store import ArtifactStore
+from .sqlite_store import ArtifactStore, SQLITE_BUSY_TIMEOUT_MS
 
 BOUNDARY_KEY_RE = re.compile(r"^sha256:[0-9a-f]{64}$")
 
@@ -94,8 +94,8 @@ class ContextLineageRegistry:
         created_at = moment.isoformat(timespec="seconds")
         connection = self.store._connect()
         try:
+            connection.execute(f"PRAGMA busy_timeout = {SQLITE_BUSY_TIMEOUT_MS}")
             self.store._validate_schema(connection)
-            connection.execute("PRAGMA busy_timeout = 1000")
             connection.execute("BEGIN IMMEDIATE")
             connection.execute(_CREATE_TABLE_SQL)
             row = connection.execute(

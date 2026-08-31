@@ -4,6 +4,7 @@ import hashlib
 import re
 import sqlite3
 import subprocess
+import threading
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
@@ -45,6 +46,7 @@ from .models import (
 
 
 SCHEMA_VERSION = 1
+SQLITE_BUSY_TIMEOUT_MS = 5000
 STORE_RELATIVE_PATH = Path(".sdlc") / "store.sqlite3"
 ARTIFACT_TYPES = frozenset({"CTX", "REQ", "DSN", "PLN", "IMP", "VFY", "RLS"})
 ARTIFACT_STATUSES = frozenset(
@@ -213,6 +215,8 @@ CREATE TABLE manifest_members (
 );
 """
 
+_INITIALIZE_LOCK = threading.Lock()
+
 
 def compute_sha256(raw_bytes: bytes) -> str:
     """Return the canonical SHA-256 representation used by the domain contract."""
@@ -266,6 +270,12 @@ class ArtifactStore:
 
     def initialize(self) -> int:
         """Create Schema v1 once or validate the existing Store idempotently."""
+
+        with _INITIALIZE_LOCK:
+            return self._initialize_locked()
+
+    def _initialize_locked(self) -> int:
+        """Serialize first initialization so cleanup cannot race another creator."""
 
         self._ensure_write()
         tracked = self._tracked_sdlc_paths()
@@ -1084,7 +1094,7 @@ class ArtifactStore:
                 connection = sqlite3.connect(self.store_path, isolation_level=None)
             connection.row_factory = sqlite3.Row
             connection.execute("PRAGMA foreign_keys = ON")
-            connection.execute("PRAGMA busy_timeout = 0")
+            connection.execute(f"PRAGMA busy_timeout = {SQLITE_BUSY_TIMEOUT_MS}")
             return connection
         except sqlite3.Error as exc:
             raise DatabaseError(f"Cannot open SQLite Store {self.store_path}: {exc}") from exc

@@ -1,5 +1,28 @@
 """Shared runtime kernel for all sdlc-ai-spec Phase Skills."""
 
+from .authority import (
+    FrozenArtifactAuthorityVerifier,
+    FrozenAuthorityVerificationError,
+)
+from .canonical import (
+    CanonicalFormatError,
+    ParsedCanonicalArtifact,
+    authority_reference,
+    compute_check_set_result_digest,
+    compute_control_input_digest,
+    exact_artifact_reference,
+    parse_canonical_artifact,
+    parse_front_matter,
+    parse_markdown_tables,
+    parse_reference_set,
+    sha256_bytes,
+)
+from .control_inputs import (
+    ControlInputError,
+    ControlInputResolver,
+    RLSIssueControlInput,
+    VFYReturnControlInput,
+)
 from .envelopes import (
     EnvelopeValidationError,
     INVOCATION_CONTRACT,
@@ -24,20 +47,37 @@ from .source_lock import (
 )
 
 __all__ = [
+    "CanonicalFormatError",
     "ContractSource",
+    "ControlInputError",
+    "ControlInputResolver",
     "EnvelopeValidationError",
+    "FrozenArtifactAuthorityVerifier",
+    "FrozenAuthorityVerificationError",
     "INVOCATION_CONTRACT",
     "OPERATIONS",
+    "ParsedCanonicalArtifact",
     "PhaseHandler",
     "REGISTRY_CONTRACT",
     "RESULT_CONTRACT",
+    "RLSIssueControlInput",
     "SOURCE_LOCK_CONTRACT",
     "SourceLockError",
+    "VFYReturnControlInput",
+    "authority_reference",
     "build_source_lock",
+    "compute_check_set_result_digest",
+    "compute_control_input_digest",
     "error_result",
+    "exact_artifact_reference",
     "execute_phase",
     "load_registry",
+    "parse_canonical_artifact",
+    "parse_front_matter",
+    "parse_markdown_tables",
+    "parse_reference_set",
     "registry_sources",
+    "sha256_bytes",
     "sha256_file",
     "validate_invocation",
     "validate_result",

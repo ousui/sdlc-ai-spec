@@ -4,6 +4,8 @@
 
 ## Unreleased
 
+- Added read-only cross-phase VFY Return and RLS Issue Control Input resolution to the shared Runtime Kernel.
+- Added canonical artifact parsing, digest calculation, and generic frozen upstream Authority verification to the shared Runtime Kernel.
 - Added the shared Runtime Kernel for invocation/result envelopes, Phase operation routing, and build-time source locks.
 - Added a stable Runtime Contract Registry and Source Lock Schema under `skills/_shared/`.
 - Added an atomic CTX Project Boundary lineage registry and a strictly read-only Artifact Catalog.

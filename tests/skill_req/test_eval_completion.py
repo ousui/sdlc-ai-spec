@@ -4,13 +4,13 @@ from copy import deepcopy
 from datetime import datetime, timezone
 
 from packages.sdlc_artifact_store import (
-    ArtifactCatalog,
     ArtifactStore,
     CanonicalManifest,
     CanonicalRevisionPayload,
     compute_sha256,
 )
-from skill_req.test_review_fixes import FIXED, PassingVerifier, ReviewFixTests, runtime
+from packages.sdlc_artifact_store.catalog import ArtifactCatalog
+from skill_req.test_review_fixes import ReviewFixTests, runtime
 
 
 class RequirementCriticalEvalCompletionTests(ReviewFixTests):

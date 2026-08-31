@@ -3,10 +3,28 @@
 
 from __future__ import annotations
 
+import importlib.util
 from pathlib import Path
+import sys
 from typing import Any, Mapping, Sequence
 
-import runtime as base
+
+def _load_base_runtime():
+    module_name = "sdlc_100_req_base_runtime"
+    existing = sys.modules.get(module_name)
+    if existing is not None:
+        return existing
+    runtime_path = Path(__file__).with_name("runtime.py")
+    spec = importlib.util.spec_from_file_location(module_name, runtime_path)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"Cannot load REQ runtime: {runtime_path}")
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+base = _load_base_runtime()
 
 
 def _build(

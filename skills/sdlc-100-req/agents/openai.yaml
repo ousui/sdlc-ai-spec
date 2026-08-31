@@ -1,0 +1,5 @@
+policy:
+  allow_implicit_invocation: false
+interface:
+  display_name: "SDLC 100 REQ"
+  short_description: "创建、修订和检查需求 REQ Artifact"

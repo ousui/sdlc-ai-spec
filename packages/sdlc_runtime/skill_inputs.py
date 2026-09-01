@@ -8,6 +8,7 @@ from typing import Any, Sequence
 
 from .skill_args import (
     ArgumentWarning,
+    META_COMMANDS,
     SkillArgumentError,
     SkillCommand,
     SkillInterfaceSpec,
@@ -115,6 +116,12 @@ def parse_skill_command_with_inputs(
         index += 1
 
     base: SkillCommand = parse_skill_command(filtered, spec)
+    if base.command in META_COMMANDS and values:
+        raise SkillArgumentError(
+            "ARGUMENT_CONFLICT",
+            f"{base.command} cannot be combined with input references",
+            details={"command": base.command, "input_references": values},
+        )
     return SkillCommandWithInputs(
         contract=base.contract,
         skill=base.skill,

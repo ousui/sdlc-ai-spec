@@ -1,0 +1,46 @@
+{
+  "contract": "sdlc-ai-spec/skill-eval-result/v1",
+  "skill": "sdlc-200-dsn",
+  "status": "pass",
+  "implementation_evidence_head": "73a53e0e8ba32e84e3d051ddd7751feeafc9911a",
+  "github_actions_run": 33491548645,
+  "counts": {
+    "critical_cases": 33,
+    "repository_tests": 177,
+    "source_lock_contracts": 26,
+    "bundled_runtime_contracts": 17
+  },
+  "gates": {
+    "compileall": "pass",
+    "runtime_contract_validation": "pass",
+    "skill_interface_validation": "pass",
+    "lifecycle_query_validation": "pass",
+    "sdlc_status_validation": "pass",
+    "req_source_lock": "pass",
+    "dsn_source_lock": "pass",
+    "req_runtime_independence": "pass",
+    "dsn_runtime_independence": "pass",
+    "status_runtime_independence": "pass",
+    "dsn_fixed_eval": "pass",
+    "full_repository_regression": "pass"
+  },
+  "external_integration": {
+    "status": "pass",
+    "workflow_run": 33491395846,
+    "runtime_head": "ac67c3c40354b0ca00e42691a6a7f9dbf3d16790",
+    "repository": "ousui/springgear",
+    "ref": "devl",
+    "commit": "e855096ff19dcdb303dc4250ba19c30acd743ac7",
+    "modules": 8,
+    "source_snapshot_unchanged": true,
+    "git_status_restored": true,
+    "remote_writes": 0
+  },
+  "compatibility": {
+    "portable_runtime": "verified",
+    "codex_static_adapter": "partial",
+    "codex_real_host": "unknown",
+    "cursor": "unknown",
+    "claude_code": "unknown"
+  }
+}

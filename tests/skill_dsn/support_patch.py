@@ -2,6 +2,7 @@
 
 from packages.sdlc_artifact_store import ArtifactStore
 from packages.sdlc_artifact_store.catalog import ArtifactCatalog
+from dsn_handler_final import DsnHandler as FinalDsnHandler
 
 from . import support as base
 
@@ -37,5 +38,6 @@ def _create_requirement(self, context_reference: str) -> str:
     return self._write_frozen("REQ", raw)
 
 
+base.DsnHandler = FinalDsnHandler
 base.DsnRuntimeFixture.catalog = _catalog
 base.DsnRuntimeFixture.create_requirement = _create_requirement

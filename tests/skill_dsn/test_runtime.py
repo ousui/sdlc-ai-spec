@@ -1,12 +1,8 @@
 from __future__ import annotations
 
-from copy import deepcopy
-from pathlib import Path
-
-from packages.sdlc_artifact_store.catalog import ArtifactCatalog
 from packages.sdlc_runtime import parse_canonical_artifact
-from packages.sdlc_runtime.canonical import find_tables
 
+from . import support_patch  # noqa: F401
 from .support import DsnRuntimeFixture
 
 
@@ -45,9 +41,9 @@ class DsnRuntimeTests(DsnRuntimeFixture):
     def test_boundary_is_required_before_allocation(self):
         design = self.complete_design()
         design.pop("boundary")
-        before = ArtifactCatalog(self.store).list_artifacts("DSN")
+        before = self.catalog().list_artifacts("DSN")
         result = self.execute(self.invocation(design=design, final=False))
-        after = ArtifactCatalog(self.store).list_artifacts("DSN")
+        after = self.catalog().list_artifacts("DSN")
         self.assertFalse(result["ok"])
         self.assertEqual(result["status"], "action_required")
         self.assertEqual(result["errors"][0]["code"], "DESIGN_BOUNDARY_REQUIRED")
@@ -72,7 +68,7 @@ class DsnRuntimeTests(DsnRuntimeFixture):
         self.assertTrue(result["ok"])
         self.assertEqual(result["artifact"]["revision"], 1)
         self.assertEqual(result["warnings"][0]["code"], "NO_CHANGE")
-        revisions = ArtifactCatalog(self.store).list_revisions(first["artifact"]["id"])
+        revisions = self.catalog().list_revisions(first["artifact"]["id"])
         self.assertEqual(tuple(item.revision for item in revisions), (1,))
 
     def test_frozen_change_creates_next_revision(self):
@@ -118,11 +114,11 @@ class DsnRuntimeTests(DsnRuntimeFixture):
     def test_requirements_from_different_contexts_fail_before_allocation(self):
         second_context = "CTX-20260901090000-99@1"
         second = self.create_requirement(second_context)
-        before = ArtifactCatalog(self.store).list_artifacts("DSN")
+        before = self.catalog().list_artifacts("DSN")
         result = self.execute(
             self.invocation(scope_inputs=(self.requirement_reference, second))
         )
-        after = ArtifactCatalog(self.store).list_artifacts("DSN")
+        after = self.catalog().list_artifacts("DSN")
         self.assertFalse(result["ok"])
         self.assertIn("different CTX", result["errors"][0]["message"])
         self.assertEqual(before, after)
@@ -149,8 +145,9 @@ class DsnRuntimeTests(DsnRuntimeFixture):
         result = self.execute(self.invocation(design=design, final=False))
         self.assertFalse(result["ok"])
         revisions = []
-        for item in ArtifactCatalog(self.store).list_artifacts("DSN"):
-            revisions.extend(ArtifactCatalog(self.store).list_revisions(item.artifact_id))
+        catalog = self.catalog()
+        for item in catalog.list_artifacts("DSN"):
+            revisions.extend(catalog.list_revisions(item.artifact_id))
         self.assertEqual(tuple(item.state for item in revisions), ("abandoned",))
 
     def test_matrix_has_fixed_sixteen_rows(self):

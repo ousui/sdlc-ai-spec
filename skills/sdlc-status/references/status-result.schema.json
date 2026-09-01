@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sdlc-ai-spec/status-result/v1",
+  "type": "object",
+  "required": ["contract", "ok", "command", "status", "project_root", "effective_write_policy", "state", "overview", "projection", "warnings", "errors", "next_action"],
+  "properties": {
+    "contract": {"const": "sdlc-ai-spec/status-result/v1"},
+    "ok": {"type": "boolean"},
+    "command": {"enum": ["auto", "list", "inspect", "help", "version", "commands", "examples"]},
+    "status": {"enum": ["completed", "action_required", "blocked", "failed"]},
+    "project_root": {"type": ["string", "null"]},
+    "effective_write_policy": {"const": "deny"},
+    "state": {"type": "string"},
+    "overview": {"type": ["object", "null"]},
+    "projection": {"type": ["object", "null"]},
+    "warnings": {"type": "array", "items": {"type": "object"}},
+    "errors": {"type": "array", "items": {"type": "object"}},
+    "next_action": {"type": ["object", "null"]}
+  },
+  "additionalProperties": true
+}

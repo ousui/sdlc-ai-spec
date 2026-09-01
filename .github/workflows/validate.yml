@@ -19,8 +19,10 @@ jobs:
       - run: python3 tools/validate_runtime_contracts.py
       - run: python3 tools/validate_skill_interfaces.py
       - run: python3 tools/validate_lifecycle_query.py
+      - run: python3 tools/validate_sdlc_status.py
       - run: python3 tools/validate_sdlc_100_req_source_lock.py
       - run: python3 tools/test_sdlc_100_req_runtime_independence.py
+      - run: python3 tools/test_sdlc_status_runtime_independence.py
       - run: python3 -m unittest discover -s tests -p 'test_*.py' -v
 
   springgear-integration:
@@ -37,3 +39,4 @@ jobs:
         with:
           python-version: "3.12"
       - run: python3 tools/test_springgear_lifecycle_query.py --source _integration/springgear
+      - run: python3 tools/test_springgear_sdlc_status.py --source _integration/springgear

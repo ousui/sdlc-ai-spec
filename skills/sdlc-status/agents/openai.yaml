@@ -1,0 +1,5 @@
+policy:
+  allow_implicit_invocation: false
+interface:
+  display_name: "SDLC Status"
+  short_description: "只读查询需求流转状态、阻塞项和下一动作"

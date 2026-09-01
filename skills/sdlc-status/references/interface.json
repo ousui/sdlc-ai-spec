@@ -1,0 +1,22 @@
+{
+  "contract": "sdlc-ai-spec/runtime/skill-interface/v1",
+  "skill": "sdlc-status",
+  "skill_version": "0.1.0",
+  "default_command": "auto",
+  "commands": [
+    {"name": "auto", "description": "根据唯一工作区和 Artifact 状态自动选择 overview、list 或 inspect", "writes": false},
+    {"name": "list", "description": "列出项目内全部准确 REQ Revision 候选及其状态", "writes": false},
+    {"name": "inspect", "description": "检查一个准确 REQ-...@数字Revision 的生命周期图", "writes": false},
+    {"name": "help", "description": "显示用途、命令、参数和写入边界", "writes": false},
+    {"name": "version", "description": "显示 Skill 与 Interface 版本", "writes": false},
+    {"name": "commands", "description": "列出全部命令及是否写入", "writes": false},
+    {"name": "examples", "description": "显示可复制的最小示例", "writes": false}
+  ],
+  "examples": [
+    "/sdlc-status",
+    "/sdlc-status list",
+    "/sdlc-status inspect --reference REQ-20260831190000-01@1",
+    "/sdlc-status --output=json",
+    "/sdlc-status --help"
+  ]
+}

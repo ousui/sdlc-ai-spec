@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
-"""Verify the built sdlc-200-dsn source lock and bundled contract bytes."""
+"""Verify the sdlc-200-dsn design sources and bundled runtime contracts."""
 
 from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -22,6 +23,9 @@ from packages.sdlc_runtime import (  # noqa: E402
 LOCK_PATH = ROOT / "skills/sdlc-200-dsn/references/source-lock.json"
 REGISTRY_PATH = ROOT / "skills/_shared/contracts/registry.json"
 BUNDLED_ROOT = ROOT / "skills/sdlc-200-dsn/references"
+DESIGN_CONTRACT_ID = "sdlc-ai-spec/spec/design/v1.1"
+DESIGN_SOURCE_SHA256 = "998b76ebf72714706bca045d22f2b5b09ac655404f324cb904edcc241bc4f0ee"
+FORBIDDEN = (re.compile(r"docs/v1\.[0-9]+/"), re.compile(r"docs/plugin-development/"))
 
 DOMAIN_FILES = (
     "110-workflow-state.md",
@@ -62,7 +66,7 @@ SPEC_SOURCES = (
         for name in DOMAIN_FILES
     ),
     ContractSource(
-        "sdlc-ai-spec/spec/design/v1.1",
+        DESIGN_CONTRACT_ID,
         "1.1",
         "docs/v1.1/200-dsn-spec.md",
     ),
@@ -79,29 +83,64 @@ SPEC_SOURCES = (
 )
 
 
-def _verify_bundled_bytes() -> None:
+def _front_matter(path: Path) -> dict[str, str]:
+    text = path.read_text(encoding="utf-8")
+    if not text.startswith("---\n") or "\n---\n" not in text[4:]:
+        raise SourceLockError("bundled parent contract has no valid Front Matter")
+    raw = text[4 : text.find("\n---\n", 4)]
+    result: dict[str, str] = {}
+    for line in raw.splitlines():
+        if not line.strip():
+            continue
+        if ":" not in line:
+            raise SourceLockError("bundled parent Front Matter is invalid")
+        key, value = line.split(":", 1)
+        result[key.strip()] = value.strip().strip('"')
+    return result
+
+
+def _verify_bundled_contracts() -> None:
+    parent = BUNDLED_ROOT / "200-dsn-spec.md"
+    if not parent.is_file():
+        raise SourceLockError("bundled DSN parent contract is missing")
+    metadata = _front_matter(parent)
+    expected = {
+        "contract": "sdlc-ai-spec/runtime/design/v1",
+        "contract_version": "1",
+        "source_contract_id": DESIGN_CONTRACT_ID,
+        "source_version": "1.1",
+        "source_sha256": DESIGN_SOURCE_SHA256,
+    }
+    for key, value in expected.items():
+        if metadata.get(key) != value:
+            raise SourceLockError(
+                f"bundled DSN parent metadata mismatch: {key}"
+            )
+
     pairs = [
-        (
-            ROOT / "docs/v1.1/200-dsn-spec.md",
-            BUNDLED_ROOT / "200-dsn-spec.md",
-        )
-    ]
-    pairs.extend(
         (
             ROOT / "docs/v1.1/200-dsn-domains" / name,
             BUNDLED_ROOT / "200-dsn-domains" / name,
         )
         for name in DOMAIN_FILES
-    )
+    ]
     for source, bundled in pairs:
         if not source.is_file() or not bundled.is_file():
             raise SourceLockError(
-                f"bundled DSN contract is missing: {bundled.relative_to(ROOT)}"
+                f"bundled DSN domain contract is missing: {bundled.relative_to(ROOT)}"
             )
         if source.read_bytes() != bundled.read_bytes():
             raise SourceLockError(
-                f"bundled DSN contract drift: {bundled.relative_to(ROOT)}"
+                f"bundled DSN domain contract drift: {bundled.relative_to(ROOT)}"
             )
+
+    for path in (parent, *(item[1] for item in pairs)):
+        text = path.read_text(encoding="utf-8")
+        for pattern in FORBIDDEN:
+            if pattern.search(text):
+                raise SourceLockError(
+                    f"bundled runtime contract contains a development path: {path.relative_to(ROOT)}"
+                )
 
 
 def main() -> int:
@@ -117,13 +156,13 @@ def main() -> int:
                 file=sys.stderr,
             )
             return 1
-        _verify_bundled_bytes()
+        _verify_bundled_contracts()
     except (OSError, json.JSONDecodeError, SourceLockError) as exc:
         print(f"sdlc-200-dsn source lock: FAIL: {exc}", file=sys.stderr)
         return 1
     print("sdlc-200-dsn source lock: PASS")
     print("contracts:", len(expected["contracts"]))
-    print("bundled contracts:", 1 + len(DOMAIN_FILES))
+    print("bundled runtime contracts:", 1 + len(DOMAIN_FILES))
     return 0
 
 

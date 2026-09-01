@@ -19,17 +19,14 @@
     "warnings"
   ],
   "properties": {
-    "contract": {"const": "sdlc-ai-spec/runtime/skill-interface/v1"},
+    "contract": {
+      "const": "sdlc-ai-spec/runtime/skill-interface/v1"
+    },
     "skill": {"type": "string", "minLength": 1},
     "skill_version": {"type": "string", "minLength": 1},
     "command": {"type": "string", "minLength": 1},
     "project_root": {"type": ["string", "null"]},
     "artifact_reference": {"type": ["string", "null"]},
-    "input_references": {
-      "type": "array",
-      "uniqueItems": true,
-      "items": {"type": "string", "minLength": 1}
-    },
     "decision_policy": {"enum": ["user", "model", "experiment"]},
     "write_policy": {"enum": ["auto", "confirm", "deny"]},
     "dry_run": {"type": "boolean"},

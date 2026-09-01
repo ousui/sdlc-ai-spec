@@ -26,7 +26,7 @@ class DsnInterfaceTests(unittest.TestCase):
             "create -i REQ-1@1 --input=REQ-2@1 input REQ-3@1",
             self.spec,
         )
-        self.assertEqual(command.command.command, "create")
+        self.assertEqual(command.command, "create")
         self.assertEqual(
             command.input_references,
             ("REQ-1@1", "REQ-2@1", "REQ-3@1"),
@@ -39,7 +39,10 @@ class DsnInterfaceTests(unittest.TestCase):
         )
         self.assertEqual(command.input_references, ("REQ-1@1",))
         self.assertTrue(
-            any(item.code == "INPUT_DUPLICATE" for item in command.command.warnings)
+            any(
+                item.code == "ARGUMENT_DUPLICATE_INPUT"
+                for item in command.warnings
+            )
         )
 
     def test_meta_command_rejects_execution_input(self):
@@ -61,7 +64,7 @@ class DsnInterfaceTests(unittest.TestCase):
             self.spec,
         )
         self.assertEqual(
-            command.command.request_text,
+            command.request_text,
             "prefer the simplest implementation",
         )
 

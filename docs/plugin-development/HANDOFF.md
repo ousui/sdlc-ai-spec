@@ -22,10 +22,12 @@
 | `sdlc-500-vfy` | ready | ready | pending | not started |
 | `sdlc-600-rls` | ready | ready | pending | not started |
 
-共同架构决定记录于：
+共同设计基线：
 
 ```text
 docs/plugin-development/architecture/remaining-phase-skill-design.md
+docs/plugin-development/architecture/remaining-phase-interface-extension.md
+docs/plugin-development/architecture/remaining-phase-foundations.md
 ```
 
 ## 关键设计决定
@@ -36,7 +38,9 @@ docs/plugin-development/architecture/remaining-phase-skill-design.md
 4. `sdlc-500-vfy` 统一管理 Inspection、Analysis、Demonstration、Test，不拆 QA/Test Skill。
 5. `sdlc-600-rls` 保持平台中立；外部 Target Effect 必须使用与 `write_policy` 分离的准确授权。
 6. 所有 Skill 继承 Shared Skill Interface，裸调用合法，默认只在真实决策或高影响副作用时询问用户。
-7. Design 可以批量完成；Approval、Implement、Evaluate、Adapt、Review、Finalize 必须逐 Skill 进行。
+7. Phase Interface 从固定精确命令集合扩展为核心命令子集加已声明附加命令；现有 Skill 行为保持不变。
+8. Claim、Resource Result、Execution Evidence 和 Effect Authorization 的逻辑 Contract 已冻结，物理实现按后续 Foundation 工作包完成。
+9. Design 可以批量完成；Approval、Implement、Evaluate、Adapt、Review、Finalize 必须逐 Skill 进行。
 
 ## 实现顺序
 
@@ -56,14 +60,14 @@ sdlc-600-rls
 
 ## 唯一下一工作包
 
-Maintainer 对本分支中的四份 Design Contract 和四份 Eval Plan 进行批量审查，并作出以下之一：
+Maintainer 对本分支中的四份 Design Contract、四份 Eval Plan 和三份共同架构设计进行批量审查，并作出以下之一：
 
 ```text
 APPROVE_REMAINING_PHASE_DESIGNS
 CORRECT_REMAINING_PHASE_DESIGNS
 ```
 
-批准只表示四份设计可以作为后续工作基线，不授权同时实现四个 Skill。批准后第一个实现工作包固定为：
+批准只表示设计与 Foundation 逻辑边界可以作为后续工作基线，不授权同时实现四个 Skill。批准后第一个实现工作包固定为：
 
 ```text
 sdlc-300-pln implement

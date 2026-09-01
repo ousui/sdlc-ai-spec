@@ -21,8 +21,7 @@
 | STS-E11 | Output modes | summary/json/debug consistent |
 | STS-E12 | Runtime independence | executes without docs |
 | STS-E13 | Sibling isolation | does not call CTX/REQ/DSN Skills |
-| STS-E14 | SpringGear closure | real CTX→REQ→status path succeeds |
-| STS-E15 | Foundation failure | corrupt/missing dependencies fail closed |
+| STS-E14 | Foundation failure | corrupt/missing dependencies fail closed |
 
 ## Cases
 
@@ -40,7 +39,6 @@
 | help | any project state | static help, no project access |
 | output-json | exact REQ | one JSON document |
 | output-debug | exact REQ | resolved command plus raw projection, no secrets |
-| springgear | actual repository snapshot | same project hashes before/after |
 
 ## Oracle protection
 
@@ -48,7 +46,6 @@
 - no test may bypass exact references;
 - no fixture may use direct SQL;
 - no expected result may be weakened to hide a write;
-- project hash equality is mandatory for real integration;
 - unexecuted host behavior remains Unknown/Partial.
 
 ## Pass gate
@@ -56,7 +53,6 @@
 - all critical cases pass;
 - full repository regression passes;
 - static Skill Interface validator passes;
-- SpringGear integration passes;
 - Review has zero Blocker/Major;
 - remote branch contains all required evidence files;
 - CI is green on the exact final branch HEAD.

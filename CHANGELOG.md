@@ -4,7 +4,7 @@
 
 ## Unreleased
 
-- Added a strictly read-only Lifecycle Query Graph package with exact REQ inspection, CTX/REQ dependency edges, frontier/blocker projection, next-action availability, and real SpringGear vertical integration evidence.
+- Added a strictly read-only Lifecycle Query Graph package with exact REQ inspection, CTX/REQ dependency edges, frontier/blocker projection, and next-action availability.
 - Added the shared Skill Interface Contract, deterministic argument parser, command metadata, help/version/commands/examples, default resolution, decision policies, write policies, and summary/json/debug output modes.
 - Upgraded `sdlc-000-ctx` and `sdlc-100-req` so bare invocation can resolve standard operations without exposing Evidence IDs or Runtime JSON to users.
 - Added read-only cross-phase VFY Return and RLS Issue Control Input resolution to the shared Runtime Kernel.

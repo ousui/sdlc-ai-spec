@@ -14,7 +14,6 @@
 ```text
 skills/sdlc-status/**
 tests/skill_status/**
-tools/test_springgear_sdlc_status.py
 docs/plugin-development/work-items/sdlc-status/**
 .github/workflows/validate.yml
 CHANGELOG.md

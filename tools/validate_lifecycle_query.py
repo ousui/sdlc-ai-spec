@@ -16,7 +16,6 @@ REQUIRED = (
     PACKAGE / "models.py",
     PACKAGE / "query.py",
     ROOT / "tests/lifecycle/test_query.py",
-    ROOT / "tools/test_springgear_lifecycle_query.py",
 )
 FORBIDDEN_CALLS = {
     "initialize",

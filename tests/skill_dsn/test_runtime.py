@@ -161,6 +161,46 @@ class DsnRuntimeTests(DsnRuntimeFixture):
         )
         self.assertEqual(len(matrix.rows), 16)
 
+    def test_na_or_waived_scope_does_not_allocate_empty_dsn(self):
+        for disposition in ("n/a", "waived"):
+            with self.subTest(disposition=disposition):
+                reference = self.create_requirement(
+                    self.context_reference, disposition
+                )
+                before = self.catalog().list_artifacts("DSN")
+                result = self.execute(
+                    self.invocation(scope_inputs=(reference,))
+                )
+                after = self.catalog().list_artifacts("DSN")
+                self.assertTrue(result["ok"])
+                self.assertEqual(result["status"], "completed")
+                self.assertIsNone(result["artifact"])
+                self.assertEqual(result["warnings"][0]["code"], "DSN_NOT_REQUIRED")
+                self.assertEqual(before, after)
+
+    def test_pending_req_applicability_blocks_before_allocation(self):
+        reference = self.create_requirement(self.context_reference, "pending")
+        before = self.catalog().list_artifacts("DSN")
+        result = self.execute(self.invocation(scope_inputs=(reference,)))
+        after = self.catalog().list_artifacts("DSN")
+        self.assertFalse(result["ok"])
+        self.assertEqual(result["status"], "action_required")
+        self.assertEqual(
+            result["errors"][0]["code"],
+            "REQ_DSN_APPLICABILITY_PENDING",
+        )
+        self.assertEqual(before, after)
+
+    def test_required_scope_dominates_na_scope(self):
+        optional = self.create_requirement(self.context_reference, "n/a")
+        result = self.execute(
+            self.invocation(
+                scope_inputs=(self.requirement_reference, optional)
+            )
+        )
+        self.assertTrue(result["ok"])
+        self.assertIsNotNone(result["artifact"])
+
 
 if __name__ == "__main__":
     import unittest

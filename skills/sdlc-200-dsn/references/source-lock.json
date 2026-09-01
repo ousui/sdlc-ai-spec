@@ -1,0 +1,135 @@
+{
+  "contract": "sdlc-ai-spec/runtime-source-lock/v1",
+  "contracts": [
+    {
+      "contract_id": "sdlc-ai-spec/runtime/artifact-store/v1",
+      "contract_version": "1",
+      "sha256": "500f2d327dfd734974d73eda2857ca2e3663ceaf6f8c48a92b925612cf25fc81"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/runtime/artifact/v1",
+      "contract_version": "1",
+      "sha256": "8e86f76153d6e7309647daa4edbdd05c0083c2ddda135279d35bd98f40a17f3c"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/runtime/kernel/v1",
+      "contract_version": "1",
+      "sha256": "0ec065370ea9d05083d5527a4fc44bf28b0376b8b1ea7e0e684e17c6c06a5ad7"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/runtime/phase/v1",
+      "contract_version": "1",
+      "sha256": "0ef203f6de99f055cbf2e9c06f927ea827be31ad3b700d2c2760e4cc42c76eb3"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/runtime/skill-execution/v1",
+      "contract_version": "1",
+      "sha256": "b05f03cc1987c9eed431040e2f5626880cbc07e44e5a9c48d93fdbc8cd352bc7"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/artifact-store/v1.1",
+      "contract_version": "1.1",
+      "sha256": "b340ca2a38dfe0f7409acaa8f9ac559e8872bed44725037889528e3d167d4764"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/core/v1.1",
+      "contract_version": "1.1",
+      "sha256": "1eefa7a138f2d221140137a5fac0f5429b7f847273fe9d70e891ace6c3b7a89b"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design-domain/110/v1.1",
+      "contract_version": "1.1",
+      "sha256": "816a9c5144fa2980e5d9675c6b74bed74a7bb07c9cacab655a9ce57c64790f0c"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design-domain/120/v1.1",
+      "contract_version": "1.1",
+      "sha256": "dd46d3f9ab07702e65b776ef1e1a2036e8bf1413f36487334f85b7b525b21ca6"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design-domain/130/v1.1",
+      "contract_version": "1.1",
+      "sha256": "97c0733673fc7141dd704b6e254929ec08d2ba96d8e6818b69782e7160991386"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design-domain/140/v1.1",
+      "contract_version": "1.1",
+      "sha256": "60a881cd1c69fbda8a02befb641f4dd8ab510c6147e02e892c3f9ba530319e01"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design-domain/210/v1.1",
+      "contract_version": "1.1",
+      "sha256": "84a62b6f15542663e7ecf93cd6e12d96b1453e9a52a64cdd1f510a9076400eef"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design-domain/220/v1.1",
+      "contract_version": "1.1",
+      "sha256": "67d238cd54eccd896ad99111db2692676a5f504fd3c0114c1b296be4fa9dcd6c"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design-domain/230/v1.1",
+      "contract_version": "1.1",
+      "sha256": "db196e684b4d86ff6d1343633a368c34059b285524703dacebf47c23738af842"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design-domain/240/v1.1",
+      "contract_version": "1.1",
+      "sha256": "0d6383f895b1a43349c38a9fd22e5704451c451e66c3b4063938c098c22f4fef"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design-domain/310/v1.1",
+      "contract_version": "1.1",
+      "sha256": "9b9c2764f57d96e0861ed7a5c841f622bc19f6ac1125ac538a6337978696d105"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design-domain/320/v1.1",
+      "contract_version": "1.1",
+      "sha256": "28928cb2d6dd99ccb98cb68e85a7c990e55c6590e5e6fa04207d8fa8df6bebc6"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design-domain/330/v1.1",
+      "contract_version": "1.1",
+      "sha256": "7d3196dad795838f906f351aa462b06637f0c377cf5dd70c866a278b91db8a10"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design-domain/340/v1.1",
+      "contract_version": "1.1",
+      "sha256": "46ae3ddea5bd98930a065431e201e67bb81f404f42867a015bf0db8738430cb1"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design-domain/350/v1.1",
+      "contract_version": "1.1",
+      "sha256": "c419d0da292d36dbd1531d3305f753bfe2e67cc9750bcbe5db403d66d1555619"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design-domain/410/v1.1",
+      "contract_version": "1.1",
+      "sha256": "8d5968912851696706c894c93c4319e122a0f527aa5035439ce33ac01d5b0291"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design-domain/420/v1.1",
+      "contract_version": "1.1",
+      "sha256": "92b19fd4a50fe1e887f64a69d13c9713fdf64198e2bd9c6ef2f9da9456579c34"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design-domain/510/v1.1",
+      "contract_version": "1.1",
+      "sha256": "30cea8dec4a69793a5bcc10ae9a6d4fa420fbff1b81e85bc4fe3f6450ba640f6"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/design/v1.1",
+      "contract_version": "1.1",
+      "sha256": "998b76ebf72714706bca045d22f2b5b09ac655404f324cb904edcc241bc4f0ee"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/project-context/v1.1",
+      "contract_version": "1.1",
+      "sha256": "1d98e7cce686664cbf9897cbac852c425644ba3ea81a0d9c1db5e27b0e530470"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/requirement/v1.1",
+      "contract_version": "1.1",
+      "sha256": "13907cab3f1a9a5575d0d292901dc532f2a1c15f5b345f4fa8b7e20b137ed3f0"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Deterministic create/revise/check runtime for sdlc-200-dsn."""
+"""Shared deterministic primitives for the sdlc-200-dsn runtime."""
 
 from __future__ import annotations
 
@@ -228,6 +228,28 @@ SPEC_HASHES = {
     "200-dsn-domains/510-verifiability-vfy-strategy.md": "30cea8dec4a69793a5bcc10ae9a6d4fa420fbff1b81e85bc4fe3f6450ba640f6",
 }
 
+SPEC_CONTRACT_IDS = {
+    "core-spec.md": "sdlc-ai-spec/spec/core/v1.1",
+    "artifact-store-spec.md": "sdlc-ai-spec/spec/artifact-store/v1.1",
+    "200-dsn-spec.md": "sdlc-ai-spec/spec/design/v1.1",
+    "200-dsn-domains/110-workflow-state.md": "sdlc-ai-spec/spec/design-domain/110/v1.1",
+    "200-dsn-domains/120-ux-interaction.md": "sdlc-ai-spec/spec/design-domain/120/v1.1",
+    "200-dsn-domains/130-ui-content.md": "sdlc-ai-spec/spec/design-domain/130/v1.1",
+    "200-dsn-domains/140-accessibility-i18n.md": "sdlc-ai-spec/spec/design-domain/140/v1.1",
+    "200-dsn-domains/210-system-architecture.md": "sdlc-ai-spec/spec/design-domain/210/v1.1",
+    "200-dsn-domains/220-components-modules.md": "sdlc-ai-spec/spec/design-domain/220/v1.1",
+    "200-dsn-domains/230-interfaces-integration.md": "sdlc-ai-spec/spec/design-domain/230/v1.1",
+    "200-dsn-domains/240-data-design.md": "sdlc-ai-spec/spec/design-domain/240/v1.1",
+    "200-dsn-domains/310-security-privacy-compliance.md": "sdlc-ai-spec/spec/design-domain/310/v1.1",
+    "200-dsn-domains/320-performance-capacity.md": "sdlc-ai-spec/spec/design-domain/320/v1.1",
+    "200-dsn-domains/330-reliability-recovery.md": "sdlc-ai-spec/spec/design-domain/330/v1.1",
+    "200-dsn-domains/340-compatibility-migration.md": "sdlc-ai-spec/spec/design-domain/340/v1.1",
+    "200-dsn-domains/350-maintainability-extensibility.md": "sdlc-ai-spec/spec/design-domain/350/v1.1",
+    "200-dsn-domains/410-deployment-configuration.md": "sdlc-ai-spec/spec/design-domain/410/v1.1",
+    "200-dsn-domains/420-observability-operability.md": "sdlc-ai-spec/spec/design-domain/420/v1.1",
+    "200-dsn-domains/510-verifiability-vfy-strategy.md": "sdlc-ai-spec/spec/design-domain/510/v1.1",
+}
+
 
 class DsnRuntimeError(ValueError):
     code = "DSN_RUNTIME_ERROR"
@@ -353,11 +375,17 @@ def _exact_base(reference: str, phase: str | None = None) -> tuple[str, int]:
     return artifact_id, revision
 
 
+def _spec_reference(name: str) -> str:
+    try:
+        contract_id = SPEC_CONTRACT_IDS[name]
+        digest = SPEC_HASHES[name]
+    except KeyError as exc:
+        raise DsnRuntimeError(f"unknown bundled DSN contract: {name}") from exc
+    return f"{contract_id}@sha256:{digest}"
+
+
 def _evaluation_contract_set() -> str:
-    return ", ".join(
-        f"docs/v1.1/{name}@sha256:{digest}"
-        for name, digest in SPEC_HASHES.items()
-    )
+    return ", ".join(_spec_reference(name) for name in SPEC_HASHES)
 
 
 def _subject_digest(

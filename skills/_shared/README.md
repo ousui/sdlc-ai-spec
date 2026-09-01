@@ -23,5 +23,5 @@ skills/_shared/
 - `skill-interface.md` 统一裸调用、命令、参数别名、默认推断、决策权、写入和用户输出；
 - 正式 Skill 必须提供私有 `references/interface.json`，并使用共享参数解析器；
 - 正式 Skill 可以读取本目录，但不得读取兄弟业务 Skill 私有目录；
-- `docs/v1.x/**` 只用于设计、构建和审查，不是运行时依赖；
+- 设计期规范只用于设计、构建和审查，不是运行时依赖；
 - 构建期使用 `packages/sdlc_runtime` 生成并验证 Skill 私有 `source-lock.json`。

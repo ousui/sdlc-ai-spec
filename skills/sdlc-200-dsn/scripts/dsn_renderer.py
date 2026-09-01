@@ -121,8 +121,7 @@ class DsnRenderer:
                     "domain" if domain else "supporting",
                     domain.display_name if domain else "Multiple",
                     (
-                        f"docs/v1.1/200-dsn-domains/{domain.filename}"
-                        f"@sha256:{SPEC_HASHES['200-dsn-domains/' + domain.filename]}"
+                        _spec_reference("200-dsn-domains/" + domain.filename)
                         if domain
                         else "N/A"
                     ),

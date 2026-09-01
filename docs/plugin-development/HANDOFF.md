@@ -2,47 +2,51 @@
 
 ## 当前基线
 
-- 主线基线：`main@18d2d73f07be719dee8f813f707e5fe589be2734`。
-- 主线最新 GitHub Actions：`33468118983`，结论 `success`。
-- 已完成正式能力：`sdlc-000-ctx`、`sdlc-100-req`、Lifecycle Query Graph、`sdlc-status`。
-- SpringGear 实时外部仓库 CI 已按主线决定移除；本地 Fixture、Runtime Contract、Skill Interface、Lifecycle Query、Status、Runtime Independence 和全仓单元测试仍由主线 CI 执行。
+- 当前远端 `main`：`4b8be64accf40467e82502dc7a76ec50fc714588`，包含不完整 DSN，主线 CI 失败。
+- 恢复分支：`revert/incomplete-sdlc-200-dsn@4b37924db6ced95d2465ee8e69bb1c3a2a4be4f4`。
+- 完整实现分支：`skill/sdlc-200-dsn-v2`，基于恢复分支。
+- 已完成正式能力：`sdlc-000-ctx`、`sdlc-100-req`、Lifecycle Query Graph、`sdlc-status`、`sdlc-200-dsn`。
 
-## 当前工作
+## sdlc-200-dsn 状态
 
-- 当前活动 Skill：`sdlc-200-dsn`。
-- 当前分支：`skill/sdlc-200-dsn`。
-- 当前阶段：`approval`。
-- `DESIGN.md`：`ready`。
-- `EVAL-PLAN.md`：`ready`。
-- Maintainer Design Decision：`pending`。
-- 本轮只完成 Design 与 Eval Plan；未创建 `SKILL.md`、Runtime、Fixture、Adapter、Source Lock 或正式 Domain Contract。
+```text
+Stage: complete
+Design: approved via APPROVAL.md
+Evaluate: PASS
+Adapt Codex: PARTIAL
+Review: PASS
+Finalization: ACCEPTED_FOR_PULL_REQUEST
+```
 
-## 已收敛设计决定
+## 完成证据
 
-1. DSN 是一个父 Artifact Set：primary Canonical Blob、全部 required Domain Member、Supporting Member 和 Manifest-Member closure 必须原子一致。
-2. 固定 16 个 Design Domain 作为 `sdlc-200-dsn` 私有 bundled contract，不创建 16 个可调用 Skill；`DOM-510` 在 DSN 存在时固定 required。
-3. Shared Skill Interface 在 implement 阶段增加向后兼容、可重复的 `--input/-i`，归一化为 `input_references`；现有 CTX、REQ 和 Status 在未使用该参数时行为不变。
-4. Lifecycle Query 在 implement 阶段扩展真实 DSN Projection、REQ→DSN Edge 和基于 Lifecycle Applicability 的下一阶段判断；`sdlc-status` 只消费 Projection，不复制 DSN 规则。
-5. 设计边界、共享/拆分、关键方案、风险接受、Waiver、法律适用性和 Final Confirmation 均保留明确决策权；默认不由模型静默决定。
-6. Runtime 不读取 `docs/**`，不调用兄弟 Skill，不直接 SQL，不把设计文件写入项目源码树，不执行 Git、远端、网络或依赖安装。
-7. 当前没有证据表明 DevSDLC 存在新的通用缺口，本阶段不修改 DevSDLC。
+- Fixed Critical Eval：`33/33 PASS`；
+- Full repository regression：`177/177 PASS`；
+- Runtime Contract / Skill Interface / Lifecycle Query / Status Validator：`PASS`；
+- DSN Source Lock：26 项；
+- Bundled Runtime Contract：17 份；
+- Runtime Independence：`PASS`，开发文档复制 0、外部依赖安装 0；
+- SpringGear temporary integration：`PASS`，`ousui/springgear@e855096ff19dcdb303dc4250ba19c30acd743ac7`；
+- SpringGear 源码快照和 Git 状态恢复一致，远端写入 0；
+- Review Open Findings：Blocker / Major / Minor = `0 / 0 / 0`。
 
-## Design 阶段验证
+## 重要实现边界
 
-- 已读取适用 `AGENTS.md`、Skill Development Workflow、Design/Eval 模板和当前 Shared Runtime / Skill Interface Contract。
-- 已核对 Core、Artifact Store、CTX、REQ、DSN 以及固定 16 份 Domain Spec；DSN Source Lock 计划为 26 项，DSN Artifact Evaluation Contract Set 为 19 项。
-- Design DoD：满足。
-- Eval Oracle：可判定。
-- Blocking Open Item：0。
-- 未执行实现测试、行为 Eval 或 Client Adapt；这些不属于当前阶段。
+1. DSN 是父 Artifact Set：primary、required Domain Member、Supporting Member、Manifest-Member closure 原子一致。
+2. 固定 16 个 bundled Domain Contract，不创建 16 个可调用 Skill；`DOM-510` 固定 required。
+3. 生产 Runtime 使用稳定 Contract ID + SHA-256，不依赖开发期物理路径。
+4. `--input/-i` 可重复且失败关闭；Meta Command 绝对无执行副作用。
+5. 上游 REQ `DSN=n/a/waived` 不创建空 DSN；`pending` 在分配前停止。
+6. Lifecycle Query 读取 DSN Applicability，准确投影 PLN 或直接 IMP；异常时不猜测。
+7. `check` 严格只读；失败的新 Control Reservation 准确 abandon。
+8. Codex 仅有静态 Adapter 证据，真实安装后行为仍为 Unknown。
 
 ## 唯一下一工作包
 
-进入 `approval`，由 Maintainer 明确执行其一：
+创建并审查：
 
 ```text
-approve-design
-reject-design
+skill/sdlc-200-dsn-v2 → main
 ```
 
-批准阶段只记录决定并把唯一下一工作包设为 `implement`；不得在同一工作包创建 Skill、Runtime、Fixture、Adapter，也不得进入实现。
+该 PR 的净效果应同时撤销不完整实现并引入完整实现。推荐 `Squash and merge`。不得自动 merge、tag 或 release。

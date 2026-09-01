@@ -5,7 +5,7 @@ from dsn_common import *
 from dsn_analyzer import DsnAnalyzer
 from dsn_builder import DsnBuilder
 from dsn_verifier import DsnVerifier
-from dsn_handler import DsnHandler, INTERFACE_PATH
+from dsn_handler_final import DsnHandler, INTERFACE_PATH
 
 
 def _meta_result(command: SkillCommandWithInputs, display: str) -> dict[str, Any]:

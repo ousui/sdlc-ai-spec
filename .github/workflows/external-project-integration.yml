@@ -1,0 +1,80 @@
+name: external-project-integration
+
+on:
+  push:
+    branches:
+      - "external-integration/**"
+
+permissions:
+  contents: read
+
+jobs:
+  integration:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sdlc-ai-spec runtime
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Resolve external project from branch name
+        id: target
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import os
+          import re
+          from pathlib import Path
+
+          name = os.environ["GITHUB_REF_NAME"]
+          prefix = "external-integration/"
+          if not name.startswith(prefix):
+              raise SystemExit("external integration branch prefix is missing")
+          value = name[len(prefix):]
+          parts = value.split("--")
+          if len(parts) != 3:
+              raise SystemExit(
+                  "branch must be external-integration/<owner>--<repo>--<ref>"
+              )
+          owner, repo, ref = parts
+          token = re.compile(r"^[A-Za-z0-9_.-]+$")
+          if not all(token.fullmatch(item) for item in parts):
+              raise SystemExit("external repository coordinates contain unsafe characters")
+          output = Path(os.environ["GITHUB_OUTPUT"])
+          with output.open("a", encoding="utf-8") as handle:
+              handle.write(f"repository={owner}/{repo}\n")
+              handle.write(f"ref={ref}\n")
+          PY
+
+      - name: Checkout external project
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ steps.target.outputs.repository }}
+          ref: ${{ steps.target.outputs.ref }}
+          path: external-project
+          persist-credentials: false
+
+      - name: Run generic DSN integration
+        shell: bash
+        run: |
+          set -euo pipefail
+          label="${{ steps.target.outputs.repository }}@$(git -C external-project rev-parse HEAD)"
+          python3 tools/run_external_dsn_integration.py \
+            --project-root "$GITHUB_WORKSPACE/external-project" \
+            --project-label "$label" \
+            | tee external-integration-result.json
+
+      - name: Verify external checkout restored
+        shell: bash
+        run: |
+          test -z "$(git -C external-project status --porcelain)"
+
+      - name: Upload integration result
+        uses: actions/upload-artifact@v4
+        with:
+          name: external-project-integration-result
+          path: external-integration-result.json
+          if-no-files-found: error

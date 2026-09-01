@@ -148,12 +148,8 @@ def main() -> int:
         codex_marketplace, plugin_name, "Codex"
     )
     source = codex_entry.get("source")
-    if not isinstance(source, dict) or source.get("source") != "url":
-        fail("Codex marketplace plugin source must use the url adapter")
-    if source.get("url") != codex_manifest.get("repository"):
-        fail("Codex marketplace source url must match plugin repository metadata")
-    if source.get("ref") != "main":
-        fail("Codex marketplace plugin source ref must be main")
+    if source != {"source": "local", "path": "./"}:
+        fail("Codex marketplace source must resolve to the marketplace root")
     if codex_entry.get("policy") != {
         "installation": "AVAILABLE",
         "authentication": "ON_INSTALL",
@@ -211,8 +207,8 @@ def main() -> int:
     claude_entry = single_marketplace_entry(
         claude_marketplace, plugin_name, "Claude Code"
     )
-    if claude_entry.get("source") != source:
-        fail("Claude Code marketplace source must match Codex")
+    if claude_entry.get("source") != "./":
+        fail("Claude Code marketplace source must resolve to the marketplace root")
 
     marketplace_projection_fields = (
         "name",

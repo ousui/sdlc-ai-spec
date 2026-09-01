@@ -7,9 +7,8 @@
     {
       "name": "sdlc-ai-spec",
       "source": {
-        "source": "url",
-        "url": "git@github.com:goedgecloud/sdlc-ai-spec.git",
-        "ref": "main"
+        "source": "local",
+        "path": "./"
       },
       "policy": {
         "installation": "AVAILABLE",

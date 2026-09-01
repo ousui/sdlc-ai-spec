@@ -34,7 +34,9 @@ tests/                自动化测试
 
 三个 Agent 共用根目录 `skills/`，平台入口保持轻量。
 
-## Codex Marketplace 安装
+## Plugin 安装
+
+### Codex
 
 将仓库添加为 Codex Marketplace，再安装其中的 `sdlc-ai-spec` Plugin：
 
@@ -44,7 +46,32 @@ codex plugin add sdlc-ai-spec@sdlc-ai-spec
 ```
 
 Marketplace 元数据位于 `.agents/plugins/marketplace.json`，Plugin 展示与运行入口位于
-`.codex-plugin/plugin.json`；实际仓库 Source 以 Marketplace 元数据为准。
+`.codex-plugin/plugin.json`。Plugin 使用 Marketplace 根目录中的同一份代码。
+
+### Claude Code
+
+将仓库添加为 Claude Code Marketplace，再安装 Plugin：
+
+```bash
+claude plugin marketplace add <marketplace-source>
+claude plugin install sdlc-ai-spec@sdlc-ai-spec
+```
+
+Marketplace 元数据位于 `.claude-plugin/marketplace.json`，Plugin 入口位于
+`.claude-plugin/plugin.json`。相对 Source `./` 指向 Marketplace 根目录。
+
+### Cursor
+
+本地开发时，将仓库链接到 Cursor 的本地 Plugin 目录，然后重启 Cursor 或执行
+`Developer: Reload Window`：
+
+```bash
+mkdir -p ~/.cursor/plugins/local
+ln -s <plugin-repository-root> ~/.cursor/plugins/local/sdlc-ai-spec
+```
+
+Cursor 入口位于 `.cursor-plugin/plugin.json`。公开 Marketplace 安装需先提交仓库并通过
+Cursor Marketplace 审核。
 
 ## Phase Skill 命名
 

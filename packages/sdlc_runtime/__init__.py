@@ -51,6 +51,7 @@ from .skill_args import (
     render_version,
     skill_interface_from_mapping,
 )
+from .skill_inputs import SkillCommandWithInputs, parse_skill_command_with_inputs
 from .source_lock import (
     ContractSource,
     REGISTRY_CONTRACT,
@@ -85,6 +86,7 @@ __all__ = [
     "SOURCE_LOCK_CONTRACT",
     "SkillArgumentError",
     "SkillCommand",
+    "SkillCommandWithInputs",
     "SkillInterfaceSpec",
     "SourceLockError",
     "VFYReturnControlInput",
@@ -106,6 +108,7 @@ __all__ = [
     "normalize_command_aliases",
     "parse_skill_arguments",
     "parse_skill_command",
+    "parse_skill_command_with_inputs",
     "registry_sources",
     "render_commands",
     "render_examples",

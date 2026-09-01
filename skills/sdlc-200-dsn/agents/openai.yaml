@@ -1,0 +1,5 @@
+policy:
+  allow_implicit_invocation: false
+interface:
+  display_name: "SDLC 200 DSN"
+  short_description: "创建、修订和检查设计 DSN Artifact Set"

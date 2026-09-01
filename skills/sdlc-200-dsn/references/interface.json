@@ -1,0 +1,24 @@
+{
+  "contract": "sdlc-ai-spec/runtime/skill-interface/v1",
+  "skill": "sdlc-200-dsn",
+  "skill_version": "1.0.0",
+  "default_command": "auto",
+  "commands": [
+    {"name": "auto", "description": "根据唯一工作区、REQ Scope、已有 DSN 和请求意图自动选择 create、revise 或 check。", "writes": true},
+    {"name": "create", "description": "基于一个或多个准确 frozen REQ 创建 DSN Artifact Set。", "writes": true},
+    {"name": "revise", "description": "修订准确 DSN Revision；open 原地修订，frozen 创建新 Revision。", "writes": true},
+    {"name": "check", "description": "严格只读检查准确 DSN Revision 和完整 Member closure。", "writes": false},
+    {"name": "help", "description": "显示用途、重复输入参数、默认行为和写入边界。", "writes": false},
+    {"name": "version", "description": "显示 Skill Version 与 Interface Contract。", "writes": false},
+    {"name": "commands", "description": "列出本 Skill 支持的命令。", "writes": false},
+    {"name": "examples", "description": "显示常用调用示例。", "writes": false}
+  ],
+  "examples": [
+    "/sdlc-200-dsn",
+    "/sdlc-200-dsn create -i REQ-20260901090000-01@1",
+    "/sdlc-200-dsn create --input=REQ-20260901090000-01@1 --input=REQ-20260901090000-02@1",
+    "/sdlc-200-dsn revise -r DSN-20260901100000-01@1 -i REQ-20260901090000-01@1",
+    "/sdlc-200-dsn check --reference DSN-20260901100000-01@1",
+    "/sdlc-200-dsn --help"
+  ]
+}

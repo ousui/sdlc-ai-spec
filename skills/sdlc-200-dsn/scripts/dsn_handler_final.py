@@ -9,6 +9,7 @@ from packages.sdlc_artifact_store.catalog import ArtifactCatalog
 
 from dsn_common import (
     APPLICABILITY_HEADERS,
+    CanonicalFormatError,
     DsnRuntimeError,
     _exact_base,
     _refs,
@@ -102,7 +103,7 @@ class DsnHandler(BaseDsnHandler):
                 if not basis:
                     raise DsnRuntimeError("REQ DSN Applicability Basis is empty")
                 dispositions.append(disposition)
-        except (ArtifactStoreError, DsnRuntimeError) as exc:
+        except (ArtifactStoreError, CanonicalFormatError, DsnRuntimeError) as exc:
             return self._error(
                 invocation,
                 exc,

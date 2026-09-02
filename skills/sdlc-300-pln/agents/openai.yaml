@@ -1,0 +1,5 @@
+policy:
+  allow_implicit_invocation: false
+interface:
+  display_name: "SDLC 300 PLN"
+  short_description: "创建、修订和检查交付计划与稳定 Work Item"

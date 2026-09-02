@@ -17,7 +17,7 @@ from .models import (
     ProjectOverview,
     RequirementCandidate,
 )
-from .query_dsn import LifecycleQueryService
+from .query_pln import LifecycleQueryService
 
 __all__ = [
     "LIFECYCLE_STATUS_CONTRACT",

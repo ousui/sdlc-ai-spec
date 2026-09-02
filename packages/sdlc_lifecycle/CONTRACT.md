@@ -100,3 +100,11 @@ complete
 ## 扩展
 
 新 Phase Skill 合入后，应通过真实 Artifact Fixture 扩充关系和下一阶段测试；核心图模型不应按阶段复制。
+
+## PLN Work Item Projection
+
+- frozen ready PLN 必须解析唯一 `Work Items` 表；
+- 下一动作必须绑定准确 `<PLN-ID>@<Revision>#<WI-ID>`；
+- 只投影最早 Target Phase 中依赖已满足的 Work Item；
+- 同一最早 Target Phase 存在多个候选时全部返回，不静默选择“第一个”；
+- Work Item 运行状态不写回 PLN Artifact 或 Store。

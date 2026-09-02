@@ -33,8 +33,8 @@ class DsnLifecycleTests(DsnRuntimeFixture):
         action = projection.next_actions[0]
         self.assertEqual(action.phase, "PLN")
         self.assertEqual(action.skill, "sdlc-300-pln")
-        self.assertFalse(action.skill_available)
-        self.assertIsNone(action.command)
+        self.assertTrue(action.skill_available)
+        self.assertIsNotNone(action.command)
 
     def test_pln_skipped_and_imp_required_routes_directly_to_imp(self):
         design = self.complete_design()
@@ -72,6 +72,7 @@ class DsnLifecycleTests(DsnRuntimeFixture):
         self.assertEqual(action.phase, "IMP")
         self.assertEqual(action.skill, "sdlc-400-imp")
         self.assertFalse(action.skill_available)
+        self.assertIsNone(action.command)
 
     def test_open_dsn_stays_on_current_phase(self):
         created = self.execute(self.invocation(final=False))

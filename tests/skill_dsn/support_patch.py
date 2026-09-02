@@ -1,5 +1,14 @@
 """Small fixture corrections kept separate from production DSN runtime."""
 
+from pathlib import Path
+import sys
+
+ROOT = Path(__file__).resolve().parents[2]
+SCRIPT_DIR = ROOT / "skills/sdlc-200-dsn/scripts"
+for candidate in (ROOT, ROOT / "packages", SCRIPT_DIR):
+    if str(candidate) not in sys.path:
+        sys.path.insert(0, str(candidate))
+
 from packages.sdlc_artifact_store import ArtifactStore
 from packages.sdlc_artifact_store.catalog import ArtifactCatalog
 from dsn_handler_final import DsnHandler as FinalDsnHandler

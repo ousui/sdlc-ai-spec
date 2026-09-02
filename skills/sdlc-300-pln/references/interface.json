@@ -1,0 +1,23 @@
+{
+  "contract": "sdlc-ai-spec/runtime/skill-interface/v1",
+  "skill": "sdlc-300-pln",
+  "skill_version": "1.0.0",
+  "default_command": "auto",
+  "commands": [
+    {"name":"auto","description":"根据准确 Scope、PLN 适用性和已有 Plan 自动选择 create、revise 或 check。","writes":true},
+    {"name":"create","description":"基于一个或多个完整 frozen REQ/DSN 创建 Plan Artifact。","writes":true},
+    {"name":"revise","description":"修订准确 Plan Revision；open 原地修订，frozen 有变化时创建新 Revision。","writes":true},
+    {"name":"check","description":"严格只读检查 Plan、Work Item、依赖、覆盖与 Gate。","writes":false},
+    {"name":"help","description":"显示用途、输入参数和写入边界。","writes":false},
+    {"name":"version","description":"显示 Skill Version 与 Interface Contract。","writes":false},
+    {"name":"commands","description":"列出支持的命令。","writes":false},
+    {"name":"examples","description":"显示常用调用示例。","writes":false}
+  ],
+  "examples": [
+    "/sdlc-300-pln",
+    "/sdlc-300-pln create -i DSN-20260901090000-01@1",
+    "/sdlc-300-pln revise -r PLN-20260901130000-01@1 -i DSN-20260901090000-01@1",
+    "/sdlc-300-pln check -r PLN-20260901130000-01@1",
+    "/sdlc-300-pln --help"
+  ]
+}

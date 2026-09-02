@@ -1,0 +1,92 @@
+name: build-remaining-phases-v18
+
+on:
+  push:
+    branches:
+      - internal/remaining-phases-v18
+    paths:
+      - .github/workflows/build-remaining-phases-v18.yml
+      - tools/internal_recover_source_v18.py
+      - tools/internal_build_remaining_phases_v18.py
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  build-candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONWARNINGS: default
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Collect exact recovery materials
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          materials=/tmp/remaining-phases-v18-materials
+          rm -rf "$materials"
+          mkdir -p "$materials/actions/quarantine" "$materials/actions/patch-tail" "$materials/refs"
+
+          gh run download 33587166202 \
+            --repo "$GITHUB_REPOSITORY" \
+            --name quarantine-v16-snapshot \
+            --dir "$materials/actions/quarantine"
+
+          gh run download 33573635143 \
+            --repo "$GITHUB_REPOSITORY" \
+            --name patch-tail-snapshot-v2 \
+            --dir "$materials/actions/patch-tail"
+
+          for ref in \
+            origin/internal/quarantine-remaining-phases-v16-failed \
+            origin/feature/complete-remaining-phases \
+            origin/internal/patch-tail-snapshot-v2 \
+            origin/internal/imp-base-snapshot-20260902; do
+            safe="${ref#origin/}"
+            safe="${safe//\//__}"
+            git archive --format=zip --output="$materials/refs/$safe.zip" "$ref"
+          done
+
+          find "$materials" -type f -print -exec sha256sum {} \; | sort \
+            > /tmp/remaining-phases-v18-materials.sha256
+
+      - name: Recover a complete source candidate
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 tools/internal_recover_source_v18.py \
+            /tmp/remaining-phases-v18-materials \
+            /tmp/remaining-phases-v18-recovered-source
+
+      - name: Build and validate the stacked candidates
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          python3 tools/internal_build_remaining_phases_v18.py \
+            /tmp/remaining-phases-v18-recovered-source \
+            /tmp/remaining-phases-v18-result.json
+
+      - name: Publish evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: remaining-phases-v18-evidence
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            /tmp/remaining-phases-v18-result.json
+            /tmp/recovery-report.json
+            /tmp/remaining-phases-v18-materials.sha256
+            /tmp/remaining-phases-v18-work/real-project-validation-repeat.json

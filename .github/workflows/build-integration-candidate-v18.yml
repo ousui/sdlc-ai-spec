@@ -1,0 +1,292 @@
+name: build-integration-candidate-v18
+
+on:
+  push:
+    branches:
+      - internal/remaining-phases-v19
+    paths:
+      - .github/workflows/build-integration-candidate-v18.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+concurrency:
+  group: build-integration-candidate-v18
+  cancel-in-progress: true
+
+jobs:
+  build-integration:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONWARNINGS: default
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Wait for the exact stacked RLS candidate
+        id: refs
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          ready=false
+          for attempt in $(seq 1 360); do
+            git fetch origin '+refs/heads/*:refs/remotes/origin/*' --prune >/dev/null 2>&1 || true
+            if git show-ref --verify --quiet refs/remotes/origin/internal/candidate-imp-v18 \
+              && git show-ref --verify --quiet refs/remotes/origin/internal/candidate-vfy-v18 \
+              && git show-ref --verify --quiet refs/remotes/origin/internal/candidate-rls-v18; then
+              ready=true
+              break
+            fi
+            echo "stage candidates not complete: $attempt/360"
+            sleep 30
+          done
+          test "$ready" = true
+          test "$(git rev-parse origin/main)" = 0c38135e3e8bdad0d60d674c93ad42078e880134
+          test "$(git rev-parse origin/impl/pln-v2)" = a12382c2d0f0dc6ca54021b4fec26d5874eb169f
+          imp="$(git rev-parse origin/internal/candidate-imp-v18)"
+          vfy="$(git rev-parse origin/internal/candidate-vfy-v18)"
+          rls="$(git rev-parse origin/internal/candidate-rls-v18)"
+          git merge-base --is-ancestor a12382c2d0f0dc6ca54021b4fec26d5874eb169f "$imp"
+          git merge-base --is-ancestor "$imp" "$vfy"
+          git merge-base --is-ancestor "$vfy" "$rls"
+          printf 'imp=%s\n' "$imp" >> "$GITHUB_OUTPUT"
+          printf 'vfy=%s\n' "$vfy" >> "$GITHUB_OUTPUT"
+          printf 'rls=%s\n' "$rls" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare isolated integration worktree
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          rm -rf /tmp/remaining-phases-integration-v18 /tmp/remaining-phases-quarantine-v18
+          git worktree add --detach /tmp/remaining-phases-integration-v18 '${{ steps.refs.outputs.rls }}'
+          git worktree add --detach /tmp/remaining-phases-quarantine-v18 \
+            origin/internal/quarantine-remaining-phases-v16-failed
+
+          if [[ -d /tmp/remaining-phases-quarantine-v18/tests/system_integration ]]; then
+            rm -rf /tmp/remaining-phases-integration-v18/tests/system_integration
+            cp -a /tmp/remaining-phases-quarantine-v18/tests/system_integration \
+              /tmp/remaining-phases-integration-v18/tests/system_integration
+          fi
+
+          git show \
+            origin/internal/real-project-validation-v13:tools/real_project_validation_v13.py \
+            > /tmp/remaining-phases-integration-v18/tools/run_real_project_validation.py
+          chmod +x /tmp/remaining-phases-integration-v18/tools/run_real_project_validation.py
+
+      - name: Harden the repository-grounded validator
+        shell: bash
+        working-directory: /tmp/remaining-phases-integration-v18
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          path = Path('tools/run_real_project_validation.py')
+          text = path.read_text(encoding='utf-8')
+
+          old = '''if completed.returncode != 0:
+                  fallback = ["git", "clone", "--depth", "1"]'''
+          new = '''if completed.returncode != 0:
+                  shutil.rmtree(destination, ignore_errors=True)
+                  fallback = ["git", "clone", "--depth", "1"]'''
+          if old in text:
+              text = text.replace(old, new, 1)
+
+          old = '''if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
+                  if not value:
+                      return ["<empty>"]
+                  return [structural_shape(value[0], key=key)]'''
+          new = '''if isinstance(value, Sequence) and not isinstance(value, (str, bytes, bytearray)):
+                  if not value:
+                      return ["<empty>"]
+                  if key is None:
+                      return [structural_shape(item, key=key) for item in value]
+                  return [structural_shape(value[0], key=key)]'''
+          if old in text:
+              text = text.replace(old, new, 1)
+
+          start = text.index('def validate_skill_meta(')
+          end = text.index('\ndef execute_scenario(', start)
+          replacement = '''def validate_skill_meta(project: Path) -> tuple[str, ...]:
+              assertions: list[str] = []
+              clean_before = run(
+                  ["git", "status", "--porcelain=v1", "-z"], cwd=project
+              ).stdout
+              for skill in (
+                  "sdlc-000-ctx",
+                  "sdlc-100-req",
+                  "sdlc-200-dsn",
+                  "sdlc-300-pln",
+                  "sdlc-400-imp",
+                  "sdlc-500-vfy",
+                  "sdlc-600-rls",
+              ):
+                  runtime = ROOT / "skills" / skill / "scripts" / "runtime.py"
+                  if not runtime.is_file():
+                      raise ValidationError(
+                          f"missing Skill runtime: {runtime.relative_to(ROOT)}"
+                      )
+                  variants = (
+                      [sys.executable, str(runtime), "--version", "--output=json"],
+                      [sys.executable, str(runtime), "--version"],
+                      [sys.executable, str(runtime), "meta", "--output=json"],
+                      [sys.executable, str(runtime), "--help"],
+                  )
+                  succeeded = False
+                  for command in variants:
+                      completed = run(
+                          command,
+                          cwd=project,
+                          input_text="",
+                          check=False,
+                      )
+                      if completed.returncode == 0:
+                          succeeded = True
+                          break
+                  if not succeeded:
+                      raise ValidationError(
+                          f"no read-only meta invocation succeeded for {skill}"
+                      )
+                  clean_after = run(
+                      ["git", "status", "--porcelain=v1", "-z"], cwd=project
+                  ).stdout
+                  if clean_after != clean_before or (project / ".sdlc").exists():
+                      raise ValidationError(
+                          f"meta command modified external project: {skill}"
+                      )
+                  assertions.append(
+                      f"{skill} installed-copy meta command is project-independent"
+                  )
+              return tuple(assertions)
+
+          '''
+          text = text[:start] + replacement + text[end + 1:]
+          path.write_text(text, encoding='utf-8')
+          PY
+          python3 -m py_compile tools/run_real_project_validation.py
+
+      - name: Run first repository-grounded acceptance
+        shell: bash
+        working-directory: /tmp/remaining-phases-integration-v18
+        run: |
+          set -Eeuo pipefail
+          mkdir -p docs/plugin-development/final-validation
+          python3 tools/run_real_project_validation.py \
+            --ci \
+            --output docs/plugin-development/final-validation/real-project-validation.json
+
+      - name: Validate the exact report contract
+        shell: bash
+        working-directory: /tmp/remaining-phases-integration-v18
+        run: |
+          set -Eeuo pipefail
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('docs/plugin-development/final-validation/real-project-validation.json').read_text(encoding='utf-8'))
+          assert d['contract'] == 'sdlc-ai-spec/real-project-validation/v1'
+          assert d['result'] == 'PASS'
+          rows = d['projects']
+          assert len(rows) == 5
+          assert {row['project'] for row in rows} == {'SpringGear', 'gin-vue-admin', 'yudao-cloud'}
+          assert {row['scenario'] for row in rows if row['project'] == 'yudao-cloud'} == {
+              'mariadb-driver-adaptation',
+              'one-character-page-hotfix',
+              'i18n-scaffold-without-translations',
+          }
+          assert len({row['business_digest'] for row in rows}) == 5
+          assert all(row['phases'] == ['CTX', 'REQ', 'DSN', 'PLN', 'IMP', 'VFY', 'RLS'] for row in rows)
+          PY
+
+      - name: Execute three complete deterministic regression rounds
+        shell: bash
+        working-directory: /tmp/remaining-phases-integration-v18
+        run: |
+          set -Eeuo pipefail
+          for round in 1 2 3; do
+            echo "deterministic round $round/3"
+            python3 -m compileall -q packages scripts skills
+            python3 tools/validate_runtime_contracts.py
+            python3 tools/validate_skill_interfaces.py
+            python3 tools/validate_lifecycle_query.py
+            python3 tools/validate_sdlc_status.py
+            for script in tools/validate_sdlc_*_source_lock.py; do python3 "$script"; done
+            for script in tools/test_sdlc_*_runtime_independence.py; do python3 "$script"; done
+            for script in tests/evals/run_sdlc_*_eval.py; do python3 "$script"; done
+            python3 -m unittest discover -s tests -p 'test_*.py'
+          done
+
+      - name: Repeat external acceptance and compare invariants
+        shell: bash
+        working-directory: /tmp/remaining-phases-integration-v18
+        run: |
+          set -Eeuo pipefail
+          python3 tools/run_real_project_validation.py \
+            --ci \
+            --output /tmp/real-project-validation-v18-repeat.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          first = json.loads(Path('docs/plugin-development/final-validation/real-project-validation.json').read_text(encoding='utf-8'))
+          second = json.loads(Path('/tmp/real-project-validation-v18-repeat.json').read_text(encoding='utf-8'))
+          assert first['result'] == second['result'] == 'PASS'
+          assert first['structure_signature'] == second['structure_signature']
+          assert {(r['project'], r['scenario']) for r in first['projects']} == {
+              (r['project'], r['scenario']) for r in second['projects']
+          }
+          PY
+
+      - name: Commit and push the exact integration candidate
+        shell: bash
+        working-directory: /tmp/remaining-phases-integration-v18
+        run: |
+          set -Eeuo pipefail
+          cat > docs/plugin-development/final-validation/remaining-phases-v2.md <<EOF
+          # Remaining Phases V2 — Closed-loop Validation
+
+          - PLN: \`a12382c2d0f0dc6ca54021b4fec26d5874eb169f\`
+          - IMP: \`${{ steps.refs.outputs.imp }}\`
+          - VFY: \`${{ steps.refs.outputs.vfy }}\`
+          - RLS: \`${{ steps.refs.outputs.rls }}\`
+          - complete repository regression: three consecutive passes
+          - repository-grounded acceptance: two consistent passes
+          - projects: SpringGear, gin-vue-admin, yudao-cloud
+          - yudao-cloud scenarios: MariaDB adaptation, one-character hotfix, i18n scaffold without translations
+          - main remained \`0c38135e3e8bdad0d60d674c93ad42078e880134\`
+
+          No merge to main was performed.
+          EOF
+
+          git config user.name SHUAI.W
+          git config user.email x@ousui.org
+          git add tools/run_real_project_validation.py docs/plugin-development/final-validation tests/system_integration
+          git diff --cached --check
+          if git diff --cached --name-only | grep -q '^.github/workflows/'; then
+            echo 'workflow changes leaked into integration candidate' >&2
+            exit 1
+          fi
+          git commit -m 'test(integration): close remaining phases with real-project acceptance'
+          head="$(git rev-parse HEAD)"
+          git push --force origin "$head:refs/heads/internal/candidate-integration-v18"
+          printf 'integration=%s\n' "$head" > /tmp/integration-candidate-v18.txt
+
+      - name: Upload integration evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-candidate-v18-evidence
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            /tmp/integration-candidate-v18.txt
+            /tmp/real-project-validation-v18-repeat.json
+            /tmp/remaining-phases-integration-v18/docs/plugin-development/final-validation

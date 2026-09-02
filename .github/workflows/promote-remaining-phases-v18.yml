@@ -1,0 +1,208 @@
+name: promote-remaining-phases-v18
+
+on:
+  push:
+    branches:
+      - internal/remaining-phases-v18
+    paths:
+      - .github/workflows/promote-remaining-phases-v18.yml
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+  statuses: write
+
+concurrency:
+  group: promote-remaining-phases-v18
+  cancel-in-progress: true
+
+jobs:
+  promote-exact-candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONWARNINGS: default
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Wait for and resolve the complete candidate graph
+        id: refs
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          expected_main=0c38135e3e8bdad0d60d674c93ad42078e880134
+          frozen_pln=a12382c2d0f0dc6ca54021b4fec26d5874eb169f
+          ready=false
+          for attempt in $(seq 1 360); do
+            git fetch origin '+refs/heads/*:refs/remotes/origin/*' --prune >/dev/null 2>&1 || true
+            if git show-ref --verify --quiet refs/remotes/origin/internal/candidate-imp-v18 \
+              && git show-ref --verify --quiet refs/remotes/origin/internal/candidate-vfy-v18 \
+              && git show-ref --verify --quiet refs/remotes/origin/internal/candidate-rls-v18 \
+              && git show-ref --verify --quiet refs/remotes/origin/internal/candidate-integration-v18; then
+              ready=true
+              break
+            fi
+            echo "candidate graph not complete: attempt $attempt/360"
+            sleep 30
+          done
+          test "$ready" = true
+          test "$(git rev-parse origin/main)" = "$expected_main"
+          test "$(git rev-parse origin/impl/pln-v2)" = "$frozen_pln"
+
+          imp="$(git rev-parse origin/internal/candidate-imp-v18)"
+          vfy="$(git rev-parse origin/internal/candidate-vfy-v18)"
+          rls="$(git rev-parse origin/internal/candidate-rls-v18)"
+          integration="$(git rev-parse origin/internal/candidate-integration-v18)"
+
+          git merge-base --is-ancestor "$frozen_pln" "$imp"
+          git merge-base --is-ancestor "$imp" "$vfy"
+          git merge-base --is-ancestor "$vfy" "$rls"
+          git merge-base --is-ancestor "$rls" "$integration"
+
+          for pair in "$frozen_pln:$imp" "$imp:$vfy" "$vfy:$rls" "$rls:$integration"; do
+            parent="${pair%%:*}"
+            child="${pair##*:}"
+            if git diff --name-only "$parent" "$child" -- .github/workflows | grep -q .; then
+              echo "candidate changes workflow files: $child" >&2
+              exit 1
+            fi
+          done
+
+          printf 'imp=%s\n' "$imp" >> "$GITHUB_OUTPUT"
+          printf 'vfy=%s\n' "$vfy" >> "$GITHUB_OUTPUT"
+          printf 'rls=%s\n' "$rls" >> "$GITHUB_OUTPUT"
+          printf 'integration=%s\n' "$integration" >> "$GITHUB_OUTPUT"
+
+      - name: Validate each exact stage candidate
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          validate_stage() {
+            local sha="$1"
+            shift
+            git checkout --detach --force "$sha"
+            python3 -m compileall -q packages scripts skills
+            python3 tools/validate_runtime_contracts.py
+            python3 tools/validate_skill_interfaces.py
+            python3 tools/validate_lifecycle_query.py
+            python3 tools/validate_sdlc_status.py
+            python3 tools/validate_sdlc_300_pln_source_lock.py
+            python3 tools/test_sdlc_300_pln_runtime_independence.py
+            python3 tests/evals/run_sdlc_300_pln_eval.py
+            local phase index slug
+            for phase in "$@"; do
+              case "$phase" in
+                IMP) index=400; slug=imp ;;
+                VFY) index=500; slug=vfy ;;
+                RLS) index=600; slug=rls ;;
+                *) exit 2 ;;
+              esac
+              python3 "tools/validate_sdlc_${index}_${slug}_source_lock.py"
+              python3 "tools/test_sdlc_${index}_${slug}_runtime_independence.py"
+              python3 "tests/evals/run_sdlc_${index}_${slug}_eval.py"
+            done
+            python3 -m unittest discover -s tests -p 'test_*.py'
+          }
+
+          validate_stage '${{ steps.refs.outputs.imp }}' IMP
+          validate_stage '${{ steps.refs.outputs.vfy }}' IMP VFY
+          validate_stage '${{ steps.refs.outputs.rls }}' IMP VFY RLS
+
+      - name: Validate exact integration candidate
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git checkout --detach --force '${{ steps.refs.outputs.integration }}'
+          for round in 1 2 3; do
+            echo "integration deterministic round $round/3"
+            python3 -m compileall -q packages scripts skills
+            python3 tools/validate_runtime_contracts.py
+            python3 tools/validate_skill_interfaces.py
+            python3 tools/validate_lifecycle_query.py
+            python3 tools/validate_sdlc_status.py
+            for script in tools/validate_sdlc_*_source_lock.py; do python3 "$script"; done
+            for script in tools/test_sdlc_*_runtime_independence.py; do python3 "$script"; done
+            for script in tests/evals/run_sdlc_*_eval.py; do python3 "$script"; done
+            python3 -m unittest discover -s tests -p 'test_*.py'
+          done
+          test -f docs/plugin-development/final-validation/remaining-phases-v2.md
+          test -f docs/plugin-development/final-validation/real-project-validation.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          d = json.loads(Path('docs/plugin-development/final-validation/real-project-validation.json').read_text(encoding='utf-8'))
+          assert d['contract'] == 'sdlc-ai-spec/real-project-validation/v1'
+          assert d['result'] == 'PASS'
+          rows = d['projects']
+          assert len(rows) == 5
+          assert {row['project'] for row in rows} == {'SpringGear', 'gin-vue-admin', 'yudao-cloud'}
+          assert {row['scenario'] for row in rows if row['project'] == 'yudao-cloud'} == {
+              'mariadb-driver-adaptation',
+              'one-character-page-hotfix',
+              'i18n-scaffold-without-translations',
+          }
+          assert len({row['business_digest'] for row in rows}) == 5
+          PY
+
+      - name: Atomically publish formal stacked refs
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*' --prune
+          test "$(git rev-parse origin/main)" = 0c38135e3e8bdad0d60d674c93ad42078e880134
+          test "$(git rev-parse origin/impl/pln-v2)" = a12382c2d0f0dc6ca54021b4fec26d5874eb169f
+          test "$(git rev-parse origin/impl/imp-v2)" = a12382c2d0f0dc6ca54021b4fec26d5874eb169f
+          test "$(git rev-parse origin/impl/vfy-v2)" = a12382c2d0f0dc6ca54021b4fec26d5874eb169f
+          test "$(git rev-parse origin/impl/rls-v2)" = a12382c2d0f0dc6ca54021b4fec26d5874eb169f
+
+          git push --atomic --force origin \
+            '${{ steps.refs.outputs.imp }}:refs/heads/impl/imp-v2' \
+            '${{ steps.refs.outputs.vfy }}:refs/heads/impl/vfy-v2' \
+            '${{ steps.refs.outputs.rls }}:refs/heads/impl/rls-v2' \
+            '${{ steps.refs.outputs.integration }}:refs/heads/integration/remaining-phases-v2'
+
+          for pair in \
+            "${{ steps.refs.outputs.imp }}:IMP" \
+            "${{ steps.refs.outputs.vfy }}:VFY" \
+            "${{ steps.refs.outputs.rls }}:RLS" \
+            "${{ steps.refs.outputs.integration }}:integration"; do
+            sha="${pair%%:*}"
+            phase="${pair##*:}"
+            gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$sha" \
+              -f state=success \
+              -f context='remaining-phases-v18/exact-gate' \
+              -f description="$phase exact candidate passed deterministic validation" >/dev/null
+          done
+          test "$(git ls-remote origin refs/heads/main | cut -f1)" = 0c38135e3e8bdad0d60d674c93ad42078e880134
+
+      - name: Publish promotion receipt
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          cat > /tmp/remaining-phases-v18-promotion.txt <<EOF
+          result=PASS
+          main=0c38135e3e8bdad0d60d674c93ad42078e880134
+          pln=a12382c2d0f0dc6ca54021b4fec26d5874eb169f
+          imp=${{ steps.refs.outputs.imp }}
+          vfy=${{ steps.refs.outputs.vfy }}
+          rls=${{ steps.refs.outputs.rls }}
+          integration=${{ steps.refs.outputs.integration }}
+          EOF
+
+      - name: Upload promotion receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: remaining-phases-v18-promotion
+          if-no-files-found: warn
+          retention-days: 14
+          path: /tmp/remaining-phases-v18-promotion.txt

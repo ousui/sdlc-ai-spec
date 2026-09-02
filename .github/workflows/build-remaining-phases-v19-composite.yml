@@ -1,0 +1,203 @@
+name: build-remaining-phases-v19-composite
+
+on:
+  push:
+    branches:
+      - internal/remaining-phases-v19
+    paths:
+      - .github/workflows/build-remaining-phases-v19-composite.yml
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: write
+
+concurrency:
+  group: build-remaining-phases-v19
+  cancel-in-progress: true
+
+jobs:
+  build-candidates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONWARNINGS: default
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch all immutable source refs
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*' --prune
+          test "$(git rev-parse origin/main)" = 0c38135e3e8bdad0d60d674c93ad42078e880134
+          test "$(git rev-parse origin/impl/pln-v2)" = a12382c2d0f0dc6ca54021b4fec26d5874eb169f
+
+      - name: Assemble preferred composite source when a green IMP source exists
+        id: source
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          source=/tmp/remaining-phases-v19-composite-source
+          rm -rf "$source" /tmp/remaining-phases-v19-local-imp /tmp/remaining-phases-v19-quarantine
+
+          imp_ref=''
+          for ref in \
+            origin/internal/local-candidate-imp-v1 \
+            origin/internal/candidate-imp-v18; do
+            if git show-ref --verify --quiet "refs/remotes/$ref"; then
+              git worktree add --detach /tmp/remaining-phases-v19-local-imp "$ref"
+              if [[ -f /tmp/remaining-phases-v19-local-imp/skills/sdlc-400-imp/SKILL.md \
+                && -f /tmp/remaining-phases-v19-local-imp/skills/sdlc-400-imp/references/source-lock.json ]]; then
+                if (
+                  cd /tmp/remaining-phases-v19-local-imp
+                  python3 tools/validate_sdlc_400_imp_source_lock.py
+                  python3 tools/test_sdlc_400_imp_runtime_independence.py
+                  python3 tests/evals/run_sdlc_400_imp_eval.py
+                  python3 -m unittest discover -s tests -p 'test_*.py'
+                ); then
+                  imp_ref="$ref"
+                  break
+                fi
+              fi
+              git worktree remove --force /tmp/remaining-phases-v19-local-imp || true
+              rm -rf /tmp/remaining-phases-v19-local-imp
+            fi
+          done
+
+          if [[ -n "$imp_ref" ]]; then
+            mkdir -p "$source"
+            git archive "$imp_ref" | tar -x -C "$source"
+            git worktree add --detach /tmp/remaining-phases-v19-quarantine \
+              origin/internal/quarantine-remaining-phases-v16-failed
+
+            copy_item() {
+              local relative="$1"
+              local src="/tmp/remaining-phases-v19-quarantine/$relative"
+              local dst="$source/$relative"
+              if [[ -d "$src" ]]; then
+                rm -rf "$dst"
+                mkdir -p "$(dirname "$dst")"
+                cp -a "$src" "$dst"
+              elif [[ -f "$src" ]]; then
+                mkdir -p "$(dirname "$dst")"
+                cp -a "$src" "$dst"
+              else
+                echo "required salvage path missing: $relative" >&2
+                exit 1
+              fi
+            }
+
+            for relative in \
+              skills/sdlc-500-vfy \
+              skills/sdlc-600-rls \
+              tests/skill_vfy \
+              tests/skill_rls \
+              tests/system_integration \
+              tests/evals/late_phase_eval.py \
+              tests/evals/run_sdlc_500_vfy_eval.py \
+              tests/evals/run_sdlc_600_rls_eval.py \
+              tools/validate_sdlc_500_vfy_source_lock.py \
+              tools/validate_sdlc_600_rls_source_lock.py \
+              tools/test_sdlc_500_vfy_runtime_independence.py \
+              tools/test_sdlc_600_rls_runtime_independence.py; do
+              copy_item "$relative"
+            done
+
+            rm -rf "$source/.github/workflows"
+            mkdir -p "$source/.github"
+            git archive origin/impl/pln-v2 .github/workflows | tar -x -C "$source"
+            rm -rf "$source/.github/patches"
+            rm -f "$source/.remaining-phases-patch-manifest.json"
+            echo "path=$source" >> "$GITHUB_OUTPUT"
+            echo "kind=composite:$imp_ref" >> "$GITHUB_OUTPUT"
+          else
+            echo 'path=' >> "$GITHUB_OUTPUT"
+            echo 'kind=archive-recovery' >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Collect and expand archive recovery materials when needed
+        if: steps.source.outputs.path == ''
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          materials=/tmp/remaining-phases-v19-materials
+          rm -rf "$materials"
+          mkdir -p "$materials/actions/quarantine" "$materials/actions/patch-tail" "$materials/refs"
+
+          gh run download 33587166202 --repo "$GITHUB_REPOSITORY" \
+            --name quarantine-v16-snapshot --dir "$materials/actions/quarantine"
+          gh run download 33573635143 --repo "$GITHUB_REPOSITORY" \
+            --name patch-tail-snapshot-v2 --dir "$materials/actions/patch-tail"
+
+          for ref in \
+            origin/internal/quarantine-remaining-phases-v16-failed \
+            origin/feature/complete-remaining-phases \
+            origin/internal/patch-tail-snapshot-v2 \
+            origin/internal/imp-base-snapshot-20260902; do
+            safe="${ref#origin/}"
+            safe="${safe//\//__}"
+            git archive --format=zip --output="$materials/refs/$safe.zip" "$ref"
+          done
+
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib, zipfile
+          root = Path('/tmp/remaining-phases-v19-materials')
+          expanded = root / 'expanded'
+          expanded.mkdir(parents=True, exist_ok=True)
+          seen = set()
+          for round_number in range(12):
+              pending = []
+              for archive in root.rglob('*.zip'):
+                  digest = hashlib.sha256(archive.read_bytes()).hexdigest()
+                  if digest not in seen:
+                      pending.append((archive, digest))
+              if not pending:
+                  break
+              for index, (archive, digest) in enumerate(pending):
+                  seen.add(digest)
+                  destination = expanded / f'r{round_number:02d}-{index:04d}-{digest[:12]}'
+                  destination.mkdir(parents=True, exist_ok=True)
+                  try:
+                      with zipfile.ZipFile(archive) as handle:
+                          handle.extractall(destination)
+                  except Exception:
+                      pass
+          PY
+
+          python3 tools/internal_recover_source_v18.py \
+            "$materials" \
+            /tmp/remaining-phases-v19-archive-source
+
+      - name: Build IMP, VFY, RLS and Integration candidates
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          source='${{ steps.source.outputs.path }}'
+          if [[ -z "$source" ]]; then
+            source=/tmp/remaining-phases-v19-archive-source
+          fi
+          python3 tools/internal_build_remaining_phases_v18.py \
+            "$source" \
+            /tmp/remaining-phases-v19-composite-result.json
+
+      - name: Upload exact build evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: remaining-phases-v19-composite-evidence
+          if-no-files-found: warn
+          retention-days: 14
+          path: |
+            /tmp/remaining-phases-v19-composite-result.json
+            /tmp/recovery-report.json
+            /tmp/remaining-phases-v18-work/real-project-validation-repeat.json

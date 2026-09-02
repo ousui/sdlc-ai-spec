@@ -1,0 +1,136 @@
+name: verify-formal-remaining-phases-v18
+
+on:
+  push:
+    branches:
+      - internal/remaining-phases-v19
+    paths:
+      - .github/workflows/verify-formal-remaining-phases-v18.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  statuses: write
+
+concurrency:
+  group: verify-formal-remaining-phases-v18
+  cancel-in-progress: true
+
+jobs:
+  verify-formal-stack:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    env:
+      GH_TOKEN: ${{ github.token }}
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONWARNINGS: default
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Wait for the formal integration branch
+        id: refs
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          ready=false
+          for attempt in $(seq 1 360); do
+            git fetch origin '+refs/heads/*:refs/remotes/origin/*' --prune >/dev/null 2>&1 || true
+            if git show-ref --verify --quiet refs/remotes/origin/integration/remaining-phases-v2; then
+              imp="$(git rev-parse origin/impl/imp-v2)"
+              vfy="$(git rev-parse origin/impl/vfy-v2)"
+              rls="$(git rev-parse origin/impl/rls-v2)"
+              integration="$(git rev-parse origin/integration/remaining-phases-v2)"
+              if [[ "$imp" != a12382c2d0f0dc6ca54021b4fec26d5874eb169f \
+                && "$vfy" != a12382c2d0f0dc6ca54021b4fec26d5874eb169f \
+                && "$rls" != a12382c2d0f0dc6ca54021b4fec26d5874eb169f ]]; then
+                ready=true
+                break
+              fi
+            fi
+            echo "formal stack not complete: $attempt/360"
+            sleep 30
+          done
+          test "$ready" = true
+          test "$(git rev-parse origin/main)" = 0c38135e3e8bdad0d60d674c93ad42078e880134
+          test "$(git rev-parse origin/impl/pln-v2)" = a12382c2d0f0dc6ca54021b4fec26d5874eb169f
+          git merge-base --is-ancestor origin/impl/pln-v2 origin/impl/imp-v2
+          git merge-base --is-ancestor origin/impl/imp-v2 origin/impl/vfy-v2
+          git merge-base --is-ancestor origin/impl/vfy-v2 origin/impl/rls-v2
+          git merge-base --is-ancestor origin/impl/rls-v2 origin/integration/remaining-phases-v2
+          if git diff --name-only origin/impl/pln-v2 origin/integration/remaining-phases-v2 -- .github/workflows | grep -q .; then
+            echo 'formal candidate unexpectedly changes workflow files' >&2
+            exit 1
+          fi
+          printf 'imp=%s\n' "$(git rev-parse origin/impl/imp-v2)" >> "$GITHUB_OUTPUT"
+          printf 'vfy=%s\n' "$(git rev-parse origin/impl/vfy-v2)" >> "$GITHUB_OUTPUT"
+          printf 'rls=%s\n' "$(git rev-parse origin/impl/rls-v2)" >> "$GITHUB_OUTPUT"
+          printf 'integration=%s\n' "$(git rev-parse origin/integration/remaining-phases-v2)" >> "$GITHUB_OUTPUT"
+
+      - name: Revalidate the exact formal integration SHA
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          git checkout --detach --force '${{ steps.refs.outputs.integration }}'
+          python3 -m compileall -q packages scripts skills
+          python3 tools/validate_runtime_contracts.py
+          python3 tools/validate_skill_interfaces.py
+          python3 tools/validate_lifecycle_query.py
+          python3 tools/validate_sdlc_status.py
+          for script in tools/validate_sdlc_*_source_lock.py; do python3 "$script"; done
+          for script in tools/test_sdlc_*_runtime_independence.py; do python3 "$script"; done
+          for script in tests/evals/run_sdlc_*_eval.py; do python3 "$script"; done
+          python3 -m unittest discover -s tests -p 'test_*.py'
+
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          report = Path('docs/plugin-development/final-validation/real-project-validation.json')
+          assert report.is_file()
+          data = json.loads(report.read_text(encoding='utf-8'))
+          assert data['contract'] == 'sdlc-ai-spec/real-project-validation/v1'
+          assert data['result'] == 'PASS'
+          rows = data['projects']
+          assert len(rows) == 5
+          assert {row['project'] for row in rows} == {'SpringGear', 'gin-vue-admin', 'yudao-cloud'}
+          assert {row['scenario'] for row in rows if row['project'] == 'yudao-cloud'} == {
+              'mariadb-driver-adaptation',
+              'one-character-page-hotfix',
+              'i18n-scaffold-without-translations',
+          }
+          assert len({row['business_digest'] for row in rows}) == 5
+          PY
+
+      - name: Publish immutable completion receipt
+        shell: bash
+        run: |
+          set -Eeuo pipefail
+          integration='${{ steps.refs.outputs.integration }}'
+          git push --force origin "$integration:refs/heads/internal/delivery-complete-v18"
+          gh api --method POST "repos/$GITHUB_REPOSITORY/statuses/$integration" \
+            -f state=success \
+            -f context='remaining-phases-v18/final-formal-verifier' \
+            -f description='formal stacked branches and integration evidence revalidated' >/dev/null
+          cat > /tmp/remaining-phases-v18-final-receipt.txt <<EOF
+          result=PASS
+          main=0c38135e3e8bdad0d60d674c93ad42078e880134
+          pln=a12382c2d0f0dc6ca54021b4fec26d5874eb169f
+          imp=${{ steps.refs.outputs.imp }}
+          vfy=${{ steps.refs.outputs.vfy }}
+          rls=${{ steps.refs.outputs.rls }}
+          integration=$integration
+          EOF
+
+      - name: Upload final receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: remaining-phases-v18-final-receipt
+          if-no-files-found: warn
+          retention-days: 30
+          path: /tmp/remaining-phases-v18-final-receipt.txt

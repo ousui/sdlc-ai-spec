@@ -2,51 +2,75 @@
 
 ## 当前基线
 
-- 当前远端 `main`：`4b8be64accf40467e82502dc7a76ec50fc714588`，包含不完整 DSN，主线 CI 失败。
-- 恢复分支：`revert/incomplete-sdlc-200-dsn@4b37924db6ced95d2465ee8e69bb1c3a2a4be4f4`。
-- 完整实现分支：`skill/sdlc-200-dsn-v2`，基于恢复分支。
-- 已完成正式能力：`sdlc-000-ctx`、`sdlc-100-req`、Lifecycle Query Graph、`sdlc-status`、`sdlc-200-dsn`。
+- 远端 `main`：`0c38135e3e8bdad0d60d674c93ad42078e880134`。
+- `main` 最新 validate：success。
+- 已完成正式能力：
+  - `sdlc-000-ctx`
+  - `sdlc-100-req`
+  - `sdlc-200-dsn`
+  - Lifecycle Query Graph
+  - `sdlc-status`
+- 当前 Design Branch：`design/remaining-phase-skills`。
+- 本分支只包含开发期 Design、Eval Plan、Architecture 和 Handoff；未创建新的正式 Skill Runtime。
 
-## sdlc-200-dsn 状态
+## 批量设计状态
+
+| Skill | Design | Eval Plan | Maintainer Decision | Implement |
+|---|---|---|---|---|
+| `sdlc-300-pln` | ready | ready | pending | not started |
+| `sdlc-400-imp` | ready | ready | pending | not started |
+| `sdlc-500-vfy` | ready | ready | pending | not started |
+| `sdlc-600-rls` | ready | ready | pending | not started |
+
+共同设计基线：
 
 ```text
-Stage: complete
-Design: approved via APPROVAL.md
-Evaluate: PASS
-Adapt Codex: PARTIAL
-Review: PASS
-Finalization: ACCEPTED_FOR_PULL_REQUEST
+docs/plugin-development/architecture/remaining-phase-skill-design.md
+docs/plugin-development/architecture/remaining-phase-interface-extension.md
+docs/plugin-development/architecture/remaining-phase-foundations.md
 ```
 
-## 完成证据
+## 关键设计决定
 
-- Fixed Critical Eval：`33/33 PASS`；
-- Full repository regression：`177/177 PASS`；
-- Runtime Contract / Skill Interface / Lifecycle Query / Status Validator：`PASS`；
-- DSN Source Lock：26 项；
-- Bundled Runtime Contract：17 份；
-- Runtime Independence：`PASS`，开发文档复制 0、外部依赖安装 0；
-- SpringGear temporary integration：`PASS`，`ousui/springgear@e855096ff19dcdb303dc4250ba19c30acd743ac7`；
-- SpringGear 源码快照和 Git 状态恢复一致，远端写入 0；
-- Review Open Findings：Blocker / Major / Minor = `0 / 0 / 0`。
+1. 一阶段一个主 Skill；不按平台、语言、测试工具或执行方式拆兄弟 Skill。
+2. `sdlc-300-pln` 统一拥有 Delivery Scope、Work Item Set、Coverage 和 Dependency Authority。
+3. `sdlc-400-imp` 实现前先完成共享 Claim Provider 与 immutable Resource Result Foundation。
+4. `sdlc-500-vfy` 统一管理 Inspection、Analysis、Demonstration、Test，不拆 QA/Test Skill。
+5. `sdlc-600-rls` 保持平台中立；外部 Target Effect 必须使用与 `write_policy` 分离的准确授权。
+6. 所有 Skill 继承 Shared Skill Interface，裸调用合法，默认只在真实决策或高影响副作用时询问用户。
+7. Phase Interface 从固定精确命令集合扩展为核心命令子集加已声明附加命令；现有 Skill 行为保持不变。
+8. Claim、Resource Result、Execution Evidence 和 Effect Authorization 的逻辑 Contract 已冻结，物理实现按后续 Foundation 工作包完成。
+9. Design 可以批量完成；Approval、Implement、Evaluate、Adapt、Review、Finalize 必须逐 Skill 进行。
 
-## 重要实现边界
+## 实现顺序
 
-1. DSN 是父 Artifact Set：primary、required Domain Member、Supporting Member、Manifest-Member closure 原子一致。
-2. 固定 16 个 bundled Domain Contract，不创建 16 个可调用 Skill；`DOM-510` 固定 required。
-3. 生产 Runtime 使用稳定 Contract ID + SHA-256，不依赖开发期物理路径。
-4. `--input/-i` 可重复且失败关闭；Meta Command 绝对无执行副作用。
-5. 上游 REQ `DSN=n/a/waived` 不创建空 DSN；`pending` 在分配前停止。
-6. Lifecycle Query 读取 DSN Applicability，准确投影 PLN 或直接 IMP；异常时不猜测。
-7. `check` 严格只读；失败的新 Control Reservation 准确 abandon。
-8. Codex 仅有静态 Adapter 证据，真实安装后行为仍为 Unknown。
+```text
+sdlc-300-pln
+    ↓
+Claim Provider + Resource Result Foundation
+    ↓
+sdlc-400-imp
+    ↓
+sdlc-500-vfy
+    ↓
+sdlc-600-rls
+```
+
+不得在前一项尚未合入 `main` 且联合 CI 未通过时实现后一项。
 
 ## 唯一下一工作包
 
-创建并审查：
+Maintainer 对本分支中的四份 Design Contract、四份 Eval Plan 和三份共同架构设计进行批量审查，并作出以下之一：
 
 ```text
-skill/sdlc-200-dsn-v2 → main
+APPROVE_REMAINING_PHASE_DESIGNS
+CORRECT_REMAINING_PHASE_DESIGNS
 ```
 
-该 PR 的净效果应同时撤销不完整实现并引入完整实现。推荐 `Squash and merge`。不得自动 merge、tag 或 release。
+批准只表示设计与 Foundation 逻辑边界可以作为后续工作基线，不授权同时实现四个 Skill。批准后第一个实现工作包固定为：
+
+```text
+sdlc-300-pln implement
+```
+
+不得在本设计分支创建 `SKILL.md`、Runtime、Fixture、Source Lock、Adapter、Claim Provider 或外部执行代码；不得自动 merge、tag 或 release。

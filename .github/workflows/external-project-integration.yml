@@ -57,12 +57,12 @@ jobs:
           path: external-project
           persist-credentials: false
 
-      - name: Run generic DSN integration
+      - name: Run generic CTX to PLN integration
         shell: bash
         run: |
           set -euo pipefail
           label="${{ steps.target.outputs.repository }}@$(git -C external-project rev-parse HEAD)"
-          python3 tools/run_external_dsn_integration.py \
+          python3 tools/run_external_pln_integration.py \
             --project-root "$GITHUB_WORKSPACE/external-project" \
             --project-label "$label" \
             | tee external-integration-result.json
@@ -71,6 +71,7 @@ jobs:
         shell: bash
         run: |
           test -z "$(git -C external-project status --porcelain)"
+          test ! -e external-project/.sdlc
 
       - name: Upload integration result
         uses: actions/upload-artifact@v4

@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 def _run(command, *, cwd, payload=None, env=None):
     return subprocess.run(
         command,
-        input=(json.dumps(payload, ensure_ascii=False) if payload is not None else None),
+        input=(json.dumps(payload, ensure_ascii=False) if payload is not None else ""),
         text=True,
         cwd=cwd,
         env=env,

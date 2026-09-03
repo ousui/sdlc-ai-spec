@@ -22,8 +22,11 @@ jobs:
       - run: python3 tools/validate_sdlc_status.py
       - run: python3 tools/validate_sdlc_100_req_source_lock.py
       - run: python3 tools/validate_sdlc_200_dsn_source_lock.py
+      - run: python3 tools/validate_sdlc_300_pln_source_lock.py
       - run: python3 tools/test_sdlc_100_req_runtime_independence.py
       - run: python3 tools/test_sdlc_200_dsn_runtime_independence.py
+      - run: python3 tools/test_sdlc_300_pln_runtime_independence.py
       - run: python3 tools/test_sdlc_status_runtime_independence.py
       - run: python3 tests/evals/run_sdlc_200_dsn_eval.py
+      - run: python3 tests/evals/run_sdlc_300_pln_eval.py
       - run: python3 -m unittest discover -s tests -p 'test_*.py' -v

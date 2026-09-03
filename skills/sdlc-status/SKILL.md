@@ -49,6 +49,11 @@ python3 <plugin-root>/skills/sdlc-status/scripts/runtime.py [arguments]
 - `json`：单个结构化 JSON；
 - `debug`：参数归一化和完整 Projection，不泄露 Secret。
 
+存在 IMP 时，显示准确 Binding、Owner、Attempt、Current Claim 状态、Resource
+Baseline/Result、Changed Scope 与 VFY 就绪性。历史 frozen Artifact 不代表当前完成；
+只有 Current Claim 已完成且 Result、依赖链有效，才提供终端 IMP 作为 VFY 输入。
+VFY Skill 未安装时明确说明；多个下一动作完整展示，由用户选择。
+
 ## 严格只读
 
 从调用到停止保持 exclusive execution：

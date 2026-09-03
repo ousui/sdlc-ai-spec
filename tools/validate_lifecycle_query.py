@@ -15,7 +15,11 @@ REQUIRED = (
     PACKAGE / "errors.py",
     PACKAGE / "models.py",
     PACKAGE / "query.py",
+    PACKAGE / "query_dsn.py",
+    PACKAGE / "query_pln.py",
+    PACKAGE / "query_imp.py",
     ROOT / "tests/lifecycle/test_query.py",
+    ROOT / "tests/skill_imp/test_lifecycle.py",
 )
 FORBIDDEN_CALLS = {
     "initialize",
@@ -24,6 +28,12 @@ FORBIDDEN_CALLS = {
     "write_open_revision",
     "freeze_revision",
     "abandon_revision",
+    "open_read_write",
+    "acquire",
+    "complete",
+    "abandon",
+    "apply_operations",
+    "restore_snapshot",
 }
 FORBIDDEN_TEXT = (
     "sqlite3.connect",
@@ -45,15 +55,16 @@ def main() -> int:
         if not path.is_file():
             fail(f"missing {path.relative_to(ROOT)}")
 
-    source = (PACKAGE / "query.py").read_text(encoding="utf-8")
-    tree = ast.parse(source)
-    for node in ast.walk(tree):
-        if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
-            if node.func.attr in FORBIDDEN_CALLS:
-                fail(f"read-only package calls {node.func.attr}")
-    for token in FORBIDDEN_TEXT:
-        if token in source:
-            fail(f"forbidden read-only token: {token}")
+    for path in sorted(PACKAGE.glob("*.py")):
+        source = path.read_text(encoding="utf-8")
+        tree = ast.parse(source)
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+                if node.func.attr in FORBIDDEN_CALLS:
+                    fail(f"{path.name}: read-only package calls {node.func.attr}")
+        for token in FORBIDDEN_TEXT:
+            if token in source:
+                fail(f"{path.name}: forbidden read-only token: {token}")
 
     contract = (PACKAGE / "CONTRACT.md").read_text(encoding="utf-8")
     for phrase in (

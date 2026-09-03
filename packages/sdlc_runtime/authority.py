@@ -8,7 +8,9 @@ when finalizing a new Revision.
 
 from __future__ import annotations
 
+from datetime import datetime
 from pathlib import Path
+import re
 from typing import Mapping
 
 from packages.sdlc_artifact_store import (
@@ -28,7 +30,6 @@ from .canonical import (
     exact_artifact_reference,
     find_tables,
     parse_canonical_artifact,
-    parse_front_matter,
     parse_reference_set,
     require_single_row,
     require_single_table,
@@ -44,6 +45,117 @@ READY_STATUS_TO_GATE = {
     "ready_with_exception": "pass_with_exception",
 }
 ALLOWED_CHECK_RESULTS = frozenset({"pass", "n/a", "waived"})
+IDENTITY_TOKEN_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:/@%+#-]*$")
+DELEGATED_AUTHORITY_HEADERS = (
+    "Delegation Basis", "Reviewer Identity", "Reviewer Role",
+    "Reviewed Executor Identity", "Independence", "Control Input Digest",
+    "Evaluation Contract Set", "Check Set Result Digest", "Excluded Authority",
+)
+DELEGATED_INDEPENDENCE = "fresh_read, recomputed, separate_execution_identity"
+DELEGATED_EXCLUDED_AUTHORITY = (
+    "business_or_design_choice, exception_or_risk_acceptance, "
+    "external_action_or_side_effect, external_permission_or_authorization, "
+    "subjective_or_human_experience_judgment"
+)
+RFC3339_RE = re.compile(
+    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$"
+)
+
+
+def is_rfc3339(value: str) -> bool:
+    """Validate both RFC 3339 syntax and calendar/offset semantics."""
+    if not isinstance(value, str) or not RFC3339_RE.fullmatch(value):
+        return False
+    try:
+        parsed = datetime.fromisoformat(value[:-1] + "+00:00" if value.endswith("Z") else value)
+    except ValueError:
+        return False
+    return parsed.tzinfo is not None and parsed.utcoffset() is not None
+
+
+def _authority_bytes(project_root: Path, reference: str) -> bytes:
+    relative, digest = authority_reference(reference)
+    target = (project_root / relative).resolve()
+    try:
+        target.relative_to(project_root)
+    except ValueError as exc:
+        raise CanonicalFormatError("Authority Reference escapes the Project Root") from exc
+    if not target.is_file():
+        raise CanonicalFormatError(f"Authority Reference does not exist: {relative}")
+    raw = target.read_bytes()
+    if sha256_bytes(raw) != digest:
+        raise CanonicalFormatError("Authority Reference digest does not match")
+    return raw
+
+
+def validate_delegated_authority_record(
+    project_root: Path,
+    authority: str,
+    artifact: str,
+    *,
+    reviewer: str,
+    reviewed_executor: str,
+    control_input_digest: str,
+    evaluation_contract_set: str,
+    check_set_result_digest: str,
+) -> None:
+    """Validate the exact delegated record and every current binding."""
+    root = Path(project_root).expanduser().resolve()
+    if not IDENTITY_TOKEN_RE.fullmatch(reviewer) or not IDENTITY_TOKEN_RE.fullmatch(
+        reviewed_executor
+    ):
+        raise CanonicalFormatError("Delegated Authority identities must be stable tokens")
+    if reviewer == reviewed_executor:
+        raise CanonicalFormatError("Delegated Reviewer must be independent")
+    raw = _authority_bytes(root, authority)
+    try:
+        lines = raw.decode("utf-8").splitlines()
+    except UnicodeDecodeError as exc:
+        raise CanonicalFormatError("Delegated Authority record must be UTF-8") from exc
+    if len(lines) != 10 or lines[0] != "---" or lines[5] != "---" or lines[6] != "":
+        raise CanonicalFormatError(
+            "Delegated Authority record does not use the fixed document structure"
+        )
+    if lines[:4] != [
+        "---",
+        "contract: sdlc-ai-spec/final-confirmation-authority/v1",
+        f"artifact: {artifact}",
+        "decision: approved",
+    ] or not lines[4].startswith("decided_at: "):
+        raise CanonicalFormatError("Delegated Authority Front Matter is invalid")
+    if not is_rfc3339(lines[4].removeprefix("decided_at: ")):
+        raise CanonicalFormatError("Delegated Authority decided_at must use RFC 3339")
+    header = "| " + " | ".join(DELEGATED_AUTHORITY_HEADERS) + " |"
+    separators = {
+        "|" + "|".join("---" for _ in DELEGATED_AUTHORITY_HEADERS) + "|",
+        "| " + " | ".join("---" for _ in DELEGATED_AUTHORITY_HEADERS) + " |",
+    }
+    if lines[7] != header or lines[8] not in separators:
+        raise CanonicalFormatError("Delegated Authority table header is invalid")
+    if not lines[9].startswith("|") or not lines[9].endswith("|"):
+        raise CanonicalFormatError("Delegated Authority must contain exactly one data row")
+    cells = [cell.strip() for cell in lines[9].strip("|").split("|")]
+    if len(cells) != len(DELEGATED_AUTHORITY_HEADERS):
+        raise CanonicalFormatError("Delegated Authority data row is invalid")
+    values = dict(zip(DELEGATED_AUTHORITY_HEADERS, cells))
+    basis = values["Delegation Basis"]
+    if basis == authority:
+        raise CanonicalFormatError("Delegation Basis must be a separate Authority record")
+    _authority_bytes(root, basis)
+    expected = {
+        "Reviewer Identity": reviewer,
+        "Reviewer Role": "Delegated Independent Reviewer",
+        "Reviewed Executor Identity": reviewed_executor,
+        "Independence": DELEGATED_INDEPENDENCE,
+        "Control Input Digest": control_input_digest,
+        "Evaluation Contract Set": evaluation_contract_set,
+        "Check Set Result Digest": check_set_result_digest,
+        "Excluded Authority": DELEGATED_EXCLUDED_AUTHORITY,
+    }
+    if any(values[key] != value for key, value in expected.items()):
+        raise CanonicalFormatError(
+            "Delegated Authority bindings or fixed sets do not match the current Revision"
+        )
 
 
 class FrozenAuthorityVerificationError(IntegrityError):
@@ -106,7 +218,7 @@ class FrozenArtifactAuthorityVerifier:
                 control_digest=control_digest,
                 check_digest=check_digest,
             )
-            self._verify_authority_file(reference, confirmation)
+            self._verify_authority_file(reference, revision, confirmation)
         except (CanonicalFormatError, OSError, UnicodeError) as exc:
             raise FrozenAuthorityVerificationError(str(exc)) from exc
 
@@ -260,44 +372,40 @@ class FrozenArtifactAuthorityVerifier:
                 raise CanonicalFormatError(
                     "Delegated Final Confirmation cannot accept Exceptions"
                 )
-        if not summary["Evaluator"].strip() or not summary["Evaluated At"].strip():
+        if not summary["Evaluator"].strip() or not is_rfc3339(summary["Evaluated At"].strip()):
             raise CanonicalFormatError("Gate Summary evaluator or time is missing")
-        if not confirmation["Confirmed At"].strip():
+        if not is_rfc3339(confirmation["Confirmed At"].strip()):
             raise CanonicalFormatError("Final Confirmation time is missing")
 
     def _verify_authority_file(
-        self, reference: str, confirmation: Mapping[str, str]
+        self,
+        reference: str,
+        revision: StoredRevision,
+        confirmation: Mapping[str, str],
     ) -> None:
-        relative, digest = authority_reference(confirmation["Authority Reference"])
-        target = (self.project_root / relative).resolve()
-        try:
-            target.relative_to(self.project_root)
-        except ValueError as exc:
-            raise CanonicalFormatError(
-                "Authority Reference escapes the Project Root"
-            ) from exc
-        if not target.is_file():
-            raise CanonicalFormatError(
-                f"Authority Reference does not exist: {relative}"
-            )
-        raw = target.read_bytes()
-        if sha256_bytes(raw) != digest:
-            raise CanonicalFormatError("Authority Reference digest does not match")
+        raw = _authority_bytes(
+            self.project_root, confirmation["Authority Reference"]
+        )
         if confirmation["Mode"] != "delegated":
             return
-        text = raw.decode("utf-8")
-        front, body = parse_front_matter(text)
-        if front.get("contract") != (
-            "sdlc-ai-spec/final-confirmation-authority/v1"
-        ):
-            raise CanonicalFormatError("Delegated Authority Contract is invalid")
-        if front.get("artifact") != reference:
-            raise CanonicalFormatError(
-                "Delegated Authority is bound to a different Artifact"
-            )
-        if front.get("decision") != "approved":
-            raise CanonicalFormatError("Delegated Authority decision is not approved")
-        if "| Delegation Basis | Reviewer Identity |" not in body:
-            raise CanonicalFormatError(
-                "Delegated Authority record is missing its fixed review table"
-            )
+        lines = raw.decode("utf-8").splitlines()
+        row = [cell.strip() for cell in lines[9].strip("|").split("|")] \
+            if len(lines) == 10 else []
+        reviewed_executor = row[3] if len(row) == len(DELEGATED_AUTHORITY_HEADERS) else ""
+        if revision.payload.artifact_type == "IMP":
+            claim = revision.control.claim
+            if claim is None:
+                raise CanonicalFormatError(
+                    "Delegated IMP Authority requires the persisted Claim Owner"
+                )
+            reviewed_executor = claim.owner
+        validate_delegated_authority_record(
+            self.project_root,
+            confirmation["Authority Reference"],
+            reference,
+            reviewer=confirmation["Confirmer"],
+            reviewed_executor=reviewed_executor,
+            control_input_digest=confirmation["Control Input Digest"],
+            evaluation_contract_set=confirmation["Evaluation Contract Set"],
+            check_set_result_digest=confirmation["Check Set Result Digest"],
+        )

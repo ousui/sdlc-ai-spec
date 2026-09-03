@@ -12,7 +12,45 @@
     "effective_write_policy": {"const": "deny"},
     "state": {"type": "string"},
     "overview": {"type": ["object", "null"]},
-    "projection": {"type": ["object", "null"]},
+    "projection": {
+      "type": ["object", "null"],
+      "properties": {
+        "current_claims": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["binding_reference", "binding_lineage", "artifact_reference", "owner", "attempt", "claim_state", "materialized", "completed", "vfy_ready", "results", "blockers"],
+            "properties": {
+              "binding_reference": {"type": "string"},
+              "binding_lineage": {"type": "string"},
+              "artifact_reference": {"type": "string"},
+              "owner": {"type": "string"},
+              "attempt": {"type": "integer", "minimum": 1},
+              "claim_state": {"enum": ["active", "completed", "abandoned"]},
+              "revision_state": {"type": ["string", "null"]},
+              "materialized": {"type": "boolean"},
+              "completed": {"type": "boolean"},
+              "vfy_ready": {"type": "boolean"},
+              "results": {"type": "array", "items": {"type": "object"}},
+              "blockers": {"type": "array", "items": {"type": "object"}}
+            }
+          }
+        },
+        "vfy_inputs": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
+        "vfy_results": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["resource", "artifact_reference", "result_reference"],
+            "properties": {
+              "resource": {"type": "string"},
+              "artifact_reference": {"type": "string"},
+              "result_reference": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
     "warnings": {"type": "array", "items": {"type": "object"}},
     "errors": {"type": "array", "items": {"type": "object"}},
     "next_action": {"type": ["object", "null"]}

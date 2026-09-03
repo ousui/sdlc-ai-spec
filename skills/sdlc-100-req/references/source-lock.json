@@ -14,7 +14,7 @@
     {
       "contract_id": "sdlc-ai-spec/runtime/kernel/v1",
       "contract_version": "1",
-      "sha256": "0ec065370ea9d05083d5527a4fc44bf28b0376b8b1ea7e0e684e17c6c06a5ad7"
+      "sha256": "9614a4fdc0e475b2c740d3b49908778d022065abc0d93e609eea534d379a54b7"
     },
     {
       "contract_id": "sdlc-ai-spec/runtime/phase/v1",

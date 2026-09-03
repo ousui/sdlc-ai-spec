@@ -8,7 +8,7 @@ from typing import Any, Mapping
 
 INVOCATION_CONTRACT = "sdlc-ai-spec/runtime-invocation/v1"
 RESULT_CONTRACT = "sdlc-ai-spec/runtime-result/v1"
-OPERATIONS = frozenset({"create", "revise", "check"})
+OPERATIONS = frozenset({"create", "revise", "check", "abandon"})
 RESULT_STATUSES = frozenset({"completed", "action_required", "blocked", "failed"})
 GATE_RESULTS = frozenset({"pending", "pass", "pass_with_exception", "fail"})
 

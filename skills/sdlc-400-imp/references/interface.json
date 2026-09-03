@@ -1,0 +1,25 @@
+{
+  "contract": "sdlc-ai-spec/runtime/skill-interface/v1",
+  "skill": "sdlc-400-imp",
+  "skill_version": "1.0.0",
+  "default_command": "auto",
+  "commands": [
+    {"name": "auto", "description": "根据唯一准确 Binding、Current Claim 和合法 Rework 选择操作。", "writes": true},
+    {"name": "create", "description": "准确领取 Binding，保存 Baseline 与 Method，在 Scope 内实施并形成 Result。", "writes": true},
+    {"name": "revise", "description": "继续 active/open Attempt，或依据合法 Rework 创建同 Artifact 的新 Attempt。", "writes": true},
+    {"name": "check", "description": "严格只读复核 Context、Binding、Claim、Result、Dependency 和 Gate。", "writes": false},
+    {"name": "abandon", "description": "校验 Owner、Attempt 和 Revision，先终止 open Revision，再终止 active Claim。", "writes": true},
+    {"name": "help", "description": "显示命令、参数及 Scope 内写入边界。", "writes": false},
+    {"name": "version", "description": "显示 Skill 和 Interface 版本。", "writes": false},
+    {"name": "commands", "description": "列出全部命令及副作用说明。", "writes": false},
+    {"name": "examples", "description": "显示准确 Binding 与 Artifact Reference 的使用示例。", "writes": false}
+  ],
+  "examples": [
+    "/sdlc-400-imp",
+    "/sdlc-400-imp create -b PLN-20260903090000-01@1#WI-001 --owner executor-a",
+    "/sdlc-400-imp revise -r IMP-20260903100000-01@1 -i VFY-20260903110000-01@1#RET-001 --owner executor-a",
+    "/sdlc-400-imp check -r IMP-20260903100000-01@1",
+    "/sdlc-400-imp abandon -r IMP-20260903100000-01@1 --owner executor-a",
+    "/sdlc-400-imp --help"
+  ]
+}

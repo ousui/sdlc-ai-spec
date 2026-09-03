@@ -34,6 +34,7 @@ class PhaseBuild:
     members: tuple[CanonicalMember, ...]
     manifest: CanonicalManifest
     subject_digest: str
+    final_confirmation_bindings: Mapping[str, str] = field(default_factory=dict)
 
 
 @dataclass(frozen=True)

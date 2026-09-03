@@ -29,6 +29,10 @@
 - 重算 Control Input Digest 和 Check Set Result Digest；
 - 校验 `CORE-G-009`、Final Confirmation 和 Gate Summary 的绑定；
 - 校验 Human / Delegated Authority Reference 的项目内路径与原始字节摘要；
+- 对 `delegated` 严格校验固定单行 Authority 文档、RFC 3339 决定时间、独立 Reviewer、
+  可复用 Delegation Basis、三项当前摘要绑定，以及固定的 Independence / Excluded Authority；
+- 对 IMP 进一步把 `Reviewed Executor Identity` 与 Revision Control Record 中持久化的
+  Claim Owner 交叉核对；其他 Artifact 没有权威执行身份字段时不宣称已证明执行者身份；
 - 返回绑定当前 Store Payload 的 `DomainVerification`。
 
 它不得用于 `freeze_revision`。新 Revision 的业务事实、Phase Check、Exception、

@@ -70,6 +70,17 @@ def _next_action(value):
     return value.to_dict() if hasattr(value, "to_dict") else dict(value)
 
 
+def _projection_action(projection):
+    if len(projection.next_actions) > 1:
+        return {
+            "code": "SELECT_NEXT_ACTION",
+            "reason": "存在多个下一动作，请从准确 Binding 对应的候选中选择",
+            "requires_user": True,
+            "command": None,
+        }
+    return _next_action(projection.next_actions[0] if projection.next_actions else None)
+
+
 def _resolve_root(value: str | None, cwd: Path | None) -> Path:
     if value:
         path = Path(value).expanduser()
@@ -251,9 +262,7 @@ def run_status(
                     if projection.overall_state in {"action_required", "selection_required"}
                     else "completed"
                 ),
-                next_action=_next_action(
-                    projection.next_actions[0] if projection.next_actions else None
-                ),
+                next_action=_projection_action(projection),
             )
         elif command.command == "list":
             overview = service.project_overview()
@@ -291,9 +300,7 @@ def run_status(
                         if projection.overall_state == "action_required"
                         else "completed"
                     ),
-                    next_action=_next_action(
-                        projection.next_actions[0] if projection.next_actions else None
-                    ),
+                    next_action=_projection_action(projection),
                 )
             else:
                 result.update(
@@ -351,6 +358,26 @@ def render_summary(result: Mapping[str, Any]) -> str:
     if projection:
         lines.append(f"需求：{projection['root_reference']}")
         lines.append("当前前沿：" + (", ".join(projection["frontier"]) or "无"))
+        for claim in projection.get("current_claims", []):
+            lines.append(
+                f"IMP：{claim['binding_reference']} | Owner={claim['owner']} | "
+                f"Attempt={claim['attempt']} | Claim={claim['claim_state']}"
+            )
+            if claim.get("outcome"):
+                lines.append(f"结果目标：{claim['outcome']}")
+            if claim.get("materialized"):
+                lines.append(f"Artifact：{claim['artifact_reference']} ({claim['revision_state']})")
+            else:
+                lines.append("Artifact：尚未物化，Current Claim 不代表 Artifact 已完成")
+            for row in claim.get("results", []):
+                lines.append(f"Resource {row['resource']}：{row['baseline_reference']} → {row['result_reference']}")
+                lines.append("Changed Scope：" + (", ".join(row.get("changed_scope", [])) or "无"))
+            lines.append("当前实施完成：" + ("是" if claim.get("completed") else "否"))
+            lines.append("VFY 就绪：" + ("是" if claim.get("vfy_ready") else "否"))
+        if projection.get("vfy_inputs"):
+            lines.append("VFY 输入：" + ", ".join(projection["vfy_inputs"]))
+        for row in projection.get("vfy_results", []):
+            lines.append(f"VFY Resource {row['resource']}：{row['result_reference']}")
         blockers = projection.get("blockers", [])
         if blockers:
             lines.append(f"阻塞项：{len(blockers)}")
@@ -378,14 +405,16 @@ def render_summary(result: Mapping[str, Any]) -> str:
             lines.append(f"已选择：{overview['selected_requirement']}")
     for error in result.get("errors", []):
         lines.append(f"错误 {error['code']}：{error['message']}")
-    action = result.get("next_action")
-    if action:
+    actions = (projection or {}).get("next_actions", [])
+    if not actions:
+        actions = [result["next_action"]] if result.get("next_action") else []
+    for action in actions:
         lines.append(
             f"下一步：{action.get('reason') or action.get('message') or action.get('code')}"
         )
         if action.get("command"):
             lines.append(f"命令：{action['command']}")
-        elif action.get("skill") and not action.get("skill_available", False):
+        if action.get("skill") and not action.get("skill_available", False):
             lines.append(f"对应 Skill 尚未安装：{action['skill']}")
     return "\n".join(lines)
 

@@ -112,6 +112,31 @@ class NextAction:
 
 
 @dataclass(frozen=True)
+class ImpClaimProjection:
+    binding_reference: str
+    binding_lineage: str
+    artifact_reference: str
+    owner: str
+    attempt: int
+    claim_state: str
+    execution_scope: tuple[str, ...]
+    dependency_results: tuple[str, ...]
+    revision_state: str | None = None
+    materialized: bool = False
+    outcome: str | None = None
+    results: tuple[Mapping[str, Any], ...] = ()
+    completed: bool = False
+    vfy_ready: bool = False
+    blockers: tuple[Mapping[str, Any], ...] = ()
+
+    def to_dict(self) -> dict[str, Any]:
+        result = asdict(self)
+        for name in ("execution_scope", "dependency_results", "results", "blockers"):
+            result[name] = list(result[name])
+        return result
+
+
+@dataclass(frozen=True)
 class LifecycleProjection:
     root_reference: str
     overall_state: str
@@ -120,6 +145,9 @@ class LifecycleProjection:
     frontier: tuple[str, ...]
     blockers: tuple[Mapping[str, Any], ...]
     next_actions: tuple[NextAction, ...]
+    current_claims: tuple[ImpClaimProjection, ...] = ()
+    vfy_inputs: tuple[str, ...] = ()
+    vfy_results: tuple[Mapping[str, Any], ...] = ()
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -131,6 +159,9 @@ class LifecycleProjection:
             "frontier": list(self.frontier),
             "blockers": [dict(item) for item in self.blockers],
             "next_actions": [item.to_dict() for item in self.next_actions],
+            "current_claims": [item.to_dict() for item in self.current_claims],
+            "vfy_inputs": list(self.vfy_inputs),
+            "vfy_results": [dict(item) for item in self.vfy_results],
         }
 
 

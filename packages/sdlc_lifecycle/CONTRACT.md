@@ -30,6 +30,8 @@ ArtifactCatalog
 read_revision
 verify_digest
 FrozenArtifactAuthorityVerifier
+ClaimProvider.open_read_only
+ClaimProvider.resolve / resolve_artifact
 ```
 
 禁止：
@@ -108,3 +110,37 @@ complete
 - 只投影最早 Target Phase 中依赖已满足的 Work Item；
 - 同一最早 Target Phase 存在多个候选时全部返回，不静默选择“第一个”；
 - Work Item 运行状态不写回 PLN Artifact 或 Store。
+
+## Current IMP Claim Projection
+
+`current_claims` 逐个展示当前 Claim 的准确 Binding、IMP Reservation、Owner、Attempt、
+Claim State、Revision State、Outcome、Scope、Dependency Results 与各 Resource Result。
+未物化的 Reservation 标记 `materialized=false`，不创建 Artifact 节点。
+历史 Artifact 仍保留在 `nodes` 中，不参与 Current Claim 完成判断或当前前沿。
+
+只有以下条件全部成立，Claim Projection 的 `completed` 才为 true：
+
+- Current Claim 为 `completed`，准确 IMP Revision 为 frozen ready 且 Authority 有效；
+- Canonical Binding、IMP-STATE、Reservation 与 Current Claim 的 Binding、Owner、Attempt、
+  Artifact、Revision、Scope、Dependency Results、Rework References 一致；
+- Result Set 对 Claim 中每个 Resource 恰有一行，Baseline、Change、Result Member 可读回，
+  Changed Scope 与不可变 Snapshot 一致；
+- PLN 的准确直接依赖与所有传递前驱均为 Current completed，后继 inputs 保留准确前驱
+  Revision；同 Resource 后继 Baseline 等于唯一前驱终端 Result。
+
+active、abandoned、open、frozen+active 均不能完成 Work Item。前驱新 Attempt 会使
+所有仍引用旧 Result 的后继失效。abandoned 请求明确 retry/rework，不自动领取执行权。
+
+`vfy_inputs` 只列出当前有效、唯一终端 Result 所在的准确 IMP Revision；每个入选
+Claim 的 `vfy_ready=true`。存在未完成 IMP Work Item、未吸收的前驱更新或无序的同
+Resource Result 时，不提供 VFY 输入，也不回退到旧结果或合并多个候选。
+VFY 就绪只说明可进入验证；是否安装 `sdlc-500-vfy` 由 `skill_available` 单独表达。
+`vfy_results` 明确每个 Resource 的唯一终端 `artifact_reference / result_reference`。
+当一个早期 IMP 同时包含多个 Resource、其中部分 Resource 有后继时，只选择尚无
+后继的 Resource Result；不能把该 Artifact 内其他旧 Result 也作为终端结果。
+
+查询只读打开 Claim Store，既不初始化缺失 Store，也不修复损坏 Store。每次 inspect
+重新读取 Current Claim 与可变 Revision；检测到查询期间 Claim 改变时失败关闭。
+无 Claim 的 PLN 保留原有准确 Work Item 候选语义。
+已有后续 Artifact 且准确引用当前终端 IMP 时，保留既有后续 Phase 查询路由；
+仅作为 Rework 输入的 VFY Return / RLS Issue 不代替当前 IMP 前沿。

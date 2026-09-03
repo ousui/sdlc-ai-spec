@@ -10,10 +10,10 @@ from typing import Any, Iterable, Mapping, Sequence
 
 from packages.sdlc_artifact_store import CanonicalMember, compute_sha256
 from packages.sdlc_runtime import authority_reference, sha256_bytes
-
-RFC3339_RE = re.compile(
-    r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})$"
+from packages.sdlc_runtime.authority import (
+    IDENTITY_TOKEN_RE, is_rfc3339, validate_delegated_authority_record,
 )
+
 SECRET_RE = re.compile(
     r"(?i)(?:-----BEGIN [A-Z ]*PRIVATE KEY-----|"
     r"\b(?:password|passwd|secret|token|api[_-]?key|private[_-]?key)\s*[:=]\s*[^\s|]{6,})"
@@ -169,7 +169,7 @@ def validate_final_confirmation(
         return False
     for field in ("confirmer", "role", "authority_reference", "confirmed_at"):
         text(confirmation.get(field), f"final_confirmation.{field}")
-    if not RFC3339_RE.fullmatch(str(confirmation["confirmed_at"])):
+    if not is_rfc3339(str(confirmation["confirmed_at"])):
         raise PhaseKitError("Final Confirmation confirmed_at must use RFC 3339")
     relative, digest = authority_reference(str(confirmation["authority_reference"]))
     root = Path(project_root).expanduser().resolve()
@@ -182,6 +182,56 @@ def validate_final_confirmation(
         raise PhaseKitError(f"Authority Reference does not exist: {relative}")
     if sha256_bytes(target.read_bytes()) != digest:
         raise PhaseKitError("Authority Reference digest does not match")
+    return True
+
+
+def validate_delegated_final_confirmation(
+    project_root: Path | str,
+    confirmation: Mapping[str, Any],
+    *,
+    artifact_reference: str,
+    reviewed_executor: str,
+    control_input_digest: str,
+    evaluation_contract_set: str,
+    check_set_result_digest: str,
+) -> bool:
+    """Validate IMP's delegated bindings after its unsigned bytes are known."""
+    if confirmation.get("mode") != "delegated":
+        return True
+    if confirmation.get("role") != "Delegated Independent Reviewer":
+        return False
+    reviewer = str(confirmation.get("confirmer") or "")
+    reviewed = str(confirmation.get("reviewed_executor") or "")
+    if (
+        reviewed != reviewed_executor
+        or not IDENTITY_TOKEN_RE.fullmatch(reviewer)
+        or not IDENTITY_TOKEN_RE.fullmatch(reviewed)
+        or reviewer == reviewed
+    ):
+        return False
+    expected = {
+        "control_input_digest": control_input_digest,
+        "evaluation_contract_set": evaluation_contract_set,
+        "check_set_result_digest": check_set_result_digest,
+    }
+    if any(confirmation.get(key) != value for key, value in expected.items()):
+        return False
+    accepted = confirmation.get("accepted_exception_references", [])
+    if accepted not in (None, []):
+        return False
+    try:
+        validate_delegated_authority_record(
+            Path(project_root),
+            str(confirmation["authority_reference"]),
+            artifact_reference,
+            reviewer=reviewer,
+            reviewed_executor=reviewed,
+            control_input_digest=control_input_digest,
+            evaluation_contract_set=evaluation_contract_set,
+            check_set_result_digest=check_set_result_digest,
+        )
+    except (KeyError, OSError, UnicodeError, ValueError):
+        return False
     return True
 
 

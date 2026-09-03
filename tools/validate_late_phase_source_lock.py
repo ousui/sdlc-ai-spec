@@ -19,9 +19,18 @@ PHASES={
   ('core','core-spec.md'),('artifact-store','artifact-store-spec.md'),('project-context','000-ctx-spec.md'),('requirement','100-req-spec.md'),('design','200-dsn-spec.md'),('plan','300-pln-spec.md'),('implementation','400-imp-spec.md'),('vfy','500-vfy-spec.md'),('release','600-rls-spec.md'))),
 }
 
+# Foundation contracts are Phase inputs, not additions to the frozen shared
+# registry. In particular, PLN must keep its original 13-source lock.
+PHASE_EXTRA_SOURCES = {
+ 'IMP': (
+  ContractSource('sdlc-ai-spec/runtime/imp-claim/v1', '1', 'packages/sdlc_claim_provider/CONTRACT.md'),
+  ContractSource('sdlc-ai-spec/runtime/resource-result/v1', '1', 'packages/sdlc_resource/CONTRACT.md'),
+ ),
+}
+
 def sources(phase):
  skill,_,items=PHASES[phase]
- return (*registry_sources(ROOT,ROOT/'skills/_shared/contracts/registry.json'),*(ContractSource(f'sdlc-ai-spec/spec/{cid}/v1.1','1.1',f'docs/v1.1/{filename}') for cid,filename in items))
+ return (*registry_sources(ROOT,ROOT/'skills/_shared/contracts/registry.json'),*(ContractSource(f'sdlc-ai-spec/spec/{cid}/v1.1','1.1',f'docs/v1.1/{filename}') for cid,filename in items),*PHASE_EXTRA_SOURCES.get(phase, ()))
 
 def validate(phase):
  skill,own_file,_=PHASES[phase]

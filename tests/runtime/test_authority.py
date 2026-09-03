@@ -5,6 +5,7 @@ from pathlib import Path
 from packages.sdlc_artifact_store import (
     CanonicalManifest,
     CanonicalRevisionPayload,
+    ClaimReservation,
     RevisionControlRecord,
     StoredRevision,
     compute_sha256,
@@ -18,6 +19,9 @@ from packages.sdlc_runtime.canonical import (
     compute_control_input_digest,
     parse_canonical_artifact,
     sha256_bytes,
+)
+from packages.sdlc_runtime.authority import (
+    DELEGATED_EXCLUDED_AUTHORITY, DELEGATED_INDEPENDENCE,
 )
 
 
@@ -39,19 +43,32 @@ class FrozenAuthorityTests(unittest.TestCase):
     def tearDown(self):
         self.temporary.cleanup()
 
-    def _authority(self, mode: str) -> str:
+    def _authority(
+        self,
+        mode: str,
+        *,
+        control_digest="",
+        check_digest="",
+        artifact_reference=REFERENCE,
+        reviewed_executor="builder-1",
+    ) -> str:
         if mode == "delegated":
+            basis_raw = b"reviewer-1 may confirm contract compliance\n"
+            basis = self.authority_dir / "policy.md"
+            basis.write_bytes(basis_raw)
+            basis_ref = ".sdlc/authority/policy.md@" + sha256_bytes(basis_raw)
             raw = (
                 "---\n"
                 "contract: sdlc-ai-spec/final-confirmation-authority/v1\n"
-                f"artifact: {REFERENCE}\n"
+                f"artifact: {artifact_reference}\n"
                 "decision: approved\n"
                 "decided_at: 2026-08-30T12:00:00Z\n"
                 "---\n\n"
                 "| Delegation Basis | Reviewer Identity | Reviewer Role | Reviewed Executor Identity | Independence | Control Input Digest | Evaluation Contract Set | Check Set Result Digest | Excluded Authority |\n"
                 "|---|---|---|---|---|---|---|---|---|\n"
-                "| policy.md@sha256:" + "c" * 64
-                + " | reviewer-1 | Delegated Independent Reviewer | builder-1 | fresh_read, recomputed, separate_execution_identity | placeholder | placeholder | placeholder | business_or_design_choice |\n"
+                f"| {basis_ref} | reviewer-1 | Delegated Independent Reviewer | {reviewed_executor} | "
+                f"{DELEGATED_INDEPENDENCE} | {control_digest} | {EVALUATION_SET} | "
+                f"{check_digest} | {DELEGATED_EXCLUDED_AUTHORITY} |\n"
             ).encode("utf-8")
         else:
             raw = (
@@ -66,13 +83,21 @@ class FrozenAuthorityTests(unittest.TestCase):
         relative = target.relative_to(self.root).as_posix()
         return f"{relative}@{sha256_bytes(raw)}"
 
-    def _blob(self, mode: str = "human", status: str = "ready") -> bytes:
-        authority_ref = self._authority(mode)
+    def _blob(
+        self,
+        mode: str = "human",
+        status: str = "ready",
+        *,
+        artifact_id=ARTIFACT_ID,
+        phase="REQ",
+        reviewed_executor="builder-1",
+    ) -> bytes:
+        reference = artifact_id + "@1"
         prefix = (
             "---\n"
             "contract: sdlc-ai-spec/artifact/v1\n"
-            "phase: REQ\n"
-            f"id: {ARTIFACT_ID}\n"
+            f"phase: {phase}\n"
+            f"id: {artifact_id}\n"
             "revision: 1\n"
             f"status: {status}\n"
             "context: CTX-20260830110000-01@1\n"
@@ -94,6 +119,13 @@ class FrozenAuthorityTests(unittest.TestCase):
         check_digest = compute_check_set_result_digest(
             parse_canonical_artifact(preliminary)
         )
+        authority_ref = self._authority(
+            mode,
+            control_digest=control_digest,
+            check_digest=check_digest,
+            artifact_reference=reference,
+            reviewed_executor=reviewed_executor,
+        )
         role = (
             "Delegated Independent Reviewer"
             if mode == "delegated"
@@ -101,7 +133,7 @@ class FrozenAuthorityTests(unittest.TestCase):
         )
         confirmer = "reviewer-1" if mode == "delegated" else "product-owner-1"
         gate_result = "pass" if status == "ready" else "pass_with_exception"
-        exceptions = "None" if status == "ready" else f"{REFERENCE}#EX-001"
+        exceptions = "None" if status == "ready" else f"{reference}#EX-001"
         return (
             prefix
             + "| Revision | Control Input Digest | Evaluation Contract Set | Check Set Result Digest | Result | Mode | Confirmer | Role | Authority Reference | Accepted Exception References | Confirmed At |\n"
@@ -112,9 +144,17 @@ class FrozenAuthorityTests(unittest.TestCase):
             + f"| 1 | {control_digest} | {EVALUATION_SET} | {check_digest} | {gate_result} | {exceptions} | evaluator-1 | 2026-08-30T12:00:01Z |\n"
         ).encode("utf-8")
 
-    def _stored(self, blob: bytes, status: str = "ready") -> StoredRevision:
+    def _stored(
+        self,
+        blob: bytes,
+        status: str = "ready",
+        *,
+        artifact_id=ARTIFACT_ID,
+        artifact_type="REQ",
+        claim=None,
+    ) -> StoredRevision:
         control = RevisionControlRecord(
-            artifact_id=ARTIFACT_ID,
+            artifact_id=artifact_id,
             revision=1,
             state="frozen",
             base_revision=None,
@@ -123,11 +163,11 @@ class FrozenAuthorityTests(unittest.TestCase):
             abandon_reason=None,
             generation=2,
             materialized=True,
-            claim=None,
+            claim=claim,
         )
         payload = CanonicalRevisionPayload(
-            artifact_id=ARTIFACT_ID,
-            artifact_type="REQ",
+            artifact_id=artifact_id,
+            artifact_type=artifact_type,
             revision=1,
             artifact_status=status,
             primary_blob=blob,
@@ -156,6 +196,24 @@ class FrozenAuthorityTests(unittest.TestCase):
         stored = self._stored(self._blob(mode="delegated"))
         result = FrozenArtifactAuthorityVerifier(self.root).verify(REFERENCE, stored)
         self.assertTrue(result.approved)
+
+    def test_delegated_imp_authority_must_bind_persisted_claim_owner(self):
+        artifact_id = "IMP-20260830120000-01"
+        reference = artifact_id + "@1"
+        blob = self._blob(
+            mode="delegated",
+            artifact_id=artifact_id,
+            phase="IMP",
+            reviewed_executor="different-builder",
+        )
+        stored = self._stored(
+            blob,
+            artifact_id=artifact_id,
+            artifact_type="IMP",
+            claim=ClaimReservation("lineage-1", "attempt-1", "builder-1"),
+        )
+        with self.assertRaises(FrozenAuthorityVerificationError):
+            FrozenArtifactAuthorityVerifier(self.root).verify(reference, stored)
 
     def test_ready_with_exception_requires_matching_sets(self):
         stored = self._stored(

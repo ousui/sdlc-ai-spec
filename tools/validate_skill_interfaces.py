@@ -13,7 +13,11 @@ INTERFACE_CONTRACT = "sdlc-ai-spec/runtime/skill-interface/v1"
 SEMVER_RE = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+$")
 PHASE_RE = re.compile(r"^sdlc-[0-9]{3}-")
 META = {"help", "version", "commands", "examples"}
-PHASE_COMMANDS = {"auto", "create", "revise", "check", *META}
+PHASE_REQUIRED_COMMANDS = {"auto", "create", "revise", "check", *META}
+RESERVED_PARAMETERS = {
+    "command", "operation", "project-root", "reference", "decision-policy",
+    "write-policy", "dry-run", "output",
+}
 REQUIRED_RUNTIME_TOKENS = (
     "scripts/sdlc_skill_interface.py",
     "references/interface.json",
@@ -69,8 +73,14 @@ def validate_spec(path: Path, skill_name: str) -> None:
         fail(f"default command is not declared: {skill_name}")
     if not META.issubset(names):
         fail(f"meta commands missing in {skill_name}: {sorted(META - set(names))}")
-    if PHASE_RE.match(skill_name) and set(names) != PHASE_COMMANDS:
-        fail(f"Phase Skill command set mismatch: {skill_name}: {names}")
+    if PHASE_RE.match(skill_name):
+        if not PHASE_REQUIRED_COMMANDS.issubset(names):
+            fail(f"Phase Skill core commands missing: {skill_name}: {names}")
+        for item in commands:
+            if item["name"] in PHASE_REQUIRED_COMMANDS:
+                continue
+            if item["name"] in RESERVED_PARAMETERS or not isinstance(item.get("writes"), bool):
+                fail(f"invalid Phase command extension: {skill_name}: {item['name']}")
     examples = data.get("examples")
     if not isinstance(examples, list) or not examples or any(
         not isinstance(item, str) or not item.strip() for item in examples

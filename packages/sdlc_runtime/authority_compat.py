@@ -143,7 +143,7 @@ class FrozenArtifactAuthorityVerifier(BaseFrozenArtifactAuthorityVerifier):
                 control_digest=control_digest,
                 check_digest=check_digest,
             )
-            self._verify_authority_file(reference, confirmation)
+            self._verify_authority_file(reference, revision, confirmation)
         except (CanonicalFormatError, OSError, UnicodeError) as exc:
             raise FrozenAuthorityVerificationError(str(exc)) from exc
 

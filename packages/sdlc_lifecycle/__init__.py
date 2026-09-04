@@ -9,6 +9,7 @@ from .errors import (
 )
 from .models import (
     LIFECYCLE_STATUS_CONTRACT,
+    ImpClaimProjection,
     LifecycleEdge,
     LifecycleNode,
     LifecycleProjection,
@@ -17,10 +18,11 @@ from .models import (
     ProjectOverview,
     RequirementCandidate,
 )
-from .query_pln import LifecycleQueryService
+from .query_imp import LifecycleQueryService
 
 __all__ = [
     "LIFECYCLE_STATUS_CONTRACT",
+    "ImpClaimProjection",
     "LifecycleArtifactError",
     "LifecycleEdge",
     "LifecycleNode",

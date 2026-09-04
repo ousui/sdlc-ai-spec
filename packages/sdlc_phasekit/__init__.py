@@ -7,7 +7,7 @@ from .common import (
     rows,
     subject_digest,
     text,
-    validate_final_confirmation,
+    validate_delegated_final_confirmation, validate_final_confirmation,
 )
 from .contracts import evaluation_contract_set
 from .handler import ArtifactPhaseHandler
@@ -35,4 +35,5 @@ __all__ = (
     "table",
     "text",
     "validate_final_confirmation",
+    "validate_delegated_final_confirmation",
 )

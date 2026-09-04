@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from dataclasses import asdict, dataclass
 import shlex
-from typing import Any, Sequence
+from typing import Any, Mapping, Sequence
 
 from .skill_args import (
     ArgumentWarning,
@@ -138,3 +138,45 @@ def parse_skill_command_with_inputs(
         help_topic=base.help_topic,
         warnings=tuple((*base.warnings, *warnings)),
     )
+
+
+def parse_skill_command_with_extensions(
+    arguments: str | Sequence[str],
+    spec: SkillInterfaceSpec,
+    extensions: Mapping[str, tuple[str, ...]],
+) -> tuple[SkillCommandWithInputs, dict[str, str]]:
+    """Register single-value Phase parameters on the shared command grammar."""
+
+    aliases = {alias: name for name, names in extensions.items() for alias in names}
+    if len(aliases) != sum(len(names) for names in extensions.values()):
+        raise SkillArgumentError("INTERFACE_SPEC_INVALID", "extension aliases overlap")
+    tokens = _tokens(arguments)
+    filtered: list[str] = []
+    values: dict[str, str] = {}
+    index = 0
+    while index < len(tokens):
+        token = tokens[index]
+        if token == "--":
+            filtered.extend(tokens[index:])
+            break
+        option, separator, value = token.partition("=")
+        if option not in aliases:
+            filtered.append(token)
+            index += 1
+            continue
+        if not separator:
+            if index + 1 >= len(tokens) or tokens[index + 1].startswith("-"):
+                raise SkillArgumentError("ARGUMENT_VALUE_REQUIRED", f"{option} requires a value")
+            index += 1
+            value = tokens[index]
+        if not value.strip():
+            raise SkillArgumentError("ARGUMENT_VALUE_INVALID", f"{option} must not be empty")
+        name = aliases[option]
+        if name in values and values[name] != value:
+            raise SkillArgumentError("ARGUMENT_CONFLICT", f"conflicting {option} values")
+        values[name] = value
+        index += 1
+    command = parse_skill_command_with_inputs(filtered, spec)
+    if command.command in META_COMMANDS and values:
+        raise SkillArgumentError("ARGUMENT_CONFLICT", "meta commands cannot take execution parameters")
+    return command, values

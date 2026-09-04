@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+import tempfile
 
 from packages.sdlc_lifecycle import LifecycleQueryService
 
@@ -66,9 +67,14 @@ class DsnLifecycleTests(DsnRuntimeFixture):
         ]
         created = self.execute(self.invocation(design=design))
         self.assertTrue(created["ok"])
-        action = self.service().inspect_requirement(
-            self.requirement_reference
-        ).next_actions[0]
+        # This case exercises a missing next Skill independently of which Phase
+        # Skills happen to be installed in the development repository.
+        with tempfile.TemporaryDirectory() as plugin_root:
+            service = LifecycleQueryService(
+                self.root, plugin_root=plugin_root,
+                verifier_factory=lambda _: PassingVerifier(),
+            )
+            action = service.inspect_requirement(self.requirement_reference).next_actions[0]
         self.assertEqual(action.phase, "IMP")
         self.assertEqual(action.skill, "sdlc-400-imp")
         self.assertFalse(action.skill_available)

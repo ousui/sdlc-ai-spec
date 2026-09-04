@@ -1,0 +1,63 @@
+{
+  "contract": "sdlc-ai-spec/imp-closed-loop-result/v1",
+  "status": "PASS",
+  "main_sha": "0c38135e3e8bdad0d60d674c93ad42078e880134",
+  "pln_sha": "cff49f3fe265f102fc545bcf3c7f7515c035b2d6",
+  "imp_sha": "207a4a16bea8979faee0474cc43cb642cef1f655",
+  "imp_parent": "cff49f3fe265f102fc545bcf3c7f7515c035b2d6",
+  "imp_commit_url": "https://github.com/ousui/sdlc-ai-spec/commit/207a4a16bea8979faee0474cc43cb642cef1f655",
+  "draft_pr": {
+    "number": 5,
+    "url": "https://github.com/ousui/sdlc-ai-spec/pull/5",
+    "state": "OPEN",
+    "is_draft": true,
+    "head": "impl/imp-v2",
+    "base": "impl/pln-v2",
+    "head_sha": "207a4a16bea8979faee0474cc43cb642cef1f655"
+  },
+  "verification": {
+    "foundation_tests": "57/57 PASS",
+    "imp_focused_tests": "163/163 PASS",
+    "lifecycle_tests": "9/9 PASS",
+    "status_tests": "19/19 PASS",
+    "critical_cases": "82/82 PASS",
+    "imp_fixed_eval": "259 tests PASS",
+    "source_lock": "PASS (16 contracts)",
+    "runtime_independence": "PASS",
+    "full_regression": "426 tests PASS",
+    "springgear": "PASS @ e855096ff19dcdb303dc4250ba19c30acd743ac7",
+    "gin_vue_admin": "PASS @ a6882210a80bb27e3aa5dff0b4c21aa4afe8988a",
+    "design_review": "Blocker 0 / Major 0 / Minor 0",
+    "fresh_exact_sha_attestation": "21/21 gates PASS",
+    "remote_readback": "PASS",
+    "main_unchanged": "PASS"
+  },
+  "remote_readback": {
+    "origin_main": "0c38135e3e8bdad0d60d674c93ad42078e880134",
+    "origin_pln": "cff49f3fe265f102fc545bcf3c7f7515c035b2d6",
+    "origin_imp": "207a4a16bea8979faee0474cc43cb642cef1f655",
+    "imp_parents": [
+      "cff49f3fe265f102fc545bcf3c7f7515c035b2d6"
+    ],
+    "pr_read_attempts": 2,
+    "first_error": "Post https://api.github.com/graphql: net/http: TLS handshake timeout",
+    "second_attempt": "PASS"
+  },
+  "stages": {
+    "vfy": "NOT STARTED",
+    "rls": "NOT STARTED",
+    "next": "impl/vfy-v2"
+  },
+  "evidence": {
+    "/private/tmp/imp-v2-full-regression.log": "6382235766adba4111807be27faf753fa98df1e43461e13edc0591dceb000d41",
+    "/private/tmp/imp-v2-design-review.md": "500848ba0cce36593d68fb9013275b36486ddfa89edb5d43b2813c75ffa99401",
+    "/private/tmp/imp-v2-real-projects.json": "6a023dbb74a771790b5687b9d66eddf8cc440eafe6327c69f3c15c4b1cde9b36",
+    "/private/tmp/imp-v2-final-attestation.log": "67d92ef8fb9965df87751f4c7e899afd6e9f915637a789ac6d144f1622bb11db",
+    "/private/tmp/imp-v2-final-attest-projects.json": "2a23935e9714e908f0ab6e5a412fcd6121b198f4aa0b1f9139357eefff7b74bc",
+    "/private/tmp/impl-imp-v2-handoff.md": "211f732e0e93345ac622539c4023495f1d7c9098c4626d38233e2dce7b85d8f6",
+    "/private/tmp/impl-imp-v2-evidence.sha256": "5cefc05647d75b22a9d6093743996b5106449aa14cd6e0b9530491159869f183"
+  },
+  "attestation_worktree": "/Users/shuaiw/Workspace/goedge.cloud/sdlc-ai-spec-imp-v2-attest",
+  "source_checkpoint": "local/checkpoint/imp-source-complete",
+  "disaster_recovery_backup": "/private/tmp/imp-v2-goal-backup-20260904-003527-ki5pyh4_"
+}

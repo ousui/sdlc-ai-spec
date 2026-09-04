@@ -54,6 +54,17 @@ All query commands force `effective_write_policy=deny`. Meta commands return bef
 - summary hides digests, SQLite and Manifest details;
 - json emits one JSON document;
 - debug includes normalized arguments and raw Projection but not Secret material.
+- IMP summary displays exact Binding, Owner, Attempt, Claim State, materialization,
+  Outcome, Resource Baseline/Result, Changed Scope, current completion and VFY readiness.
+- `projection.current_claims` contains only Current Claim projections; historical
+  Artifact nodes are not current completion evidence.
+- `projection.vfy_inputs` contains only exact current completed terminal IMP inputs.
+  VFY readiness does not imply VFY execution, acceptance, or Skill availability.
+- `projection.vfy_results` selects one exact terminal Result per Resource, including
+  when different Resources have terminal Results in different IMP revisions.
+- Multiple next actions remain visible in the summary. The top-level `next_action`
+  asks for selection instead of silently selecting the first candidate.
+- An unavailable next Skill has `skill_available=false` and no executable command.
 
 ## Error codes
 

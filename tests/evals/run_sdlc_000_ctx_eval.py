@@ -30,6 +30,7 @@ if str(ROOT) not in sys.path:
 
 from packages.sdlc_artifact_store import ArtifactStore, compute_sha256  # noqa: E402
 from packages.sdlc_artifact_store.catalog import ArtifactCatalog  # noqa: E402
+from packages.sdlc_runtime import EnvelopeValidationError, validate_result  # noqa: E402
 from tests.skills.test_sdlc_000_ctx import (  # noqa: E402
     CtxRuntimeTests,
     FIXED_TIME,
@@ -1042,11 +1043,236 @@ def eval_runtime_and_source() -> None:
 
 
 def eval_comparison_exclusive_and_clients() -> None:
-    for case_id in ("EV-W01-C01", "EV-W02-C02", "EV-W03-R01", "EV-W04-K05"):
-        record(
+    evidence_path = ROOT / "tests/evals/fixtures/sdlc_000_ctx_without_skill.json"
+    evidence_bytes = evidence_path.read_bytes()
+    evidence = json.loads(evidence_bytes)
+    current_cases = {
+        "EV-W01-C01": "EV-C01",
+        "EV-W02-C02": "EV-C02",
+        "EV-W03-R01": "EV-R01",
+        "EV-W04-K05": "EV-K05",
+    }
+    expected_outcomes = {
+        "EV-W01-C01": ("create", True),
+        "EV-W02-C02": ("create", True),
+        "EV-W03-R01": ("revise", True),
+        "EV-W04-K05": ("check", False),
+    }
+    capture = evidence.get("capture", {})
+    fixture_ok = (
+        hashlib.sha256(evidence_bytes).hexdigest()
+        == "ef044f0adb1e70ad5aab9f1fe7e68893563e25288b2f9aceac1b4a4a4045819b"
+        and evidence.get("contract") == "sdlc-ai-spec/ctx-without-skill-evidence/v3"
+        and capture.get("client_version") == "codex-cli 0.153.0-alpha.5"
+        and capture.get("model") == "gpt-5.4"
+        and capture.get("reasoning") == "low"
+        and capture.get("target_skill_loaded") is False
+        and capture.get("project_root_token") == "${PROJECT_ROOT}"
+        and capture.get("capture_case_token") == "${CAPTURE_CASE}"
+        and capture.get("home_token") == "${HOME}"
+        and capture.get("source_lock_sha256")
+        == hashlib.sha256(
+            (ROOT / "skills/sdlc-000-ctx/references/source-lock.json").read_bytes()
+        ).hexdigest()
+        and capture.get("state_capture")
+        == "A complete project-file SHA-256 map was collected immediately before and after each recorded command; the fixed evaluator validates the retained maps and limits changes to local .sdlc state."
+        and set(evidence.get("cases", {})) == set(expected_outcomes)
+    )
+    prefix = (
+        "请处理以下单一 Project Context Runtime Invocation。你是 fresh 普通 Agent；"
+        "当前未安装或加载 sdlc-000-ctx Skill 及其 Runtime，且不得寻找、读取或调用任何 "
+        "Skill、Plugin 或外部仓库。允许访问并按 Invocation 的授权范围操作当前隔离 "
+        "project_root；不得联网、安装依赖、执行 Git 写入或外部系统写入，也不得编写替代 "
+        "Runtime。保留事实缺口，不推断正式事实。请直接执行；最后输出机器可读 JSON Result "
+        "和一致的简短中文摘要。\n\n<invocation>\n"
+    )
+    expected_command = (
+        "codex exec --ignore-user-config --ignore-rules --ephemeral "
+        "--skip-git-repo-check --sandbox workspace-write --json --color never "
+        "-m gpt-5.4 -c model_reasoning_effort=\"low\" -C ${PROJECT_ROOT} "
+        "-o ${CAPTURE_CASE}/output3.txt - < ${CAPTURE_CASE}/prompt.txt > "
+        "${CAPTURE_CASE}/transcript3.jsonl 2> ${CAPTURE_CASE}/stderr3.txt"
+    )
+    thread_ids = []
+    for case_id, expected in expected_outcomes.items():
+        case = evidence.get("cases", {}).get(case_id, {})
+        invocation_raw = case.get("invocation.json", "")
+        prompt = case.get("prompt.txt", "")
+        output_text = case.get("output.txt", "")
+        transcript_text = case.get("transcript.jsonl", "")
+        stderr_text = case.get("stderr.txt", "")
+        try:
+            invocation = json.loads(invocation_raw)
+            output_source = output_text.lstrip()
+            if output_source.startswith("```json"):
+                output_source = output_source.split("\n", 1)[1]
+            output, end = json.JSONDecoder().raw_decode(output_source)
+            validate_result(output)
+        except EnvelopeValidationError:
+            schema_invalid = True
+        except (TypeError, ValueError, json.JSONDecodeError):
+            invocation, output, end, schema_invalid = {}, {}, 0, False
+        else:
+            schema_invalid = False
+        operation, changed = expected
+        before, after = case.get("before", {}), case.get("after", {})
+        current = next(
+            (row for row in RESULTS if row["case"] == current_cases[case_id]),
+            {},
+        )
+        normalized = case.get("normalized_sha256", {})
+        raw_fields = {
+            name: case.get(name, "")
+            for name in (
+                "invocation.json", "prompt.txt", "output.txt",
+                "transcript.jsonl", "stderr.txt",
+            )
+        }
+        digest_ok = (
+            normalized
+            == {
+                name: hashlib.sha256(value.encode("utf-8")).hexdigest()
+                for name, value in raw_fields.items()
+            }
+        )
+        state_maps_ok = all(
+            isinstance(snapshot_value, dict)
+            and all(
+                isinstance(path, str)
+                and path
+                and not path.startswith(("/", "../"))
+                and "/../" not in path
+                and isinstance(digest, str)
+                and len(digest) == 64
+                and all(character in "0123456789abcdef" for character in digest)
+                for path, digest in snapshot_value.items()
+            )
+            and all(path == ".sdlc/.gitignore" or path == ".sdlc/store.sqlite3"
+                    for path in snapshot_value)
+            for snapshot_value in (before, after)
+        )
+        try:
+            events = [json.loads(line) for line in transcript_text.splitlines() if line]
+        except (TypeError, json.JSONDecodeError):
+            events = []
+        execution = case.get("execution", {})
+        thread_started = [event for event in events if event.get("type") == "thread.started"]
+        turn_started = [event for event in events if event.get("type") == "turn.started"]
+        turn_completed = [event for event in events if event.get("type") == "turn.completed"]
+        turn_failed = [event for event in events if event.get("type") == "turn.failed"]
+        completed_items = [
+            event["item"] for event in events
+            if event.get("type") == "item.completed" and isinstance(event.get("item"), dict)
+        ]
+        agent_messages = [
+            item.get("text", "") for item in completed_items
+            if item.get("type") == "agent_message"
+        ]
+        command_results = [
+            item for item in completed_items if item.get("type") == "command_execution"
+        ]
+        started_items = [
+            event["item"] for event in events
+            if event.get("type") == "item.started" and isinstance(event.get("item"), dict)
+        ]
+        started_by_id = {item.get("id"): item for item in started_items}
+        completed_by_id = {
+            item.get("id"): item for item in completed_items
+            if item.get("type") != "agent_message"
+        }
+        item_pairs_ok = (
+            len(started_by_id) == len(started_items)
+            and len(completed_by_id) == len(completed_items) - len(agent_messages)
+            and len({item.get("id") for item in completed_items}) == len(completed_items)
+            and set(started_by_id) == set(completed_by_id)
+            and all(
+                isinstance(identity, str)
+                and started_by_id[identity].get("type") == completed_by_id[identity].get("type")
+                and started_by_id[identity].get("status") == "in_progress"
+                and completed_by_id[identity].get("status") in {"completed", "failed"}
+                and (
+                    started_by_id[identity].get("type") != "command_execution"
+                    or started_by_id[identity].get("command")
+                    == completed_by_id[identity].get("command")
+                )
+                and (
+                    started_by_id[identity].get("type") != "file_change"
+                    or started_by_id[identity].get("changes")
+                    == completed_by_id[identity].get("changes")
+                )
+                for identity in started_by_id
+            )
+        )
+        event_types_ok = (
+            all(event.get("type") in {
+                "thread.started", "turn.started", "item.started",
+                "item.completed", "turn.completed",
+            } for event in events)
+            and events
+            and events[0].get("type") == "thread.started"
+            and events[1].get("type") == "turn.started"
+            and events[-1].get("type") == "turn.completed"
+        )
+        transcript_ok = (
+            len(thread_started) == len(turn_started) == len(turn_completed) == 1
+            and not turn_failed
+            and execution.get("thread_id") == thread_started[0].get("thread_id")
+            and isinstance(execution.get("thread_id"), str)
+            and execution.get("thread_id") not in thread_ids
+            and execution.get("command") == expected_command
+            and execution.get("exit_code") == 0
+            and execution.get("started_at", "N/A") != "N/A"
+            and execution.get("completed_at", "N/A") != "N/A"
+            and execution.get("started_at") < execution.get("completed_at")
+            and agent_messages
+            and agent_messages[-1].strip() == output_text.strip()
+            and command_results
+            and event_types_ok
+            and item_pairs_ok
+            and all(
+                item.get("status") in {"completed", "failed"}
+                and isinstance(item.get("exit_code"), int)
+                for item in command_results
+            )
+            and not any(
+                token in transcript_text
+                for token in (
+                    "/Users/shuaiw", "/private/tmp/imp-ctx-fresh-",
+                    "skills/sdlc-000-ctx", "curl ", "wget ", "git push",
+                )
+            )
+            and "${PROJECT_ROOT}" in transcript_text
+            and isinstance(stderr_text, str)
+        )
+        if execution.get("thread_id"):
+            thread_ids.append(execution["thread_id"])
+        check(
             case_id,
-            "NOT_RUN",
-            "without-skill ordinary-Agent execution was not available inside this exclusive work-package session; no result was fabricated",
+            fixture_ok
+            and digest_ok
+            and state_maps_ok
+            and transcript_ok
+            and invocation.get("contract") == "sdlc-ai-spec/runtime-invocation/v1"
+            and invocation.get("operation") == operation
+            and invocation.get("project_root") == "${PROJECT_ROOT}"
+            and prompt == prefix + invocation_raw.rstrip("\n") + "\n</invocation>\n"
+            and isinstance(output, dict)
+            and output.get("operation") == operation
+            and schema_invalid
+            and (before != after) == changed
+            and current.get("status") == "PASS",
+            "fresh ordinary-agent command, exit, complete JSONL tool trace, Invocation/Prompt/Output and side-effect evidence are digest-bound; current with-skill oracle passes and without-skill Result Schema fails",
+            {
+                "source": str(evidence_path.relative_to(ROOT)),
+                "normalized_sha256": normalized,
+                "execution": execution,
+                "transcript_events": len(events),
+                "command_results": len(command_results),
+                "without_skill_status": output.get("status", output.get("result", "N/A")),
+                "without_skill_schema": "FAIL" if schema_invalid else "PASS",
+                "source_effect_changed": changed,
+                "with_skill_case": current_cases[case_id],
+            },
         )
     target_files = [path for path in (ROOT / "skills/sdlc-000-ctx").rglob("*") if path.is_file()]
     target_text = "\n".join(path.read_text(encoding="utf-8", errors="ignore") for path in target_files)

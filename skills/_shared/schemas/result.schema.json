@@ -26,7 +26,8 @@
       "enum": [
         "create",
         "revise",
-        "check"
+        "check",
+        "abandon"
       ]
     },
     "status": {

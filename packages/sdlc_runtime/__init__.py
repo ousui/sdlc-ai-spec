@@ -51,7 +51,11 @@ from .skill_args import (
     render_version,
     skill_interface_from_mapping,
 )
-from .skill_inputs import SkillCommandWithInputs, parse_skill_command_with_inputs
+from .skill_inputs import (
+    SkillCommandWithInputs,
+    parse_skill_command_with_extensions,
+    parse_skill_command_with_inputs,
+)
 from .source_lock import (
     ContractSource,
     REGISTRY_CONTRACT,
@@ -109,6 +113,7 @@ __all__ = [
     "parse_skill_arguments",
     "parse_skill_command",
     "parse_skill_command_with_inputs",
+    "parse_skill_command_with_extensions",
     "registry_sources",
     "render_commands",
     "render_examples",

@@ -144,3 +144,12 @@ VFY 就绪只说明可进入验证；是否安装 `sdlc-500-vfy` 由 `skill_avai
 无 Claim 的 PLN 保留原有准确 Work Item 候选语义。
 已有后续 Artifact 且准确引用当前终端 IMP 时，保留既有后续 Phase 查询路由；
 仅作为 Rework 输入的 VFY Return / RLS Issue 不代替当前 IMP 前沿。
+
+## VFY Projection
+
+带唯一 `VFY-STATE` Supporting Member 的当前 VFY 必须继续绑定全部当前终端 IMP
+Resource Result。查询层只读验证 Subject 的 Result Reference/Digest、Binding Lineage、
+Attempt、Claim、IMP Revision、Baseline、Changed Scope 与依赖链，并投影独立的
+`product_result / artifact_gate / unresolved_returns / rls_applicability / rls_ready`。
+产品 `fail` 与可信 Artifact `pass` 不冲突；early-stop 或 unresolved Return 精确返回
+所属上游 Phase，永远不进入 RLS。旧的无 `VFY-STATE` canonical fixture 保留通用路由。

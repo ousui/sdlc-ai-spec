@@ -62,6 +62,9 @@ All query commands force `effective_write_policy=deny`. Meta commands return bef
   VFY readiness does not imply VFY execution, acceptance, or Skill availability.
 - `projection.vfy_results` selects one exact terminal Result per Resource, including
   when different Resources have terminal Results in different IMP revisions.
+- `projection.vfy_projection` separates the frozen VFY Product Result, Artifact Gate,
+  unresolved Return, RLS applicability and RLS readiness. Product failure never
+  becomes an Artifact authority failure and never authorizes RLS by itself.
 - Multiple next actions remain visible in the summary. The top-level `next_action`
   asks for selection instead of silently selecting the first candidate.
 - An unavailable next Skill has `skill_available=false` and no executable command.

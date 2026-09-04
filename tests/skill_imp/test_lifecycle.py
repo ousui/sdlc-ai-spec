@@ -103,7 +103,7 @@ class ImpLifecycleTests(ImpFixture):
         self.assertEqual(projection.next_actions[0].phase, "IMP")
         self.assert_not_ready(projection)
 
-    def test_frozen_completed_result_is_ready_but_missing_vfy_skill_is_explicit(self):
+    def test_frozen_completed_result_is_ready_and_installed_vfy_is_explicit(self):
         completed = self.finish(self.create_open())
         projection = self.query()
         current = self.current(projection)
@@ -113,8 +113,8 @@ class ImpLifecycleTests(ImpFixture):
         self.assertEqual(current.results[0]["result_reference"], self.info(completed)["results"][0])
         action = projection.next_actions[0]
         self.assertEqual(action.phase, "VFY")
-        self.assertFalse(action.skill_available)
-        self.assertIsNone(action.command)
+        self.assertTrue(action.skill_available)
+        self.assertIn("/sdlc-500-vfy create", action.command)
 
     def test_abandoned_claim_requires_explicit_retry_or_rework(self):
         opened = self.create_open()

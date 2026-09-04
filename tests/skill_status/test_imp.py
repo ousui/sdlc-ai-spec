@@ -40,15 +40,15 @@ class ImpStatusTests(ImpFixture):
                 self.assertIn("VFY 就绪：否", summary)
         self.assertEqual(tree_bytes(self.root), before)
 
-    def test_completed_summary_separates_vfy_readiness_from_skill_availability(self):
+    def test_completed_summary_separates_vfy_readiness_and_installed_skill(self):
         completed = self.finish(self.create_open())
         result = self.status()
         summary = RUNTIME.render_summary(result)
         self.assertIn("当前实施完成：是", summary)
         self.assertIn("VFY 就绪：是", summary)
-        self.assertIn("对应 Skill 尚未安装：sdlc-500-vfy", summary)
+        self.assertIn("命令：/sdlc-500-vfy create", summary)
         self.assertIn(self.info(completed)["results"][0], summary)
-        self.assertIsNone(result["next_action"]["command"])
+        self.assertIn("/sdlc-500-vfy create", result["next_action"]["command"])
 
     def test_corrupt_claim_store_reports_stable_error_and_remains_unchanged(self):
         self.finish(self.create_open())

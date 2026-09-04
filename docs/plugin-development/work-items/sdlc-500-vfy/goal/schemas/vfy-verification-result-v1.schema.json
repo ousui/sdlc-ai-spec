@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ousui.github.io/sdlc-ai-spec/schemas/vfy-verification-result-v1.schema.json",
+  "title": "VFY Verification Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "status",
+    "profile",
+    "source_sha",
+    "source_tree",
+    "started_at",
+    "finished_at",
+    "commands",
+    "critical_cases",
+    "evidence_digest"
+  ],
+  "properties": {
+    "contract": {"const": "sdlc-ai-spec/vfy-verification-result/v1"},
+    "status": {"enum": ["PASS", "FAIL"]},
+    "profile": {"enum": ["quick", "phase", "full", "external", "attest"]},
+    "source_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "source_tree": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "started_at": {"type": "string", "format": "date-time"},
+    "finished_at": {"type": "string", "format": "date-time"},
+    "commands": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "argv", "cwd", "started_at", "duration_seconds", "exit_code", "log_path", "log_sha256", "status"],
+        "properties": {
+          "id": {"type": "string", "minLength": 1},
+          "argv": {"type": "array", "minItems": 1, "items": {"type": "string"}},
+          "cwd": {"type": "string", "minLength": 1},
+          "started_at": {"type": "string", "format": "date-time"},
+          "duration_seconds": {"type": "number", "minimum": 0},
+          "exit_code": {"type": "integer"},
+          "log_path": {"type": "string", "minLength": 1},
+          "log_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "status": {"enum": ["PASS", "FAIL"]}
+        }
+      }
+    },
+    "critical_cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "status", "test", "evidence"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^VFY-E(?:00[1-9]|0[1-7][0-9]|080)$"},
+          "status": {"enum": ["PASS", "FAIL"]},
+          "test": {"type": "string", "minLength": 1},
+          "evidence": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "external_projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["repository", "source_sha", "chain", "method_types", "cleanup", "status"],
+        "properties": {
+          "repository": {"type": "string", "minLength": 1},
+          "source_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "chain": {"const": ["CTX", "REQ", "DSN", "PLN", "IMP", "VFY"]},
+          "method_types": {
+            "type": "array",
+            "minItems": 2,
+            "uniqueItems": true,
+            "items": {"enum": ["inspection", "analysis", "test"]}
+          },
+          "cleanup": {"enum": ["PASS", "FAIL"]},
+          "status": {"enum": ["PASS", "FAIL"]}
+        }
+      }
+    },
+    "evidence_digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "first_failure": {"type": ["object", "null"]},
+    "notes": {"type": "array", "items": {"type": "string"}}
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"profile": {"enum": ["phase", "full", "attest"]}}},
+      "then": {"properties": {"critical_cases": {"minItems": 80, "maxItems": 80}}}
+    },
+    {
+      "if": {"properties": {"profile": {"enum": ["external", "attest"]}}},
+      "then": {
+        "required": ["external_projects"],
+        "properties": {"external_projects": {"minItems": 2, "maxItems": 2}}
+      }
+    }
+  ]
+}

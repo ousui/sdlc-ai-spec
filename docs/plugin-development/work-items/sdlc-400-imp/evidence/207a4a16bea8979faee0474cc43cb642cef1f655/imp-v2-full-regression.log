@@ -1,0 +1,1362 @@
+root=/Users/shuaiw/Workspace/goedge.cloud/sdlc-ai-spec-imp-v2-manual
+head=eeeb4ae92a67d39f42f1cc6772aea2357828ce6e
+mode=full
+
+$ git diff --check
+EXIT_CODE=0
+
+$ python3 -m compileall -q packages scripts skills tests tools
+EXIT_CODE=0
+
+$ python3 tools/validate_runtime_contracts.py
+runtime contract validation: PASS
+runtime contracts: 5
+formal skills: 6
+EXIT_CODE=0
+
+$ python3 tools/validate_skill_interfaces.py
+skill interface validation: PASS
+formal skills: 6
+interface contract: sdlc-ai-spec/runtime/skill-interface/v1
+authority source locks: unchanged
+EXIT_CODE=0
+
+$ python3 tools/validate_lifecycle_query.py
+lifecycle query validation: PASS
+projection contract: sdlc-ai-spec/lifecycle-status/v1
+writes: 0
+EXIT_CODE=0
+
+$ python3 tools/validate_sdlc_status.py
+sdlc-status validation: PASS
+commands: 7
+writes: 0
+EXIT_CODE=0
+
+$ python3 tools/validate_sdlc_100_req_source_lock.py
+sdlc-100-req source lock: PASS
+contracts: 8
+EXIT_CODE=0
+
+$ python3 tools/validate_sdlc_200_dsn_source_lock.py
+sdlc-200-dsn source lock: PASS
+contracts: 26
+bundled runtime contracts: 17
+EXIT_CODE=0
+
+$ python3 tools/validate_sdlc_300_pln_source_lock.py
+PLN source lock: PASS (13)
+EXIT_CODE=0
+
+$ python3 tools/validate_sdlc_400_imp_source_lock.py
+IMP source lock: PASS (16)
+EXIT_CODE=0
+
+$ python3 tools/test_sdlc_100_req_runtime_independence.py
+sdlc-100-req runtime independence: PASS
+docs copied: 0
+external dependencies installed: 0
+EXIT_CODE=0
+
+$ python3 tools/test_sdlc_200_dsn_runtime_independence.py
+sdlc-200-dsn runtime independence: PASS
+development docs copied: 0
+external dependencies installed: 0
+project writes during read-only check: 0
+EXIT_CODE=0
+
+$ python3 tools/test_sdlc_300_pln_runtime_independence.py
+sdlc-pln runtime independence: PASS
+development docs copied: 0
+external dependencies installed: 0
+project writes during read-only check: 0
+EXIT_CODE=0
+
+$ python3 tools/test_sdlc_400_imp_runtime_independence.py
+sdlc-imp runtime independence: PASS
+development docs copied: 0
+network operations: 0
+dependencies installed: 0
+git ref mutations: 0
+read-only project writes: 0
+create/check/abandon: PASS
+EXIT_CODE=0
+
+$ python3 tools/test_sdlc_status_runtime_independence.py
+sdlc-status runtime independence: PASS
+docs copied: 0
+project writes: 0
+EXIT_CODE=0
+
+$ python3 tests/evals/run_sdlc_000_ctx_eval.py
+{
+  "case_count": 51,
+  "cases": [
+    {
+      "actual": "portable trigger metadata forbids implicit invocation; real client behavior is deferred",
+      "case": "EV-T01",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "operation=create",
+      "case": "EV-T02",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "operation=revise",
+      "case": "EV-T03",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "operation=check",
+      "case": "EV-T04",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "code=TARGET_AMBIGUOUS; zero_store_access=True",
+      "case": "EV-I01",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "ARTIFACT_REFERENCE_REQUIRED",
+      "case": "EV-I02",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "ARTIFACT_REFERENCE_INVALID",
+      "case": "EV-I03",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "code=PROJECT_BOUNDARY_CONFIRMATION_REQUIRED; zero_write=True",
+      "case": "EV-I04",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "status=completed; artifact={'id': 'CTX-20260830101112-01', 'type': 'CTX', 'revision': 1, 'revision_state': 'frozen', 'artifact_status': 'ready', 'reference': 'CTX-20260830101112-01@1'}; gate=pass",
+      "case": "EV-C01",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "status=action_required; open_items=3",
+      "case": "EV-C02",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "code=CTX_LINEAGE_EXISTS; artifacts=1",
+      "case": "EV-C03",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "results=[('action_required', []), ('blocked', [('CTX_LINEAGE_EXISTS', 'This confirmed Project Boundary already has a CTX Lineage')])]; ids=['CTX-20260830101112-01']; artifacts=1",
+      "case": "EV-C04",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "status=completed; zero_write=True",
+      "case": "EV-C05",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "revision_count=1; generation=1->2",
+      "case": "EV-R01",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "revision=2; base=1; frozen_unchanged=True",
+      "case": "EV-R02",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "status=completed; revision_count=1",
+      "case": "EV-R03",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "CONTROL_RESERVATION",
+      "case": "EV-R04",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "INVALID_STATE",
+      "case": "EV-R05",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "gate=pass; byte_identical=True",
+      "case": "EV-K01",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "state=open; byte_identical=True",
+      "case": "EV-K02",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "state=abandoned; authority=None",
+      "case": "EV-K03",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "code=CONTROL_RESERVATION; byte_identical=True",
+      "case": "EV-K04",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "code=STORE_NOT_FOUND; zero_write=True",
+      "case": "EV-K05",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "code=CTX_DOMAIN_INVALID; failed_checks=['CTX-G-002']",
+      "case": "EV-K06",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "code=CTX_CONTENT_INVALID; store_created=False",
+      "case": "EV-REV001",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "revisions=[1, 2, 3]; base=1; materialized=True",
+      "case": "EV-REV002-MAX",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "result=failed; controls=[(1, 'frozen', True), (2, 'abandoned', False)]",
+      "case": "EV-REV002-CLEANUP",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "input_keys=['context', 'evidence', 'supporting_members']; members=['SUP-001']",
+      "case": "EV-REV006-PEER",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "code=CTX_CONTENT_INVALID; store_created=False",
+      "case": "EV-REV006-NESTED",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "gate=pass_with_exception; status=ready_with_exception",
+      "case": "EV-D01",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "gate=pass; status=ready",
+      "case": "EV-D02",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "variant=missing_decided_at; status=action_required; state=open",
+      "case": "EV-D02-N01",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "variant=imprecise_fixed_set; status=action_required; state=open",
+      "case": "EV-D02-N02",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "variant=invalid_delegation_basis; status=action_required; state=open",
+      "case": "EV-D02-N03",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "status=failed; code=CTX_CONTENT_INVALID; external_digest=bea4795214f9dac3654462750d38bcc3e4fceb33176ad57a95c8035f8171dde7; zero_store=True",
+      "case": "EV-D03",
+      "evidence": {
+        "authorization": [
+          "fixture:external-context-producer"
+        ],
+        "call_log": [
+          "fixture:external-context-producer"
+        ],
+        "canary_exists": false,
+        "dependency": "fixture:external-normalizer",
+        "dependency_invoked": false,
+        "dependency_requested": "fixture:external-normalizer",
+        "external_digest": "bea4795214f9dac3654462750d38bcc3e4fceb33176ad57a95c8035f8171dde7",
+        "peer_input_keys": [
+          "context",
+          "evidence",
+          "supporting_members"
+        ],
+        "producer": "fixture:external-context-producer",
+        "producer_returncode": 0,
+        "result_code": "CTX_CONTENT_INVALID",
+        "store_exists": false
+      },
+      "status": "PASS"
+    },
+    {
+      "actual": "references=3",
+      "case": "EV-D04",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "contract_count=8; exact_runtime_verification=pass",
+      "case": "EV-S01",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "result_code=SOURCE_LOCK_INVALID",
+      "case": "EV-S02",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "docs_present=False; create=action_required; revise=completed; check=completed",
+      "case": "EV-S03",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "cwd=different-cwd; result_code=STORE_NOT_FOUND",
+      "case": "EV-S04",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "returncode=1; structured=True; traceback=False",
+      "case": "EV-S05",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "python_docs_path_hits=[]; direct_sql=False",
+      "case": "EV-S06",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "fresh ordinary-agent command, exit, complete JSONL tool trace, Invocation/Prompt/Output and side-effect evidence are digest-bound; current with-skill oracle passes and without-skill Result Schema fails",
+      "case": "EV-W01-C01",
+      "evidence": {
+        "command_results": 15,
+        "execution": {
+          "command": "codex exec --ignore-user-config --ignore-rules --ephemeral --skip-git-repo-check --sandbox workspace-write --json --color never -m gpt-5.4 -c model_reasoning_effort=\"low\" -C ${PROJECT_ROOT} -o ${CAPTURE_CASE}/output3.txt - < ${CAPTURE_CASE}/prompt.txt > ${CAPTURE_CASE}/transcript3.jsonl 2> ${CAPTURE_CASE}/stderr3.txt",
+          "completed_at": "2026-09-03T18:04:08.805000Z",
+          "exit_code": 0,
+          "started_at": "2026-09-03T18:02:40.685721Z",
+          "thread_id": "01a0686f-ec94-7742-9dc5-0a1ed8d95be5"
+        },
+        "normalized_sha256": {
+          "invocation.json": "2824bb400e76741d7d5538ffeef1141cee82f7e628645f79f9bff6e32c225c9a",
+          "output.txt": "17608c33952307394fe2937be5e4b8096787acdc8a8edb73a869649f1f1e99ca",
+          "prompt.txt": "cc4b51b1f7bc1966475d121c5d06b32d6db4f99c54f2eb247f2e03eb5169ba06",
+          "stderr.txt": "a8793c314e88a21504fbb11489edd8d7165ad7c0b14c6ef5451626f9498dce10",
+          "transcript.jsonl": "20c3d3d98cf18758d54ccd87cba21f078237774cc7d0791e92cbdad57a790d22"
+        },
+        "source": "tests/evals/fixtures/sdlc_000_ctx_without_skill.json",
+        "source_effect_changed": true,
+        "transcript_events": 39,
+        "with_skill_case": "EV-C01",
+        "without_skill_schema": "FAIL",
+        "without_skill_status": "N/A"
+      },
+      "status": "PASS"
+    },
+    {
+      "actual": "fresh ordinary-agent command, exit, complete JSONL tool trace, Invocation/Prompt/Output and side-effect evidence are digest-bound; current with-skill oracle passes and without-skill Result Schema fails",
+      "case": "EV-W02-C02",
+      "evidence": {
+        "command_results": 13,
+        "execution": {
+          "command": "codex exec --ignore-user-config --ignore-rules --ephemeral --skip-git-repo-check --sandbox workspace-write --json --color never -m gpt-5.4 -c model_reasoning_effort=\"low\" -C ${PROJECT_ROOT} -o ${CAPTURE_CASE}/output3.txt - < ${CAPTURE_CASE}/prompt.txt > ${CAPTURE_CASE}/transcript3.jsonl 2> ${CAPTURE_CASE}/stderr3.txt",
+          "completed_at": "2026-09-03T18:05:43.275195Z",
+          "exit_code": 0,
+          "started_at": "2026-09-03T18:04:29.730221Z",
+          "thread_id": "01a06871-968e-7272-b03c-4094e58b6998"
+        },
+        "normalized_sha256": {
+          "invocation.json": "d449a1ab85c9401301d741b4510ab05aedcf03ef7dda1349f0989b6226613824",
+          "output.txt": "e81fde3ea56a9b9d072a33004536071d54cc93b46a4385faa9ad80ffd9210b6c",
+          "prompt.txt": "1ffffccc21af63c76f3fc6ad30ac06ec937511d8a78afe337a2f8839a1ffb9ee",
+          "stderr.txt": "9ed927d27b7ac59d01181a702456ac9fefccb40cd5b38aa89de68bd83721ac9c",
+          "transcript.jsonl": "36ab2a41e66352b4837df79bc08375ff606ae91c226b85beb144f4b79f4a7db8"
+        },
+        "source": "tests/evals/fixtures/sdlc_000_ctx_without_skill.json",
+        "source_effect_changed": true,
+        "transcript_events": 34,
+        "with_skill_case": "EV-C02",
+        "without_skill_schema": "FAIL",
+        "without_skill_status": "success"
+      },
+      "status": "PASS"
+    },
+    {
+      "actual": "fresh ordinary-agent command, exit, complete JSONL tool trace, Invocation/Prompt/Output and side-effect evidence are digest-bound; current with-skill oracle passes and without-skill Result Schema fails",
+      "case": "EV-W03-R01",
+      "evidence": {
+        "command_results": 24,
+        "execution": {
+          "command": "codex exec --ignore-user-config --ignore-rules --ephemeral --skip-git-repo-check --sandbox workspace-write --json --color never -m gpt-5.4 -c model_reasoning_effort=\"low\" -C ${PROJECT_ROOT} -o ${CAPTURE_CASE}/output3.txt - < ${CAPTURE_CASE}/prompt.txt > ${CAPTURE_CASE}/transcript3.jsonl 2> ${CAPTURE_CASE}/stderr3.txt",
+          "completed_at": "2026-09-03T18:06:58.640319Z",
+          "exit_code": 0,
+          "started_at": "2026-09-03T18:04:32.102982Z",
+          "thread_id": "01a06871-9fd2-7993-8c65-2c4143cb9b4b"
+        },
+        "normalized_sha256": {
+          "invocation.json": "2f3016f3399ec4d918af67721495f29761b08b9db08b1e04d82353e1a840da5c",
+          "output.txt": "bf2e814151e6611c0705c7c95e3d436233cf007e2c1a6542213f5611ad81a79a",
+          "prompt.txt": "b6b9f95418a96939b71135549085a0522bf4e30cc8d246c179f1f8b50a2f195b",
+          "stderr.txt": "d9a05a29484cfba0f2e2f60ed1f17443cde0420a3898fe61c55d16747a3ddf2e",
+          "transcript.jsonl": "ddb771677aec9174f6ec84bd8d0ad0240a194210e5833e608c5404c0d5551d2f"
+        },
+        "source": "tests/evals/fixtures/sdlc_000_ctx_without_skill.json",
+        "source_effect_changed": true,
+        "transcript_events": 65,
+        "with_skill_case": "EV-R01",
+        "without_skill_schema": "FAIL",
+        "without_skill_status": "ok"
+      },
+      "status": "PASS"
+    },
+    {
+      "actual": "fresh ordinary-agent command, exit, complete JSONL tool trace, Invocation/Prompt/Output and side-effect evidence are digest-bound; current with-skill oracle passes and without-skill Result Schema fails",
+      "case": "EV-W04-K05",
+      "evidence": {
+        "command_results": 6,
+        "execution": {
+          "command": "codex exec --ignore-user-config --ignore-rules --ephemeral --skip-git-repo-check --sandbox workspace-write --json --color never -m gpt-5.4 -c model_reasoning_effort=\"low\" -C ${PROJECT_ROOT} -o ${CAPTURE_CASE}/output3.txt - < ${CAPTURE_CASE}/prompt.txt > ${CAPTURE_CASE}/transcript3.jsonl 2> ${CAPTURE_CASE}/stderr3.txt",
+          "completed_at": "2026-09-03T18:05:09.681091Z",
+          "exit_code": 0,
+          "started_at": "2026-09-03T18:04:33.155193Z",
+          "thread_id": "01a06871-a3e9-7273-93fd-853afb32025d"
+        },
+        "normalized_sha256": {
+          "invocation.json": "e440ba63510be21614e65f17542b7068a76256909e6b39c63e8699228e4dba97",
+          "output.txt": "e0755fca483011d298dc224b0e28b554bef301a3224f1243459b8a1927d6746a",
+          "prompt.txt": "d7a24b30d31c0b412fd0c0a9e7eadbef152c6a3d031adafb48e5b5659a06f7ce",
+          "stderr.txt": "86a3e68e31809e12a9dc3b22f652ac2a26e1a1eeac8df7c52e1c3491fc3c866d",
+          "transcript.jsonl": "a7f7d86e5d54d50f5789274b157a8d312dbdf68f1bb4a3605fb2a734dbc0afab"
+        },
+        "source": "tests/evals/fixtures/sdlc_000_ctx_without_skill.json",
+        "source_effect_changed": false,
+        "transcript_events": 18,
+        "with_skill_case": "EV-K05",
+        "without_skill_schema": "FAIL",
+        "without_skill_status": "failed"
+      },
+      "status": "PASS"
+    },
+    {
+      "actual": "no sibling Skill invocation path in the bundled target Skill",
+      "case": "EV-X01",
+      "evidence": null,
+      "status": "PASS"
+    },
+    {
+      "actual": "authorized producer executed once; requested dependency received no delegated authorization and wrote no canary; output stayed in peer Evidence/Supporting Member and its conflicting proposal was rejected",
+      "case": "EV-X02",
+      "evidence": {
+        "authorization": [
+          "fixture:external-context-producer"
+        ],
+        "call_log": [
+          "fixture:external-context-producer"
+        ],
+        "canary_exists": false,
+        "dependency": "fixture:external-normalizer",
+        "dependency_invoked": false,
+        "dependency_requested": "fixture:external-normalizer",
+        "external_digest": "bea4795214f9dac3654462750d38bcc3e4fceb33176ad57a95c8035f8171dde7",
+        "peer_input_keys": [
+          "context",
+          "evidence",
+          "supporting_members"
+        ],
+        "producer": "fixture:external-context-producer",
+        "producer_returncode": 0,
+        "result_code": "CTX_CONTENT_INVALID",
+        "store_exists": false
+      },
+      "status": "PASS"
+    },
+    {
+      "actual": "Cursor Discovery/Invocation/Behavior not executed in evaluate; dedicated client evidence belongs to adapt-codex or an explicitly authorized future client stage",
+      "case": "EV-P01",
+      "evidence": null,
+      "status": "DEFERRED"
+    },
+    {
+      "actual": "Claude Code Discovery/Invocation/Behavior not executed in evaluate; dedicated client evidence belongs to adapt-codex or an explicitly authorized future client stage",
+      "case": "EV-P02",
+      "evidence": null,
+      "status": "DEFERRED"
+    },
+    {
+      "actual": "Codex Discovery/Invocation/Behavior not executed in evaluate; dedicated client evidence belongs to adapt-codex or an explicitly authorized future client stage",
+      "case": "EV-P03",
+      "evidence": null,
+      "status": "DEFERRED"
+    }
+  ],
+  "contract": "sdlc-ai-spec/sdlc-000-ctx-eval-results/v1",
+  "counts": {
+    "DEFERRED": 3,
+    "FAIL": 0,
+    "NOT_RUN": 0,
+    "PASS": 48
+  },
+  "fixed_time": "2026-08-30T10:11:12+00:00"
+}
+EXIT_CODE=0
+
+$ python3 tests/evals/run_sdlc_200_dsn_eval.py
+test_catalog_has_fixed_sixteen_domain_order (skill_dsn.test_domains.DsnDomainContractTests.test_catalog_has_fixed_sixteen_domain_order) ... ok
+test_composite_required_dominates_na (skill_dsn.test_domains.DsnDomainContractTests.test_composite_required_dominates_na) ... ok
+test_composite_rows_have_fixed_five_row_order (skill_dsn.test_domains.DsnDomainContractTests.test_composite_rows_have_fixed_five_row_order) ... ok
+test_dom_510_cannot_be_na_or_waived (skill_dsn.test_domains.DsnDomainContractTests.test_dom_510_cannot_be_na_or_waived) ... ok
+test_missing_domains_are_explicit_pending_rows (skill_dsn.test_domains.DsnDomainContractTests.test_missing_domains_are_explicit_pending_rows) ... ok
+test_incomplete_required_domain_remains_open (skill_dsn.test_integrity.DsnIntegrityTests.test_incomplete_required_domain_remains_open) ... ok
+test_stale_final_confirmation_does_not_freeze (skill_dsn.test_integrity.DsnIntegrityTests.test_stale_final_confirmation_does_not_freeze) ... ok
+test_verifier_rejects_missing_required_member (skill_dsn.test_integrity.DsnIntegrityTests.test_verifier_rejects_missing_required_member) ... ok
+test_verifier_rejects_status_mismatch (skill_dsn.test_integrity.DsnIntegrityTests.test_verifier_rejects_status_mismatch) ... ok
+test_duplicate_input_is_deduplicated_with_warning (skill_dsn.test_interface.DsnInterfaceTests.test_duplicate_input_is_deduplicated_with_warning) ... ok
+test_free_text_is_preserved_after_separator (skill_dsn.test_interface.DsnInterfaceTests.test_free_text_is_preserved_after_separator) ... ok
+test_input_requires_exact_token_value (skill_dsn.test_interface.DsnInterfaceTests.test_input_requires_exact_token_value) ... ok
+test_meta_command_rejects_execution_input (skill_dsn.test_interface.DsnInterfaceTests.test_meta_command_rejects_execution_input) ... ok
+test_repeatable_input_forms_preserve_first_order (skill_dsn.test_interface.DsnInterfaceTests.test_repeatable_input_forms_preserve_first_order) ... ok
+test_invalid_dsn_applicability_does_not_guess_next_phase (skill_dsn.test_lifecycle.DsnLifecycleTests.test_invalid_dsn_applicability_does_not_guess_next_phase) ... ok
+test_open_dsn_stays_on_current_phase (skill_dsn.test_lifecycle.DsnLifecycleTests.test_open_dsn_stays_on_current_phase) ... ok
+test_pln_skipped_and_imp_required_routes_directly_to_imp (skill_dsn.test_lifecycle.DsnLifecycleTests.test_pln_skipped_and_imp_required_routes_directly_to_imp) ... ok
+test_ready_dsn_creates_req_to_dsn_edge_and_routes_to_pln (skill_dsn.test_lifecycle.DsnLifecycleTests.test_ready_dsn_creates_req_to_dsn_edge_and_routes_to_pln) ... ok
+test_boundary_is_required_before_allocation (skill_dsn.test_runtime.DsnRuntimeTests.test_boundary_is_required_before_allocation) ... ok
+test_check_is_strictly_read_only (skill_dsn.test_runtime.DsnRuntimeTests.test_check_is_strictly_read_only) ... ok
+test_complete_create_freezes_ready_artifact_set (skill_dsn.test_runtime.DsnRuntimeTests.test_complete_create_freezes_ready_artifact_set) ... ok
+test_frozen_change_creates_next_revision (skill_dsn.test_runtime.DsnRuntimeTests.test_frozen_change_creates_next_revision) ... ok
+test_frozen_no_change_does_not_allocate_revision (skill_dsn.test_runtime.DsnRuntimeTests.test_frozen_no_change_does_not_allocate_revision) ... ok
+test_matrix_has_fixed_sixteen_rows (skill_dsn.test_runtime.DsnRuntimeTests.test_matrix_has_fixed_sixteen_rows) ... ok
+test_missing_final_confirmation_persists_waiting_input (skill_dsn.test_runtime.DsnRuntimeTests.test_missing_final_confirmation_persists_waiting_input) ... ok
+test_multiple_requirements_from_same_context_are_supported (skill_dsn.test_runtime.DsnRuntimeTests.test_multiple_requirements_from_same_context_are_supported) ... ok
+test_na_or_waived_scope_does_not_allocate_empty_dsn (skill_dsn.test_runtime.DsnRuntimeTests.test_na_or_waived_scope_does_not_allocate_empty_dsn) ... ok
+test_only_required_domains_create_members (skill_dsn.test_runtime.DsnRuntimeTests.test_only_required_domains_create_members) ... ok
+test_open_revision_is_revised_in_place (skill_dsn.test_runtime.DsnRuntimeTests.test_open_revision_is_revised_in_place) ... ok
+test_pending_req_applicability_blocks_before_allocation (skill_dsn.test_runtime.DsnRuntimeTests.test_pending_req_applicability_blocks_before_allocation) ... ok
+test_required_scope_dominates_na_scope (skill_dsn.test_runtime.DsnRuntimeTests.test_required_scope_dominates_na_scope) ... ok
+test_requirements_from_different_contexts_fail_before_allocation (skill_dsn.test_runtime.DsnRuntimeTests.test_requirements_from_different_contexts_fail_before_allocation) ... ok
+test_secret_supporting_member_fails_and_abandons_reservation (skill_dsn.test_runtime.DsnRuntimeTests.test_secret_supporting_member_fails_and_abandons_reservation) ... ok
+
+----------------------------------------------------------------------
+Ran 33 tests in 0.424s
+
+OK
+sdlc-200-dsn source lock: PASS
+contracts: 26
+bundled runtime contracts: 17
+sdlc-200-dsn runtime independence: PASS
+development docs copied: 0
+external dependencies installed: 0
+project writes during read-only check: 0
+sdlc-200-dsn eval: PASS
+critical cases: 33
+source-lock contracts: 26
+runtime independence: PASS
+EXIT_CODE=0
+
+$ python3 tests/evals/run_sdlc_300_pln_eval.py
+test_duplicate_work_item_semantics_are_rejected (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_duplicate_work_item_semantics_are_rejected) ... ok
+test_generic_completion_or_evidence_is_not_sufficient (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_generic_completion_or_evidence_is_not_sufficient) ... ok
+test_missing_responsible_role_remains_action_required (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_missing_responsible_role_remains_action_required) ... ok
+test_non_required_phase_cannot_have_pseudo_work_item (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_non_required_phase_cannot_have_pseudo_work_item) ... ok
+test_path_token_must_belong_to_declared_resource (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_path_token_must_belong_to_declared_resource) ... ok
+test_required_rls_work_item_has_exactly_one_environment (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_required_rls_work_item_has_exactly_one_environment) ... ok
+test_unconfirmed_obligation_and_scope_expansion_fail (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_unconfirmed_obligation_and_scope_expansion_fail) ... ok
+test_unknown_authority_fields_are_rejected (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_unknown_authority_fields_are_rejected) ... ok
+test_vfy_is_always_required_and_needs_work_item (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_vfy_is_always_required_and_needs_work_item) ... ok
+test_parallel_earliest_work_items_are_all_projected (tests.skill_pln.test_lifecycle.PlnLifecycleTests.test_parallel_earliest_work_items_are_all_projected) ... ok
+test_ready_plan_projects_exact_imp_binding (tests.skill_pln.test_lifecycle.PlnLifecycleTests.test_ready_plan_projects_exact_imp_binding) ... ok
+test_candidate_cannot_override_upstream_pln_applicability (tests.skill_pln.test_runtime.PlnRuntimeTests.test_candidate_cannot_override_upstream_pln_applicability) ... ok
+test_check_is_read_only (tests.skill_pln.test_runtime.PlnRuntimeTests.test_check_is_read_only) ... ok
+test_create_freezes_complete_plan (tests.skill_pln.test_runtime.PlnRuntimeTests.test_create_freezes_complete_plan) ... ok
+test_dependency_cycle_and_later_phase_fail (tests.skill_pln.test_runtime.PlnRuntimeTests.test_dependency_cycle_and_later_phase_fail) ... ok
+test_missing_confirmation_persists_open_revision (tests.skill_pln.test_runtime.PlnRuntimeTests.test_missing_confirmation_persists_open_revision) ... ok
+test_non_required_and_pending_do_not_allocate (tests.skill_pln.test_runtime.PlnRuntimeTests.test_non_required_and_pending_do_not_allocate) ... ok
+test_open_revise_frozen_no_change_and_change (tests.skill_pln.test_runtime.PlnRuntimeTests.test_open_revise_frozen_no_change_and_change) ... ok
+test_same_resource_work_items_require_dependency_chain (tests.skill_pln.test_runtime.PlnRuntimeTests.test_same_resource_work_items_require_dependency_chain) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.470s
+
+OK
+PLN source lock: PASS (13)
+sdlc-pln runtime independence: PASS
+development docs copied: 0
+external dependencies installed: 0
+project writes during read-only check: 0
+sdlc-pln eval: PASS
+critical cases: 19
+runtime independence: PASS
+EXIT_CODE=0
+
+$ python3 tests/evals/run_sdlc_400_imp_eval.py
+test_abandon_cas_rejects_owner_attempt_artifact_and_revision_mismatch (tests.late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_abandon_cas_rejects_owner_attempt_artifact_and_revision_mismatch) ... ok
+test_abandon_records_actor_and_terminal_retry_preserves_actor_and_reason (tests.late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_abandon_records_actor_and_terminal_retry_preserves_actor_and_reason) ... ok
+test_active_binding_input_and_rework_mismatch_preserves_claim (tests.late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_active_binding_input_and_rework_mismatch_preserves_claim) ... ok
+test_completed_acquire_and_complete_retry_return_same_record (tests.late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_completed_acquire_and_complete_retry_return_same_record) ... ok
+test_concurrent_different_lineages_cannot_share_active_resource (tests.late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_concurrent_different_lineages_cannot_share_active_resource) ... ok
+test_concurrent_same_lineage_allocates_one_identity_and_attempt (tests.late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_concurrent_same_lineage_allocates_one_identity_and_attempt) ... ok
+test_concurrent_same_lineage_leaves_one_current_active_row (tests.late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_concurrent_same_lineage_leaves_one_current_active_row) ... ok
+test_frozen_abandon_rejects_a_forged_completion_failure_reason (tests.late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_frozen_abandon_rejects_a_forged_completion_failure_reason) ... ok
+test_historical_completed_attempt_does_not_replace_current_active_attempt (tests.late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_historical_completed_attempt_does_not_replace_current_active_attempt) ... ok
+test_abandoned_claim_requires_explicit_retry (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_abandoned_claim_requires_explicit_retry) ... ok
+test_abandoned_nonempty_rework_sequence_still_requires_explicit_retry (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_abandoned_nonempty_rework_sequence_still_requires_explicit_retry) ... ok
+test_abandoned_retry_may_assign_a_new_stable_owner (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_abandoned_retry_may_assign_a_new_stable_owner) ... ok
+test_acquire_is_idempotent_for_same_active_request (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_acquire_is_idempotent_for_same_active_request) ... ok
+test_active_mismatch_and_resource_conflict_fail_closed (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_active_mismatch_and_resource_conflict_fail_closed) ... ok
+test_blank_or_noncanonical_stored_identity_fields_fail_closed (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_blank_or_noncanonical_stored_identity_fields_fail_closed) ... ok
+test_claim_tables_are_namespaced_in_the_shared_artifact_store (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_claim_tables_are_namespaced_in_the_shared_artifact_store) ... ok
+test_complete_rechecks_frozen_final_confirmation_authority (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_complete_rechecks_frozen_final_confirmation_authority) ... ok
+test_complete_recomputes_the_immutable_resource_chain (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_complete_recomputes_the_immutable_resource_chain) ... ok
+test_complete_recursively_rechecks_dependency_chain (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_complete_recursively_rechecks_dependency_chain) ... ok
+test_complete_rejects_a_generically_frozen_mismatched_imp_payload (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_complete_rejects_a_generically_frozen_mismatched_imp_payload) ... ok
+test_complete_requires_current_completed_dependencies (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_complete_requires_current_completed_dependencies) ... ok
+test_completed_claim_can_start_new_rework_attempt (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_completed_claim_can_start_new_rework_attempt) ... ok
+test_completed_rework_sequence_is_idempotent (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_completed_rework_sequence_is_idempotent) ... ok
+test_invalid_or_reversed_stored_timestamps_fail_closed (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_invalid_or_reversed_stored_timestamps_fail_closed) ... ok
+test_invalid_stored_state_fails_closed_before_resource_reallocation (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_invalid_stored_state_fails_closed_before_resource_reallocation) ... ok
+test_noncanonical_stored_rework_fails_closed (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_noncanonical_stored_rework_fails_closed) ... ok
+test_read_only_connection_cannot_write_even_with_query_only_disabled (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_read_only_connection_cannot_write_even_with_query_only_disabled) ... ok
+test_rework_reference_order_is_one_canonical_set (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_rework_reference_order_is_one_canonical_set) ... ok
+test_terminal_transition_requires_matching_artifact_control (tests.late_foundations.test_claim_provider.ClaimProviderTests.test_terminal_transition_requires_matching_artifact_control) ... ok
+test_database_change_during_query_fails_closed (tests.late_foundations.test_claim_read_only.ClaimReadOnlyTests.test_database_change_during_query_fails_closed) ... ok
+test_existing_journal_sidecars_are_rejected_without_touching_them (tests.late_foundations.test_claim_read_only.ClaimReadOnlyTests.test_existing_journal_sidecars_are_rejected_without_touching_them) ... ok
+test_invalid_schema_is_rejected_without_repair (tests.late_foundations.test_claim_read_only.ClaimReadOnlyTests.test_invalid_schema_is_rejected_without_repair) ... ok
+test_missing_store_never_creates_database_or_parent (tests.late_foundations.test_claim_read_only.ClaimReadOnlyTests.test_missing_store_never_creates_database_or_parent) ... ok
+test_queries_do_not_initialize_schema_or_execute_write_sql (tests.late_foundations.test_claim_read_only.ClaimReadOnlyTests.test_queries_do_not_initialize_schema_or_execute_write_sql) ... ok
+test_wal_database_is_rejected_without_creating_wal_or_shm (tests.late_foundations.test_claim_read_only.ClaimReadOnlyTests.test_wal_database_is_rejected_without_creating_wal_or_shm) ... ok
+test_command_evidence_and_secret_rejection (tests.late_foundations.test_execution_effects.ExecutionAndEffectsTests.test_command_evidence_and_secret_rejection) ... ok
+test_execution_foundation_does_not_expose_release_effect_authority (tests.late_foundations.test_execution_effects.ExecutionAndEffectsTests.test_execution_foundation_does_not_expose_release_effect_authority) ... ok
+test_manual_evidence_is_structured (tests.late_foundations.test_execution_effects.ExecutionAndEffectsTests.test_manual_evidence_is_structured) ... ok
+test_changed_foundation_bytes_fail_without_regenerating_lock (tests.late_foundations.test_imp_source_lock.ImpSourceLockTests.test_changed_foundation_bytes_fail_without_regenerating_lock) ... ok
+test_deterministic_constructor_and_read_only_validation (tests.late_foundations.test_imp_source_lock.ImpSourceLockTests.test_deterministic_constructor_and_read_only_validation) ... ok
+test_every_missing_source_fails_closed (tests.late_foundations.test_imp_source_lock.ImpSourceLockTests.test_every_missing_source_fails_closed) ... ok
+test_extra_missing_duplicate_unsorted_and_sha_drift_fail_closed (tests.late_foundations.test_imp_source_lock.ImpSourceLockTests.test_extra_missing_duplicate_unsorted_and_sha_drift_fail_closed) ... ok
+test_imp_foundations_are_documented_and_do_not_change_pln (tests.late_foundations.test_imp_source_lock.ImpSourceLockTests.test_imp_foundations_are_documented_and_do_not_change_pln) ... ok
+test_missing_or_drifted_bundled_spec_fails_closed (tests.late_foundations.test_imp_source_lock.ImpSourceLockTests.test_missing_or_drifted_bundled_spec_fails_closed) ... ok
+test_registry_order_and_duplicate_contract_ids_fail_closed (tests.late_foundations.test_imp_source_lock.ImpSourceLockTests.test_registry_order_and_duplicate_contract_ids_fail_closed) ... ok
+test_cleanup_failure_is_reported_instead_of_silently_hidden (tests.late_foundations.test_phasekit_cleanup.PhaseKitCleanupTests.test_cleanup_failure_is_reported_instead_of_silently_hidden) ... ok
+test_normal_build_failure_closes_the_new_revision (tests.late_foundations.test_phasekit_cleanup.PhaseKitCleanupTests.test_normal_build_failure_closes_the_new_revision) ... ok
+test_out_of_scope_and_runtime_paths_are_rejected (tests.late_foundations.test_resource.ResourceTests.test_out_of_scope_and_runtime_paths_are_rejected) ... ok
+test_scoped_write_and_restore (tests.late_foundations.test_resource.ResourceTests.test_scoped_write_and_restore) ... ok
+test_snapshot_excludes_git_and_runtime_and_is_deterministic (tests.late_foundations.test_resource.ResourceTests.test_snapshot_excludes_git_and_runtime_and_is_deterministic) ... ok
+test_full_snapshot_digest_and_bytes_survive_live_binary_changes (tests.late_foundations.test_resource_contract.ResourceContractTests.test_full_snapshot_digest_and_bytes_survive_live_binary_changes) ... ok
+test_missing_resource_capture_does_not_create_the_root (tests.late_foundations.test_resource_contract.ResourceContractTests.test_missing_resource_capture_does_not_create_the_root) ... ok
+test_path_scope_without_resource_token_cannot_authorize_a_write (tests.late_foundations.test_resource_contract.ResourceContractTests.test_path_scope_without_resource_token_cannot_authorize_a_write) ... ok
+test_nested_development_resources_are_rejected (tests.late_foundations.test_runtime_independence_guard.RuntimeIndependenceGuardTests.test_nested_development_resources_are_rejected) ... ok
+test_static_scan_rejects_development_paths_network_install_and_git_commands (tests.late_foundations.test_runtime_independence_guard.RuntimeIndependenceGuardTests.test_static_scan_rejects_development_paths_network_install_and_git_commands) ... ok
+test_suppressed_network_attempt_cannot_be_reported_as_pass (tests.late_foundations.test_runtime_independence_guard.RuntimeIndependenceGuardTests.test_suppressed_network_attempt_cannot_be_reported_as_pass) ... ok
+test_suppressed_read_only_write_attempt_cannot_be_reported_as_pass (tests.late_foundations.test_runtime_independence_guard.RuntimeIndependenceGuardTests.test_suppressed_read_only_write_attempt_cannot_be_reported_as_pass) ... ok
+test_active_claim_rejects_a_different_exact_binding_revision (tests.skill_imp.test_binding.BindingTests.test_active_claim_rejects_a_different_exact_binding_revision) ... ok
+test_artifact_uses_the_real_pln_context_and_full_lineage (tests.skill_imp.test_binding.BindingTests.test_artifact_uses_the_real_pln_context_and_full_lineage) ... ok
+test_binding_must_match_the_requested_imp_reference (tests.skill_imp.test_binding.BindingTests.test_binding_must_match_the_requested_imp_reference) ... ok
+test_complete_dsn_direct_binding_requires_pln_not_required (tests.skill_imp.test_binding.BindingTests.test_complete_dsn_direct_binding_requires_pln_not_required) ... ok
+test_complete_req_direct_binding_uses_its_real_context (tests.skill_imp.test_binding.BindingTests.test_complete_req_direct_binding_uses_its_real_context) ... ok
+test_direct_dependency_fails_closed_when_current_state_cannot_be_verified (tests.skill_imp.test_binding.BindingTests.test_direct_dependency_fails_closed_when_current_state_cannot_be_verified) ... ok
+test_direct_dependency_uses_exact_readback_instead_of_cached_current_state (tests.skill_imp.test_binding.BindingTests.test_direct_dependency_uses_exact_readback_instead_of_cached_current_state) ... ok
+test_direct_pln_waiver_carries_the_real_exception (tests.skill_imp.test_binding.BindingTests.test_direct_pln_waiver_carries_the_real_exception) ... ok
+test_direct_req_dsn_waiver_requires_an_approved_exception (tests.skill_imp.test_binding.BindingTests.test_direct_req_dsn_waiver_requires_an_approved_exception) ... ok
+test_inconsistent_upstream_context_fails_closed (tests.skill_imp.test_binding.BindingTests.test_inconsistent_upstream_context_fails_closed) ... ok
+test_lifecycle_applicability_preserves_upstream_fact_without_pending_pass (tests.skill_imp.test_binding.BindingTests.test_lifecycle_applicability_preserves_upstream_fact_without_pending_pass) ... ok
+test_missing_pln_context_fails_closed_before_claim (tests.skill_imp.test_binding.BindingTests.test_missing_pln_context_fails_closed_before_claim) ... ok
+test_missing_wi_missing_revision_and_inexact_binding_fail_closed (tests.skill_imp.test_binding.BindingTests.test_missing_wi_missing_revision_and_inexact_binding_fail_closed) ... ok
+test_multiple_work_items_do_not_auto_select_first (tests.skill_imp.test_binding.BindingTests.test_multiple_work_items_do_not_auto_select_first) ... ok
+test_pln_reference_cannot_impersonate_context (tests.skill_imp.test_binding.BindingTests.test_pln_reference_cannot_impersonate_context) ... ok
+test_target_phase_must_be_imp (tests.skill_imp.test_binding.BindingTests.test_target_phase_must_be_imp) ... ok
+test_caller_supplied_snapshot_cannot_fabricate_candidate_baseline (tests.skill_imp.test_candidate_material.CandidateMaterialTests.test_caller_supplied_snapshot_cannot_fabricate_candidate_baseline) ... ok
+test_candidate_baseline_must_be_the_current_immutable_head (tests.skill_imp.test_candidate_material.CandidateMaterialTests.test_candidate_baseline_must_be_the_current_immutable_head) ... ok
+test_candidate_cannot_hide_a_new_unversioned_directory (tests.skill_imp.test_candidate_material.CandidateMaterialTests.test_candidate_cannot_hide_a_new_unversioned_directory) ... ok
+test_candidate_cannot_remove_a_tracked_parent_before_claim (tests.skill_imp.test_candidate_material.CandidateMaterialTests.test_candidate_cannot_remove_a_tracked_parent_before_claim) ... ok
+test_candidate_current_state_must_match_the_immutable_evidence (tests.skill_imp.test_candidate_material.CandidateMaterialTests.test_candidate_current_state_must_match_the_immutable_evidence) ... ok
+test_candidate_delta_outside_path_scope_is_rejected_before_claim (tests.skill_imp.test_candidate_material.CandidateMaterialTests.test_candidate_delta_outside_path_scope_is_rejected_before_claim) ... ok
+test_candidate_directory_mode_delta_is_not_a_vcs_proven_change (tests.skill_imp.test_candidate_material.CandidateMaterialTests.test_candidate_directory_mode_delta_is_not_a_vcs_proven_change) ... ok
+test_candidate_is_persisted_then_replayed_from_declared_baseline (tests.skill_imp.test_candidate_material.CandidateMaterialTests.test_candidate_is_persisted_then_replayed_from_declared_baseline) ... ok
+test_candidate_resource_root_must_exist_in_immutable_head (tests.skill_imp.test_candidate_material.CandidateMaterialTests.test_candidate_resource_root_must_exist_in_immutable_head) ... ok
+test_method_must_reproduce_the_declared_candidate_result (tests.skill_imp.test_candidate_material.CandidateMaterialTests.test_method_must_reproduce_the_declared_candidate_result) ... ok
+test_preexisting_patch_without_candidate_evidence_cannot_be_backdated (tests.skill_imp.test_candidate_material.CandidateMaterialTests.test_preexisting_patch_without_candidate_evidence_cannot_be_backdated) ... ok
+test_auto_uses_the_unique_exact_work_item (tests.skill_imp.test_cli.CliTests.test_auto_uses_the_unique_exact_work_item) ... ok
+test_binding_long_and_short_enter_the_same_formal_runtime (tests.skill_imp.test_cli.CliTests.test_binding_long_and_short_enter_the_same_formal_runtime) ... ok
+test_environment_owner_is_stable_across_runtime_calls (tests.skill_imp.test_cli.CliTests.test_environment_owner_is_stable_across_runtime_calls) ... ok
+test_explicit_owner_has_priority_over_environment (tests.skill_imp.test_cli.CliTests.test_explicit_owner_has_priority_over_environment) ... ok
+test_formal_subprocess_entry_modifies_only_the_declared_product (tests.skill_imp.test_cli.CliTests.test_formal_subprocess_entry_modifies_only_the_declared_product) ... ok
+test_missing_owner_requires_action_without_claim_allocation (tests.skill_imp.test_cli.CliTests.test_missing_owner_requires_action_without_claim_allocation) ... ok
+test_repeatable_input_aliases_preserve_first_occurrence_order (tests.skill_imp.test_cli.CliTests.test_repeatable_input_aliases_preserve_first_occurrence_order) ... ok
+test_formal_entry_meta_ignores_stdin_and_has_zero_project_writes (tests.skill_imp.test_cli.MetaTests.test_formal_entry_meta_ignores_stdin_and_has_zero_project_writes) ... ok
+test_meta_commands_do_not_scan_resolve_owner_or_access_stores (tests.skill_imp.test_cli.MetaTests.test_meta_commands_do_not_scan_resolve_owner_or_access_stores) ... ok
+test_owner_conflicting_candidates_require_action_and_explicit_wins (tests.skill_imp.test_cli.MetaTests.test_owner_conflicting_candidates_require_action_and_explicit_wins) ... ok
+test_owner_uses_the_core_identity_token_alphabet (tests.skill_imp.test_cli.MetaTests.test_owner_uses_the_core_identity_token_alphabet) ... ok
+test_shared_extensions_honor_equals_conflicts_and_free_text_boundary (tests.skill_imp.test_cli.MetaTests.test_shared_extensions_honor_equals_conflicts_and_free_text_boundary) ... ok
+test_candidate_local_closure_still_rejects_a_missing_retained_snapshot (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_candidate_local_closure_still_rejects_a_missing_retained_snapshot) ... ok
+test_cross_lineage_recovery_reference_is_rejected (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_cross_lineage_recovery_reference_is_rejected) ... ok
+test_empty_or_ambiguous_recovery_reference_does_not_open_frozen (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_empty_or_ambiguous_recovery_reference_does_not_open_frozen) ... ok
+test_frozen_no_change_control_recovery_uses_new_authority (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_frozen_no_change_control_recovery_uses_new_authority) ... ok
+test_new_current_attempt_invalidates_successor_and_rechecks_dependency_chain (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_new_current_attempt_invalidates_successor_and_rechecks_dependency_chain) ... ok
+test_new_owner_receives_new_current_claim_not_old_authority (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_new_owner_receives_new_current_claim_not_old_authority) ... ok
+test_ordinary_revise_cannot_bypass_frozen (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_ordinary_revise_cannot_bypass_frozen) ... ok
+test_post_checklist_readback_must_match_candidate_before_no_change_result (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_post_checklist_readback_must_match_candidate_before_no_change_result) ... ok
+test_recovery_cannot_change_method_or_product (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_recovery_cannot_change_method_or_product) ... ok
+test_recovery_check_is_strictly_read_only (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_recovery_check_is_strictly_read_only) ... ok
+test_recovery_rejects_product_drift_before_claim (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_recovery_rejects_product_drift_before_claim) ... ok
+test_same_recovery_sequence_is_idempotent_and_keeps_current_attempt (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_same_recovery_sequence_is_idempotent_and_keeps_current_attempt) ... ok
+test_stale_reference_from_another_recovery_sequence_is_rejected (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_stale_reference_from_another_recovery_sequence_is_rejected) ... ok
+test_successor_recovery_uses_local_candidate_when_old_baseline_is_unreadable (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_successor_recovery_uses_local_candidate_when_old_baseline_is_unreadable) ... ok
+test_unresolved_product_return_disqualifies_no_change_recovery (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_unresolved_product_return_disqualifies_no_change_recovery) ... ok
+test_valid_frozen_result_cannot_start_spurious_recovery (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_valid_frozen_result_cannot_start_spurious_recovery) ... ok
+test_wrong_artifact_reference_is_rejected (tests.skill_imp.test_control_recovery.ControlRecoveryTests.test_wrong_artifact_reference_is_rejected) ... ok
+test_absent_unmodified_claim_resource_fails_before_any_product_write (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_absent_unmodified_claim_resource_fails_before_any_product_write) ... ok
+test_applicable_checks_cannot_be_omitted_or_marked_na (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_applicable_checks_cannot_be_omitted_or_marked_na) ... ok
+test_applicable_local_checks_save_real_execution_evidence (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_applicable_local_checks_save_real_execution_evidence) ... ok
+test_candidate_patch_without_execution_cannot_be_claimed_as_result (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_candidate_patch_without_execution_cannot_be_claimed_as_result) ... ok
+test_clean_git_baseline_is_a_complete_immutable_snapshot (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_clean_git_baseline_is_a_complete_immutable_snapshot) ... ok
+test_imp_build_failure_after_allocation_abandons_exact_reservation (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_imp_build_failure_after_allocation_abandons_exact_reservation) ... ok
+test_method_block_identity_survives_active_revision_and_rework (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_method_block_identity_survives_active_revision_and_rework) ... ok
+test_missing_business_design_and_plan_decisions_return_to_the_owner (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_missing_business_design_and_plan_decisions_return_to_the_owner) ... ok
+test_missing_design_decision_returns_to_design (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_missing_design_decision_returns_to_design) ... ok
+test_mutable_and_path_only_result_references_are_rejected (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_mutable_and_path_only_result_references_are_rejected) ... ok
+test_new_resource_retains_absence_evidence_and_complete_result (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_new_resource_retains_absence_evidence_and_complete_result) ... ok
+test_patch_without_full_result_and_tampered_result_content_fail_check (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_patch_without_full_result_and_tampered_result_content_fail_check) ... ok
+test_project_check_rejects_shell_install_and_wrapper_commands (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_project_check_rejects_shell_install_and_wrapper_commands) ... ok
+test_python_project_check_denies_network_processes_and_snapshot_external_writes (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_python_project_check_denies_network_processes_and_snapshot_external_writes) ... ok
+test_required_or_pending_pln_cannot_use_direct_binding (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_required_or_pending_pln_cannot_use_direct_binding) ... ok
+test_resource_mapping_and_method_scope_expansion_fail_before_claim (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_resource_mapping_and_method_scope_expansion_fail_before_claim) ... ok
+test_return_imp_issue_without_unique_imp_lineage_returns_to_plan (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_return_imp_issue_without_unique_imp_lineage_returns_to_plan) ... ok
+test_secret_in_method_or_baseline_never_enters_artifact_or_evidence (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_secret_in_method_or_baseline_never_enters_artifact_or_evidence) ... ok
+test_step_block_and_check_ids_cannot_be_renamed_during_rework (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_step_block_and_check_ids_cannot_be_renamed_during_rework) ... ok
+test_successor_inputs_must_include_the_current_predecessor_result (tests.skill_imp.test_critical_gaps.CriticalGapTests.test_successor_inputs_must_include_the_current_predecessor_result) ... ok
+test_frozen_complete_retry_abandons_on_permanent_dependency_failure (tests.skill_imp.test_dependencies.DependencyTests.test_frozen_complete_retry_abandons_on_permanent_dependency_failure) ... ok
+test_missing_predecessor_prevents_acquisition (tests.skill_imp.test_dependencies.DependencyTests.test_missing_predecessor_prevents_acquisition) ... ok
+test_same_resource_successor_inherits_baseline_and_can_resume_to_complete (tests.skill_imp.test_dependencies.DependencyTests.test_same_resource_successor_inherits_baseline_and_can_resume_to_complete) ... ok
+test_successor_rejects_workspace_that_does_not_match_predecessor_result (tests.skill_imp.test_dependencies.DependencyTests.test_successor_rejects_workspace_that_does_not_match_predecessor_result) ... ok
+test_abandoned_claim_requires_explicit_retry_or_rework (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_abandoned_claim_requires_explicit_retry_or_rework) ... ok
+test_abandoned_history_does_not_block_completed_retry (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_abandoned_history_does_not_block_completed_retry) ... ok
+test_active_open_claim_shows_owner_attempt_and_imp_frontier (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_active_open_claim_shows_owner_attempt_and_imp_frontier) ... ok
+test_claim_before_materialization_is_not_an_artifact (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_claim_before_materialization_is_not_an_artifact) ... ok
+test_claim_change_during_query_fails_closed (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_claim_change_during_query_fails_closed) ... ok
+test_claim_identity_mismatch_is_not_completed (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_claim_identity_mismatch_is_not_completed) ... ok
+test_completed_claim_cannot_authorize_open_revision (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_completed_claim_cannot_authorize_open_revision) ... ok
+test_completed_claim_with_missing_exact_revision_does_not_fall_back (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_completed_claim_with_missing_exact_revision_does_not_fall_back) ... ok
+test_corrupt_claim_store_fails_closed_without_repair (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_corrupt_claim_store_fails_closed_without_repair) ... ok
+test_direct_req_binding_has_current_claim_and_vfy_input (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_direct_req_binding_has_current_claim_and_vfy_input) ... ok
+test_existing_downstream_artifact_keeps_its_lifecycle_frontier (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_existing_downstream_artifact_keeps_its_lifecycle_frontier) ... ok
+test_failed_local_gate_is_a_visible_blocker (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_failed_local_gate_is_a_visible_blocker) ... ok
+test_frozen_completed_result_is_ready_but_missing_vfy_skill_is_explicit (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_frozen_completed_result_is_ready_but_missing_vfy_skill_is_explicit) ... ok
+test_frozen_with_active_claim_cannot_enter_vfy (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_frozen_with_active_claim_cannot_enter_vfy) ... ok
+test_independent_resources_keep_both_terminal_vfy_inputs (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_independent_resources_keep_both_terminal_vfy_inputs) ... ok
+test_missing_claim_store_does_not_make_frozen_imp_usable (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_missing_claim_store_does_not_make_frozen_imp_usable) ... ok
+test_missing_immutable_result_member_is_not_completed (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_missing_immutable_result_member_is_not_completed) ... ok
+test_new_plan_revision_does_not_rebind_an_active_claim (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_new_plan_revision_does_not_rebind_an_active_claim) ... ok
+test_new_predecessor_attempt_invalidates_all_transitive_successors (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_new_predecessor_attempt_invalidates_all_transitive_successors) ... ok
+test_occupied_resource_is_not_offered_as_a_start_candidate (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_occupied_resource_is_not_offered_as_a_start_candidate) ... ok
+test_plan_without_claim_store_stays_read_only (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_plan_without_claim_store_stays_read_only) ... ok
+test_predecessor_completion_enables_next_imp_work_item_before_vfy (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_predecessor_completion_enables_next_imp_work_item_before_vfy) ... ok
+test_query_does_not_call_write_apis_or_change_bytes_or_mtime (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_query_does_not_call_write_apis_or_change_bytes_or_mtime) ... ok
+test_query_reuse_reads_current_claim_after_completion (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_query_reuse_reads_current_claim_after_completion) ... ok
+test_rework_excludes_old_completed_revision_and_return_from_frontier (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_rework_excludes_old_completed_revision_and_return_from_frontier) ... ok
+test_same_resource_chain_uses_only_current_completed_terminal (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_same_resource_chain_uses_only_current_completed_terminal) ... ok
+test_unordered_completed_results_for_one_resource_are_ambiguous (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_unordered_completed_results_for_one_resource_are_ambiguous) ... ok
+test_vfy_selects_terminal_result_per_resource_in_multi_resource_artifact (tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_vfy_selects_terminal_result_per_resource_in_multi_resource_artifact) ... ok
+test_external_effect_or_arbitrary_command_check_is_never_executed (tests.skill_imp.test_method.MethodTests.test_external_effect_or_arbitrary_command_check_is_never_executed) ... ok
+test_failed_local_check_cannot_freeze_or_claim_vfy_ready (tests.skill_imp.test_method.MethodTests.test_failed_local_check_cannot_freeze_or_claim_vfy_ready) ... ok
+test_file_decomposed_step_returns_to_plan (tests.skill_imp.test_method.MethodTests.test_file_decomposed_step_returns_to_plan) ... ok
+test_fixed_consideration_order_and_stable_block_ids_are_persisted (tests.skill_imp.test_method.MethodTests.test_fixed_consideration_order_and_stable_block_ids_are_persisted) ... ok
+test_mixed_transaction_or_failure_boundaries_require_split_steps (tests.skill_imp.test_method.MethodTests.test_mixed_transaction_or_failure_boundaries_require_split_steps) ... ok
+test_na_consideration_requires_an_objective_basis (tests.skill_imp.test_method.MethodTests.test_na_consideration_requires_an_objective_basis) ... ok
+test_new_public_abstraction_without_dsn_decision_returns_upstream (tests.skill_imp.test_method.MethodTests.test_new_public_abstraction_without_dsn_decision_returns_upstream) ... ok
+test_pending_consideration_cannot_reach_the_gate (tests.skill_imp.test_method.MethodTests.test_pending_consideration_cannot_reach_the_gate) ... ok
+test_project_check_id_cannot_change_its_bounded_command_role (tests.skill_imp.test_method.MethodTests.test_project_check_id_cannot_change_its_bounded_command_role) ... ok
+test_required_na_waived_and_pending_dispositions_are_enforced (tests.skill_imp.test_method.MethodTests.test_required_na_waived_and_pending_dispositions_are_enforced) ... ok
+test_step_file_decomposition_and_mixed_failure_boundaries_are_rejected (tests.skill_imp.test_method.MethodTests.test_step_file_decomposition_and_mixed_failure_boundaries_are_rejected) ... ok
+test_waived_consideration_requires_an_approved_exception (tests.skill_imp.test_method.MethodTests.test_waived_consideration_requires_an_approved_exception) ... ok
+test_acquire_and_complete_payload_readback_precede_first_product_write (tests.skill_imp.test_resources.ResourceTests.test_acquire_and_complete_payload_readback_precede_first_product_write) ... ok
+test_confirm_stops_before_acquire_then_accepts_only_the_exact_preview (tests.skill_imp.test_resources.ResourceTests.test_confirm_stops_before_acquire_then_accepts_only_the_exact_preview) ... ok
+test_dirty_workspace_baseline_contains_staged_unstaged_and_untracked_user_bytes (tests.skill_imp.test_resources.ResourceTests.test_dirty_workspace_baseline_contains_staged_unstaged_and_untracked_user_bytes) ... ok
+test_entire_operation_batch_is_validated_before_any_scope_write (tests.skill_imp.test_resources.ResourceTests.test_entire_operation_batch_is_validated_before_any_scope_write) ... ok
+test_existing_user_changes_in_target_are_not_overwritten (tests.skill_imp.test_resources.ResourceTests.test_existing_user_changes_in_target_are_not_overwritten) ... ok
+test_full_immutable_result_remains_readable_after_live_workspace_changes (tests.skill_imp.test_resources.ResourceTests.test_full_immutable_result_remains_readable_after_live_workspace_changes) ... ok
+test_multiple_resources_include_unchanged_row_without_losing_user_content (tests.skill_imp.test_resources.ResourceTests.test_multiple_resources_include_unchanged_row_without_losing_user_content) ... ok
+test_no_git_commit_push_or_ref_side_effects (tests.skill_imp.test_resources.ResourceTests.test_no_git_commit_push_or_ref_side_effects) ... ok
+test_one_resource_many_files_still_has_one_result_row (tests.skill_imp.test_resources.ResourceTests.test_one_resource_many_files_still_has_one_result_row) ... ok
+test_pre_execution_checklist_semantic_tamper_is_rejected (tests.skill_imp.test_resources.ResourceTests.test_pre_execution_checklist_semantic_tamper_is_rejected) ... ok
+test_result_ids_are_never_reused_after_a_resource_leaves_scope (tests.skill_imp.test_resources.ResourceTests.test_result_ids_are_never_reused_after_a_resource_leaves_scope) ... ok
+test_stale_product_confirmation_does_not_authorize_a_changed_method (tests.skill_imp.test_resources.ResourceTests.test_stale_product_confirmation_does_not_authorize_a_changed_method) ... ok
+test_symlink_escape_is_rejected_without_reading_or_writing_external_product (tests.skill_imp.test_resources.ResourceTests.test_symlink_escape_is_rejected_without_reading_or_writing_external_product) ... ok
+test_tampered_context_is_rejected_on_readback_with_no_repair (tests.skill_imp.test_resources.ResourceTests.test_tampered_context_is_rejected_on_readback_with_no_repair) ... ok
+test_unchanged_resource_uses_baseline_as_result_and_none_changed_scope (tests.skill_imp.test_resources.ResourceTests.test_unchanged_resource_uses_baseline_as_result_and_none_changed_scope) ... ok
+test_write_policy_deny_has_no_project_writes (tests.skill_imp.test_resources.ResourceTests.test_write_policy_deny_has_no_project_writes) ... ok
+test_abandoned_same_return_sequence_cannot_allocate_without_retry (tests.skill_imp.test_rework.ReworkTests.test_abandoned_same_return_sequence_cannot_allocate_without_retry) ... ok
+test_explicit_abandoned_retry_may_transfer_current_claim_authority (tests.skill_imp.test_rework.ReworkTests.test_explicit_abandoned_retry_may_transfer_current_claim_authority) ... ok
+test_explicit_abandoned_retry_preserves_artifact_and_creates_next_attempt (tests.skill_imp.test_rework.ReworkTests.test_explicit_abandoned_retry_preserves_artifact_and_creates_next_attempt) ... ok
+test_frozen_return_starts_one_sequence_and_resumes_against_original_subject (tests.skill_imp.test_rework.ReworkTests.test_frozen_return_starts_one_sequence_and_resumes_against_original_subject) ... ok
+test_return_evidence_item_resolves_its_immutable_member_and_digest (tests.skill_imp.test_rework.ReworkTests.test_return_evidence_item_resolves_its_immutable_member_and_digest) ... ok
+test_return_with_a_different_binding_or_context_cannot_start_an_attempt (tests.skill_imp.test_rework.ReworkTests.test_return_with_a_different_binding_or_context_cannot_start_an_attempt) ... ok
+test_abandon_revision_then_claim_with_matching_reason (tests.skill_imp.test_state_machine.StateMachineTests.test_abandon_revision_then_claim_with_matching_reason) ... ok
+test_abandon_validates_owner_attempt_and_revision_before_any_write (tests.skill_imp.test_state_machine.StateMachineTests.test_abandon_validates_owner_attempt_and_revision_before_any_write) ... ok
+test_active_open_revise_stays_on_the_same_revision (tests.skill_imp.test_state_machine.StateMachineTests.test_active_open_revise_stays_on_the_same_revision) ... ok
+test_active_owner_and_input_mismatch_are_rejected (tests.skill_imp.test_state_machine.StateMachineTests.test_active_owner_and_input_mismatch_are_rejected) ... ok
+test_active_revision_cannot_insert_before_the_executed_prefix (tests.skill_imp.test_state_machine.StateMachineTests.test_active_revision_cannot_insert_before_the_executed_prefix) ... ok
+test_active_revision_cannot_remove_an_already_executed_operation (tests.skill_imp.test_state_machine.StateMachineTests.test_active_revision_cannot_remove_an_already_executed_operation) ... ok
+test_check_is_absolutely_read_only_and_never_executes_checks (tests.skill_imp.test_state_machine.StateMachineTests.test_check_is_absolutely_read_only_and_never_executes_checks) ... ok
+test_claim_termination_failure_keeps_active_and_can_resume_abandon (tests.skill_imp.test_state_machine.StateMachineTests.test_claim_termination_failure_keeps_active_and_can_resume_abandon) ... ok
+test_complete_transient_failure_retries_without_rewriting_frozen_artifact (tests.skill_imp.test_state_machine.StateMachineTests.test_complete_transient_failure_retries_without_rewriting_frozen_artifact) ... ok
+test_completed_binding_change_without_complete_rework_set_is_rejected (tests.skill_imp.test_state_machine.StateMachineTests.test_completed_binding_change_without_complete_rework_set_is_rejected) ... ok
+test_completed_handler_retry_requires_the_current_owner (tests.skill_imp.test_state_machine.StateMachineTests.test_completed_handler_retry_requires_the_current_owner) ... ok
+test_completed_without_rework_does_not_allocate_another_attempt (tests.skill_imp.test_state_machine.StateMachineTests.test_completed_without_rework_does_not_allocate_another_attempt) ... ok
+test_delegated_confirmation_requires_exact_independent_authority (tests.skill_imp.test_state_machine.StateMachineTests.test_delegated_confirmation_requires_exact_independent_authority) ... ok
+test_different_lineage_resource_conflict_fails_closed (tests.skill_imp.test_state_machine.StateMachineTests.test_different_lineage_resource_conflict_fails_closed) ... ok
+test_freeze_always_precedes_claim_complete (tests.skill_imp.test_state_machine.StateMachineTests.test_freeze_always_precedes_claim_complete) ... ok
+test_missing_and_stale_final_confirmation_keep_open (tests.skill_imp.test_state_machine.StateMachineTests.test_missing_and_stale_final_confirmation_keep_open) ... ok
+test_ordinary_abandon_cannot_cancel_frozen_history (tests.skill_imp.test_state_machine.StateMachineTests.test_ordinary_abandon_cannot_cancel_frozen_history) ... ok
+test_rework_revision_cannot_repurpose_stable_method_identities (tests.skill_imp.test_state_machine.StateMachineTests.test_rework_revision_cannot_repurpose_stable_method_identities) ... ok
+test_same_active_request_is_idempotent_without_empty_revision (tests.skill_imp.test_state_machine.StateMachineTests.test_same_active_request_is_idempotent_without_empty_revision) ... ok
+test_stale_final_confirmation_does_not_freeze (tests.skill_imp.test_state_machine.StateMachineTests.test_stale_final_confirmation_does_not_freeze) ... ok
+test_updated_exact_binding_with_rework_creates_stable_artifact_new_attempt (tests.skill_imp.test_state_machine.StateMachineTests.test_updated_exact_binding_with_rework_creates_stable_artifact_new_attempt) ... ok
+test_abandoned_revision_is_not_authority (tests.lifecycle.test_query.LifecycleQueryTests.test_abandoned_revision_is_not_authority) ... ok
+test_inspect_rejects_member_or_symbolic_reference (tests.lifecycle.test_query.LifecycleQueryTests.test_inspect_rejects_member_or_symbolic_reference) ... ok
+test_lists_all_materialized_requirement_revisions_and_head (tests.lifecycle.test_query.LifecycleQueryTests.test_lists_all_materialized_requirement_revisions_and_head) ... ok
+test_missing_declared_dependency_is_blocked (tests.lifecycle.test_query.LifecycleQueryTests.test_missing_declared_dependency_is_blocked) ... ok
+test_missing_store_is_strictly_read_only (tests.lifecycle.test_query.LifecycleQueryTests.test_missing_store_is_strictly_read_only) ... ok
+test_open_item_is_action_required_not_authority (tests.lifecycle.test_query.LifecycleQueryTests.test_open_item_is_action_required_not_authority) ... ok
+test_overview_requires_selection_for_multiple_requirements (tests.lifecycle.test_query.LifecycleQueryTests.test_overview_requires_selection_for_multiple_requirements) ... ok
+test_overview_selects_only_one_active_requirement (tests.lifecycle.test_query.LifecycleQueryTests.test_overview_selects_only_one_active_requirement) ... ok
+test_ready_req_graph_has_context_edge_and_next_dsn (tests.lifecycle.test_query.LifecycleQueryTests.test_ready_req_graph_has_context_edge_and_next_dsn) ... ok
+test_auto_and_inspect_show_current_claim_and_read_only_policy (tests.skill_status.test_imp.ImpStatusTests.test_auto_and_inspect_show_current_claim_and_read_only_policy) ... ok
+test_cli_json_includes_current_claim_and_exact_vfy_input (tests.skill_status.test_imp.ImpStatusTests.test_cli_json_includes_current_claim_and_exact_vfy_input) ... ok
+test_completed_summary_separates_vfy_readiness_from_skill_availability (tests.skill_status.test_imp.ImpStatusTests.test_completed_summary_separates_vfy_readiness_from_skill_availability) ... ok
+test_corrupt_claim_store_reports_stable_error_and_remains_unchanged (tests.skill_status.test_imp.ImpStatusTests.test_corrupt_claim_store_reports_stable_error_and_remains_unchanged) ... ok
+test_multiple_actions_remain_visible_without_choosing_first (tests.skill_status.test_imp.ImpStatusTests.test_multiple_actions_remain_visible_without_choosing_first) ... ok
+test_status_uses_no_artifact_or_claim_mutation_api (tests.skill_status.test_imp.ImpStatusTests.test_status_uses_no_artifact_or_claim_mutation_api) ... ok
+test_auto_inspects_single_requirement (tests.skill_status.test_runtime.StatusRuntimeTests.test_auto_inspects_single_requirement) ... ok
+test_bare_missing_store_is_not_started_and_writes_nothing (tests.skill_status.test_runtime.StatusRuntimeTests.test_bare_missing_store_is_not_started_and_writes_nothing) ... ok
+test_cli_json_is_one_document (tests.skill_status.test_runtime.StatusRuntimeTests.test_cli_json_is_one_document) ... ok
+test_corrupt_store_fails_closed_without_modification (tests.skill_status.test_runtime.StatusRuntimeTests.test_corrupt_store_fails_closed_without_modification) ... ok
+test_debug_output_contains_resolution_without_changing_project (tests.skill_status.test_runtime.StatusRuntimeTests.test_debug_output_contains_resolution_without_changing_project) ... ok
+test_inspect_requires_exact_reference (tests.skill_status.test_runtime.StatusRuntimeTests.test_inspect_requires_exact_reference) ... ok
+test_list_keeps_exact_revisions (tests.skill_status.test_runtime.StatusRuntimeTests.test_list_keeps_exact_revisions) ... ok
+test_meta_commands_do_not_resolve_project (tests.skill_status.test_runtime.StatusRuntimeTests.test_meta_commands_do_not_resolve_project) ... ok
+test_multiple_requirements_require_user_selection (tests.skill_status.test_runtime.StatusRuntimeTests.test_multiple_requirements_require_user_selection) ... ok
+test_skill_has_no_sibling_invocation (tests.skill_status.test_runtime.StatusRuntimeTests.test_skill_has_no_sibling_invocation) ... ok
+test_write_policy_is_forced_deny_and_preserved_without_store (tests.skill_status.test_runtime.StatusRuntimeTests.test_write_policy_is_forced_deny_and_preserved_without_store) ... ok
+test_blocked_projection_shows_code_reference_and_message (tests.skill_status.test_summary.StatusSummaryTests.test_blocked_projection_shows_code_reference_and_message) ... ok
+test_multiple_requirements_show_exact_candidates (tests.skill_status.test_summary.StatusSummaryTests.test_multiple_requirements_show_exact_candidates) ... ok
+test_complete_manifest_accepts_real_collected_method (tests.evals.test_sdlc_400_imp_case_coverage.CaseCoverageTests.test_complete_manifest_accepts_real_collected_method) ... ok
+test_duplicate_collected_tests_are_rejected (tests.evals.test_sdlc_400_imp_case_coverage.CaseCoverageTests.test_duplicate_collected_tests_are_rejected) ... ok
+test_duplicate_json_keys_are_rejected (tests.evals.test_sdlc_400_imp_case_coverage.CaseCoverageTests.test_duplicate_json_keys_are_rejected) ... ok
+test_dynamic_skip_is_not_a_successful_execution (tests.evals.test_sdlc_400_imp_case_coverage.CaseCoverageTests.test_dynamic_skip_is_not_a_successful_execution) ... ok
+test_empty_or_nonexistent_test_target_fails_closed (tests.evals.test_sdlc_400_imp_case_coverage.CaseCoverageTests.test_empty_or_nonexistent_test_target_fails_closed) ... ok
+test_missing_duplicate_extra_and_reordered_case_ids_fail (tests.evals.test_sdlc_400_imp_case_coverage.CaseCoverageTests.test_missing_duplicate_extra_and_reordered_case_ids_fail) ... ok
+test_missing_gate_tool_directory_or_critical_file_never_skips (tests.evals.test_sdlc_400_imp_case_coverage.CaseCoverageTests.test_missing_gate_tool_directory_or_critical_file_never_skips) ... ok
+test_one_unrelated_passing_method_cannot_cover_all_cases (tests.evals.test_sdlc_400_imp_case_coverage.CaseCoverageTests.test_one_unrelated_passing_method_cannot_cover_all_cases) ... ok
+test_skipped_methods_classes_and_expected_failures_cannot_cover_cases (tests.evals.test_sdlc_400_imp_case_coverage.CaseCoverageTests.test_skipped_methods_classes_and_expected_failures_cannot_cover_cases) ... ok
+test_successful_execution_must_include_every_mapped_method (tests.evals.test_sdlc_400_imp_case_coverage.CaseCoverageTests.test_successful_execution_must_include_every_mapped_method) ... ok
+test_unexecuted_mapping_cannot_be_reported_as_pass (tests.evals.test_sdlc_400_imp_case_coverage.CaseCoverageTests.test_unexecuted_mapping_cannot_be_reported_as_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 259 tests in 41.548s
+
+OK
+IMP source lock: PASS (16)
+sdlc-imp runtime independence: PASS
+development docs copied: 0
+network operations: 0
+dependencies installed: 0
+git ref mutations: 0
+read-only project writes: 0
+create/check/abandon: PASS
+source lock: PASS
+runtime independence: PASS
+critical case IDs: 82/82
+executed tests: 259
+sdlc-imp eval: PASS
+EXIT_CODE=0
+
+$ python3 -m unittest discover -s tests -p 'test_*.py' -v
+test_catalog_lists_artifacts_and_revisions_read_only (artifact_store.test_catalog.ArtifactCatalogTests.test_catalog_lists_artifacts_and_revisions_read_only) ... ok
+test_catalog_requires_read_only_store (artifact_store.test_catalog.ArtifactCatalogTests.test_catalog_requires_read_only_store) ... ok
+test_concurrent_reserve_returns_one_lineage (artifact_store.test_context_lineage.ContextLineageTests.test_concurrent_reserve_returns_one_lineage) ... ok
+test_different_boundaries_receive_different_ids (artifact_store.test_context_lineage.ContextLineageTests.test_different_boundaries_receive_different_ids) ... ok
+test_invalid_boundary_key_is_rejected (artifact_store.test_context_lineage.ContextLineageTests.test_invalid_boundary_key_is_rejected) ... ok
+test_read_only_find_does_not_create_extension_table (artifact_store.test_context_lineage.ContextLineageTests.test_read_only_find_does_not_create_extension_table) ... ok
+test_read_only_reserve_is_rejected (artifact_store.test_context_lineage.ContextLineageTests.test_read_only_reserve_is_rejected) ... ok
+test_reserve_is_idempotent (artifact_store.test_context_lineage.ContextLineageTests.test_reserve_is_idempotent) ... ok
+test_01_initialize_first_create_uses_fixed_runtime_layout (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_01_initialize_first_create_uses_fixed_runtime_layout) ... ok
+test_02_initialize_is_idempotent (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_02_initialize_is_idempotent) ... ok
+test_03_read_only_missing_runtime_creates_nothing (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_03_read_only_missing_runtime_creates_nothing) ... ok
+test_04_read_only_missing_database_creates_nothing (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_04_read_only_missing_database_creates_nothing) ... ok
+test_05_schema_version_mismatch_fails (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_05_schema_version_mismatch_fails) ... ok
+test_06_missing_or_damaged_schema_fails_without_repair (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_06_missing_or_damaged_schema_fails_without_repair) ... ok
+test_07_artifact_id_is_unique_and_same_second_sequence_increments (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_07_artifact_id_is_unique_and_same_second_sequence_increments) ... ok
+test_08_all_supported_prefixes_allocate (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_08_all_supported_prefixes_allocate) ... ok
+test_09_revision_is_monotonic_and_never_reused (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_09_revision_is_monotonic_and_never_reused) ... ok
+test_10_only_one_open_revision_per_artifact (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_10_only_one_open_revision_per_artifact) ... ok
+test_11_control_reservation_cannot_read_resolve_or_freeze (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_11_control_reservation_cannot_read_resolve_or_freeze) ... ok
+test_12_first_complete_payload_materializes_atomically (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_12_first_complete_payload_materializes_atomically) ... ok
+test_13_materialized_open_revision_rewrites_in_place (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_13_materialized_open_revision_rewrites_in_place) ... ok
+test_14_missing_member_fails (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_14_missing_member_fails) ... ok
+test_15_unregistered_extra_member_fails (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_15_unregistered_extra_member_fails) ... ok
+test_16_duplicate_member_id_and_name_fail (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_16_duplicate_member_id_and_name_fail) ... ok
+test_17_primary_and_member_digest_mismatch_fail (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_17_primary_and_member_digest_mismatch_fail) ... ok
+test_18_manifest_member_metadata_must_match (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_18_manifest_member_metadata_must_match) ... ok
+test_19_frozen_revision_is_immutable (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_19_frozen_revision_is_immutable) ... ok
+test_20_control_reservation_can_be_abandoned (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_20_control_reservation_can_be_abandoned) ... ok
+test_21_materialized_open_can_be_abandoned_but_not_authority (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_21_materialized_open_can_be_abandoned_but_not_authority) ... ok
+test_22_exact_reference_has_no_latest_or_other_revision_fallback (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_22_exact_reference_has_no_latest_or_other_revision_fallback) ... ok
+test_23_freeze_and_resolve_fail_closed_without_verifier (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_23_freeze_and_resolve_fail_closed_without_verifier) ... ok
+test_24_stale_and_rejected_verifiers_fail (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_24_stale_and_rejected_verifiers_fail) ... ok
+test_25_passing_verifier_completes_freeze_and_resolve (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_25_passing_verifier_completes_freeze_and_resolve) ... ok
+test_26_transaction_exception_leaves_no_partial_payload (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_26_transaction_exception_leaves_no_partial_payload) ... ok
+test_27_cli_uses_explicit_project_root_from_different_cwd (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_27_cli_uses_explicit_project_root_from_different_cwd) ... ok
+test_28_initialize_does_not_modify_root_gitignore (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_28_initialize_does_not_modify_root_gitignore) ... ok
+test_29_runtime_has_no_third_party_or_network_install_code (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_29_runtime_has_no_third_party_or_network_install_code) ... ok
+test_30_external_imp_exact_id_and_revision_are_idempotent_or_conflict (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_30_external_imp_exact_id_and_revision_are_idempotent_or_conflict) ... ok
+test_31_generation_conflict_prevents_last_write_wins (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_31_generation_conflict_prevents_last_write_wins) ... ok
+test_32_read_only_open_creates_no_sidecars_and_rejects_writes (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_32_read_only_open_creates_no_sidecars_and_rejects_writes) ... ok
+test_33_tracked_runtime_content_fails_closed (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_33_tracked_runtime_content_fails_closed) ... ok
+test_34_cli_freeze_without_verifier_returns_stable_json_error (artifact_store.test_sqlite_store.ArtifactStoreTestCase.test_34_cli_freeze_without_verifier_returns_stable_json_error) ... ok
+test_abandon_cas_rejects_owner_attempt_artifact_and_revision_mismatch (late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_abandon_cas_rejects_owner_attempt_artifact_and_revision_mismatch) ... ok
+test_abandon_records_actor_and_terminal_retry_preserves_actor_and_reason (late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_abandon_records_actor_and_terminal_retry_preserves_actor_and_reason) ... ok
+test_active_binding_input_and_rework_mismatch_preserves_claim (late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_active_binding_input_and_rework_mismatch_preserves_claim) ... ok
+test_completed_acquire_and_complete_retry_return_same_record (late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_completed_acquire_and_complete_retry_return_same_record) ... ok
+test_concurrent_different_lineages_cannot_share_active_resource (late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_concurrent_different_lineages_cannot_share_active_resource) ... ok
+test_concurrent_same_lineage_allocates_one_identity_and_attempt (late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_concurrent_same_lineage_allocates_one_identity_and_attempt) ... ok
+test_concurrent_same_lineage_leaves_one_current_active_row (late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_concurrent_same_lineage_leaves_one_current_active_row) ... ok
+test_frozen_abandon_rejects_a_forged_completion_failure_reason (late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_frozen_abandon_rejects_a_forged_completion_failure_reason) ... ok
+test_historical_completed_attempt_does_not_replace_current_active_attempt (late_foundations.test_claim_critical_cases.ClaimCriticalCases.test_historical_completed_attempt_does_not_replace_current_active_attempt) ... ok
+test_abandoned_claim_requires_explicit_retry (late_foundations.test_claim_provider.ClaimProviderTests.test_abandoned_claim_requires_explicit_retry) ... ok
+test_abandoned_nonempty_rework_sequence_still_requires_explicit_retry (late_foundations.test_claim_provider.ClaimProviderTests.test_abandoned_nonempty_rework_sequence_still_requires_explicit_retry) ... ok
+test_abandoned_retry_may_assign_a_new_stable_owner (late_foundations.test_claim_provider.ClaimProviderTests.test_abandoned_retry_may_assign_a_new_stable_owner) ... ok
+test_acquire_is_idempotent_for_same_active_request (late_foundations.test_claim_provider.ClaimProviderTests.test_acquire_is_idempotent_for_same_active_request) ... ok
+test_active_mismatch_and_resource_conflict_fail_closed (late_foundations.test_claim_provider.ClaimProviderTests.test_active_mismatch_and_resource_conflict_fail_closed) ... ok
+test_blank_or_noncanonical_stored_identity_fields_fail_closed (late_foundations.test_claim_provider.ClaimProviderTests.test_blank_or_noncanonical_stored_identity_fields_fail_closed) ... ok
+test_claim_tables_are_namespaced_in_the_shared_artifact_store (late_foundations.test_claim_provider.ClaimProviderTests.test_claim_tables_are_namespaced_in_the_shared_artifact_store) ... ok
+test_complete_rechecks_frozen_final_confirmation_authority (late_foundations.test_claim_provider.ClaimProviderTests.test_complete_rechecks_frozen_final_confirmation_authority) ... ok
+test_complete_recomputes_the_immutable_resource_chain (late_foundations.test_claim_provider.ClaimProviderTests.test_complete_recomputes_the_immutable_resource_chain) ... ok
+test_complete_recursively_rechecks_dependency_chain (late_foundations.test_claim_provider.ClaimProviderTests.test_complete_recursively_rechecks_dependency_chain) ... ok
+test_complete_rejects_a_generically_frozen_mismatched_imp_payload (late_foundations.test_claim_provider.ClaimProviderTests.test_complete_rejects_a_generically_frozen_mismatched_imp_payload) ... ok
+test_complete_requires_current_completed_dependencies (late_foundations.test_claim_provider.ClaimProviderTests.test_complete_requires_current_completed_dependencies) ... ok
+test_completed_claim_can_start_new_rework_attempt (late_foundations.test_claim_provider.ClaimProviderTests.test_completed_claim_can_start_new_rework_attempt) ... ok
+test_completed_rework_sequence_is_idempotent (late_foundations.test_claim_provider.ClaimProviderTests.test_completed_rework_sequence_is_idempotent) ... ok
+test_invalid_or_reversed_stored_timestamps_fail_closed (late_foundations.test_claim_provider.ClaimProviderTests.test_invalid_or_reversed_stored_timestamps_fail_closed) ... ok
+test_invalid_stored_state_fails_closed_before_resource_reallocation (late_foundations.test_claim_provider.ClaimProviderTests.test_invalid_stored_state_fails_closed_before_resource_reallocation) ... ok
+test_noncanonical_stored_rework_fails_closed (late_foundations.test_claim_provider.ClaimProviderTests.test_noncanonical_stored_rework_fails_closed) ... ok
+test_read_only_connection_cannot_write_even_with_query_only_disabled (late_foundations.test_claim_provider.ClaimProviderTests.test_read_only_connection_cannot_write_even_with_query_only_disabled) ... ok
+test_rework_reference_order_is_one_canonical_set (late_foundations.test_claim_provider.ClaimProviderTests.test_rework_reference_order_is_one_canonical_set) ... ok
+test_terminal_transition_requires_matching_artifact_control (late_foundations.test_claim_provider.ClaimProviderTests.test_terminal_transition_requires_matching_artifact_control) ... ok
+test_database_change_during_query_fails_closed (late_foundations.test_claim_read_only.ClaimReadOnlyTests.test_database_change_during_query_fails_closed) ... ok
+test_existing_journal_sidecars_are_rejected_without_touching_them (late_foundations.test_claim_read_only.ClaimReadOnlyTests.test_existing_journal_sidecars_are_rejected_without_touching_them) ... ok
+test_invalid_schema_is_rejected_without_repair (late_foundations.test_claim_read_only.ClaimReadOnlyTests.test_invalid_schema_is_rejected_without_repair) ... ok
+test_missing_store_never_creates_database_or_parent (late_foundations.test_claim_read_only.ClaimReadOnlyTests.test_missing_store_never_creates_database_or_parent) ... ok
+test_queries_do_not_initialize_schema_or_execute_write_sql (late_foundations.test_claim_read_only.ClaimReadOnlyTests.test_queries_do_not_initialize_schema_or_execute_write_sql) ... ok
+test_wal_database_is_rejected_without_creating_wal_or_shm (late_foundations.test_claim_read_only.ClaimReadOnlyTests.test_wal_database_is_rejected_without_creating_wal_or_shm) ... ok
+test_command_evidence_and_secret_rejection (late_foundations.test_execution_effects.ExecutionAndEffectsTests.test_command_evidence_and_secret_rejection) ... ok
+test_execution_foundation_does_not_expose_release_effect_authority (late_foundations.test_execution_effects.ExecutionAndEffectsTests.test_execution_foundation_does_not_expose_release_effect_authority) ... ok
+test_manual_evidence_is_structured (late_foundations.test_execution_effects.ExecutionAndEffectsTests.test_manual_evidence_is_structured) ... ok
+test_changed_foundation_bytes_fail_without_regenerating_lock (late_foundations.test_imp_source_lock.ImpSourceLockTests.test_changed_foundation_bytes_fail_without_regenerating_lock) ... ok
+test_deterministic_constructor_and_read_only_validation (late_foundations.test_imp_source_lock.ImpSourceLockTests.test_deterministic_constructor_and_read_only_validation) ... ok
+test_every_missing_source_fails_closed (late_foundations.test_imp_source_lock.ImpSourceLockTests.test_every_missing_source_fails_closed) ... ok
+test_extra_missing_duplicate_unsorted_and_sha_drift_fail_closed (late_foundations.test_imp_source_lock.ImpSourceLockTests.test_extra_missing_duplicate_unsorted_and_sha_drift_fail_closed) ... ok
+test_imp_foundations_are_documented_and_do_not_change_pln (late_foundations.test_imp_source_lock.ImpSourceLockTests.test_imp_foundations_are_documented_and_do_not_change_pln) ... ok
+test_missing_or_drifted_bundled_spec_fails_closed (late_foundations.test_imp_source_lock.ImpSourceLockTests.test_missing_or_drifted_bundled_spec_fails_closed) ... ok
+test_registry_order_and_duplicate_contract_ids_fail_closed (late_foundations.test_imp_source_lock.ImpSourceLockTests.test_registry_order_and_duplicate_contract_ids_fail_closed) ... ok
+test_cleanup_failure_is_reported_instead_of_silently_hidden (late_foundations.test_phasekit_cleanup.PhaseKitCleanupTests.test_cleanup_failure_is_reported_instead_of_silently_hidden) ... ok
+test_normal_build_failure_closes_the_new_revision (late_foundations.test_phasekit_cleanup.PhaseKitCleanupTests.test_normal_build_failure_closes_the_new_revision) ... ok
+test_out_of_scope_and_runtime_paths_are_rejected (late_foundations.test_resource.ResourceTests.test_out_of_scope_and_runtime_paths_are_rejected) ... ok
+test_scoped_write_and_restore (late_foundations.test_resource.ResourceTests.test_scoped_write_and_restore) ... ok
+test_snapshot_excludes_git_and_runtime_and_is_deterministic (late_foundations.test_resource.ResourceTests.test_snapshot_excludes_git_and_runtime_and_is_deterministic) ... ok
+test_full_snapshot_digest_and_bytes_survive_live_binary_changes (late_foundations.test_resource_contract.ResourceContractTests.test_full_snapshot_digest_and_bytes_survive_live_binary_changes) ... ok
+test_missing_resource_capture_does_not_create_the_root (late_foundations.test_resource_contract.ResourceContractTests.test_missing_resource_capture_does_not_create_the_root) ... ok
+test_path_scope_without_resource_token_cannot_authorize_a_write (late_foundations.test_resource_contract.ResourceContractTests.test_path_scope_without_resource_token_cannot_authorize_a_write) ... ok
+test_nested_development_resources_are_rejected (late_foundations.test_runtime_independence_guard.RuntimeIndependenceGuardTests.test_nested_development_resources_are_rejected) ... ok
+test_static_scan_rejects_development_paths_network_install_and_git_commands (late_foundations.test_runtime_independence_guard.RuntimeIndependenceGuardTests.test_static_scan_rejects_development_paths_network_install_and_git_commands) ... ok
+test_suppressed_network_attempt_cannot_be_reported_as_pass (late_foundations.test_runtime_independence_guard.RuntimeIndependenceGuardTests.test_suppressed_network_attempt_cannot_be_reported_as_pass) ... ok
+test_suppressed_read_only_write_attempt_cannot_be_reported_as_pass (late_foundations.test_runtime_independence_guard.RuntimeIndependenceGuardTests.test_suppressed_read_only_write_attempt_cannot_be_reported_as_pass) ... ok
+test_delegated_imp_authority_must_bind_persisted_claim_owner (runtime.test_authority.FrozenAuthorityTests.test_delegated_imp_authority_must_bind_persisted_claim_owner) ... ok
+test_missing_authority_file_is_rejected (runtime.test_authority.FrozenAuthorityTests.test_missing_authority_file_is_rejected) ... ok
+test_ready_with_exception_requires_matching_sets (runtime.test_authority.FrozenAuthorityTests.test_ready_with_exception_requires_matching_sets) ... ok
+test_status_gate_mismatch_is_rejected (runtime.test_authority.FrozenAuthorityTests.test_status_gate_mismatch_is_rejected) ... ok
+test_tampered_content_invalidates_control_digest (runtime.test_authority.FrozenAuthorityTests.test_tampered_content_invalidates_control_digest) ... ok
+test_valid_delegated_authority (runtime.test_authority.FrozenAuthorityTests.test_valid_delegated_authority) ... ok
+test_valid_human_authority (runtime.test_authority.FrozenAuthorityTests.test_valid_human_authority) ... ok
+test_check_digest_excludes_core_g_009 (runtime.test_canonical.CanonicalArtifactTests.test_check_digest_excludes_core_g_009) ... ok
+test_control_digest_ignores_status_and_gate (runtime.test_canonical.CanonicalArtifactTests.test_control_digest_ignores_status_and_gate) ... ok
+test_crlf_and_bom_are_rejected (runtime.test_canonical.CanonicalArtifactTests.test_crlf_and_bom_are_rejected) ... ok
+test_parse_front_matter_and_tables (runtime.test_canonical.CanonicalArtifactTests.test_parse_front_matter_and_tables) ... ok
+test_pending_check_is_not_digestible (runtime.test_canonical.CanonicalArtifactTests.test_pending_check_is_not_digestible) ... ok
+test_reference_must_name_an_exact_item (runtime.test_control_inputs.ControlInputResolverTests.test_reference_must_name_an_exact_item) ... ok
+test_resolve_rls_confirmation_issue (runtime.test_control_inputs.ControlInputResolverTests.test_resolve_rls_confirmation_issue) ... ok
+test_resolve_rls_release_item_issue (runtime.test_control_inputs.ControlInputResolverTests.test_resolve_rls_release_item_issue) ... ok
+test_resolve_vfy_return_for_req (runtime.test_control_inputs.ControlInputResolverTests.test_resolve_vfy_return_for_req) ... ok
+test_rls_follow_up_mismatch_fails (runtime.test_control_inputs.ControlInputResolverTests.test_rls_follow_up_mismatch_fails) ... ok
+test_vfy_return_phase_mismatch_fails (runtime.test_control_inputs.ControlInputResolverTests.test_vfy_return_phase_mismatch_fails) ... ok
+test_ctx_control_and_check_digest_match_producer (runtime.test_ctx_authority_compat.CtxAuthorityCompatibilityTests.test_ctx_control_and_check_digest_match_producer) ... ok
+test_error_result_matches_contract (runtime.test_envelopes.EnvelopeTests.test_error_result_matches_contract) ... ok
+test_extra_top_level_field_is_rejected (runtime.test_envelopes.EnvelopeTests.test_extra_top_level_field_is_rejected) ... ok
+test_relative_project_root_is_rejected (runtime.test_envelopes.EnvelopeTests.test_relative_project_root_is_rejected) ... ok
+test_success_with_errors_is_rejected (runtime.test_envelopes.EnvelopeTests.test_success_with_errors_is_rejected) ... ok
+test_valid_invocation_is_normalized (runtime.test_envelopes.EnvelopeTests.test_valid_invocation_is_normalized) ... ok
+test_all_supported_operation_forms (runtime.test_skill_args.SkillArgumentTests.test_all_supported_operation_forms) ... ok
+test_cli_emits_one_json_document (runtime.test_skill_args.SkillArgumentTests.test_cli_emits_one_json_document) ... ok
+test_common_options_and_free_text (runtime.test_skill_args.SkillArgumentTests.test_common_options_and_free_text) ... ok
+test_conflicting_operations_fail (runtime.test_skill_args.SkillArgumentTests.test_conflicting_operations_fail) ... ok
+test_default_is_auto (runtime.test_skill_args.SkillArgumentTests.test_default_is_auto) ... ok
+test_help_and_topic (runtime.test_skill_args.SkillArgumentTests.test_help_and_topic) ... ok
+test_meta_command_is_side_effect_free_shape (runtime.test_skill_args.SkillArgumentTests.test_meta_command_is_side_effect_free_shape) ... ok
+test_same_duplicate_warns_and_conflict_fails (runtime.test_skill_args.SkillArgumentTests.test_same_duplicate_warns_and_conflict_fails) ... ok
+test_unknown_and_quote_errors_fail (runtime.test_skill_args.SkillArgumentTests.test_unknown_and_quote_errors_fail) ... ok
+test_conflict_between_command_and_operation (runtime.test_skill_command_aliases.SkillCommandAliasTests.test_conflict_between_command_and_operation) ... ok
+test_general_command_forms (runtime.test_skill_command_aliases.SkillCommandAliasTests.test_general_command_forms) ... ok
+test_meta_command_through_general_command (runtime.test_skill_command_aliases.SkillCommandAliasTests.test_meta_command_through_general_command) ... ok
+test_digest_drift_fails (runtime.test_source_lock.SourceLockTests.test_digest_drift_fails) ... ok
+test_registry_and_lock_are_deterministic (runtime.test_source_lock.SourceLockTests.test_registry_and_lock_are_deterministic) ... ok
+test_registry_requires_sorted_ids (runtime.test_source_lock.SourceLockTests.test_registry_requires_sorted_ids) ... ok
+test_source_lock_rejects_extra_field (runtime.test_source_lock.SourceLockTests.test_source_lock_rejects_extra_field) ... ok
+test_legacy_work_item_removed (runtime_contracts.test_runtime_contracts.RuntimeContractTests.test_legacy_work_item_removed) ... ok
+test_shared_directory_is_not_a_skill (runtime_contracts.test_runtime_contracts.RuntimeContractTests.test_shared_directory_is_not_a_skill) ... ok
+test_shared_schemas_parse (runtime_contracts.test_runtime_contracts.RuntimeContractTests.test_shared_schemas_parse) ... ok
+test_validator_passes (runtime_contracts.test_runtime_contracts.RuntimeContractTests.test_validator_passes) ... ok
+test_catalog_has_fixed_sixteen_domain_order (skill_dsn.test_domains.DsnDomainContractTests.test_catalog_has_fixed_sixteen_domain_order) ... ok
+test_composite_required_dominates_na (skill_dsn.test_domains.DsnDomainContractTests.test_composite_required_dominates_na) ... ok
+test_composite_rows_have_fixed_five_row_order (skill_dsn.test_domains.DsnDomainContractTests.test_composite_rows_have_fixed_five_row_order) ... ok
+test_dom_510_cannot_be_na_or_waived (skill_dsn.test_domains.DsnDomainContractTests.test_dom_510_cannot_be_na_or_waived) ... ok
+test_missing_domains_are_explicit_pending_rows (skill_dsn.test_domains.DsnDomainContractTests.test_missing_domains_are_explicit_pending_rows) ... ok
+test_incomplete_required_domain_remains_open (skill_dsn.test_integrity.DsnIntegrityTests.test_incomplete_required_domain_remains_open) ... ok
+test_stale_final_confirmation_does_not_freeze (skill_dsn.test_integrity.DsnIntegrityTests.test_stale_final_confirmation_does_not_freeze) ... ok
+test_verifier_rejects_missing_required_member (skill_dsn.test_integrity.DsnIntegrityTests.test_verifier_rejects_missing_required_member) ... ok
+test_verifier_rejects_status_mismatch (skill_dsn.test_integrity.DsnIntegrityTests.test_verifier_rejects_status_mismatch) ... ok
+test_duplicate_input_is_deduplicated_with_warning (skill_dsn.test_interface.DsnInterfaceTests.test_duplicate_input_is_deduplicated_with_warning) ... ok
+test_free_text_is_preserved_after_separator (skill_dsn.test_interface.DsnInterfaceTests.test_free_text_is_preserved_after_separator) ... ok
+test_input_requires_exact_token_value (skill_dsn.test_interface.DsnInterfaceTests.test_input_requires_exact_token_value) ... ok
+test_meta_command_rejects_execution_input (skill_dsn.test_interface.DsnInterfaceTests.test_meta_command_rejects_execution_input) ... ok
+test_repeatable_input_forms_preserve_first_order (skill_dsn.test_interface.DsnInterfaceTests.test_repeatable_input_forms_preserve_first_order) ... ok
+test_invalid_dsn_applicability_does_not_guess_next_phase (skill_dsn.test_lifecycle.DsnLifecycleTests.test_invalid_dsn_applicability_does_not_guess_next_phase) ... ok
+test_open_dsn_stays_on_current_phase (skill_dsn.test_lifecycle.DsnLifecycleTests.test_open_dsn_stays_on_current_phase) ... ok
+test_pln_skipped_and_imp_required_routes_directly_to_imp (skill_dsn.test_lifecycle.DsnLifecycleTests.test_pln_skipped_and_imp_required_routes_directly_to_imp) ... ok
+test_ready_dsn_creates_req_to_dsn_edge_and_routes_to_pln (skill_dsn.test_lifecycle.DsnLifecycleTests.test_ready_dsn_creates_req_to_dsn_edge_and_routes_to_pln) ... ok
+test_boundary_is_required_before_allocation (skill_dsn.test_runtime.DsnRuntimeTests.test_boundary_is_required_before_allocation) ... ok
+test_check_is_strictly_read_only (skill_dsn.test_runtime.DsnRuntimeTests.test_check_is_strictly_read_only) ... ok
+test_complete_create_freezes_ready_artifact_set (skill_dsn.test_runtime.DsnRuntimeTests.test_complete_create_freezes_ready_artifact_set) ... ok
+test_frozen_change_creates_next_revision (skill_dsn.test_runtime.DsnRuntimeTests.test_frozen_change_creates_next_revision) ... ok
+test_frozen_no_change_does_not_allocate_revision (skill_dsn.test_runtime.DsnRuntimeTests.test_frozen_no_change_does_not_allocate_revision) ... ok
+test_matrix_has_fixed_sixteen_rows (skill_dsn.test_runtime.DsnRuntimeTests.test_matrix_has_fixed_sixteen_rows) ... ok
+test_missing_final_confirmation_persists_waiting_input (skill_dsn.test_runtime.DsnRuntimeTests.test_missing_final_confirmation_persists_waiting_input) ... ok
+test_multiple_requirements_from_same_context_are_supported (skill_dsn.test_runtime.DsnRuntimeTests.test_multiple_requirements_from_same_context_are_supported) ... ok
+test_na_or_waived_scope_does_not_allocate_empty_dsn (skill_dsn.test_runtime.DsnRuntimeTests.test_na_or_waived_scope_does_not_allocate_empty_dsn) ... ok
+test_only_required_domains_create_members (skill_dsn.test_runtime.DsnRuntimeTests.test_only_required_domains_create_members) ... ok
+test_open_revision_is_revised_in_place (skill_dsn.test_runtime.DsnRuntimeTests.test_open_revision_is_revised_in_place) ... ok
+test_pending_req_applicability_blocks_before_allocation (skill_dsn.test_runtime.DsnRuntimeTests.test_pending_req_applicability_blocks_before_allocation) ... ok
+test_required_scope_dominates_na_scope (skill_dsn.test_runtime.DsnRuntimeTests.test_required_scope_dominates_na_scope) ... ok
+test_requirements_from_different_contexts_fail_before_allocation (skill_dsn.test_runtime.DsnRuntimeTests.test_requirements_from_different_contexts_fail_before_allocation) ... ok
+test_secret_supporting_member_fails_and_abandons_reservation (skill_dsn.test_runtime.DsnRuntimeTests.test_secret_supporting_member_fails_and_abandons_reservation) ... ok
+test_active_claim_rejects_a_different_exact_binding_revision (skill_imp.test_binding.BindingTests.test_active_claim_rejects_a_different_exact_binding_revision) ... ok
+test_artifact_uses_the_real_pln_context_and_full_lineage (skill_imp.test_binding.BindingTests.test_artifact_uses_the_real_pln_context_and_full_lineage) ... ok
+test_binding_must_match_the_requested_imp_reference (skill_imp.test_binding.BindingTests.test_binding_must_match_the_requested_imp_reference) ... ok
+test_complete_dsn_direct_binding_requires_pln_not_required (skill_imp.test_binding.BindingTests.test_complete_dsn_direct_binding_requires_pln_not_required) ... ok
+test_complete_req_direct_binding_uses_its_real_context (skill_imp.test_binding.BindingTests.test_complete_req_direct_binding_uses_its_real_context) ... ok
+test_direct_dependency_fails_closed_when_current_state_cannot_be_verified (skill_imp.test_binding.BindingTests.test_direct_dependency_fails_closed_when_current_state_cannot_be_verified) ... ok
+test_direct_dependency_uses_exact_readback_instead_of_cached_current_state (skill_imp.test_binding.BindingTests.test_direct_dependency_uses_exact_readback_instead_of_cached_current_state) ... ok
+test_direct_pln_waiver_carries_the_real_exception (skill_imp.test_binding.BindingTests.test_direct_pln_waiver_carries_the_real_exception) ... ok
+test_direct_req_dsn_waiver_requires_an_approved_exception (skill_imp.test_binding.BindingTests.test_direct_req_dsn_waiver_requires_an_approved_exception) ... ok
+test_inconsistent_upstream_context_fails_closed (skill_imp.test_binding.BindingTests.test_inconsistent_upstream_context_fails_closed) ... ok
+test_lifecycle_applicability_preserves_upstream_fact_without_pending_pass (skill_imp.test_binding.BindingTests.test_lifecycle_applicability_preserves_upstream_fact_without_pending_pass) ... ok
+test_missing_pln_context_fails_closed_before_claim (skill_imp.test_binding.BindingTests.test_missing_pln_context_fails_closed_before_claim) ... ok
+test_missing_wi_missing_revision_and_inexact_binding_fail_closed (skill_imp.test_binding.BindingTests.test_missing_wi_missing_revision_and_inexact_binding_fail_closed) ... ok
+test_multiple_work_items_do_not_auto_select_first (skill_imp.test_binding.BindingTests.test_multiple_work_items_do_not_auto_select_first) ... ok
+test_pln_reference_cannot_impersonate_context (skill_imp.test_binding.BindingTests.test_pln_reference_cannot_impersonate_context) ... ok
+test_target_phase_must_be_imp (skill_imp.test_binding.BindingTests.test_target_phase_must_be_imp) ... ok
+test_caller_supplied_snapshot_cannot_fabricate_candidate_baseline (skill_imp.test_candidate_material.CandidateMaterialTests.test_caller_supplied_snapshot_cannot_fabricate_candidate_baseline) ... ok
+test_candidate_baseline_must_be_the_current_immutable_head (skill_imp.test_candidate_material.CandidateMaterialTests.test_candidate_baseline_must_be_the_current_immutable_head) ... ok
+test_candidate_cannot_hide_a_new_unversioned_directory (skill_imp.test_candidate_material.CandidateMaterialTests.test_candidate_cannot_hide_a_new_unversioned_directory) ... ok
+test_candidate_cannot_remove_a_tracked_parent_before_claim (skill_imp.test_candidate_material.CandidateMaterialTests.test_candidate_cannot_remove_a_tracked_parent_before_claim) ... ok
+test_candidate_current_state_must_match_the_immutable_evidence (skill_imp.test_candidate_material.CandidateMaterialTests.test_candidate_current_state_must_match_the_immutable_evidence) ... ok
+test_candidate_delta_outside_path_scope_is_rejected_before_claim (skill_imp.test_candidate_material.CandidateMaterialTests.test_candidate_delta_outside_path_scope_is_rejected_before_claim) ... ok
+test_candidate_directory_mode_delta_is_not_a_vcs_proven_change (skill_imp.test_candidate_material.CandidateMaterialTests.test_candidate_directory_mode_delta_is_not_a_vcs_proven_change) ... ok
+test_candidate_is_persisted_then_replayed_from_declared_baseline (skill_imp.test_candidate_material.CandidateMaterialTests.test_candidate_is_persisted_then_replayed_from_declared_baseline) ... ok
+test_candidate_resource_root_must_exist_in_immutable_head (skill_imp.test_candidate_material.CandidateMaterialTests.test_candidate_resource_root_must_exist_in_immutable_head) ... ok
+test_method_must_reproduce_the_declared_candidate_result (skill_imp.test_candidate_material.CandidateMaterialTests.test_method_must_reproduce_the_declared_candidate_result) ... ok
+test_preexisting_patch_without_candidate_evidence_cannot_be_backdated (skill_imp.test_candidate_material.CandidateMaterialTests.test_preexisting_patch_without_candidate_evidence_cannot_be_backdated) ... ok
+test_auto_uses_the_unique_exact_work_item (skill_imp.test_cli.CliTests.test_auto_uses_the_unique_exact_work_item) ... ok
+test_binding_long_and_short_enter_the_same_formal_runtime (skill_imp.test_cli.CliTests.test_binding_long_and_short_enter_the_same_formal_runtime) ... ok
+test_environment_owner_is_stable_across_runtime_calls (skill_imp.test_cli.CliTests.test_environment_owner_is_stable_across_runtime_calls) ... ok
+test_explicit_owner_has_priority_over_environment (skill_imp.test_cli.CliTests.test_explicit_owner_has_priority_over_environment) ... ok
+test_formal_subprocess_entry_modifies_only_the_declared_product (skill_imp.test_cli.CliTests.test_formal_subprocess_entry_modifies_only_the_declared_product) ... ok
+test_missing_owner_requires_action_without_claim_allocation (skill_imp.test_cli.CliTests.test_missing_owner_requires_action_without_claim_allocation) ... ok
+test_repeatable_input_aliases_preserve_first_occurrence_order (skill_imp.test_cli.CliTests.test_repeatable_input_aliases_preserve_first_occurrence_order) ... ok
+test_formal_entry_meta_ignores_stdin_and_has_zero_project_writes (skill_imp.test_cli.MetaTests.test_formal_entry_meta_ignores_stdin_and_has_zero_project_writes) ... ok
+test_meta_commands_do_not_scan_resolve_owner_or_access_stores (skill_imp.test_cli.MetaTests.test_meta_commands_do_not_scan_resolve_owner_or_access_stores) ... ok
+test_owner_conflicting_candidates_require_action_and_explicit_wins (skill_imp.test_cli.MetaTests.test_owner_conflicting_candidates_require_action_and_explicit_wins) ... ok
+test_owner_uses_the_core_identity_token_alphabet (skill_imp.test_cli.MetaTests.test_owner_uses_the_core_identity_token_alphabet) ... ok
+test_shared_extensions_honor_equals_conflicts_and_free_text_boundary (skill_imp.test_cli.MetaTests.test_shared_extensions_honor_equals_conflicts_and_free_text_boundary) ... ok
+test_candidate_local_closure_still_rejects_a_missing_retained_snapshot (skill_imp.test_control_recovery.ControlRecoveryTests.test_candidate_local_closure_still_rejects_a_missing_retained_snapshot) ... ok
+test_cross_lineage_recovery_reference_is_rejected (skill_imp.test_control_recovery.ControlRecoveryTests.test_cross_lineage_recovery_reference_is_rejected) ... ok
+test_empty_or_ambiguous_recovery_reference_does_not_open_frozen (skill_imp.test_control_recovery.ControlRecoveryTests.test_empty_or_ambiguous_recovery_reference_does_not_open_frozen) ... ok
+test_frozen_no_change_control_recovery_uses_new_authority (skill_imp.test_control_recovery.ControlRecoveryTests.test_frozen_no_change_control_recovery_uses_new_authority) ... ok
+test_new_current_attempt_invalidates_successor_and_rechecks_dependency_chain (skill_imp.test_control_recovery.ControlRecoveryTests.test_new_current_attempt_invalidates_successor_and_rechecks_dependency_chain) ... ok
+test_new_owner_receives_new_current_claim_not_old_authority (skill_imp.test_control_recovery.ControlRecoveryTests.test_new_owner_receives_new_current_claim_not_old_authority) ... ok
+test_ordinary_revise_cannot_bypass_frozen (skill_imp.test_control_recovery.ControlRecoveryTests.test_ordinary_revise_cannot_bypass_frozen) ... ok
+test_post_checklist_readback_must_match_candidate_before_no_change_result (skill_imp.test_control_recovery.ControlRecoveryTests.test_post_checklist_readback_must_match_candidate_before_no_change_result) ... ok
+test_recovery_cannot_change_method_or_product (skill_imp.test_control_recovery.ControlRecoveryTests.test_recovery_cannot_change_method_or_product) ... ok
+test_recovery_check_is_strictly_read_only (skill_imp.test_control_recovery.ControlRecoveryTests.test_recovery_check_is_strictly_read_only) ... ok
+test_recovery_rejects_product_drift_before_claim (skill_imp.test_control_recovery.ControlRecoveryTests.test_recovery_rejects_product_drift_before_claim) ... ok
+test_same_recovery_sequence_is_idempotent_and_keeps_current_attempt (skill_imp.test_control_recovery.ControlRecoveryTests.test_same_recovery_sequence_is_idempotent_and_keeps_current_attempt) ... ok
+test_stale_reference_from_another_recovery_sequence_is_rejected (skill_imp.test_control_recovery.ControlRecoveryTests.test_stale_reference_from_another_recovery_sequence_is_rejected) ... ok
+test_successor_recovery_uses_local_candidate_when_old_baseline_is_unreadable (skill_imp.test_control_recovery.ControlRecoveryTests.test_successor_recovery_uses_local_candidate_when_old_baseline_is_unreadable) ... ok
+test_unresolved_product_return_disqualifies_no_change_recovery (skill_imp.test_control_recovery.ControlRecoveryTests.test_unresolved_product_return_disqualifies_no_change_recovery) ... ok
+test_valid_frozen_result_cannot_start_spurious_recovery (skill_imp.test_control_recovery.ControlRecoveryTests.test_valid_frozen_result_cannot_start_spurious_recovery) ... ok
+test_wrong_artifact_reference_is_rejected (skill_imp.test_control_recovery.ControlRecoveryTests.test_wrong_artifact_reference_is_rejected) ... ok
+test_absent_unmodified_claim_resource_fails_before_any_product_write (skill_imp.test_critical_gaps.CriticalGapTests.test_absent_unmodified_claim_resource_fails_before_any_product_write) ... ok
+test_applicable_checks_cannot_be_omitted_or_marked_na (skill_imp.test_critical_gaps.CriticalGapTests.test_applicable_checks_cannot_be_omitted_or_marked_na) ... ok
+test_applicable_local_checks_save_real_execution_evidence (skill_imp.test_critical_gaps.CriticalGapTests.test_applicable_local_checks_save_real_execution_evidence) ... ok
+test_candidate_patch_without_execution_cannot_be_claimed_as_result (skill_imp.test_critical_gaps.CriticalGapTests.test_candidate_patch_without_execution_cannot_be_claimed_as_result) ... ok
+test_clean_git_baseline_is_a_complete_immutable_snapshot (skill_imp.test_critical_gaps.CriticalGapTests.test_clean_git_baseline_is_a_complete_immutable_snapshot) ... ok
+test_imp_build_failure_after_allocation_abandons_exact_reservation (skill_imp.test_critical_gaps.CriticalGapTests.test_imp_build_failure_after_allocation_abandons_exact_reservation) ... ok
+test_method_block_identity_survives_active_revision_and_rework (skill_imp.test_critical_gaps.CriticalGapTests.test_method_block_identity_survives_active_revision_and_rework) ... ok
+test_missing_business_design_and_plan_decisions_return_to_the_owner (skill_imp.test_critical_gaps.CriticalGapTests.test_missing_business_design_and_plan_decisions_return_to_the_owner) ... ok
+test_missing_design_decision_returns_to_design (skill_imp.test_critical_gaps.CriticalGapTests.test_missing_design_decision_returns_to_design) ... ok
+test_mutable_and_path_only_result_references_are_rejected (skill_imp.test_critical_gaps.CriticalGapTests.test_mutable_and_path_only_result_references_are_rejected) ... ok
+test_new_resource_retains_absence_evidence_and_complete_result (skill_imp.test_critical_gaps.CriticalGapTests.test_new_resource_retains_absence_evidence_and_complete_result) ... ok
+test_patch_without_full_result_and_tampered_result_content_fail_check (skill_imp.test_critical_gaps.CriticalGapTests.test_patch_without_full_result_and_tampered_result_content_fail_check) ... ok
+test_project_check_rejects_shell_install_and_wrapper_commands (skill_imp.test_critical_gaps.CriticalGapTests.test_project_check_rejects_shell_install_and_wrapper_commands) ... ok
+test_python_project_check_denies_network_processes_and_snapshot_external_writes (skill_imp.test_critical_gaps.CriticalGapTests.test_python_project_check_denies_network_processes_and_snapshot_external_writes) ... ok
+test_required_or_pending_pln_cannot_use_direct_binding (skill_imp.test_critical_gaps.CriticalGapTests.test_required_or_pending_pln_cannot_use_direct_binding) ... ok
+test_resource_mapping_and_method_scope_expansion_fail_before_claim (skill_imp.test_critical_gaps.CriticalGapTests.test_resource_mapping_and_method_scope_expansion_fail_before_claim) ... ok
+test_return_imp_issue_without_unique_imp_lineage_returns_to_plan (skill_imp.test_critical_gaps.CriticalGapTests.test_return_imp_issue_without_unique_imp_lineage_returns_to_plan) ... ok
+test_secret_in_method_or_baseline_never_enters_artifact_or_evidence (skill_imp.test_critical_gaps.CriticalGapTests.test_secret_in_method_or_baseline_never_enters_artifact_or_evidence) ... ok
+test_step_block_and_check_ids_cannot_be_renamed_during_rework (skill_imp.test_critical_gaps.CriticalGapTests.test_step_block_and_check_ids_cannot_be_renamed_during_rework) ... ok
+test_successor_inputs_must_include_the_current_predecessor_result (skill_imp.test_critical_gaps.CriticalGapTests.test_successor_inputs_must_include_the_current_predecessor_result) ... ok
+test_frozen_complete_retry_abandons_on_permanent_dependency_failure (skill_imp.test_dependencies.DependencyTests.test_frozen_complete_retry_abandons_on_permanent_dependency_failure) ... ok
+test_missing_predecessor_prevents_acquisition (skill_imp.test_dependencies.DependencyTests.test_missing_predecessor_prevents_acquisition) ... ok
+test_same_resource_successor_inherits_baseline_and_can_resume_to_complete (skill_imp.test_dependencies.DependencyTests.test_same_resource_successor_inherits_baseline_and_can_resume_to_complete) ... ok
+test_successor_rejects_workspace_that_does_not_match_predecessor_result (skill_imp.test_dependencies.DependencyTests.test_successor_rejects_workspace_that_does_not_match_predecessor_result) ... ok
+test_abandoned_claim_requires_explicit_retry_or_rework (skill_imp.test_lifecycle.ImpLifecycleTests.test_abandoned_claim_requires_explicit_retry_or_rework) ... ok
+test_abandoned_history_does_not_block_completed_retry (skill_imp.test_lifecycle.ImpLifecycleTests.test_abandoned_history_does_not_block_completed_retry) ... ok
+test_active_open_claim_shows_owner_attempt_and_imp_frontier (skill_imp.test_lifecycle.ImpLifecycleTests.test_active_open_claim_shows_owner_attempt_and_imp_frontier) ... ok
+test_claim_before_materialization_is_not_an_artifact (skill_imp.test_lifecycle.ImpLifecycleTests.test_claim_before_materialization_is_not_an_artifact) ... ok
+test_claim_change_during_query_fails_closed (skill_imp.test_lifecycle.ImpLifecycleTests.test_claim_change_during_query_fails_closed) ... ok
+test_claim_identity_mismatch_is_not_completed (skill_imp.test_lifecycle.ImpLifecycleTests.test_claim_identity_mismatch_is_not_completed) ... ok
+test_completed_claim_cannot_authorize_open_revision (skill_imp.test_lifecycle.ImpLifecycleTests.test_completed_claim_cannot_authorize_open_revision) ... ok
+test_completed_claim_with_missing_exact_revision_does_not_fall_back (skill_imp.test_lifecycle.ImpLifecycleTests.test_completed_claim_with_missing_exact_revision_does_not_fall_back) ... ok
+test_corrupt_claim_store_fails_closed_without_repair (skill_imp.test_lifecycle.ImpLifecycleTests.test_corrupt_claim_store_fails_closed_without_repair) ... ok
+test_direct_req_binding_has_current_claim_and_vfy_input (skill_imp.test_lifecycle.ImpLifecycleTests.test_direct_req_binding_has_current_claim_and_vfy_input) ... ok
+test_existing_downstream_artifact_keeps_its_lifecycle_frontier (skill_imp.test_lifecycle.ImpLifecycleTests.test_existing_downstream_artifact_keeps_its_lifecycle_frontier) ... ok
+test_failed_local_gate_is_a_visible_blocker (skill_imp.test_lifecycle.ImpLifecycleTests.test_failed_local_gate_is_a_visible_blocker) ... ok
+test_frozen_completed_result_is_ready_but_missing_vfy_skill_is_explicit (skill_imp.test_lifecycle.ImpLifecycleTests.test_frozen_completed_result_is_ready_but_missing_vfy_skill_is_explicit) ... ok
+test_frozen_with_active_claim_cannot_enter_vfy (skill_imp.test_lifecycle.ImpLifecycleTests.test_frozen_with_active_claim_cannot_enter_vfy) ... ok
+test_independent_resources_keep_both_terminal_vfy_inputs (skill_imp.test_lifecycle.ImpLifecycleTests.test_independent_resources_keep_both_terminal_vfy_inputs) ... ok
+test_missing_claim_store_does_not_make_frozen_imp_usable (skill_imp.test_lifecycle.ImpLifecycleTests.test_missing_claim_store_does_not_make_frozen_imp_usable) ... ok
+test_missing_immutable_result_member_is_not_completed (skill_imp.test_lifecycle.ImpLifecycleTests.test_missing_immutable_result_member_is_not_completed) ... ok
+test_new_plan_revision_does_not_rebind_an_active_claim (skill_imp.test_lifecycle.ImpLifecycleTests.test_new_plan_revision_does_not_rebind_an_active_claim) ... ok
+test_new_predecessor_attempt_invalidates_all_transitive_successors (skill_imp.test_lifecycle.ImpLifecycleTests.test_new_predecessor_attempt_invalidates_all_transitive_successors) ... ok
+test_occupied_resource_is_not_offered_as_a_start_candidate (skill_imp.test_lifecycle.ImpLifecycleTests.test_occupied_resource_is_not_offered_as_a_start_candidate) ... ok
+test_plan_without_claim_store_stays_read_only (skill_imp.test_lifecycle.ImpLifecycleTests.test_plan_without_claim_store_stays_read_only) ... ok
+test_predecessor_completion_enables_next_imp_work_item_before_vfy (skill_imp.test_lifecycle.ImpLifecycleTests.test_predecessor_completion_enables_next_imp_work_item_before_vfy) ... ok
+test_query_does_not_call_write_apis_or_change_bytes_or_mtime (skill_imp.test_lifecycle.ImpLifecycleTests.test_query_does_not_call_write_apis_or_change_bytes_or_mtime) ... ok
+test_query_reuse_reads_current_claim_after_completion (skill_imp.test_lifecycle.ImpLifecycleTests.test_query_reuse_reads_current_claim_after_completion) ... ok
+test_rework_excludes_old_completed_revision_and_return_from_frontier (skill_imp.test_lifecycle.ImpLifecycleTests.test_rework_excludes_old_completed_revision_and_return_from_frontier) ... ok
+test_same_resource_chain_uses_only_current_completed_terminal (skill_imp.test_lifecycle.ImpLifecycleTests.test_same_resource_chain_uses_only_current_completed_terminal) ... ok
+test_unordered_completed_results_for_one_resource_are_ambiguous (skill_imp.test_lifecycle.ImpLifecycleTests.test_unordered_completed_results_for_one_resource_are_ambiguous) ... ok
+test_vfy_selects_terminal_result_per_resource_in_multi_resource_artifact (skill_imp.test_lifecycle.ImpLifecycleTests.test_vfy_selects_terminal_result_per_resource_in_multi_resource_artifact) ... ok
+test_external_effect_or_arbitrary_command_check_is_never_executed (skill_imp.test_method.MethodTests.test_external_effect_or_arbitrary_command_check_is_never_executed) ... ok
+test_failed_local_check_cannot_freeze_or_claim_vfy_ready (skill_imp.test_method.MethodTests.test_failed_local_check_cannot_freeze_or_claim_vfy_ready) ... ok
+test_file_decomposed_step_returns_to_plan (skill_imp.test_method.MethodTests.test_file_decomposed_step_returns_to_plan) ... ok
+test_fixed_consideration_order_and_stable_block_ids_are_persisted (skill_imp.test_method.MethodTests.test_fixed_consideration_order_and_stable_block_ids_are_persisted) ... ok
+test_mixed_transaction_or_failure_boundaries_require_split_steps (skill_imp.test_method.MethodTests.test_mixed_transaction_or_failure_boundaries_require_split_steps) ... ok
+test_na_consideration_requires_an_objective_basis (skill_imp.test_method.MethodTests.test_na_consideration_requires_an_objective_basis) ... ok
+test_new_public_abstraction_without_dsn_decision_returns_upstream (skill_imp.test_method.MethodTests.test_new_public_abstraction_without_dsn_decision_returns_upstream) ... ok
+test_pending_consideration_cannot_reach_the_gate (skill_imp.test_method.MethodTests.test_pending_consideration_cannot_reach_the_gate) ... ok
+test_project_check_id_cannot_change_its_bounded_command_role (skill_imp.test_method.MethodTests.test_project_check_id_cannot_change_its_bounded_command_role) ... ok
+test_required_na_waived_and_pending_dispositions_are_enforced (skill_imp.test_method.MethodTests.test_required_na_waived_and_pending_dispositions_are_enforced) ... ok
+test_step_file_decomposition_and_mixed_failure_boundaries_are_rejected (skill_imp.test_method.MethodTests.test_step_file_decomposition_and_mixed_failure_boundaries_are_rejected) ... ok
+test_waived_consideration_requires_an_approved_exception (skill_imp.test_method.MethodTests.test_waived_consideration_requires_an_approved_exception) ... ok
+test_acquire_and_complete_payload_readback_precede_first_product_write (skill_imp.test_resources.ResourceTests.test_acquire_and_complete_payload_readback_precede_first_product_write) ... ok
+test_confirm_stops_before_acquire_then_accepts_only_the_exact_preview (skill_imp.test_resources.ResourceTests.test_confirm_stops_before_acquire_then_accepts_only_the_exact_preview) ... ok
+test_dirty_workspace_baseline_contains_staged_unstaged_and_untracked_user_bytes (skill_imp.test_resources.ResourceTests.test_dirty_workspace_baseline_contains_staged_unstaged_and_untracked_user_bytes) ... ok
+test_entire_operation_batch_is_validated_before_any_scope_write (skill_imp.test_resources.ResourceTests.test_entire_operation_batch_is_validated_before_any_scope_write) ... ok
+test_existing_user_changes_in_target_are_not_overwritten (skill_imp.test_resources.ResourceTests.test_existing_user_changes_in_target_are_not_overwritten) ... ok
+test_full_immutable_result_remains_readable_after_live_workspace_changes (skill_imp.test_resources.ResourceTests.test_full_immutable_result_remains_readable_after_live_workspace_changes) ... ok
+test_multiple_resources_include_unchanged_row_without_losing_user_content (skill_imp.test_resources.ResourceTests.test_multiple_resources_include_unchanged_row_without_losing_user_content) ... ok
+test_no_git_commit_push_or_ref_side_effects (skill_imp.test_resources.ResourceTests.test_no_git_commit_push_or_ref_side_effects) ... ok
+test_one_resource_many_files_still_has_one_result_row (skill_imp.test_resources.ResourceTests.test_one_resource_many_files_still_has_one_result_row) ... ok
+test_pre_execution_checklist_semantic_tamper_is_rejected (skill_imp.test_resources.ResourceTests.test_pre_execution_checklist_semantic_tamper_is_rejected) ... ok
+test_result_ids_are_never_reused_after_a_resource_leaves_scope (skill_imp.test_resources.ResourceTests.test_result_ids_are_never_reused_after_a_resource_leaves_scope) ... ok
+test_stale_product_confirmation_does_not_authorize_a_changed_method (skill_imp.test_resources.ResourceTests.test_stale_product_confirmation_does_not_authorize_a_changed_method) ... ok
+test_symlink_escape_is_rejected_without_reading_or_writing_external_product (skill_imp.test_resources.ResourceTests.test_symlink_escape_is_rejected_without_reading_or_writing_external_product) ... ok
+test_tampered_context_is_rejected_on_readback_with_no_repair (skill_imp.test_resources.ResourceTests.test_tampered_context_is_rejected_on_readback_with_no_repair) ... ok
+test_unchanged_resource_uses_baseline_as_result_and_none_changed_scope (skill_imp.test_resources.ResourceTests.test_unchanged_resource_uses_baseline_as_result_and_none_changed_scope) ... ok
+test_write_policy_deny_has_no_project_writes (skill_imp.test_resources.ResourceTests.test_write_policy_deny_has_no_project_writes) ... ok
+test_abandoned_same_return_sequence_cannot_allocate_without_retry (skill_imp.test_rework.ReworkTests.test_abandoned_same_return_sequence_cannot_allocate_without_retry) ... ok
+test_explicit_abandoned_retry_may_transfer_current_claim_authority (skill_imp.test_rework.ReworkTests.test_explicit_abandoned_retry_may_transfer_current_claim_authority) ... ok
+test_explicit_abandoned_retry_preserves_artifact_and_creates_next_attempt (skill_imp.test_rework.ReworkTests.test_explicit_abandoned_retry_preserves_artifact_and_creates_next_attempt) ... ok
+test_frozen_return_starts_one_sequence_and_resumes_against_original_subject (skill_imp.test_rework.ReworkTests.test_frozen_return_starts_one_sequence_and_resumes_against_original_subject) ... ok
+test_return_evidence_item_resolves_its_immutable_member_and_digest (skill_imp.test_rework.ReworkTests.test_return_evidence_item_resolves_its_immutable_member_and_digest) ... ok
+test_return_with_a_different_binding_or_context_cannot_start_an_attempt (skill_imp.test_rework.ReworkTests.test_return_with_a_different_binding_or_context_cannot_start_an_attempt) ... ok
+test_abandon_revision_then_claim_with_matching_reason (skill_imp.test_state_machine.StateMachineTests.test_abandon_revision_then_claim_with_matching_reason) ... ok
+test_abandon_validates_owner_attempt_and_revision_before_any_write (skill_imp.test_state_machine.StateMachineTests.test_abandon_validates_owner_attempt_and_revision_before_any_write) ... ok
+test_active_open_revise_stays_on_the_same_revision (skill_imp.test_state_machine.StateMachineTests.test_active_open_revise_stays_on_the_same_revision) ... ok
+test_active_owner_and_input_mismatch_are_rejected (skill_imp.test_state_machine.StateMachineTests.test_active_owner_and_input_mismatch_are_rejected) ... ok
+test_active_revision_cannot_insert_before_the_executed_prefix (skill_imp.test_state_machine.StateMachineTests.test_active_revision_cannot_insert_before_the_executed_prefix) ... ok
+test_active_revision_cannot_remove_an_already_executed_operation (skill_imp.test_state_machine.StateMachineTests.test_active_revision_cannot_remove_an_already_executed_operation) ... ok
+test_check_is_absolutely_read_only_and_never_executes_checks (skill_imp.test_state_machine.StateMachineTests.test_check_is_absolutely_read_only_and_never_executes_checks) ... ok
+test_claim_termination_failure_keeps_active_and_can_resume_abandon (skill_imp.test_state_machine.StateMachineTests.test_claim_termination_failure_keeps_active_and_can_resume_abandon) ... ok
+test_complete_transient_failure_retries_without_rewriting_frozen_artifact (skill_imp.test_state_machine.StateMachineTests.test_complete_transient_failure_retries_without_rewriting_frozen_artifact) ... ok
+test_completed_binding_change_without_complete_rework_set_is_rejected (skill_imp.test_state_machine.StateMachineTests.test_completed_binding_change_without_complete_rework_set_is_rejected) ... ok
+test_completed_handler_retry_requires_the_current_owner (skill_imp.test_state_machine.StateMachineTests.test_completed_handler_retry_requires_the_current_owner) ... ok
+test_completed_without_rework_does_not_allocate_another_attempt (skill_imp.test_state_machine.StateMachineTests.test_completed_without_rework_does_not_allocate_another_attempt) ... ok
+test_delegated_confirmation_requires_exact_independent_authority (skill_imp.test_state_machine.StateMachineTests.test_delegated_confirmation_requires_exact_independent_authority) ... ok
+test_different_lineage_resource_conflict_fails_closed (skill_imp.test_state_machine.StateMachineTests.test_different_lineage_resource_conflict_fails_closed) ... ok
+test_freeze_always_precedes_claim_complete (skill_imp.test_state_machine.StateMachineTests.test_freeze_always_precedes_claim_complete) ... ok
+test_missing_and_stale_final_confirmation_keep_open (skill_imp.test_state_machine.StateMachineTests.test_missing_and_stale_final_confirmation_keep_open) ... ok
+test_ordinary_abandon_cannot_cancel_frozen_history (skill_imp.test_state_machine.StateMachineTests.test_ordinary_abandon_cannot_cancel_frozen_history) ... ok
+test_rework_revision_cannot_repurpose_stable_method_identities (skill_imp.test_state_machine.StateMachineTests.test_rework_revision_cannot_repurpose_stable_method_identities) ... ok
+test_same_active_request_is_idempotent_without_empty_revision (skill_imp.test_state_machine.StateMachineTests.test_same_active_request_is_idempotent_without_empty_revision) ... ok
+test_stale_final_confirmation_does_not_freeze (skill_imp.test_state_machine.StateMachineTests.test_stale_final_confirmation_does_not_freeze) ... ok
+test_updated_exact_binding_with_rework_creates_stable_artifact_new_attempt (skill_imp.test_state_machine.StateMachineTests.test_updated_exact_binding_with_rework_creates_stable_artifact_new_attempt) ... ok
+test_duplicate_work_item_semantics_are_rejected (skill_pln.test_contract_matrix.PlnContractMatrixTests.test_duplicate_work_item_semantics_are_rejected) ... ok
+test_generic_completion_or_evidence_is_not_sufficient (skill_pln.test_contract_matrix.PlnContractMatrixTests.test_generic_completion_or_evidence_is_not_sufficient) ... ok
+test_missing_responsible_role_remains_action_required (skill_pln.test_contract_matrix.PlnContractMatrixTests.test_missing_responsible_role_remains_action_required) ... ok
+test_non_required_phase_cannot_have_pseudo_work_item (skill_pln.test_contract_matrix.PlnContractMatrixTests.test_non_required_phase_cannot_have_pseudo_work_item) ... ok
+test_path_token_must_belong_to_declared_resource (skill_pln.test_contract_matrix.PlnContractMatrixTests.test_path_token_must_belong_to_declared_resource) ... ok
+test_required_rls_work_item_has_exactly_one_environment (skill_pln.test_contract_matrix.PlnContractMatrixTests.test_required_rls_work_item_has_exactly_one_environment) ... ok
+test_unconfirmed_obligation_and_scope_expansion_fail (skill_pln.test_contract_matrix.PlnContractMatrixTests.test_unconfirmed_obligation_and_scope_expansion_fail) ... ok
+test_unknown_authority_fields_are_rejected (skill_pln.test_contract_matrix.PlnContractMatrixTests.test_unknown_authority_fields_are_rejected) ... ok
+test_vfy_is_always_required_and_needs_work_item (skill_pln.test_contract_matrix.PlnContractMatrixTests.test_vfy_is_always_required_and_needs_work_item) ... ok
+test_parallel_earliest_work_items_are_all_projected (skill_pln.test_lifecycle.PlnLifecycleTests.test_parallel_earliest_work_items_are_all_projected) ... ok
+test_ready_plan_projects_exact_imp_binding (skill_pln.test_lifecycle.PlnLifecycleTests.test_ready_plan_projects_exact_imp_binding) ... ok
+test_candidate_cannot_override_upstream_pln_applicability (skill_pln.test_runtime.PlnRuntimeTests.test_candidate_cannot_override_upstream_pln_applicability) ... ok
+test_check_is_read_only (skill_pln.test_runtime.PlnRuntimeTests.test_check_is_read_only) ... ok
+test_create_freezes_complete_plan (skill_pln.test_runtime.PlnRuntimeTests.test_create_freezes_complete_plan) ... ok
+test_dependency_cycle_and_later_phase_fail (skill_pln.test_runtime.PlnRuntimeTests.test_dependency_cycle_and_later_phase_fail) ... ok
+test_missing_confirmation_persists_open_revision (skill_pln.test_runtime.PlnRuntimeTests.test_missing_confirmation_persists_open_revision) ... ok
+test_non_required_and_pending_do_not_allocate (skill_pln.test_runtime.PlnRuntimeTests.test_non_required_and_pending_do_not_allocate) ... ok
+test_open_revise_frozen_no_change_and_change (skill_pln.test_runtime.PlnRuntimeTests.test_open_revise_frozen_no_change_and_change) ... ok
+test_same_resource_work_items_require_dependency_chain (skill_pln.test_runtime.PlnRuntimeTests.test_same_resource_work_items_require_dependency_chain) ... ok
+test_acceptance_criteria_gap_fails_req_g_006 (skill_req.test_eval_completion.RequirementCriticalEvalCompletionTests.test_acceptance_criteria_gap_fails_req_g_006) ... ok
+test_context_is_not_duplicated_in_front_inputs (skill_req.test_eval_completion.RequirementCriticalEvalCompletionTests.test_context_is_not_duplicated_in_front_inputs) ... ok
+test_failed_build_abandons_allocated_revision (skill_req.test_eval_completion.RequirementCriticalEvalCompletionTests.test_failed_build_abandons_allocated_revision) ... ok
+test_frozen_effective_revise_allocates_next_revision (skill_req.test_eval_completion.RequirementCriticalEvalCompletionTests.test_frozen_effective_revise_allocates_next_revision) ... ok
+test_frozen_no_change_does_not_allocate_new_revision (skill_req.test_eval_completion.RequirementCriticalEvalCompletionTests.test_frozen_no_change_does_not_allocate_new_revision) ... ok
+test_non_frozen_ctx_fails_without_fallback_or_req_allocation (skill_req.test_eval_completion.RequirementCriticalEvalCompletionTests.test_non_frozen_ctx_fails_without_fallback_or_req_allocation) ... ok
+test_semantic_check_rejects_context_in_inputs (skill_req.test_eval_completion.RequirementCriticalEvalCompletionTests.test_semantic_check_rejects_context_in_inputs) ... ok
+test_semantic_check_rejects_unrooted_requirement (skill_req.test_eval_completion.RequirementCriticalEvalCompletionTests.test_semantic_check_rejects_unrooted_requirement) ... ok
+test_stale_final_confirmation_persists_core_g_009_failure (skill_req.test_eval_completion.RequirementCriticalEvalCompletionTests.test_stale_final_confirmation_persists_core_g_009_failure) ... ok
+test_context_is_not_duplicated_in_front_inputs (skill_req.test_review_fixes.ReviewFixTests.test_context_is_not_duplicated_in_front_inputs) ... ok
+test_failed_build_abandons_allocated_revision (skill_req.test_review_fixes.ReviewFixTests.test_failed_build_abandons_allocated_revision) ... ok
+test_frozen_no_change_does_not_allocate_new_revision (skill_req.test_review_fixes.ReviewFixTests.test_frozen_no_change_does_not_allocate_new_revision) ... ok
+test_semantic_check_rejects_context_in_inputs (skill_req.test_review_fixes.ReviewFixTests.test_semantic_check_rejects_context_in_inputs) ... ok
+test_semantic_check_rejects_unrooted_requirement (skill_req.test_review_fixes.ReviewFixTests.test_semantic_check_rejects_unrooted_requirement) ... ok
+test_context_is_not_duplicated_in_front_inputs (skill_req.test_review_fixes.ReviewFixTests.test_context_is_not_duplicated_in_front_inputs) ... ok
+test_failed_build_abandons_allocated_revision (skill_req.test_review_fixes.ReviewFixTests.test_failed_build_abandons_allocated_revision) ... ok
+test_frozen_no_change_does_not_allocate_new_revision (skill_req.test_review_fixes.ReviewFixTests.test_frozen_no_change_does_not_allocate_new_revision) ... ok
+test_semantic_check_rejects_context_in_inputs (skill_req.test_review_fixes.ReviewFixTests.test_semantic_check_rejects_context_in_inputs) ... ok
+test_semantic_check_rejects_unrooted_requirement (skill_req.test_review_fixes.ReviewFixTests.test_semantic_check_rejects_unrooted_requirement) ... ok
+test_check_missing_store_does_not_create_runtime (skill_req.test_runtime.RequirementRuntimeTests.test_check_missing_store_does_not_create_runtime) ... ok
+test_complete_create_freezes_ready_requirement (skill_req.test_runtime.RequirementRuntimeTests.test_complete_create_freezes_ready_requirement) ... ok
+test_cycle_fails_requirement_gate (skill_req.test_runtime.RequirementRuntimeTests.test_cycle_fails_requirement_gate) ... ok
+test_frozen_check_is_read_only_and_complete (skill_req.test_runtime.RequirementRuntimeTests.test_frozen_check_is_read_only_and_complete) ... ok
+test_missing_content_persists_waiting_input (skill_req.test_runtime.RequirementRuntimeTests.test_missing_content_persists_waiting_input) ... ok
+test_missing_write_authorization_creates_no_req (skill_req.test_runtime.RequirementRuntimeTests.test_missing_write_authorization_creates_no_req) ... ok
+test_open_revision_is_revised_in_place (skill_req.test_runtime.RequirementRuntimeTests.test_open_revision_is_revised_in_place) ... ok
+test_auto_and_inspect_show_current_claim_and_read_only_policy (skill_status.test_imp.ImpStatusTests.test_auto_and_inspect_show_current_claim_and_read_only_policy) ... ok
+test_cli_json_includes_current_claim_and_exact_vfy_input (skill_status.test_imp.ImpStatusTests.test_cli_json_includes_current_claim_and_exact_vfy_input) ... /Users/shuaiw/Workspace/goedge.cloud/sdlc-ai-spec-imp-v2-manual/packages/sdlc_runtime/canonical.py:155: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x10b3d8a90>
+  return tuple(cell.strip() for cell in stripped[1:-1].split("|"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/Users/shuaiw/Workspace/goedge.cloud/sdlc-ai-spec-imp-v2-manual/packages/sdlc_runtime/canonical.py:155: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x10b3d8c70>
+  return tuple(cell.strip() for cell in stripped[1:-1].split("|"))
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+ok
+test_completed_summary_separates_vfy_readiness_from_skill_availability (skill_status.test_imp.ImpStatusTests.test_completed_summary_separates_vfy_readiness_from_skill_availability) ... ok
+test_corrupt_claim_store_reports_stable_error_and_remains_unchanged (skill_status.test_imp.ImpStatusTests.test_corrupt_claim_store_reports_stable_error_and_remains_unchanged) ... ok
+test_multiple_actions_remain_visible_without_choosing_first (skill_status.test_imp.ImpStatusTests.test_multiple_actions_remain_visible_without_choosing_first) ... ok
+test_status_uses_no_artifact_or_claim_mutation_api (skill_status.test_imp.ImpStatusTests.test_status_uses_no_artifact_or_claim_mutation_api) ... ok
+test_auto_inspects_single_requirement (skill_status.test_runtime.StatusRuntimeTests.test_auto_inspects_single_requirement) ... ok
+test_bare_missing_store_is_not_started_and_writes_nothing (skill_status.test_runtime.StatusRuntimeTests.test_bare_missing_store_is_not_started_and_writes_nothing) ... ok
+test_cli_json_is_one_document (skill_status.test_runtime.StatusRuntimeTests.test_cli_json_is_one_document) ... ok
+test_corrupt_store_fails_closed_without_modification (skill_status.test_runtime.StatusRuntimeTests.test_corrupt_store_fails_closed_without_modification) ... ok
+test_debug_output_contains_resolution_without_changing_project (skill_status.test_runtime.StatusRuntimeTests.test_debug_output_contains_resolution_without_changing_project) ... ok
+test_inspect_requires_exact_reference (skill_status.test_runtime.StatusRuntimeTests.test_inspect_requires_exact_reference) ... ok
+test_list_keeps_exact_revisions (skill_status.test_runtime.StatusRuntimeTests.test_list_keeps_exact_revisions) ... ok
+test_meta_commands_do_not_resolve_project (skill_status.test_runtime.StatusRuntimeTests.test_meta_commands_do_not_resolve_project) ... ok
+test_multiple_requirements_require_user_selection (skill_status.test_runtime.StatusRuntimeTests.test_multiple_requirements_require_user_selection) ... ok
+test_skill_has_no_sibling_invocation (skill_status.test_runtime.StatusRuntimeTests.test_skill_has_no_sibling_invocation) ... ok
+test_write_policy_is_forced_deny_and_preserved_without_store (skill_status.test_runtime.StatusRuntimeTests.test_write_policy_is_forced_deny_and_preserved_without_store) ... ok
+test_blocked_projection_shows_code_reference_and_message (skill_status.test_summary.StatusSummaryTests.test_blocked_projection_shows_code_reference_and_message) ... ok
+test_multiple_requirements_show_exact_candidates (skill_status.test_summary.StatusSummaryTests.test_multiple_requirements_show_exact_candidates) ... ok
+test_approved_peer_input_shape_consumes_evidence_and_supporting_members (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_approved_peer_input_shape_consumes_evidence_and_supporting_members) ... ok
+test_boundary_key_normalizes_nfc_line_endings_and_outer_whitespace (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_boundary_key_normalizes_nfc_line_endings_and_outer_whitespace) ... ok
+test_check_missing_store_is_strictly_read_only (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_check_missing_store_is_strictly_read_only) ... ok
+test_concurrent_cli_first_create_converges_across_processes (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_concurrent_cli_first_create_converges_across_processes) ... ok
+test_concurrent_first_create_converges_on_one_ctx_id (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_concurrent_first_create_converges_on_one_ctx_id) ... ok
+test_corrupt_schema_is_not_hidden_by_initialize_recovery (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_corrupt_schema_is_not_hidden_by_initialize_recovery) ... ok
+test_corrupt_store_is_not_hidden_by_lock_recovery (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_corrupt_store_is_not_hidden_by_lock_recovery) ... ok
+test_create_materializes_waiting_input_and_duplicate_is_blocked (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_create_materializes_waiting_input_and_duplicate_is_blocked) ... ok
+test_delegated_confirmation_requires_and_accepts_fixed_authority_contract (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_delegated_confirmation_requires_and_accepts_fixed_authority_contract) ... ok
+test_domain_validator_rejects_manifest_member_closure_tampering (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_domain_validator_rejects_manifest_member_closure_tampering) ... ok
+test_domain_validator_rejects_missing_primary_invalid_enums_and_exception_contract (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_domain_validator_rejects_missing_primary_invalid_enums_and_exception_contract) ... ok
+test_domain_validator_rejects_tampered_basis_even_with_updated_blob_digest (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_domain_validator_rejects_tampered_basis_even_with_updated_blob_digest) ... ok
+test_dry_run_creates_no_persistent_state (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_dry_run_creates_no_persistent_state) ... ok
+test_frozen_no_change_keeps_revision_and_effective_change_allocates_next (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_frozen_no_change_keeps_revision_and_effective_change_allocates_next) ... ok
+test_missing_foundation_returns_structured_result_without_traceback (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_missing_foundation_returns_structured_result_without_traceback) ... ok
+test_old_frozen_base_uses_lineage_max_revision_and_invalid_input_allocates_nothing (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_old_frozen_base_uses_lineage_max_revision_and_invalid_input_allocates_nothing) ... ok
+test_open_revise_binds_confirmation_freezes_and_checks_read_only (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_open_revise_binds_confirmation_freezes_and_checks_read_only) ... ok
+test_post_allocation_failure_abandons_unmaterialized_control_reservation (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_post_allocation_failure_abandons_unmaterialized_control_reservation) ... ok
+test_runtime_source_lock_is_exact_and_runtime_has_no_design_source_dependency (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_runtime_source_lock_is_exact_and_runtime_has_no_design_source_dependency) ... ok
+test_unconfirmed_boundary_does_not_create_store (skills.test_sdlc_000_ctx.CtxRuntimeTests.test_unconfirmed_boundary_does_not_create_store) ... ok
+test_two_distinct_projects_complete_real_imp_and_restore_git (system_integration.test_external_imp_integration.ExternalImpIntegrationTests.test_two_distinct_projects_complete_real_imp_and_restore_git) ... [2026-09-03T22:58:58.170008+00:00] fixture/spring-probe: create real CTX
+[2026-09-03T22:58:58.197915+00:00] fixture/spring-probe: create real REQ
+[2026-09-03T22:58:58.203442+00:00] fixture/spring-probe: create real DSN
+[2026-09-03T22:58:58.210821+00:00] fixture/spring-probe: create real PLN and select WI-001
+[2026-09-03T22:58:58.218888+00:00] fixture/spring-probe: acquire Claim, execute README edit and complete IMP
+[2026-09-03T22:58:58.463817+00:00] fixture/spring-probe: read-only IMP check and lifecycle projection
+[2026-09-03T22:58:58.566278+00:00] fixture/spring-probe: cleanup restored exact initial Git state
+[2026-09-03T22:58:58.592181+00:00] fixture/go-vue-probe: create real CTX
+[2026-09-03T22:58:58.619935+00:00] fixture/go-vue-probe: create real REQ
+[2026-09-03T22:58:58.625900+00:00] fixture/go-vue-probe: create real DSN
+[2026-09-03T22:58:58.632691+00:00] fixture/go-vue-probe: create real PLN and select WI-001
+[2026-09-03T22:58:58.640524+00:00] fixture/go-vue-probe: acquire Claim, execute README edit and complete IMP
+[2026-09-03T22:58:58.887754+00:00] fixture/go-vue-probe: read-only IMP check and lifecycle projection
+[2026-09-03T22:58:58.991125+00:00] fixture/go-vue-probe: cleanup restored exact initial Git state
+ok
+test_go_vue_project_uses_real_build_descriptors_and_stable_work_items (system_integration.test_external_pln_integration.ExternalPlnIntegrationTests.test_go_vue_project_uses_real_build_descriptors_and_stable_work_items) ... ok
+test_maven_project_reaches_exact_imp_binding_without_source_changes (system_integration.test_external_pln_integration.ExternalPlnIntegrationTests.test_maven_project_reaches_exact_imp_binding_without_source_changes) ... ok
+
+----------------------------------------------------------------------
+Ran 426 tests in 50.254s
+
+OK
+EXIT_CODE=0

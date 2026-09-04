@@ -1,0 +1,3694 @@
+{
+  "clone_attempts": {
+    "flipped-aurora/gin-vue-admin": [
+      {
+        "attempt": 1,
+        "checkout_exit_code": 0,
+        "checkout_stderr": "HEAD 目前位于 a6882210 Merge pull request #2235 from kobihikri/ci/pin-github-push-action\n",
+        "checkout_stdout": "",
+        "clone_exit_code": 0,
+        "clone_stderr": "正克隆到 '/private/tmp/imp-v2-real-projects-x_ntdmw6/project-2'...\n",
+        "clone_stdout": "",
+        "delay_seconds": 0
+      }
+    ],
+    "ousui/springgear": [
+      {
+        "attempt": 1,
+        "checkout_exit_code": 0,
+        "checkout_stderr": "HEAD 目前位于 e855096 Merge remote-tracking branch 'origin/2.1.0-start' into devl\n",
+        "checkout_stdout": "",
+        "clone_exit_code": 0,
+        "clone_stderr": "正克隆到 '/private/tmp/imp-v2-real-projects-x_ntdmw6/project-1'...\n",
+        "clone_stdout": "",
+        "delay_seconds": 0
+      }
+    ]
+  },
+  "contract": "sdlc-ai-spec/external-imp-integration/v1",
+  "cross_project": {
+    "artifact_id_patterns_equal": true,
+    "artifact_structure_signature_equal": true,
+    "gate_structure_equal": true,
+    "lifecycle_relationship_equal": true,
+    "manifest_structure_equal": true,
+    "ok": true,
+    "revision_semantics_equal": true,
+    "semantic_content_digests_different": {
+      "design": true,
+      "evidence": true,
+      "requirement": true,
+      "resource": true,
+      "result": true,
+      "work_item": true
+    }
+  },
+  "error": null,
+  "ok": true,
+  "projects": [
+    {
+      "binding": "PLN-20260904010000-01@1#WI-001",
+      "check_read_only": true,
+      "claim": {
+        "artifact_reference": "IMP-20260904010000-01@1",
+        "attempt": 1,
+        "state": "completed"
+      },
+      "cleanup": {
+        "final_head": "e855096ff19dcdb303dc4250ba19c30acd743ac7",
+        "final_status_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "final_tracked_untracked_sha256": "sha256:bbf4729b820fc8fbc67e137ef3bbd95315aac1fc3e16e5b2f87ee6e2a8a35b98",
+        "head_equal": true,
+        "refs_equal": true,
+        "runtime_removed": true,
+        "status_equal": true,
+        "tracked_untracked_digest_equal": true
+      },
+      "context_matches_plan": true,
+      "contract": "sdlc-ai-spec/external-imp-project/v1",
+      "during_execution": {
+        "head_unchanged": true,
+        "readme_modified": true,
+        "refs_unchanged": true
+      },
+      "git_integrity": {
+        "commit_push_or_ref_mutation_executed": false,
+        "initial_head": "e855096ff19dcdb303dc4250ba19c30acd743ac7",
+        "initial_refs_sha256": "sha256:d54eeee60c9ddbd1cc5eda610dc2ad06268428838ba317b73c3a3fb7ae1e5d08",
+        "initial_status_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "initial_tracked_untracked_sha256": "sha256:bbf4729b820fc8fbc67e137ef3bbd95315aac1fc3e16e5b2f87ee6e2a8a35b98"
+      },
+      "lifecycle": {
+        "edges": [
+          [
+            "CTX",
+            "DSN",
+            "context"
+          ],
+          [
+            "CTX",
+            "IMP",
+            "context"
+          ],
+          [
+            "CTX",
+            "PLN",
+            "context"
+          ],
+          [
+            "CTX",
+            "REQ",
+            "context"
+          ],
+          [
+            "DSN",
+            "PLN",
+            "scope_input"
+          ],
+          [
+            "PLN",
+            "IMP",
+            "control_input"
+          ],
+          [
+            "PLN",
+            "IMP",
+            "scope_input"
+          ],
+          [
+            "REQ",
+            "DSN",
+            "scope_input"
+          ]
+        ],
+        "frontier": [
+          "IMP"
+        ],
+        "next_actions": [
+          {
+            "code": "START_VFY",
+            "phase": "VFY"
+          }
+        ],
+        "overall_state": "ready_for_next_phase",
+        "vfy_inputs": [
+          "IMP"
+        ]
+      },
+      "ok": true,
+      "owner": "external-imp-executor",
+      "phases": {
+        "CTX": {
+          "artifact_status": "ready",
+          "base_revision": null,
+          "gate": {
+            "check_tables": [
+              [
+                {
+                  "id": "CORE-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-006",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-007",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-008",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-009",
+                  "result": "pass"
+                }
+              ]
+            ],
+            "summary_headers": [
+              "Evaluated Revision",
+              "Control Input Digest",
+              "Evaluation Contract Set",
+              "Check Set Result Digest",
+              "Gate Result",
+              "Exception References",
+              "Evaluator",
+              "Evaluated At"
+            ],
+            "summary_result": "pass"
+          },
+          "id_pattern": "CTX-14digits-NN",
+          "materialized": true,
+          "primary_sha256": "sha256:dde07ecf1a8e43e4e7fc8b0be1fe231dea6e9a3b48bc30b4cb37cc2378f88b4c",
+          "reference": "CTX-20260904010000-01@1",
+          "revision": 1,
+          "revision_state": "frozen",
+          "shape": {
+            "front_matter_keys": [
+              "contract",
+              "id",
+              "revision",
+              "status"
+            ],
+            "headings": [
+              {
+                "level": 1,
+                "text": "<artifact-title>"
+              },
+              {
+                "level": 2,
+                "text": "摘要 Summary"
+              },
+              {
+                "level": 2,
+                "text": "项目标识 Project Identity"
+              },
+              {
+                "level": 2,
+                "text": "资源登记 Resource Registry"
+              },
+              {
+                "level": 2,
+                "text": "技术与工程基线 Technical and Engineering Baseline"
+              },
+              {
+                "level": 3,
+                "text": "技术基线 Technology Baseline"
+              },
+              {
+                "level": 3,
+                "text": "工程入口 Engineering Entry Points"
+              },
+              {
+                "level": 2,
+                "text": "项目结构 Project Topology"
+              },
+              {
+                "level": 2,
+                "text": "项目规则 Project Rules"
+              },
+              {
+                "level": 2,
+                "text": "环境与约束 Environment and Constraints"
+              },
+              {
+                "level": 3,
+                "text": "环境 Environment"
+              },
+              {
+                "level": 3,
+                "text": "约束 Constraints"
+              },
+              {
+                "level": 2,
+                "text": "待确认项 Open Items"
+              },
+              {
+                "level": 2,
+                "text": "证据 Evidence"
+              },
+              {
+                "level": 2,
+                "text": "刷新摘要 Refresh Summary"
+              },
+              {
+                "level": 2,
+                "text": "支撑产物清单 Supporting Artifact Manifest"
+              },
+              {
+                "level": 2,
+                "text": "豁免 Exceptions"
+              },
+              {
+                "level": 2,
+                "text": "门禁 Gate"
+              },
+              {
+                "level": 3,
+                "text": "Core Checks"
+              },
+              {
+                "level": 3,
+                "text": "CTX Checks"
+              },
+              {
+                "level": 3,
+                "text": "Final Confirmation"
+              },
+              {
+                "level": 3,
+                "text": "Artifact Gate Summary"
+              }
+            ],
+            "manifest_keys": [
+              "artifact",
+              "contract",
+              "external_references",
+              "local_members"
+            ],
+            "manifest_members": [],
+            "members": [],
+            "tables": [
+              [
+                "Field",
+                "Value",
+                "Basis",
+                "Basis References"
+              ],
+              [
+                "ID",
+                "Type",
+                "Name",
+                "Role",
+                "Locator",
+                "Baseline Reference",
+                "Basis",
+                "Basis References"
+              ],
+              [
+                "ID",
+                "Category",
+                "Name",
+                "Version or Constraint",
+                "Purpose",
+                "Basis",
+                "Basis References"
+              ],
+              [
+                "ID",
+                "Purpose",
+                "Command or Entry Point",
+                "Working Scope",
+                "Preconditions",
+                "Basis",
+                "Basis References"
+              ],
+              [
+                "ID",
+                "Name",
+                "Type",
+                "Resource Reference",
+                "Responsibility",
+                "Entry Point",
+                "Depends On",
+                "Authority Reference",
+                "Basis",
+                "Basis References"
+              ],
+              [
+                "ID",
+                "Category",
+                "Rule Summary",
+                "Scope",
+                "Authority Reference",
+                "Basis",
+                "Basis References"
+              ],
+              [
+                "ID",
+                "Environment",
+                "Purpose",
+                "Accessibility",
+                "Data and Network Boundary",
+                "Basis",
+                "Basis References"
+              ],
+              [
+                "ID",
+                "Constraint",
+                "Scope",
+                "Impact",
+                "Required Handling",
+                "Authority Reference",
+                "Basis",
+                "Basis References"
+              ],
+              [
+                "ID",
+                "所需输入或待确认决策 Needed Input or Decision",
+                "预期来源 Expected Source",
+                "被阻塞项 Blocked References",
+                "状态 State",
+                "解决结果或证据 Resolution or Evidence"
+              ],
+              [
+                "ID",
+                "Type",
+                "Supports References",
+                "Source or Producer",
+                "Reference",
+                "Integrity or Digest",
+                "Produced At",
+                "Sensitivity or Access",
+                "Empty Reason"
+              ],
+              [
+                "Base Revision",
+                "Observed At",
+                "Observation Baseline",
+                "Refresh Reason",
+                "Effective Change References",
+                "Evidence References"
+              ],
+              [
+                "Member ID",
+                "Type",
+                "Path or Reference",
+                "Media Type",
+                "Purpose",
+                "SHA-256 Digest",
+                "Empty Reason"
+              ],
+              [
+                "ID",
+                "State",
+                "Origin Exception Reference",
+                "作用域或被跳过义务 Scope or Skipped Obligation",
+                "原因 Reason",
+                "已知风险 Known Risk",
+                "补偿措施 Compensating Control",
+                "批准记录 Approver, Role and Time",
+                "复查条件 Revisit Condition",
+                "下游限制 Downstream Obligation",
+                "解决或替代引用 Resolution or Superseding References"
+              ],
+              [
+                "Check ID",
+                "检查项 Check",
+                "结果 Result",
+                "证据或说明 Evidence or Notes"
+              ],
+              [
+                "Check ID",
+                "Check",
+                "Result",
+                "Basis References"
+              ],
+              [
+                "Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Result",
+                "Mode",
+                "Confirmer",
+                "Role",
+                "Authority Reference",
+                "Accepted Exception References",
+                "Confirmed At"
+              ],
+              [
+                "Evaluated Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Gate Result",
+                "Exception References",
+                "Evaluator",
+                "Evaluated At"
+              ]
+            ]
+          }
+        },
+        "DSN": {
+          "artifact_status": "ready",
+          "base_revision": null,
+          "gate": {
+            "check_tables": [
+              [
+                {
+                  "id": "CORE-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-006",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-007",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-008",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-009",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-210-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-210-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-210-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-220-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-220-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-220-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-510-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-510-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-510-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-510-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-510-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-006",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-007",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-008",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-009",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-010",
+                  "result": "pass"
+                }
+              ]
+            ],
+            "summary_headers": [
+              "Evaluated Revision",
+              "Control Input Digest",
+              "Evaluation Contract Set",
+              "Check Set Result Digest",
+              "Gate Result",
+              "Exception References",
+              "Evaluator",
+              "Evaluated At"
+            ],
+            "summary_result": "pass"
+          },
+          "id_pattern": "DSN-14digits-NN",
+          "materialized": true,
+          "primary_sha256": "sha256:aeec0aa8f39ab4f815efab361fc55a0adde00adf77c40e3d02497932b33a1ff8",
+          "reference": "DSN-20260904010000-01@1",
+          "revision": 1,
+          "revision_state": "frozen",
+          "shape": {
+            "front_matter_keys": [
+              "contract",
+              "phase",
+              "id",
+              "revision",
+              "status",
+              "context",
+              "profile",
+              "inputs"
+            ],
+            "headings": [
+              {
+                "level": 1,
+                "text": "<artifact-title>"
+              },
+              {
+                "level": 2,
+                "text": "摘要 Summary"
+              },
+              {
+                "level": 2,
+                "text": "范围 Scope"
+              },
+              {
+                "level": 2,
+                "text": "设计基线与变更 Design Baseline and Change"
+              },
+              {
+                "level": 2,
+                "text": "需求追踪 Requirement Traceability"
+              },
+              {
+                "level": 2,
+                "text": "设计决策 Design Decisions"
+              },
+              {
+                "level": 2,
+                "text": "设计总纲 Design Index"
+              },
+              {
+                "level": 3,
+                "text": "复合 Domain 子领域适用性 Composite Domain Subdomain Applicability"
+              },
+              {
+                "level": 2,
+                "text": "产物集清单 Artifact Set Manifest"
+              },
+              {
+                "level": 2,
+                "text": "待确认项 Open Items"
+              },
+              {
+                "level": 2,
+                "text": "证据 Evidence"
+              },
+              {
+                "level": 2,
+                "text": "豁免 Exceptions"
+              },
+              {
+                "level": 2,
+                "text": "生命周期适用性 Lifecycle Applicability"
+              },
+              {
+                "level": 2,
+                "text": "门禁 Gate"
+              }
+            ],
+            "manifest_keys": [
+              "local_members"
+            ],
+            "manifest_members": [
+              {
+                "canonical_name": "domains/210-system-architecture.md",
+                "media_type": "text/markdown",
+                "member_id": "DOM-210"
+              },
+              {
+                "canonical_name": "domains/220-components-modules.md",
+                "media_type": "text/markdown",
+                "member_id": "DOM-220"
+              },
+              {
+                "canonical_name": "domains/510-verifiability-vfy-strategy.md",
+                "media_type": "text/markdown",
+                "member_id": "DOM-510"
+              },
+              {
+                "canonical_name": "baseline/README.md",
+                "media_type": "text/markdown",
+                "member_id": "SUP-001"
+              }
+            ],
+            "members": [
+              {
+                "canonical_name": "domains/210-system-architecture.md",
+                "media_type": "text/markdown",
+                "member_id": "DOM-210"
+              },
+              {
+                "canonical_name": "domains/220-components-modules.md",
+                "media_type": "text/markdown",
+                "member_id": "DOM-220"
+              },
+              {
+                "canonical_name": "domains/510-verifiability-vfy-strategy.md",
+                "media_type": "text/markdown",
+                "member_id": "DOM-510"
+              },
+              {
+                "canonical_name": "baseline/README.md",
+                "media_type": "text/markdown",
+                "member_id": "SUP-001"
+              }
+            ],
+            "tables": [
+              [
+                "Scope Item",
+                "Value"
+              ],
+              [
+                "Change Type",
+                "Current Baseline References",
+                "Target State Summary",
+                "Impact Summary"
+              ],
+              [
+                "Change ID",
+                "Object or Boundary",
+                "Change",
+                "Baseline References",
+                "Baseline State",
+                "Target State",
+                "Affected Domains"
+              ],
+              [
+                "Source References",
+                "Design Item or Member References",
+                "Decision References",
+                "VFY Point or Objective References",
+                "N/A Reason"
+              ],
+              [
+                "ID",
+                "Requirement or Constraint References",
+                "决策问题 Decision Question",
+                "候选方案 Options",
+                "选择结果 Decision",
+                "选择依据 Rationale",
+                "影响 Domain Affected Domains"
+              ],
+              [
+                "分组 Group",
+                "设计领域 Design Domain",
+                "处置 Disposition",
+                "完成状态 Completion",
+                "责任角色 Responsible Role",
+                "内容引用 Content Reference",
+                "适用性依据引用 Applicability Basis References",
+                "不适用或豁免说明 N/A or Waiver Reason"
+              ],
+              [
+                "复合 Domain 分类码 Composite Domain Catalog Code",
+                "子领域 Subdomain",
+                "Disposition",
+                "Applicability Basis References",
+                "不适用、豁免或待确认说明 N/A, Waiver or Pending Reason",
+                "Exception References"
+              ],
+              [
+                "Member ID",
+                "Type",
+                "Domain",
+                "Domain Spec Reference or Digest",
+                "Path or Reference",
+                "Media Type",
+                "Purpose",
+                "SHA-256 Digest",
+                "Empty Reason"
+              ],
+              [
+                "ID",
+                "所需输入或待确认决策 Needed Input or Decision",
+                "预期来源 Expected Source",
+                "被阻塞项 Blocked References",
+                "状态 State",
+                "解决结果或证据 Resolution or Evidence"
+              ],
+              [
+                "ID",
+                "Type",
+                "Supports References",
+                "Source or Producer",
+                "Reference",
+                "Integrity or Digest",
+                "Produced At",
+                "Sensitivity or Access",
+                "Empty Reason"
+              ],
+              [
+                "ID",
+                "State",
+                "Origin Exception Reference",
+                "作用域或被跳过义务 Scope or Skipped Obligation",
+                "原因 Reason",
+                "已知风险 Known Risk",
+                "补偿措施 Compensating Control",
+                "批准记录 Approver, Role and Time",
+                "复查条件 Revisit Condition",
+                "下游限制 Downstream Obligation",
+                "解决或替代引用 Resolution or Superseding References"
+              ],
+              [
+                "Phase",
+                "Disposition",
+                "Host",
+                "判断依据 Basis"
+              ],
+              [
+                "Check ID",
+                "检查项 Check",
+                "结果 Result",
+                "证据或说明 Evidence or Notes"
+              ],
+              [
+                "Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Result",
+                "Mode",
+                "Confirmer",
+                "Role",
+                "Authority Reference",
+                "Accepted Exception References",
+                "Confirmed At"
+              ],
+              [
+                "Evaluated Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Gate Result",
+                "Exception References",
+                "Evaluator",
+                "Evaluated At"
+              ]
+            ]
+          }
+        },
+        "IMP": {
+          "artifact_status": "ready",
+          "base_revision": null,
+          "gate": {
+            "check_tables": [
+              [
+                {
+                  "id": "CORE-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-006",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-007",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-008",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-009",
+                  "result": "pass"
+                },
+                {
+                  "id": "IMP-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "IMP-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "IMP-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "IMP-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "IMP-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "IMP-G-006",
+                  "result": "pass"
+                }
+              ]
+            ],
+            "summary_headers": [
+              "Evaluated Revision",
+              "Control Input Digest",
+              "Evaluation Contract Set",
+              "Check Set Result Digest",
+              "Gate Result",
+              "Exception References",
+              "Evaluator",
+              "Evaluated At"
+            ],
+            "summary_result": "pass"
+          },
+          "id_pattern": "IMP-14digits-NN",
+          "materialized": true,
+          "primary_sha256": "sha256:5bf1cb7ba4e090dcfd73c53ceee0414e3c289a12f8b783c6e86ec8d64322da4a",
+          "reference": "IMP-20260904010000-01@1",
+          "revision": 1,
+          "revision_state": "frozen",
+          "shape": {
+            "front_matter_keys": [
+              "contract",
+              "phase",
+              "id",
+              "revision",
+              "status",
+              "context",
+              "profile",
+              "inputs"
+            ],
+            "headings": [
+              {
+                "level": 1,
+                "text": "<artifact-title>"
+              },
+              {
+                "level": 2,
+                "text": "摘要 Summary"
+              },
+              {
+                "level": 2,
+                "text": "范围 Scope"
+              },
+              {
+                "level": 2,
+                "text": "实施控制 Implementation Control"
+              },
+              {
+                "level": 3,
+                "text": "实施绑定 Implementation Binding"
+              },
+              {
+                "level": 3,
+                "text": "输入就绪检查 Input Readiness Check Set"
+              },
+              {
+                "level": 2,
+                "text": "实施方法合约 Implementation Method Contract"
+              },
+              {
+                "level": 3,
+                "text": "实施考量矩阵 Implementation Consideration Matrix"
+              },
+              {
+                "level": 3,
+                "text": "实施步骤 Implementation Approach"
+              },
+              {
+                "level": 4,
+                "text": "STEP-001 Publish the exact README integration marker"
+              },
+              {
+                "level": 5,
+                "text": "EFF-001 Effects & Consistency"
+              },
+              {
+                "level": 2,
+                "text": "实施结果 Implementation Result"
+              },
+              {
+                "level": 2,
+                "text": "实施检查 Implementation Checks"
+              },
+              {
+                "level": 2,
+                "text": "待确认项 Open Items"
+              },
+              {
+                "level": 2,
+                "text": "证据 Evidence"
+              },
+              {
+                "level": 2,
+                "text": "Supporting Artifact Manifest"
+              },
+              {
+                "level": 2,
+                "text": "豁免 Exceptions"
+              },
+              {
+                "level": 2,
+                "text": "生命周期适用性 Lifecycle Applicability"
+              },
+              {
+                "level": 2,
+                "text": "门禁 Gate"
+              },
+              {
+                "level": 3,
+                "text": "Final Confirmation"
+              },
+              {
+                "level": 3,
+                "text": "Artifact Gate Summary"
+              }
+            ],
+            "manifest_keys": [
+              "contract",
+              "local_members"
+            ],
+            "manifest_members": [
+              {
+                "canonical_name": "snapshots/base-res-001.json",
+                "media_type": "application/json",
+                "member_id": "BASE-RES-001"
+              },
+              {
+                "canonical_name": "evidence/change-res-001.json",
+                "media_type": "application/json",
+                "member_id": "CHANGE-RES-001"
+              },
+              {
+                "canonical_name": "evidence/evd-chk-001.json",
+                "media_type": "application/json",
+                "member_id": "EVD-CHK-001"
+              },
+              {
+                "canonical_name": "evidence/evd-pre.json",
+                "media_type": "application/json",
+                "member_id": "EVD-PRE"
+              },
+              {
+                "canonical_name": "evidence/imp-state.json",
+                "media_type": "application/json",
+                "member_id": "IMP-STATE"
+              },
+              {
+                "canonical_name": "snapshots/result-res-001.json",
+                "media_type": "application/json",
+                "member_id": "RESULT-RES-001"
+              }
+            ],
+            "members": [
+              {
+                "canonical_name": "snapshots/base-res-001.json",
+                "media_type": "application/json",
+                "member_id": "BASE-RES-001"
+              },
+              {
+                "canonical_name": "evidence/change-res-001.json",
+                "media_type": "application/json",
+                "member_id": "CHANGE-RES-001"
+              },
+              {
+                "canonical_name": "evidence/evd-chk-001.json",
+                "media_type": "application/json",
+                "member_id": "EVD-CHK-001"
+              },
+              {
+                "canonical_name": "evidence/evd-pre.json",
+                "media_type": "application/json",
+                "member_id": "EVD-PRE"
+              },
+              {
+                "canonical_name": "evidence/imp-state.json",
+                "media_type": "application/json",
+                "member_id": "IMP-STATE"
+              },
+              {
+                "canonical_name": "snapshots/result-res-001.json",
+                "media_type": "application/json",
+                "member_id": "RESULT-RES-001"
+              }
+            ],
+            "tables": [
+              [
+                "Relationship",
+                "Reference"
+              ],
+              [
+                "IMP Binding Reference",
+                "Binding Lineage Key",
+                "Attempt",
+                "Owner",
+                "Rework References"
+              ],
+              [
+                "Check ID",
+                "检查项 Check",
+                "Result",
+                "Evidence or Notes"
+              ],
+              [
+                "实施考量项 Implementation Consideration",
+                "Disposition",
+                "触发依据或 N/A 原因",
+                "Approach Step 引用",
+                "Exception 引用"
+              ],
+              [
+                "ID",
+                "Resource",
+                "Baseline Reference",
+                "Change Reference",
+                "Result Reference",
+                "Changed Scope",
+                "Approach Step References"
+              ],
+              [
+                "ID",
+                "检查或方法 Check or Method",
+                "范围 Scope",
+                "结果 Result",
+                "依据 Basis"
+              ],
+              [
+                "ID",
+                "所需输入或待确认决策 Needed Input or Decision",
+                "预期来源 Expected Source",
+                "被阻塞项 Blocked References",
+                "状态 State",
+                "解决结果或证据 Resolution or Evidence"
+              ],
+              [
+                "ID",
+                "Type",
+                "Supports References",
+                "Source or Producer",
+                "Reference",
+                "Integrity or Digest",
+                "Produced At",
+                "Sensitivity or Access",
+                "Empty Reason"
+              ],
+              [
+                "Member ID",
+                "Canonical Name",
+                "Media Type",
+                "Purpose",
+                "SHA-256 Digest"
+              ],
+              [
+                "ID",
+                "State",
+                "Origin Exception Reference",
+                "作用域或被跳过义务 Scope or Skipped Obligation",
+                "原因 Reason",
+                "已知风险 Known Risk",
+                "补偿措施 Compensating Control",
+                "批准记录 Approver, Role and Time",
+                "复查条件 Revisit Condition",
+                "下游限制 Downstream Obligation",
+                "解决或替代引用 Resolution or Superseding References"
+              ],
+              [
+                "Phase",
+                "Disposition",
+                "Host",
+                "判断依据 Basis"
+              ],
+              [
+                "Check ID",
+                "检查项 Check",
+                "结果 Result",
+                "证据或说明 Evidence or Notes"
+              ],
+              [
+                "Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Result",
+                "Mode",
+                "Confirmer",
+                "Role",
+                "Authority Reference",
+                "Accepted Exception References",
+                "Confirmed At"
+              ],
+              [
+                "Evaluated Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Gate Result",
+                "Exception References",
+                "Evaluator",
+                "Evaluated At"
+              ]
+            ]
+          }
+        },
+        "PLN": {
+          "artifact_status": "ready",
+          "base_revision": null,
+          "gate": {
+            "check_tables": [
+              [
+                {
+                  "id": "CORE-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-006",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-007",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-008",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-009",
+                  "result": "pass"
+                },
+                {
+                  "id": "PLN-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "PLN-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "PLN-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "PLN-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "PLN-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "PLN-G-006",
+                  "result": "pass"
+                },
+                {
+                  "id": "PLN-G-007",
+                  "result": "pass"
+                }
+              ]
+            ],
+            "summary_headers": [
+              "Evaluated Revision",
+              "Control Input Digest",
+              "Evaluation Contract Set",
+              "Check Set Result Digest",
+              "Gate Result",
+              "Exception References",
+              "Evaluator",
+              "Evaluated At"
+            ],
+            "summary_result": "pass"
+          },
+          "id_pattern": "PLN-14digits-NN",
+          "materialized": true,
+          "primary_sha256": "sha256:51f6bf274e18a87fd916a2670e6c13979aaf1c9eba91e046a7c22d17258e850b",
+          "reference": "PLN-20260904010000-01@1",
+          "revision": 1,
+          "revision_state": "frozen",
+          "shape": {
+            "front_matter_keys": [
+              "contract",
+              "phase",
+              "id",
+              "revision",
+              "status",
+              "context",
+              "profile",
+              "inputs"
+            ],
+            "headings": [
+              {
+                "level": 1,
+                "text": "<artifact-title>"
+              },
+              {
+                "level": 2,
+                "text": "摘要 Summary"
+              },
+              {
+                "level": 2,
+                "text": "范围 Scope"
+              },
+              {
+                "level": 2,
+                "text": "交付范围 Delivery Scope"
+              },
+              {
+                "level": 2,
+                "text": "聚合适用性 Aggregated Applicability"
+              },
+              {
+                "level": 2,
+                "text": "义务覆盖 Obligations"
+              },
+              {
+                "level": 2,
+                "text": "工作项 Work Items"
+              },
+              {
+                "level": 2,
+                "text": "待确认项 Open Items"
+              },
+              {
+                "level": 2,
+                "text": "证据 Evidence"
+              },
+              {
+                "level": 2,
+                "text": "Supporting Artifact Manifest"
+              },
+              {
+                "level": 2,
+                "text": "豁免 Exceptions"
+              },
+              {
+                "level": 2,
+                "text": "生命周期适用性 Lifecycle Applicability"
+              },
+              {
+                "level": 2,
+                "text": "门禁 Gate"
+              },
+              {
+                "level": 3,
+                "text": "Final Confirmation"
+              },
+              {
+                "level": 3,
+                "text": "Artifact Gate Summary"
+              }
+            ],
+            "manifest_keys": [
+              "contract",
+              "local_members"
+            ],
+            "manifest_members": [],
+            "members": [],
+            "tables": [
+              [
+                "Field",
+                "Value"
+              ],
+              [
+                "Scope Token",
+                "Source References",
+                "Outcome"
+              ],
+              [
+                "Phase",
+                "Disposition",
+                "Host",
+                "判断依据 Basis"
+              ],
+              [
+                "Obligation Reference",
+                "Covered By Work Items"
+              ],
+              [
+                "ID",
+                "目标 Phase Target Phase",
+                "结果 Outcome",
+                "执行范围 Execution Scope",
+                "来源引用 Source References",
+                "约束引用 Constraint References",
+                "依赖 Depends On",
+                "完成条件 Completion Criteria",
+                "预期证据 Expected Evidence",
+                "责任角色 Responsible Role"
+              ],
+              [
+                "ID",
+                "所需输入或待确认决策 Needed Input or Decision",
+                "预期来源 Expected Source",
+                "被阻塞项 Blocked References",
+                "状态 State",
+                "解决结果或证据 Resolution or Evidence"
+              ],
+              [
+                "ID",
+                "Type",
+                "Supports References",
+                "Source or Producer",
+                "Reference",
+                "Integrity or Digest",
+                "Produced At",
+                "Sensitivity or Access",
+                "Empty Reason"
+              ],
+              [
+                "Member ID",
+                "Canonical Name",
+                "Media Type",
+                "Purpose",
+                "SHA-256 Digest"
+              ],
+              [
+                "ID",
+                "State",
+                "Origin Exception Reference",
+                "作用域或被跳过义务 Scope or Skipped Obligation",
+                "原因 Reason",
+                "已知风险 Known Risk",
+                "补偿措施 Compensating Control",
+                "批准记录 Approver, Role and Time",
+                "复查条件 Revisit Condition",
+                "下游限制 Downstream Obligation",
+                "解决或替代引用 Resolution or Superseding References"
+              ],
+              [
+                "Phase",
+                "Disposition",
+                "Host",
+                "判断依据 Basis"
+              ],
+              [
+                "Check ID",
+                "检查项 Check",
+                "结果 Result",
+                "证据或说明 Evidence or Notes"
+              ],
+              [
+                "Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Result",
+                "Mode",
+                "Confirmer",
+                "Role",
+                "Authority Reference",
+                "Accepted Exception References",
+                "Confirmed At"
+              ],
+              [
+                "Evaluated Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Gate Result",
+                "Exception References",
+                "Evaluator",
+                "Evaluated At"
+              ]
+            ]
+          }
+        },
+        "REQ": {
+          "artifact_status": "ready",
+          "base_revision": null,
+          "gate": {
+            "check_tables": [
+              [
+                {
+                  "id": "CORE-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-006",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-007",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-008",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-009",
+                  "result": "pass"
+                }
+              ],
+              [
+                {
+                  "id": "REQ-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "REQ-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "REQ-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "REQ-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "REQ-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "REQ-G-006",
+                  "result": "pass"
+                },
+                {
+                  "id": "REQ-G-007",
+                  "result": "pass"
+                },
+                {
+                  "id": "REQ-G-008",
+                  "result": "pass"
+                }
+              ]
+            ],
+            "summary_headers": [
+              "Evaluated Revision",
+              "Control Input Digest",
+              "Evaluation Contract Set",
+              "Check Set Result Digest",
+              "Gate Result",
+              "Exception References",
+              "Evaluator",
+              "Evaluated At"
+            ],
+            "summary_result": "pass"
+          },
+          "id_pattern": "REQ-14digits-NN",
+          "materialized": true,
+          "primary_sha256": "sha256:f3625e16c96f7e9fdae5c7ef7337e5e61f84c4901cdc525dfcd7c196e58e11af",
+          "reference": "REQ-20260904010000-01@1",
+          "revision": 1,
+          "revision_state": "frozen",
+          "shape": {
+            "front_matter_keys": [
+              "contract",
+              "phase",
+              "id",
+              "revision",
+              "status",
+              "context",
+              "profile",
+              "inputs"
+            ],
+            "headings": [
+              {
+                "level": 1,
+                "text": "<artifact-title>"
+              },
+              {
+                "level": 2,
+                "text": "摘要 Summary"
+              },
+              {
+                "level": 2,
+                "text": "原始输入 Source Input"
+              },
+              {
+                "level": 2,
+                "text": "目标与成功条件 Goal and Success"
+              },
+              {
+                "level": 2,
+                "text": "范围 Scope"
+              },
+              {
+                "level": 3,
+                "text": "包含 In Scope"
+              },
+              {
+                "level": 3,
+                "text": "不包含 Out of Scope"
+              },
+              {
+                "level": 2,
+                "text": "影响对象 Affected Parties"
+              },
+              {
+                "level": 2,
+                "text": "需求项 Requirements"
+              },
+              {
+                "level": 2,
+                "text": "验收条件 Acceptance Criteria"
+              },
+              {
+                "level": 2,
+                "text": "依赖 Dependencies"
+              },
+              {
+                "level": 2,
+                "text": "生命周期配置 Lifecycle Profile"
+              },
+              {
+                "level": 2,
+                "text": "待确认项 Open Items"
+              },
+              {
+                "level": 2,
+                "text": "证据 Evidence"
+              },
+              {
+                "level": 2,
+                "text": "支撑产物清单 Supporting Artifact Manifest"
+              },
+              {
+                "level": 2,
+                "text": "豁免 Exceptions"
+              },
+              {
+                "level": 2,
+                "text": "生命周期适用性 Lifecycle Applicability"
+              },
+              {
+                "level": 2,
+                "text": "门禁 Gate"
+              },
+              {
+                "level": 3,
+                "text": "Core Checks"
+              },
+              {
+                "level": 3,
+                "text": "REQ Checks"
+              },
+              {
+                "level": 3,
+                "text": "Final Confirmation"
+              },
+              {
+                "level": 3,
+                "text": "Artifact Gate Summary"
+              }
+            ],
+            "manifest_keys": [
+              "local_members"
+            ],
+            "manifest_members": [],
+            "members": [],
+            "tables": [
+              [
+                "ID",
+                "Type",
+                "Content or Immutable Reference",
+                "Evidence Reference"
+              ],
+              [
+                "ID",
+                "当前问题 Current Problem",
+                "目标结果与预期用途 Goal, Intended Outcome and Use",
+                "成功条件 Success Condition"
+              ],
+              [
+                "ID",
+                "对象 Affected Party",
+                "Stakeholder Need or Impact"
+              ],
+              [
+                "ID",
+                "类型 Type",
+                "来源或父项引用 Source or Parent References",
+                "需求描述 Requirement Statement"
+              ],
+              [
+                "ID",
+                "关联需求 Requirement References",
+                "条件 Condition",
+                "预期结果 Expected Result"
+              ],
+              [
+                "ID",
+                "依赖项 Dependency",
+                "要求状态 Required State",
+                "当前状态 Current State",
+                "状态检查引用 State Check Reference"
+              ],
+              [
+                "Selected Profile",
+                "Basis"
+              ],
+              [
+                "ID",
+                "所需输入或待确认决策 Needed Input or Decision",
+                "预期来源 Expected Source",
+                "被阻塞项 Blocked References",
+                "状态 State",
+                "解决结果或证据 Resolution or Evidence"
+              ],
+              [
+                "ID",
+                "Type",
+                "Supports References",
+                "Source or Producer",
+                "Reference",
+                "Integrity or Digest",
+                "Produced At",
+                "Sensitivity or Access",
+                "Empty Reason"
+              ],
+              [
+                "Member ID",
+                "Type",
+                "Path or Reference",
+                "Media Type",
+                "Purpose",
+                "SHA-256 Digest",
+                "Empty Reason"
+              ],
+              [
+                "ID",
+                "State",
+                "Origin Exception Reference",
+                "作用域或被跳过义务 Scope or Skipped Obligation",
+                "原因 Reason",
+                "已知风险 Known Risk",
+                "补偿措施 Compensating Control",
+                "批准记录 Approver, Role and Time",
+                "复查条件 Revisit Condition",
+                "下游限制 Downstream Obligation",
+                "解决或替代引用 Resolution or Superseding References"
+              ],
+              [
+                "Phase",
+                "Disposition",
+                "Host",
+                "判断依据 Basis"
+              ],
+              [
+                "Check ID",
+                "检查项 Check",
+                "结果 Result",
+                "证据或说明 Evidence or Notes"
+              ],
+              [
+                "Check ID",
+                "检查项 Check",
+                "结果 Result",
+                "证据或说明 Evidence or Notes"
+              ],
+              [
+                "Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Result",
+                "Mode",
+                "Confirmer",
+                "Role",
+                "Authority Reference",
+                "Accepted Exception References",
+                "Confirmed At"
+              ],
+              [
+                "Evaluated Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Gate Result",
+                "Exception References",
+                "Evaluator",
+                "Evaluated At"
+              ]
+            ]
+          }
+        }
+      },
+      "project": "ousui/springgear",
+      "project_commit": "e855096ff19dcdb303dc4250ba19c30acd743ac7",
+      "references": {
+        "CTX": "CTX-20260904010000-01@1",
+        "DSN": "DSN-20260904010000-01@1",
+        "IMP": "IMP-20260904010000-01@1",
+        "PLN": "PLN-20260904010000-01@1",
+        "REQ": "REQ-20260904010000-01@1"
+      },
+      "resource_root": "springgear-parent",
+      "result": {
+        "digest_reproducible": true,
+        "member": "RESULT-RES-001",
+        "readme_sha256": "sha256:09e575f4dbc8ec5b131bdb3cc935a69d59530def39f53fb0aecb797b07980c9b",
+        "reference": "IMP-20260904010000-01@1/RESULT-RES-001",
+        "sha256": "sha256:9f6179e8cfce7dd18ffb0cf336189583ee63023d96d48fbcbd365aa888725cbf"
+      },
+      "semantic_digests": {
+        "design": "sha256:df284cdb47d2de032910c4614934b837205623883dddfef61f970b14ab074f80",
+        "evidence": "sha256:fe22d81c03640026ad58257e7e98aa388293fa27a90c289832f65aaf3695d906",
+        "requirement": "sha256:11249773484b2952d242e5921c7a7716d0e68af59371e3aab0b34bb7ce31ed6f",
+        "resource": "sha256:0da651f17777508cd5b1bfec68f6e9d81cdb78326f59b9a5b915112bd8cc1902",
+        "result": "sha256:9f6179e8cfce7dd18ffb0cf336189583ee63023d96d48fbcbd365aa888725cbf",
+        "work_item": "sha256:a0537608b5d2ce0c976d9ed93b40ad0f6057327b52b9c2babcb3afaf6a8973c9"
+      },
+      "target_path": "springgear-parent/README.md",
+      "vfy_ready": true
+    },
+    {
+      "binding": "PLN-20260904010000-01@1#WI-001",
+      "check_read_only": true,
+      "claim": {
+        "artifact_reference": "IMP-20260904010000-01@1",
+        "attempt": 1,
+        "state": "completed"
+      },
+      "cleanup": {
+        "final_head": "a6882210a80bb27e3aa5dff0b4c21aa4afe8988a",
+        "final_status_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "final_tracked_untracked_sha256": "sha256:3fcb00081910a464a31acf82e6ae0533246e9e2f849bbe12e3b5cdbede47965b",
+        "head_equal": true,
+        "refs_equal": true,
+        "runtime_removed": true,
+        "status_equal": true,
+        "tracked_untracked_digest_equal": true
+      },
+      "context_matches_plan": true,
+      "contract": "sdlc-ai-spec/external-imp-project/v1",
+      "during_execution": {
+        "head_unchanged": true,
+        "readme_modified": true,
+        "refs_unchanged": true
+      },
+      "git_integrity": {
+        "commit_push_or_ref_mutation_executed": false,
+        "initial_head": "a6882210a80bb27e3aa5dff0b4c21aa4afe8988a",
+        "initial_refs_sha256": "sha256:95e93902e6a093594a1db26f3730d0cd24646023348e027cf1145c2ede643754",
+        "initial_status_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "initial_tracked_untracked_sha256": "sha256:3fcb00081910a464a31acf82e6ae0533246e9e2f849bbe12e3b5cdbede47965b"
+      },
+      "lifecycle": {
+        "edges": [
+          [
+            "CTX",
+            "DSN",
+            "context"
+          ],
+          [
+            "CTX",
+            "IMP",
+            "context"
+          ],
+          [
+            "CTX",
+            "PLN",
+            "context"
+          ],
+          [
+            "CTX",
+            "REQ",
+            "context"
+          ],
+          [
+            "DSN",
+            "PLN",
+            "scope_input"
+          ],
+          [
+            "PLN",
+            "IMP",
+            "control_input"
+          ],
+          [
+            "PLN",
+            "IMP",
+            "scope_input"
+          ],
+          [
+            "REQ",
+            "DSN",
+            "scope_input"
+          ]
+        ],
+        "frontier": [
+          "IMP"
+        ],
+        "next_actions": [
+          {
+            "code": "START_VFY",
+            "phase": "VFY"
+          }
+        ],
+        "overall_state": "ready_for_next_phase",
+        "vfy_inputs": [
+          "IMP"
+        ]
+      },
+      "ok": true,
+      "owner": "external-imp-executor",
+      "phases": {
+        "CTX": {
+          "artifact_status": "ready",
+          "base_revision": null,
+          "gate": {
+            "check_tables": [
+              [
+                {
+                  "id": "CORE-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-006",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-007",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-008",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-009",
+                  "result": "pass"
+                }
+              ]
+            ],
+            "summary_headers": [
+              "Evaluated Revision",
+              "Control Input Digest",
+              "Evaluation Contract Set",
+              "Check Set Result Digest",
+              "Gate Result",
+              "Exception References",
+              "Evaluator",
+              "Evaluated At"
+            ],
+            "summary_result": "pass"
+          },
+          "id_pattern": "CTX-14digits-NN",
+          "materialized": true,
+          "primary_sha256": "sha256:0122c91cf292c800744d05bba0bb1b67a80cc2e72e5d7695f827949a0421d708",
+          "reference": "CTX-20260904010000-01@1",
+          "revision": 1,
+          "revision_state": "frozen",
+          "shape": {
+            "front_matter_keys": [
+              "contract",
+              "id",
+              "revision",
+              "status"
+            ],
+            "headings": [
+              {
+                "level": 1,
+                "text": "<artifact-title>"
+              },
+              {
+                "level": 2,
+                "text": "摘要 Summary"
+              },
+              {
+                "level": 2,
+                "text": "项目标识 Project Identity"
+              },
+              {
+                "level": 2,
+                "text": "资源登记 Resource Registry"
+              },
+              {
+                "level": 2,
+                "text": "技术与工程基线 Technical and Engineering Baseline"
+              },
+              {
+                "level": 3,
+                "text": "技术基线 Technology Baseline"
+              },
+              {
+                "level": 3,
+                "text": "工程入口 Engineering Entry Points"
+              },
+              {
+                "level": 2,
+                "text": "项目结构 Project Topology"
+              },
+              {
+                "level": 2,
+                "text": "项目规则 Project Rules"
+              },
+              {
+                "level": 2,
+                "text": "环境与约束 Environment and Constraints"
+              },
+              {
+                "level": 3,
+                "text": "环境 Environment"
+              },
+              {
+                "level": 3,
+                "text": "约束 Constraints"
+              },
+              {
+                "level": 2,
+                "text": "待确认项 Open Items"
+              },
+              {
+                "level": 2,
+                "text": "证据 Evidence"
+              },
+              {
+                "level": 2,
+                "text": "刷新摘要 Refresh Summary"
+              },
+              {
+                "level": 2,
+                "text": "支撑产物清单 Supporting Artifact Manifest"
+              },
+              {
+                "level": 2,
+                "text": "豁免 Exceptions"
+              },
+              {
+                "level": 2,
+                "text": "门禁 Gate"
+              },
+              {
+                "level": 3,
+                "text": "Core Checks"
+              },
+              {
+                "level": 3,
+                "text": "CTX Checks"
+              },
+              {
+                "level": 3,
+                "text": "Final Confirmation"
+              },
+              {
+                "level": 3,
+                "text": "Artifact Gate Summary"
+              }
+            ],
+            "manifest_keys": [
+              "artifact",
+              "contract",
+              "external_references",
+              "local_members"
+            ],
+            "manifest_members": [],
+            "members": [],
+            "tables": [
+              [
+                "Field",
+                "Value",
+                "Basis",
+                "Basis References"
+              ],
+              [
+                "ID",
+                "Type",
+                "Name",
+                "Role",
+                "Locator",
+                "Baseline Reference",
+                "Basis",
+                "Basis References"
+              ],
+              [
+                "ID",
+                "Category",
+                "Name",
+                "Version or Constraint",
+                "Purpose",
+                "Basis",
+                "Basis References"
+              ],
+              [
+                "ID",
+                "Purpose",
+                "Command or Entry Point",
+                "Working Scope",
+                "Preconditions",
+                "Basis",
+                "Basis References"
+              ],
+              [
+                "ID",
+                "Name",
+                "Type",
+                "Resource Reference",
+                "Responsibility",
+                "Entry Point",
+                "Depends On",
+                "Authority Reference",
+                "Basis",
+                "Basis References"
+              ],
+              [
+                "ID",
+                "Category",
+                "Rule Summary",
+                "Scope",
+                "Authority Reference",
+                "Basis",
+                "Basis References"
+              ],
+              [
+                "ID",
+                "Environment",
+                "Purpose",
+                "Accessibility",
+                "Data and Network Boundary",
+                "Basis",
+                "Basis References"
+              ],
+              [
+                "ID",
+                "Constraint",
+                "Scope",
+                "Impact",
+                "Required Handling",
+                "Authority Reference",
+                "Basis",
+                "Basis References"
+              ],
+              [
+                "ID",
+                "所需输入或待确认决策 Needed Input or Decision",
+                "预期来源 Expected Source",
+                "被阻塞项 Blocked References",
+                "状态 State",
+                "解决结果或证据 Resolution or Evidence"
+              ],
+              [
+                "ID",
+                "Type",
+                "Supports References",
+                "Source or Producer",
+                "Reference",
+                "Integrity or Digest",
+                "Produced At",
+                "Sensitivity or Access",
+                "Empty Reason"
+              ],
+              [
+                "Base Revision",
+                "Observed At",
+                "Observation Baseline",
+                "Refresh Reason",
+                "Effective Change References",
+                "Evidence References"
+              ],
+              [
+                "Member ID",
+                "Type",
+                "Path or Reference",
+                "Media Type",
+                "Purpose",
+                "SHA-256 Digest",
+                "Empty Reason"
+              ],
+              [
+                "ID",
+                "State",
+                "Origin Exception Reference",
+                "作用域或被跳过义务 Scope or Skipped Obligation",
+                "原因 Reason",
+                "已知风险 Known Risk",
+                "补偿措施 Compensating Control",
+                "批准记录 Approver, Role and Time",
+                "复查条件 Revisit Condition",
+                "下游限制 Downstream Obligation",
+                "解决或替代引用 Resolution or Superseding References"
+              ],
+              [
+                "Check ID",
+                "检查项 Check",
+                "结果 Result",
+                "证据或说明 Evidence or Notes"
+              ],
+              [
+                "Check ID",
+                "Check",
+                "Result",
+                "Basis References"
+              ],
+              [
+                "Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Result",
+                "Mode",
+                "Confirmer",
+                "Role",
+                "Authority Reference",
+                "Accepted Exception References",
+                "Confirmed At"
+              ],
+              [
+                "Evaluated Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Gate Result",
+                "Exception References",
+                "Evaluator",
+                "Evaluated At"
+              ]
+            ]
+          }
+        },
+        "DSN": {
+          "artifact_status": "ready",
+          "base_revision": null,
+          "gate": {
+            "check_tables": [
+              [
+                {
+                  "id": "CORE-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-006",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-007",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-008",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-009",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-210-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-210-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-210-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-220-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-220-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-220-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-510-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-510-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-510-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-510-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-DG-510-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-006",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-007",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-008",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-009",
+                  "result": "pass"
+                },
+                {
+                  "id": "DSN-G-010",
+                  "result": "pass"
+                }
+              ]
+            ],
+            "summary_headers": [
+              "Evaluated Revision",
+              "Control Input Digest",
+              "Evaluation Contract Set",
+              "Check Set Result Digest",
+              "Gate Result",
+              "Exception References",
+              "Evaluator",
+              "Evaluated At"
+            ],
+            "summary_result": "pass"
+          },
+          "id_pattern": "DSN-14digits-NN",
+          "materialized": true,
+          "primary_sha256": "sha256:7c1d9d8e07af228f56bd028540f7d6335a5608cf763f073db1ac8b8da2389218",
+          "reference": "DSN-20260904010000-01@1",
+          "revision": 1,
+          "revision_state": "frozen",
+          "shape": {
+            "front_matter_keys": [
+              "contract",
+              "phase",
+              "id",
+              "revision",
+              "status",
+              "context",
+              "profile",
+              "inputs"
+            ],
+            "headings": [
+              {
+                "level": 1,
+                "text": "<artifact-title>"
+              },
+              {
+                "level": 2,
+                "text": "摘要 Summary"
+              },
+              {
+                "level": 2,
+                "text": "范围 Scope"
+              },
+              {
+                "level": 2,
+                "text": "设计基线与变更 Design Baseline and Change"
+              },
+              {
+                "level": 2,
+                "text": "需求追踪 Requirement Traceability"
+              },
+              {
+                "level": 2,
+                "text": "设计决策 Design Decisions"
+              },
+              {
+                "level": 2,
+                "text": "设计总纲 Design Index"
+              },
+              {
+                "level": 3,
+                "text": "复合 Domain 子领域适用性 Composite Domain Subdomain Applicability"
+              },
+              {
+                "level": 2,
+                "text": "产物集清单 Artifact Set Manifest"
+              },
+              {
+                "level": 2,
+                "text": "待确认项 Open Items"
+              },
+              {
+                "level": 2,
+                "text": "证据 Evidence"
+              },
+              {
+                "level": 2,
+                "text": "豁免 Exceptions"
+              },
+              {
+                "level": 2,
+                "text": "生命周期适用性 Lifecycle Applicability"
+              },
+              {
+                "level": 2,
+                "text": "门禁 Gate"
+              }
+            ],
+            "manifest_keys": [
+              "local_members"
+            ],
+            "manifest_members": [
+              {
+                "canonical_name": "domains/210-system-architecture.md",
+                "media_type": "text/markdown",
+                "member_id": "DOM-210"
+              },
+              {
+                "canonical_name": "domains/220-components-modules.md",
+                "media_type": "text/markdown",
+                "member_id": "DOM-220"
+              },
+              {
+                "canonical_name": "domains/510-verifiability-vfy-strategy.md",
+                "media_type": "text/markdown",
+                "member_id": "DOM-510"
+              },
+              {
+                "canonical_name": "baseline/README.md",
+                "media_type": "text/markdown",
+                "member_id": "SUP-001"
+              }
+            ],
+            "members": [
+              {
+                "canonical_name": "domains/210-system-architecture.md",
+                "media_type": "text/markdown",
+                "member_id": "DOM-210"
+              },
+              {
+                "canonical_name": "domains/220-components-modules.md",
+                "media_type": "text/markdown",
+                "member_id": "DOM-220"
+              },
+              {
+                "canonical_name": "domains/510-verifiability-vfy-strategy.md",
+                "media_type": "text/markdown",
+                "member_id": "DOM-510"
+              },
+              {
+                "canonical_name": "baseline/README.md",
+                "media_type": "text/markdown",
+                "member_id": "SUP-001"
+              }
+            ],
+            "tables": [
+              [
+                "Scope Item",
+                "Value"
+              ],
+              [
+                "Change Type",
+                "Current Baseline References",
+                "Target State Summary",
+                "Impact Summary"
+              ],
+              [
+                "Change ID",
+                "Object or Boundary",
+                "Change",
+                "Baseline References",
+                "Baseline State",
+                "Target State",
+                "Affected Domains"
+              ],
+              [
+                "Source References",
+                "Design Item or Member References",
+                "Decision References",
+                "VFY Point or Objective References",
+                "N/A Reason"
+              ],
+              [
+                "ID",
+                "Requirement or Constraint References",
+                "决策问题 Decision Question",
+                "候选方案 Options",
+                "选择结果 Decision",
+                "选择依据 Rationale",
+                "影响 Domain Affected Domains"
+              ],
+              [
+                "分组 Group",
+                "设计领域 Design Domain",
+                "处置 Disposition",
+                "完成状态 Completion",
+                "责任角色 Responsible Role",
+                "内容引用 Content Reference",
+                "适用性依据引用 Applicability Basis References",
+                "不适用或豁免说明 N/A or Waiver Reason"
+              ],
+              [
+                "复合 Domain 分类码 Composite Domain Catalog Code",
+                "子领域 Subdomain",
+                "Disposition",
+                "Applicability Basis References",
+                "不适用、豁免或待确认说明 N/A, Waiver or Pending Reason",
+                "Exception References"
+              ],
+              [
+                "Member ID",
+                "Type",
+                "Domain",
+                "Domain Spec Reference or Digest",
+                "Path or Reference",
+                "Media Type",
+                "Purpose",
+                "SHA-256 Digest",
+                "Empty Reason"
+              ],
+              [
+                "ID",
+                "所需输入或待确认决策 Needed Input or Decision",
+                "预期来源 Expected Source",
+                "被阻塞项 Blocked References",
+                "状态 State",
+                "解决结果或证据 Resolution or Evidence"
+              ],
+              [
+                "ID",
+                "Type",
+                "Supports References",
+                "Source or Producer",
+                "Reference",
+                "Integrity or Digest",
+                "Produced At",
+                "Sensitivity or Access",
+                "Empty Reason"
+              ],
+              [
+                "ID",
+                "State",
+                "Origin Exception Reference",
+                "作用域或被跳过义务 Scope or Skipped Obligation",
+                "原因 Reason",
+                "已知风险 Known Risk",
+                "补偿措施 Compensating Control",
+                "批准记录 Approver, Role and Time",
+                "复查条件 Revisit Condition",
+                "下游限制 Downstream Obligation",
+                "解决或替代引用 Resolution or Superseding References"
+              ],
+              [
+                "Phase",
+                "Disposition",
+                "Host",
+                "判断依据 Basis"
+              ],
+              [
+                "Check ID",
+                "检查项 Check",
+                "结果 Result",
+                "证据或说明 Evidence or Notes"
+              ],
+              [
+                "Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Result",
+                "Mode",
+                "Confirmer",
+                "Role",
+                "Authority Reference",
+                "Accepted Exception References",
+                "Confirmed At"
+              ],
+              [
+                "Evaluated Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Gate Result",
+                "Exception References",
+                "Evaluator",
+                "Evaluated At"
+              ]
+            ]
+          }
+        },
+        "IMP": {
+          "artifact_status": "ready",
+          "base_revision": null,
+          "gate": {
+            "check_tables": [
+              [
+                {
+                  "id": "CORE-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-006",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-007",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-008",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-009",
+                  "result": "pass"
+                },
+                {
+                  "id": "IMP-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "IMP-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "IMP-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "IMP-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "IMP-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "IMP-G-006",
+                  "result": "pass"
+                }
+              ]
+            ],
+            "summary_headers": [
+              "Evaluated Revision",
+              "Control Input Digest",
+              "Evaluation Contract Set",
+              "Check Set Result Digest",
+              "Gate Result",
+              "Exception References",
+              "Evaluator",
+              "Evaluated At"
+            ],
+            "summary_result": "pass"
+          },
+          "id_pattern": "IMP-14digits-NN",
+          "materialized": true,
+          "primary_sha256": "sha256:10d8c7c51324c92bc76355b80020e62df5090582701722617397543ccb01e1e5",
+          "reference": "IMP-20260904010000-01@1",
+          "revision": 1,
+          "revision_state": "frozen",
+          "shape": {
+            "front_matter_keys": [
+              "contract",
+              "phase",
+              "id",
+              "revision",
+              "status",
+              "context",
+              "profile",
+              "inputs"
+            ],
+            "headings": [
+              {
+                "level": 1,
+                "text": "<artifact-title>"
+              },
+              {
+                "level": 2,
+                "text": "摘要 Summary"
+              },
+              {
+                "level": 2,
+                "text": "范围 Scope"
+              },
+              {
+                "level": 2,
+                "text": "实施控制 Implementation Control"
+              },
+              {
+                "level": 3,
+                "text": "实施绑定 Implementation Binding"
+              },
+              {
+                "level": 3,
+                "text": "输入就绪检查 Input Readiness Check Set"
+              },
+              {
+                "level": 2,
+                "text": "实施方法合约 Implementation Method Contract"
+              },
+              {
+                "level": 3,
+                "text": "实施考量矩阵 Implementation Consideration Matrix"
+              },
+              {
+                "level": 3,
+                "text": "实施步骤 Implementation Approach"
+              },
+              {
+                "level": 4,
+                "text": "STEP-001 Publish the exact README integration marker"
+              },
+              {
+                "level": 5,
+                "text": "EFF-001 Effects & Consistency"
+              },
+              {
+                "level": 2,
+                "text": "实施结果 Implementation Result"
+              },
+              {
+                "level": 2,
+                "text": "实施检查 Implementation Checks"
+              },
+              {
+                "level": 2,
+                "text": "待确认项 Open Items"
+              },
+              {
+                "level": 2,
+                "text": "证据 Evidence"
+              },
+              {
+                "level": 2,
+                "text": "Supporting Artifact Manifest"
+              },
+              {
+                "level": 2,
+                "text": "豁免 Exceptions"
+              },
+              {
+                "level": 2,
+                "text": "生命周期适用性 Lifecycle Applicability"
+              },
+              {
+                "level": 2,
+                "text": "门禁 Gate"
+              },
+              {
+                "level": 3,
+                "text": "Final Confirmation"
+              },
+              {
+                "level": 3,
+                "text": "Artifact Gate Summary"
+              }
+            ],
+            "manifest_keys": [
+              "contract",
+              "local_members"
+            ],
+            "manifest_members": [
+              {
+                "canonical_name": "snapshots/base-res-001.json",
+                "media_type": "application/json",
+                "member_id": "BASE-RES-001"
+              },
+              {
+                "canonical_name": "evidence/change-res-001.json",
+                "media_type": "application/json",
+                "member_id": "CHANGE-RES-001"
+              },
+              {
+                "canonical_name": "evidence/evd-chk-001.json",
+                "media_type": "application/json",
+                "member_id": "EVD-CHK-001"
+              },
+              {
+                "canonical_name": "evidence/evd-pre.json",
+                "media_type": "application/json",
+                "member_id": "EVD-PRE"
+              },
+              {
+                "canonical_name": "evidence/imp-state.json",
+                "media_type": "application/json",
+                "member_id": "IMP-STATE"
+              },
+              {
+                "canonical_name": "snapshots/result-res-001.json",
+                "media_type": "application/json",
+                "member_id": "RESULT-RES-001"
+              }
+            ],
+            "members": [
+              {
+                "canonical_name": "snapshots/base-res-001.json",
+                "media_type": "application/json",
+                "member_id": "BASE-RES-001"
+              },
+              {
+                "canonical_name": "evidence/change-res-001.json",
+                "media_type": "application/json",
+                "member_id": "CHANGE-RES-001"
+              },
+              {
+                "canonical_name": "evidence/evd-chk-001.json",
+                "media_type": "application/json",
+                "member_id": "EVD-CHK-001"
+              },
+              {
+                "canonical_name": "evidence/evd-pre.json",
+                "media_type": "application/json",
+                "member_id": "EVD-PRE"
+              },
+              {
+                "canonical_name": "evidence/imp-state.json",
+                "media_type": "application/json",
+                "member_id": "IMP-STATE"
+              },
+              {
+                "canonical_name": "snapshots/result-res-001.json",
+                "media_type": "application/json",
+                "member_id": "RESULT-RES-001"
+              }
+            ],
+            "tables": [
+              [
+                "Relationship",
+                "Reference"
+              ],
+              [
+                "IMP Binding Reference",
+                "Binding Lineage Key",
+                "Attempt",
+                "Owner",
+                "Rework References"
+              ],
+              [
+                "Check ID",
+                "检查项 Check",
+                "Result",
+                "Evidence or Notes"
+              ],
+              [
+                "实施考量项 Implementation Consideration",
+                "Disposition",
+                "触发依据或 N/A 原因",
+                "Approach Step 引用",
+                "Exception 引用"
+              ],
+              [
+                "ID",
+                "Resource",
+                "Baseline Reference",
+                "Change Reference",
+                "Result Reference",
+                "Changed Scope",
+                "Approach Step References"
+              ],
+              [
+                "ID",
+                "检查或方法 Check or Method",
+                "范围 Scope",
+                "结果 Result",
+                "依据 Basis"
+              ],
+              [
+                "ID",
+                "所需输入或待确认决策 Needed Input or Decision",
+                "预期来源 Expected Source",
+                "被阻塞项 Blocked References",
+                "状态 State",
+                "解决结果或证据 Resolution or Evidence"
+              ],
+              [
+                "ID",
+                "Type",
+                "Supports References",
+                "Source or Producer",
+                "Reference",
+                "Integrity or Digest",
+                "Produced At",
+                "Sensitivity or Access",
+                "Empty Reason"
+              ],
+              [
+                "Member ID",
+                "Canonical Name",
+                "Media Type",
+                "Purpose",
+                "SHA-256 Digest"
+              ],
+              [
+                "ID",
+                "State",
+                "Origin Exception Reference",
+                "作用域或被跳过义务 Scope or Skipped Obligation",
+                "原因 Reason",
+                "已知风险 Known Risk",
+                "补偿措施 Compensating Control",
+                "批准记录 Approver, Role and Time",
+                "复查条件 Revisit Condition",
+                "下游限制 Downstream Obligation",
+                "解决或替代引用 Resolution or Superseding References"
+              ],
+              [
+                "Phase",
+                "Disposition",
+                "Host",
+                "判断依据 Basis"
+              ],
+              [
+                "Check ID",
+                "检查项 Check",
+                "结果 Result",
+                "证据或说明 Evidence or Notes"
+              ],
+              [
+                "Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Result",
+                "Mode",
+                "Confirmer",
+                "Role",
+                "Authority Reference",
+                "Accepted Exception References",
+                "Confirmed At"
+              ],
+              [
+                "Evaluated Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Gate Result",
+                "Exception References",
+                "Evaluator",
+                "Evaluated At"
+              ]
+            ]
+          }
+        },
+        "PLN": {
+          "artifact_status": "ready",
+          "base_revision": null,
+          "gate": {
+            "check_tables": [
+              [
+                {
+                  "id": "CORE-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-006",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-007",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-008",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-009",
+                  "result": "pass"
+                },
+                {
+                  "id": "PLN-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "PLN-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "PLN-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "PLN-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "PLN-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "PLN-G-006",
+                  "result": "pass"
+                },
+                {
+                  "id": "PLN-G-007",
+                  "result": "pass"
+                }
+              ]
+            ],
+            "summary_headers": [
+              "Evaluated Revision",
+              "Control Input Digest",
+              "Evaluation Contract Set",
+              "Check Set Result Digest",
+              "Gate Result",
+              "Exception References",
+              "Evaluator",
+              "Evaluated At"
+            ],
+            "summary_result": "pass"
+          },
+          "id_pattern": "PLN-14digits-NN",
+          "materialized": true,
+          "primary_sha256": "sha256:5b7e098071b9dd4bc9607584fa5c8e9c2380aa9b427fae72c23ad1986e745421",
+          "reference": "PLN-20260904010000-01@1",
+          "revision": 1,
+          "revision_state": "frozen",
+          "shape": {
+            "front_matter_keys": [
+              "contract",
+              "phase",
+              "id",
+              "revision",
+              "status",
+              "context",
+              "profile",
+              "inputs"
+            ],
+            "headings": [
+              {
+                "level": 1,
+                "text": "<artifact-title>"
+              },
+              {
+                "level": 2,
+                "text": "摘要 Summary"
+              },
+              {
+                "level": 2,
+                "text": "范围 Scope"
+              },
+              {
+                "level": 2,
+                "text": "交付范围 Delivery Scope"
+              },
+              {
+                "level": 2,
+                "text": "聚合适用性 Aggregated Applicability"
+              },
+              {
+                "level": 2,
+                "text": "义务覆盖 Obligations"
+              },
+              {
+                "level": 2,
+                "text": "工作项 Work Items"
+              },
+              {
+                "level": 2,
+                "text": "待确认项 Open Items"
+              },
+              {
+                "level": 2,
+                "text": "证据 Evidence"
+              },
+              {
+                "level": 2,
+                "text": "Supporting Artifact Manifest"
+              },
+              {
+                "level": 2,
+                "text": "豁免 Exceptions"
+              },
+              {
+                "level": 2,
+                "text": "生命周期适用性 Lifecycle Applicability"
+              },
+              {
+                "level": 2,
+                "text": "门禁 Gate"
+              },
+              {
+                "level": 3,
+                "text": "Final Confirmation"
+              },
+              {
+                "level": 3,
+                "text": "Artifact Gate Summary"
+              }
+            ],
+            "manifest_keys": [
+              "contract",
+              "local_members"
+            ],
+            "manifest_members": [],
+            "members": [],
+            "tables": [
+              [
+                "Field",
+                "Value"
+              ],
+              [
+                "Scope Token",
+                "Source References",
+                "Outcome"
+              ],
+              [
+                "Phase",
+                "Disposition",
+                "Host",
+                "判断依据 Basis"
+              ],
+              [
+                "Obligation Reference",
+                "Covered By Work Items"
+              ],
+              [
+                "ID",
+                "目标 Phase Target Phase",
+                "结果 Outcome",
+                "执行范围 Execution Scope",
+                "来源引用 Source References",
+                "约束引用 Constraint References",
+                "依赖 Depends On",
+                "完成条件 Completion Criteria",
+                "预期证据 Expected Evidence",
+                "责任角色 Responsible Role"
+              ],
+              [
+                "ID",
+                "所需输入或待确认决策 Needed Input or Decision",
+                "预期来源 Expected Source",
+                "被阻塞项 Blocked References",
+                "状态 State",
+                "解决结果或证据 Resolution or Evidence"
+              ],
+              [
+                "ID",
+                "Type",
+                "Supports References",
+                "Source or Producer",
+                "Reference",
+                "Integrity or Digest",
+                "Produced At",
+                "Sensitivity or Access",
+                "Empty Reason"
+              ],
+              [
+                "Member ID",
+                "Canonical Name",
+                "Media Type",
+                "Purpose",
+                "SHA-256 Digest"
+              ],
+              [
+                "ID",
+                "State",
+                "Origin Exception Reference",
+                "作用域或被跳过义务 Scope or Skipped Obligation",
+                "原因 Reason",
+                "已知风险 Known Risk",
+                "补偿措施 Compensating Control",
+                "批准记录 Approver, Role and Time",
+                "复查条件 Revisit Condition",
+                "下游限制 Downstream Obligation",
+                "解决或替代引用 Resolution or Superseding References"
+              ],
+              [
+                "Phase",
+                "Disposition",
+                "Host",
+                "判断依据 Basis"
+              ],
+              [
+                "Check ID",
+                "检查项 Check",
+                "结果 Result",
+                "证据或说明 Evidence or Notes"
+              ],
+              [
+                "Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Result",
+                "Mode",
+                "Confirmer",
+                "Role",
+                "Authority Reference",
+                "Accepted Exception References",
+                "Confirmed At"
+              ],
+              [
+                "Evaluated Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Gate Result",
+                "Exception References",
+                "Evaluator",
+                "Evaluated At"
+              ]
+            ]
+          }
+        },
+        "REQ": {
+          "artifact_status": "ready",
+          "base_revision": null,
+          "gate": {
+            "check_tables": [
+              [
+                {
+                  "id": "CORE-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-006",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-007",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-008",
+                  "result": "pass"
+                },
+                {
+                  "id": "CORE-G-009",
+                  "result": "pass"
+                }
+              ],
+              [
+                {
+                  "id": "REQ-G-001",
+                  "result": "pass"
+                },
+                {
+                  "id": "REQ-G-002",
+                  "result": "pass"
+                },
+                {
+                  "id": "REQ-G-003",
+                  "result": "pass"
+                },
+                {
+                  "id": "REQ-G-004",
+                  "result": "pass"
+                },
+                {
+                  "id": "REQ-G-005",
+                  "result": "pass"
+                },
+                {
+                  "id": "REQ-G-006",
+                  "result": "pass"
+                },
+                {
+                  "id": "REQ-G-007",
+                  "result": "pass"
+                },
+                {
+                  "id": "REQ-G-008",
+                  "result": "pass"
+                }
+              ]
+            ],
+            "summary_headers": [
+              "Evaluated Revision",
+              "Control Input Digest",
+              "Evaluation Contract Set",
+              "Check Set Result Digest",
+              "Gate Result",
+              "Exception References",
+              "Evaluator",
+              "Evaluated At"
+            ],
+            "summary_result": "pass"
+          },
+          "id_pattern": "REQ-14digits-NN",
+          "materialized": true,
+          "primary_sha256": "sha256:0708eea73b9331acfd5792e74be60b9a1646d4fbab0d60badcd30b05e72479de",
+          "reference": "REQ-20260904010000-01@1",
+          "revision": 1,
+          "revision_state": "frozen",
+          "shape": {
+            "front_matter_keys": [
+              "contract",
+              "phase",
+              "id",
+              "revision",
+              "status",
+              "context",
+              "profile",
+              "inputs"
+            ],
+            "headings": [
+              {
+                "level": 1,
+                "text": "<artifact-title>"
+              },
+              {
+                "level": 2,
+                "text": "摘要 Summary"
+              },
+              {
+                "level": 2,
+                "text": "原始输入 Source Input"
+              },
+              {
+                "level": 2,
+                "text": "目标与成功条件 Goal and Success"
+              },
+              {
+                "level": 2,
+                "text": "范围 Scope"
+              },
+              {
+                "level": 3,
+                "text": "包含 In Scope"
+              },
+              {
+                "level": 3,
+                "text": "不包含 Out of Scope"
+              },
+              {
+                "level": 2,
+                "text": "影响对象 Affected Parties"
+              },
+              {
+                "level": 2,
+                "text": "需求项 Requirements"
+              },
+              {
+                "level": 2,
+                "text": "验收条件 Acceptance Criteria"
+              },
+              {
+                "level": 2,
+                "text": "依赖 Dependencies"
+              },
+              {
+                "level": 2,
+                "text": "生命周期配置 Lifecycle Profile"
+              },
+              {
+                "level": 2,
+                "text": "待确认项 Open Items"
+              },
+              {
+                "level": 2,
+                "text": "证据 Evidence"
+              },
+              {
+                "level": 2,
+                "text": "支撑产物清单 Supporting Artifact Manifest"
+              },
+              {
+                "level": 2,
+                "text": "豁免 Exceptions"
+              },
+              {
+                "level": 2,
+                "text": "生命周期适用性 Lifecycle Applicability"
+              },
+              {
+                "level": 2,
+                "text": "门禁 Gate"
+              },
+              {
+                "level": 3,
+                "text": "Core Checks"
+              },
+              {
+                "level": 3,
+                "text": "REQ Checks"
+              },
+              {
+                "level": 3,
+                "text": "Final Confirmation"
+              },
+              {
+                "level": 3,
+                "text": "Artifact Gate Summary"
+              }
+            ],
+            "manifest_keys": [
+              "local_members"
+            ],
+            "manifest_members": [],
+            "members": [],
+            "tables": [
+              [
+                "ID",
+                "Type",
+                "Content or Immutable Reference",
+                "Evidence Reference"
+              ],
+              [
+                "ID",
+                "当前问题 Current Problem",
+                "目标结果与预期用途 Goal, Intended Outcome and Use",
+                "成功条件 Success Condition"
+              ],
+              [
+                "ID",
+                "对象 Affected Party",
+                "Stakeholder Need or Impact"
+              ],
+              [
+                "ID",
+                "类型 Type",
+                "来源或父项引用 Source or Parent References",
+                "需求描述 Requirement Statement"
+              ],
+              [
+                "ID",
+                "关联需求 Requirement References",
+                "条件 Condition",
+                "预期结果 Expected Result"
+              ],
+              [
+                "ID",
+                "依赖项 Dependency",
+                "要求状态 Required State",
+                "当前状态 Current State",
+                "状态检查引用 State Check Reference"
+              ],
+              [
+                "Selected Profile",
+                "Basis"
+              ],
+              [
+                "ID",
+                "所需输入或待确认决策 Needed Input or Decision",
+                "预期来源 Expected Source",
+                "被阻塞项 Blocked References",
+                "状态 State",
+                "解决结果或证据 Resolution or Evidence"
+              ],
+              [
+                "ID",
+                "Type",
+                "Supports References",
+                "Source or Producer",
+                "Reference",
+                "Integrity or Digest",
+                "Produced At",
+                "Sensitivity or Access",
+                "Empty Reason"
+              ],
+              [
+                "Member ID",
+                "Type",
+                "Path or Reference",
+                "Media Type",
+                "Purpose",
+                "SHA-256 Digest",
+                "Empty Reason"
+              ],
+              [
+                "ID",
+                "State",
+                "Origin Exception Reference",
+                "作用域或被跳过义务 Scope or Skipped Obligation",
+                "原因 Reason",
+                "已知风险 Known Risk",
+                "补偿措施 Compensating Control",
+                "批准记录 Approver, Role and Time",
+                "复查条件 Revisit Condition",
+                "下游限制 Downstream Obligation",
+                "解决或替代引用 Resolution or Superseding References"
+              ],
+              [
+                "Phase",
+                "Disposition",
+                "Host",
+                "判断依据 Basis"
+              ],
+              [
+                "Check ID",
+                "检查项 Check",
+                "结果 Result",
+                "证据或说明 Evidence or Notes"
+              ],
+              [
+                "Check ID",
+                "检查项 Check",
+                "结果 Result",
+                "证据或说明 Evidence or Notes"
+              ],
+              [
+                "Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Result",
+                "Mode",
+                "Confirmer",
+                "Role",
+                "Authority Reference",
+                "Accepted Exception References",
+                "Confirmed At"
+              ],
+              [
+                "Evaluated Revision",
+                "Control Input Digest",
+                "Evaluation Contract Set",
+                "Check Set Result Digest",
+                "Gate Result",
+                "Exception References",
+                "Evaluator",
+                "Evaluated At"
+              ]
+            ]
+          }
+        }
+      },
+      "project": "flipped-aurora/gin-vue-admin",
+      "project_commit": "a6882210a80bb27e3aa5dff0b4c21aa4afe8988a",
+      "references": {
+        "CTX": "CTX-20260904010000-01@1",
+        "DSN": "DSN-20260904010000-01@1",
+        "IMP": "IMP-20260904010000-01@1",
+        "PLN": "PLN-20260904010000-01@1",
+        "REQ": "REQ-20260904010000-01@1"
+      },
+      "resource_root": "aiDoc/memory/business/active",
+      "result": {
+        "digest_reproducible": true,
+        "member": "RESULT-RES-001",
+        "readme_sha256": "sha256:b090e3531c387fb3fa1018eceb4249d042c0a02923719b84315f805194bd3ed0",
+        "reference": "IMP-20260904010000-01@1/RESULT-RES-001",
+        "sha256": "sha256:492a0ea5a16900a2d4928363254aaec1dca94aa5700d1a91d1cf3dda326c44b6"
+      },
+      "semantic_digests": {
+        "design": "sha256:cfd8224300573e02a2feeb2c2b72ee7ee3e4bfc6353cc9b0cb1887b66a04d34e",
+        "evidence": "sha256:e096c07e53badcc8ac9f0e0fd2d1a9b474d28866efc1073701a6ee77a7771e88",
+        "requirement": "sha256:dd2445380132f97142ca3ed3452426f7654681a8aeeabd6faa93b347d2ea6cb3",
+        "resource": "sha256:040471c9620d1be9193cc58fb79510a6534e5e1d78d02f474f62491369a6f43b",
+        "result": "sha256:492a0ea5a16900a2d4928363254aaec1dca94aa5700d1a91d1cf3dda326c44b6",
+        "work_item": "sha256:ddbbc75a6c4db308c9ea5aab6e856f7d645a99f71a4d0ce5189432c731d5a76b"
+      },
+      "target_path": "aiDoc/memory/business/active/README.md",
+      "vfy_ready": true
+    }
+  ]
+}

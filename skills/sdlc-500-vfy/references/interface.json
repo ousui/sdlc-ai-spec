@@ -1,0 +1,25 @@
+{
+  "contract": "sdlc-ai-spec/runtime/skill-interface/v1",
+  "skill": "sdlc-500-vfy",
+  "skill_version": "0.3.0",
+  "default_command": "auto",
+  "commands": [
+    {"name":"auto","description":"根据准确 Scope、当前 Subject Set 和已有 VFY 状态选择 create、run、revise 或 check。","writes":true},
+    {"name":"create","description":"从 repeatable exact input 编译 VFY Contract，并执行当前安全可执行 Method。","writes":true},
+    {"name":"run","description":"执行或记录当前 open Revision 中选定的 pending Method。","writes":true},
+    {"name":"revise","description":"基于新的权威 Subject 或 Control Input 创建新 Revision；无变化返回 NO_CHANGE。","writes":true},
+    {"name":"check","description":"从准确持久化 Reference 绝对只读复核 Scope、Subject、Evidence、Return 与 Gate。","writes":false},
+    {"name":"help","description":"显示用途、参数和副作用边界。","writes":false},
+    {"name":"version","description":"显示 Skill 与接口版本。","writes":false},
+    {"name":"commands","description":"列出全部命令及是否写入。","writes":false},
+    {"name":"examples","description":"显示准确 Reference 与 Method 选择示例。","writes":false}
+  ],
+  "examples": [
+    "/sdlc-500-vfy",
+    "/sdlc-500-vfy create -i PLN-20260904100000-01@1 -i IMP-20260904110000-01@1/RESULT-RES-001",
+    "/sdlc-500-vfy run -r VFY-20260904120000-01@1 -m VFM-001 -m VFM-002",
+    "/sdlc-500-vfy revise -r VFY-20260904120000-01@1 -i PLN-20260904100000-01@1 -i VFY-20260904120000-01@1#RET-001",
+    "/sdlc-500-vfy check -r VFY-20260904120000-01@1",
+    "/sdlc-500-vfy --help"
+  ]
+}

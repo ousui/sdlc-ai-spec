@@ -1,0 +1,45 @@
+source_sha = 5ea3ba9aa7288021c4d99b14cff76ec0fc405841
+base_sha = 638e27221b13d74208b54f78530cf338f67879af
+{"attempts": [{"attempt": 1, "delay_before_seconds": 0, "duration_ms": 70483, "exit_code": 0, "finished_at": "2026-09-05T01:48:26Z", "started_at": "2026-09-05T01:47:16Z", "stderr_log": "full-logs/full_repository_regression-attempt-1.stderr.log", "stderr_sha256": "sha256:ebc93e203cdd2f59aebbbdf5cd618b09d313ddec4b7bfa47b2297e455df102c4", "stdout_log": "full-logs/full_repository_regression-attempt-1.stdout.log", "stdout_sha256": "sha256:c0a9d94a975a1f50cafe4e8ee12d299c991afb619e4195872f75cf5d6e31e914", "transient_network_failure": false}], "base_sha": "638e27221b13d74208b54f78530cf338f67879af", "command": ["/opt/homebrew/opt/python@3.14/bin/python3.14", "-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py"], "cwd": ".", "duration_ms": 70483, "exit_code": 0, "finished_at": "2026-09-05T01:48:26Z", "name": "full_repository_regression", "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841", "started_at": "2026-09-05T01:47:16Z", "status": "PASS", "stderr_log": "full-logs/full_repository_regression-attempt-1.stderr.log", "stderr_sha256": "sha256:ebc93e203cdd2f59aebbbdf5cd618b09d313ddec4b7bfa47b2297e455df102c4", "stdout_log": "full-logs/full_repository_regression-attempt-1.stdout.log", "stdout_sha256": "sha256:c0a9d94a975a1f50cafe4e8ee12d299c991afb619e4195872f75cf5d6e31e914"}
+STDOUT
+[2026-09-05T01:48:24.348194+00:00] fixture/spring-probe: create real CTX
+[2026-09-05T01:48:24.376768+00:00] fixture/spring-probe: create real REQ
+[2026-09-05T01:48:24.382830+00:00] fixture/spring-probe: create real DSN
+[2026-09-05T01:48:24.390069+00:00] fixture/spring-probe: create real PLN and select WI-001
+[2026-09-05T01:48:24.397845+00:00] fixture/spring-probe: acquire Claim, execute README edit and complete IMP
+[2026-09-05T01:48:24.649528+00:00] fixture/spring-probe: read-only IMP check and lifecycle projection
+[2026-09-05T01:48:24.757879+00:00] fixture/spring-probe: cleanup restored exact initial Git state
+[2026-09-05T01:48:24.785098+00:00] fixture/go-vue-probe: create real CTX
+[2026-09-05T01:48:24.813353+00:00] fixture/go-vue-probe: create real REQ
+[2026-09-05T01:48:24.819024+00:00] fixture/go-vue-probe: create real DSN
+[2026-09-05T01:48:24.826831+00:00] fixture/go-vue-probe: create real PLN and select WI-001
+[2026-09-05T01:48:24.834890+00:00] fixture/go-vue-probe: acquire Claim, execute README edit and complete IMP
+[2026-09-05T01:48:25.088555+00:00] fixture/go-vue-probe: read-only IMP check and lifecycle projection
+[2026-09-05T01:48:25.197914+00:00] fixture/go-vue-probe: cleanup restored exact initial Git state
+[2026-09-05T01:48:25Z] CTX: execute external_imp._create_context
+[2026-09-05T01:48:25Z] REQ: execute external_imp._create_requirement
+[2026-09-05T01:48:25Z] DSN: execute external_imp._create_design
+[2026-09-05T01:48:25Z] PLN: execute external_imp._create_plan
+[2026-09-05T01:48:25Z] IMP: execute external_imp._complete_imp
+[2026-09-05T01:48:25Z] VFY: execute VfyHandler.create+run
+[2026-09-05T01:48:26Z] fixture/springgear: cleanup restored exact initial state
+[2026-09-05T01:48:26Z] CTX: execute external_imp._create_context
+[2026-09-05T01:48:26Z] REQ: execute external_imp._create_requirement
+[2026-09-05T01:48:26Z] DSN: execute external_imp._create_design
+[2026-09-05T01:48:26Z] PLN: execute external_imp._create_plan
+[2026-09-05T01:48:26Z] IMP: execute external_imp._complete_imp
+[2026-09-05T01:48:26Z] VFY: execute VfyHandler.create+run
+[2026-09-05T01:48:26Z] fixture/gin-vue-admin: cleanup restored exact initial state
+
+STDERR
+................................................................................................................................................................................................................................................................................................................................................................................................../opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:341: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x1092958a0>
+  @property
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:341: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x109295a80>
+  @property
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.......................................................................................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 633 tests in 70.157s
+
+OK

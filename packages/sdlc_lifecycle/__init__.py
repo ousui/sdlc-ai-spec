@@ -18,7 +18,7 @@ from .models import (
     ProjectOverview,
     RequirementCandidate,
 )
-from .query_imp import LifecycleQueryService
+from .query_vfy import LifecycleQueryService, VfyProjection, project_vfy_state
 
 __all__ = [
     "LIFECYCLE_STATUS_CONTRACT",
@@ -36,4 +36,6 @@ __all__ = [
     "OpenItemProjection",
     "ProjectOverview",
     "RequirementCandidate",
+    "VfyProjection",
+    "project_vfy_state",
 ]

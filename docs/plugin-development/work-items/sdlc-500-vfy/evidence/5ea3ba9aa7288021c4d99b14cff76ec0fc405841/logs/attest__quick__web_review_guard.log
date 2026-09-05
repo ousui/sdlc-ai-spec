@@ -1,0 +1,14 @@
+source_sha = 5ea3ba9aa7288021c4d99b14cff76ec0fc405841
+base_sha = 638e27221b13d74208b54f78530cf338f67879af
+{"attempts": [{"attempt": 1, "delay_before_seconds": 0, "duration_ms": 1099, "exit_code": 0, "finished_at": "2026-09-05T01:51:12Z", "started_at": "2026-09-05T01:51:10Z", "stderr_log": "attest-logs/quick__web_review_guard-attempt-1.stderr.log", "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "stdout_log": "attest-logs/quick__web_review_guard-attempt-1.stdout.log", "stdout_sha256": "sha256:2d05799302926c250aaba1a21c8679a808d36832f0ff8f181af465d4c25de994", "transient_network_failure": false}], "base_sha": "638e27221b13d74208b54f78530cf338f67879af", "command": ["/opt/homebrew/opt/python@3.14/bin/python3.14", "tools/review_sdlc_500_vfy_implementation.py"], "cwd": ".", "duration_ms": 1099, "exit_code": 0, "finished_at": "2026-09-05T01:51:12Z", "name": "quick__web_review_guard", "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841", "started_at": "2026-09-05T01:51:10Z", "status": "PASS", "stderr_log": "attest-logs/quick__web_review_guard-attempt-1.stderr.log", "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "stdout_log": "attest-logs/quick__web_review_guard-attempt-1.stdout.log", "stdout_sha256": "sha256:2d05799302926c250aaba1a21c8679a808d36832f0ff8f181af465d4c25de994"}
+STDOUT
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.810s
+
+OK
+VFY_IMPLEMENTATION_REVIEW=PASS
+VFY-WEB-001..006 structural guards=PASS
+VFY-WEB-007 capability/unittest/Formal Eval behavioral guards=PASS
+
+STDERR

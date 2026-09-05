@@ -1,0 +1,1292 @@
+{
+  "commands": [
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "638e27221b13d74208b54f78530cf338f67879af..5ea3ba9aa7288021c4d99b14cff76ec0fc405841"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.009,
+      "exit_code": 0,
+      "id": "quick__diff_check",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/quick__diff_check.log",
+      "log_sha256": "55ce38b9ddfd821c140ff0a60970e0447d6cc0aaf35db7d43682e67738301246",
+      "started_at": "2026-09-05T01:44:36Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "import ast\nimport importlib.util\nfrom pathlib import Path\nimport subprocess\nimport sys\n\nroot = Path.cwd()\nbase, source = sys.argv[1:3]\nchanged = subprocess.check_output(\n    [\"git\", \"diff\", \"--name-only\", f\"{base}..{source}\"], text=True\n).splitlines()\nfiles = [root / name for name in changed if name.endswith(\".py\")]\nfor path in files:\n    if not path.is_file():\n        raise SystemExit(f\"missing changed Python path: {path}\")\n    ast.parse(path.read_text(encoding=\"utf-8\"), filename=str(path))\nscripts = root / \"skills/sdlc-500-vfy/scripts\"\nsys.path[:0] = [str(root), str(scripts)]\nfor path in sorted(scripts.glob(\"vfy_*.py\")):\n    __import__(path.stem)\nruntime = scripts / \"runtime.py\"\nspec = importlib.util.spec_from_file_location(\"vfy_quick_runtime\", runtime)\nif spec is None or spec.loader is None:\n    raise SystemExit(\"VFY Runtime import spec unavailable\")\nmodule = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(module)\nprint(f\"AST={len(files)} VFY_IMPORTS=PASS\")",
+        "638e27221b13d74208b54f78530cf338f67879af",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.181,
+      "exit_code": 0,
+      "id": "quick__python_syntax_import",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/quick__python_syntax_import.log",
+      "log_sha256": "b23338b5c42fbbbeeae7d9902dbbc517feef67d474387ce4b507f5bc5e1fbea1",
+      "started_at": "2026-09-05T01:44:36Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "import json\nfrom pathlib import Path\nimport subprocess\nimport sys\n\nroot = Path.cwd()\nbase, source = sys.argv[1:3]\nchanged = subprocess.check_output(\n    [\"git\", \"diff\", \"--name-only\", f\"{base}..{source}\"], text=True\n).splitlines()\nfiles = [root / name for name in changed if name.endswith(\".json\")]\nfor path in files:\n    if not path.is_file():\n        raise SystemExit(f\"missing changed JSON path: {path}\")\n    json.loads(path.read_text(encoding=\"utf-8\"))\nprint(f\"JSON={len(files)} PASS\")",
+        "638e27221b13d74208b54f78530cf338f67879af",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.033,
+      "exit_code": 0,
+      "id": "quick__json_parse",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/quick__json_parse.log",
+      "log_sha256": "8cfeff2847476f109c08c156d39e70b006e0d9125ddb683f4c0fb629283a968d",
+      "started_at": "2026-09-05T01:44:36Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_skill_interfaces.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.024,
+      "exit_code": 0,
+      "id": "quick__skill_interface",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/quick__skill_interface.log",
+      "log_sha256": "0f032a5ea04d823c81dd8f55c6f9377fbb525e722296552bfe14dd770978e517",
+      "started_at": "2026-09-05T01:44:36Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_sdlc_500_vfy_source_lock.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.039,
+      "exit_code": 0,
+      "id": "quick__source_lock_structure",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/quick__source_lock_structure.log",
+      "log_sha256": "f24b38daf5747053ffe924c1524e780bbdef9b952ec6f256eb4b0b9bc64cc760",
+      "started_at": "2026-09-05T01:44:36Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_sdlc_500_vfy_case_coverage.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 4.44,
+      "exit_code": 0,
+      "id": "quick__critical_case_coverage",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/quick__critical_case_coverage.log",
+      "log_sha256": "bf481d4e096d776db5e3aaf1589a526b39979cc893e0c43eb32582a659cefcde",
+      "started_at": "2026-09-05T01:44:36Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-m",
+        "unittest",
+        "tests.skill_vfy.test_runtime",
+        "tests.skill_vfy.test_source_lock",
+        "tests.evals.test_sdlc_500_vfy_case_coverage"
+      ],
+      "cwd": ".",
+      "duration_seconds": 4.389,
+      "exit_code": 0,
+      "id": "quick__focused_deterministic_tests",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/quick__focused_deterministic_tests.log",
+      "log_sha256": "d8959051843fc328e3e462a25938f3cae91448d0cf3b71267e855d65a5bca5d3",
+      "started_at": "2026-09-05T01:44:41Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/review_sdlc_500_vfy_implementation.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 1.088,
+      "exit_code": 0,
+      "id": "quick__web_review_guard",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/quick__web_review_guard.log",
+      "log_sha256": "68619388cc57af24170ff481c77545d805434c0cfac78806dff4bae54c07c784",
+      "started_at": "2026-09-05T01:44:45Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "from pathlib import Path\nimport subprocess\nimport sys\n\nbase, source = sys.argv[1:3]\nchanged = subprocess.check_output(\n    [\"git\", \"diff\", \"--name-only\", f\"{base}..{source}\"], text=True\n).splitlines()\nprefixes = (\n    \"skills/sdlc-500-vfy/\",\n    \"tests/skill_vfy/\",\n)\nexact = {\n    \"packages/sdlc_lifecycle/query_vfy.py\",\n    \"packages/sdlc_lifecycle/__init__.py\",\n    \"packages/sdlc_lifecycle/models.py\",\n    \"packages/sdlc_lifecycle/CONTRACT.md\",\n    \"skills/sdlc-status/SKILL.md\",\n    \"skills/sdlc-status/references/contract.md\",\n    \"skills/sdlc-status/references/status-result.schema.json\",\n    \"skills/sdlc-status/scripts/runtime.py\",\n    \"skills/sdlc-status/scripts/vfy_projection.py\",\n    \"tests/evals/run_sdlc_500_vfy_eval.py\",\n    \"tests/evals/sdlc_500_vfy_cases.json\",\n    \"tests/evals/test_sdlc_500_vfy_case_coverage.py\",\n    \"tests/evals/vfy_case_harness.py\",\n    \"tests/evals/vfy_case_harness_hardened.py\",\n    \"tests/system_integration/test_external_vfy_integration.py\",\n    \"tests/skill_imp/test_lifecycle.py\",\n    \"tests/skill_status/test_imp.py\",\n    \"tools/validate_sdlc_500_vfy_case_coverage.py\",\n    \"tools/validate_sdlc_500_vfy_source_lock.py\",\n    \"tools/test_sdlc_500_vfy_runtime_independence.py\",\n    \"tools/review_sdlc_500_vfy_implementation.py\",\n    \"tools/run_external_vfy_integration.py\",\n    \"tools/run_vfy_delivery_validation.py\",\n}\nunknown = [name for name in changed if name not in exact and not name.startswith(prefixes)]\nforbidden = [\n    name for name in changed\n    if name.startswith(\".github/\")\n    or \"sdlc-600-rls\" in name\n    or \"/skill_rls/\" in name\n    or name.startswith(\"tests/skill_rls/\")\n    or (name.startswith(\"tools/\") and \"rls\" in Path(name).name.lower())\n    or \"/evidence/\" in name\n]\nif unknown:\n    raise SystemExit(\"unknown Subject paths: \" + \", \".join(unknown))\nif forbidden:\n    raise SystemExit(\"forbidden Workflow/RLS/Evidence paths: \" + \", \".join(forbidden))\nprint(f\"WHITELIST={len(changed)} NO_WORKFLOW_RLS_EVIDENCE=PASS\")",
+        "638e27221b13d74208b54f78530cf338f67879af",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.032,
+      "exit_code": 0,
+      "id": "quick__subject_path_whitelist",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/quick__subject_path_whitelist.log",
+      "log_sha256": "7b6b0a476ae61db4d274e86691837fccf5fe09e718691896af9837afbc7857f0",
+      "started_at": "2026-09-05T01:44:46Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--quiet",
+        "638e27221b13d74208b54f78530cf338f67879af..5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+        "--",
+        "docs/plugin-development/work-items/sdlc-500-vfy/DESIGN.md",
+        "docs/plugin-development/work-items/sdlc-500-vfy/EVAL-PLAN.md",
+        "docs/plugin-development/work-items/sdlc-500-vfy/goal"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.006,
+      "exit_code": 0,
+      "id": "quick__design_authority_bytes",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/quick__design_authority_bytes.log",
+      "log_sha256": "68a75ca8f8a48d22e406c167977dc6ca54ada774228d29150a94f306f235ded1",
+      "started_at": "2026-09-05T01:44:46Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/skill_vfy",
+        "-p",
+        "test_*.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 13.576,
+      "exit_code": 0,
+      "id": "phase__vfy_suite",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/phase__vfy_suite.log",
+      "log_sha256": "53e36c4a82dbdd4145091045d6907034d16919b568c342ac78efde38f70c8766",
+      "started_at": "2026-09-05T01:45:10Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tests/evals/run_sdlc_500_vfy_eval.py",
+        "--json-out",
+        "/private/tmp/vfy-web007-validation/5ea3ba9/phase-fixed-eval.json"
+      ],
+      "cwd": ".",
+      "duration_seconds": 4.199,
+      "exit_code": 0,
+      "id": "phase__fixed_eval_80",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/phase__fixed_eval_80.log",
+      "log_sha256": "436f7631ebcc09d79deeb5321592ff63142987c6487954b8ae813bc05c3f49b9",
+      "started_at": "2026-09-05T01:45:24Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-m",
+        "unittest",
+        "tests.skill_vfy.test_lifecycle",
+        "tests.skill_imp.test_lifecycle",
+        "tests.skill_status.test_imp"
+      ],
+      "cwd": ".",
+      "duration_seconds": 12.896,
+      "exit_code": 0,
+      "id": "phase__lifecycle_status_regression",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/phase__lifecycle_status_regression.log",
+      "log_sha256": "2dbfe389bc77b5de052ec0945a18ad81c178475e9e3dd0233fd34020e2bbda69",
+      "started_at": "2026-09-05T01:45:28Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_skill_interfaces.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.022,
+      "exit_code": 0,
+      "id": "full__skill_interface",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/full__skill_interface.log",
+      "log_sha256": "02d4f9b8fccc158989c2c3e3e4235ce71f9a7f89214ec352cca58f0da19fee4a",
+      "started_at": "2026-09-05T01:47:11Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_sdlc_500_vfy_source_lock.py",
+        "--require-final"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.037,
+      "exit_code": 0,
+      "id": "full__final_source_lock",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/full__final_source_lock.log",
+      "log_sha256": "96d9bea7e0a068c514f99e8cd608e941201ba46961fc220595bd3c20e1de0669",
+      "started_at": "2026-09-05T01:47:11Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/test_sdlc_500_vfy_runtime_independence.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 3.359,
+      "exit_code": 0,
+      "id": "full__installed_runtime_independence",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/full__installed_runtime_independence.log",
+      "log_sha256": "06aff7df1c1fd63e67148ee2c5064d328deaed2d2cd0d5061d97c6db9422adc9",
+      "started_at": "2026-09-05T01:47:11Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_runtime_contracts.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.13,
+      "exit_code": 0,
+      "id": "full__runtime_contract_boundary",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/full__runtime_contract_boundary.log",
+      "log_sha256": "06adecef9a45af40b96433440b119ae6f12616cc823933decd4cb8f279f7be44",
+      "started_at": "2026-09-05T01:47:15Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/review_sdlc_500_vfy_implementation.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 1.028,
+      "exit_code": 0,
+      "id": "full__web_review_guard",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/full__web_review_guard.log",
+      "log_sha256": "d359038850c13bb1500e6064ec07439f4ae7d376e85da784fb177b5bfa968db6",
+      "started_at": "2026-09-05T01:47:15Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 70.483,
+      "exit_code": 0,
+      "id": "full__full_repository_regression",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/full__full_repository_regression.log",
+      "log_sha256": "2834ee70a1f761c1adb357c30865f213e15867b9df36fcaf6c94dcb50bb59313",
+      "started_at": "2026-09-05T01:47:16Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "from pathlib import Path\nimport subprocess\nimport sys\n\nbase, source = sys.argv[1:3]\nchanged = subprocess.check_output(\n    [\"git\", \"diff\", \"--name-only\", f\"{base}..{source}\"], text=True\n).splitlines()\nprefixes = (\n    \"skills/sdlc-500-vfy/\",\n    \"tests/skill_vfy/\",\n)\nexact = {\n    \"packages/sdlc_lifecycle/query_vfy.py\",\n    \"packages/sdlc_lifecycle/__init__.py\",\n    \"packages/sdlc_lifecycle/models.py\",\n    \"packages/sdlc_lifecycle/CONTRACT.md\",\n    \"skills/sdlc-status/SKILL.md\",\n    \"skills/sdlc-status/references/contract.md\",\n    \"skills/sdlc-status/references/status-result.schema.json\",\n    \"skills/sdlc-status/scripts/runtime.py\",\n    \"skills/sdlc-status/scripts/vfy_projection.py\",\n    \"tests/evals/run_sdlc_500_vfy_eval.py\",\n    \"tests/evals/sdlc_500_vfy_cases.json\",\n    \"tests/evals/test_sdlc_500_vfy_case_coverage.py\",\n    \"tests/evals/vfy_case_harness.py\",\n    \"tests/evals/vfy_case_harness_hardened.py\",\n    \"tests/system_integration/test_external_vfy_integration.py\",\n    \"tests/skill_imp/test_lifecycle.py\",\n    \"tests/skill_status/test_imp.py\",\n    \"tools/validate_sdlc_500_vfy_case_coverage.py\",\n    \"tools/validate_sdlc_500_vfy_source_lock.py\",\n    \"tools/test_sdlc_500_vfy_runtime_independence.py\",\n    \"tools/review_sdlc_500_vfy_implementation.py\",\n    \"tools/run_external_vfy_integration.py\",\n    \"tools/run_vfy_delivery_validation.py\",\n}\nunknown = [name for name in changed if name not in exact and not name.startswith(prefixes)]\nforbidden = [\n    name for name in changed\n    if name.startswith(\".github/\")\n    or \"sdlc-600-rls\" in name\n    or \"/skill_rls/\" in name\n    or name.startswith(\"tests/skill_rls/\")\n    or (name.startswith(\"tools/\") and \"rls\" in Path(name).name.lower())\n    or \"/evidence/\" in name\n]\nif unknown:\n    raise SystemExit(\"unknown Subject paths: \" + \", \".join(unknown))\nif forbidden:\n    raise SystemExit(\"forbidden Workflow/RLS/Evidence paths: \" + \", \".join(forbidden))\nprint(f\"WHITELIST={len(changed)} NO_WORKFLOW_RLS_EVIDENCE=PASS\")",
+        "638e27221b13d74208b54f78530cf338f67879af",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.033,
+      "exit_code": 0,
+      "id": "full__subject_path_whitelist",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/full__subject_path_whitelist.log",
+      "log_sha256": "3fc1d4ae1263fd99e8f0e86db27a7fb7ccab79435db86ca2f893c005721e317b",
+      "started_at": "2026-09-05T01:48:26Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--quiet",
+        "638e27221b13d74208b54f78530cf338f67879af..5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+        "--",
+        "docs/plugin-development/work-items/sdlc-500-vfy/DESIGN.md",
+        "docs/plugin-development/work-items/sdlc-500-vfy/EVAL-PLAN.md",
+        "docs/plugin-development/work-items/sdlc-500-vfy/goal"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.005,
+      "exit_code": 0,
+      "id": "full__design_authority_bytes",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/full__design_authority_bytes.log",
+      "log_sha256": "37c5f0806a94b465be76f7a068278370857e4c1abd50dc5d6c54db827b315e26",
+      "started_at": "2026-09-05T01:48:26Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/run_external_vfy_integration.py",
+        "--source-sha",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+        "--base-sha",
+        "638e27221b13d74208b54f78530cf338f67879af",
+        "--json-out",
+        "/private/tmp/vfy-web007-validation/5ea3ba9/vfy-real-projects.json",
+        "--log-out",
+        "/private/tmp/vfy-web007-validation/5ea3ba9/vfy-real-projects.log"
+      ],
+      "cwd": ".",
+      "duration_seconds": 18.274,
+      "exit_code": 0,
+      "id": "external__two_exact_external_projects",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/external__two_exact_external_projects.log",
+      "log_sha256": "3094f14b5f63bd5b7d44e013d61ebef28f42623f92334aa20f9b58d1829bf771",
+      "started_at": "2026-09-05T01:48:50Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--check",
+        "638e27221b13d74208b54f78530cf338f67879af..5ea3ba9aa7288021c4d99b14cff76ec0fc405841"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.009,
+      "exit_code": 0,
+      "id": "attest__quick__diff_check",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__quick__diff_check.log",
+      "log_sha256": "45b6c1ef91fca1ab73a878c388ff187876aa740edfd1d40634e76806c4b84b2d",
+      "started_at": "2026-09-05T01:51:01Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "import ast\nimport importlib.util\nfrom pathlib import Path\nimport subprocess\nimport sys\n\nroot = Path.cwd()\nbase, source = sys.argv[1:3]\nchanged = subprocess.check_output(\n    [\"git\", \"diff\", \"--name-only\", f\"{base}..{source}\"], text=True\n).splitlines()\nfiles = [root / name for name in changed if name.endswith(\".py\")]\nfor path in files:\n    if not path.is_file():\n        raise SystemExit(f\"missing changed Python path: {path}\")\n    ast.parse(path.read_text(encoding=\"utf-8\"), filename=str(path))\nscripts = root / \"skills/sdlc-500-vfy/scripts\"\nsys.path[:0] = [str(root), str(scripts)]\nfor path in sorted(scripts.glob(\"vfy_*.py\")):\n    __import__(path.stem)\nruntime = scripts / \"runtime.py\"\nspec = importlib.util.spec_from_file_location(\"vfy_quick_runtime\", runtime)\nif spec is None or spec.loader is None:\n    raise SystemExit(\"VFY Runtime import spec unavailable\")\nmodule = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(module)\nprint(f\"AST={len(files)} VFY_IMPORTS=PASS\")",
+        "638e27221b13d74208b54f78530cf338f67879af",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.17,
+      "exit_code": 0,
+      "id": "attest__quick__python_syntax_import",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__quick__python_syntax_import.log",
+      "log_sha256": "65244de8606cb87b0e04e77a2daa00721414819437229e222b9a60c8fe371b9c",
+      "started_at": "2026-09-05T01:51:01Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "import json\nfrom pathlib import Path\nimport subprocess\nimport sys\n\nroot = Path.cwd()\nbase, source = sys.argv[1:3]\nchanged = subprocess.check_output(\n    [\"git\", \"diff\", \"--name-only\", f\"{base}..{source}\"], text=True\n).splitlines()\nfiles = [root / name for name in changed if name.endswith(\".json\")]\nfor path in files:\n    if not path.is_file():\n        raise SystemExit(f\"missing changed JSON path: {path}\")\n    json.loads(path.read_text(encoding=\"utf-8\"))\nprint(f\"JSON={len(files)} PASS\")",
+        "638e27221b13d74208b54f78530cf338f67879af",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.032,
+      "exit_code": 0,
+      "id": "attest__quick__json_parse",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__quick__json_parse.log",
+      "log_sha256": "3ea1cdd6e7b8b79a5a396334bee11c7296ff295febd12e2c85a601849d8e5794",
+      "started_at": "2026-09-05T01:51:02Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_skill_interfaces.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.023,
+      "exit_code": 0,
+      "id": "attest__quick__skill_interface",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__quick__skill_interface.log",
+      "log_sha256": "1a09f18667170a89a5e97b9373b2b04e1d3926fae26737bb04ef30c7d158b0ba",
+      "started_at": "2026-09-05T01:51:02Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_sdlc_500_vfy_source_lock.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.038,
+      "exit_code": 0,
+      "id": "attest__quick__source_lock_structure",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__quick__source_lock_structure.log",
+      "log_sha256": "86b68db02bb76c803f97a2f23fc44364de21d5682995a54f2dc979c5aef46ecc",
+      "started_at": "2026-09-05T01:51:02Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_sdlc_500_vfy_case_coverage.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 4.366,
+      "exit_code": 0,
+      "id": "attest__quick__critical_case_coverage",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__quick__critical_case_coverage.log",
+      "log_sha256": "2050342d056d592aa4386591fe5525c0513f25f4a940087c750a950799bdc90d",
+      "started_at": "2026-09-05T01:51:02Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-m",
+        "unittest",
+        "tests.skill_vfy.test_runtime",
+        "tests.skill_vfy.test_source_lock",
+        "tests.evals.test_sdlc_500_vfy_case_coverage"
+      ],
+      "cwd": ".",
+      "duration_seconds": 4.42,
+      "exit_code": 0,
+      "id": "attest__quick__focused_deterministic_tests",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__quick__focused_deterministic_tests.log",
+      "log_sha256": "5148b67d681cbdf089afbcc9e0374ff3f29926335988b21c561810b7063e8baa",
+      "started_at": "2026-09-05T01:51:06Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/review_sdlc_500_vfy_implementation.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 1.099,
+      "exit_code": 0,
+      "id": "attest__quick__web_review_guard",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__quick__web_review_guard.log",
+      "log_sha256": "b305563017088c75ef076e566be5e54895e6a58e671bd6cc96735a2e73e9f81e",
+      "started_at": "2026-09-05T01:51:10Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "from pathlib import Path\nimport subprocess\nimport sys\n\nbase, source = sys.argv[1:3]\nchanged = subprocess.check_output(\n    [\"git\", \"diff\", \"--name-only\", f\"{base}..{source}\"], text=True\n).splitlines()\nprefixes = (\n    \"skills/sdlc-500-vfy/\",\n    \"tests/skill_vfy/\",\n)\nexact = {\n    \"packages/sdlc_lifecycle/query_vfy.py\",\n    \"packages/sdlc_lifecycle/__init__.py\",\n    \"packages/sdlc_lifecycle/models.py\",\n    \"packages/sdlc_lifecycle/CONTRACT.md\",\n    \"skills/sdlc-status/SKILL.md\",\n    \"skills/sdlc-status/references/contract.md\",\n    \"skills/sdlc-status/references/status-result.schema.json\",\n    \"skills/sdlc-status/scripts/runtime.py\",\n    \"skills/sdlc-status/scripts/vfy_projection.py\",\n    \"tests/evals/run_sdlc_500_vfy_eval.py\",\n    \"tests/evals/sdlc_500_vfy_cases.json\",\n    \"tests/evals/test_sdlc_500_vfy_case_coverage.py\",\n    \"tests/evals/vfy_case_harness.py\",\n    \"tests/evals/vfy_case_harness_hardened.py\",\n    \"tests/system_integration/test_external_vfy_integration.py\",\n    \"tests/skill_imp/test_lifecycle.py\",\n    \"tests/skill_status/test_imp.py\",\n    \"tools/validate_sdlc_500_vfy_case_coverage.py\",\n    \"tools/validate_sdlc_500_vfy_source_lock.py\",\n    \"tools/test_sdlc_500_vfy_runtime_independence.py\",\n    \"tools/review_sdlc_500_vfy_implementation.py\",\n    \"tools/run_external_vfy_integration.py\",\n    \"tools/run_vfy_delivery_validation.py\",\n}\nunknown = [name for name in changed if name not in exact and not name.startswith(prefixes)]\nforbidden = [\n    name for name in changed\n    if name.startswith(\".github/\")\n    or \"sdlc-600-rls\" in name\n    or \"/skill_rls/\" in name\n    or name.startswith(\"tests/skill_rls/\")\n    or (name.startswith(\"tools/\") and \"rls\" in Path(name).name.lower())\n    or \"/evidence/\" in name\n]\nif unknown:\n    raise SystemExit(\"unknown Subject paths: \" + \", \".join(unknown))\nif forbidden:\n    raise SystemExit(\"forbidden Workflow/RLS/Evidence paths: \" + \", \".join(forbidden))\nprint(f\"WHITELIST={len(changed)} NO_WORKFLOW_RLS_EVIDENCE=PASS\")",
+        "638e27221b13d74208b54f78530cf338f67879af",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.031,
+      "exit_code": 0,
+      "id": "attest__quick__subject_path_whitelist",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__quick__subject_path_whitelist.log",
+      "log_sha256": "4f121f63dd25c9d0e558d54bc6c002d5f171b95b61e20dfdab9df626a291a1a7",
+      "started_at": "2026-09-05T01:51:12Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--quiet",
+        "638e27221b13d74208b54f78530cf338f67879af..5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+        "--",
+        "docs/plugin-development/work-items/sdlc-500-vfy/DESIGN.md",
+        "docs/plugin-development/work-items/sdlc-500-vfy/EVAL-PLAN.md",
+        "docs/plugin-development/work-items/sdlc-500-vfy/goal"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.007,
+      "exit_code": 0,
+      "id": "attest__quick__design_authority_bytes",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__quick__design_authority_bytes.log",
+      "log_sha256": "5b16117d84c45420be943cdf88ec065c6faec6c5a4557f34e0e34585ea181445",
+      "started_at": "2026-09-05T01:51:12Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/skill_vfy",
+        "-p",
+        "test_*.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 13.64,
+      "exit_code": 0,
+      "id": "attest__phase__vfy_suite",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__phase__vfy_suite.log",
+      "log_sha256": "47d58624a7df578af8ef8722546451486b08849b872a1f8dfb1100d9cf3baea8",
+      "started_at": "2026-09-05T01:51:12Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tests/evals/run_sdlc_500_vfy_eval.py",
+        "--json-out",
+        "/private/tmp/vfy-web007-validation/5ea3ba9/attest-fixed-eval.json"
+      ],
+      "cwd": ".",
+      "duration_seconds": 4.36,
+      "exit_code": 0,
+      "id": "attest__phase__fixed_eval_80",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__phase__fixed_eval_80.log",
+      "log_sha256": "a20462520c4d53e027653de92bfa4f0a122d5c46eebebd6f9f7733c0d87ef2cc",
+      "started_at": "2026-09-05T01:51:25Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-m",
+        "unittest",
+        "tests.skill_vfy.test_lifecycle",
+        "tests.skill_imp.test_lifecycle",
+        "tests.skill_status.test_imp"
+      ],
+      "cwd": ".",
+      "duration_seconds": 12.767,
+      "exit_code": 0,
+      "id": "attest__phase__lifecycle_status_regression",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__phase__lifecycle_status_regression.log",
+      "log_sha256": "ae5f6ffb63423fd2ab59c635b005a9015f9d36045730e7689ad2273afd5e78b1",
+      "started_at": "2026-09-05T01:51:30Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_skill_interfaces.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.026,
+      "exit_code": 0,
+      "id": "attest__full__skill_interface",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__full__skill_interface.log",
+      "log_sha256": "6e35270fd7200a01fa94d9232a991341432974f1a9dedfb80b29d2bb9dcc3d6d",
+      "started_at": "2026-09-05T01:51:42Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_sdlc_500_vfy_source_lock.py",
+        "--require-final"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.039,
+      "exit_code": 0,
+      "id": "attest__full__final_source_lock",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__full__final_source_lock.log",
+      "log_sha256": "b5fa7ff60c097da74f39d53b5958d804056d164a23e1647aa732446856496d9b",
+      "started_at": "2026-09-05T01:51:42Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/test_sdlc_500_vfy_runtime_independence.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 3.495,
+      "exit_code": 0,
+      "id": "attest__full__installed_runtime_independence",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__full__installed_runtime_independence.log",
+      "log_sha256": "9c2696befa4aac04db264ebbf1a46c33a1d7a6182723ab2c04f4f310ed182fe4",
+      "started_at": "2026-09-05T01:51:42Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_runtime_contracts.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.133,
+      "exit_code": 0,
+      "id": "attest__full__runtime_contract_boundary",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__full__runtime_contract_boundary.log",
+      "log_sha256": "cca7bf75e517d4e15411d425ce37523ab519be728febac56a17159fcebf73e2b",
+      "started_at": "2026-09-05T01:51:46Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/review_sdlc_500_vfy_implementation.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 1.122,
+      "exit_code": 0,
+      "id": "attest__full__web_review_guard",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__full__web_review_guard.log",
+      "log_sha256": "1f8348a9bc58f355948aff382ca9b4b130d703e95366279ad96ef89a42e27d37",
+      "started_at": "2026-09-05T01:51:46Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py"
+      ],
+      "cwd": ".",
+      "duration_seconds": 72.745,
+      "exit_code": 0,
+      "id": "attest__full__full_repository_regression",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__full__full_repository_regression.log",
+      "log_sha256": "a00fede044f60a0732a4f418cc09765cc3f4e559c861e459adfc46804ff7210f",
+      "started_at": "2026-09-05T01:51:47Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "from pathlib import Path\nimport subprocess\nimport sys\n\nbase, source = sys.argv[1:3]\nchanged = subprocess.check_output(\n    [\"git\", \"diff\", \"--name-only\", f\"{base}..{source}\"], text=True\n).splitlines()\nprefixes = (\n    \"skills/sdlc-500-vfy/\",\n    \"tests/skill_vfy/\",\n)\nexact = {\n    \"packages/sdlc_lifecycle/query_vfy.py\",\n    \"packages/sdlc_lifecycle/__init__.py\",\n    \"packages/sdlc_lifecycle/models.py\",\n    \"packages/sdlc_lifecycle/CONTRACT.md\",\n    \"skills/sdlc-status/SKILL.md\",\n    \"skills/sdlc-status/references/contract.md\",\n    \"skills/sdlc-status/references/status-result.schema.json\",\n    \"skills/sdlc-status/scripts/runtime.py\",\n    \"skills/sdlc-status/scripts/vfy_projection.py\",\n    \"tests/evals/run_sdlc_500_vfy_eval.py\",\n    \"tests/evals/sdlc_500_vfy_cases.json\",\n    \"tests/evals/test_sdlc_500_vfy_case_coverage.py\",\n    \"tests/evals/vfy_case_harness.py\",\n    \"tests/evals/vfy_case_harness_hardened.py\",\n    \"tests/system_integration/test_external_vfy_integration.py\",\n    \"tests/skill_imp/test_lifecycle.py\",\n    \"tests/skill_status/test_imp.py\",\n    \"tools/validate_sdlc_500_vfy_case_coverage.py\",\n    \"tools/validate_sdlc_500_vfy_source_lock.py\",\n    \"tools/test_sdlc_500_vfy_runtime_independence.py\",\n    \"tools/review_sdlc_500_vfy_implementation.py\",\n    \"tools/run_external_vfy_integration.py\",\n    \"tools/run_vfy_delivery_validation.py\",\n}\nunknown = [name for name in changed if name not in exact and not name.startswith(prefixes)]\nforbidden = [\n    name for name in changed\n    if name.startswith(\".github/\")\n    or \"sdlc-600-rls\" in name\n    or \"/skill_rls/\" in name\n    or name.startswith(\"tests/skill_rls/\")\n    or (name.startswith(\"tools/\") and \"rls\" in Path(name).name.lower())\n    or \"/evidence/\" in name\n]\nif unknown:\n    raise SystemExit(\"unknown Subject paths: \" + \", \".join(unknown))\nif forbidden:\n    raise SystemExit(\"forbidden Workflow/RLS/Evidence paths: \" + \", \".join(forbidden))\nprint(f\"WHITELIST={len(changed)} NO_WORKFLOW_RLS_EVIDENCE=PASS\")",
+        "638e27221b13d74208b54f78530cf338f67879af",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.036,
+      "exit_code": 0,
+      "id": "attest__full__subject_path_whitelist",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__full__subject_path_whitelist.log",
+      "log_sha256": "a961cc0459a7a256ff9e3df36f2264955bd0e8922c8289a3c44711bfd4a0ff17",
+      "started_at": "2026-09-05T01:53:00Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "git",
+        "diff",
+        "--quiet",
+        "638e27221b13d74208b54f78530cf338f67879af..5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+        "--",
+        "docs/plugin-development/work-items/sdlc-500-vfy/DESIGN.md",
+        "docs/plugin-development/work-items/sdlc-500-vfy/EVAL-PLAN.md",
+        "docs/plugin-development/work-items/sdlc-500-vfy/goal"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.007,
+      "exit_code": 0,
+      "id": "attest__full__design_authority_bytes",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__full__design_authority_bytes.log",
+      "log_sha256": "839519d1344c1feec810fce8c107398054d9ff12963bdf17e2786d43cf20f433",
+      "started_at": "2026-09-05T01:53:00Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/run_external_vfy_integration.py",
+        "--source-sha",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+        "--base-sha",
+        "638e27221b13d74208b54f78530cf338f67879af",
+        "--json-out",
+        "/private/tmp/vfy-web007-validation/5ea3ba9/attest-real-projects.json",
+        "--log-out",
+        "/private/tmp/vfy-web007-validation/5ea3ba9/attest-real-projects.log"
+      ],
+      "cwd": ".",
+      "duration_seconds": 18.458,
+      "exit_code": 0,
+      "id": "attest__external__two_exact_external_projects",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__external__two_exact_external_projects.log",
+      "log_sha256": "b9363603d0bdcceab3fad6a2ad4a2ca2dd8815a18f5fe7eba699532b4d2a65f2",
+      "started_at": "2026-09-05T01:53:00Z",
+      "status": "PASS"
+    },
+    {
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "from pathlib import Path\nimport sys\n\npath = Path(sys.argv[1])\nsource, base = sys.argv[2:4]\nif not path.is_file():\n    raise SystemExit(f\"missing independent review: {path}\")\ntext = path.read_text(encoding=\"utf-8\")\nrequired = (\n    \"VFY_DESIGN_REVIEW = PASS\",\n    f\"Implementation Subject SHA = {source}\",\n    f\"Design Head SHA = {base}\",\n    \"Blocker = 0\",\n    \"Major = 0\",\n)\nmissing = [item for item in required if item not in text]\nif missing:\n    raise SystemExit(\"independent review is incomplete: \" + \", \".join(missing))\nprint(\"INDEPENDENT_REVIEW=PASS Blocker=0 Major=0\")",
+        "/private/tmp/vfy-web007-validation/5ea3ba9/vfy-design-review.md",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+        "638e27221b13d74208b54f78530cf338f67879af"
+      ],
+      "cwd": ".",
+      "duration_seconds": 0.021,
+      "exit_code": 0,
+      "id": "attest__independent_review",
+      "log_path": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/logs/attest__independent_review.log",
+      "log_sha256": "a0abd5bb5b026a9b151e8b3e2034448f2235172d74972165defd7d12fcc0f3b2",
+      "started_at": "2026-09-05T01:53:18Z",
+      "status": "PASS"
+    }
+  ],
+  "contract": "sdlc-ai-spec/vfy-verification-result/v1",
+  "critical_cases": [
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E001",
+      "id": "VFY-E001",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e001"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E002",
+      "id": "VFY-E002",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e002"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E003",
+      "id": "VFY-E003",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e003"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E004",
+      "id": "VFY-E004",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e004"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E005",
+      "id": "VFY-E005",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e005"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E006",
+      "id": "VFY-E006",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e006"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E007",
+      "id": "VFY-E007",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e007"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E008",
+      "id": "VFY-E008",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e008"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E009",
+      "id": "VFY-E009",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e009"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E010",
+      "id": "VFY-E010",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e010"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E011",
+      "id": "VFY-E011",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e011"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E012",
+      "id": "VFY-E012",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e012"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E013",
+      "id": "VFY-E013",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e013"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E014",
+      "id": "VFY-E014",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e014"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E015",
+      "id": "VFY-E015",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e015"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E016",
+      "id": "VFY-E016",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e016"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E017",
+      "id": "VFY-E017",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e017"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E018",
+      "id": "VFY-E018",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e018"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E019",
+      "id": "VFY-E019",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e019"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E020",
+      "id": "VFY-E020",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e020"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E021",
+      "id": "VFY-E021",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e021"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E022",
+      "id": "VFY-E022",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e022"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E023",
+      "id": "VFY-E023",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e023"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E024",
+      "id": "VFY-E024",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e024"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E025",
+      "id": "VFY-E025",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e025"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E026",
+      "id": "VFY-E026",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e026"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E027",
+      "id": "VFY-E027",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e027"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E028",
+      "id": "VFY-E028",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e028"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E029",
+      "id": "VFY-E029",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e029"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E030",
+      "id": "VFY-E030",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e030"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E031",
+      "id": "VFY-E031",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e031"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E032",
+      "id": "VFY-E032",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e032"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E033",
+      "id": "VFY-E033",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e033"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E034",
+      "id": "VFY-E034",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e034"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E035",
+      "id": "VFY-E035",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e035"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E036",
+      "id": "VFY-E036",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e036"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E037",
+      "id": "VFY-E037",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e037"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E038",
+      "id": "VFY-E038",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e038"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E039",
+      "id": "VFY-E039",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e039"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E040",
+      "id": "VFY-E040",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e040"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E041",
+      "id": "VFY-E041",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e041"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E042",
+      "id": "VFY-E042",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e042"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E043",
+      "id": "VFY-E043",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e043"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E044",
+      "id": "VFY-E044",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e044"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E045",
+      "id": "VFY-E045",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e045"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E046",
+      "id": "VFY-E046",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e046"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E047",
+      "id": "VFY-E047",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e047"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E048",
+      "id": "VFY-E048",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e048"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E049",
+      "id": "VFY-E049",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e049"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E050",
+      "id": "VFY-E050",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e050"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E051",
+      "id": "VFY-E051",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e051"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E052",
+      "id": "VFY-E052",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e052"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E053",
+      "id": "VFY-E053",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e053"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E054",
+      "id": "VFY-E054",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e054"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E055",
+      "id": "VFY-E055",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e055"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E056",
+      "id": "VFY-E056",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e056"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E057",
+      "id": "VFY-E057",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e057"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E058",
+      "id": "VFY-E058",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e058"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E059",
+      "id": "VFY-E059",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e059"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E060",
+      "id": "VFY-E060",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e060"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E061",
+      "id": "VFY-E061",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e061"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E062",
+      "id": "VFY-E062",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e062"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E063",
+      "id": "VFY-E063",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e063"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E064",
+      "id": "VFY-E064",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e064"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E065",
+      "id": "VFY-E065",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e065"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E066",
+      "id": "VFY-E066",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e066"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E067",
+      "id": "VFY-E067",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e067"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E068",
+      "id": "VFY-E068",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e068"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E069",
+      "id": "VFY-E069",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e069"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E070",
+      "id": "VFY-E070",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e070"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E071",
+      "id": "VFY-E071",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e071"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E072",
+      "id": "VFY-E072",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e072"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E073",
+      "id": "VFY-E073",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e073"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E074",
+      "id": "VFY-E074",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e074"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E075",
+      "id": "VFY-E075",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e075"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E076",
+      "id": "VFY-E076",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e076"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E077",
+      "id": "VFY-E077",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e077"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E078",
+      "id": "VFY-E078",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e078"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E079",
+      "id": "VFY-E079",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e079"
+    },
+    {
+      "evidence": "docs/plugin-development/work-items/sdlc-500-vfy/evidence/5ea3ba9aa7288021c4d99b14cff76ec0fc405841/vfy-fixed-eval.log#VFY-E080",
+      "id": "VFY-E080",
+      "status": "PASS",
+      "test": "tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e080"
+    }
+  ],
+  "evidence_digest": "903d98d5c5fbf465fba847d1a3dd19b3954663cb63c196fb38e01756f74ddc19",
+  "external_projects": [
+    {
+      "chain": [
+        "CTX",
+        "REQ",
+        "DSN",
+        "PLN",
+        "IMP",
+        "VFY"
+      ],
+      "cleanup": "PASS",
+      "method_types": [
+        "inspection",
+        "analysis"
+      ],
+      "repository": "ousui/springgear",
+      "source_sha": "e855096ff19dcdb303dc4250ba19c30acd743ac7",
+      "status": "PASS"
+    },
+    {
+      "chain": [
+        "CTX",
+        "REQ",
+        "DSN",
+        "PLN",
+        "IMP",
+        "VFY"
+      ],
+      "cleanup": "PASS",
+      "method_types": [
+        "inspection",
+        "analysis"
+      ],
+      "repository": "flipped-aurora/gin-vue-admin",
+      "source_sha": "a6882210a80bb27e3aa5dff0b4c21aa4afe8988a",
+      "status": "PASS"
+    }
+  ],
+  "finished_at": "2026-09-05T01:53:19Z",
+  "first_failure": null,
+  "notes": [
+    "base_sha = 638e27221b13d74208b54f78530cf338f67879af",
+    "VFY_INTEGRATION_MODE = PREMERGE_DIRECT_DESIGN_ANCESTRY",
+    "VFY suite = 206; full regression = 633; skip = 0; expectedFailure = 0",
+    "Evidence digest = SHA-256 of compact JSON [[command id, combined log SHA-256], ...] in command order",
+    "Independent Review: detached executable source/Contract and behavioral gate; external Web acceptance remains required",
+    "macOS OS sandbox tested; Linux bwrap activation was not exercised on this host",
+    "VFY-WEB-007: deterministic Linux missing-backend tests verify exact action_required with no process or Evidence; Formal E041/E046 require real execution and cannot count unavailable as PASS",
+    "Negative manual/human fixtures are test data, not real human product acceptance",
+    "GitHub Actions authority = false; main modified = false; RLS started = false"
+  ],
+  "profile": "attest",
+  "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+  "source_tree": "d1ec752587e296a80adf611ce5057cb14917c837",
+  "started_at": "2026-09-05T01:44:36Z",
+  "status": "PASS"
+}

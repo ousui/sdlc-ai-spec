@@ -1,0 +1,50 @@
+{
+  "ordinary_tests": 5,
+  "ordinary_errors": 0,
+  "ordinary_failures": 0,
+  "ordinary_log": "test_vfy_e041 (tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e041)\nExecute VFY-E041 against its concrete Oracle. ... ok\ntest_vfy_e046 (tests.skill_vfy.test_critical_cases.VfyCriticalCases.test_vfy_e046)\nExecute VFY-E046 against its concrete Oracle. ... ok\ntest_vfy_e041 (tests.skill_vfy.test_executor_evidence.VfyExecutorEvidenceCases.test_vfy_e041)\nExecute VFY-E041 against its hardened concrete Oracle. ... ok\ntest_vfy_e046 (tests.skill_vfy.test_executor_evidence.VfyExecutorEvidenceCases.test_vfy_e046)\nExecute VFY-E046 against its hardened concrete Oracle. ... ok\ntest_command_network_and_outside_write_are_denied_by_os (tests.skill_vfy.test_fresh_review_boundaries.FreshReviewBoundariesTest.test_command_network_and_outside_write_are_denied_by_os) ... ok\n\n----------------------------------------------------------------------\nRan 5 tests in 0.013s\n\nOK\n",
+  "formal": {
+    "contract": "sdlc-ai-spec/vfy-fixed-eval-result/v1",
+    "generated_at": "2026-09-05T01:49:43Z",
+    "registry": "tests/evals/sdlc_500_vfy_cases.json",
+    "selected_count": 2,
+    "expected_full_count": 80,
+    "passed": 0,
+    "failed": 2,
+    "status": "FAIL",
+    "complete_fixed_eval": false,
+    "skipped": 0,
+    "expected_failures": 0,
+    "results": [
+      {
+        "case_id": "VFY-E041",
+        "status": "FAIL",
+        "result": null,
+        "error": {
+          "type": "VfyError",
+          "message": "OS sandbox is unavailable; command execution remains pending",
+          "traceback": "Traceback (most recent call last):\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/tests/evals/run_sdlc_500_vfy_eval.py\", line 73, in run\n    actual = run_case(case_id)\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/tests/evals/vfy_case_harness_hardened.py\", line 609, in run_case\n    result = _override(number, root)\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/tests/evals/vfy_case_harness_hardened.py\", line 448, in _override\n    row, evidence = _command_result(root, should_pass=True)\n                    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/tests/evals/vfy_case_harness_hardened.py\", line 250, in _command_result\n    return execute_method(\n        method,\n    ...<2 lines>...\n        allow_commands=True,\n    )\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/skills/sdlc-500-vfy/scripts/vfy_executor.py\", line 528, in execute_method\n    result, observed = _execute_command(\n                       ~~~~~~~~~~~~~~~~^\n        project_root, procedure, allow_commands=allow_commands\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/skills/sdlc-500-vfy/scripts/vfy_executor.py\", line 404, in _execute_command\n    code, stdout, stderr, timed_out = _bounded_process(\n                                      ~~~~~~~~~~~~~~~~^\n        argv,\n        ^^^^^\n    ...<3 lines>...\n        max_output=max_output,\n        ^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/skills/sdlc-500-vfy/scripts/vfy_executor.py\", line 336, in _bounded_process\n    _sandbox_argv(argv, root, cwd),\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/skills/sdlc-500-vfy/scripts/vfy_executor.py\", line 289, in _sandbox_argv\n    require(bubblewrap is not None, \"VFY_METHOD_NOT_READY\",\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n            \"OS sandbox is unavailable; command execution remains pending\",\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n            status=\"action_required\")\n            ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/skills/sdlc-500-vfy/scripts/vfy_common.py\", line 85, in require\n    raise VfyError(\n    ...<5 lines>...\n    )\nvfy_common.VfyError: OS sandbox is unavailable; command execution remains pending\n",
+          "code": "VFY_METHOD_NOT_READY",
+          "status": "action_required"
+        }
+      },
+      {
+        "case_id": "VFY-E046",
+        "status": "FAIL",
+        "result": null,
+        "error": {
+          "type": "VfyError",
+          "message": "OS sandbox is unavailable; command execution remains pending",
+          "traceback": "Traceback (most recent call last):\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/tests/evals/run_sdlc_500_vfy_eval.py\", line 73, in run\n    actual = run_case(case_id)\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/tests/evals/vfy_case_harness_hardened.py\", line 609, in run_case\n    result = _override(number, root)\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/tests/evals/vfy_case_harness_hardened.py\", line 472, in _override\n    row, evidence = _command_result(root, should_pass=False)\n                    ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/tests/evals/vfy_case_harness_hardened.py\", line 250, in _command_result\n    return execute_method(\n        method,\n    ...<2 lines>...\n        allow_commands=True,\n    )\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/skills/sdlc-500-vfy/scripts/vfy_executor.py\", line 528, in execute_method\n    result, observed = _execute_command(\n                       ~~~~~~~~~~~~~~~~^\n        project_root, procedure, allow_commands=allow_commands\n        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/skills/sdlc-500-vfy/scripts/vfy_executor.py\", line 404, in _execute_command\n    code, stdout, stderr, timed_out = _bounded_process(\n                                      ~~~~~~~~~~~~~~~~^\n        argv,\n        ^^^^^\n    ...<3 lines>...\n        max_output=max_output,\n        ^^^^^^^^^^^^^^^^^^^^^^\n    )\n    ^\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/skills/sdlc-500-vfy/scripts/vfy_executor.py\", line 336, in _bounded_process\n    _sandbox_argv(argv, root, cwd),\n    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/skills/sdlc-500-vfy/scripts/vfy_executor.py\", line 289, in _sandbox_argv\n    require(bubblewrap is not None, \"VFY_METHOD_NOT_READY\",\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n            \"OS sandbox is unavailable; command execution remains pending\",\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n            status=\"action_required\")\n            ^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review/skills/sdlc-500-vfy/scripts/vfy_common.py\", line 85, in require\n    raise VfyError(\n    ...<5 lines>...\n    )\nvfy_common.VfyError: OS sandbox is unavailable; command execution remains pending\n",
+          "code": "VFY_METHOD_NOT_READY",
+          "status": "action_required"
+        }
+      }
+    ]
+  },
+  "subprocess_calls": 0,
+  "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+  "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+  "scenario": "Linux missing bwrap simulated at platform/backend discovery seams; not a live Linux host",
+  "formal_case_pass_claim": false
+}

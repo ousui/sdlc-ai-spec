@@ -1,0 +1,11 @@
+................................................................................................................................................................................................................................................................................................................................................................................................../opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:341: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x10abedc60>
+  @property
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:341: ResourceWarning: unclosed database in <sqlite3.Connection object at 0x10abeda80>
+  @property
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+.......................................................................................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 633 tests in 72.396s
+
+OK

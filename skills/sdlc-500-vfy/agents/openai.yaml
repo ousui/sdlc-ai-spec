@@ -1,0 +1,5 @@
+policy:
+  allow_implicit_invocation: false
+interface:
+  display_name: "SDLC 500 VFY"
+  short_description: "验证准确产品结果并形成可信结论"

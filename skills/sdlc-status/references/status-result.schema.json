@@ -45,9 +45,19 @@
             "properties": {
               "resource": {"type": "string"},
               "artifact_reference": {"type": "string"},
-              "result_reference": {"type": "string"}
+              "result_reference": {"type": "string"},
+              "result_digest": {
+                "anyOf": [
+                  {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+                  {"type": "null"}
+                ]
+              }
             }
           }
+        },
+        "vfy_projection": {
+          "type": ["object", "null"],
+          "required": ["artifact_reference", "revision_state", "artifact_status", "product_result", "artifact_gate", "early_stop", "unresolved_returns", "rls_applicability", "rls_ready", "next_phase", "next_action", "return_phase"]
         }
       }
     },

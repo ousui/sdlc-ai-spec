@@ -378,6 +378,14 @@ def render_summary(result: Mapping[str, Any]) -> str:
             lines.append("VFY 输入：" + ", ".join(projection["vfy_inputs"]))
         for row in projection.get("vfy_results", []):
             lines.append(f"VFY Resource {row['resource']}：{row['result_reference']}")
+        vfy = projection.get("vfy_projection")
+        if vfy:
+            lines.append(f"VFY Artifact：{vfy['artifact_reference']}")
+            lines.append(f"Product Result：{vfy['product_result']}")
+            lines.append(f"Artifact Gate：{vfy['artifact_gate']}")
+            lines.append("RLS ready：" + ("是" if vfy.get("rls_ready") else "否"))
+            if vfy.get("return_phase"):
+                lines.append(f"Return Phase：{vfy['return_phase']}")
         blockers = projection.get("blockers", [])
         if blockers:
             lines.append(f"阻塞项：{len(blockers)}")

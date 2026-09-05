@@ -1,0 +1,11 @@
+source_sha = 5ea3ba9aa7288021c4d99b14cff76ec0fc405841
+base_sha = 638e27221b13d74208b54f78530cf338f67879af
+{"attempts": [{"attempt": 1, "delay_before_seconds": 0, "duration_ms": 12896, "exit_code": 0, "finished_at": "2026-09-05T01:45:41Z", "started_at": "2026-09-05T01:45:28Z", "stderr_log": "phase-logs/lifecycle_status_regression-attempt-1.stderr.log", "stderr_sha256": "sha256:009f25234b2ef6782f24a0660545bb74311698d20f9d109fe0f2c1e83345ae8e", "stdout_log": "phase-logs/lifecycle_status_regression-attempt-1.stdout.log", "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "transient_network_failure": false}], "base_sha": "638e27221b13d74208b54f78530cf338f67879af", "command": ["/opt/homebrew/opt/python@3.14/bin/python3.14", "-m", "unittest", "tests.skill_vfy.test_lifecycle", "tests.skill_imp.test_lifecycle", "tests.skill_status.test_imp"], "cwd": ".", "duration_ms": 12896, "exit_code": 0, "finished_at": "2026-09-05T01:45:41Z", "name": "lifecycle_status_regression", "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841", "started_at": "2026-09-05T01:45:28Z", "status": "PASS", "stderr_log": "phase-logs/lifecycle_status_regression-attempt-1.stderr.log", "stderr_sha256": "sha256:009f25234b2ef6782f24a0660545bb74311698d20f9d109fe0f2c1e83345ae8e", "stdout_log": "phase-logs/lifecycle_status_regression-attempt-1.stdout.log", "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+STDOUT
+
+STDERR
+....................................
+----------------------------------------------------------------------
+Ran 36 tests in 12.659s
+
+OK

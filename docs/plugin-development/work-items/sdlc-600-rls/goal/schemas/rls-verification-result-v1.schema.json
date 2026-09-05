@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sdlc-ai-spec/rls-verification-result/v1",
+  "title": "RLS Verification Result",
+  "type": "object",
+  "required": [
+    "contract",
+    "source_sha",
+    "profile",
+    "status",
+    "checks",
+    "real_target_effects"
+  ],
+  "properties": {
+    "contract": {
+      "const": "sdlc-ai-spec/rls-verification-result/v1"
+    },
+    "source_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "profile": {
+      "enum": [
+        "provisional",
+        "quick",
+        "phase",
+        "full",
+        "external",
+        "attest"
+      ]
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "HARD_BLOCKED"
+      ]
+    },
+    "checks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "argv",
+          "cwd",
+          "exit_code",
+          "duration_seconds",
+          "log_digest"
+        ]
+      }
+    },
+    "real_target_effects": {
+      "const": 0
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sdlc-ai-spec/rls-delivery-result/v1",
+  "title": "RLS Final Delivery Result",
+  "type": "object",
+  "required": [
+    "contract",
+    "status",
+    "implementation_subject_sha",
+    "evidence_head_sha",
+    "fixed_eval",
+    "real_target_effects"
+  ],
+  "properties": {
+    "contract": {
+      "const": "sdlc-ai-spec/rls-delivery-result/v1"
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "HARD_BLOCKED"
+      ]
+    },
+    "implementation_subject_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "evidence_head_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$"
+    },
+    "fixed_eval": {
+      "const": "87/87 PASS"
+    },
+    "real_target_effects": {
+      "const": 0
+    }
+  },
+  "additionalProperties": true
+}

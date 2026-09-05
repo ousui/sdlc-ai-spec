@@ -1,0 +1,47 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sdlc-ai-spec/vfy-release-candidate/v1",
+  "title": "VFY Release Candidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract", "provisional", "vfy_reference", "revision_state", "artifact_status",
+    "artifact_gate", "early_stop", "pending_fields", "scope_reference",
+    "subject_references", "result_references", "subject_current_valid",
+    "imp_chain_current_valid", "con_ver", "con_val", "product_result",
+    "unresolved_returns", "rls_applicability", "release_target_obligations",
+    "evidence_references", "exception", "exception_references", "source_digest", "rls_ready"
+  ],
+  "properties": {
+    "contract": {"const": "sdlc-ai-spec/vfy-release-candidate/v1"},
+    "provisional": {"const": false},
+    "vfy_reference": {"type":"string","pattern":"^VFY-[0-9]{14}-[0-9]{2,}@[1-9][0-9]*$"},
+    "revision_state": {"const":"frozen"},
+    "artifact_status": {"enum":["ready","ready_with_exception"]},
+    "artifact_gate": {"enum":["pass","pass_with_exception"]},
+    "early_stop": {"const":false},
+    "pending_fields": {"type":"array","maxItems":0},
+    "scope_reference": {"type":"string","pattern":"^(REQ|DSN|PLN)-[0-9]{14}-[0-9]{2,}@[1-9][0-9]*$"},
+    "subject_references": {"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string"}},
+    "result_references": {"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string"}},
+    "subject_current_valid": {"const":true},
+    "imp_chain_current_valid": {"const":true},
+    "con_ver": {"enum":["pass","fail","n/a","waived"]},
+    "con_val": {"enum":["pass","fail","n/a","waived"]},
+    "product_result": {"enum":["pass","fail","n/a","waived"]},
+    "unresolved_returns": {"type":"array","maxItems":0},
+    "rls_applicability": {"enum":["required","n/a","waived"]},
+    "release_target_obligations": {"type":"array","items":{"type":"object"}},
+    "evidence_references": {"type":"array","minItems":1,"uniqueItems":true,"items":{"type":"string"}},
+    "exception": {"type":["object","null"]},
+    "exception_references": {"type":"array","uniqueItems":true,"items":{"type":"string","pattern":"^(CTX|REQ|DSN|PLN|IMP|VFY|RLS)-[0-9]{14}-[0-9]{2,}@[1-9][0-9]*#EX-[0-9]{3}$"}},
+    "source_digest": {"type":"string","pattern":"^sha256:[0-9a-f]{64}$"},
+    "rls_ready": {"type":"boolean"}
+  },
+  "allOf": [
+    {
+      "if": {"properties":{"artifact_gate":{"const":"pass_with_exception"}}},
+      "then": {"properties":{"exception_references":{"minItems":1}}}
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "name": "clone-exact-cache",
+  "attempt": 1,
+  "argv": [
+    "git",
+    "clone",
+    "--no-hardlinks",
+    "--no-checkout",
+    "/private/tmp/sdlc-rls-repair-20260905-01a070e8/external-cache/springgear",
+    "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-springgear-kjxutsi5/project"
+  ],
+  "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-springgear-kjxutsi5",
+  "started_at": "2026-09-05T11:39:40.029255+00:00",
+  "finished_at": "2026-09-05T11:39:40.065739+00:00",
+  "duration_ms": 37,
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "Cloning into '/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-springgear-kjxutsi5/project'...\n",
+  "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/clone-exact-cache-attempt-1.stdout.log",
+  "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/clone-exact-cache-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "sha256:85f0272c0c3a379458b033bb027effcd81356a0c3179745d382ad110cfeb2fda",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": null,
+  "source_after": null,
+  "source_unchanged": true,
+  "success": true
+}

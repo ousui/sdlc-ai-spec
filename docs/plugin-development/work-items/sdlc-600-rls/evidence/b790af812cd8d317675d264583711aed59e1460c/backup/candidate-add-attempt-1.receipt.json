@@ -1,0 +1,48 @@
+{
+  "name": "candidate-add",
+  "attempt": 1,
+  "argv": [
+    "git",
+    "worktree",
+    "add",
+    "--detach",
+    "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/candidate",
+    "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+  ],
+  "cwd": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/source",
+  "started_at": "2026-09-05T11:23:35.586318+00:00",
+  "finished_at": "2026-09-05T11:23:35.779802+00:00",
+  "duration_ms": 194,
+  "exit_code": 0,
+  "stdout": "HEAD is now at c9615ce docs(rls): 绑定已接受 VFY 与最终交付设计\n",
+  "stderr": "Preparing worktree (detached HEAD c9615ce)\n",
+  "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/candidate-add-attempt-1.stdout.log",
+  "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/candidate-add-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:9a79905ba0d96f5af37f066f40f9f334809c894c7bbfd24543d65dd06be685b3",
+  "stderr_sha256": "sha256:353320b725be576ca8eadfcb4acd373a9e0df5d45dd274a1de3cb8c7e4952780",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": {
+    "root": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/source",
+    "sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+    "tree": "4bca19ff957415cacc8a427678cfbddd528fa768",
+    "parents": [
+      "206c379b77bb47ba0cf7913ea6dc1f8a39ed9bcd"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_after": {
+    "root": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/source",
+    "sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+    "tree": "4bca19ff957415cacc8a427678cfbddd528fa768",
+    "parents": [
+      "206c379b77bb47ba0cf7913ea6dc1f8a39ed9bcd"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_unchanged": true,
+  "success": true
+}

@@ -1,0 +1,7 @@
+{
+  "scope": "Independent probe harness stdout only; no S3 change",
+  "first_failure": "Two child-safe-writer stdout logs contain the extra newline added by print(read_text()).",
+  "repair": "Use sys.stdout.write to preserve the child JSON writer output without adding a second newline, then rerun all 12 independent probes at repair source and S3.",
+  "raw_history": "The two complete first-probe output directories and initial harness are retained byte-for-byte in precommit-probe-archives.tar.gz; no old raw file is rewritten.",
+  "checks": "git diff --check, exact byte/hash equality, first-write safety and all 12 probe assertions remain required."
+}

@@ -1,0 +1,15 @@
+RLS_STEP_START source
+RLS_STEP_END source PASS
+RLS_STEP_START fresh-worktree-add
+RLS_STEP_END fresh-worktree-add PASS
+RLS_STEP_START fresh-quick
+RLS_STEP_END fresh-quick PASS
+RLS_STEP_START fresh-phase
+RLS_STEP_END fresh-phase PASS
+RLS_STEP_START fresh-full
+RLS_STEP_END fresh-full PASS
+RLS_STEP_START fresh-external
+RLS_STEP_END fresh-external PASS
+RLS_STEP_START fresh-worktree-remove
+RLS_STEP_END fresh-worktree-remove PASS
+RLS_DELIVERY_ATTEST = PASS

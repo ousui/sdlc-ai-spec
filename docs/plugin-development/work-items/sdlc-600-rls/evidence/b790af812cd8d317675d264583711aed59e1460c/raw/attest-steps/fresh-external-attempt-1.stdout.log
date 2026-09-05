@@ -1,0 +1,5 @@
+RLS_STEP_START source
+RLS_STEP_END source PASS
+RLS_STEP_START external-projects
+RLS_STEP_END external-projects PASS
+RLS_DELIVERY_EXTERNAL = PASS

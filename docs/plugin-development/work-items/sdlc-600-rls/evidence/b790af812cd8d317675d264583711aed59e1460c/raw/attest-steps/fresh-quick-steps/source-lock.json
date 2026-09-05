@@ -1,0 +1,7 @@
+{
+  "contract": "sdlc-ai-spec/rls-final-source-lock-validation/v1",
+  "provisional": false,
+  "vfy_upstream_sha": "46509eb6688df30e71ed094132b2d10e81ceb2ac",
+  "entries": 14,
+  "result": "PASS"
+}

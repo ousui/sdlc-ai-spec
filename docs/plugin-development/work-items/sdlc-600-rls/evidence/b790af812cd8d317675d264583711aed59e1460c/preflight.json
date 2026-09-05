@@ -1,0 +1,24 @@
+{
+  "source": {
+    "root": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/source",
+    "sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+    "tree": "4bca19ff957415cacc8a427678cfbddd528fa768",
+    "parents": [
+      "206c379b77bb47ba0cf7913ea6dc1f8a39ed9bcd"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "main": {
+    "root": "/Users/shuaiw/Workspace/goedge.cloud/sdlc-ai-spec",
+    "sha": "644218e02876c5649fd87cfca12e1876d3b3b8bf",
+    "tree": "3a75052b5ab1a10b91eb4cc1582b527a86e7dd5b",
+    "parents": [
+      "8d293355235057142235f1ca63c241d586c8abdc"
+    ],
+    "branch": "main",
+    "status": ""
+  },
+  "refs": "c9615cec2da3b39949a3fdd8be32396eae6db3aa\trefs/heads/design/sdlc-600-rls-goal\nac0c3a8abbb975b8f1d7b4b630a5a902e4603759\trefs/heads/impl/rls-v2\n46509eb6688df30e71ed094132b2d10e81ceb2ac\trefs/heads/impl/vfy-v2\n644218e02876c5649fd87cfca12e1876d3b3b8bf\trefs/heads/main",
+  "worktrees": "worktree /Users/shuaiw/Workspace/goedge.cloud/sdlc-ai-spec\nHEAD 644218e02876c5649fd87cfca12e1876d3b3b8bf\nbranch refs/heads/main\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/rls-final-20260905T034238Z/candidate\nHEAD 13e37b100060d714a6b61c26e1ba990edb2dcae3\ndetached\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/rls-final-20260905T034238Z/source-provisional\nHEAD 70e6f92fd1644831c836de1e2b8a0aa567c5a979\ndetached\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/source\nHEAD ac0c3a8abbb975b8f1d7b4b630a5a902e4603759\ndetached\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/rls-repair-20260905-01a070e8/candidate\nHEAD 93e98c577b5c3136df55ee5a7cb7a1c2adfcda30\ndetached\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/vfy-goal-20260904T093158Z/attest\nHEAD 2234b948a01da37f3824fcaa173c2df30c0e06eb\ndetached\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/vfy-goal-20260904T093158Z/candidate\nHEAD 3ad179b3dad5885dfb559ec206e141f6cbbdc310\nbranch refs/heads/local/vfy-goal-20260904T093158Z\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/vfy-goal-20260904T093158Z/remote-readback\nHEAD 3ad179b3dad5885dfb559ec206e141f6cbbdc310\ndetached\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/vfy-goal-20260904T093158Z/source\nHEAD 7981088ecea897e16795b3ea6f721d32f6fd6a44\ndetached\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/attest\nHEAD fc162b14e7f91901c0761708f919a5cdd43c01cd\ndetached\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/candidate\nHEAD f5eba20cd9c2e55fc7db8c77c880e1d78ccb0830\nbranch refs/heads/local/vfy-repair-20260904T172247Z\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/remote-readback\nHEAD f5eba20cd9c2e55fc7db8c77c880e1d78ccb0830\ndetached\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/review\nHEAD 030445e20f262e551d3be61572ad888224825eba\ndetached\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/review-fc162b1\nHEAD fc162b14e7f91901c0761708f919a5cdd43c01cd\ndetached\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/source\nHEAD 66cce6c8a2f56ef43c8cb91b0d0cd4fc3bce202e\ndetached\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-attest\nHEAD 5ea3ba9aa7288021c4d99b14cff76ec0fc405841\ndetached\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-candidate\nHEAD 46509eb6688df30e71ed094132b2d10e81ceb2ac\nbranch refs/heads/local/vfy-repair-web007\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-remote-readback\nHEAD 46509eb6688df30e71ed094132b2d10e81ceb2ac\ndetached\n\nworktree /Users/shuaiw/.local/state/sdlc-ai-spec/vfy-repair-20260904T172247Z/web007-review\nHEAD 5ea3ba9aa7288021c4d99b14cff76ec0fc405841\ndetached"
+}

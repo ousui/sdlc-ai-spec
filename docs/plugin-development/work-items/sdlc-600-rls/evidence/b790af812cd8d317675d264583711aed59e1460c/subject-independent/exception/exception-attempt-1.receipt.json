@@ -1,0 +1,27 @@
+{
+  "name": "exception",
+  "attempt": 1,
+  "argv": [
+    "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-independent-probes-rw5qsu_j/absent-executable",
+    "--password",
+    "[REDACTED]"
+  ],
+  "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-independent-probes-rw5qsu_j",
+  "started_at": "2026-09-05T11:51:44.710548+00:00",
+  "finished_at": "2026-09-05T11:51:44.712432+00:00",
+  "duration_ms": 2,
+  "exit_code": 127,
+  "stdout": "",
+  "stderr": "[Errno 2] No such file or directory: '/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-independent-probes-rw5qsu_j/absent-executable'",
+  "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/exception/exception-attempt-1.stdout.log",
+  "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/exception/exception-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "sha256:232f2bb7a5374d3786432b47a52ec7923f9b593f0897e528d2d3d8b4e06c4392",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": true,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": null,
+  "source_after": null,
+  "source_unchanged": true,
+  "success": false
+}

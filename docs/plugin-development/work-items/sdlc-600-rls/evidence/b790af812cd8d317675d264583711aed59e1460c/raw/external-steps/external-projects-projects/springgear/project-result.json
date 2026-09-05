@@ -1,0 +1,2978 @@
+{
+  "name": "springgear",
+  "repository": "ousui/springgear",
+  "expected_sha": "e855096ff19dcdb303dc4250ba19c30acd743ac7",
+  "success": true,
+  "fetch_attempts": [
+    {
+      "name": "clone-exact-cache",
+      "attempt": 1,
+      "argv": [
+        "git",
+        "clone",
+        "--no-hardlinks",
+        "--no-checkout",
+        "/private/tmp/sdlc-rls-repair-20260905-01a070e8/external-cache/springgear",
+        "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-springgear-f61ick30/project"
+      ],
+      "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-springgear-f61ick30",
+      "started_at": "2026-09-05T11:33:27.652918+00:00",
+      "finished_at": "2026-09-05T11:33:27.684682+00:00",
+      "duration_ms": 32,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "Cloning into '/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-springgear-f61ick30/project'...\n",
+      "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/springgear/clone-exact-cache-attempt-1.stdout.log",
+      "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/springgear/clone-exact-cache-attempt-1.stderr.log",
+      "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "sha256:eba60f48cc5d8d4e5209b62fdf5f13efd6d7375e3828bb62fd05ee8dd651b614",
+      "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+      "redaction_applied": false,
+      "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+      "source_before": null,
+      "source_after": null,
+      "source_unchanged": true,
+      "success": true
+    }
+  ],
+  "real_target_effects": 0,
+  "remote_writes": 0,
+  "installations": 0,
+  "cache_before": {
+    "root": "/private/tmp/sdlc-rls-repair-20260905-01a070e8/external-cache/springgear",
+    "sha": "e855096ff19dcdb303dc4250ba19c30acd743ac7",
+    "tree": "0ec0b82046896c5b72c8075c4d9855352fa9802a",
+    "parents": [],
+    "branch": "",
+    "status": ""
+  },
+  "cache_after": {
+    "root": "/private/tmp/sdlc-rls-repair-20260905-01a070e8/external-cache/springgear",
+    "sha": "e855096ff19dcdb303dc4250ba19c30acd743ac7",
+    "tree": "0ec0b82046896c5b72c8075c4d9855352fa9802a",
+    "parents": [],
+    "branch": "",
+    "status": ""
+  },
+  "checkout": {
+    "name": "checkout-exact",
+    "attempt": 1,
+    "argv": [
+      "git",
+      "-C",
+      "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-springgear-f61ick30/project",
+      "checkout",
+      "--detach",
+      "e855096ff19dcdb303dc4250ba19c30acd743ac7"
+    ],
+    "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-springgear-f61ick30",
+    "started_at": "2026-09-05T11:33:27.724200+00:00",
+    "finished_at": "2026-09-05T11:33:27.743578+00:00",
+    "duration_ms": 19,
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": "HEAD is now at e855096 Merge remote-tracking branch 'origin/2.1.0-start' into devl\n",
+    "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/springgear/checkout-exact-attempt-1.stdout.log",
+    "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/springgear/checkout-exact-attempt-1.stderr.log",
+    "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "stderr_sha256": "sha256:21561abe5647f05d43721ae1aeb2bf98a783d1caf7b2b310d5aa51c8f6b39233",
+    "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+    "redaction_applied": false,
+    "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+    "source_before": null,
+    "source_after": null,
+    "source_unchanged": true,
+    "success": true
+  },
+  "before": {
+    "head": "e855096ff19dcdb303dc4250ba19c30acd743ac7",
+    "tree": "0ec0b82046896c5b72c8075c4d9855352fa9802a",
+    "refs": "",
+    "status": "",
+    "tracked": "100644 b61e180393e2bd2919cd91f435de4ff78de59de7 0\t.gitignore\n100644 261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64 0\tLICENSE\n100644 4d97cf042b406499981d6fd02c01f3a46049b756 0\tREADME.md\n100644 d2ffbfefee41f9b965636c25a688c75947a34e05 0\tdocs/doc-change.md\n100644 38686cc8fd3dcb6f4f6bea1681e477f832faa4d4 0\tdocs/doc-example-01.md\n100644 6ae600733c490444a12f13b4a09d26d201d89dd6 0\tdocs/doc-guide.md\n100644 9443aa63513be7ec1c0f38bc3520a9cb2cda2386 0\tdocs/doc-history-flow.png\n100644 2e28c23261d6a8e1ef2ac18ffc60902684a72dd4 0\tdocs/doc-history.md\n100644 658a51e75826b095b31f2694eec9507687450489 0\tpom.xml\n100644 a1f7186f484c897fc1096c5d1e034d1fec8f5c5d 0\tspringgear-bom/pom.xml\n100644 2c51923c7a45b42cb7bce808dd4a6fa55e3b5f8d 0\tspringgear-core/pom.xml\n100644 ec1db204c7eb0e099feae55911752ba0d6300701 0\tspringgear-core/src/main/java/org/springgear/EnableSpringGear.java\n100644 ca8b5808e2a9cee079d47f4b45fe37dd2a5c1d37 0\tspringgear-core/src/main/java/org/springgear/SpringGearConfiguration.java\n100644 649527a6e0f9ab25a3afb8359274ecb4ca3ecf61 0\tspringgear-core/src/main/java/org/springgear/context/AbstractSpringGearBeanRegistrar.java\n100644 fa2c9ad46234c89d5b5682b36ce5563e3faef4ee 0\tspringgear-core/src/main/java/org/springgear/context/SpringGearBeanAnnotationRegistrar.java\n100644 43565b24fbf7b65fbb03aa9c7baa89c0d87c1182 0\tspringgear-core/src/main/java/org/springgear/context/SpringGearBeanRegistrar.java\n100644 f431e7c82d70b361fffbdbc1f40edcedae2adb91 0\tspringgear-core/src/main/java/org/springgear/core/annotation/SpringGearEngine.java\n100644 54e06becb01e6ac2a1d7d81aa2dd709beb03341e 0\tspringgear-core/src/main/java/org/springgear/core/annotation/SpringGearRouter.java\n100644 2f0430f2b085f99691e8238c536c8cbaf1390c87 0\tspringgear-core/src/main/java/org/springgear/core/context/SpringGearContext.java\n100644 1362863395db10e1fd25ba71b327408bc745e04c 0\tspringgear-core/src/main/java/org/springgear/core/context/SpringGearContextValue.java\n100644 1587e79878b9ec71705e3c4e910b536038994730 0\tspringgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineBeanProcessor.java\n100644 efe4b9d3be834661e54264344968bb0c31a983a1 0\tspringgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineFactoryBean.java\n100644 1b185fd74967fb73c02e38dcd802d2e009aa2ef8 0\tspringgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineInvoker.java\n100644 90f8f216a1509e684d1231128366e2ff8da6b388 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/AbstractSpringGearEngineExecutor.java\n100644 561e2bbc8475f4a6b4d295dc9f39dc7c1c8dcb31 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/DefaultSpringGearEngineExecutor.java\n100644 8ad3fb2b2519c157fcc4838a327ecdc9f3d2843c 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/SpringGearEngineExecutor.java\n100644 93669ef6ac1fb9d42a8a745c0b2a5da281654994 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearEndingHandler.java\n100644 4dba2978fa925cc2570cbd04dc3c196d9b95506b 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearHandler.java\n100644 19c74ae97b7cb77a9a2685208a7bb2446e09751b 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearOrderedHandler.java\n100644 0f8f0a966db4dc9731b42c3fcf420de4a899be29 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearRequestValidHandler.java\n100644 f6413d523a4a9dddcb326724b219123f9e8a53e7 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/handler/SpringGearHandlerInterface.java\n100644 56027c979925075368af5b5e788fbd6a5cbfc850 0\tspringgear-core/src/main/java/org/springgear/core/engine/request/SpringGearEngineParts.java\n100644 f2d89c1fce9efe8dcf1571f2f9eb7aaa8097014a 0\tspringgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearMapResultWrapper.java\n100644 38e53442a05a95aead5788eaa27c31c6a1b4f33d 0\tspringgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearOriginalResultWrapper.java\n100644 884713c9cc1acfbe7de6d108605df3f42697d186 0\tspringgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearResultWrapper.java\n100644 b6d1902ddf10b5877d055d678594734a48d7e5d1 0\tspringgear-core/src/main/java/org/springgear/core/router/SpringGearRouterBeanProcessor.java\n100644 238476516694e7288be49250a280eb59a369c6dc 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearContinueException.java\n100644 6ae2faa81cc779f06fbd03878c672692f9e0dd4b 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearError.java\n100644 9e2fd2b70930aef0048b359376f709dbd3c05a29 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearException.java\n100644 53eb729828d95945e89bbebb68472d52795081f7 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearExceptionThrows.java\n100644 a09f179eba43debc52b2925b8eecb2c63d230b80 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearExceptions.java\n100644 5ce4735433e63b9552be39169a1d3a5024759c9d 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearInterruptException.java\n100644 222a4efdb5fea1982aef823173ac35cb6da1993e 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearUnauthorizedException.java\n100644 49fb626fa6fd85c38ac6832cc4b8d41450ee6c66 0\tspringgear-core/src/main/java/org/springgear/support/constants/HttpStatus.java\n100644 c4dc71e07cf01ffeea0477d25fb8835446ab7023 0\tspringgear-core/src/main/java/org/springgear/support/constants/package-info.java\n100644 560b4ca0267adf2a2eeb4a0a54a24c8b009dac64 0\tspringgear-core/src/main/java/org/springgear/support/enums/SymbolEnum.java\n100644 b0a7f38cee4c9717a03f1fe38bbb0282f2e09045 0\tspringgear-core/src/main/java/org/springgear/support/enums/package-info.java\n100644 2623b969cb4e253bf34fceb8f491c3e4f844677e 0\tspringgear-core/src/main/java/org/springgear/support/tools/package-info.java\n100644 9c1b0f2405d14889cafea0792fec25a2615cdc71 0\tspringgear-core/src/main/java/org/springgear/support/utils/SpringGearUtils.java\n100644 bd69e2c8303d7d5409881137013dbaa0179782d6 0\tspringgear-eventbus/pom.xml\n100644 b2641c1bcb089f597556eecdd49bd8d5d8ae3860 0\tspringgear-eventbus/src/main/java/org/springgear/eventbus/AbstractSpringGearEventListener.java\n100644 8d8d04d8fca07a94bacfcc4cd5a64be3db1b8f4e 0\tspringgear-eventbus/src/main/java/org/springgear/eventbus/EventBusAware.java\n100644 fb5d770fb38fba579f97288d04e321fbc1d33906 0\tspringgear-eventbus/src/main/java/org/springgear/eventbus/SpringGearEventAware.java\n100644 0c69f784a96324a46a6b76a6f2fa425da4555f80 0\tspringgear-eventbus/src/main/java/org/springgear/eventbus/SpringGearEventListener.java\n100644 988565b6d4d213e692cd6d4301fa92519dad3b5f 0\tspringgear-eventbus/src/main/java/org/springgear/eventbus/annotation/SpringGearEvent.java\n100644 ec3e16ed573e7152e9b4dec1cae5781b27dc25fb 0\tspringgear-example/README.md\n100644 c8c50ad3f7a4bd99e3f543cf02919e593a761176 0\tspringgear-example/example-01-start-xml_config/README.md\n100644 4580d2aaec943b6ad602ce9dcf8fad6d99ae2363 0\tspringgear-example/example-01-start-xml_config/pom.xml\n100644 85d6473f17bbb5cb120a30572e6d74044e5e32fa 0\tspringgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/Main.java\n100644 6883c7ee758dd46b7e88230677f9107757931ee7 0\tspringgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/service/MyServiceInterface.java\n100644 b8aa1824a0e00f6cedf6fb1b41fae91f37684290 0\tspringgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java\n100644 42d547175c3fe59236c08c48e63948238b0ecb2e 0\tspringgear-example/example-01-start-xml_config/src/main/resources/spring-config.xml\n100644 1a2c59eb933433d5c10f3e0422e7fd6eb7167b3d 0\tspringgear-example/example-02-start-java_config/README.md\n100644 bb9a1e161c100467692d00ddb7b395b8cef3a6ba 0\tspringgear-example/example-02-start-java_config/pom.xml\n100644 5359deb12a713bfc17176322999cf19e1e2eda90 0\tspringgear-example/example-02-start-java_config/src/main/java/org/springgear/example/Main.java\n100644 6883c7ee758dd46b7e88230677f9107757931ee7 0\tspringgear-example/example-02-start-java_config/src/main/java/org/springgear/example/service/MyServiceInterface.java\n100644 d556c669f4e71403885910fdf1efaf287a034daf 0\tspringgear-example/example-02-start-java_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java\n100644 1cae41eefbe13977974f745173b3ac893f7e1a53 0\tspringgear-example/example-03-start-annotation_config/README.md\n100644 8f2c4848928bc2667c8428f256939c02d6447363 0\tspringgear-example/example-03-start-annotation_config/pom.xml\n100644 b161d4db92ada0ab3f9babfe91a6569d3dd71a44 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/Main.java\n100644 da3d640b080d08f7fcf14846c179dc6795525871 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/MyServiceInterface.java\n100644 e119efb08e04346ec465ab2f763f2b5e613d9c0c 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler00Verify.java\n100644 5dce0bece68bc5cd28694b98c9c1c2932ae2428c 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler01.java\n100644 7b7fb03248dff847ff237d5b17b2a22f5746310b 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler10.java\n100644 3f2c5e078da7f8cb0df18256e667eb1802b57a49 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler99.java\n100644 6a2cecffeb3e812c3ad849c2d0a613fdf3a91b85 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler00Verify.java\n100644 cb8bfe152f4b29aa2fac892fd0aeb2e096440697 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler01.java\n100644 f6a5a1e01a432d4bdcc0a0798bd9181c607c400e 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler10.java\n100644 cac9a2b05e4ea3f7f769cc527d56fd6dd80eeb7e 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler99.java\n100644 d556c669f4e71403885910fdf1efaf287a034daf 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java\n100644 988a5a43076898d78a09c452a0ce4859f00a4918 0\tspringgear-example/example-04-simple_use/README.md\n100644 529085409b1ee562bc18dde6be7813d61c609e73 0\tspringgear-example/example-04-simple_use/pom.xml\n100644 d01cfd092f36c9c64024d45d01c31d3487fd1b8b 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/Main.java\n100644 da3d640b080d08f7fcf14846c179dc6795525871 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/MyServiceInterface.java\n100644 cd65bc9a20286fd177edd642ecb26677d9872751 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler00Verify.java\n100644 f6a793d5dbfd80bc016d63b70dffef2943f1eee0 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler01.java\n100644 4e3726763448b14a98306f31cda09a66d12f4547 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler10.java\n100644 3f2c5e078da7f8cb0df18256e667eb1802b57a49 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler99.java\n100644 1a171d159da714f6d3d89da0137ef5034005b713 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler00Verify.java\n100644 cb8bfe152f4b29aa2fac892fd0aeb2e096440697 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler01.java\n100644 f6a5a1e01a432d4bdcc0a0798bd9181c607c400e 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler10.java\n100644 cac9a2b05e4ea3f7f769cc527d56fd6dd80eeb7e 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler99.java\n100644 d556c669f4e71403885910fdf1efaf287a034daf 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/single/SingleHandler01.java\n100644 dc751fb91d5a81a9b63d36f314ae8b5c00e50524 0\tspringgear-example/example-05-context_use/README.md\n100644 7ac3486129ddd9fb7f3e71d651ad8b969100661a 0\tspringgear-example/example-05-context_use/pom.xml\n100644 57aec04ef83cf808746857348e9c61411d36dbb1 0\tspringgear-example/example-05-context_use/src/main/java/org/springgear/example/Main.java\n100644 603c12c77d3288c9b678ecde769d18d5ad3c33e0 0\tspringgear-example/example-05-context_use/src/main/java/org/springgear/example/ctx/MyCtxVal.java\n100644 063d634bbdd3653765b4056db57a39d845e076d3 0\tspringgear-example/example-05-context_use/src/main/java/org/springgear/example/service/MyServiceInterface.java\n100644 ebcd1aecef56fd24fa1765dd5c0498f82a720784 0\tspringgear-example/example-05-context_use/src/main/java/org/springgear/example/service/single/SingleHandler01.java\n100644 855a45efb76551f850b25443dece8388b70e1216 0\tspringgear-example/example-05-context_use/src/main/java/org/springgear/example/service/single/SingleHandler02.java\n100644 8d868cbd68e36d11c9aa91860f0f9aac0d0b825d 0\tspringgear-example/pom.xml\n100644 ecb3f263a8281b433ad46b99857900369ff20e11 0\tspringgear-ext-parent/README.md\n100644 5dd7b045d063973dcee4ac6c9275bf422efc3bf0 0\tspringgear-ext-parent/pom.xml\n100644 60e3b734c9f5618cf12564abae8139690aac16a6 0\tspringgear-ext-parent/springgear-ext-orika/pom.xml\n100644 85cd68eb130b63ecbba02976a4e8a686e53087ed 0\tspringgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/OrikaBeanMapper.java\n100644 e030348869126ce8e67f1ef783f0abf9e6c7b3be 0\tspringgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/OrikaCustomMapper.java\n100644 d214cf6770fba13b5317af90090c27da6f386e77 0\tspringgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/config/Orika.java\n100644 f980f9170aa2e79458adb7cf8782e0b48430f6c4 0\tspringgear-parent/README.md\n100644 6464dafac56e17bfc71cb593eb30886f5912eda5 0\tspringgear-parent/pom.xml\n100644 292384c0a4d674177d3a0eda904291fca7614d73 0\tspringgear-pending/pom.xml\n100644 ce232d8b83eb8124ef3d1cd985c6033fbd9ae6dc 0\tspringgear-pending/src/main/java/org/springgear/config/Properties.java\n100644 b109668f1a46bc746f621e384d71bb388a94c6d5 0\tspringgear-webmvc/pom.xml\n100644 d69c7dcd66e93ac06a8a6169bbec0f073a35b405 0\tspringgear-webmvc/src/main/java/org/springgear/webmvc/annotation/Authentication.java\n100644 009234380aaf4102f050072b5e755dbb06dd2b36 0\tspringgear-webmvc/src/main/java/org/springgear/webmvc/annotation/ResponseBodyWrapper.java",
+    "untracked": "",
+    "tracked_bytes_modes": {
+      ".gitignore": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 169,
+        "sha256": "sha256:6414407579da1449da4fca6d58ed784895d73e0a1660774f75cf36afe6502852"
+      },
+      "LICENSE": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 11357,
+        "sha256": "sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      },
+      "README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2733,
+        "sha256": "sha256:8b491970bfa58999cf5ec4103cc2326fc8f50470ba37031f5e76f079293b0e7f"
+      },
+      "docs/doc-change.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 96,
+        "sha256": "sha256:23c91fcf99e09c1fb20a6f9931fbd8a7bd396da74de220a1db1b96440390b0b1"
+      },
+      "docs/doc-example-01.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2425,
+        "sha256": "sha256:fb554af252c6312ab0b875f66502ccc7b49d61fa1f4c7d3b94e42d49cfbd935a"
+      },
+      "docs/doc-guide.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 927,
+        "sha256": "sha256:22f0544d1ab69c97bced3f7c6313cff4e6b6f707cec40ec9b8493ee740cb5133"
+      },
+      "docs/doc-history-flow.png": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 138187,
+        "sha256": "sha256:c37e208bea8f55990e0bbb3b53ba22b28837485402a74aef8a9c8c98beded0f1"
+      },
+      "docs/doc-history.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1930,
+        "sha256": "sha256:1ca24e2a490f84f653325613659548597ddc3d2a348a7af00d749c566caf123f"
+      },
+      "pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 6429,
+        "sha256": "sha256:98875d07f26dd2ffd690d830bbbab18abed46491e025b98d27bfd0f6ce256da7"
+      },
+      "springgear-bom/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2186,
+        "sha256": "sha256:7a5b551ed04b4cc54e494e916d241369649d6d1fb6c35035117c672fec5b4703"
+      },
+      "springgear-core/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 813,
+        "sha256": "sha256:e8107ee871837d426d9687096648944372cc4f57565f8c5b57ee6fc16ed57bbb"
+      },
+      "springgear-core/src/main/java/org/springgear/EnableSpringGear.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 852,
+        "sha256": "sha256:76d204011acec23997fdd152774e951bffffc628f26cf7e42fea89e2406e475c"
+      },
+      "springgear-core/src/main/java/org/springgear/SpringGearConfiguration.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1041,
+        "sha256": "sha256:4ff055048fb0e7c9980e91ff2e0d44ec2d3b327f8e597333f577767260481a83"
+      },
+      "springgear-core/src/main/java/org/springgear/context/AbstractSpringGearBeanRegistrar.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1299,
+        "sha256": "sha256:0f538668854a2d55f7cdcf9e82608608adb1f105a4e79a6d1d5a159eb7771127"
+      },
+      "springgear-core/src/main/java/org/springgear/context/SpringGearBeanAnnotationRegistrar.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2909,
+        "sha256": "sha256:0ae39fd4cfb688deea43ff5a84e3f69ab70aeff1177779a541ef539004ec4c99"
+      },
+      "springgear-core/src/main/java/org/springgear/context/SpringGearBeanRegistrar.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2125,
+        "sha256": "sha256:4616e155908a7a760a6e379e51b4bf2ad9ce9ea3d3ebd2d495dff55d127293f2"
+      },
+      "springgear-core/src/main/java/org/springgear/core/annotation/SpringGearEngine.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1617,
+        "sha256": "sha256:4f2720b6ed6a88a59f384129282cd2fed581a1af56b9d1a27dce37f9c95fa592"
+      },
+      "springgear-core/src/main/java/org/springgear/core/annotation/SpringGearRouter.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 658,
+        "sha256": "sha256:b6f3142d2676ef0d1826deb641ebb28983803f01278e5b41721f0fa580b5c754"
+      },
+      "springgear-core/src/main/java/org/springgear/core/context/SpringGearContext.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2098,
+        "sha256": "sha256:29e20ceb59801c03960aac82dbde06442008356d4a86ea85a5eaa08062dc310b"
+      },
+      "springgear-core/src/main/java/org/springgear/core/context/SpringGearContextValue.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 257,
+        "sha256": "sha256:61c664dd0e9942bfaff592c58f617316d148f02008aac6c0e948cc5103988d6c"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineBeanProcessor.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 5802,
+        "sha256": "sha256:4e3f2c69842f8fa676df0d13f0ac2966d50405255f91a16234404deef0faa858"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineFactoryBean.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1783,
+        "sha256": "sha256:00be754934b5dd453467d4043b4dc3ce932aeeb92dd74f6c47ff9a8c38149ac5"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineInvoker.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 5435,
+        "sha256": "sha256:2ee38c08675a930d60fa1e724e9c38267e97a3bc25efc10996fcfc59e56bd9a3"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/AbstractSpringGearEngineExecutor.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 3579,
+        "sha256": "sha256:4e8011d244496e1bff0758d3d2f81c01b7ac977d1ff58a5eaedc36cb7c9ce7c4"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/DefaultSpringGearEngineExecutor.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 3389,
+        "sha256": "sha256:0de062e39fb198b03664e7f3ed46479068d6e0cb9b990273e0d4153e8ae8896f"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/SpringGearEngineExecutor.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1366,
+        "sha256": "sha256:7d23a6181751c62225fd228c3546861654845687e65b1cfdd56d25adb3ac1bd5"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearEndingHandler.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 965,
+        "sha256": "sha256:1b0ad409b0bb0056e9b94a92700e89b272c9e78ce6a0a4acb71d9c3580dd7c15"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearHandler.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 427,
+        "sha256": "sha256:a749cc42863af85dddba5f2ae96623a4d82b29eb624e0465674e5aa416d94d71"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearOrderedHandler.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 344,
+        "sha256": "sha256:dfff5ba49512f03a0f1048a7e4d7d24d0ddf57ba0480bf113f38cc7b6783c189"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearRequestValidHandler.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1125,
+        "sha256": "sha256:e68009e217cd49553ec9513f5efe040088baa457c4db0d51a05f328fe7f8d98f"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/handler/SpringGearHandlerInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 702,
+        "sha256": "sha256:add024e6a30b776ec45cd22e3a0053f0e849494739da37ef13c1188e7917d978"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/request/SpringGearEngineParts.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1791,
+        "sha256": "sha256:1c81bfc24e8aed52d7bcc5cd8571cae3f09e12f98cdb081cfbcc3c75b316f0a4"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearMapResultWrapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 828,
+        "sha256": "sha256:63494e0d50a7d28a45de510c7800a98d1f1d17355a2c014e5b89cd53861cbc86"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearOriginalResultWrapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 495,
+        "sha256": "sha256:f8bd22414ff7096f80c071be7acb47e61a3015a352d37317f5da9a81c62ea6ca"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearResultWrapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 690,
+        "sha256": "sha256:156911b556e73333ab06d07be0fdb0ddc4b48df237bbde2c7728584d6df6d827"
+      },
+      "springgear-core/src/main/java/org/springgear/core/router/SpringGearRouterBeanProcessor.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 4070,
+        "sha256": "sha256:98bb62ab9df1bb5f20864b336bcc3c2853508d1b81628f18d384d40cf55a099d"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearContinueException.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 420,
+        "sha256": "sha256:6a9ca40954e58661c68814c9a0e45bdd00cf36b4d4237770e208af2cdc274e85"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearError.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 380,
+        "sha256": "sha256:cc112ca01deccb678d39edcc8c9779b2163fdc304a6e8ab832bba29c215f0215"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearException.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 541,
+        "sha256": "sha256:c7a53cb9b10c79474883e7d791bea8ebd97096953003937f0f90eeabbc402dfa"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearExceptionThrows.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1152,
+        "sha256": "sha256:b2927e85c908bd49efe845679e41e3f06b23f48d7bd74ebbeb5cc6e71c76cb65"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearExceptions.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1324,
+        "sha256": "sha256:dca314b0f025a71b0a7636aec488d919871c3e27aa394fb9553e06666e4b7d82"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearInterruptException.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 674,
+        "sha256": "sha256:da9e6ec1b4211ff06ec56a9bac77d9e8bcd7bf41ad6c7cf6062b26e3c685b4d0"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearUnauthorizedException.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 381,
+        "sha256": "sha256:01a6671bccd39cf56f503e87b99a193f966e98da836192d86f281875d43df5fa"
+      },
+      "springgear-core/src/main/java/org/springgear/support/constants/HttpStatus.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 5924,
+        "sha256": "sha256:ade534849fe3be7a967f77806ec4130f7fb26042d8bd8f231276a0bdd7bb88d0"
+      },
+      "springgear-core/src/main/java/org/springgear/support/constants/package-info.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 106,
+        "sha256": "sha256:f71a59147208d535164b74e009fde6e116f2e646b046064e1256597080dd2a54"
+      },
+      "springgear-core/src/main/java/org/springgear/support/enums/SymbolEnum.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2218,
+        "sha256": "sha256:e6c093b83e7e5025b126623591166cb65648be8dcd26e9ae8298f5ffe9ee2290"
+      },
+      "springgear-core/src/main/java/org/springgear/support/enums/package-info.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 105,
+        "sha256": "sha256:42e1cd2492f02f390c54c4801a2a7fb2ca1f9f60b505dd20834b596802687470"
+      },
+      "springgear-core/src/main/java/org/springgear/support/tools/package-info.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 160,
+        "sha256": "sha256:def72cbf21e872d7b28d3259a1e471515e3f9dd6bd5224a79e74a31388490c9e"
+      },
+      "springgear-core/src/main/java/org/springgear/support/utils/SpringGearUtils.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 3133,
+        "sha256": "sha256:16d7b949ef969b4fa32b6bc59c05e56e02c092359151e0cd99995d6cb8d120be"
+      },
+      "springgear-eventbus/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 918,
+        "sha256": "sha256:a1f354241220348a3589cfc2faa228abb9c1ca2c9e3477189921eff3ce5a816f"
+      },
+      "springgear-eventbus/src/main/java/org/springgear/eventbus/AbstractSpringGearEventListener.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1162,
+        "sha256": "sha256:68f94d5b16737e03a0cc47b6b14997f90ab45b0ec8b189f2e109685e360a6c7b"
+      },
+      "springgear-eventbus/src/main/java/org/springgear/eventbus/EventBusAware.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 267,
+        "sha256": "sha256:c5512ecb1f2b7c4cfb2567db4ea845814de9e6a806c5699a14f9d9707384d3bc"
+      },
+      "springgear-eventbus/src/main/java/org/springgear/eventbus/SpringGearEventAware.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 245,
+        "sha256": "sha256:312c4a7018829bb5acb5842c2e68d722429d5c2c51c398f25ad11cfec96e01d5"
+      },
+      "springgear-eventbus/src/main/java/org/springgear/eventbus/SpringGearEventListener.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 459,
+        "sha256": "sha256:26f59b491077686d65c01f614231531a6e61099736ecba021cdc0446192e503b"
+      },
+      "springgear-eventbus/src/main/java/org/springgear/eventbus/annotation/SpringGearEvent.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 632,
+        "sha256": "sha256:7e4b2b67b5d4008a81358613ac5066d3d32882e7405b896b09c179c5b7ee3450"
+      },
+      "springgear-example/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 85,
+        "sha256": "sha256:361f42862dc449cf861ee8ce01bd8a3227c3717e39d2092b576980e195e28bd3"
+      },
+      "springgear-example/example-01-start-xml_config/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 109,
+        "sha256": "sha256:380144f462f8bf8144a0c205f79845d4f3ae26bab9bbd3ffca9cf4cd1a2551d7"
+      },
+      "springgear-example/example-01-start-xml_config/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 546,
+        "sha256": "sha256:d00288706324323a1d70a7a0bcc2fc4c6b5924162f8cad4dd2eac7dcc87ed873"
+      },
+      "springgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/Main.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 635,
+        "sha256": "sha256:49524f3869285e0bd186f1151e645b503712ef3ec22307de49102554b2ca9bfd"
+      },
+      "springgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/service/MyServiceInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 383,
+        "sha256": "sha256:e060d1587bf0c156a43fe58afcce87f06d6a9accdcc478b214ccd66bbc669c18"
+      },
+      "springgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 983,
+        "sha256": "sha256:b67f2ccd531a6a379a58c1de6de47d86973617ac41c1f4b430b1a5ded5232008"
+      },
+      "springgear-example/example-01-start-xml_config/src/main/resources/spring-config.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 925,
+        "sha256": "sha256:8a52ed8cd562b617904373f3cf8e2c4bc26cda215b050c2c401454a7502c0540"
+      },
+      "springgear-example/example-02-start-java_config/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 194,
+        "sha256": "sha256:2d15b18df6fb447ebc01b5a774220a940048b8155758f214709ed66eabf7da23"
+      },
+      "springgear-example/example-02-start-java_config/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 547,
+        "sha256": "sha256:8b469eca82a9351081f90fb12384b886d6c224b103d0728e2213945029743806"
+      },
+      "springgear-example/example-02-start-java_config/src/main/java/org/springgear/example/Main.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1305,
+        "sha256": "sha256:359f4a8fb26895b30d17327b8c001453c717f94a567f4b8d79af4c5b97355647"
+      },
+      "springgear-example/example-02-start-java_config/src/main/java/org/springgear/example/service/MyServiceInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 383,
+        "sha256": "sha256:e060d1587bf0c156a43fe58afcce87f06d6a9accdcc478b214ccd66bbc669c18"
+      },
+      "springgear-example/example-02-start-java_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 768,
+        "sha256": "sha256:9213992d7a2422cf6f539b815f28d1632d923705330a410bb2d99c824a2e3e32"
+      },
+      "springgear-example/example-03-start-annotation_config/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 148,
+        "sha256": "sha256:71958e411d15f8154499e5f1e25bd42a8096f9fc581d0e59145e21ad6ae582f1"
+      },
+      "springgear-example/example-03-start-annotation_config/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 553,
+        "sha256": "sha256:bab9c5c7150203a16617780111fb0b8a7ad7989636e4c46394b514eed6ff6096"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/Main.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1025,
+        "sha256": "sha256:8726b008abec70b46ab574ef319f7d2ebf420ee2b52976c25193c7170af2e704"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/MyServiceInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 742,
+        "sha256": "sha256:d2c41e28c1c5ae127a424c8bd94b94f46fee7d39a6dd5922231fd1a81b4d49a3"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler00Verify.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 574,
+        "sha256": "sha256:b51a829a2bce27718ba2b30b94472d101b5c86cdb72482689943ae4316b2c8c1"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 689,
+        "sha256": "sha256:c74edab8c2669d8ae16d03b52b723ae4612438dbd3f64ee4611c535828fc2d4f"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler10.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 682,
+        "sha256": "sha256:1d3110e89c15ecaa4d3bdba41a7ff86faa487a04d01602c35ac79136bcc85d10"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler99.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 813,
+        "sha256": "sha256:94c4a30f82844ef9f66b7562e6dd8a6b614948835fdd4459fba2d164233297de"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler00Verify.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 765,
+        "sha256": "sha256:5361e00ceb31ad3f95675ceae45bf0ff4d51b71d1c6d71ee623197e13d154031"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 792,
+        "sha256": "sha256:cca15bed90d066f9e47c4e55eb2ca7ef67b5b5bd412dfb1663accbac31227635"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler10.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 744,
+        "sha256": "sha256:e1640acd1213a3053604667f07110c63796e18f6de35f369aae6479bc82810b2"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler99.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 813,
+        "sha256": "sha256:09744f52deab76e29aaa3ea2d7733eed35b2dd263dcaee1f1a7101c7e353f774"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 768,
+        "sha256": "sha256:9213992d7a2422cf6f539b815f28d1632d923705330a410bb2d99c824a2e3e32"
+      },
+      "springgear-example/example-04-simple_use/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 99,
+        "sha256": "sha256:46230657d214e03f88c8ffc4130e39d1830b610f94a9c2b82e4a94e8d4efcd86"
+      },
+      "springgear-example/example-04-simple_use/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 540,
+        "sha256": "sha256:23913a0138ffd6b0fd4dcaa78808a16a413c3b2217e2b82121e9a35d84101071"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/Main.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1703,
+        "sha256": "sha256:cb519343a9e10cc981d74f028060e9da7f13ffb21a5c31c58e230c6e68d4fda7"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/MyServiceInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 742,
+        "sha256": "sha256:d2c41e28c1c5ae127a424c8bd94b94f46fee7d39a6dd5922231fd1a81b4d49a3"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler00Verify.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 764,
+        "sha256": "sha256:b517333cd66f4f14f7a7ca6c2e890a818c37dc883ce25dea9311dcefea9e62cf"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 690,
+        "sha256": "sha256:87c27dd438a7fb82310676ff94d8b05f14559c9bc99dd68b0b5fe445dbb2b7dc"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler10.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 763,
+        "sha256": "sha256:520ce2c02989e8d4be65fa648c1e45d2e34e8a3bcc2c7be4b7927f09059ff1fa"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler99.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 813,
+        "sha256": "sha256:94c4a30f82844ef9f66b7562e6dd8a6b614948835fdd4459fba2d164233297de"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler00Verify.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 764,
+        "sha256": "sha256:e10d61dee9c8fe40c85e306cec59abd72c58ebd55c68de238abb8e1edab7dc25"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 792,
+        "sha256": "sha256:cca15bed90d066f9e47c4e55eb2ca7ef67b5b5bd412dfb1663accbac31227635"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler10.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 744,
+        "sha256": "sha256:e1640acd1213a3053604667f07110c63796e18f6de35f369aae6479bc82810b2"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler99.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 813,
+        "sha256": "sha256:09744f52deab76e29aaa3ea2d7733eed35b2dd263dcaee1f1a7101c7e353f774"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/single/SingleHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 768,
+        "sha256": "sha256:9213992d7a2422cf6f539b815f28d1632d923705330a410bb2d99c824a2e3e32"
+      },
+      "springgear-example/example-05-context_use/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 101,
+        "sha256": "sha256:de376267145f49aa94397e9c5a15fdaa8e889e786ba18c6bef3e1937f2437d3c"
+      },
+      "springgear-example/example-05-context_use/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 541,
+        "sha256": "sha256:ec250bbf125dc770548f31e98ed509ddb15637a47a1a28c46a5d0c18a6d35102"
+      },
+      "springgear-example/example-05-context_use/src/main/java/org/springgear/example/Main.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1741,
+        "sha256": "sha256:ee695e6aef19a86ea47709e9e7824fd84d7ace23c677126aad30e13edde025b4"
+      },
+      "springgear-example/example-05-context_use/src/main/java/org/springgear/example/ctx/MyCtxVal.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 531,
+        "sha256": "sha256:dbb436edd13b66b0697340c5580695c8dd93b61f6ede85dca38aabcb6e155aac"
+      },
+      "springgear-example/example-05-context_use/src/main/java/org/springgear/example/service/MyServiceInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 858,
+        "sha256": "sha256:9caf2bd286a7643a6fada63644b263cd2041b3b24d0e0093beb507a62e015bf6"
+      },
+      "springgear-example/example-05-context_use/src/main/java/org/springgear/example/service/single/SingleHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 822,
+        "sha256": "sha256:e589a7b93923dcfec31936e170edae9a462cb6146a29ab6d4f3844cc2cfdc493"
+      },
+      "springgear-example/example-05-context_use/src/main/java/org/springgear/example/service/single/SingleHandler02.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 804,
+        "sha256": "sha256:66ce656b945dcc24e16acbfca734263e5b8fa3a3739ca696f1384851884f6268"
+      },
+      "springgear-example/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1760,
+        "sha256": "sha256:f76f6795d19b5760a07b94d813097ee4d7af2627b96f4c4161e5014e59c0dcd0"
+      },
+      "springgear-ext-parent/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 63,
+        "sha256": "sha256:d5279c77cef59a88606c8df57dce5eb9f66769be5589cc2a9a0b8257ab8e27a8"
+      },
+      "springgear-ext-parent/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1732,
+        "sha256": "sha256:87d929e224b83674077c6a7792c2b4040978362bb02b0eebc1a2a7df9b59303e"
+      },
+      "springgear-ext-parent/springgear-ext-orika/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 976,
+        "sha256": "sha256:73ba2a1aded25370633646c6b595b8fd8da3cb4dd4a10ed47f652acad59e6353"
+      },
+      "springgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/OrikaBeanMapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 3541,
+        "sha256": "sha256:df1500ab761181db71fd400ad86355e862f135f121d9812e57a7e640245e02c2"
+      },
+      "springgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/OrikaCustomMapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1759,
+        "sha256": "sha256:76303ef78967ed4db187c7c08b4b7807fdc047ae59941dc89fc1aadc7d716a82"
+      },
+      "springgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/config/Orika.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 358,
+        "sha256": "sha256:23e3a17a4fb303b90a30b5c7f0c024f84b31e461f90ca7f945c3e775828290a1"
+      },
+      "springgear-parent/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 97,
+        "sha256": "sha256:0da651f17777508cd5b1bfec68f6e9d81cdb78326f59b9a5b915112bd8cc1902"
+      },
+      "springgear-parent/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 4877,
+        "sha256": "sha256:25ffaa695a90c826d2cd137ff96877b1672846f3dd7d38214f140ddb61a844cd"
+      },
+      "springgear-pending/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 776,
+        "sha256": "sha256:1e464f415fb7168125839ec80fc14979878036c61d72d021593c46b0beb74f5d"
+      },
+      "springgear-pending/src/main/java/org/springgear/config/Properties.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 824,
+        "sha256": "sha256:d97ffd4b90686d2d65fd5c0e8f8892abe79f89d42667605ab2d558bb42a1385f"
+      },
+      "springgear-webmvc/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 953,
+        "sha256": "sha256:45b2f7484222a7b95853de3692184387268e8c76f6ef3b38f4e2158b5ad6d139"
+      },
+      "springgear-webmvc/src/main/java/org/springgear/webmvc/annotation/Authentication.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 601,
+        "sha256": "sha256:7e813178569d4bdf30b2faad8ba2b13ecd1bc50b746942400fbbc00d3debe9f4"
+      },
+      "springgear-webmvc/src/main/java/org/springgear/webmvc/annotation/ResponseBodyWrapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 715,
+        "sha256": "sha256:c7ed117eeb38ee28a0f38ecee89547a79ecb18d412c8014663519aa831054e28"
+      }
+    },
+    "untracked_bytes_modes": {},
+    "sdlc": {
+      "exists": false,
+      "files": {}
+    }
+  },
+  "resource_selection": {
+    "root": "springgear-parent",
+    "source": "accepted VFY/IMP external integration _select_resource_root",
+    "scope": "resource:repo path:repo/README.md"
+  },
+  "chain": {
+    "context": "CTX-20260904010000-01@1",
+    "requirement": "REQ-20260904010000-01@1",
+    "design": "DSN-20260904010000-01@1",
+    "plan": "PLN-20260904010000-01@1",
+    "vfy": "VFY-20260905113328-01@1"
+  },
+  "imp_subjects": [
+    {
+      "attempt": "1",
+      "baseline_reference": "IMP-20260904010000-01@1/BASE-RES-001",
+      "binding_lineage": "PLN-20260904010000-01#WI-001",
+      "claim_state": "completed",
+      "cumulative_changed_scope": [
+        "resource:repo",
+        "path:repo/README.md"
+      ],
+      "current_valid": true,
+      "dependency_chain_valid": true,
+      "dependency_result_references": [],
+      "imp_revision_reference": "IMP-20260904010000-01@1",
+      "imp_revision_state": "frozen",
+      "reference": "IMP-20260904010000-01@1/RESULT-RES-001",
+      "resource_id": "repo",
+      "result_digest": "sha256:9f6179e8cfce7dd18ffb0cf336189583ee63023d96d48fbcbd365aa888725cbf"
+    }
+  ],
+  "vfy_candidate": {
+    "contract": "sdlc-ai-spec/vfy-release-candidate/v1",
+    "provisional": false,
+    "vfy_reference": "VFY-20260905113328-01@1",
+    "revision_state": "frozen",
+    "artifact_status": "ready",
+    "artifact_gate": "pass",
+    "early_stop": false,
+    "pending_fields": [],
+    "scope_reference": "PLN-20260904010000-01@1",
+    "subject_references": [
+      "IMP-20260904010000-01@1/RESULT-RES-001"
+    ],
+    "result_references": [
+      "IMP-20260904010000-01@1/RESULT-RES-001"
+    ],
+    "subject_current_valid": true,
+    "imp_chain_current_valid": true,
+    "con_ver": "pass",
+    "con_val": "pass",
+    "product_result": "pass",
+    "unresolved_returns": [],
+    "rls_applicability": "required",
+    "release_target_obligations": [
+      {
+        "confirmation": "Observe the authorized local Sandbox release",
+        "evidence_requirement": "Immutable target-side snapshot after the selected RLI",
+        "expected": "The target version equals the bound release reference",
+        "reference": "PLN-20260904010000-01@1#WI-003"
+      }
+    ],
+    "evidence_references": [
+      "EVD-001@sha256:501392c7e6e93c78ec2260b0c131e83e5787e3d1f6055640349c7b22d6cb7838",
+      "EVD-002@sha256:65ea9d0477aa48cb387fa90ad9abd331769eb70abb3b3b4c18184a5b601a2d38"
+    ],
+    "exception": null,
+    "exception_references": [],
+    "source_digest": "sha256:08ce0c793fe0b0288f266840171d9062a84b3bd599cb692490b50cd6e6d7138c",
+    "rls_ready": true
+  },
+  "adapter": {
+    "vfy_reference": "VFY-20260905113328-01@1",
+    "scope_reference": "PLN-20260904010000-01@1",
+    "subject_references": [
+      "IMP-20260904010000-01@1/RESULT-RES-001"
+    ],
+    "result_references": [
+      "IMP-20260904010000-01@1/RESULT-RES-001"
+    ],
+    "con_ver": "pass",
+    "con_val": "pass",
+    "product_result": "pass",
+    "artifact_status": "ready",
+    "artifact_gate": "pass",
+    "early_stop": false,
+    "unresolved_returns": [],
+    "rls_applicability": "required",
+    "release_target_obligations": [
+      {
+        "confirmation": "Observe the authorized local Sandbox release",
+        "evidence_requirement": "Immutable target-side snapshot after the selected RLI",
+        "expected": "The target version equals the bound release reference",
+        "reference": "PLN-20260904010000-01@1#WI-003"
+      }
+    ],
+    "evidence_references": [
+      "EVD-001@sha256:501392c7e6e93c78ec2260b0c131e83e5787e3d1f6055640349c7b22d6cb7838",
+      "EVD-002@sha256:65ea9d0477aa48cb387fa90ad9abd331769eb70abb3b3b4c18184a5b601a2d38"
+    ],
+    "exception_references": [],
+    "source_digest": "sha256:08ce0c793fe0b0288f266840171d9062a84b3bd599cb692490b50cd6e6d7138c",
+    "candidate_digest": "sha256:51539cb5d0155c482452587c36cb592c9f6e7bee95344c0626384c56484d30c8",
+    "rls_ready": true,
+    "provisional": false,
+    "interface_mode": "FINAL_PERSISTED_VFY",
+    "context_reference": "CTX-20260904010000-01@1",
+    "profile": "full",
+    "input_references": [
+      "IMP-20260904010000-01@1",
+      "PLN-20260904010000-01@1",
+      "VFY-20260905113328-01@1"
+    ],
+    "authority_verified": true,
+    "rls_work_item_references": [
+      "PLN-20260904010000-01@1#WI-003"
+    ],
+    "authority_exceptions": [],
+    "obligation_sources": [
+      {
+        "reference": "PLN-20260904010000-01@1#WI-003",
+        "source_references": [
+          "PLN-20260904010000-01@1#WI-003"
+        ]
+      }
+    ]
+  },
+  "rls_reference": "RLS-20260905113328-01@1",
+  "rls_state": {
+    "active_exceptions": [],
+    "artifact": {
+      "allocated": true,
+      "base_revision": null,
+      "id": "RLS-20260905113328-01",
+      "reference": "RLS-20260905113328-01@1",
+      "revision": 1,
+      "revision_state": "frozen"
+    },
+    "artifact_gate": "pass",
+    "cancel_requested": false,
+    "confirmations": [
+      {
+        "confirmation": "Observe the authorized local Sandbox release",
+        "evidence_references": [
+          "SANDBOX-EVD-b6b23759edd1c7d73bfc9d4612e9e9aa87329e6a644dd9d81d5d7bb924cfaaf3"
+        ],
+        "evidence_requirement": "Immutable target-side snapshot after the selected RLI",
+        "executor": "sandbox-observer",
+        "expected": "The target version equals the bound release reference",
+        "follow_up": "none",
+        "id": "RCF-001",
+        "objective_na_reason": null,
+        "observed": {
+          "applied": [
+            "RLI-001"
+          ],
+          "partial": [],
+          "target": "sandbox-a",
+          "version": "lifecycle-validation-e855096ff19d"
+        },
+        "result": "pass",
+        "source_references": [
+          "PLN-20260904010000-01@1#WI-003"
+        ],
+        "subjective": false
+      }
+    ],
+    "context_reference": "CTX-20260904010000-01@1",
+    "contract": "sdlc-ai-spec/rls-result/v1",
+    "effect_authorization": {
+      "action_summaries": [
+        "apply exact verified Result Set"
+      ],
+      "authorization_id": "EA-1415193dd5c44941",
+      "authorized_at": "2026-09-05T11:33:28Z",
+      "authorizer_identity": "external-fixture-host",
+      "confirmation_set_digest": "5e325dd0b05ca989ac9a91bacd3fcff4ca3803f048c578634835ac9cbf7c7192",
+      "contract": "sdlc-ai-spec/effect-authorization/v1",
+      "effect_digest": "6e00b077762ad7adf484170d88ead62cc79fa1e6ba4b32ee27079143d6b4f01f",
+      "pre_execution_checklist_digest": "d2e8b7bafdbf8280e2bcb2b7e140a48f9f3e9e7a2b3bc30cb48e86756503305b",
+      "release_contract_digest": "e669ad9e42fc00eca33ca3f72cac59ad8f84cd288264b1115fdc9e989860e8c5",
+      "release_item_set_digest": "ef663ab4a807db6fa5d290633462119e84e6e1343f089f8426520f2c4bd136b6",
+      "release_reference": "lifecycle-validation-e855096ff19d",
+      "release_target": "sandbox-a",
+      "result_references": [
+        "IMP-20260904010000-01@1/RESULT-RES-001"
+      ],
+      "revision": 1,
+      "rli_ids": [
+        "RLI-001"
+      ],
+      "rls_artifact_id": "RLS-20260905113328-01",
+      "rls_artifact_reference": "RLS-20260905113328-01@1",
+      "scope_reference": "PLN-20260904010000-01@1",
+      "selected_rli_contract_digest": "ef663ab4a807db6fa5d290633462119e84e6e1343f089f8426520f2c4bd136b6",
+      "target_baseline_digest": "d6101c37a2fd6264fefbb037e57497d22e800470ce0e26299ef3f7882319d932",
+      "valid_until": "2026-09-05T11:48:28Z",
+      "vfy_candidate_digest": "sha256:51539cb5d0155c482452587c36cb592c9f6e7bee95344c0626384c56484d30c8",
+      "vfy_reference": "VFY-20260905113328-01@1",
+      "vfy_source_digest": "sha256:08ce0c793fe0b0288f266840171d9062a84b3bd599cb692490b50cd6e6d7138c"
+    },
+    "effect_authorization_history": [
+      {
+        "action_summaries": [
+          "apply exact verified Result Set"
+        ],
+        "authorization_id": "EA-1415193dd5c44941",
+        "authorized_at": "2026-09-05T11:33:28Z",
+        "authorizer_identity": "external-fixture-host",
+        "confirmation_set_digest": "5e325dd0b05ca989ac9a91bacd3fcff4ca3803f048c578634835ac9cbf7c7192",
+        "contract": "sdlc-ai-spec/effect-authorization/v1",
+        "effect_digest": "6e00b077762ad7adf484170d88ead62cc79fa1e6ba4b32ee27079143d6b4f01f",
+        "pre_execution_checklist_digest": "d2e8b7bafdbf8280e2bcb2b7e140a48f9f3e9e7a2b3bc30cb48e86756503305b",
+        "release_contract_digest": "e669ad9e42fc00eca33ca3f72cac59ad8f84cd288264b1115fdc9e989860e8c5",
+        "release_item_set_digest": "ef663ab4a807db6fa5d290633462119e84e6e1343f089f8426520f2c4bd136b6",
+        "release_reference": "lifecycle-validation-e855096ff19d",
+        "release_target": "sandbox-a",
+        "result_references": [
+          "IMP-20260904010000-01@1/RESULT-RES-001"
+        ],
+        "revision": 1,
+        "rli_ids": [
+          "RLI-001"
+        ],
+        "rls_artifact_id": "RLS-20260905113328-01",
+        "rls_artifact_reference": "RLS-20260905113328-01@1",
+        "scope_reference": "PLN-20260904010000-01@1",
+        "selected_rli_contract_digest": "ef663ab4a807db6fa5d290633462119e84e6e1343f089f8426520f2c4bd136b6",
+        "target_baseline_digest": "d6101c37a2fd6264fefbb037e57497d22e800470ce0e26299ef3f7882319d932",
+        "valid_until": "2026-09-05T11:48:28Z",
+        "vfy_candidate_digest": "sha256:51539cb5d0155c482452587c36cb592c9f6e7bee95344c0626384c56484d30c8",
+        "vfy_reference": "VFY-20260905113328-01@1",
+        "vfy_source_digest": "sha256:08ce0c793fe0b0288f266840171d9062a84b3bd599cb692490b50cd6e6d7138c"
+      }
+    ],
+    "effect_uncertain": false,
+    "errors": [],
+    "evidence": [
+      {
+        "event": {
+          "after": {
+            "applied": [
+              "RLI-001"
+            ],
+            "partial": [],
+            "target": "sandbox-a",
+            "version": "lifecycle-validation-e855096ff19d"
+          },
+          "artifact_reference": "RLS-20260905113328-01@1",
+          "before": {
+            "applied": [],
+            "partial": [],
+            "target": "sandbox-a",
+            "version": null
+          },
+          "behavior": "success",
+          "executor": "sandbox-executor",
+          "item": "RLI-001",
+          "observed_at": "2026-09-05T11:33:28Z",
+          "release_reference": "lifecycle-validation-e855096ff19d",
+          "result": "success",
+          "target": "sandbox-a",
+          "target_effect": true
+        },
+        "locator": "evidence/aa72094da762a08fcbc5be3e6825acd3743af9b83f6b956da8728240243c98bc.json",
+        "reference": "SANDBOX-EVD-aa72094da762a08fcbc5be3e6825acd3743af9b83f6b956da8728240243c98bc",
+        "sha256": "aa72094da762a08fcbc5be3e6825acd3743af9b83f6b956da8728240243c98bc"
+      },
+      {
+        "event": {
+          "artifact_reference": "RLS-20260905113328-01@1",
+          "confirmation_binding": {
+            "executor": "sandbox-observer",
+            "rcf_contract_digest": "sha256:ddaa77d7b1b578981b4ead73668deb3bbb0666c034390fc0962e3a065efc8747",
+            "rcf_id": "RCF-001",
+            "release_contract_digest": "sha256:e669ad9e42fc00eca33ca3f72cac59ad8f84cd288264b1115fdc9e989860e8c5",
+            "release_reference": "lifecycle-validation-e855096ff19d",
+            "release_target": "sandbox-a",
+            "result_references": [
+              "IMP-20260904010000-01@1/RESULT-RES-001"
+            ],
+            "rls_reference": "RLS-20260905113328-01@1",
+            "scenario": null,
+            "scope_reference": "PLN-20260904010000-01@1",
+            "target_locator": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-springgear-f61ick30/sandbox-target",
+            "target_snapshot_digest": "sha256:ab462fe475df1d59b30b1ed67da860399d7f72a8a259bb3eb88cde9d36dd9ac6",
+            "vfy_candidate_digest": "sha256:51539cb5d0155c482452587c36cb592c9f6e7bee95344c0626384c56484d30c8",
+            "vfy_reference": "VFY-20260905113328-01@1",
+            "vfy_source_digest": "sha256:08ce0c793fe0b0288f266840171d9062a84b3bd599cb692490b50cd6e6d7138c"
+          },
+          "confirmation_evaluation": {
+            "checks": [
+              {
+                "actual": "lifecycle-validation-e855096ff19d",
+                "expected": "lifecycle-validation-e855096ff19d",
+                "field": "version",
+                "matched": true,
+                "present": true
+              }
+            ],
+            "fault_injected": false,
+            "kind": "sandbox_state_equals",
+            "policy": "sdlc-ai-spec/rls-confirmation-policy/v1",
+            "rcf_contract_digest": "sha256:ddaa77d7b1b578981b4ead73668deb3bbb0666c034390fc0962e3a065efc8747",
+            "result": "pass"
+          },
+          "executor": "sandbox-observer",
+          "expected_release_reference": "lifecycle-validation-e855096ff19d",
+          "human_evidence": null,
+          "item": "RCF-001",
+          "observed": {
+            "applied": [
+              "RLI-001"
+            ],
+            "partial": [],
+            "target": "sandbox-a",
+            "version": "lifecycle-validation-e855096ff19d"
+          },
+          "observed_at": "2026-09-05T11:33:28Z",
+          "release_reference": "lifecycle-validation-e855096ff19d",
+          "result": "pass",
+          "target": "sandbox-a"
+        },
+        "locator": "evidence/b6b23759edd1c7d73bfc9d4612e9e9aa87329e6a644dd9d81d5d7bb924cfaaf3.json",
+        "reference": "SANDBOX-EVD-b6b23759edd1c7d73bfc9d4612e9e9aa87329e6a644dd9d81d5d7bb924cfaaf3",
+        "sha256": "b6b23759edd1c7d73bfc9d4612e9e9aa87329e6a644dd9d81d5d7bb924cfaaf3"
+      }
+    ],
+    "exceptions": [],
+    "final_confirmation": {
+      "mode": "delegated",
+      "confirmer": "rls-fixture-reviewer",
+      "confirmer_identity": "rls-fixture-reviewer",
+      "role": "Delegated Independent Reviewer",
+      "authority_reference": ".sdlc/authority/rls-confirmation-02c9654e00b9d28ccdb45deb359d6cf483c15f0dc44c8372bc951ac0d9b15195.md@sha256:02c9654e00b9d28ccdb45deb359d6cf483c15f0dc44c8372bc951ac0d9b15195",
+      "confirmed_at": "2026-09-05T11:33:28Z",
+      "control_input_digest": "sha256:9f282197afcf57f4708266c332835b0b678bc839142507c95798d3de8d591377",
+      "check_set_result_digest": "sha256:54fd40c90cea72f62b40093634812d2eadddb6683550305412dc6d857afb90a5",
+      "evaluation_contract_set": "sdlc-ai-spec/rls-runtime-contract/v1@sha256:85f2aff50d18579968a597e40fd5b7efdbbef48f3982986cbfe7dfe13ed1efda",
+      "digest": "22577a6064709b90e56bd3b47a71635ceb5fdc2315f5b1e39f18c2f17ff646c6",
+      "accepted_exception_references": []
+    },
+    "follow_up": "none",
+    "input_references": [
+      "IMP-20260904010000-01@1",
+      "PLN-20260904010000-01@1",
+      "VFY-20260905113328-01@1"
+    ],
+    "pre_execution_checklist": {
+      "checks": [
+        "scope_result_exact",
+        "vfy_ready",
+        "vfy_source_digest_bound",
+        "target_unique",
+        "baseline_captured",
+        "rls_work_items_covered",
+        "release_target_obligations_covered",
+        "authorization_required_before_effect"
+      ],
+      "confirmation_contract_digest": "5e325dd0b05ca989ac9a91bacd3fcff4ca3803f048c578634835ac9cbf7c7192",
+      "rcf_ids": [
+        "RCF-001"
+      ],
+      "release_contract_digest": "e669ad9e42fc00eca33ca3f72cac59ad8f84cd288264b1115fdc9e989860e8c5",
+      "release_item_contract_digest": "ef663ab4a807db6fa5d290633462119e84e6e1343f089f8426520f2c4bd136b6",
+      "release_reference": "lifecycle-validation-e855096ff19d",
+      "release_target": "sandbox-a",
+      "result_references": [
+        "IMP-20260904010000-01@1/RESULT-RES-001"
+      ],
+      "rli_ids": [
+        "RLI-001"
+      ],
+      "scope_reference": "PLN-20260904010000-01@1",
+      "target_baseline": "N/A — Initial Release",
+      "vfy_candidate_digest": "sha256:51539cb5d0155c482452587c36cb592c9f6e7bee95344c0626384c56484d30c8",
+      "vfy_exception_references": [],
+      "vfy_reference": "VFY-20260905113328-01@1",
+      "vfy_rls_ready": true,
+      "vfy_source_digest": "sha256:08ce0c793fe0b0288f266840171d9062a84b3bd599cb692490b50cd6e6d7138c"
+    },
+    "pre_execution_checklist_digest": "d2e8b7bafdbf8280e2bcb2b7e140a48f9f3e9e7a2b3bc30cb48e86756503305b",
+    "profile": "full",
+    "provisional": false,
+    "release_conclusion": "success",
+    "release_contract": {
+      "approval_or_trigger_reference": "None — no separate approval defined",
+      "obligation_source_references": [
+        {
+          "reference": "PLN-20260904010000-01@1#WI-003",
+          "source_references": [
+            "PLN-20260904010000-01@1#WI-003"
+          ]
+        }
+      ],
+      "release_reference": "lifecycle-validation-e855096ff19d",
+      "release_target": "sandbox-a",
+      "release_target_obligations": [
+        {
+          "confirmation": "Observe the authorized local Sandbox release",
+          "evidence_requirement": "Immutable target-side snapshot after the selected RLI",
+          "expected": "The target version equals the bound release reference",
+          "reference": "PLN-20260904010000-01@1#WI-003"
+        }
+      ],
+      "result_references": [
+        "IMP-20260904010000-01@1/RESULT-RES-001"
+      ],
+      "rls_work_item_references": [
+        "PLN-20260904010000-01@1#WI-003"
+      ],
+      "scope_reference": "PLN-20260904010000-01@1",
+      "target_baseline": "N/A — Initial Release",
+      "target_locator": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-springgear-f61ick30/sandbox-target",
+      "vfy_candidate_digest": "sha256:51539cb5d0155c482452587c36cb592c9f6e7bee95344c0626384c56484d30c8",
+      "vfy_candidate_provisional": false,
+      "vfy_conclusions": {
+        "artifact_gate": "pass",
+        "artifact_status": "ready",
+        "con_val": "pass",
+        "con_ver": "pass",
+        "product_result": "pass"
+      },
+      "vfy_exception_references": [],
+      "vfy_reference": "VFY-20260905113328-01@1",
+      "vfy_rls_ready": true,
+      "vfy_source_digest": "sha256:08ce0c793fe0b0288f266840171d9062a84b3bd599cb692490b50cd6e6d7138c"
+    },
+    "release_items": [
+      {
+        "action": "apply exact verified Result Set",
+        "evidence_references": [
+          "SANDBOX-EVD-aa72094da762a08fcbc5be3e6825acd3743af9b83f6b956da8728240243c98bc"
+        ],
+        "executor": "sandbox-executor",
+        "follow_up": "none",
+        "id": "RLI-001",
+        "prerequisite": "exact baseline and current Effect Authorization",
+        "prerequisite_satisfied": true,
+        "result": "success",
+        "source_references": [
+          "IMP-20260904010000-01@1/RESULT-RES-001",
+          "PLN-20260904010000-01@1#WI-003"
+        ]
+      }
+    ],
+    "state_contract": "sdlc-ai-spec/rls-state/v1",
+    "status": "ready",
+    "target_effect": true,
+    "target_snapshot_after": {
+      "applied": [
+        "RLI-001"
+      ],
+      "partial": [],
+      "target": "sandbox-a",
+      "version": "lifecycle-validation-e855096ff19d"
+    },
+    "target_snapshot_before": {
+      "applied": [],
+      "partial": [],
+      "target": "sandbox-a",
+      "version": null
+    },
+    "upstream_exceptions": [],
+    "warnings": []
+  },
+  "generation": 7,
+  "grant": {
+    "contract": "sdlc-ai-spec/effect-authorization/v1",
+    "authorization_id": "EA-1415193dd5c44941",
+    "rls_artifact_id": "RLS-20260905113328-01",
+    "rls_artifact_reference": "RLS-20260905113328-01@1",
+    "revision": 1,
+    "release_reference": "lifecycle-validation-e855096ff19d",
+    "scope_reference": "PLN-20260904010000-01@1",
+    "result_references": [
+      "IMP-20260904010000-01@1/RESULT-RES-001"
+    ],
+    "vfy_reference": "VFY-20260905113328-01@1",
+    "vfy_source_digest": "sha256:08ce0c793fe0b0288f266840171d9062a84b3bd599cb692490b50cd6e6d7138c",
+    "vfy_candidate_digest": "sha256:51539cb5d0155c482452587c36cb592c9f6e7bee95344c0626384c56484d30c8",
+    "release_target": "sandbox-a",
+    "target_baseline_digest": "d6101c37a2fd6264fefbb037e57497d22e800470ce0e26299ef3f7882319d932",
+    "release_contract_digest": "e669ad9e42fc00eca33ca3f72cac59ad8f84cd288264b1115fdc9e989860e8c5",
+    "rli_ids": [
+      "RLI-001"
+    ],
+    "action_summaries": [
+      "apply exact verified Result Set"
+    ],
+    "selected_rli_contract_digest": "ef663ab4a807db6fa5d290633462119e84e6e1343f089f8426520f2c4bd136b6",
+    "release_item_set_digest": "ef663ab4a807db6fa5d290633462119e84e6e1343f089f8426520f2c4bd136b6",
+    "confirmation_set_digest": "5e325dd0b05ca989ac9a91bacd3fcff4ca3803f048c578634835ac9cbf7c7192",
+    "pre_execution_checklist_digest": "d2e8b7bafdbf8280e2bcb2b7e140a48f9f3e9e7a2b3bc30cb48e86756503305b",
+    "authorizer_identity": "external-fixture-host",
+    "authorized_at": "2026-09-05T11:33:28Z",
+    "valid_until": "2026-09-05T11:48:28Z",
+    "effect_digest": "6e00b077762ad7adf484170d88ead62cc79fa1e6ba4b32ee27079143d6b4f01f"
+  },
+  "confirmation": {
+    "mode": "delegated",
+    "confirmer": "rls-fixture-reviewer",
+    "role": "Delegated Independent Reviewer",
+    "authority_reference": ".sdlc/authority/rls-confirmation-02c9654e00b9d28ccdb45deb359d6cf483c15f0dc44c8372bc951ac0d9b15195.md@sha256:02c9654e00b9d28ccdb45deb359d6cf483c15f0dc44c8372bc951ac0d9b15195",
+    "confirmed_at": "2026-09-05T11:33:28Z",
+    "control_input_digest": "sha256:9f282197afcf57f4708266c332835b0b678bc839142507c95798d3de8d591377",
+    "check_set_result_digest": "sha256:54fd40c90cea72f62b40093634812d2eadddb6683550305412dc6d857afb90a5",
+    "evaluation_contract_set": "sdlc-ai-spec/rls-runtime-contract/v1@sha256:85f2aff50d18579968a597e40fd5b7efdbbef48f3982986cbfe7dfe13ed1efda",
+    "accepted_exception_references": []
+  },
+  "check": {
+    "ok": true,
+    "release_conclusion": "success",
+    "follow_up": "none",
+    "artifact_gate": "pass",
+    "pending": false,
+    "artifact_reference": "RLS-20260905113328-01@1",
+    "generation": 7
+  },
+  "store_snapshot": {
+    "exists": true,
+    "files": {
+      ".gitignore": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2,
+        "sha256": "sha256:cdbcae15105d6b781e620813c79c7e868740d4e9cc53ce6f5fcbbc12387adf4b"
+      },
+      "authority/ctx-final-confirmation.txt": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 525,
+        "sha256": "sha256:60c71f4af176b431e07685b29e7afa0bc57b78a9b028f0178b3ca9b0b22c78e7"
+      },
+      "authority/ctx-source.txt": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 187,
+        "sha256": "sha256:2dae362e8bdc3a9ee4abb258aa9f2447dc87a4f7a8303656739991f161b5a207"
+      },
+      "authority/dsn-approval.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 94,
+        "sha256": "sha256:d599b978201e894d6328039a958625276f9e360048a4f4f8a93799f16e4f142c"
+      },
+      "authority/imp-approval.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 628,
+        "sha256": "sha256:d48a930bd4362fd98d85b9a00ee910c88fb3ebf80fc88af6cf0c691e2560d615"
+      },
+      "authority/pln-approval.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 63,
+        "sha256": "sha256:cdfbf4073b52ecb324afe6611fc89b4df394b2d4b904f3d38eadd3ab93859b88"
+      },
+      "authority/req-approval.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 94,
+        "sha256": "sha256:d599b978201e894d6328039a958625276f9e360048a4f4f8a93799f16e4f142c"
+      },
+      "authority/rls-confirmation-02c9654e00b9d28ccdb45deb359d6cf483c15f0dc44c8372bc951ac0d9b15195.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1118,
+        "sha256": "sha256:02c9654e00b9d28ccdb45deb359d6cf483c15f0dc44c8372bc951ac0d9b15195"
+      },
+      "authority/rls-delegation-d71aa532512267dfc0b1b756b56d36b012d03b00ee9c3834b7681d1123ec8694.txt": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 106,
+        "sha256": "sha256:d71aa532512267dfc0b1b756b56d36b012d03b00ee9c3834b7681d1123ec8694"
+      },
+      "authority/rls-effects/EA-1415193dd5c44941.grant.json": {
+        "kind": "file",
+        "mode": 384,
+        "bytes": 1475,
+        "sha256": "sha256:f12961b04cf54790c4a6f1aab2206788bfb8897f142885dfc5624be674de05ee"
+      },
+      "authority/rls-effects/EA-1415193dd5c44941.used.json": {
+        "kind": "file",
+        "mode": 384,
+        "bytes": 168,
+        "sha256": "sha256:a27c1038d13107ae7b29cb60219885374863097f6632fce2d045dfb15f723eae"
+      },
+      "authority/vfy-test-delegated-confirmation.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1374,
+        "sha256": "sha256:89bd3b569decd87ee03048116603a1c90b948e7a31663df8581ec9b63a922910"
+      },
+      "authority/vfy-test-delegation.txt": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 84,
+        "sha256": "sha256:35063b9a017f27c9b5b387e7ceaa9115519dd4ed62e942e1a688d8a5fe33ec00"
+      },
+      "imp-runtime.lock": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 0,
+        "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      "rls-execution/RLS-20260905113328-01@1/18434a683d2b4975a59fbc7f2fe648c1.json": {
+        "kind": "file",
+        "mode": 384,
+        "bytes": 8361,
+        "sha256": "sha256:c5a14281b440e122db077c20714bc075dfce3f2b9da8e1b68f7c009bd3c9cee2"
+      },
+      "rls-execution/RLS-20260905113328-01@1/21116f869bbf4d319d96343f1bd34f74.json": {
+        "kind": "file",
+        "mode": 384,
+        "bytes": 8362,
+        "sha256": "sha256:392136aa8da07b10093520ee82bad007e7326f769ea8949bb182a9f26d179440"
+      },
+      "rls-execution/RLS-20260905113328-01@1/b91c9786b7f548138de739293d5b062c.json": {
+        "kind": "file",
+        "mode": 384,
+        "bytes": 7435,
+        "sha256": "sha256:1fd3e96d68eedc4f6605abc4f1e276e4e18b67fd85a4c36b7878b6997ae331a4"
+      },
+      "store.sqlite3": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 270336,
+        "sha256": "sha256:58e16e999d886c943d5c66ccd97962dfc2643eb41c711382c2d8f28386b40e1d"
+      }
+    }
+  },
+  "target_snapshot": {
+    "exists": true,
+    "files": {
+      "evidence/aa72094da762a08fcbc5be3e6825acd3743af9b83f6b956da8728240243c98bc.json": {
+        "kind": "file",
+        "mode": 384,
+        "bytes": 456,
+        "sha256": "sha256:aa72094da762a08fcbc5be3e6825acd3743af9b83f6b956da8728240243c98bc"
+      },
+      "evidence/b6b23759edd1c7d73bfc9d4612e9e9aa87329e6a644dd9d81d5d7bb924cfaaf3.json": {
+        "kind": "file",
+        "mode": 384,
+        "bytes": 1801,
+        "sha256": "sha256:b6b23759edd1c7d73bfc9d4612e9e9aa87329e6a644dd9d81d5d7bb924cfaaf3"
+      },
+      "target-state.json": {
+        "kind": "file",
+        "mode": 384,
+        "bytes": 104,
+        "sha256": "sha256:391ffe55e0df242ef33f5cb486da133488e9bf9d3e3897820826d6cd599f6a6a"
+      }
+    }
+  },
+  "effect_journal": {
+    "exists": true,
+    "files": {
+      "RLS-20260905113328-01@1/18434a683d2b4975a59fbc7f2fe648c1.json": {
+        "kind": "file",
+        "mode": 384,
+        "bytes": 8361,
+        "sha256": "sha256:c5a14281b440e122db077c20714bc075dfce3f2b9da8e1b68f7c009bd3c9cee2"
+      },
+      "RLS-20260905113328-01@1/21116f869bbf4d319d96343f1bd34f74.json": {
+        "kind": "file",
+        "mode": 384,
+        "bytes": 8362,
+        "sha256": "sha256:392136aa8da07b10093520ee82bad007e7326f769ea8949bb182a9f26d179440"
+      },
+      "RLS-20260905113328-01@1/b91c9786b7f548138de739293d5b062c.json": {
+        "kind": "file",
+        "mode": 384,
+        "bytes": 7435,
+        "sha256": "sha256:1fd3e96d68eedc4f6605abc4f1e276e4e18b67fd85a4c36b7878b6997ae331a4"
+      }
+    }
+  },
+  "during": {
+    "head": "e855096ff19dcdb303dc4250ba19c30acd743ac7",
+    "tree": "0ec0b82046896c5b72c8075c4d9855352fa9802a",
+    "refs": "",
+    "status": "M springgear-parent/README.md",
+    "tracked": "100644 b61e180393e2bd2919cd91f435de4ff78de59de7 0\t.gitignore\n100644 261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64 0\tLICENSE\n100644 4d97cf042b406499981d6fd02c01f3a46049b756 0\tREADME.md\n100644 d2ffbfefee41f9b965636c25a688c75947a34e05 0\tdocs/doc-change.md\n100644 38686cc8fd3dcb6f4f6bea1681e477f832faa4d4 0\tdocs/doc-example-01.md\n100644 6ae600733c490444a12f13b4a09d26d201d89dd6 0\tdocs/doc-guide.md\n100644 9443aa63513be7ec1c0f38bc3520a9cb2cda2386 0\tdocs/doc-history-flow.png\n100644 2e28c23261d6a8e1ef2ac18ffc60902684a72dd4 0\tdocs/doc-history.md\n100644 658a51e75826b095b31f2694eec9507687450489 0\tpom.xml\n100644 a1f7186f484c897fc1096c5d1e034d1fec8f5c5d 0\tspringgear-bom/pom.xml\n100644 2c51923c7a45b42cb7bce808dd4a6fa55e3b5f8d 0\tspringgear-core/pom.xml\n100644 ec1db204c7eb0e099feae55911752ba0d6300701 0\tspringgear-core/src/main/java/org/springgear/EnableSpringGear.java\n100644 ca8b5808e2a9cee079d47f4b45fe37dd2a5c1d37 0\tspringgear-core/src/main/java/org/springgear/SpringGearConfiguration.java\n100644 649527a6e0f9ab25a3afb8359274ecb4ca3ecf61 0\tspringgear-core/src/main/java/org/springgear/context/AbstractSpringGearBeanRegistrar.java\n100644 fa2c9ad46234c89d5b5682b36ce5563e3faef4ee 0\tspringgear-core/src/main/java/org/springgear/context/SpringGearBeanAnnotationRegistrar.java\n100644 43565b24fbf7b65fbb03aa9c7baa89c0d87c1182 0\tspringgear-core/src/main/java/org/springgear/context/SpringGearBeanRegistrar.java\n100644 f431e7c82d70b361fffbdbc1f40edcedae2adb91 0\tspringgear-core/src/main/java/org/springgear/core/annotation/SpringGearEngine.java\n100644 54e06becb01e6ac2a1d7d81aa2dd709beb03341e 0\tspringgear-core/src/main/java/org/springgear/core/annotation/SpringGearRouter.java\n100644 2f0430f2b085f99691e8238c536c8cbaf1390c87 0\tspringgear-core/src/main/java/org/springgear/core/context/SpringGearContext.java\n100644 1362863395db10e1fd25ba71b327408bc745e04c 0\tspringgear-core/src/main/java/org/springgear/core/context/SpringGearContextValue.java\n100644 1587e79878b9ec71705e3c4e910b536038994730 0\tspringgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineBeanProcessor.java\n100644 efe4b9d3be834661e54264344968bb0c31a983a1 0\tspringgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineFactoryBean.java\n100644 1b185fd74967fb73c02e38dcd802d2e009aa2ef8 0\tspringgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineInvoker.java\n100644 90f8f216a1509e684d1231128366e2ff8da6b388 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/AbstractSpringGearEngineExecutor.java\n100644 561e2bbc8475f4a6b4d295dc9f39dc7c1c8dcb31 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/DefaultSpringGearEngineExecutor.java\n100644 8ad3fb2b2519c157fcc4838a327ecdc9f3d2843c 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/SpringGearEngineExecutor.java\n100644 93669ef6ac1fb9d42a8a745c0b2a5da281654994 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearEndingHandler.java\n100644 4dba2978fa925cc2570cbd04dc3c196d9b95506b 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearHandler.java\n100644 19c74ae97b7cb77a9a2685208a7bb2446e09751b 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearOrderedHandler.java\n100644 0f8f0a966db4dc9731b42c3fcf420de4a899be29 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearRequestValidHandler.java\n100644 f6413d523a4a9dddcb326724b219123f9e8a53e7 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/handler/SpringGearHandlerInterface.java\n100644 56027c979925075368af5b5e788fbd6a5cbfc850 0\tspringgear-core/src/main/java/org/springgear/core/engine/request/SpringGearEngineParts.java\n100644 f2d89c1fce9efe8dcf1571f2f9eb7aaa8097014a 0\tspringgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearMapResultWrapper.java\n100644 38e53442a05a95aead5788eaa27c31c6a1b4f33d 0\tspringgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearOriginalResultWrapper.java\n100644 884713c9cc1acfbe7de6d108605df3f42697d186 0\tspringgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearResultWrapper.java\n100644 b6d1902ddf10b5877d055d678594734a48d7e5d1 0\tspringgear-core/src/main/java/org/springgear/core/router/SpringGearRouterBeanProcessor.java\n100644 238476516694e7288be49250a280eb59a369c6dc 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearContinueException.java\n100644 6ae2faa81cc779f06fbd03878c672692f9e0dd4b 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearError.java\n100644 9e2fd2b70930aef0048b359376f709dbd3c05a29 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearException.java\n100644 53eb729828d95945e89bbebb68472d52795081f7 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearExceptionThrows.java\n100644 a09f179eba43debc52b2925b8eecb2c63d230b80 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearExceptions.java\n100644 5ce4735433e63b9552be39169a1d3a5024759c9d 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearInterruptException.java\n100644 222a4efdb5fea1982aef823173ac35cb6da1993e 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearUnauthorizedException.java\n100644 49fb626fa6fd85c38ac6832cc4b8d41450ee6c66 0\tspringgear-core/src/main/java/org/springgear/support/constants/HttpStatus.java\n100644 c4dc71e07cf01ffeea0477d25fb8835446ab7023 0\tspringgear-core/src/main/java/org/springgear/support/constants/package-info.java\n100644 560b4ca0267adf2a2eeb4a0a54a24c8b009dac64 0\tspringgear-core/src/main/java/org/springgear/support/enums/SymbolEnum.java\n100644 b0a7f38cee4c9717a03f1fe38bbb0282f2e09045 0\tspringgear-core/src/main/java/org/springgear/support/enums/package-info.java\n100644 2623b969cb4e253bf34fceb8f491c3e4f844677e 0\tspringgear-core/src/main/java/org/springgear/support/tools/package-info.java\n100644 9c1b0f2405d14889cafea0792fec25a2615cdc71 0\tspringgear-core/src/main/java/org/springgear/support/utils/SpringGearUtils.java\n100644 bd69e2c8303d7d5409881137013dbaa0179782d6 0\tspringgear-eventbus/pom.xml\n100644 b2641c1bcb089f597556eecdd49bd8d5d8ae3860 0\tspringgear-eventbus/src/main/java/org/springgear/eventbus/AbstractSpringGearEventListener.java\n100644 8d8d04d8fca07a94bacfcc4cd5a64be3db1b8f4e 0\tspringgear-eventbus/src/main/java/org/springgear/eventbus/EventBusAware.java\n100644 fb5d770fb38fba579f97288d04e321fbc1d33906 0\tspringgear-eventbus/src/main/java/org/springgear/eventbus/SpringGearEventAware.java\n100644 0c69f784a96324a46a6b76a6f2fa425da4555f80 0\tspringgear-eventbus/src/main/java/org/springgear/eventbus/SpringGearEventListener.java\n100644 988565b6d4d213e692cd6d4301fa92519dad3b5f 0\tspringgear-eventbus/src/main/java/org/springgear/eventbus/annotation/SpringGearEvent.java\n100644 ec3e16ed573e7152e9b4dec1cae5781b27dc25fb 0\tspringgear-example/README.md\n100644 c8c50ad3f7a4bd99e3f543cf02919e593a761176 0\tspringgear-example/example-01-start-xml_config/README.md\n100644 4580d2aaec943b6ad602ce9dcf8fad6d99ae2363 0\tspringgear-example/example-01-start-xml_config/pom.xml\n100644 85d6473f17bbb5cb120a30572e6d74044e5e32fa 0\tspringgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/Main.java\n100644 6883c7ee758dd46b7e88230677f9107757931ee7 0\tspringgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/service/MyServiceInterface.java\n100644 b8aa1824a0e00f6cedf6fb1b41fae91f37684290 0\tspringgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java\n100644 42d547175c3fe59236c08c48e63948238b0ecb2e 0\tspringgear-example/example-01-start-xml_config/src/main/resources/spring-config.xml\n100644 1a2c59eb933433d5c10f3e0422e7fd6eb7167b3d 0\tspringgear-example/example-02-start-java_config/README.md\n100644 bb9a1e161c100467692d00ddb7b395b8cef3a6ba 0\tspringgear-example/example-02-start-java_config/pom.xml\n100644 5359deb12a713bfc17176322999cf19e1e2eda90 0\tspringgear-example/example-02-start-java_config/src/main/java/org/springgear/example/Main.java\n100644 6883c7ee758dd46b7e88230677f9107757931ee7 0\tspringgear-example/example-02-start-java_config/src/main/java/org/springgear/example/service/MyServiceInterface.java\n100644 d556c669f4e71403885910fdf1efaf287a034daf 0\tspringgear-example/example-02-start-java_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java\n100644 1cae41eefbe13977974f745173b3ac893f7e1a53 0\tspringgear-example/example-03-start-annotation_config/README.md\n100644 8f2c4848928bc2667c8428f256939c02d6447363 0\tspringgear-example/example-03-start-annotation_config/pom.xml\n100644 b161d4db92ada0ab3f9babfe91a6569d3dd71a44 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/Main.java\n100644 da3d640b080d08f7fcf14846c179dc6795525871 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/MyServiceInterface.java\n100644 e119efb08e04346ec465ab2f763f2b5e613d9c0c 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler00Verify.java\n100644 5dce0bece68bc5cd28694b98c9c1c2932ae2428c 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler01.java\n100644 7b7fb03248dff847ff237d5b17b2a22f5746310b 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler10.java\n100644 3f2c5e078da7f8cb0df18256e667eb1802b57a49 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler99.java\n100644 6a2cecffeb3e812c3ad849c2d0a613fdf3a91b85 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler00Verify.java\n100644 cb8bfe152f4b29aa2fac892fd0aeb2e096440697 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler01.java\n100644 f6a5a1e01a432d4bdcc0a0798bd9181c607c400e 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler10.java\n100644 cac9a2b05e4ea3f7f769cc527d56fd6dd80eeb7e 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler99.java\n100644 d556c669f4e71403885910fdf1efaf287a034daf 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java\n100644 988a5a43076898d78a09c452a0ce4859f00a4918 0\tspringgear-example/example-04-simple_use/README.md\n100644 529085409b1ee562bc18dde6be7813d61c609e73 0\tspringgear-example/example-04-simple_use/pom.xml\n100644 d01cfd092f36c9c64024d45d01c31d3487fd1b8b 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/Main.java\n100644 da3d640b080d08f7fcf14846c179dc6795525871 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/MyServiceInterface.java\n100644 cd65bc9a20286fd177edd642ecb26677d9872751 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler00Verify.java\n100644 f6a793d5dbfd80bc016d63b70dffef2943f1eee0 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler01.java\n100644 4e3726763448b14a98306f31cda09a66d12f4547 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler10.java\n100644 3f2c5e078da7f8cb0df18256e667eb1802b57a49 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler99.java\n100644 1a171d159da714f6d3d89da0137ef5034005b713 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler00Verify.java\n100644 cb8bfe152f4b29aa2fac892fd0aeb2e096440697 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler01.java\n100644 f6a5a1e01a432d4bdcc0a0798bd9181c607c400e 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler10.java\n100644 cac9a2b05e4ea3f7f769cc527d56fd6dd80eeb7e 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler99.java\n100644 d556c669f4e71403885910fdf1efaf287a034daf 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/single/SingleHandler01.java\n100644 dc751fb91d5a81a9b63d36f314ae8b5c00e50524 0\tspringgear-example/example-05-context_use/README.md\n100644 7ac3486129ddd9fb7f3e71d651ad8b969100661a 0\tspringgear-example/example-05-context_use/pom.xml\n100644 57aec04ef83cf808746857348e9c61411d36dbb1 0\tspringgear-example/example-05-context_use/src/main/java/org/springgear/example/Main.java\n100644 603c12c77d3288c9b678ecde769d18d5ad3c33e0 0\tspringgear-example/example-05-context_use/src/main/java/org/springgear/example/ctx/MyCtxVal.java\n100644 063d634bbdd3653765b4056db57a39d845e076d3 0\tspringgear-example/example-05-context_use/src/main/java/org/springgear/example/service/MyServiceInterface.java\n100644 ebcd1aecef56fd24fa1765dd5c0498f82a720784 0\tspringgear-example/example-05-context_use/src/main/java/org/springgear/example/service/single/SingleHandler01.java\n100644 855a45efb76551f850b25443dece8388b70e1216 0\tspringgear-example/example-05-context_use/src/main/java/org/springgear/example/service/single/SingleHandler02.java\n100644 8d868cbd68e36d11c9aa91860f0f9aac0d0b825d 0\tspringgear-example/pom.xml\n100644 ecb3f263a8281b433ad46b99857900369ff20e11 0\tspringgear-ext-parent/README.md\n100644 5dd7b045d063973dcee4ac6c9275bf422efc3bf0 0\tspringgear-ext-parent/pom.xml\n100644 60e3b734c9f5618cf12564abae8139690aac16a6 0\tspringgear-ext-parent/springgear-ext-orika/pom.xml\n100644 85cd68eb130b63ecbba02976a4e8a686e53087ed 0\tspringgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/OrikaBeanMapper.java\n100644 e030348869126ce8e67f1ef783f0abf9e6c7b3be 0\tspringgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/OrikaCustomMapper.java\n100644 d214cf6770fba13b5317af90090c27da6f386e77 0\tspringgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/config/Orika.java\n100644 f980f9170aa2e79458adb7cf8782e0b48430f6c4 0\tspringgear-parent/README.md\n100644 6464dafac56e17bfc71cb593eb30886f5912eda5 0\tspringgear-parent/pom.xml\n100644 292384c0a4d674177d3a0eda904291fca7614d73 0\tspringgear-pending/pom.xml\n100644 ce232d8b83eb8124ef3d1cd985c6033fbd9ae6dc 0\tspringgear-pending/src/main/java/org/springgear/config/Properties.java\n100644 b109668f1a46bc746f621e384d71bb388a94c6d5 0\tspringgear-webmvc/pom.xml\n100644 d69c7dcd66e93ac06a8a6169bbec0f073a35b405 0\tspringgear-webmvc/src/main/java/org/springgear/webmvc/annotation/Authentication.java\n100644 009234380aaf4102f050072b5e755dbb06dd2b36 0\tspringgear-webmvc/src/main/java/org/springgear/webmvc/annotation/ResponseBodyWrapper.java",
+    "untracked": "",
+    "tracked_bytes_modes": {
+      ".gitignore": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 169,
+        "sha256": "sha256:6414407579da1449da4fca6d58ed784895d73e0a1660774f75cf36afe6502852"
+      },
+      "LICENSE": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 11357,
+        "sha256": "sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      },
+      "README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2733,
+        "sha256": "sha256:8b491970bfa58999cf5ec4103cc2326fc8f50470ba37031f5e76f079293b0e7f"
+      },
+      "docs/doc-change.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 96,
+        "sha256": "sha256:23c91fcf99e09c1fb20a6f9931fbd8a7bd396da74de220a1db1b96440390b0b1"
+      },
+      "docs/doc-example-01.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2425,
+        "sha256": "sha256:fb554af252c6312ab0b875f66502ccc7b49d61fa1f4c7d3b94e42d49cfbd935a"
+      },
+      "docs/doc-guide.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 927,
+        "sha256": "sha256:22f0544d1ab69c97bced3f7c6313cff4e6b6f707cec40ec9b8493ee740cb5133"
+      },
+      "docs/doc-history-flow.png": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 138187,
+        "sha256": "sha256:c37e208bea8f55990e0bbb3b53ba22b28837485402a74aef8a9c8c98beded0f1"
+      },
+      "docs/doc-history.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1930,
+        "sha256": "sha256:1ca24e2a490f84f653325613659548597ddc3d2a348a7af00d749c566caf123f"
+      },
+      "pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 6429,
+        "sha256": "sha256:98875d07f26dd2ffd690d830bbbab18abed46491e025b98d27bfd0f6ce256da7"
+      },
+      "springgear-bom/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2186,
+        "sha256": "sha256:7a5b551ed04b4cc54e494e916d241369649d6d1fb6c35035117c672fec5b4703"
+      },
+      "springgear-core/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 813,
+        "sha256": "sha256:e8107ee871837d426d9687096648944372cc4f57565f8c5b57ee6fc16ed57bbb"
+      },
+      "springgear-core/src/main/java/org/springgear/EnableSpringGear.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 852,
+        "sha256": "sha256:76d204011acec23997fdd152774e951bffffc628f26cf7e42fea89e2406e475c"
+      },
+      "springgear-core/src/main/java/org/springgear/SpringGearConfiguration.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1041,
+        "sha256": "sha256:4ff055048fb0e7c9980e91ff2e0d44ec2d3b327f8e597333f577767260481a83"
+      },
+      "springgear-core/src/main/java/org/springgear/context/AbstractSpringGearBeanRegistrar.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1299,
+        "sha256": "sha256:0f538668854a2d55f7cdcf9e82608608adb1f105a4e79a6d1d5a159eb7771127"
+      },
+      "springgear-core/src/main/java/org/springgear/context/SpringGearBeanAnnotationRegistrar.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2909,
+        "sha256": "sha256:0ae39fd4cfb688deea43ff5a84e3f69ab70aeff1177779a541ef539004ec4c99"
+      },
+      "springgear-core/src/main/java/org/springgear/context/SpringGearBeanRegistrar.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2125,
+        "sha256": "sha256:4616e155908a7a760a6e379e51b4bf2ad9ce9ea3d3ebd2d495dff55d127293f2"
+      },
+      "springgear-core/src/main/java/org/springgear/core/annotation/SpringGearEngine.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1617,
+        "sha256": "sha256:4f2720b6ed6a88a59f384129282cd2fed581a1af56b9d1a27dce37f9c95fa592"
+      },
+      "springgear-core/src/main/java/org/springgear/core/annotation/SpringGearRouter.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 658,
+        "sha256": "sha256:b6f3142d2676ef0d1826deb641ebb28983803f01278e5b41721f0fa580b5c754"
+      },
+      "springgear-core/src/main/java/org/springgear/core/context/SpringGearContext.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2098,
+        "sha256": "sha256:29e20ceb59801c03960aac82dbde06442008356d4a86ea85a5eaa08062dc310b"
+      },
+      "springgear-core/src/main/java/org/springgear/core/context/SpringGearContextValue.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 257,
+        "sha256": "sha256:61c664dd0e9942bfaff592c58f617316d148f02008aac6c0e948cc5103988d6c"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineBeanProcessor.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 5802,
+        "sha256": "sha256:4e3f2c69842f8fa676df0d13f0ac2966d50405255f91a16234404deef0faa858"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineFactoryBean.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1783,
+        "sha256": "sha256:00be754934b5dd453467d4043b4dc3ce932aeeb92dd74f6c47ff9a8c38149ac5"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineInvoker.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 5435,
+        "sha256": "sha256:2ee38c08675a930d60fa1e724e9c38267e97a3bc25efc10996fcfc59e56bd9a3"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/AbstractSpringGearEngineExecutor.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 3579,
+        "sha256": "sha256:4e8011d244496e1bff0758d3d2f81c01b7ac977d1ff58a5eaedc36cb7c9ce7c4"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/DefaultSpringGearEngineExecutor.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 3389,
+        "sha256": "sha256:0de062e39fb198b03664e7f3ed46479068d6e0cb9b990273e0d4153e8ae8896f"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/SpringGearEngineExecutor.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1366,
+        "sha256": "sha256:7d23a6181751c62225fd228c3546861654845687e65b1cfdd56d25adb3ac1bd5"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearEndingHandler.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 965,
+        "sha256": "sha256:1b0ad409b0bb0056e9b94a92700e89b272c9e78ce6a0a4acb71d9c3580dd7c15"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearHandler.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 427,
+        "sha256": "sha256:a749cc42863af85dddba5f2ae96623a4d82b29eb624e0465674e5aa416d94d71"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearOrderedHandler.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 344,
+        "sha256": "sha256:dfff5ba49512f03a0f1048a7e4d7d24d0ddf57ba0480bf113f38cc7b6783c189"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearRequestValidHandler.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1125,
+        "sha256": "sha256:e68009e217cd49553ec9513f5efe040088baa457c4db0d51a05f328fe7f8d98f"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/handler/SpringGearHandlerInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 702,
+        "sha256": "sha256:add024e6a30b776ec45cd22e3a0053f0e849494739da37ef13c1188e7917d978"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/request/SpringGearEngineParts.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1791,
+        "sha256": "sha256:1c81bfc24e8aed52d7bcc5cd8571cae3f09e12f98cdb081cfbcc3c75b316f0a4"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearMapResultWrapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 828,
+        "sha256": "sha256:63494e0d50a7d28a45de510c7800a98d1f1d17355a2c014e5b89cd53861cbc86"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearOriginalResultWrapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 495,
+        "sha256": "sha256:f8bd22414ff7096f80c071be7acb47e61a3015a352d37317f5da9a81c62ea6ca"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearResultWrapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 690,
+        "sha256": "sha256:156911b556e73333ab06d07be0fdb0ddc4b48df237bbde2c7728584d6df6d827"
+      },
+      "springgear-core/src/main/java/org/springgear/core/router/SpringGearRouterBeanProcessor.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 4070,
+        "sha256": "sha256:98bb62ab9df1bb5f20864b336bcc3c2853508d1b81628f18d384d40cf55a099d"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearContinueException.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 420,
+        "sha256": "sha256:6a9ca40954e58661c68814c9a0e45bdd00cf36b4d4237770e208af2cdc274e85"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearError.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 380,
+        "sha256": "sha256:cc112ca01deccb678d39edcc8c9779b2163fdc304a6e8ab832bba29c215f0215"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearException.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 541,
+        "sha256": "sha256:c7a53cb9b10c79474883e7d791bea8ebd97096953003937f0f90eeabbc402dfa"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearExceptionThrows.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1152,
+        "sha256": "sha256:b2927e85c908bd49efe845679e41e3f06b23f48d7bd74ebbeb5cc6e71c76cb65"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearExceptions.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1324,
+        "sha256": "sha256:dca314b0f025a71b0a7636aec488d919871c3e27aa394fb9553e06666e4b7d82"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearInterruptException.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 674,
+        "sha256": "sha256:da9e6ec1b4211ff06ec56a9bac77d9e8bcd7bf41ad6c7cf6062b26e3c685b4d0"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearUnauthorizedException.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 381,
+        "sha256": "sha256:01a6671bccd39cf56f503e87b99a193f966e98da836192d86f281875d43df5fa"
+      },
+      "springgear-core/src/main/java/org/springgear/support/constants/HttpStatus.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 5924,
+        "sha256": "sha256:ade534849fe3be7a967f77806ec4130f7fb26042d8bd8f231276a0bdd7bb88d0"
+      },
+      "springgear-core/src/main/java/org/springgear/support/constants/package-info.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 106,
+        "sha256": "sha256:f71a59147208d535164b74e009fde6e116f2e646b046064e1256597080dd2a54"
+      },
+      "springgear-core/src/main/java/org/springgear/support/enums/SymbolEnum.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2218,
+        "sha256": "sha256:e6c093b83e7e5025b126623591166cb65648be8dcd26e9ae8298f5ffe9ee2290"
+      },
+      "springgear-core/src/main/java/org/springgear/support/enums/package-info.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 105,
+        "sha256": "sha256:42e1cd2492f02f390c54c4801a2a7fb2ca1f9f60b505dd20834b596802687470"
+      },
+      "springgear-core/src/main/java/org/springgear/support/tools/package-info.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 160,
+        "sha256": "sha256:def72cbf21e872d7b28d3259a1e471515e3f9dd6bd5224a79e74a31388490c9e"
+      },
+      "springgear-core/src/main/java/org/springgear/support/utils/SpringGearUtils.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 3133,
+        "sha256": "sha256:16d7b949ef969b4fa32b6bc59c05e56e02c092359151e0cd99995d6cb8d120be"
+      },
+      "springgear-eventbus/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 918,
+        "sha256": "sha256:a1f354241220348a3589cfc2faa228abb9c1ca2c9e3477189921eff3ce5a816f"
+      },
+      "springgear-eventbus/src/main/java/org/springgear/eventbus/AbstractSpringGearEventListener.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1162,
+        "sha256": "sha256:68f94d5b16737e03a0cc47b6b14997f90ab45b0ec8b189f2e109685e360a6c7b"
+      },
+      "springgear-eventbus/src/main/java/org/springgear/eventbus/EventBusAware.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 267,
+        "sha256": "sha256:c5512ecb1f2b7c4cfb2567db4ea845814de9e6a806c5699a14f9d9707384d3bc"
+      },
+      "springgear-eventbus/src/main/java/org/springgear/eventbus/SpringGearEventAware.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 245,
+        "sha256": "sha256:312c4a7018829bb5acb5842c2e68d722429d5c2c51c398f25ad11cfec96e01d5"
+      },
+      "springgear-eventbus/src/main/java/org/springgear/eventbus/SpringGearEventListener.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 459,
+        "sha256": "sha256:26f59b491077686d65c01f614231531a6e61099736ecba021cdc0446192e503b"
+      },
+      "springgear-eventbus/src/main/java/org/springgear/eventbus/annotation/SpringGearEvent.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 632,
+        "sha256": "sha256:7e4b2b67b5d4008a81358613ac5066d3d32882e7405b896b09c179c5b7ee3450"
+      },
+      "springgear-example/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 85,
+        "sha256": "sha256:361f42862dc449cf861ee8ce01bd8a3227c3717e39d2092b576980e195e28bd3"
+      },
+      "springgear-example/example-01-start-xml_config/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 109,
+        "sha256": "sha256:380144f462f8bf8144a0c205f79845d4f3ae26bab9bbd3ffca9cf4cd1a2551d7"
+      },
+      "springgear-example/example-01-start-xml_config/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 546,
+        "sha256": "sha256:d00288706324323a1d70a7a0bcc2fc4c6b5924162f8cad4dd2eac7dcc87ed873"
+      },
+      "springgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/Main.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 635,
+        "sha256": "sha256:49524f3869285e0bd186f1151e645b503712ef3ec22307de49102554b2ca9bfd"
+      },
+      "springgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/service/MyServiceInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 383,
+        "sha256": "sha256:e060d1587bf0c156a43fe58afcce87f06d6a9accdcc478b214ccd66bbc669c18"
+      },
+      "springgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 983,
+        "sha256": "sha256:b67f2ccd531a6a379a58c1de6de47d86973617ac41c1f4b430b1a5ded5232008"
+      },
+      "springgear-example/example-01-start-xml_config/src/main/resources/spring-config.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 925,
+        "sha256": "sha256:8a52ed8cd562b617904373f3cf8e2c4bc26cda215b050c2c401454a7502c0540"
+      },
+      "springgear-example/example-02-start-java_config/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 194,
+        "sha256": "sha256:2d15b18df6fb447ebc01b5a774220a940048b8155758f214709ed66eabf7da23"
+      },
+      "springgear-example/example-02-start-java_config/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 547,
+        "sha256": "sha256:8b469eca82a9351081f90fb12384b886d6c224b103d0728e2213945029743806"
+      },
+      "springgear-example/example-02-start-java_config/src/main/java/org/springgear/example/Main.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1305,
+        "sha256": "sha256:359f4a8fb26895b30d17327b8c001453c717f94a567f4b8d79af4c5b97355647"
+      },
+      "springgear-example/example-02-start-java_config/src/main/java/org/springgear/example/service/MyServiceInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 383,
+        "sha256": "sha256:e060d1587bf0c156a43fe58afcce87f06d6a9accdcc478b214ccd66bbc669c18"
+      },
+      "springgear-example/example-02-start-java_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 768,
+        "sha256": "sha256:9213992d7a2422cf6f539b815f28d1632d923705330a410bb2d99c824a2e3e32"
+      },
+      "springgear-example/example-03-start-annotation_config/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 148,
+        "sha256": "sha256:71958e411d15f8154499e5f1e25bd42a8096f9fc581d0e59145e21ad6ae582f1"
+      },
+      "springgear-example/example-03-start-annotation_config/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 553,
+        "sha256": "sha256:bab9c5c7150203a16617780111fb0b8a7ad7989636e4c46394b514eed6ff6096"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/Main.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1025,
+        "sha256": "sha256:8726b008abec70b46ab574ef319f7d2ebf420ee2b52976c25193c7170af2e704"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/MyServiceInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 742,
+        "sha256": "sha256:d2c41e28c1c5ae127a424c8bd94b94f46fee7d39a6dd5922231fd1a81b4d49a3"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler00Verify.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 574,
+        "sha256": "sha256:b51a829a2bce27718ba2b30b94472d101b5c86cdb72482689943ae4316b2c8c1"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 689,
+        "sha256": "sha256:c74edab8c2669d8ae16d03b52b723ae4612438dbd3f64ee4611c535828fc2d4f"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler10.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 682,
+        "sha256": "sha256:1d3110e89c15ecaa4d3bdba41a7ff86faa487a04d01602c35ac79136bcc85d10"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler99.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 813,
+        "sha256": "sha256:94c4a30f82844ef9f66b7562e6dd8a6b614948835fdd4459fba2d164233297de"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler00Verify.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 765,
+        "sha256": "sha256:5361e00ceb31ad3f95675ceae45bf0ff4d51b71d1c6d71ee623197e13d154031"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 792,
+        "sha256": "sha256:cca15bed90d066f9e47c4e55eb2ca7ef67b5b5bd412dfb1663accbac31227635"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler10.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 744,
+        "sha256": "sha256:e1640acd1213a3053604667f07110c63796e18f6de35f369aae6479bc82810b2"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler99.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 813,
+        "sha256": "sha256:09744f52deab76e29aaa3ea2d7733eed35b2dd263dcaee1f1a7101c7e353f774"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 768,
+        "sha256": "sha256:9213992d7a2422cf6f539b815f28d1632d923705330a410bb2d99c824a2e3e32"
+      },
+      "springgear-example/example-04-simple_use/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 99,
+        "sha256": "sha256:46230657d214e03f88c8ffc4130e39d1830b610f94a9c2b82e4a94e8d4efcd86"
+      },
+      "springgear-example/example-04-simple_use/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 540,
+        "sha256": "sha256:23913a0138ffd6b0fd4dcaa78808a16a413c3b2217e2b82121e9a35d84101071"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/Main.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1703,
+        "sha256": "sha256:cb519343a9e10cc981d74f028060e9da7f13ffb21a5c31c58e230c6e68d4fda7"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/MyServiceInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 742,
+        "sha256": "sha256:d2c41e28c1c5ae127a424c8bd94b94f46fee7d39a6dd5922231fd1a81b4d49a3"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler00Verify.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 764,
+        "sha256": "sha256:b517333cd66f4f14f7a7ca6c2e890a818c37dc883ce25dea9311dcefea9e62cf"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 690,
+        "sha256": "sha256:87c27dd438a7fb82310676ff94d8b05f14559c9bc99dd68b0b5fe445dbb2b7dc"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler10.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 763,
+        "sha256": "sha256:520ce2c02989e8d4be65fa648c1e45d2e34e8a3bcc2c7be4b7927f09059ff1fa"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler99.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 813,
+        "sha256": "sha256:94c4a30f82844ef9f66b7562e6dd8a6b614948835fdd4459fba2d164233297de"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler00Verify.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 764,
+        "sha256": "sha256:e10d61dee9c8fe40c85e306cec59abd72c58ebd55c68de238abb8e1edab7dc25"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 792,
+        "sha256": "sha256:cca15bed90d066f9e47c4e55eb2ca7ef67b5b5bd412dfb1663accbac31227635"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler10.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 744,
+        "sha256": "sha256:e1640acd1213a3053604667f07110c63796e18f6de35f369aae6479bc82810b2"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler99.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 813,
+        "sha256": "sha256:09744f52deab76e29aaa3ea2d7733eed35b2dd263dcaee1f1a7101c7e353f774"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/single/SingleHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 768,
+        "sha256": "sha256:9213992d7a2422cf6f539b815f28d1632d923705330a410bb2d99c824a2e3e32"
+      },
+      "springgear-example/example-05-context_use/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 101,
+        "sha256": "sha256:de376267145f49aa94397e9c5a15fdaa8e889e786ba18c6bef3e1937f2437d3c"
+      },
+      "springgear-example/example-05-context_use/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 541,
+        "sha256": "sha256:ec250bbf125dc770548f31e98ed509ddb15637a47a1a28c46a5d0c18a6d35102"
+      },
+      "springgear-example/example-05-context_use/src/main/java/org/springgear/example/Main.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1741,
+        "sha256": "sha256:ee695e6aef19a86ea47709e9e7824fd84d7ace23c677126aad30e13edde025b4"
+      },
+      "springgear-example/example-05-context_use/src/main/java/org/springgear/example/ctx/MyCtxVal.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 531,
+        "sha256": "sha256:dbb436edd13b66b0697340c5580695c8dd93b61f6ede85dca38aabcb6e155aac"
+      },
+      "springgear-example/example-05-context_use/src/main/java/org/springgear/example/service/MyServiceInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 858,
+        "sha256": "sha256:9caf2bd286a7643a6fada63644b263cd2041b3b24d0e0093beb507a62e015bf6"
+      },
+      "springgear-example/example-05-context_use/src/main/java/org/springgear/example/service/single/SingleHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 822,
+        "sha256": "sha256:e589a7b93923dcfec31936e170edae9a462cb6146a29ab6d4f3844cc2cfdc493"
+      },
+      "springgear-example/example-05-context_use/src/main/java/org/springgear/example/service/single/SingleHandler02.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 804,
+        "sha256": "sha256:66ce656b945dcc24e16acbfca734263e5b8fa3a3739ca696f1384851884f6268"
+      },
+      "springgear-example/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1760,
+        "sha256": "sha256:f76f6795d19b5760a07b94d813097ee4d7af2627b96f4c4161e5014e59c0dcd0"
+      },
+      "springgear-ext-parent/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 63,
+        "sha256": "sha256:d5279c77cef59a88606c8df57dce5eb9f66769be5589cc2a9a0b8257ab8e27a8"
+      },
+      "springgear-ext-parent/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1732,
+        "sha256": "sha256:87d929e224b83674077c6a7792c2b4040978362bb02b0eebc1a2a7df9b59303e"
+      },
+      "springgear-ext-parent/springgear-ext-orika/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 976,
+        "sha256": "sha256:73ba2a1aded25370633646c6b595b8fd8da3cb4dd4a10ed47f652acad59e6353"
+      },
+      "springgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/OrikaBeanMapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 3541,
+        "sha256": "sha256:df1500ab761181db71fd400ad86355e862f135f121d9812e57a7e640245e02c2"
+      },
+      "springgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/OrikaCustomMapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1759,
+        "sha256": "sha256:76303ef78967ed4db187c7c08b4b7807fdc047ae59941dc89fc1aadc7d716a82"
+      },
+      "springgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/config/Orika.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 358,
+        "sha256": "sha256:23e3a17a4fb303b90a30b5c7f0c024f84b31e461f90ca7f945c3e775828290a1"
+      },
+      "springgear-parent/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 146,
+        "sha256": "sha256:09e575f4dbc8ec5b131bdb3cc935a69d59530def39f53fb0aecb797b07980c9b"
+      },
+      "springgear-parent/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 4877,
+        "sha256": "sha256:25ffaa695a90c826d2cd137ff96877b1672846f3dd7d38214f140ddb61a844cd"
+      },
+      "springgear-pending/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 776,
+        "sha256": "sha256:1e464f415fb7168125839ec80fc14979878036c61d72d021593c46b0beb74f5d"
+      },
+      "springgear-pending/src/main/java/org/springgear/config/Properties.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 824,
+        "sha256": "sha256:d97ffd4b90686d2d65fd5c0e8f8892abe79f89d42667605ab2d558bb42a1385f"
+      },
+      "springgear-webmvc/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 953,
+        "sha256": "sha256:45b2f7484222a7b95853de3692184387268e8c76f6ef3b38f4e2158b5ad6d139"
+      },
+      "springgear-webmvc/src/main/java/org/springgear/webmvc/annotation/Authentication.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 601,
+        "sha256": "sha256:7e813178569d4bdf30b2faad8ba2b13ecd1bc50b746942400fbbc00d3debe9f4"
+      },
+      "springgear-webmvc/src/main/java/org/springgear/webmvc/annotation/ResponseBodyWrapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 715,
+        "sha256": "sha256:c7ed117eeb38ee28a0f38ecee89547a79ecb18d412c8014663519aa831054e28"
+      }
+    },
+    "untracked_bytes_modes": {},
+    "sdlc": {
+      "exists": true,
+      "files": {
+        ".gitignore": {
+          "kind": "file",
+          "mode": 420,
+          "bytes": 2,
+          "sha256": "sha256:cdbcae15105d6b781e620813c79c7e868740d4e9cc53ce6f5fcbbc12387adf4b"
+        },
+        "authority/ctx-final-confirmation.txt": {
+          "kind": "file",
+          "mode": 420,
+          "bytes": 525,
+          "sha256": "sha256:60c71f4af176b431e07685b29e7afa0bc57b78a9b028f0178b3ca9b0b22c78e7"
+        },
+        "authority/ctx-source.txt": {
+          "kind": "file",
+          "mode": 420,
+          "bytes": 187,
+          "sha256": "sha256:2dae362e8bdc3a9ee4abb258aa9f2447dc87a4f7a8303656739991f161b5a207"
+        },
+        "authority/dsn-approval.md": {
+          "kind": "file",
+          "mode": 420,
+          "bytes": 94,
+          "sha256": "sha256:d599b978201e894d6328039a958625276f9e360048a4f4f8a93799f16e4f142c"
+        },
+        "authority/imp-approval.md": {
+          "kind": "file",
+          "mode": 420,
+          "bytes": 628,
+          "sha256": "sha256:d48a930bd4362fd98d85b9a00ee910c88fb3ebf80fc88af6cf0c691e2560d615"
+        },
+        "authority/pln-approval.md": {
+          "kind": "file",
+          "mode": 420,
+          "bytes": 63,
+          "sha256": "sha256:cdfbf4073b52ecb324afe6611fc89b4df394b2d4b904f3d38eadd3ab93859b88"
+        },
+        "authority/req-approval.md": {
+          "kind": "file",
+          "mode": 420,
+          "bytes": 94,
+          "sha256": "sha256:d599b978201e894d6328039a958625276f9e360048a4f4f8a93799f16e4f142c"
+        },
+        "authority/rls-confirmation-02c9654e00b9d28ccdb45deb359d6cf483c15f0dc44c8372bc951ac0d9b15195.md": {
+          "kind": "file",
+          "mode": 420,
+          "bytes": 1118,
+          "sha256": "sha256:02c9654e00b9d28ccdb45deb359d6cf483c15f0dc44c8372bc951ac0d9b15195"
+        },
+        "authority/rls-delegation-d71aa532512267dfc0b1b756b56d36b012d03b00ee9c3834b7681d1123ec8694.txt": {
+          "kind": "file",
+          "mode": 420,
+          "bytes": 106,
+          "sha256": "sha256:d71aa532512267dfc0b1b756b56d36b012d03b00ee9c3834b7681d1123ec8694"
+        },
+        "authority/rls-effects/EA-1415193dd5c44941.grant.json": {
+          "kind": "file",
+          "mode": 384,
+          "bytes": 1475,
+          "sha256": "sha256:f12961b04cf54790c4a6f1aab2206788bfb8897f142885dfc5624be674de05ee"
+        },
+        "authority/rls-effects/EA-1415193dd5c44941.used.json": {
+          "kind": "file",
+          "mode": 384,
+          "bytes": 168,
+          "sha256": "sha256:a27c1038d13107ae7b29cb60219885374863097f6632fce2d045dfb15f723eae"
+        },
+        "authority/vfy-test-delegated-confirmation.md": {
+          "kind": "file",
+          "mode": 420,
+          "bytes": 1374,
+          "sha256": "sha256:89bd3b569decd87ee03048116603a1c90b948e7a31663df8581ec9b63a922910"
+        },
+        "authority/vfy-test-delegation.txt": {
+          "kind": "file",
+          "mode": 420,
+          "bytes": 84,
+          "sha256": "sha256:35063b9a017f27c9b5b387e7ceaa9115519dd4ed62e942e1a688d8a5fe33ec00"
+        },
+        "imp-runtime.lock": {
+          "kind": "file",
+          "mode": 420,
+          "bytes": 0,
+          "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        },
+        "rls-execution/RLS-20260905113328-01@1/18434a683d2b4975a59fbc7f2fe648c1.json": {
+          "kind": "file",
+          "mode": 384,
+          "bytes": 8361,
+          "sha256": "sha256:c5a14281b440e122db077c20714bc075dfce3f2b9da8e1b68f7c009bd3c9cee2"
+        },
+        "rls-execution/RLS-20260905113328-01@1/21116f869bbf4d319d96343f1bd34f74.json": {
+          "kind": "file",
+          "mode": 384,
+          "bytes": 8362,
+          "sha256": "sha256:392136aa8da07b10093520ee82bad007e7326f769ea8949bb182a9f26d179440"
+        },
+        "rls-execution/RLS-20260905113328-01@1/b91c9786b7f548138de739293d5b062c.json": {
+          "kind": "file",
+          "mode": 384,
+          "bytes": 7435,
+          "sha256": "sha256:1fd3e96d68eedc4f6605abc4f1e276e4e18b67fd85a4c36b7878b6997ae331a4"
+        },
+        "store.sqlite3": {
+          "kind": "file",
+          "mode": 420,
+          "bytes": 270336,
+          "sha256": "sha256:58e16e999d886c943d5c66ccd97962dfc2643eb41c711382c2d8f28386b40e1d"
+        }
+      }
+    }
+  },
+  "store_export": {
+    "path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/springgear/store-export.json",
+    "sha256": "sha256:28ebce494798886ce22575cd942d5c745a2b3436000750f784c1fc53949081db"
+  },
+  "target_cleanup": true,
+  "after_cleanup": {
+    "head": "e855096ff19dcdb303dc4250ba19c30acd743ac7",
+    "tree": "0ec0b82046896c5b72c8075c4d9855352fa9802a",
+    "refs": "",
+    "status": "",
+    "tracked": "100644 b61e180393e2bd2919cd91f435de4ff78de59de7 0\t.gitignore\n100644 261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64 0\tLICENSE\n100644 4d97cf042b406499981d6fd02c01f3a46049b756 0\tREADME.md\n100644 d2ffbfefee41f9b965636c25a688c75947a34e05 0\tdocs/doc-change.md\n100644 38686cc8fd3dcb6f4f6bea1681e477f832faa4d4 0\tdocs/doc-example-01.md\n100644 6ae600733c490444a12f13b4a09d26d201d89dd6 0\tdocs/doc-guide.md\n100644 9443aa63513be7ec1c0f38bc3520a9cb2cda2386 0\tdocs/doc-history-flow.png\n100644 2e28c23261d6a8e1ef2ac18ffc60902684a72dd4 0\tdocs/doc-history.md\n100644 658a51e75826b095b31f2694eec9507687450489 0\tpom.xml\n100644 a1f7186f484c897fc1096c5d1e034d1fec8f5c5d 0\tspringgear-bom/pom.xml\n100644 2c51923c7a45b42cb7bce808dd4a6fa55e3b5f8d 0\tspringgear-core/pom.xml\n100644 ec1db204c7eb0e099feae55911752ba0d6300701 0\tspringgear-core/src/main/java/org/springgear/EnableSpringGear.java\n100644 ca8b5808e2a9cee079d47f4b45fe37dd2a5c1d37 0\tspringgear-core/src/main/java/org/springgear/SpringGearConfiguration.java\n100644 649527a6e0f9ab25a3afb8359274ecb4ca3ecf61 0\tspringgear-core/src/main/java/org/springgear/context/AbstractSpringGearBeanRegistrar.java\n100644 fa2c9ad46234c89d5b5682b36ce5563e3faef4ee 0\tspringgear-core/src/main/java/org/springgear/context/SpringGearBeanAnnotationRegistrar.java\n100644 43565b24fbf7b65fbb03aa9c7baa89c0d87c1182 0\tspringgear-core/src/main/java/org/springgear/context/SpringGearBeanRegistrar.java\n100644 f431e7c82d70b361fffbdbc1f40edcedae2adb91 0\tspringgear-core/src/main/java/org/springgear/core/annotation/SpringGearEngine.java\n100644 54e06becb01e6ac2a1d7d81aa2dd709beb03341e 0\tspringgear-core/src/main/java/org/springgear/core/annotation/SpringGearRouter.java\n100644 2f0430f2b085f99691e8238c536c8cbaf1390c87 0\tspringgear-core/src/main/java/org/springgear/core/context/SpringGearContext.java\n100644 1362863395db10e1fd25ba71b327408bc745e04c 0\tspringgear-core/src/main/java/org/springgear/core/context/SpringGearContextValue.java\n100644 1587e79878b9ec71705e3c4e910b536038994730 0\tspringgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineBeanProcessor.java\n100644 efe4b9d3be834661e54264344968bb0c31a983a1 0\tspringgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineFactoryBean.java\n100644 1b185fd74967fb73c02e38dcd802d2e009aa2ef8 0\tspringgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineInvoker.java\n100644 90f8f216a1509e684d1231128366e2ff8da6b388 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/AbstractSpringGearEngineExecutor.java\n100644 561e2bbc8475f4a6b4d295dc9f39dc7c1c8dcb31 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/DefaultSpringGearEngineExecutor.java\n100644 8ad3fb2b2519c157fcc4838a327ecdc9f3d2843c 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/SpringGearEngineExecutor.java\n100644 93669ef6ac1fb9d42a8a745c0b2a5da281654994 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearEndingHandler.java\n100644 4dba2978fa925cc2570cbd04dc3c196d9b95506b 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearHandler.java\n100644 19c74ae97b7cb77a9a2685208a7bb2446e09751b 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearOrderedHandler.java\n100644 0f8f0a966db4dc9731b42c3fcf420de4a899be29 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearRequestValidHandler.java\n100644 f6413d523a4a9dddcb326724b219123f9e8a53e7 0\tspringgear-core/src/main/java/org/springgear/core/engine/executor/handler/SpringGearHandlerInterface.java\n100644 56027c979925075368af5b5e788fbd6a5cbfc850 0\tspringgear-core/src/main/java/org/springgear/core/engine/request/SpringGearEngineParts.java\n100644 f2d89c1fce9efe8dcf1571f2f9eb7aaa8097014a 0\tspringgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearMapResultWrapper.java\n100644 38e53442a05a95aead5788eaa27c31c6a1b4f33d 0\tspringgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearOriginalResultWrapper.java\n100644 884713c9cc1acfbe7de6d108605df3f42697d186 0\tspringgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearResultWrapper.java\n100644 b6d1902ddf10b5877d055d678594734a48d7e5d1 0\tspringgear-core/src/main/java/org/springgear/core/router/SpringGearRouterBeanProcessor.java\n100644 238476516694e7288be49250a280eb59a369c6dc 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearContinueException.java\n100644 6ae2faa81cc779f06fbd03878c672692f9e0dd4b 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearError.java\n100644 9e2fd2b70930aef0048b359376f709dbd3c05a29 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearException.java\n100644 53eb729828d95945e89bbebb68472d52795081f7 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearExceptionThrows.java\n100644 a09f179eba43debc52b2925b8eecb2c63d230b80 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearExceptions.java\n100644 5ce4735433e63b9552be39169a1d3a5024759c9d 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearInterruptException.java\n100644 222a4efdb5fea1982aef823173ac35cb6da1993e 0\tspringgear-core/src/main/java/org/springgear/exception/SpringGearUnauthorizedException.java\n100644 49fb626fa6fd85c38ac6832cc4b8d41450ee6c66 0\tspringgear-core/src/main/java/org/springgear/support/constants/HttpStatus.java\n100644 c4dc71e07cf01ffeea0477d25fb8835446ab7023 0\tspringgear-core/src/main/java/org/springgear/support/constants/package-info.java\n100644 560b4ca0267adf2a2eeb4a0a54a24c8b009dac64 0\tspringgear-core/src/main/java/org/springgear/support/enums/SymbolEnum.java\n100644 b0a7f38cee4c9717a03f1fe38bbb0282f2e09045 0\tspringgear-core/src/main/java/org/springgear/support/enums/package-info.java\n100644 2623b969cb4e253bf34fceb8f491c3e4f844677e 0\tspringgear-core/src/main/java/org/springgear/support/tools/package-info.java\n100644 9c1b0f2405d14889cafea0792fec25a2615cdc71 0\tspringgear-core/src/main/java/org/springgear/support/utils/SpringGearUtils.java\n100644 bd69e2c8303d7d5409881137013dbaa0179782d6 0\tspringgear-eventbus/pom.xml\n100644 b2641c1bcb089f597556eecdd49bd8d5d8ae3860 0\tspringgear-eventbus/src/main/java/org/springgear/eventbus/AbstractSpringGearEventListener.java\n100644 8d8d04d8fca07a94bacfcc4cd5a64be3db1b8f4e 0\tspringgear-eventbus/src/main/java/org/springgear/eventbus/EventBusAware.java\n100644 fb5d770fb38fba579f97288d04e321fbc1d33906 0\tspringgear-eventbus/src/main/java/org/springgear/eventbus/SpringGearEventAware.java\n100644 0c69f784a96324a46a6b76a6f2fa425da4555f80 0\tspringgear-eventbus/src/main/java/org/springgear/eventbus/SpringGearEventListener.java\n100644 988565b6d4d213e692cd6d4301fa92519dad3b5f 0\tspringgear-eventbus/src/main/java/org/springgear/eventbus/annotation/SpringGearEvent.java\n100644 ec3e16ed573e7152e9b4dec1cae5781b27dc25fb 0\tspringgear-example/README.md\n100644 c8c50ad3f7a4bd99e3f543cf02919e593a761176 0\tspringgear-example/example-01-start-xml_config/README.md\n100644 4580d2aaec943b6ad602ce9dcf8fad6d99ae2363 0\tspringgear-example/example-01-start-xml_config/pom.xml\n100644 85d6473f17bbb5cb120a30572e6d74044e5e32fa 0\tspringgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/Main.java\n100644 6883c7ee758dd46b7e88230677f9107757931ee7 0\tspringgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/service/MyServiceInterface.java\n100644 b8aa1824a0e00f6cedf6fb1b41fae91f37684290 0\tspringgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java\n100644 42d547175c3fe59236c08c48e63948238b0ecb2e 0\tspringgear-example/example-01-start-xml_config/src/main/resources/spring-config.xml\n100644 1a2c59eb933433d5c10f3e0422e7fd6eb7167b3d 0\tspringgear-example/example-02-start-java_config/README.md\n100644 bb9a1e161c100467692d00ddb7b395b8cef3a6ba 0\tspringgear-example/example-02-start-java_config/pom.xml\n100644 5359deb12a713bfc17176322999cf19e1e2eda90 0\tspringgear-example/example-02-start-java_config/src/main/java/org/springgear/example/Main.java\n100644 6883c7ee758dd46b7e88230677f9107757931ee7 0\tspringgear-example/example-02-start-java_config/src/main/java/org/springgear/example/service/MyServiceInterface.java\n100644 d556c669f4e71403885910fdf1efaf287a034daf 0\tspringgear-example/example-02-start-java_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java\n100644 1cae41eefbe13977974f745173b3ac893f7e1a53 0\tspringgear-example/example-03-start-annotation_config/README.md\n100644 8f2c4848928bc2667c8428f256939c02d6447363 0\tspringgear-example/example-03-start-annotation_config/pom.xml\n100644 b161d4db92ada0ab3f9babfe91a6569d3dd71a44 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/Main.java\n100644 da3d640b080d08f7fcf14846c179dc6795525871 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/MyServiceInterface.java\n100644 e119efb08e04346ec465ab2f763f2b5e613d9c0c 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler00Verify.java\n100644 5dce0bece68bc5cd28694b98c9c1c2932ae2428c 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler01.java\n100644 7b7fb03248dff847ff237d5b17b2a22f5746310b 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler10.java\n100644 3f2c5e078da7f8cb0df18256e667eb1802b57a49 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler99.java\n100644 6a2cecffeb3e812c3ad849c2d0a613fdf3a91b85 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler00Verify.java\n100644 cb8bfe152f4b29aa2fac892fd0aeb2e096440697 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler01.java\n100644 f6a5a1e01a432d4bdcc0a0798bd9181c607c400e 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler10.java\n100644 cac9a2b05e4ea3f7f769cc527d56fd6dd80eeb7e 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler99.java\n100644 d556c669f4e71403885910fdf1efaf287a034daf 0\tspringgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java\n100644 988a5a43076898d78a09c452a0ce4859f00a4918 0\tspringgear-example/example-04-simple_use/README.md\n100644 529085409b1ee562bc18dde6be7813d61c609e73 0\tspringgear-example/example-04-simple_use/pom.xml\n100644 d01cfd092f36c9c64024d45d01c31d3487fd1b8b 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/Main.java\n100644 da3d640b080d08f7fcf14846c179dc6795525871 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/MyServiceInterface.java\n100644 cd65bc9a20286fd177edd642ecb26677d9872751 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler00Verify.java\n100644 f6a793d5dbfd80bc016d63b70dffef2943f1eee0 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler01.java\n100644 4e3726763448b14a98306f31cda09a66d12f4547 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler10.java\n100644 3f2c5e078da7f8cb0df18256e667eb1802b57a49 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler99.java\n100644 1a171d159da714f6d3d89da0137ef5034005b713 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler00Verify.java\n100644 cb8bfe152f4b29aa2fac892fd0aeb2e096440697 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler01.java\n100644 f6a5a1e01a432d4bdcc0a0798bd9181c607c400e 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler10.java\n100644 cac9a2b05e4ea3f7f769cc527d56fd6dd80eeb7e 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler99.java\n100644 d556c669f4e71403885910fdf1efaf287a034daf 0\tspringgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/single/SingleHandler01.java\n100644 dc751fb91d5a81a9b63d36f314ae8b5c00e50524 0\tspringgear-example/example-05-context_use/README.md\n100644 7ac3486129ddd9fb7f3e71d651ad8b969100661a 0\tspringgear-example/example-05-context_use/pom.xml\n100644 57aec04ef83cf808746857348e9c61411d36dbb1 0\tspringgear-example/example-05-context_use/src/main/java/org/springgear/example/Main.java\n100644 603c12c77d3288c9b678ecde769d18d5ad3c33e0 0\tspringgear-example/example-05-context_use/src/main/java/org/springgear/example/ctx/MyCtxVal.java\n100644 063d634bbdd3653765b4056db57a39d845e076d3 0\tspringgear-example/example-05-context_use/src/main/java/org/springgear/example/service/MyServiceInterface.java\n100644 ebcd1aecef56fd24fa1765dd5c0498f82a720784 0\tspringgear-example/example-05-context_use/src/main/java/org/springgear/example/service/single/SingleHandler01.java\n100644 855a45efb76551f850b25443dece8388b70e1216 0\tspringgear-example/example-05-context_use/src/main/java/org/springgear/example/service/single/SingleHandler02.java\n100644 8d868cbd68e36d11c9aa91860f0f9aac0d0b825d 0\tspringgear-example/pom.xml\n100644 ecb3f263a8281b433ad46b99857900369ff20e11 0\tspringgear-ext-parent/README.md\n100644 5dd7b045d063973dcee4ac6c9275bf422efc3bf0 0\tspringgear-ext-parent/pom.xml\n100644 60e3b734c9f5618cf12564abae8139690aac16a6 0\tspringgear-ext-parent/springgear-ext-orika/pom.xml\n100644 85cd68eb130b63ecbba02976a4e8a686e53087ed 0\tspringgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/OrikaBeanMapper.java\n100644 e030348869126ce8e67f1ef783f0abf9e6c7b3be 0\tspringgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/OrikaCustomMapper.java\n100644 d214cf6770fba13b5317af90090c27da6f386e77 0\tspringgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/config/Orika.java\n100644 f980f9170aa2e79458adb7cf8782e0b48430f6c4 0\tspringgear-parent/README.md\n100644 6464dafac56e17bfc71cb593eb30886f5912eda5 0\tspringgear-parent/pom.xml\n100644 292384c0a4d674177d3a0eda904291fca7614d73 0\tspringgear-pending/pom.xml\n100644 ce232d8b83eb8124ef3d1cd985c6033fbd9ae6dc 0\tspringgear-pending/src/main/java/org/springgear/config/Properties.java\n100644 b109668f1a46bc746f621e384d71bb388a94c6d5 0\tspringgear-webmvc/pom.xml\n100644 d69c7dcd66e93ac06a8a6169bbec0f073a35b405 0\tspringgear-webmvc/src/main/java/org/springgear/webmvc/annotation/Authentication.java\n100644 009234380aaf4102f050072b5e755dbb06dd2b36 0\tspringgear-webmvc/src/main/java/org/springgear/webmvc/annotation/ResponseBodyWrapper.java",
+    "untracked": "",
+    "tracked_bytes_modes": {
+      ".gitignore": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 169,
+        "sha256": "sha256:6414407579da1449da4fca6d58ed784895d73e0a1660774f75cf36afe6502852"
+      },
+      "LICENSE": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 11357,
+        "sha256": "sha256:c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+      },
+      "README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2733,
+        "sha256": "sha256:8b491970bfa58999cf5ec4103cc2326fc8f50470ba37031f5e76f079293b0e7f"
+      },
+      "docs/doc-change.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 96,
+        "sha256": "sha256:23c91fcf99e09c1fb20a6f9931fbd8a7bd396da74de220a1db1b96440390b0b1"
+      },
+      "docs/doc-example-01.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2425,
+        "sha256": "sha256:fb554af252c6312ab0b875f66502ccc7b49d61fa1f4c7d3b94e42d49cfbd935a"
+      },
+      "docs/doc-guide.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 927,
+        "sha256": "sha256:22f0544d1ab69c97bced3f7c6313cff4e6b6f707cec40ec9b8493ee740cb5133"
+      },
+      "docs/doc-history-flow.png": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 138187,
+        "sha256": "sha256:c37e208bea8f55990e0bbb3b53ba22b28837485402a74aef8a9c8c98beded0f1"
+      },
+      "docs/doc-history.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1930,
+        "sha256": "sha256:1ca24e2a490f84f653325613659548597ddc3d2a348a7af00d749c566caf123f"
+      },
+      "pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 6429,
+        "sha256": "sha256:98875d07f26dd2ffd690d830bbbab18abed46491e025b98d27bfd0f6ce256da7"
+      },
+      "springgear-bom/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2186,
+        "sha256": "sha256:7a5b551ed04b4cc54e494e916d241369649d6d1fb6c35035117c672fec5b4703"
+      },
+      "springgear-core/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 813,
+        "sha256": "sha256:e8107ee871837d426d9687096648944372cc4f57565f8c5b57ee6fc16ed57bbb"
+      },
+      "springgear-core/src/main/java/org/springgear/EnableSpringGear.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 852,
+        "sha256": "sha256:76d204011acec23997fdd152774e951bffffc628f26cf7e42fea89e2406e475c"
+      },
+      "springgear-core/src/main/java/org/springgear/SpringGearConfiguration.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1041,
+        "sha256": "sha256:4ff055048fb0e7c9980e91ff2e0d44ec2d3b327f8e597333f577767260481a83"
+      },
+      "springgear-core/src/main/java/org/springgear/context/AbstractSpringGearBeanRegistrar.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1299,
+        "sha256": "sha256:0f538668854a2d55f7cdcf9e82608608adb1f105a4e79a6d1d5a159eb7771127"
+      },
+      "springgear-core/src/main/java/org/springgear/context/SpringGearBeanAnnotationRegistrar.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2909,
+        "sha256": "sha256:0ae39fd4cfb688deea43ff5a84e3f69ab70aeff1177779a541ef539004ec4c99"
+      },
+      "springgear-core/src/main/java/org/springgear/context/SpringGearBeanRegistrar.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2125,
+        "sha256": "sha256:4616e155908a7a760a6e379e51b4bf2ad9ce9ea3d3ebd2d495dff55d127293f2"
+      },
+      "springgear-core/src/main/java/org/springgear/core/annotation/SpringGearEngine.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1617,
+        "sha256": "sha256:4f2720b6ed6a88a59f384129282cd2fed581a1af56b9d1a27dce37f9c95fa592"
+      },
+      "springgear-core/src/main/java/org/springgear/core/annotation/SpringGearRouter.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 658,
+        "sha256": "sha256:b6f3142d2676ef0d1826deb641ebb28983803f01278e5b41721f0fa580b5c754"
+      },
+      "springgear-core/src/main/java/org/springgear/core/context/SpringGearContext.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2098,
+        "sha256": "sha256:29e20ceb59801c03960aac82dbde06442008356d4a86ea85a5eaa08062dc310b"
+      },
+      "springgear-core/src/main/java/org/springgear/core/context/SpringGearContextValue.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 257,
+        "sha256": "sha256:61c664dd0e9942bfaff592c58f617316d148f02008aac6c0e948cc5103988d6c"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineBeanProcessor.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 5802,
+        "sha256": "sha256:4e3f2c69842f8fa676df0d13f0ac2966d50405255f91a16234404deef0faa858"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineFactoryBean.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1783,
+        "sha256": "sha256:00be754934b5dd453467d4043b4dc3ce932aeeb92dd74f6c47ff9a8c38149ac5"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/SpringGearEngineInvoker.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 5435,
+        "sha256": "sha256:2ee38c08675a930d60fa1e724e9c38267e97a3bc25efc10996fcfc59e56bd9a3"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/AbstractSpringGearEngineExecutor.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 3579,
+        "sha256": "sha256:4e8011d244496e1bff0758d3d2f81c01b7ac977d1ff58a5eaedc36cb7c9ce7c4"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/DefaultSpringGearEngineExecutor.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 3389,
+        "sha256": "sha256:0de062e39fb198b03664e7f3ed46479068d6e0cb9b990273e0d4153e8ae8896f"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/SpringGearEngineExecutor.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1366,
+        "sha256": "sha256:7d23a6181751c62225fd228c3546861654845687e65b1cfdd56d25adb3ac1bd5"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearEndingHandler.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 965,
+        "sha256": "sha256:1b0ad409b0bb0056e9b94a92700e89b272c9e78ce6a0a4acb71d9c3580dd7c15"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearHandler.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 427,
+        "sha256": "sha256:a749cc42863af85dddba5f2ae96623a4d82b29eb624e0465674e5aa416d94d71"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearOrderedHandler.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 344,
+        "sha256": "sha256:dfff5ba49512f03a0f1048a7e4d7d24d0ddf57ba0480bf113f38cc7b6783c189"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/handler/AbstractSpringGearRequestValidHandler.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1125,
+        "sha256": "sha256:e68009e217cd49553ec9513f5efe040088baa457c4db0d51a05f328fe7f8d98f"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/executor/handler/SpringGearHandlerInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 702,
+        "sha256": "sha256:add024e6a30b776ec45cd22e3a0053f0e849494739da37ef13c1188e7917d978"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/request/SpringGearEngineParts.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1791,
+        "sha256": "sha256:1c81bfc24e8aed52d7bcc5cd8571cae3f09e12f98cdb081cfbcc3c75b316f0a4"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearMapResultWrapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 828,
+        "sha256": "sha256:63494e0d50a7d28a45de510c7800a98d1f1d17355a2c014e5b89cd53861cbc86"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearOriginalResultWrapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 495,
+        "sha256": "sha256:f8bd22414ff7096f80c071be7acb47e61a3015a352d37317f5da9a81c62ea6ca"
+      },
+      "springgear-core/src/main/java/org/springgear/core/engine/wrapper/SpringGearResultWrapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 690,
+        "sha256": "sha256:156911b556e73333ab06d07be0fdb0ddc4b48df237bbde2c7728584d6df6d827"
+      },
+      "springgear-core/src/main/java/org/springgear/core/router/SpringGearRouterBeanProcessor.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 4070,
+        "sha256": "sha256:98bb62ab9df1bb5f20864b336bcc3c2853508d1b81628f18d384d40cf55a099d"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearContinueException.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 420,
+        "sha256": "sha256:6a9ca40954e58661c68814c9a0e45bdd00cf36b4d4237770e208af2cdc274e85"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearError.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 380,
+        "sha256": "sha256:cc112ca01deccb678d39edcc8c9779b2163fdc304a6e8ab832bba29c215f0215"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearException.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 541,
+        "sha256": "sha256:c7a53cb9b10c79474883e7d791bea8ebd97096953003937f0f90eeabbc402dfa"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearExceptionThrows.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1152,
+        "sha256": "sha256:b2927e85c908bd49efe845679e41e3f06b23f48d7bd74ebbeb5cc6e71c76cb65"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearExceptions.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1324,
+        "sha256": "sha256:dca314b0f025a71b0a7636aec488d919871c3e27aa394fb9553e06666e4b7d82"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearInterruptException.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 674,
+        "sha256": "sha256:da9e6ec1b4211ff06ec56a9bac77d9e8bcd7bf41ad6c7cf6062b26e3c685b4d0"
+      },
+      "springgear-core/src/main/java/org/springgear/exception/SpringGearUnauthorizedException.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 381,
+        "sha256": "sha256:01a6671bccd39cf56f503e87b99a193f966e98da836192d86f281875d43df5fa"
+      },
+      "springgear-core/src/main/java/org/springgear/support/constants/HttpStatus.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 5924,
+        "sha256": "sha256:ade534849fe3be7a967f77806ec4130f7fb26042d8bd8f231276a0bdd7bb88d0"
+      },
+      "springgear-core/src/main/java/org/springgear/support/constants/package-info.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 106,
+        "sha256": "sha256:f71a59147208d535164b74e009fde6e116f2e646b046064e1256597080dd2a54"
+      },
+      "springgear-core/src/main/java/org/springgear/support/enums/SymbolEnum.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 2218,
+        "sha256": "sha256:e6c093b83e7e5025b126623591166cb65648be8dcd26e9ae8298f5ffe9ee2290"
+      },
+      "springgear-core/src/main/java/org/springgear/support/enums/package-info.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 105,
+        "sha256": "sha256:42e1cd2492f02f390c54c4801a2a7fb2ca1f9f60b505dd20834b596802687470"
+      },
+      "springgear-core/src/main/java/org/springgear/support/tools/package-info.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 160,
+        "sha256": "sha256:def72cbf21e872d7b28d3259a1e471515e3f9dd6bd5224a79e74a31388490c9e"
+      },
+      "springgear-core/src/main/java/org/springgear/support/utils/SpringGearUtils.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 3133,
+        "sha256": "sha256:16d7b949ef969b4fa32b6bc59c05e56e02c092359151e0cd99995d6cb8d120be"
+      },
+      "springgear-eventbus/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 918,
+        "sha256": "sha256:a1f354241220348a3589cfc2faa228abb9c1ca2c9e3477189921eff3ce5a816f"
+      },
+      "springgear-eventbus/src/main/java/org/springgear/eventbus/AbstractSpringGearEventListener.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1162,
+        "sha256": "sha256:68f94d5b16737e03a0cc47b6b14997f90ab45b0ec8b189f2e109685e360a6c7b"
+      },
+      "springgear-eventbus/src/main/java/org/springgear/eventbus/EventBusAware.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 267,
+        "sha256": "sha256:c5512ecb1f2b7c4cfb2567db4ea845814de9e6a806c5699a14f9d9707384d3bc"
+      },
+      "springgear-eventbus/src/main/java/org/springgear/eventbus/SpringGearEventAware.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 245,
+        "sha256": "sha256:312c4a7018829bb5acb5842c2e68d722429d5c2c51c398f25ad11cfec96e01d5"
+      },
+      "springgear-eventbus/src/main/java/org/springgear/eventbus/SpringGearEventListener.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 459,
+        "sha256": "sha256:26f59b491077686d65c01f614231531a6e61099736ecba021cdc0446192e503b"
+      },
+      "springgear-eventbus/src/main/java/org/springgear/eventbus/annotation/SpringGearEvent.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 632,
+        "sha256": "sha256:7e4b2b67b5d4008a81358613ac5066d3d32882e7405b896b09c179c5b7ee3450"
+      },
+      "springgear-example/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 85,
+        "sha256": "sha256:361f42862dc449cf861ee8ce01bd8a3227c3717e39d2092b576980e195e28bd3"
+      },
+      "springgear-example/example-01-start-xml_config/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 109,
+        "sha256": "sha256:380144f462f8bf8144a0c205f79845d4f3ae26bab9bbd3ffca9cf4cd1a2551d7"
+      },
+      "springgear-example/example-01-start-xml_config/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 546,
+        "sha256": "sha256:d00288706324323a1d70a7a0bcc2fc4c6b5924162f8cad4dd2eac7dcc87ed873"
+      },
+      "springgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/Main.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 635,
+        "sha256": "sha256:49524f3869285e0bd186f1151e645b503712ef3ec22307de49102554b2ca9bfd"
+      },
+      "springgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/service/MyServiceInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 383,
+        "sha256": "sha256:e060d1587bf0c156a43fe58afcce87f06d6a9accdcc478b214ccd66bbc669c18"
+      },
+      "springgear-example/example-01-start-xml_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 983,
+        "sha256": "sha256:b67f2ccd531a6a379a58c1de6de47d86973617ac41c1f4b430b1a5ded5232008"
+      },
+      "springgear-example/example-01-start-xml_config/src/main/resources/spring-config.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 925,
+        "sha256": "sha256:8a52ed8cd562b617904373f3cf8e2c4bc26cda215b050c2c401454a7502c0540"
+      },
+      "springgear-example/example-02-start-java_config/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 194,
+        "sha256": "sha256:2d15b18df6fb447ebc01b5a774220a940048b8155758f214709ed66eabf7da23"
+      },
+      "springgear-example/example-02-start-java_config/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 547,
+        "sha256": "sha256:8b469eca82a9351081f90fb12384b886d6c224b103d0728e2213945029743806"
+      },
+      "springgear-example/example-02-start-java_config/src/main/java/org/springgear/example/Main.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1305,
+        "sha256": "sha256:359f4a8fb26895b30d17327b8c001453c717f94a567f4b8d79af4c5b97355647"
+      },
+      "springgear-example/example-02-start-java_config/src/main/java/org/springgear/example/service/MyServiceInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 383,
+        "sha256": "sha256:e060d1587bf0c156a43fe58afcce87f06d6a9accdcc478b214ccd66bbc669c18"
+      },
+      "springgear-example/example-02-start-java_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 768,
+        "sha256": "sha256:9213992d7a2422cf6f539b815f28d1632d923705330a410bb2d99c824a2e3e32"
+      },
+      "springgear-example/example-03-start-annotation_config/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 148,
+        "sha256": "sha256:71958e411d15f8154499e5f1e25bd42a8096f9fc581d0e59145e21ad6ae582f1"
+      },
+      "springgear-example/example-03-start-annotation_config/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 553,
+        "sha256": "sha256:bab9c5c7150203a16617780111fb0b8a7ad7989636e4c46394b514eed6ff6096"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/Main.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1025,
+        "sha256": "sha256:8726b008abec70b46ab574ef319f7d2ebf420ee2b52976c25193c7170af2e704"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/MyServiceInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 742,
+        "sha256": "sha256:d2c41e28c1c5ae127a424c8bd94b94f46fee7d39a6dd5922231fd1a81b4d49a3"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler00Verify.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 574,
+        "sha256": "sha256:b51a829a2bce27718ba2b30b94472d101b5c86cdb72482689943ae4316b2c8c1"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 689,
+        "sha256": "sha256:c74edab8c2669d8ae16d03b52b723ae4612438dbd3f64ee4611c535828fc2d4f"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler10.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 682,
+        "sha256": "sha256:1d3110e89c15ecaa4d3bdba41a7ff86faa487a04d01602c35ac79136bcc85d10"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/multi/MultiHandler99.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 813,
+        "sha256": "sha256:94c4a30f82844ef9f66b7562e6dd8a6b614948835fdd4459fba2d164233297de"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler00Verify.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 765,
+        "sha256": "sha256:5361e00ceb31ad3f95675ceae45bf0ff4d51b71d1c6d71ee623197e13d154031"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 792,
+        "sha256": "sha256:cca15bed90d066f9e47c4e55eb2ca7ef67b5b5bd412dfb1663accbac31227635"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler10.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 744,
+        "sha256": "sha256:e1640acd1213a3053604667f07110c63796e18f6de35f369aae6479bc82810b2"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/order/OrderHandler99.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 813,
+        "sha256": "sha256:09744f52deab76e29aaa3ea2d7733eed35b2dd263dcaee1f1a7101c7e353f774"
+      },
+      "springgear-example/example-03-start-annotation_config/src/main/java/org/springgear/example/service/single/SingleHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 768,
+        "sha256": "sha256:9213992d7a2422cf6f539b815f28d1632d923705330a410bb2d99c824a2e3e32"
+      },
+      "springgear-example/example-04-simple_use/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 99,
+        "sha256": "sha256:46230657d214e03f88c8ffc4130e39d1830b610f94a9c2b82e4a94e8d4efcd86"
+      },
+      "springgear-example/example-04-simple_use/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 540,
+        "sha256": "sha256:23913a0138ffd6b0fd4dcaa78808a16a413c3b2217e2b82121e9a35d84101071"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/Main.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1703,
+        "sha256": "sha256:cb519343a9e10cc981d74f028060e9da7f13ffb21a5c31c58e230c6e68d4fda7"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/MyServiceInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 742,
+        "sha256": "sha256:d2c41e28c1c5ae127a424c8bd94b94f46fee7d39a6dd5922231fd1a81b4d49a3"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler00Verify.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 764,
+        "sha256": "sha256:b517333cd66f4f14f7a7ca6c2e890a818c37dc883ce25dea9311dcefea9e62cf"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 690,
+        "sha256": "sha256:87c27dd438a7fb82310676ff94d8b05f14559c9bc99dd68b0b5fe445dbb2b7dc"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler10.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 763,
+        "sha256": "sha256:520ce2c02989e8d4be65fa648c1e45d2e34e8a3bcc2c7be4b7927f09059ff1fa"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/multi/MultiHandler99.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 813,
+        "sha256": "sha256:94c4a30f82844ef9f66b7562e6dd8a6b614948835fdd4459fba2d164233297de"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler00Verify.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 764,
+        "sha256": "sha256:e10d61dee9c8fe40c85e306cec59abd72c58ebd55c68de238abb8e1edab7dc25"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 792,
+        "sha256": "sha256:cca15bed90d066f9e47c4e55eb2ca7ef67b5b5bd412dfb1663accbac31227635"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler10.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 744,
+        "sha256": "sha256:e1640acd1213a3053604667f07110c63796e18f6de35f369aae6479bc82810b2"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/order/OrderHandler99.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 813,
+        "sha256": "sha256:09744f52deab76e29aaa3ea2d7733eed35b2dd263dcaee1f1a7101c7e353f774"
+      },
+      "springgear-example/example-04-simple_use/src/main/java/org/springgear/example/service/single/SingleHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 768,
+        "sha256": "sha256:9213992d7a2422cf6f539b815f28d1632d923705330a410bb2d99c824a2e3e32"
+      },
+      "springgear-example/example-05-context_use/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 101,
+        "sha256": "sha256:de376267145f49aa94397e9c5a15fdaa8e889e786ba18c6bef3e1937f2437d3c"
+      },
+      "springgear-example/example-05-context_use/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 541,
+        "sha256": "sha256:ec250bbf125dc770548f31e98ed509ddb15637a47a1a28c46a5d0c18a6d35102"
+      },
+      "springgear-example/example-05-context_use/src/main/java/org/springgear/example/Main.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1741,
+        "sha256": "sha256:ee695e6aef19a86ea47709e9e7824fd84d7ace23c677126aad30e13edde025b4"
+      },
+      "springgear-example/example-05-context_use/src/main/java/org/springgear/example/ctx/MyCtxVal.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 531,
+        "sha256": "sha256:dbb436edd13b66b0697340c5580695c8dd93b61f6ede85dca38aabcb6e155aac"
+      },
+      "springgear-example/example-05-context_use/src/main/java/org/springgear/example/service/MyServiceInterface.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 858,
+        "sha256": "sha256:9caf2bd286a7643a6fada63644b263cd2041b3b24d0e0093beb507a62e015bf6"
+      },
+      "springgear-example/example-05-context_use/src/main/java/org/springgear/example/service/single/SingleHandler01.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 822,
+        "sha256": "sha256:e589a7b93923dcfec31936e170edae9a462cb6146a29ab6d4f3844cc2cfdc493"
+      },
+      "springgear-example/example-05-context_use/src/main/java/org/springgear/example/service/single/SingleHandler02.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 804,
+        "sha256": "sha256:66ce656b945dcc24e16acbfca734263e5b8fa3a3739ca696f1384851884f6268"
+      },
+      "springgear-example/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1760,
+        "sha256": "sha256:f76f6795d19b5760a07b94d813097ee4d7af2627b96f4c4161e5014e59c0dcd0"
+      },
+      "springgear-ext-parent/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 63,
+        "sha256": "sha256:d5279c77cef59a88606c8df57dce5eb9f66769be5589cc2a9a0b8257ab8e27a8"
+      },
+      "springgear-ext-parent/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1732,
+        "sha256": "sha256:87d929e224b83674077c6a7792c2b4040978362bb02b0eebc1a2a7df9b59303e"
+      },
+      "springgear-ext-parent/springgear-ext-orika/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 976,
+        "sha256": "sha256:73ba2a1aded25370633646c6b595b8fd8da3cb4dd4a10ed47f652acad59e6353"
+      },
+      "springgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/OrikaBeanMapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 3541,
+        "sha256": "sha256:df1500ab761181db71fd400ad86355e862f135f121d9812e57a7e640245e02c2"
+      },
+      "springgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/OrikaCustomMapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 1759,
+        "sha256": "sha256:76303ef78967ed4db187c7c08b4b7807fdc047ae59941dc89fc1aadc7d716a82"
+      },
+      "springgear-ext-parent/springgear-ext-orika/src/main/java/org/springgear/extend/orika/config/Orika.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 358,
+        "sha256": "sha256:23e3a17a4fb303b90a30b5c7f0c024f84b31e461f90ca7f945c3e775828290a1"
+      },
+      "springgear-parent/README.md": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 97,
+        "sha256": "sha256:0da651f17777508cd5b1bfec68f6e9d81cdb78326f59b9a5b915112bd8cc1902"
+      },
+      "springgear-parent/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 4877,
+        "sha256": "sha256:25ffaa695a90c826d2cd137ff96877b1672846f3dd7d38214f140ddb61a844cd"
+      },
+      "springgear-pending/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 776,
+        "sha256": "sha256:1e464f415fb7168125839ec80fc14979878036c61d72d021593c46b0beb74f5d"
+      },
+      "springgear-pending/src/main/java/org/springgear/config/Properties.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 824,
+        "sha256": "sha256:d97ffd4b90686d2d65fd5c0e8f8892abe79f89d42667605ab2d558bb42a1385f"
+      },
+      "springgear-webmvc/pom.xml": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 953,
+        "sha256": "sha256:45b2f7484222a7b95853de3692184387268e8c76f6ef3b38f4e2158b5ad6d139"
+      },
+      "springgear-webmvc/src/main/java/org/springgear/webmvc/annotation/Authentication.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 601,
+        "sha256": "sha256:7e813178569d4bdf30b2faad8ba2b13ecd1bc50b746942400fbbc00d3debe9f4"
+      },
+      "springgear-webmvc/src/main/java/org/springgear/webmvc/annotation/ResponseBodyWrapper.java": {
+        "kind": "file",
+        "mode": 420,
+        "bytes": 715,
+        "sha256": "sha256:c7ed117eeb38ee28a0f38ecee89547a79ecb18d412c8014663519aa831054e28"
+      }
+    },
+    "untracked_bytes_modes": {},
+    "sdlc": {
+      "exists": false,
+      "files": {}
+    }
+  },
+  "project_cleanup": true
+}

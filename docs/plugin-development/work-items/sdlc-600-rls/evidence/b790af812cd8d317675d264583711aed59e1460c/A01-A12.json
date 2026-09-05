@@ -1,0 +1,226 @@
+{
+  "contract": "sdlc-ai-spec/rls-interface-execution-ledger/v1",
+  "rows": [
+    {
+      "id": "A01",
+      "purpose": "Exact persisted Candidate and producer digest",
+      "tests": [
+        "tests.skill_rls.test_final_boundaries.FinalVfyBoundaryTests.test_producer_full_state_digest_and_24_wire_fields_differential"
+      ],
+      "status": "CLOSED",
+      "source_sha": "b790af812cd8d317675d264583711aed59e1460c",
+      "accepted_source": {
+        "sha": "46509eb6688df30e71ed094132b2d10e81ceb2ac",
+        "path": "skills/sdlc-500-vfy/scripts/vfy_release.py",
+        "blob": "d5529be9b3efeb30c834884e3fa53bc8bb532dcc"
+      },
+      "adapter_blob": "49d9be64dbd2d81fb76c088556aac862f7d7f994",
+      "execution_log": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-private.json",
+      "execution_log_sha256": "sha256:deb168c4400ba27ed9ccb897c35c55662dfebe0132193743a90a1bd2d03ebda1"
+    },
+    {
+      "id": "A02",
+      "purpose": "Store frozen authority",
+      "tests": [
+        "tests.skill_rls.test_final_boundaries.FinalVfyBoundaryTests.test_real_open_pending_vfy_cannot_be_release_authority",
+        "tests.skill_rls.test_final_store.RlsFinalStoreTests.test_frozen_revision_cannot_be_rewritten"
+      ],
+      "status": "CLOSED",
+      "source_sha": "b790af812cd8d317675d264583711aed59e1460c",
+      "accepted_source": {
+        "sha": "46509eb6688df30e71ed094132b2d10e81ceb2ac",
+        "path": "packages/sdlc_artifact_store/models.py",
+        "blob": "3f3e59b8bd0a4dba931e07dda69a5ade169723f7"
+      },
+      "adapter_blob": "49d9be64dbd2d81fb76c088556aac862f7d7f994",
+      "execution_log": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-private.json",
+      "execution_log_sha256": "sha256:deb168c4400ba27ed9ccb897c35c55662dfebe0132193743a90a1bd2d03ebda1"
+    },
+    {
+      "id": "A03",
+      "purpose": "Exact current Scope",
+      "tests": [
+        "tests.skill_rls.test_final_boundaries.FinalVfyBoundaryTests.test_current_imp_claim_result_digest_and_scope_are_recomputed",
+        "tests.skill_rls.test_critical_cases_final.RlsFinalCriticalCases.test_rls_e020_final"
+      ],
+      "status": "CLOSED",
+      "source_sha": "b790af812cd8d317675d264583711aed59e1460c",
+      "accepted_source": {
+        "sha": "46509eb6688df30e71ed094132b2d10e81ceb2ac",
+        "path": "skills/sdlc-500-vfy/scripts/vfy_authority.py",
+        "blob": "9d133beca6810fb43dbd009f5305b2fc70b22603"
+      },
+      "adapter_blob": "49d9be64dbd2d81fb76c088556aac862f7d7f994",
+      "execution_log": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-private.json",
+      "execution_log_sha256": "sha256:deb168c4400ba27ed9ccb897c35c55662dfebe0132193743a90a1bd2d03ebda1"
+    },
+    {
+      "id": "A04",
+      "purpose": "Current IMP Claim and complete Result Set",
+      "tests": [
+        "tests.skill_rls.test_final_boundaries.FinalVfyBoundaryTests.test_current_imp_claim_result_digest_and_scope_are_recomputed",
+        "tests.skill_rls.test_critical_cases_final.RlsFinalCriticalCases.test_rls_e021_final"
+      ],
+      "status": "CLOSED",
+      "source_sha": "b790af812cd8d317675d264583711aed59e1460c",
+      "accepted_source": {
+        "sha": "46509eb6688df30e71ed094132b2d10e81ceb2ac",
+        "path": "packages/sdlc_lifecycle/query_vfy.py",
+        "blob": "dc2790f569ea5bd364b30a33d2d1229afaa06d53"
+      },
+      "adapter_blob": "49d9be64dbd2d81fb76c088556aac862f7d7f994",
+      "execution_log": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-private.json",
+      "execution_log_sha256": "sha256:deb168c4400ba27ed9ccb897c35c55662dfebe0132193743a90a1bd2d03ebda1"
+    },
+    {
+      "id": "A05",
+      "purpose": "Independent terminal con_ver/con_val",
+      "tests": [
+        "tests.skill_rls.test_critical_cases_final.RlsFinalCriticalCases.test_rls_e017_final",
+        "tests.skill_rls.test_critical_cases_final.RlsFinalCriticalCases.test_rls_e018_final"
+      ],
+      "status": "CLOSED",
+      "source_sha": "b790af812cd8d317675d264583711aed59e1460c",
+      "accepted_source": {
+        "sha": "46509eb6688df30e71ed094132b2d10e81ceb2ac",
+        "path": "skills/sdlc-500-vfy/scripts/vfy_verifier.py",
+        "blob": "6aea2b09158625258c9056282f6be350d36a932f"
+      },
+      "adapter_blob": "49d9be64dbd2d81fb76c088556aac862f7d7f994",
+      "execution_log": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-private.json",
+      "execution_log_sha256": "sha256:deb168c4400ba27ed9ccb897c35c55662dfebe0132193743a90a1bd2d03ebda1"
+    },
+    {
+      "id": "A06",
+      "purpose": "Preserve product fail and exact active Exception",
+      "tests": [
+        "tests.skill_rls.test_critical_cases_final.RlsFinalCriticalCases.test_rls_e019_final",
+        "tests.skill_rls.test_final_boundaries.FinalVfyBoundaryTests.test_expired_or_wrong_scope_exception_is_not_current_authority"
+      ],
+      "status": "CLOSED",
+      "source_sha": "b790af812cd8d317675d264583711aed59e1460c",
+      "accepted_source": {
+        "sha": "46509eb6688df30e71ed094132b2d10e81ceb2ac",
+        "path": "skills/sdlc-500-vfy/scripts/vfy_exceptions.py",
+        "blob": "7ff2a4486e449cd50efe5d19ea620f04a1662477"
+      },
+      "adapter_blob": "49d9be64dbd2d81fb76c088556aac862f7d7f994",
+      "execution_log": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-private.json",
+      "execution_log_sha256": "sha256:deb168c4400ba27ed9ccb897c35c55662dfebe0132193743a90a1bd2d03ebda1"
+    },
+    {
+      "id": "A07",
+      "purpose": "Status/Gate and primary/state/member consistency",
+      "tests": [
+        "tests.skill_rls.test_final_store.RlsFinalStoreTests.test_primary_state_member_manifest_cross_checks",
+        "tests.skill_rls.test_final_store.RlsFinalStoreTests.test_context_profile_input_and_gate_tamper_cannot_freeze"
+      ],
+      "status": "CLOSED",
+      "source_sha": "b790af812cd8d317675d264583711aed59e1460c",
+      "accepted_source": {
+        "sha": "46509eb6688df30e71ed094132b2d10e81ceb2ac",
+        "path": "skills/sdlc-500-vfy/scripts/vfy_builder.py",
+        "blob": "a4adcb604e7569b7903eeb0ce63989084ea6024c"
+      },
+      "adapter_blob": "49d9be64dbd2d81fb76c088556aac862f7d7f994",
+      "execution_log": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-private.json",
+      "execution_log_sha256": "sha256:deb168c4400ba27ed9ccb897c35c55662dfebe0132193743a90a1bd2d03ebda1"
+    },
+    {
+      "id": "A08",
+      "purpose": "Real frozen early-stop rejection",
+      "tests": [
+        "tests.skill_rls.test_final_boundaries.FinalVfyBoundaryTests.test_real_frozen_early_stop_and_return_are_rejected"
+      ],
+      "status": "CLOSED",
+      "source_sha": "b790af812cd8d317675d264583711aed59e1460c",
+      "accepted_source": {
+        "sha": "46509eb6688df30e71ed094132b2d10e81ceb2ac",
+        "path": "skills/sdlc-500-vfy/scripts/vfy_release.py",
+        "blob": "d5529be9b3efeb30c834884e3fa53bc8bb532dcc"
+      },
+      "adapter_blob": "49d9be64dbd2d81fb76c088556aac862f7d7f994",
+      "execution_log": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-private.json",
+      "execution_log_sha256": "sha256:deb168c4400ba27ed9ccb897c35c55662dfebe0132193743a90a1bd2d03ebda1"
+    },
+    {
+      "id": "A09",
+      "purpose": "Unresolved Return and Control authority",
+      "tests": [
+        "tests.skill_rls.test_final_boundaries.FinalVfyBoundaryTests.test_real_frozen_early_stop_and_return_are_rejected",
+        "tests.skill_rls.test_final_boundaries.FinalVfyBoundaryTests.test_control_input_cannot_omit_authority_or_self_report_resolution",
+        "tests.skill_rls.test_final_lifecycle.FinalRlsLifecycleTests.test_frozen_return_pln_reads_real_control_owner"
+      ],
+      "status": "CLOSED",
+      "source_sha": "b790af812cd8d317675d264583711aed59e1460c",
+      "accepted_source": {
+        "sha": "46509eb6688df30e71ed094132b2d10e81ceb2ac",
+        "path": "packages/sdlc_runtime/control_inputs.py",
+        "blob": "89d35b02702e9c453ed518b7aa8cbf10d8ee89f3"
+      },
+      "adapter_blob": "49d9be64dbd2d81fb76c088556aac862f7d7f994",
+      "execution_log": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-private.json",
+      "execution_log_sha256": "sha256:deb168c4400ba27ed9ccb897c35c55662dfebe0132193743a90a1bd2d03ebda1"
+    },
+    {
+      "id": "A10",
+      "purpose": "Required readiness and legal no-effect dispositions",
+      "tests": [
+        "tests.skill_rls.test_critical_cases_final.RlsFinalCriticalCases.test_rls_e011_final",
+        "tests.skill_rls.test_critical_cases_final.RlsFinalCriticalCases.test_rls_e012_final",
+        "tests.skill_rls.test_final_boundaries.FinalVfyBoundaryTests.test_applicability_cannot_self_report_n_a_or_pending"
+      ],
+      "status": "CLOSED",
+      "source_sha": "b790af812cd8d317675d264583711aed59e1460c",
+      "accepted_source": {
+        "sha": "46509eb6688df30e71ed094132b2d10e81ceb2ac",
+        "path": "skills/sdlc-500-vfy/scripts/vfy_release.py",
+        "blob": "d5529be9b3efeb30c834884e3fa53bc8bb532dcc"
+      },
+      "adapter_blob": "49d9be64dbd2d81fb76c088556aac862f7d7f994",
+      "execution_log": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-private.json",
+      "execution_log_sha256": "sha256:deb168c4400ba27ed9ccb897c35c55662dfebe0132193743a90a1bd2d03ebda1"
+    },
+    {
+      "id": "A11",
+      "purpose": "Original carried obligations and bounded execution",
+      "tests": [
+        "tests.skill_rls.test_critical_cases_final.RlsFinalCriticalCases.test_rls_e028_final",
+        "tests.skill_rls.test_critical_cases_final.RlsFinalCriticalCases.test_rls_e029_final",
+        "tests.skill_rls.test_web_repair_store.RlsWebRepairStoreTests.test_inherited_supported_health_failure_is_not_version_pass",
+        "tests.skill_rls.test_web_repair_store.RlsWebRepairStoreTests.test_inherited_unsupported_expected_leaves_real_rcf_pending"
+      ],
+      "status": "CLOSED",
+      "source_sha": "b790af812cd8d317675d264583711aed59e1460c",
+      "accepted_source": {
+        "sha": "46509eb6688df30e71ed094132b2d10e81ceb2ac",
+        "path": "skills/sdlc-500-vfy/scripts/vfy_release.py",
+        "blob": "d5529be9b3efeb30c834884e3fa53bc8bb532dcc"
+      },
+      "adapter_blob": "49d9be64dbd2d81fb76c088556aac862f7d7f994",
+      "execution_log": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-private.json",
+      "execution_log_sha256": "sha256:deb168c4400ba27ed9ccb897c35c55662dfebe0132193743a90a1bd2d03ebda1"
+    },
+    {
+      "id": "A12",
+      "purpose": "Actual Supporting closure and Final Confirmation",
+      "tests": [
+        "tests.skill_rls.test_final_boundaries.FinalVfyBoundaryTests.test_missing_actual_vfy_evidence_member_is_rejected",
+        "tests.skill_rls.test_final_boundaries.FinalVfyBoundaryTests.test_producer_full_state_digest_and_24_wire_fields_differential",
+        "tests.skill_rls.test_final_store.RlsFinalStoreTests.test_stale_payload_binding_cannot_freeze"
+      ],
+      "status": "CLOSED",
+      "source_sha": "b790af812cd8d317675d264583711aed59e1460c",
+      "accepted_source": {
+        "sha": "46509eb6688df30e71ed094132b2d10e81ceb2ac",
+        "path": "skills/sdlc-500-vfy/scripts/vfy_release.py",
+        "blob": "d5529be9b3efeb30c834884e3fa53bc8bb532dcc"
+      },
+      "adapter_blob": "49d9be64dbd2d81fb76c088556aac862f7d7f994",
+      "execution_log": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-private.json",
+      "execution_log_sha256": "sha256:deb168c4400ba27ed9ccb897c35c55662dfebe0132193743a90a1bd2d03ebda1"
+    }
+  ],
+  "mapping_source": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759:docs/plugin-development/work-items/sdlc-600-rls/evidence/web-repair-20260905/A01-A12.json",
+  "historical_verdicts_reused": false
+}

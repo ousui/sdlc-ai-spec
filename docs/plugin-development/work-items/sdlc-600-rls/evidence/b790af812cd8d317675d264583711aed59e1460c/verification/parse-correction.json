@@ -1,0 +1,13 @@
+{
+  "scope": "E3 verifier only; S3 and all raw logs unchanged",
+  "initial_single_line_count": 908,
+  "additional_docstring_format_count": 160,
+  "required_repository_count": 1068,
+  "reason": "unittest shortDescription is printed on the second line for 160 existing VFY tests",
+  "checks_retained": [
+    "explicit terminal ok",
+    "all test IDs unique",
+    "exact 1068/435 count",
+    "zero failures/errors/skips/expected failures/unexpected successes"
+  ]
+}

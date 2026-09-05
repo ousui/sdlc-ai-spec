@@ -1,0 +1,47 @@
+{
+  "name": "restore-fsck",
+  "attempt": 1,
+  "argv": [
+    "git",
+    "-C",
+    "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/restore.git",
+    "fsck",
+    "--full"
+  ],
+  "cwd": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/source",
+  "started_at": "2026-09-05T11:23:35.189761+00:00",
+  "finished_at": "2026-09-05T11:23:35.390096+00:00",
+  "duration_ms": 200,
+  "exit_code": 0,
+  "stdout": "dangling commit 7a00aa04780b7d6b08676042b34f30d558b2a969\ndangling commit 8fc15b71e0a90623e6805277fd131dd1f68de0fd\ndangling commit 70e6f92fd1644831c836de1e2b8a0aa567c5a979\ndangling commit ac0c3a8abbb975b8f1d7b4b630a5a902e4603759\n",
+  "stderr": "notice: No default references\n",
+  "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/restore-fsck-attempt-1.stdout.log",
+  "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/restore-fsck-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:089644fbea0b02b6d33b95a1cdbee0a0057389e956a9c1365b685cc1d1490a6c",
+  "stderr_sha256": "sha256:f6af22973493778f6d09860e838d5b86cee14ceea3160e5773480a7802fa2726",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": {
+    "root": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/source",
+    "sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+    "tree": "4bca19ff957415cacc8a427678cfbddd528fa768",
+    "parents": [
+      "206c379b77bb47ba0cf7913ea6dc1f8a39ed9bcd"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_after": {
+    "root": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/source",
+    "sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+    "tree": "4bca19ff957415cacc8a427678cfbddd528fa768",
+    "parents": [
+      "206c379b77bb47ba0cf7913ea6dc1f8a39ed9bcd"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_unchanged": true,
+  "success": true
+}

@@ -1,0 +1,13 @@
+RLS_STEP_START source
+RLS_STEP_END source PASS
+RLS_STEP_START runtime-contracts
+RLS_STEP_END runtime-contracts PASS
+RLS_STEP_START skill-interfaces
+RLS_STEP_END skill-interfaces PASS
+RLS_STEP_START rls-source-lock
+RLS_STEP_END rls-source-lock PASS
+RLS_STEP_START vfy-source-lock
+RLS_STEP_END vfy-source-lock PASS
+RLS_STEP_START critical-oracles
+RLS_STEP_END critical-oracles PASS
+RLS_DELIVERY_QUICK = PASS

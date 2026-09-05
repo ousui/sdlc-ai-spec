@@ -1,0 +1,46 @@
+{
+  "name": "critical-oracles",
+  "attempt": 1,
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-m",
+    "unittest",
+    "tests.evals.test_sdlc_600_rls_case_coverage"
+  ],
+  "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+  "started_at": "2026-09-05T11:33:33.742441+00:00",
+  "finished_at": "2026-09-05T11:33:33.946066+00:00",
+  "duration_ms": 204,
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.067s\n\nOK\n",
+  "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/critical-oracles-attempt-1.stdout.log",
+  "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/critical-oracles-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "sha256:13b96ed43ad62b23c6812e318f100b156de88f41891dfeb3b15c976596356e17",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": {
+    "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+    "sha": "b790af812cd8d317675d264583711aed59e1460c",
+    "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+    "parents": [
+      "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_after": {
+    "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+    "sha": "b790af812cd8d317675d264583711aed59e1460c",
+    "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+    "parents": [
+      "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_unchanged": true,
+  "success": true
+}

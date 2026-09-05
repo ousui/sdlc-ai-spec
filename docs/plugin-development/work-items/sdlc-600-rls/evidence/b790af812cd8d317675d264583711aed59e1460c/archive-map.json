@@ -1,0 +1,2070 @@
+{
+  "contract": "sdlc-ai-spec/byte-preserving-archive/v1",
+  "files": [
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-attempt-1.receipt.json",
+      "sha256": "sha256:c684fc46efb59a79c87a32fe08b173cc306f79183e893107d518cf237a87626a",
+      "bytes": 2203
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-attempt-1.stdout.log",
+      "sha256": "sha256:2b9bd79d071654e718eaf07c95059d778aaa2d931f62b8f8dd476d4de8877cbb",
+      "bytes": 145
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-attempt-1.receipt.json",
+      "sha256": "sha256:3a7c9d7055e828bcdbd977aafbc468866d5eb71f73b7b5c058b3186a517f042e",
+      "bytes": 2130
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-attempt-1.stdout.log",
+      "sha256": "sha256:5ee10f114bb670407e4c66ddb70d5ba7abdf6d511c277554d2f3e457f6aa69b7",
+      "bytes": 33
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/checkout-exact-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/checkout-exact-attempt-1.receipt.json",
+      "sha256": "sha256:52e8e16c03a03d9b1c284cbf6ff4dd0ab47bbba7e8c2eab2bb012e7ab2ed1795",
+      "bytes": 1491
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/checkout-exact-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/checkout-exact-attempt-1.stderr.log",
+      "sha256": "sha256:76d2dd1c0c4a735debc8ca8c5e71022f14c14e29e878ce8cc6a885e4b332ed14",
+      "bytes": 89
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/checkout-exact-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/checkout-exact-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/clone-exact-cache-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/clone-exact-cache-attempt-1.receipt.json",
+      "sha256": "sha256:17ab8098cbffe5e8133d03b481b51bd866c3c74d6295358c7f675dc1f566233b",
+      "bytes": 1579
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/clone-exact-cache-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/clone-exact-cache-attempt-1.stderr.log",
+      "sha256": "sha256:be330881727c893d997d4d15b688824b7c75746fe76d1cebb6f3f5bcc83b715e",
+      "bytes": 119
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/clone-exact-cache-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/clone-exact-cache-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/project-result.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/project-result.json",
+      "sha256": "sha256:8481b302373ee6dd1de8e08911180583e68e84818e6aeff9d3276c8d3342fcb1",
+      "bytes": 742754
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/store-export.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/store-export.json",
+      "sha256": "sha256:741a15dc21874b61c8dcc6cf4d4b5dd196548e1e61d7e6ef9a4cfaf79afee6c1",
+      "bytes": 184432
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/checkout-exact-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/checkout-exact-attempt-1.receipt.json",
+      "sha256": "sha256:8c1ca6ac75fe8394656eeac664f554caf2f10b9227864744367f5cdda3dc3834",
+      "bytes": 1473
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/checkout-exact-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/checkout-exact-attempt-1.stderr.log",
+      "sha256": "sha256:21561abe5647f05d43721ae1aeb2bf98a783d1caf7b2b310d5aa51c8f6b39233",
+      "bytes": 83
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/checkout-exact-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/checkout-exact-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/clone-exact-cache-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/clone-exact-cache-attempt-1.receipt.json",
+      "sha256": "sha256:6bb8358fa6b7dae734cb0f318675aec818ba2ef7e27d9857c427f855a02804b9",
+      "bytes": 1561
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/clone-exact-cache-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/clone-exact-cache-attempt-1.stderr.log",
+      "sha256": "sha256:85f0272c0c3a379458b033bb027effcd81356a0c3179745d382ad110cfeb2fda",
+      "bytes": 116
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/clone-exact-cache-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/clone-exact-cache-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/project-result.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/project-result.json",
+      "sha256": "sha256:87b4634800ffebc22a1416aef589d13fbd7917d6c3f97ef5a34d28cf34c96c2e",
+      "bytes": 171895
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/store-export.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/store-export.json",
+      "sha256": "sha256:aed53aafc81d49aec25b67fa73586cfbd82d47ea335e338649ed299afebc0ca6",
+      "bytes": 209056
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/external-projects.json",
+      "sha256": "sha256:609afca74a2965a8d533567c715ed62c438a11c164a52165cbc8c43c100146c7",
+      "bytes": 987192
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/source-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/source-attempt-1.receipt.json",
+      "sha256": "sha256:476435868d8f2791f70bacf14a7f8abe7836d5f6f2ca1c057fb378b3b56f7ad7",
+      "bytes": 2076
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/source-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/source-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/source-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/source-attempt-1.stdout.log",
+      "sha256": "sha256:bd8075fbc0fc78b3a77ac8c5efcf3c374469df0640153e1ca2f19d32bb1d6d00",
+      "bytes": 24
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/source.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external-steps/source.json",
+      "sha256": "sha256:9c4b6f33a5e8424a62078cddffef1941f5ce7959891ee6f19d22450d57bdd13b",
+      "bytes": 8011
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-external.json",
+      "sha256": "sha256:a020202f219152658e4bffb3e789d618f8ce63961826e16b67e3a185bbf8ea1b",
+      "bytes": 1028694
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-attempt-1.receipt.json",
+      "sha256": "sha256:240d800155fba52f42df7abfcb474cb9127de573269700b7dc85a3afd28a7c5f",
+      "bytes": 2570
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-attempt-1.stdout.log",
+      "sha256": "sha256:cb2df17b099f6f34ad7bc2b0420c56405b6d0125fbce364e0772dd28b73cea11",
+      "bytes": 520
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/effect-boundary-review-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/effect-boundary-review-attempt-1.receipt.json",
+      "sha256": "sha256:11bf8c1e24cbb2ef276197bcda1c4cfae315af98a505946cfcc03d4b3e6f7048",
+      "bytes": 4765
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/effect-boundary-review-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/effect-boundary-review-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/effect-boundary-review-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/effect-boundary-review-attempt-1.stdout.log",
+      "sha256": "sha256:886cd6bc1a49785e121390fc0eb53e9321dd01d0d9a8a40b3a0b680106c6c2ba",
+      "bytes": 2718
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/effect-review-behavior.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/effect-review-behavior.json",
+      "sha256": "sha256:5b38f11e89f5a8b2f12aac631314f1b60d81ae45cba3cadb1194011646bfe7e4",
+      "bytes": 3007
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/effect-review.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/effect-review.json",
+      "sha256": "sha256:514c56bb5f38d1fe1592423882e5d0ade16e6978ae0ef10f778446f7d6b3e2ff",
+      "bytes": 7628
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/repository-regression-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/repository-regression-attempt-1.receipt.json",
+      "sha256": "sha256:38d8b7bfe93b13525aa64741d10d05d85f300cf5b64ae2a1aebfae726bce2b9f",
+      "bytes": 178991
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/repository-regression-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/repository-regression-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/repository-regression-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/repository-regression-attempt-1.stdout.log",
+      "sha256": "sha256:48504b472b60547eaad0fa2329b96cfa2652a872368603100e505d60fc55cc6b",
+      "bytes": 175688
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/repository.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/repository.json",
+      "sha256": "sha256:8fff7bbb0de2d7b715aeef891bce5cf06b8642231438dfee5274f918a8d68312",
+      "bytes": 175003
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/rls-independence.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-independence.json",
+      "sha256": "sha256:b747dc8c306bcbdb2f99417ee2fd4c7222d81b334487c70d17e9f5118303ea66",
+      "bytes": 85579
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/rls-installed-independence-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-installed-independence-attempt-1.receipt.json",
+      "sha256": "sha256:612789f4baad0c8c96a0150bfbe739bddab2fb7b9e7ecb73e05ef60aa20cbcf1",
+      "bytes": 2085
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/rls-installed-independence-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-installed-independence-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/rls-installed-independence-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-installed-independence-attempt-1.stdout.log",
+      "sha256": "sha256:0ed6f76d2997eed1386be2f98be6b1cc2818858ef43086686d475d0a6b1f4adf",
+      "bytes": 32
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/rls-private-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-private-attempt-1.receipt.json",
+      "sha256": "sha256:6ad8b3ca1589126b787f8f1cc40c179a179ed3f010e1a218e284aa5c89b236a5",
+      "bytes": 73107
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/rls-private-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-private-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/rls-private-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-private-attempt-1.stdout.log",
+      "sha256": "sha256:e0ef9234853b570e0502c9511dbf5c5e6b68b45e626b214a64ddb7f90c91c708",
+      "bytes": 70655
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/rls-private.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/rls-private.json",
+      "sha256": "sha256:deb168c4400ba27ed9ccb897c35c55662dfebe0132193743a90a1bd2d03ebda1",
+      "bytes": 71340
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/source-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/source-attempt-1.receipt.json",
+      "sha256": "sha256:81080aaa8259258562c38fdaa1eb4c295adc8614fb4b21d18a02b52c0b1807f6",
+      "bytes": 2064
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/source-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/source-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/source-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/source-attempt-1.stdout.log",
+      "sha256": "sha256:bd8075fbc0fc78b3a77ac8c5efcf3c374469df0640153e1ca2f19d32bb1d6d00",
+      "bytes": 24
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/source.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/source.json",
+      "sha256": "sha256:9c4b6f33a5e8424a62078cddffef1941f5ce7959891ee6f19d22450d57bdd13b",
+      "bytes": 8011
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/vfy-80.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/vfy-80.json",
+      "sha256": "sha256:05893bf2505b3a94b983f6e91bb1f5ec1b4861cb24e2d1488878ea5d404f352b",
+      "bytes": 76724
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/vfy-installed-independence-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/vfy-installed-independence-attempt-1.receipt.json",
+      "sha256": "sha256:64df590f6a8fd07d2fa598606cd4c0c14387aebebd8b680ea403949a05655808",
+      "bytes": 30480
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/vfy-installed-independence-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/vfy-installed-independence-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/vfy-installed-independence-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/vfy-installed-independence-attempt-1.stdout.log",
+      "sha256": "sha256:8567d4f6369e0db3a2770ebf3eec157f53897e32f33feeb8c636a0f1b9ceddb6",
+      "bytes": 26185
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/vfy-strict-80-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/vfy-strict-80-attempt-1.receipt.json",
+      "sha256": "sha256:02fb6d6eff0a9ab0bbb868e2ad831045945f2c0eb02f64895301c7edd3144250",
+      "bytes": 59130
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/vfy-strict-80-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/vfy-strict-80-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full-steps/vfy-strict-80-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full-steps/vfy-strict-80-attempt-1.stdout.log",
+      "sha256": "sha256:af318838139f76816e18a2cc3863064ad8a4a13f1f58da220f9dd606d1ab2476",
+      "bytes": 51866
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-full.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-full.json",
+      "sha256": "sha256:a1ab6b2c1ee8426071900c6981a20dbb0555e9ca68ea73cf8bdfd7ce44557f00",
+      "bytes": 609320
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-phase-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-phase-attempt-1.receipt.json",
+      "sha256": "sha256:ab81f0123ffee7e1ca2cbc6475d741920436e573d53747121d2e95c28c3b72e4",
+      "bytes": 2247
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-phase-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-phase-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-phase-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-phase-attempt-1.stdout.log",
+      "sha256": "sha256:fd8b7f010cc1cc6fe0351ec023d63b78e0525d68df1b3d6a7b136e3c6b5f5227",
+      "bytes": 201
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-phase-steps/critical-oracles-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-phase-steps/critical-oracles-attempt-1.receipt.json",
+      "sha256": "sha256:76bca0a132feecf2f9e32030a22d0c46ac66f92e86fd32943aa99c5d5d1bed8e",
+      "bytes": 1999
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-phase-steps/critical-oracles-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-phase-steps/critical-oracles-attempt-1.stderr.log",
+      "sha256": "sha256:eabb2209d3d6ae302216ebd4fa91ef7d6bc1fb7aab5dc0fe7aff0c99aecd6c9f",
+      "bytes": 104
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-phase-steps/critical-oracles-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-phase-steps/critical-oracles-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-phase-steps/fixed-eval.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-phase-steps/fixed-eval.json",
+      "sha256": "sha256:96c8c2252366425ef81a6a0fc39f66e0a80452d2b7e28e42df8496f6e8237ad3",
+      "bytes": 14179
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-phase-steps/rls-e001-e087-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-phase-steps/rls-e001-e087-attempt-1.receipt.json",
+      "sha256": "sha256:767c685a2997f8c79559686603027e79ed9fbf4ec343a6d900423316a7f317c5",
+      "bytes": 2029
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-phase-steps/rls-e001-e087-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-phase-steps/rls-e001-e087-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-phase-steps/rls-e001-e087-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-phase-steps/rls-e001-e087-attempt-1.stdout.log",
+      "sha256": "sha256:5db2dc9a73dbc9b5d827c19baa1236b1485020326af386413671877bed39645d",
+      "bytes": 28
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-phase-steps/source-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-phase-steps/source-attempt-1.receipt.json",
+      "sha256": "sha256:1f280e600f629d9076d7ad45270bd8a9ac322b84f18301bfaee3407ec867e252",
+      "bytes": 2067
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-phase-steps/source-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-phase-steps/source-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-phase-steps/source-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-phase-steps/source-attempt-1.stdout.log",
+      "sha256": "sha256:bd8075fbc0fc78b3a77ac8c5efcf3c374469df0640153e1ca2f19d32bb1d6d00",
+      "bytes": 24
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-phase-steps/source.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-phase-steps/source.json",
+      "sha256": "sha256:9c4b6f33a5e8424a62078cddffef1941f5ce7959891ee6f19d22450d57bdd13b",
+      "bytes": 8011
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-phase.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-phase.json",
+      "sha256": "sha256:5c07c8a1ad3614902b5306338acd8050b1094ca7ed052b1457f91292a44c2317",
+      "bytes": 22354
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-attempt-1.receipt.json",
+      "sha256": "sha256:c9462e3fd644cc8c254debee59ef616cf21a65c28581feff626675972b74d99a",
+      "bytes": 2457
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-attempt-1.stdout.log",
+      "sha256": "sha256:5baad5e32d5a09babc6875b7de17bf71954188934cc696f32b628a158f717566",
+      "bytes": 406
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/critical-oracles-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/critical-oracles-attempt-1.receipt.json",
+      "sha256": "sha256:3b7538455dcb204bd18f1458241c00dd7df0d2e9519987f0a041d0d13e5a05e8",
+      "bytes": 1999
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/critical-oracles-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/critical-oracles-attempt-1.stderr.log",
+      "sha256": "sha256:13b96ed43ad62b23c6812e318f100b156de88f41891dfeb3b15c976596356e17",
+      "bytes": 104
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/critical-oracles-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/critical-oracles-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/rls-source-lock-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/rls-source-lock-attempt-1.receipt.json",
+      "sha256": "sha256:06fdbe9ff4463fa0c893219e8ed0f483c693319d3476f769dd2dd41b0f993fec",
+      "bytes": 2062
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/rls-source-lock-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/rls-source-lock-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/rls-source-lock-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/rls-source-lock-attempt-1.stdout.log",
+      "sha256": "sha256:a289cf13592350a39a415643e65924035736db787b435191126eef1afbc73a23",
+      "bytes": 50
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/runtime-contracts-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/runtime-contracts-attempt-1.receipt.json",
+      "sha256": "sha256:250a5e5a7a0a59bd39ac99a5879707f0e51964aba682ea1503af4ffd0ac4097d",
+      "bytes": 1934
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/runtime-contracts-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/runtime-contracts-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/runtime-contracts-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/runtime-contracts-attempt-1.stdout.log",
+      "sha256": "sha256:d3dc89a08c6df93affe4464617ecf5614771bf888392b4a12818d9c8cd0bda36",
+      "bytes": 72
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/skill-interfaces-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/skill-interfaces-attempt-1.receipt.json",
+      "sha256": "sha256:03715537637cba6482352935f5d598b649d7fe16f2d3604088ed1df14bce5e65",
+      "bytes": 2003
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/skill-interfaces-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/skill-interfaces-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/skill-interfaces-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/skill-interfaces-attempt-1.stdout.log",
+      "sha256": "sha256:9825a016f267883d99316e465bcb6352311d4e26d10cb9558108ae9e9e6530f7",
+      "bytes": 144
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/source-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/source-attempt-1.receipt.json",
+      "sha256": "sha256:1e0c9c1713b1441a420408edd6d9c893a412a301de31c8d51e6f5be3d0b67a51",
+      "bytes": 2067
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/source-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/source-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/source-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/source-attempt-1.stdout.log",
+      "sha256": "sha256:bd8075fbc0fc78b3a77ac8c5efcf3c374469df0640153e1ca2f19d32bb1d6d00",
+      "bytes": 24
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/source-lock.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/source-lock.json",
+      "sha256": "sha256:5bf73b07c936f7e97cdf817c52bc8498bbfead5220bf2b7528f01e6af28d503c",
+      "bytes": 196
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/source.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/source.json",
+      "sha256": "sha256:9c4b6f33a5e8424a62078cddffef1941f5ce7959891ee6f19d22450d57bdd13b",
+      "bytes": 8011
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/vfy-source-lock-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/vfy-source-lock-attempt-1.receipt.json",
+      "sha256": "sha256:f8e4291387a93053692c8602e414627fbfbe88ab1650904ea2bb22aa9182393b",
+      "bytes": 1986
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/vfy-source-lock-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/vfy-source-lock-attempt-1.stderr.log",
+      "sha256": "sha256:0d628f37216e0a286bb4dc09c3961e6b1490ff1c53d56a39af806e9c2cc5da78",
+      "bytes": 105
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/vfy-source-lock-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick-steps/vfy-source-lock-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-quick.json",
+      "sha256": "sha256:adc8705cf5deb1d0a8aa012f84129204f8585d85dfef9b416a470ff47b4437e0",
+      "bytes": 14271
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-worktree-add-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-worktree-add-attempt-1.receipt.json",
+      "sha256": "sha256:4692c72f2a9b55dd8158a6dd9193a20cf3c2c04bb102fd7bb9b017843bd9579a",
+      "bytes": 2041
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-worktree-add-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-worktree-add-attempt-1.stderr.log",
+      "sha256": "sha256:9aa1d4de23eef67b45a09e452eb64d33b5940c27fc0a61dadaa4b38d0711082f",
+      "bytes": 43
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-worktree-add-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-worktree-add-attempt-1.stdout.log",
+      "sha256": "sha256:5dc9bcf2eba7f24cc9fc6780b95bc2a1531637500a43be3d6c24142dd893df47",
+      "bytes": 86
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-worktree-remove-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-worktree-remove-attempt-1.receipt.json",
+      "sha256": "sha256:b57b6b3a825342c278be9d3365df8deecfa5cfb7dfc3d0556937b060f28c9398",
+      "bytes": 1858
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-worktree-remove-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-worktree-remove-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-worktree-remove-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/fresh-worktree-remove-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/source-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/source-attempt-1.receipt.json",
+      "sha256": "sha256:ff8c1c08548bec27983c25ec0c9fd46b632dbfe6ca0db95a11e9578d195040d4",
+      "bytes": 1992
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/source-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/source-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/source-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/source-attempt-1.stdout.log",
+      "sha256": "sha256:bd8075fbc0fc78b3a77ac8c5efcf3c374469df0640153e1ca2f19d32bb1d6d00",
+      "bytes": 24
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/source.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest-steps/source.json",
+      "sha256": "sha256:34a2f31951b4eaa2cf5a7ecb07ed1707be9a4325b6cb7e185b0eec2dbf50eaab",
+      "bytes": 8004
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/attest.json",
+      "sha256": "sha256:8f026adf0cf3fa15686969c046d0a7a0db406851e73e77e6bb5ffd8c7225975e",
+      "bytes": 1778148
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-attempt-1.receipt.json",
+      "sha256": "sha256:1abe8bc657991237e3f72e426e6dbb1339e77cb5d0f832164807cee57ad8341c",
+      "bytes": 2052
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-attempt-1.stdout.log",
+      "sha256": "sha256:5ee10f114bb670407e4c66ddb70d5ba7abdf6d511c277554d2f3e457f6aa69b7",
+      "bytes": 33
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/gin-vue-admin/checkout-exact-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-projects/gin-vue-admin/checkout-exact-attempt-1.receipt.json",
+      "sha256": "sha256:0b34c617747c187960de4c5a111c19c99f723c5a5c76ee0d1cd8f0ebaab0f821",
+      "bytes": 1453
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/gin-vue-admin/checkout-exact-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-projects/gin-vue-admin/checkout-exact-attempt-1.stderr.log",
+      "sha256": "sha256:76d2dd1c0c4a735debc8ca8c5e71022f14c14e29e878ce8cc6a885e4b332ed14",
+      "bytes": 89
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/gin-vue-admin/checkout-exact-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-projects/gin-vue-admin/checkout-exact-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/gin-vue-admin/clone-exact-cache-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-projects/gin-vue-admin/clone-exact-cache-attempt-1.receipt.json",
+      "sha256": "sha256:f27d6b640b72ebdd631ba1afdc34a7c3338dee77d8d56de690d9033935b0b036",
+      "bytes": 1541
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/gin-vue-admin/clone-exact-cache-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-projects/gin-vue-admin/clone-exact-cache-attempt-1.stderr.log",
+      "sha256": "sha256:b762081467daf9b748701264281a91b86941eea8e3c974125e7a21dcdc4d7bbb",
+      "bytes": 119
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/gin-vue-admin/clone-exact-cache-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-projects/gin-vue-admin/clone-exact-cache-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/gin-vue-admin/project-result.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-projects/gin-vue-admin/project-result.json",
+      "sha256": "sha256:c1504ae826cb7a0fa5ea621edd451084c36e597623e9c72248cc5f8a0a7e6d8b",
+      "bytes": 742659
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/gin-vue-admin/store-export.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-projects/gin-vue-admin/store-export.json",
+      "sha256": "sha256:5933374556c322478950472a111108d1fe6b80ba223a98642dbbfa397ad2779c",
+      "bytes": 184420
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/springgear/checkout-exact-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-projects/springgear/checkout-exact-attempt-1.receipt.json",
+      "sha256": "sha256:f982393a6f3edf7e76a13f89030bb213c5445e282b5b6b2867a29c3bb0631e42",
+      "bytes": 1435
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/springgear/checkout-exact-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-projects/springgear/checkout-exact-attempt-1.stderr.log",
+      "sha256": "sha256:21561abe5647f05d43721ae1aeb2bf98a783d1caf7b2b310d5aa51c8f6b39233",
+      "bytes": 83
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/springgear/checkout-exact-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-projects/springgear/checkout-exact-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/springgear/clone-exact-cache-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-projects/springgear/clone-exact-cache-attempt-1.receipt.json",
+      "sha256": "sha256:aa4092c29c1017630e693cd8fe070f94287034a4c4604efad28397601bd32460",
+      "bytes": 1523
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/springgear/clone-exact-cache-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-projects/springgear/clone-exact-cache-attempt-1.stderr.log",
+      "sha256": "sha256:eba60f48cc5d8d4e5209b62fdf5f13efd6d7375e3828bb62fd05ee8dd651b614",
+      "bytes": 116
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/springgear/clone-exact-cache-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-projects/springgear/clone-exact-cache-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/springgear/project-result.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-projects/springgear/project-result.json",
+      "sha256": "sha256:59717a0d11b44ae49b9a8728f307d6871e5e154b19d93f3e0c59907f394d23dd",
+      "bytes": 171800
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/springgear/store-export.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects-projects/springgear/store-export.json",
+      "sha256": "sha256:28ebce494798886ce22575cd942d5c745a2b3436000750f784c1fc53949081db",
+      "bytes": 209048
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/external-projects.json",
+      "sha256": "sha256:5b8ae346b6ae3a0f40024f1f0d436b3a59708d4752a52fbab1593ec0eb85e429",
+      "bytes": 986988
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/source-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/source-attempt-1.receipt.json",
+      "sha256": "sha256:e9f5dd0dfdfd0422eb06f630cb15f0b0dc2ce382a58dfd992e9f6010226b70ed",
+      "bytes": 1998
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/source-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/source-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/source-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/source-attempt-1.stdout.log",
+      "sha256": "sha256:bd8075fbc0fc78b3a77ac8c5efcf3c374469df0640153e1ca2f19d32bb1d6d00",
+      "bytes": 24
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/source.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external-steps/source.json",
+      "sha256": "sha256:34a2f31951b4eaa2cf5a7ecb07ed1707be9a4325b6cb7e185b0eec2dbf50eaab",
+      "bytes": 8004
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/external.json",
+      "sha256": "sha256:b6adb637980b2db11d52ac96deadd43f9560cf5695ae84f107a87f6aa6004f26",
+      "bytes": 1028320
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/effect-boundary-review-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/effect-boundary-review-attempt-1.receipt.json",
+      "sha256": "sha256:a4ce97aca9ad75239ff89fee56a1c4b875d104c0ab7f6c08bc88aad146df50d6",
+      "bytes": 4686
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/effect-boundary-review-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/effect-boundary-review-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/effect-boundary-review-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/effect-boundary-review-attempt-1.stdout.log",
+      "sha256": "sha256:1922bfcfc48332ace3442ad9887116e9b209b54d3b98e36740d9ad4e681ddbfd",
+      "bytes": 2718
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/effect-review-behavior.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/effect-review-behavior.json",
+      "sha256": "sha256:44a8c2ffaa6b2d0399fe835ad5808e98fa52770edaa1da7328e16c90d8bdf587",
+      "bytes": 3007
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/effect-review.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/effect-review.json",
+      "sha256": "sha256:671fa02515808ee9eadc500725d7a48ed1730f31a539945ab90093b639f0e9f0",
+      "bytes": 7628
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/repository-regression-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/repository-regression-attempt-1.receipt.json",
+      "sha256": "sha256:b2c284043221d82940156617d4405c5ca2fb716055c86172ae2c672004353837",
+      "bytes": 178913
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/repository-regression-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/repository-regression-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/repository-regression-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/repository-regression-attempt-1.stdout.log",
+      "sha256": "sha256:29c33b47116ab8c9019a2bf6a4f4ef0b9f908c1314549c30d329f43be2ab1aec",
+      "bytes": 175688
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/repository.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/repository.json",
+      "sha256": "sha256:4f038b22c2f6ea8c7d54d354aa10e753b1e197ab551e1c78f0d6d8fd44f98770",
+      "bytes": 175003
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/rls-independence.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/rls-independence.json",
+      "sha256": "sha256:8bbdf7864efe2de0b2a6cb109f8819459876ada5ca2bfd3120182264f404a987",
+      "bytes": 85579
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/rls-installed-independence-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/rls-installed-independence-attempt-1.receipt.json",
+      "sha256": "sha256:cd192d979d70498bdf225509b6d187d1141a2f7bb2f07e4902c3c4443abfdbc7",
+      "bytes": 2007
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/rls-installed-independence-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/rls-installed-independence-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/rls-installed-independence-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/rls-installed-independence-attempt-1.stdout.log",
+      "sha256": "sha256:0ed6f76d2997eed1386be2f98be6b1cc2818858ef43086686d475d0a6b1f4adf",
+      "bytes": 32
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/rls-private-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/rls-private-attempt-1.receipt.json",
+      "sha256": "sha256:644c17f6bc892a016e695d15347bfc146beb20cece476bd85f4a1aeff22105ee",
+      "bytes": 73029
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/rls-private-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/rls-private-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/rls-private-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/rls-private-attempt-1.stdout.log",
+      "sha256": "sha256:722455bc8a165047bb851a26941b372f5438061e6a1786898c082905d76b72a8",
+      "bytes": 70655
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/rls-private.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/rls-private.json",
+      "sha256": "sha256:26de34643b32a3c292f119f5f966b1a858a4ee768b568bd93cd9b94a37ee63e8",
+      "bytes": 71340
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/source-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/source-attempt-1.receipt.json",
+      "sha256": "sha256:5eb349aa407f434ff97fb8daacd4030befa77e56f1b75b61a180a7cdc57c9292",
+      "bytes": 1986
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/source-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/source-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/source-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/source-attempt-1.stdout.log",
+      "sha256": "sha256:bd8075fbc0fc78b3a77ac8c5efcf3c374469df0640153e1ca2f19d32bb1d6d00",
+      "bytes": 24
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/source.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/source.json",
+      "sha256": "sha256:34a2f31951b4eaa2cf5a7ecb07ed1707be9a4325b6cb7e185b0eec2dbf50eaab",
+      "bytes": 8004
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/vfy-80.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/vfy-80.json",
+      "sha256": "sha256:d54fc476e13474eef55a7f6f3f5cd7cd0eb0bc89f390ab0060932ffe5fef355e",
+      "bytes": 76724
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/vfy-installed-independence-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/vfy-installed-independence-attempt-1.receipt.json",
+      "sha256": "sha256:077f80a8ca00ced2e038fd0df827447954828bcceaf2d8cd1a0606f76dae493c",
+      "bytes": 30421
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/vfy-installed-independence-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/vfy-installed-independence-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/vfy-installed-independence-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/vfy-installed-independence-attempt-1.stdout.log",
+      "sha256": "sha256:f7ff15e3078749f8338d294ad5b9bfba8f9c8885f2ece40dc31eb123172cb969",
+      "bytes": 26185
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/vfy-strict-80-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/vfy-strict-80-attempt-1.receipt.json",
+      "sha256": "sha256:6458d303155098c816a1e764cc0e0b5f84465203a9ae106a60ed70bcba33d751",
+      "bytes": 59071
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/vfy-strict-80-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/vfy-strict-80-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full-steps/vfy-strict-80-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full-steps/vfy-strict-80-attempt-1.stdout.log",
+      "sha256": "sha256:ef463e6d8b6ba2d4fd29423cecd07ceee2e5973738cf2b3d8e68ba87979ad2ed",
+      "bytes": 51866
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/full.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/full.json",
+      "sha256": "sha256:18176d0316f424dd6df9d81241a9b102af30769719527b82711a42ab39fed041",
+      "bytes": 608797
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/phase-steps/critical-oracles-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/phase-steps/critical-oracles-attempt-1.receipt.json",
+      "sha256": "sha256:78d8de513afff6e8075d1ae61146967b2ff86aa0241ba3589d541cd4523494b1",
+      "bytes": 1940
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/phase-steps/critical-oracles-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/phase-steps/critical-oracles-attempt-1.stderr.log",
+      "sha256": "sha256:eabb2209d3d6ae302216ebd4fa91ef7d6bc1fb7aab5dc0fe7aff0c99aecd6c9f",
+      "bytes": 104
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/phase-steps/critical-oracles-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/phase-steps/critical-oracles-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/phase-steps/fixed-eval.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/phase-steps/fixed-eval.json",
+      "sha256": "sha256:72eedefd112a6b590530cd846db65e3da13c9c5664c589db1c81190a57d3cd4a",
+      "bytes": 14179
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/phase-steps/rls-e001-e087-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/phase-steps/rls-e001-e087-attempt-1.receipt.json",
+      "sha256": "sha256:e84c2c55ecacf8dab3beda6f313b508cdf179b30b612a1a0d0a819d6f19f73a9",
+      "bytes": 1951
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/phase-steps/rls-e001-e087-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/phase-steps/rls-e001-e087-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/phase-steps/rls-e001-e087-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/phase-steps/rls-e001-e087-attempt-1.stdout.log",
+      "sha256": "sha256:5db2dc9a73dbc9b5d827c19baa1236b1485020326af386413671877bed39645d",
+      "bytes": 28
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/phase-steps/source-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/phase-steps/source-attempt-1.receipt.json",
+      "sha256": "sha256:e04d3f45f82a3668ecb0891decde01c7e4ba41d958e10224f17eaa5d96c2c1cd",
+      "bytes": 1989
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/phase-steps/source-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/phase-steps/source-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/phase-steps/source-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/phase-steps/source-attempt-1.stdout.log",
+      "sha256": "sha256:bd8075fbc0fc78b3a77ac8c5efcf3c374469df0640153e1ca2f19d32bb1d6d00",
+      "bytes": 24
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/phase-steps/source.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/phase-steps/source.json",
+      "sha256": "sha256:34a2f31951b4eaa2cf5a7ecb07ed1707be9a4325b6cb7e185b0eec2dbf50eaab",
+      "bytes": 8004
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/phase.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/phase.json",
+      "sha256": "sha256:8f043aea03b0d81eb0ac6bee6802d7ffbb09a3e38f7a3f779ea2103a98b7c635",
+      "bytes": 22125
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/critical-oracles-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/critical-oracles-attempt-1.receipt.json",
+      "sha256": "sha256:a81e747afaa5a5c36ab303498a6a119560388a8aa902db101578284da8c5cd82",
+      "bytes": 1940
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/critical-oracles-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/critical-oracles-attempt-1.stderr.log",
+      "sha256": "sha256:eabb2209d3d6ae302216ebd4fa91ef7d6bc1fb7aab5dc0fe7aff0c99aecd6c9f",
+      "bytes": 104
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/critical-oracles-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/critical-oracles-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/rls-source-lock-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/rls-source-lock-attempt-1.receipt.json",
+      "sha256": "sha256:34aaeec04329cfdfe295a62837db67abd663748efcc7e64634100bc2e2251c1c",
+      "bytes": 1983
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/rls-source-lock-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/rls-source-lock-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/rls-source-lock-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/rls-source-lock-attempt-1.stdout.log",
+      "sha256": "sha256:a289cf13592350a39a415643e65924035736db787b435191126eef1afbc73a23",
+      "bytes": 50
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/runtime-contracts-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/runtime-contracts-attempt-1.receipt.json",
+      "sha256": "sha256:0dcf4fe257a85654f41f358ff372e7add862bb09df27bbe35df03907e73b2aec",
+      "bytes": 1875
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/runtime-contracts-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/runtime-contracts-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/runtime-contracts-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/runtime-contracts-attempt-1.stdout.log",
+      "sha256": "sha256:d3dc89a08c6df93affe4464617ecf5614771bf888392b4a12818d9c8cd0bda36",
+      "bytes": 72
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/skill-interfaces-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/skill-interfaces-attempt-1.receipt.json",
+      "sha256": "sha256:8e6a4d9eebb2adb294ebcbb41a8e17d6cf7381568fb1b2f015ef52f6006ec163",
+      "bytes": 1943
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/skill-interfaces-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/skill-interfaces-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/skill-interfaces-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/skill-interfaces-attempt-1.stdout.log",
+      "sha256": "sha256:9825a016f267883d99316e465bcb6352311d4e26d10cb9558108ae9e9e6530f7",
+      "bytes": 144
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/source-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/source-attempt-1.receipt.json",
+      "sha256": "sha256:95ad9e5221f1cbfae3349e2db6ad8d3cc23f82f900360da19198718bf6d40644",
+      "bytes": 1989
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/source-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/source-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/source-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/source-attempt-1.stdout.log",
+      "sha256": "sha256:bd8075fbc0fc78b3a77ac8c5efcf3c374469df0640153e1ca2f19d32bb1d6d00",
+      "bytes": 24
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/source-lock.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/source-lock.json",
+      "sha256": "sha256:5bf73b07c936f7e97cdf817c52bc8498bbfead5220bf2b7528f01e6af28d503c",
+      "bytes": 196
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/source.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/source.json",
+      "sha256": "sha256:34a2f31951b4eaa2cf5a7ecb07ed1707be9a4325b6cb7e185b0eec2dbf50eaab",
+      "bytes": 8004
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/vfy-source-lock-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/vfy-source-lock-attempt-1.receipt.json",
+      "sha256": "sha256:67f9b8d09b202cf7e6de6ca26efd3ac440da4587b2278623dc0cf53f73ba5add",
+      "bytes": 1927
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/vfy-source-lock-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/vfy-source-lock-attempt-1.stderr.log",
+      "sha256": "sha256:371404efbea0e5bbe27729b5afb0973c5fa907a30f4f06716e1cfda4572cb83a",
+      "bytes": 105
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/vfy-source-lock-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick-steps/vfy-source-lock-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/raw/quick.json",
+      "sha256": "sha256:ad38d446f3467dd83a2eead798272ce99a5178e0664658bf84e2d466d241972f",
+      "bytes": 13863
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/commands/profile-attest-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/commands/profile-attest-attempt-1.receipt.json",
+      "sha256": "sha256:5da4b8410c5c306f0a3aea14323232a6a1126a7febbdfad0f221377e7c3d623c",
+      "bytes": 2474
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/commands/profile-attest-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/commands/profile-attest-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/commands/profile-attest-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/commands/profile-attest-attempt-1.stdout.log",
+      "sha256": "sha256:9b068d7a56153f71e12851cd89761f1cedb9c49931badc74875cc3fcc4c7121c",
+      "bytes": 454
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/commands/profile-external-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/commands/profile-external-attempt-1.receipt.json",
+      "sha256": "sha256:ec4a1dd2673a6c64880734e927a55bb32a0679037464c1fe52d6b51d6d0fb774",
+      "bytes": 2163
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/commands/profile-external-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/commands/profile-external-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/commands/profile-external-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/commands/profile-external-attempt-1.stdout.log",
+      "sha256": "sha256:2b9bd79d071654e718eaf07c95059d778aaa2d931f62b8f8dd476d4de8877cbb",
+      "bytes": 145
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/commands/profile-full-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/commands/profile-full-attempt-1.receipt.json",
+      "sha256": "sha256:e9c9245eefe1ace7cfc422b5fc0d83c66291c5bf8d2e314bacd9d3470b7e91f1",
+      "bytes": 2530
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/commands/profile-full-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/commands/profile-full-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/commands/profile-full-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/commands/profile-full-attempt-1.stdout.log",
+      "sha256": "sha256:cb2df17b099f6f34ad7bc2b0420c56405b6d0125fbce364e0772dd28b73cea11",
+      "bytes": 520
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/commands/profile-phase-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/commands/profile-phase-attempt-1.receipt.json",
+      "sha256": "sha256:9d1726fd10b0c0f5b70aea7f9e4792c473c3841625c7002d9d83d635ace3cbd7",
+      "bytes": 2207
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/commands/profile-phase-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/commands/profile-phase-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/commands/profile-phase-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/commands/profile-phase-attempt-1.stdout.log",
+      "sha256": "sha256:fd8b7f010cc1cc6fe0351ec023d63b78e0525d68df1b3d6a7b136e3c6b5f5227",
+      "bytes": 201
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/commands/profile-quick-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/commands/profile-quick-attempt-1.receipt.json",
+      "sha256": "sha256:aeb9af4cb056dd3502d5c6e69dc4bc54f3f602aec95824020c84f1d5495c96f5",
+      "bytes": 2417
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/commands/profile-quick-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/commands/profile-quick-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/commands/profile-quick-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/commands/profile-quick-attempt-1.stdout.log",
+      "sha256": "sha256:5baad5e32d5a09babc6875b7de17bf71954188934cc696f32b628a158f717566",
+      "bytes": 406
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused/confirmation-store-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused/confirmation-store-attempt-1.receipt.json",
+      "sha256": "sha256:0dcf513522a86a10a3ead5fbb169d0fdd4f2f298f002315f72e016eef7b1d255",
+      "bytes": 10917
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused/confirmation-store-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused/confirmation-store-attempt-1.stderr.log",
+      "sha256": "sha256:f958e49fd46743b7c409dca441db61d59e989ddada1e6a3f837c4e69946b044a",
+      "bytes": 8929
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused/confirmation-store-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused/confirmation-store-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused/propagation-redaction-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused/propagation-redaction-attempt-1.receipt.json",
+      "sha256": "sha256:c8149f20a9d30d671a3832dde5c39046e527f362eea32a5ea025bdfa4d9b57aa",
+      "bytes": 16784
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused/propagation-redaction-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused/propagation-redaction-attempt-1.stderr.log",
+      "sha256": "sha256:df4373a2f3259ed9427ee4b8302cdc2ac7424e38719bc782d4e9bc8966e2f6b2",
+      "bytes": 14805
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused/propagation-redaction-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused/propagation-redaction-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused/summary.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused/summary.json",
+      "sha256": "sha256:6635e5a8723712c72bdd6ba089ad01b4ecc8bb90fbe928003f7ca727f1d19c0a",
+      "bytes": 17274
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/audit-bindings/audit-bindings-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/audit-bindings/audit-bindings-attempt-1.receipt.json",
+      "sha256": "sha256:0f3516d8564afcc86e08f394966989c4320350d97bf66a2fd41b0df70a801584",
+      "bytes": 1749
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/audit-bindings/audit-bindings-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/audit-bindings/audit-bindings-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/audit-bindings/audit-bindings-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/audit-bindings/audit-bindings-attempt-1.stdout.log",
+      "sha256": "sha256:7f8f88a627cd5975e73fa7581f946675361650bc5270890c96386e55efd54b7a",
+      "bytes": 274
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/child-safe-writer/child-safe-writer-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/child-safe-writer/child-safe-writer-attempt-1.receipt.json",
+      "sha256": "sha256:ce35f6bb753916df492a2028a1414b8770c15a5f48e3e7f35155cf33221c8101",
+      "bytes": 1819
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/child-safe-writer/child-safe-writer-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/child-safe-writer/child-safe-writer-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/child-safe-writer/child-safe-writer-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/child-safe-writer/child-safe-writer-attempt-1.stdout.log",
+      "sha256": "sha256:22f35019221aa75f774624be213f272834c49d656acf7eb232d39ea5444bf65d",
+      "bytes": 81
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/cross-stream/cross-stream-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/cross-stream/cross-stream-attempt-1.receipt.json",
+      "sha256": "sha256:f5a41bd7b88a85f14f3fa197e568272ab98fc120fae5bbda50ef39e05f022c63",
+      "bytes": 1340
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/cross-stream/cross-stream-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/cross-stream/cross-stream-attempt-1.stderr.log",
+      "sha256": "sha256:a918c4bf90d43cc071f2b71952090ef8f0225a9353fa3001ab9a67de20071d48",
+      "bytes": 27
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/cross-stream/cross-stream-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/cross-stream/cross-stream-attempt-1.stdout.log",
+      "sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+      "bytes": 11
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/duplicate-keys/duplicate-keys-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/duplicate-keys/duplicate-keys-attempt-1.receipt.json",
+      "sha256": "sha256:cd1c7a1017582e0248ec4bf8749faa6c687bb77a8dd2daedef4e9a1f6e5bead4",
+      "bytes": 1424
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/duplicate-keys/duplicate-keys-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/duplicate-keys/duplicate-keys-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/duplicate-keys/duplicate-keys-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/duplicate-keys/duplicate-keys-attempt-1.stdout.log",
+      "sha256": "sha256:6edb78ab02d6b2536d57ed17e0f71bf02c9605ab33238991cc32fb45f7d27526",
+      "bytes": 55
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/equals/equals-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/equals/equals-attempt-1.receipt.json",
+      "sha256": "sha256:6114f07bd41d600f7e755ab789181c538e948131b038a3103b5252fef6056286",
+      "bytes": 1279
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/equals/equals-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/equals/equals-attempt-1.stderr.log",
+      "sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+      "bytes": 11
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/equals/equals-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/equals/equals-attempt-1.stdout.log",
+      "sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+      "bytes": 11
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/exception/exception-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/exception/exception-attempt-1.receipt.json",
+      "sha256": "sha256:fb292687091a186aa2dbe5c17892a9d35850d48d36b4246b770869d89496dd5e",
+      "bytes": 1361
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/exception/exception-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/exception/exception-attempt-1.stderr.log",
+      "sha256": "sha256:81aede8827ab0dbf6830844f57ba7760264378422a33c7226fba8c021c20efa3",
+      "bytes": 137
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/exception/exception-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/exception/exception-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/json-fields/json-fields-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/json-fields/json-fields-attempt-1.receipt.json",
+      "sha256": "sha256:6296f8d3cdffaf1715d5ac8378f47e388082446171940c0c11e4ee445ec40df6",
+      "bytes": 1346
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/json-fields/json-fields-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/json-fields/json-fields-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/json-fields/json-fields-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/json-fields/json-fields-attempt-1.stdout.log",
+      "sha256": "sha256:7367ace5f6db034db2fd0b5015ba2764d9b502592a00396175d7b976b579640d",
+      "bytes": 55
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/nested-safe-writer.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/nested-safe-writer.json",
+      "sha256": "sha256:22f35019221aa75f774624be213f272834c49d656acf7eb232d39ea5444bf65d",
+      "bytes": 81
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/nonzero/nonzero-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/nonzero/nonzero-attempt-1.receipt.json",
+      "sha256": "sha256:97b3947a90b9169a329d1253baea9d69fde5aa12873eda8b013cea52f617d9cf",
+      "bytes": 1305
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/nonzero/nonzero-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/nonzero/nonzero-attempt-1.stderr.log",
+      "sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+      "bytes": 11
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/nonzero/nonzero-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/nonzero/nonzero-attempt-1.stdout.log",
+      "sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+      "bytes": 11
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/original-inputs/original-inputs-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/original-inputs/original-inputs-attempt-1.receipt.json",
+      "sha256": "sha256:96b9e7688f9d7500bf35df37a7516057a08a0bfd3f9604b18f8456ab55bb3b10",
+      "bytes": 1341
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/original-inputs/original-inputs-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/original-inputs/original-inputs-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/original-inputs/original-inputs-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/original-inputs/original-inputs-attempt-1.stdout.log",
+      "sha256": "sha256:924161b2afd0462a520bc67d5ab5ee4aa9449ddb8435e7614d3e43d3ff86cd75",
+      "bytes": 19
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/result.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/result.json",
+      "sha256": "sha256:a3f7611c08062d2504e0ffeb1144312248ec31c3437251b5436fe1b33dc2d8d9",
+      "bytes": 2230
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/separate/separate-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/separate/separate-attempt-1.receipt.json",
+      "sha256": "sha256:7782bb1a0112683042e2fe50f7ea85ddb48e0e91261f1951bd676c3fe3208b51",
+      "bytes": 1296
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/separate/separate-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/separate/separate-attempt-1.stderr.log",
+      "sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+      "bytes": 11
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/separate/separate-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/separate/separate-attempt-1.stdout.log",
+      "sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+      "bytes": 11
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/timeout/timeout-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/timeout/timeout-attempt-1.receipt.json",
+      "sha256": "sha256:8db6ba7cdce1385d7068fe90b962ac53381edb91697cf6a575a146b7cd411383",
+      "bytes": 1380
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/timeout/timeout-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/timeout/timeout-attempt-1.stderr.log",
+      "sha256": "sha256:353b8ad45620783b31cd5457d505298e9629f317b1eeea0324245e76d66e9704",
+      "bytes": 27
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/timeout/timeout-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/timeout/timeout-attempt-1.stdout.log",
+      "sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+      "bytes": 11
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/writer-first-write.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/focused-independent/writer-first-write.json",
+      "sha256": "sha256:e17dea756e7fd1d243d15f92440820986c486ccc48434347b74d4efc56380b0d",
+      "bytes": 103
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/audit-bindings/audit-bindings-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/audit-bindings/audit-bindings-attempt-1.receipt.json",
+      "sha256": "sha256:d3f2d5da078f4ea905267d0da59c3f020278858bafb1174c045cbb4928be4d58",
+      "bytes": 1749
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/audit-bindings/audit-bindings-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/audit-bindings/audit-bindings-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/audit-bindings/audit-bindings-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/audit-bindings/audit-bindings-attempt-1.stdout.log",
+      "sha256": "sha256:7f8f88a627cd5975e73fa7581f946675361650bc5270890c96386e55efd54b7a",
+      "bytes": 274
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/child-safe-writer/child-safe-writer-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/child-safe-writer/child-safe-writer-attempt-1.receipt.json",
+      "sha256": "sha256:4ccba59342e84ed685e997ca8b6f95d2c8fe5141b33b346222da06eebfafe45d",
+      "bytes": 1830
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/child-safe-writer/child-safe-writer-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/child-safe-writer/child-safe-writer-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/child-safe-writer/child-safe-writer-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/child-safe-writer/child-safe-writer-attempt-1.stdout.log",
+      "sha256": "sha256:22f35019221aa75f774624be213f272834c49d656acf7eb232d39ea5444bf65d",
+      "bytes": 81
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/cross-stream/cross-stream-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/cross-stream/cross-stream-attempt-1.receipt.json",
+      "sha256": "sha256:7d97e06cde46587fa0a2181a7a2a8f051f2d0fbb0089790b1eca702f814d4a1f",
+      "bytes": 1340
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/cross-stream/cross-stream-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/cross-stream/cross-stream-attempt-1.stderr.log",
+      "sha256": "sha256:a918c4bf90d43cc071f2b71952090ef8f0225a9353fa3001ab9a67de20071d48",
+      "bytes": 27
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/cross-stream/cross-stream-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/cross-stream/cross-stream-attempt-1.stdout.log",
+      "sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+      "bytes": 11
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/duplicate-keys/duplicate-keys-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/duplicate-keys/duplicate-keys-attempt-1.receipt.json",
+      "sha256": "sha256:7327a3dc467ad5e6705dc964eacecd4007620100bfa89c75f737377eecc3bbb1",
+      "bytes": 1424
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/duplicate-keys/duplicate-keys-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/duplicate-keys/duplicate-keys-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/duplicate-keys/duplicate-keys-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/duplicate-keys/duplicate-keys-attempt-1.stdout.log",
+      "sha256": "sha256:6edb78ab02d6b2536d57ed17e0f71bf02c9605ab33238991cc32fb45f7d27526",
+      "bytes": 55
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/equals/equals-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/equals/equals-attempt-1.receipt.json",
+      "sha256": "sha256:c6224c30dd8655e9c30f823adf14fc75ac66bb2e1fc9a5f3980c2d0e85e5693a",
+      "bytes": 1279
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/equals/equals-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/equals/equals-attempt-1.stderr.log",
+      "sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+      "bytes": 11
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/equals/equals-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/equals/equals-attempt-1.stdout.log",
+      "sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+      "bytes": 11
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/exception/exception-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/exception/exception-attempt-1.receipt.json",
+      "sha256": "sha256:de5f608f0fbe8b513e5f8e94d7511112619ae676217b75a053bd67d81d0f96a1",
+      "bytes": 1361
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/exception/exception-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/exception/exception-attempt-1.stderr.log",
+      "sha256": "sha256:232f2bb7a5374d3786432b47a52ec7923f9b593f0897e528d2d3d8b4e06c4392",
+      "bytes": 137
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/exception/exception-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/exception/exception-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/json-fields/json-fields-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/json-fields/json-fields-attempt-1.receipt.json",
+      "sha256": "sha256:3718fdc998042d2388fee109a9cd438c2f76bae7b85edb75f43b4eb97945950e",
+      "bytes": 1346
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/json-fields/json-fields-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/json-fields/json-fields-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/json-fields/json-fields-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/json-fields/json-fields-attempt-1.stdout.log",
+      "sha256": "sha256:7367ace5f6db034db2fd0b5015ba2764d9b502592a00396175d7b976b579640d",
+      "bytes": 55
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/nested-safe-writer.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/nested-safe-writer.json",
+      "sha256": "sha256:22f35019221aa75f774624be213f272834c49d656acf7eb232d39ea5444bf65d",
+      "bytes": 81
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/nonzero/nonzero-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/nonzero/nonzero-attempt-1.receipt.json",
+      "sha256": "sha256:7967e908497d12280d8a9847a73bb6ac62de69d89be36390b63d49d2772407a2",
+      "bytes": 1305
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/nonzero/nonzero-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/nonzero/nonzero-attempt-1.stderr.log",
+      "sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+      "bytes": 11
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/nonzero/nonzero-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/nonzero/nonzero-attempt-1.stdout.log",
+      "sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+      "bytes": 11
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/original-inputs/original-inputs-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/original-inputs/original-inputs-attempt-1.receipt.json",
+      "sha256": "sha256:d59b623e71f4be4a41af488faa575e418ae7fdc7030d9664eaaae22fbc785d7d",
+      "bytes": 1341
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/original-inputs/original-inputs-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/original-inputs/original-inputs-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/original-inputs/original-inputs-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/original-inputs/original-inputs-attempt-1.stdout.log",
+      "sha256": "sha256:924161b2afd0462a520bc67d5ab5ee4aa9449ddb8435e7614d3e43d3ff86cd75",
+      "bytes": 19
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/result.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/result.json",
+      "sha256": "sha256:c14f61c7c04d0cd0f11e8167ddf33551441ee943c07311e73a1c8032351f182a",
+      "bytes": 2241
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/separate/separate-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/separate/separate-attempt-1.receipt.json",
+      "sha256": "sha256:90f9707b9e388b42bfa74cff9f0ff0c83e777d40e691a9ae8aeddcc7ade83117",
+      "bytes": 1296
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/separate/separate-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/separate/separate-attempt-1.stderr.log",
+      "sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+      "bytes": 11
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/separate/separate-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/separate/separate-attempt-1.stdout.log",
+      "sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+      "bytes": 11
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/timeout/timeout-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/timeout/timeout-attempt-1.receipt.json",
+      "sha256": "sha256:a2c43d9808a534394322a4697100a42c1eaeb99d8f360aeb26f932e5892826f8",
+      "bytes": 1380
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/timeout/timeout-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/timeout/timeout-attempt-1.stderr.log",
+      "sha256": "sha256:353b8ad45620783b31cd5457d505298e9629f317b1eeea0324245e76d66e9704",
+      "bytes": 27
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/timeout/timeout-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/timeout/timeout-attempt-1.stdout.log",
+      "sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+      "bytes": 11
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/writer-first-write.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-independent/writer-first-write.json",
+      "sha256": "sha256:e17dea756e7fd1d243d15f92440820986c486ccc48434347b74d4efc56380b0d",
+      "bytes": 103
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-gates/exact-source-guard-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-gates/exact-source-guard-attempt-1.receipt.json",
+      "sha256": "sha256:1396f6a39e3f948218ee88e845660c1b667ae0a7f1e1a64be3bda57b40eb59d7",
+      "bytes": 2021
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-gates/exact-source-guard-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-gates/exact-source-guard-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-gates/exact-source-guard-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-gates/exact-source-guard-attempt-1.stdout.log",
+      "sha256": "sha256:bd8075fbc0fc78b3a77ac8c5efcf3c374469df0640153e1ca2f19d32bb1d6d00",
+      "bytes": 24
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-gates/independent-probes-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-gates/independent-probes-attempt-1.receipt.json",
+      "sha256": "sha256:025a513b2413f773a3c422fc3bfd02b55ae63492a3d91c90fce1edb45d62ad33",
+      "bytes": 2104
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-gates/independent-probes-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-gates/independent-probes-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-gates/independent-probes-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-gates/independent-probes-attempt-1.stdout.log",
+      "sha256": "sha256:3853c3b36062e27e14db66e18a51868e4eda31eac04eadd3665d6f9edf90fa4f",
+      "bytes": 90
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-gates/os-sandbox-capability-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-gates/os-sandbox-capability-attempt-1.receipt.json",
+      "sha256": "sha256:f86e93d561cfe0d9ebebde233242422af4a49771ac5d9f644ac17ec0d25b0933",
+      "bytes": 1821
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-gates/os-sandbox-capability-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-gates/os-sandbox-capability-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-gates/os-sandbox-capability-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject-gates/os-sandbox-capability-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/bundle-create-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/bundle-create-attempt-1.receipt.json",
+      "sha256": "sha256:4801756bcf669bc291adbf25398ae3218db967255def1b1c4cc4b679eaac32e4",
+      "bytes": 2078
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/bundle-create-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/bundle-create-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/bundle-create-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/bundle-create-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/bundle-unbundle-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/bundle-unbundle-attempt-1.receipt.json",
+      "sha256": "sha256:d587578d40a6fde046b0dc6c12b86ecb5959b19764e5e3bb904d5a11bf005f1b",
+      "bytes": 2004
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/bundle-unbundle-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/bundle-unbundle-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/bundle-unbundle-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/bundle-unbundle-attempt-1.stdout.log",
+      "sha256": "sha256:3f79895f9a649c604af46f66a7f21a36c3827c0362174d1f7ad5353304a7c084",
+      "bytes": 73
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/bundle-verify-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/bundle-verify-attempt-1.receipt.json",
+      "sha256": "sha256:18eeac35ba20a025f01630cb520491bccdc6aa211b2cc580e12f6f2e24d7ecc3",
+      "bytes": 2109
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/bundle-verify-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/bundle-verify-attempt-1.stderr.log",
+      "sha256": "sha256:dec4da0c16628a705f0e13ac6d6cdeeb7252802cd0eff9c224486a5818ca14c7",
+      "bytes": 108
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/bundle-verify-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/bundle-verify-attempt-1.stdout.log",
+      "sha256": "sha256:ae96f98a86b08b4e873b766b70df17b2e589e035a0afac9bdf78804c6e0d20fb",
+      "bytes": 184
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/bundle.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/bundle.json",
+      "sha256": "sha256:7ea6a5aff10966ccb584fa05dbe736e77e1078beee4795ec055cbee726023d80",
+      "bytes": 2285
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/candidate-add-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/candidate-add-attempt-1.receipt.json",
+      "sha256": "sha256:c48e40f08ad436033a7864928dc722adc2be2366697b1df30e3d6da73fecbc2e",
+      "bytes": 1980
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/candidate-add-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/candidate-add-attempt-1.stderr.log",
+      "sha256": "sha256:353320b725be576ca8eadfcb4acd373a9e0df5d45dd274a1de3cb8c7e4952780",
+      "bytes": 43
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/candidate-add-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/candidate-add-attempt-1.stdout.log",
+      "sha256": "sha256:9a79905ba0d96f5af37f066f40f9f334809c894c7bbfd24543d65dd06be685b3",
+      "bytes": 76
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/restore-fsck-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/restore-fsck-attempt-1.receipt.json",
+      "sha256": "sha256:56933de563fdd2b05851098a725c0feed1893a37e9a3129b7155b9d106d39c8f",
+      "bytes": 2073
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/restore-fsck-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/restore-fsck-attempt-1.stderr.log",
+      "sha256": "sha256:f6af22973493778f6d09860e838d5b86cee14ceea3160e5773480a7802fa2726",
+      "bytes": 30
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/restore-fsck-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/restore-fsck-attempt-1.stdout.log",
+      "sha256": "sha256:089644fbea0b02b6d33b95a1cdbee0a0057389e956a9c1365b685cc1d1490a6c",
+      "bytes": 228
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/restore-init-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/restore-init-attempt-1.receipt.json",
+      "sha256": "sha256:3891faac1e414eaed0af8b5196a99a0e2bd5595252330d8dc47c8c9ae8a4c40f",
+      "bytes": 1931
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/restore-init-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/restore-init-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/backup/restore-init-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/backup/restore-init-attempt-1.stdout.log",
+      "sha256": "sha256:549694cc21d86329e244f21b4469e7b3be62917f3e90294611040bb3a2262d98",
+      "bytes": 130
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/preflight.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/preflight.json",
+      "sha256": "sha256:897b9170e41c1afc5e57d9802accc548527fa57cb0810a12312a4d49bee6ade0",
+      "bytes": 3868
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/subject.json",
+      "sha256": "sha256:d4e381e248c0f438f5bfc6e50ca48ddd2a70e8b976138a76e1848a634f0c24a2",
+      "bytes": 306
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/migration.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/migration.json",
+      "sha256": "sha256:6c79c7acc9f4ec48876bd141df1635c291ceec50bc160921710b09a0a34f72c9",
+      "bytes": 35562
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/source-guard.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/source-guard.json",
+      "sha256": "sha256:34a2f31951b4eaa2cf5a7ecb07ed1707be9a4325b6cb7e185b0eec2dbf50eaab",
+      "bytes": 8004
+    },
+    {
+      "source_path": "/private/tmp/rls-propagation-01a07149-probes.py",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/reproduce/independent_probes.py",
+      "sha256": "sha256:90f94b615017151b6d37343db94df9755602e4f756a635e71001c6d184a58688",
+      "bytes": 5804
+    },
+    {
+      "source_path": "/private/tmp/rls-propagation-01a07149-setup.py",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/reproduce/migration_and_backup.py",
+      "sha256": "sha256:9f1c3666e817b75181e8488d4280f0eb802bfa45c4786fbb5d14de01d60c4a1f",
+      "bytes": 4916
+    },
+    {
+      "source_path": "/private/tmp/rls-propagation-01a07149-verifier.py",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/verify_evidence.py",
+      "sha256": "sha256:b60edc9f1c988cbdcaebbc828c9f6f24072ed154539f7445d858f58fcb9060e9",
+      "bytes": 15078
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/verification/evidence-verify-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/verification/evidence-verify-attempt-1.receipt.json",
+      "sha256": "sha256:ca58521ef54609a6b535c736194644220ec26f944baa74ea129ab4c75a8b9d6b",
+      "bytes": 52387
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/verification/evidence-verify-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/verification/evidence-verify-attempt-1.stderr.log",
+      "sha256": "sha256:f0f2006daaa143fcb74f36862f1ed72392b4698fab02af4c45228c767a05ab2e",
+      "bytes": 1125
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/verification/evidence-verify-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/verification/evidence-verify-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/verification/initial-verifier.py",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/verification/initial-verifier.py",
+      "sha256": "sha256:831d606623d42a147c32bd71c9836046eac81283abe34ab832afe75f9cef150b",
+      "bytes": 14892
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/verification/parse-correction.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/verification/parse-correction.json",
+      "sha256": "sha256:be9be8b4a383992c30fbd54f5ec77e4c8c2cfab1b98edfa0fab2af0cecbe8dcb",
+      "bytes": 463
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/probe-rerun-commands/cleanup.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/probe-rerun-commands/cleanup.json",
+      "sha256": "sha256:8cb84aec7ebc033b513437dbe3f488e98303f9f0da6b51ca74dc0751266d16cd",
+      "bytes": 198
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/probe-rerun-commands/independent-probes-v2-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/probe-rerun-commands/independent-probes-v2-attempt-1.receipt.json",
+      "sha256": "sha256:1172be5211423f30d991926db0d1c375ac67bad1d701251cd6fa4fbb8bf678fb",
+      "bytes": 2118
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/probe-rerun-commands/independent-probes-v2-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/probe-rerun-commands/independent-probes-v2-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/probe-rerun-commands/independent-probes-v2-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/probe-rerun-commands/independent-probes-v2-attempt-1.stdout.log",
+      "sha256": "sha256:5a0e8e5fc037a67d8b84dae52a53dcc0c28a56a5efe057304984b5d0c8a58653",
+      "bytes": 90
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/probe-rerun-commands/independent-probes-v2-subject-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/probe-rerun-commands/independent-probes-v2-subject-attempt-1.receipt.json",
+      "sha256": "sha256:23488192b510e05cfccd58a743bbd8866349ae4e7c7b77f599e116b537307725",
+      "bytes": 2178
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/probe-rerun-commands/independent-probes-v2-subject-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/probe-rerun-commands/independent-probes-v2-subject-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/probe-rerun-commands/independent-probes-v2-subject-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/probe-rerun-commands/independent-probes-v2-subject-attempt-1.stdout.log",
+      "sha256": "sha256:3853c3b36062e27e14db66e18a51868e4eda31eac04eadd3665d6f9edf90fa4f",
+      "bytes": 90
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/precommit-discovery/ORIGINAL-ARCHIVE-MANIFEST.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/precommit-discovery/ORIGINAL-ARCHIVE-MANIFEST.json",
+      "sha256": "sha256:442742dab4a70fb743faf21307615128da1a568528b9516bee6c2e736377bedc",
+      "bytes": 15645
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/precommit-discovery/correction.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/precommit-discovery/correction.json",
+      "sha256": "sha256:35a10304452ab901e2f9988611775a4495eada6c1646d89b8c1884e53934def7",
+      "bytes": 656
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/precommit-discovery/evidence-diff-check-attempt-1.receipt.json",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/precommit-discovery/evidence-diff-check-attempt-1.receipt.json",
+      "sha256": "sha256:458d239e6045f389c007c1d3be7bb569cbb51d7bb95ae88037e55afcacd863e3",
+      "bytes": 111548
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/precommit-discovery/evidence-diff-check-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/precommit-discovery/evidence-diff-check-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/precommit-discovery/evidence-diff-check-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/precommit-discovery/evidence-diff-check-attempt-1.stdout.log",
+      "sha256": "sha256:58dade2a51f58e6596dac27c4b1e7e61e976ea2900901673c0ff1ec0a3b21656",
+      "bytes": 402
+    },
+    {
+      "source_path": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/precommit-discovery/initial-independent-probes.py",
+      "archive_path": "docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/precommit-discovery/initial-independent-probes.py",
+      "sha256": "sha256:1e2f64bb3f41e8fd21b98b5a6b4c3695997edac2cca51a73e662b53639b3d7dd",
+      "bytes": 5793
+    }
+  ],
+  "byte_rewrites": 0
+}

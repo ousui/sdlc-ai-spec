@@ -1,0 +1,78 @@
+{
+  "contract": "sdlc-ai-spec/runtime/skill-interface/v1",
+  "skill": "sdlc-600-rls",
+  "skill_version": "0.3.0",
+  "default_command": "auto",
+  "commands": [
+    {
+      "name": "auto",
+      "description": "根据唯一 VFY、RLS 状态和目标效果选择唯一合法动作。",
+      "writes": true
+    },
+    {
+      "name": "create",
+      "description": "建立 Release Contract、RLI、RCF 和 Checklist；不产生目标效果。",
+      "writes": true
+    },
+    {
+      "name": "execute",
+      "description": "在精确 Effect Authorization 下执行一个或多个选定 RLI。",
+      "writes": true
+    },
+    {
+      "name": "confirm",
+      "description": "执行或记录一个或多个选定的目标侧 RCF。",
+      "writes": true
+    },
+    {
+      "name": "revise",
+      "description": "同目标重试时创建新 Revision；目标改变时创建新 Artifact。",
+      "writes": true
+    },
+    {
+      "name": "check",
+      "description": "严格只读复核 Contract、Evidence、Conclusion、Gate 和目标当前状态。",
+      "writes": false
+    },
+    {
+      "name": "cancel",
+      "description": "仅在确认未产生目标效果且目标未漂移时取消当前发版。",
+      "writes": true
+    },
+    {
+      "name": "finalize",
+      "description": "验证独立最终确认与当前 Gate 后冻结准确 Revision。",
+      "writes": true
+    },
+    {
+      "name": "help",
+      "description": "显示用途、参数和副作用边界。",
+      "writes": false
+    },
+    {
+      "name": "version",
+      "description": "显示 Skill 和 Interface 版本。",
+      "writes": false
+    },
+    {
+      "name": "commands",
+      "description": "列出全部命令及副作用。",
+      "writes": false
+    },
+    {
+      "name": "examples",
+      "description": "显示最小安全调用示例。",
+      "writes": false
+    }
+  ],
+  "examples": [
+    "/sdlc-600-rls",
+    "/sdlc-600-rls create -i VFY-20260904100000-01@1 --target sandbox-a --release-reference 1.0.0",
+    "/sdlc-600-rls execute -r RLS-20260904110000-01@1 --item RLI-001 --item RLI-002",
+    "/sdlc-600-rls confirm -r RLS-20260904110000-01@1 --item RCF-001",
+    "/sdlc-600-rls revise -r RLS-20260904110000-01@1",
+    "/sdlc-600-rls cancel -r RLS-20260904110000-01@1",
+    "/sdlc-600-rls check -r RLS-20260904110000-01@1",
+    "/sdlc-600-rls --help"
+  ]
+}

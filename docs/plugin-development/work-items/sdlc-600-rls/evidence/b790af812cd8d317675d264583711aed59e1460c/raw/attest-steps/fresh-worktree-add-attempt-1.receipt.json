@@ -1,0 +1,48 @@
+{
+  "name": "fresh-worktree-add",
+  "attempt": 1,
+  "argv": [
+    "git",
+    "worktree",
+    "add",
+    "--detach",
+    "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+    "b790af812cd8d317675d264583711aed59e1460c"
+  ],
+  "cwd": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/candidate",
+  "started_at": "2026-09-05T11:33:31.879436+00:00",
+  "finished_at": "2026-09-05T11:33:32.005349+00:00",
+  "duration_ms": 126,
+  "exit_code": 0,
+  "stdout": "HEAD is now at b790af8 feat(rls): 建立带敏感值传播保护的本地发版闭环\n",
+  "stderr": "Preparing worktree (detached HEAD b790af8)\n",
+  "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-worktree-add-attempt-1.stdout.log",
+  "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-worktree-add-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:5dc9bcf2eba7f24cc9fc6780b95bc2a1531637500a43be3d6c24142dd893df47",
+  "stderr_sha256": "sha256:9aa1d4de23eef67b45a09e452eb64d33b5940c27fc0a61dadaa4b38d0711082f",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": {
+    "root": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/candidate",
+    "sha": "b790af812cd8d317675d264583711aed59e1460c",
+    "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+    "parents": [
+      "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_after": {
+    "root": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/candidate",
+    "sha": "b790af812cd8d317675d264583711aed59e1460c",
+    "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+    "parents": [
+      "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_unchanged": true,
+  "success": true
+}

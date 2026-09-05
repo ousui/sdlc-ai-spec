@@ -1,0 +1,48 @@
+{
+  "name": "source",
+  "attempt": 1,
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "tools/validate_rls_delivery_source.py",
+    "--source-sha",
+    "b790af812cd8d317675d264583711aed59e1460c",
+    "--json-out",
+    "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/source.json"
+  ],
+  "cwd": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/candidate",
+  "started_at": "2026-09-05T11:27:18.442406+00:00",
+  "finished_at": "2026-09-05T11:27:18.787550+00:00",
+  "duration_ms": 345,
+  "exit_code": 0,
+  "stdout": "RLS_SOURCE_GUARD = PASS\n",
+  "stderr": "",
+  "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/source-attempt-1.stdout.log",
+  "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/source-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:bd8075fbc0fc78b3a77ac8c5efcf3c374469df0640153e1ca2f19d32bb1d6d00",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": {
+    "root": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/candidate",
+    "sha": "b790af812cd8d317675d264583711aed59e1460c",
+    "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+    "parents": [
+      "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_after": {
+    "root": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/candidate",
+    "sha": "b790af812cd8d317675d264583711aed59e1460c",
+    "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+    "parents": [
+      "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_unchanged": true,
+  "success": true
+}

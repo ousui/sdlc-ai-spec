@@ -1,0 +1,9 @@
+{
+  "file": "precommit-probe-archives.tar.gz",
+  "bytes": 17816,
+  "sha256": "sha256:e0782cd028ce10d6d4b6210ca2ee741f176d040a2f8c37ec5743dc66f0900a5d",
+  "manifest": "precommit-discovery/ORIGINAL-ARCHIVE-MANIFEST.json",
+  "reason": "Preserve all initial independent-probe raw bytes including the extra print newline while committing newly re-executed probe outputs that pass unchanged git diff --check.",
+  "delivered_with": "RLS-S3-E3-Web-Review.tar.gz",
+  "old_raw_files_rewritten": false
+}

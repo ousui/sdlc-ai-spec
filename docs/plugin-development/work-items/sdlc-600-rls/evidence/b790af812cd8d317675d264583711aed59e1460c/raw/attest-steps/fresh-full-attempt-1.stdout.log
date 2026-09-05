@@ -1,0 +1,15 @@
+RLS_STEP_START source
+RLS_STEP_END source PASS
+RLS_STEP_START rls-private
+RLS_STEP_END rls-private PASS
+RLS_STEP_START effect-boundary-review
+RLS_STEP_END effect-boundary-review PASS
+RLS_STEP_START vfy-strict-80
+RLS_STEP_END vfy-strict-80 PASS
+RLS_STEP_START vfy-installed-independence
+RLS_STEP_END vfy-installed-independence PASS
+RLS_STEP_START rls-installed-independence
+RLS_STEP_END rls-installed-independence PASS
+RLS_STEP_START repository-regression
+RLS_STEP_END repository-regression PASS
+RLS_DELIVERY_FULL = PASS

@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sdlc-ai-spec/rls-propagation-final-result/v2",
+  "type": "object",
+  "required": [
+    "accepted_vfy_sha",
+    "bridge_sha",
+    "contract",
+    "design_head_sha",
+    "external_projects",
+    "fixed_eval",
+    "fresh_attest",
+    "full_regression",
+    "implementation_subject_sha",
+    "installed_independence",
+    "limitations",
+    "main_modified",
+    "main_sha",
+    "pr_merged",
+    "real_store_tests",
+    "real_target_effects",
+    "repair_source_sha",
+    "repair_source_tree",
+    "rls_private",
+    "source_lock_entries",
+    "status",
+    "subject_tree",
+    "superseded_objects",
+    "vfy_interface_rows",
+    "vfy_modified",
+    "vfy_regression",
+    "web_repair_tests",
+    "web_review",
+    "propagation_tests",
+    "original_web_repair_tests",
+    "redaction_policy"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "contract": {
+      "type": "string",
+      "const": "sdlc-ai-spec/rls-propagation-final-result/v2"
+    },
+    "status": {
+      "type": "string",
+      "const": "PASS"
+    },
+    "repair_source_sha": {
+      "type": "string",
+      "pattern": "[0-9a-f]{40}"
+    },
+    "repair_source_tree": {
+      "type": "string",
+      "pattern": "[0-9a-f]{40}"
+    },
+    "accepted_vfy_sha": {
+      "type": "string",
+      "pattern": "[0-9a-f]{40}"
+    },
+    "main_sha": {
+      "type": "string",
+      "pattern": "[0-9a-f]{40}"
+    },
+    "bridge_sha": {
+      "type": "string",
+      "pattern": "[0-9a-f]{40}"
+    },
+    "design_head_sha": {
+      "type": "string",
+      "pattern": "[0-9a-f]{40}"
+    },
+    "implementation_subject_sha": {
+      "type": "string",
+      "pattern": "[0-9a-f]{40}"
+    },
+    "subject_tree": {
+      "type": "string",
+      "pattern": "[0-9a-f]{40}"
+    },
+    "fixed_eval": {
+      "type": "integer",
+      "minimum": 1,
+      "const": 87
+    },
+    "vfy_regression": {
+      "type": "integer",
+      "minimum": 1,
+      "const": 80
+    },
+    "full_regression": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "rls_private": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "web_repair_tests": {
+      "type": "integer",
+      "minimum": 1,
+      "const": 120
+    },
+    "real_store_tests": {
+      "type": "integer",
+      "minimum": 1,
+      "const": 10
+    },
+    "source_lock_entries": {
+      "type": "integer",
+      "minimum": 1,
+      "const": 14
+    },
+    "vfy_interface_rows": {
+      "type": "integer",
+      "minimum": 1,
+      "const": 12
+    },
+    "external_projects": {
+      "type": "integer",
+      "minimum": 1,
+      "const": 2
+    },
+    "fresh_attest": {
+      "type": "boolean",
+      "const": true
+    },
+    "installed_independence": {
+      "type": "boolean",
+      "const": true
+    },
+    "web_review": {
+      "type": "string",
+      "const": "REQUIRED"
+    },
+    "real_target_effects": {
+      "type": "integer",
+      "minimum": 0,
+      "const": 0
+    },
+    "main_modified": {
+      "type": "boolean",
+      "const": false
+    },
+    "vfy_modified": {
+      "type": "boolean",
+      "const": false
+    },
+    "pr_merged": {
+      "type": "boolean",
+      "const": false
+    },
+    "superseded_objects": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "propagation_tests": {
+      "type": "integer",
+      "const": 56
+    },
+    "original_web_repair_tests": {
+      "type": "integer",
+      "const": 64
+    },
+    "redaction_policy": {
+      "type": "string",
+      "const": "sdlc-ai-spec/validation-redaction/v2"
+    }
+  }
+}

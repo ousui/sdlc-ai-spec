@@ -1,0 +1,30 @@
+{
+  "name": "checkout-exact",
+  "attempt": 1,
+  "argv": [
+    "git",
+    "-C",
+    "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-gin-vue-admin-jd6vglm9/project",
+    "checkout",
+    "--detach",
+    "a6882210a80bb27e3aa5dff0b4c21aa4afe8988a"
+  ],
+  "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-gin-vue-admin-jd6vglm9",
+  "started_at": "2026-09-05T11:33:29.112352+00:00",
+  "finished_at": "2026-09-05T11:33:29.186432+00:00",
+  "duration_ms": 74,
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "HEAD is now at a688221 Merge pull request #2235 from kobihikri/ci/pin-github-push-action\n",
+  "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/gin-vue-admin/checkout-exact-attempt-1.stdout.log",
+  "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/external-steps/external-projects-projects/gin-vue-admin/checkout-exact-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "sha256:76d2dd1c0c4a735debc8ca8c5e71022f14c14e29e878ce8cc6a885e4b332ed14",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": null,
+  "source_after": null,
+  "source_unchanged": true,
+  "success": true
+}

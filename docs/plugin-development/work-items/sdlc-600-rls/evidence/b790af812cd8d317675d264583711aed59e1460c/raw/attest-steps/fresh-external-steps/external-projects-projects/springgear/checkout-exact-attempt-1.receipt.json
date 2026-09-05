@@ -1,0 +1,30 @@
+{
+  "name": "checkout-exact",
+  "attempt": 1,
+  "argv": [
+    "git",
+    "-C",
+    "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-springgear-kjxutsi5/project",
+    "checkout",
+    "--detach",
+    "e855096ff19dcdb303dc4250ba19c30acd743ac7"
+  ],
+  "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-springgear-kjxutsi5",
+  "started_at": "2026-09-05T11:39:40.110931+00:00",
+  "finished_at": "2026-09-05T11:39:40.133049+00:00",
+  "duration_ms": 22,
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "HEAD is now at e855096 Merge remote-tracking branch 'origin/2.1.0-start' into devl\n",
+  "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/checkout-exact-attempt-1.stdout.log",
+  "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/springgear/checkout-exact-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "sha256:21561abe5647f05d43721ae1aeb2bf98a783d1caf7b2b310d5aa51c8f6b39233",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": null,
+  "source_after": null,
+  "source_unchanged": true,
+  "success": true
+}

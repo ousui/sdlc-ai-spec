@@ -1,0 +1,30 @@
+{
+  "name": "clone-exact-cache",
+  "attempt": 1,
+  "argv": [
+    "git",
+    "clone",
+    "--no-hardlinks",
+    "--no-checkout",
+    "/private/tmp/sdlc-rls-repair-20260905-01a070e8/external-cache/gin-vue-admin",
+    "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-gin-vue-admin-49e9jjun/project"
+  ],
+  "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-gin-vue-admin-49e9jjun",
+  "started_at": "2026-09-05T11:39:41.430680+00:00",
+  "finished_at": "2026-09-05T11:39:41.482114+00:00",
+  "duration_ms": 51,
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "Cloning into '/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-external-gin-vue-admin-49e9jjun/project'...\n",
+  "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/clone-exact-cache-attempt-1.stdout.log",
+  "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/external-projects-projects/gin-vue-admin/clone-exact-cache-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "sha256:be330881727c893d997d4d15b688824b7c75746fe76d1cebb6f3f5bcc83b715e",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": null,
+  "source_after": null,
+  "source_unchanged": true,
+  "success": true
+}

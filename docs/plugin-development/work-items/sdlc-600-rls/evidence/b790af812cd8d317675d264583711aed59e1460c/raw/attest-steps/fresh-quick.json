@@ -1,0 +1,308 @@
+{
+  "contract": "sdlc-ai-spec/rls-delivery-validation/v1",
+  "profile": "quick",
+  "source_sha": "b790af812cd8d317675d264583711aed59e1460c",
+  "success": true,
+  "started_at": "2026-09-05T11:33:32.199057+00:00",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "steps": [
+    {
+      "name": "source",
+      "attempt": 1,
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_rls_delivery_source.py",
+        "--source-sha",
+        "b790af812cd8d317675d264583711aed59e1460c",
+        "--json-out",
+        "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/source.json"
+      ],
+      "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+      "started_at": "2026-09-05T11:33:32.349591+00:00",
+      "finished_at": "2026-09-05T11:33:32.736711+00:00",
+      "duration_ms": 387,
+      "exit_code": 0,
+      "stdout": "RLS_SOURCE_GUARD = PASS\n",
+      "stderr": "",
+      "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/source-attempt-1.stdout.log",
+      "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/source-attempt-1.stderr.log",
+      "stdout_sha256": "sha256:bd8075fbc0fc78b3a77ac8c5efcf3c374469df0640153e1ca2f19d32bb1d6d00",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+      "redaction_applied": false,
+      "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+      "source_before": {
+        "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+        "sha": "b790af812cd8d317675d264583711aed59e1460c",
+        "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+        "parents": [
+          "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+        ],
+        "branch": "",
+        "status": ""
+      },
+      "source_after": {
+        "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+        "sha": "b790af812cd8d317675d264583711aed59e1460c",
+        "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+        "parents": [
+          "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+        ],
+        "branch": "",
+        "status": ""
+      },
+      "source_unchanged": true,
+      "success": true
+    },
+    {
+      "name": "runtime-contracts",
+      "attempt": 1,
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_runtime_contracts.py"
+      ],
+      "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+      "started_at": "2026-09-05T11:33:32.813783+00:00",
+      "finished_at": "2026-09-05T11:33:33.007235+00:00",
+      "duration_ms": 193,
+      "exit_code": 0,
+      "stdout": "runtime contract validation: PASS\nruntime contracts: 5\nformal skills: 8\n",
+      "stderr": "",
+      "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/runtime-contracts-attempt-1.stdout.log",
+      "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/runtime-contracts-attempt-1.stderr.log",
+      "stdout_sha256": "sha256:d3dc89a08c6df93affe4464617ecf5614771bf888392b4a12818d9c8cd0bda36",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+      "redaction_applied": false,
+      "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+      "source_before": {
+        "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+        "sha": "b790af812cd8d317675d264583711aed59e1460c",
+        "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+        "parents": [
+          "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+        ],
+        "branch": "",
+        "status": ""
+      },
+      "source_after": {
+        "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+        "sha": "b790af812cd8d317675d264583711aed59e1460c",
+        "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+        "parents": [
+          "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+        ],
+        "branch": "",
+        "status": ""
+      },
+      "source_unchanged": true,
+      "success": true
+    },
+    {
+      "name": "skill-interfaces",
+      "attempt": 1,
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_skill_interfaces.py"
+      ],
+      "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+      "started_at": "2026-09-05T11:33:33.083103+00:00",
+      "finished_at": "2026-09-05T11:33:33.185700+00:00",
+      "duration_ms": 103,
+      "exit_code": 0,
+      "stdout": "skill interface validation: PASS\nformal skills: 8\ninterface contract: sdlc-ai-spec/runtime/skill-interface/v1\nauthority source locks: unchanged\n",
+      "stderr": "",
+      "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/skill-interfaces-attempt-1.stdout.log",
+      "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/skill-interfaces-attempt-1.stderr.log",
+      "stdout_sha256": "sha256:9825a016f267883d99316e465bcb6352311d4e26d10cb9558108ae9e9e6530f7",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+      "redaction_applied": false,
+      "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+      "source_before": {
+        "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+        "sha": "b790af812cd8d317675d264583711aed59e1460c",
+        "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+        "parents": [
+          "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+        ],
+        "branch": "",
+        "status": ""
+      },
+      "source_after": {
+        "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+        "sha": "b790af812cd8d317675d264583711aed59e1460c",
+        "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+        "parents": [
+          "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+        ],
+        "branch": "",
+        "status": ""
+      },
+      "source_unchanged": true,
+      "success": true
+    },
+    {
+      "name": "rls-source-lock",
+      "attempt": 1,
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_sdlc_600_rls_source_lock.py",
+        "--json-out",
+        "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/source-lock.json"
+      ],
+      "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+      "started_at": "2026-09-05T11:33:33.265559+00:00",
+      "finished_at": "2026-09-05T11:33:33.385146+00:00",
+      "duration_ms": 120,
+      "exit_code": 0,
+      "stdout": "RLS_FINAL_SOURCE_LOCK = PASS (14 bundled sources)\n",
+      "stderr": "",
+      "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/rls-source-lock-attempt-1.stdout.log",
+      "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/rls-source-lock-attempt-1.stderr.log",
+      "stdout_sha256": "sha256:a289cf13592350a39a415643e65924035736db787b435191126eef1afbc73a23",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+      "redaction_applied": false,
+      "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+      "source_before": {
+        "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+        "sha": "b790af812cd8d317675d264583711aed59e1460c",
+        "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+        "parents": [
+          "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+        ],
+        "branch": "",
+        "status": ""
+      },
+      "source_after": {
+        "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+        "sha": "b790af812cd8d317675d264583711aed59e1460c",
+        "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+        "parents": [
+          "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+        ],
+        "branch": "",
+        "status": ""
+      },
+      "source_unchanged": true,
+      "success": true
+    },
+    {
+      "name": "vfy-source-lock",
+      "attempt": 1,
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-m",
+        "unittest",
+        "tests.skill_vfy.test_source_lock"
+      ],
+      "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+      "started_at": "2026-09-05T11:33:33.462165+00:00",
+      "finished_at": "2026-09-05T11:33:33.627887+00:00",
+      "duration_ms": 166,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": ".......\n----------------------------------------------------------------------\nRan 7 tests in 0.041s\n\nOK\n",
+      "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/vfy-source-lock-attempt-1.stdout.log",
+      "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/vfy-source-lock-attempt-1.stderr.log",
+      "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "sha256:0d628f37216e0a286bb4dc09c3961e6b1490ff1c53d56a39af806e9c2cc5da78",
+      "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+      "redaction_applied": false,
+      "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+      "source_before": {
+        "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+        "sha": "b790af812cd8d317675d264583711aed59e1460c",
+        "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+        "parents": [
+          "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+        ],
+        "branch": "",
+        "status": ""
+      },
+      "source_after": {
+        "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+        "sha": "b790af812cd8d317675d264583711aed59e1460c",
+        "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+        "parents": [
+          "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+        ],
+        "branch": "",
+        "status": ""
+      },
+      "source_unchanged": true,
+      "success": true
+    },
+    {
+      "name": "critical-oracles",
+      "attempt": 1,
+      "argv": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-m",
+        "unittest",
+        "tests.evals.test_sdlc_600_rls_case_coverage"
+      ],
+      "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+      "started_at": "2026-09-05T11:33:33.742441+00:00",
+      "finished_at": "2026-09-05T11:33:33.946066+00:00",
+      "duration_ms": 204,
+      "exit_code": 0,
+      "stdout": "",
+      "stderr": "......\n----------------------------------------------------------------------\nRan 6 tests in 0.067s\n\nOK\n",
+      "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/critical-oracles-attempt-1.stdout.log",
+      "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-quick-steps/critical-oracles-attempt-1.stderr.log",
+      "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "sha256:13b96ed43ad62b23c6812e318f100b156de88f41891dfeb3b15c976596356e17",
+      "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+      "redaction_applied": false,
+      "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+      "source_before": {
+        "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+        "sha": "b790af812cd8d317675d264583711aed59e1460c",
+        "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+        "parents": [
+          "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+        ],
+        "branch": "",
+        "status": ""
+      },
+      "source_after": {
+        "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+        "sha": "b790af812cd8d317675d264583711aed59e1460c",
+        "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+        "parents": [
+          "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+        ],
+        "branch": "",
+        "status": ""
+      },
+      "source_unchanged": true,
+      "success": true
+    }
+  ],
+  "real_target_effects": 0,
+  "remote_writes": 0,
+  "installations": 0,
+  "source_before": {
+    "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+    "sha": "b790af812cd8d317675d264583711aed59e1460c",
+    "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+    "parents": [
+      "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_after": {
+    "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+    "sha": "b790af812cd8d317675d264583711aed59e1460c",
+    "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+    "parents": [
+      "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "finished_at": "2026-09-05T11:33:34.022852+00:00"
+}

@@ -30,6 +30,7 @@ def validate(profile: str, source: str, output: Path):
             ("inventory", ["tools/validate_skill_conformance.py","--json-out",str(logs/"inventory.json")]),
             ("all-source-locks", ["tools/validate_all_skill_source_locks.py","--json-out",str(logs/"locks.json")]),
             ("status-static", ["tools/validate_sdlc_status.py"]),
+            ("status-coverage", ["-m","unittest","tests.evals.test_sdlc_status_case_coverage","-v"]),
             ("status-fixed", ["tests/evals/run_sdlc_status_eval.py","--json-out",str(logs/"status-fixed.json")]),
             ("status-installed", ["tools/test_sdlc_status_runtime_independence.py","--json-out",str(logs/"status-installed.json")]),
             ("rls-fixed", ["tests/evals/run_sdlc_600_rls_eval.py","--json-out",str(logs/"rls-fixed.json")]),
@@ -37,7 +38,7 @@ def validate(profile: str, source: str, output: Path):
         ]
         if profile=="strict":
             commands += [("vfy-strict",["tests/evals/run_sdlc_500_vfy_eval.py","--json-out",str(logs/"vfy-strict.json")]),
-                         ("vfy-installed",["tools/test_sdlc_500_vfy_runtime_independence.py","--json-out",str(logs/"vfy-installed.json")]),
+                         ("vfy-installed",["tools/test_sdlc_500_vfy_runtime_independence.py"]),
                          ("rls-installed",["tools/test_sdlc_600_rls_runtime_independence.py","--json-out",str(logs/"rls-installed.json")])]
         for name, args in commands:
             receipt=run_step(ROOT,name,[sys.executable,"-B",*args],logs,timeout=900)

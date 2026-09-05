@@ -69,6 +69,14 @@ class StatusConformanceTests(unittest.TestCase):
         self.assertEqual({}, self.snapshot())
 
     def test_auto_exact_missing_store_is_not_a_successful_overview(self):
+        # STS-E02: an unbound overview still returns not_started with zero writes.
+        # Exact references are a separate, stricter obligation, never a fallback.
+        for arguments in ([], ["auto"], ["list"]):
+            result = RUNTIME.run_status(arguments, cwd=self.root)
+            self.assertTrue(result["ok"], result)
+            self.assertEqual("not_started", result["state"])
+            self.assertEqual("START_PROJECT_CONTEXT", result["next_action"]["code"])
+            self.assertEqual([], list(self.root.iterdir()))
         for command in ("auto", "inspect"):
             result = RUNTIME.run_status([command, "-r", REF], cwd=self.root)
             self.assertFalse(result["ok"], result)

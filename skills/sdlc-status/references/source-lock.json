@@ -1,0 +1,260 @@
+{
+  "contract": "sdlc-ai-spec/runtime-source-lock/v1",
+  "contracts": [
+    {
+      "contract_id": "sdlc-ai-spec/runtime/artifact-store/v1",
+      "contract_version": "1",
+      "sha256": "500f2d327dfd734974d73eda2857ca2e3663ceaf6f8c48a92b925612cf25fc81"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/runtime/lifecycle/v1",
+      "contract_version": "1",
+      "sha256": "08b2afa9daaee4ea87694472ee473a26c350493d3a5f14c5e9d02500b3aaffc7"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/runtime/skill-execution/v1",
+      "contract_version": "1",
+      "sha256": "b05f03cc1987c9eed431040e2f5626880cbc07e44e5a9c48d93fdbc8cd352bc7"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/runtime/skill-interface/v1",
+      "contract_version": "1",
+      "sha256": "3ac6ee7bf0599b8dd5930fc6a65a2623b7dea5238b7231de62a362545d526163"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/conformance/v1",
+      "contract_version": "1",
+      "sha256": "de21fe159cd2633b43ae7f9a87c85ff1d8e8b05ff5f9c7c5e0d8a4aecf3b2f7d"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/contract/v1",
+      "contract_version": "1",
+      "sha256": "c80f9eea06777d9fb3214cd80bd834eb202853bc1e2bd24e76bc8b1126927f04"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/entry/v1",
+      "contract_version": "1",
+      "sha256": "d7340b62eb2a216c4d4cb5eafb7d9e1ff30b159ce721505dacdc97fca1978d79"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/interface/v1",
+      "contract_version": "1",
+      "sha256": "0165f513e915364f433949cada6666ec39d12089055e73f78d1b722c7fe1c1ed"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/result-schema/v1",
+      "contract_version": "1",
+      "sha256": "8832b5a37ec73259385b86a4fb5808f020fc8b6f8d5737f312b9190726c239e1"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/rls-projection-schema/v1",
+      "contract_version": "1",
+      "sha256": "2c25a3430822ff402dd0a6bb65d1c83946cf67e07dc653f9564825eca554ac91"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_artifact_store/__init__.py/v1",
+      "contract_version": "1",
+      "sha256": "0a1905869b41ba749970122ec6e1924dd4c563199432886fdf7d124fda2b32dd"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_artifact_store/__main__.py/v1",
+      "contract_version": "1",
+      "sha256": "1b78a3bde3bc82262571850990424a1e65b04391e9296fd8a17d4234027f31bb"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_artifact_store/catalog.py/v1",
+      "contract_version": "1",
+      "sha256": "901f089c2fa7f01d2aa7966c28911f7682d545927fb1341cd18214144b126700"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_artifact_store/context_lineage.py/v1",
+      "contract_version": "1",
+      "sha256": "e70c7e0811f2dde3c9f9d1c5eb196b83880b3ef9164668b8412b929adc0c6aff"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_artifact_store/errors.py/v1",
+      "contract_version": "1",
+      "sha256": "1ef84c61cd4909648b3c647e2b2174dadff34a8b007e14afe06873fcbdc287b6"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_artifact_store/models.py/v1",
+      "contract_version": "1",
+      "sha256": "9e776cca6ac415aa12db0576aaf19ca5c259cb34363b735c38f5ec577ecbd4ae"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_artifact_store/sqlite_store.py/v1",
+      "contract_version": "1",
+      "sha256": "ba9e654dfde018820500357a3945c720291450da0f7e4d5d498cdc61d40dcb4f"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_claim_provider/__init__.py/v1",
+      "contract_version": "1",
+      "sha256": "0184b856d2e8b7866ffd52f9889ce6d2cd3e7425f856eabc363eb269b02cb254"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_claim_provider/models.py/v1",
+      "contract_version": "1",
+      "sha256": "de18f8f2721f75571f618b6f6e4ab0a1960110d1f4bc7990e2f0720f46ca5cb3"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_claim_provider/sqlite_provider.py/v1",
+      "contract_version": "1",
+      "sha256": "df305c7af55ef6436d72429d31f3c1295a7c91e666231ba550511536c758ff3e"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_execution/__init__.py/v1",
+      "contract_version": "1",
+      "sha256": "bd17cb9003de698e9bd4cdfefa2bc803aa009f3d0a76ba722aeffb939fa46c1e"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_lifecycle/__init__.py/v1",
+      "contract_version": "1",
+      "sha256": "55a8b05022443c5fcb07d81609f82d82ffc153ebd275f38fb9b6818dbb9f3ad5"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_lifecycle/errors.py/v1",
+      "contract_version": "1",
+      "sha256": "4a06f1d510b9717239b3d8d2f76b254e542ef90d6fad5f5159cbeddcf6c8054f"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_lifecycle/models.py/v1",
+      "contract_version": "1",
+      "sha256": "263a3de0dd39874a10c46fc1434464fee4dc10449272a04b05887a3154621359"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_lifecycle/query.py/v1",
+      "contract_version": "1",
+      "sha256": "cf76746c90b4135329240bd52591ca717ab5a7f53745c02b3eb1bae44597dd45"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_lifecycle/query_dsn.py/v1",
+      "contract_version": "1",
+      "sha256": "676b523aeffadb32621795b938ced959dc8ceb690aa50cf4c2b85b2626da2150"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_lifecycle/query_imp.py/v1",
+      "contract_version": "1",
+      "sha256": "030ca48c4ed2a5dfb3cc305d9f30f24c9663816f6855047fa630a1e1c51514cf"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_lifecycle/query_pln.py/v1",
+      "contract_version": "1",
+      "sha256": "fc3a36ef41b8b47e04b4338335bf3c0a7b8f37ce19c8c3a68abe0a01855d663c"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_lifecycle/query_rls.py/v1",
+      "contract_version": "1",
+      "sha256": "fdca61c2223791ae5e70891fbe851456111f1fd663b26494967c48caddb7ac6e"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_lifecycle/query_vfy.py/v1",
+      "contract_version": "1",
+      "sha256": "acf2dc56c71dc284efc4eaf0299f2d84c594c7e08e94ff4fe1f275ab64529b7c"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_phasekit/__init__.py/v1",
+      "contract_version": "1",
+      "sha256": "25c19ef279177d30a994377d2816aa8cb33bb87267bb424333f83a1a91f312bf"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_phasekit/common.py/v1",
+      "contract_version": "1",
+      "sha256": "6494b43941ae92d4db8054266d507f33cb324ee04fa8221ca9b07a524cc2a532"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_phasekit/contracts.py/v1",
+      "contract_version": "1",
+      "sha256": "5d7e53655c458ebe85262ff87598b505417c4658e19dd8d23c645d924526158c"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_phasekit/handler.py/v1",
+      "contract_version": "1",
+      "sha256": "8f5e7fc057cb15a1b492a2c8e897889e7f8f649cfb221f4a27ea16ad90358d4c"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_phasekit/models.py/v1",
+      "contract_version": "1",
+      "sha256": "d4f5fc227a0f50fbc274161bb0efbfc700410d18091979fc5be499f97586bce7"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_phasekit/render.py/v1",
+      "contract_version": "1",
+      "sha256": "5f80cbdc3454b09dd0d7aca9b84635a4811144d569dd9169ef4057bd34dc99b6"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_phasekit/verify.py/v1",
+      "contract_version": "1",
+      "sha256": "e4acd7acfdcbcd16a59d1ef7a5b043768d844fb3e44501d7303c1faa3a74a751"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_resource/__init__.py/v1",
+      "contract_version": "1",
+      "sha256": "98f4eba6a91850c33ce73896d95e7a88edb538cd024d4aae591bad0d9eccafa7"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/__init__.py/v1",
+      "contract_version": "1",
+      "sha256": "7795f53c91681ddc88dee94325a958b0ca69ba4445716d7825563ef63d7efb22"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/authority.py/v1",
+      "contract_version": "1",
+      "sha256": "5e989f9eee4325b36776ead5090667f7672578281ba24da5a14fcff73b9647dd"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/authority_compat.py/v1",
+      "contract_version": "1",
+      "sha256": "9473929c8f16a825e1486557ba30caeeb75319db0d410f31c76c70e749a55cc9"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/canonical.py/v1",
+      "contract_version": "1",
+      "sha256": "c3fb0b1cfcfcd4d828d5a092b70f14c01925f56cb17ea6914d6c765005998c55"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/control_inputs.py/v1",
+      "contract_version": "1",
+      "sha256": "5551b9632c04c47928df04449518f39f333d4fab8f8833f8d4398723c9503409"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/envelopes.py/v1",
+      "contract_version": "1",
+      "sha256": "d116e20fa7b7b4d7a62ad7d7c981f27210bacec33d5ceeba88bea0449abc5ad9"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/phase.py/v1",
+      "contract_version": "1",
+      "sha256": "b6ecebc5d6680e4c2f3520e6c211d42582067aa7b00dbcbe75032bc0bc1c5920"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/skill_args.py/v1",
+      "contract_version": "1",
+      "sha256": "1607a48092720e7deddb2a4bb9c49399b1aa495842e82677065619833577f326"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/skill_command.py/v1",
+      "contract_version": "1",
+      "sha256": "96ae9dee0d17815f93dada46cfc586813c2999b9569e16b7585b8bdc3a2ac463"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/skill_inputs.py/v1",
+      "contract_version": "1",
+      "sha256": "0095e48ef537ddc90b56c95cea9087096bf9f2da44e2962368701f9d6a7d6e41"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/source_lock.py/v1",
+      "contract_version": "1",
+      "sha256": "97afb1d50bf0f87587684a540c1a3c0d5ef861fd9921f12269ba9c6a48a0d50e"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/skills/sdlc-status/scripts/runtime.py/v1",
+      "contract_version": "1",
+      "sha256": "0d1a5630888f509158b239ed213c013ab85d9a202bb91782fc28ee0c42478fa6"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/skills/sdlc-status/scripts/vfy_projection.py/v1",
+      "contract_version": "1",
+      "sha256": "e5ee6c3ee65a45aee978f88064fece1c938df980942d4eca5a2e5a300bc8d627"
+    }
+  ]
+}

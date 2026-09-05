@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 import sys
 from typing import Any, Callable, Mapping, Sequence
@@ -28,6 +29,8 @@ from packages.sdlc_runtime import (  # noqa: E402
     render_help,
     render_version,
 )
+
+from packages.sdlc_runtime.canonical import exact_artifact_reference  # noqa: E402
 
 RESULT_CONTRACT = "sdlc-ai-spec/status-result/v1"
 INTERFACE_PATH = Path(__file__).resolve().parents[1] / "references/interface.json"
@@ -60,8 +63,22 @@ def _base_result(command: str, project_root: str | None) -> dict[str, Any]:
 
 def _finish(result: dict[str, Any], command: SkillCommand) -> dict[str, Any]:
     if command.output == "debug":
-        result["resolved"] = command.to_dict()
+        resolved = command.to_dict()
+        # Diagnostic metadata is not a transport for user prose or unvalidated input.
+        resolved["request_text"] = "[OMITTED]" if command.request_text else ""
+        resolved["help_topic"] = None
+        resolved["project_root"] = result.get("project_root")
+        resolved["artifact_reference"] = (result.get("projection") or {}).get("root_reference")
+        result["resolved"] = resolved
     return result
+
+
+def _safe_failure(exc: Exception, default: str = "STATUS_RUNTIME_ERROR") -> dict[str, Any]:
+    """Preserve a bounded error code, never echo exception text or payload details."""
+    code = getattr(exc, "code", default)
+    if not isinstance(code, str) or not re.fullmatch(r"[A-Z][A-Z0-9_]{0,79}", code):
+        code = default
+    return _error(code, "状态查询无法安全完成；请按错误码核查准确输入或 Store。")
 
 
 def _next_action(value):
@@ -189,7 +206,7 @@ def run_status(
             ok=False,
             status="failed",
             state="invalid_target",
-            errors=[exc.to_dict()],
+            errors=[_safe_failure(exc)],
         )
         return _finish(result, command)
     result["project_root"] = str(root)
@@ -215,6 +232,18 @@ def run_status(
         )
         return _finish(result, command)
 
+    if reference is not None:
+        try:
+            identity, revision = exact_artifact_reference(reference)
+            if not identity.startswith("REQ-") or reference != f"{identity}@{revision}":
+                raise ValueError("not a requirement")
+        except (TypeError, ValueError):
+            result.update(
+                ok=False, status="failed", state="invalid_reference",
+                errors=[_error("LIFECYCLE_REFERENCE_INVALID", "需要准确的 REQ-...@数字Revision；不接受符号或 Member 引用。")],
+            )
+            return _finish(result, command)
+
     try:
         service = service_factory(root, plugin_root=PLUGIN_ROOT)
     except LifecycleStoreUnavailable:
@@ -222,7 +251,7 @@ def run_status(
             _not_started(
                 root,
                 command.command,
-                inspect=command.command == "inspect",
+                inspect=command.command == "inspect" or reference is not None,
                 warnings=result["warnings"],
             ),
             command,
@@ -232,7 +261,7 @@ def run_status(
             ok=False,
             status="failed",
             state="query_failed",
-            errors=[exc.to_dict()],
+            errors=[_safe_failure(exc)],
         )
         return _finish(result, command)
     except Exception as exc:
@@ -241,10 +270,7 @@ def run_status(
             status="failed",
             state="query_failed",
             errors=[
-                _error(
-                    getattr(exc, "code", "STATUS_RUNTIME_ERROR"),
-                    str(exc),
-                )
+                _safe_failure(exc)
             ],
         )
         return _finish(result, command)
@@ -297,7 +323,7 @@ def run_status(
                         "blocked"
                         if projection.overall_state == "blocked"
                         else "action_required"
-                        if projection.overall_state == "action_required"
+                        if projection.overall_state in {"action_required", "selection_required"}
                         else "completed"
                     ),
                     next_action=_projection_action(projection),
@@ -325,14 +351,14 @@ def run_status(
             ok=False,
             status="blocked" if exc.code != "LIFECYCLE_REFERENCE_INVALID" else "failed",
             state="query_failed",
-            errors=[exc.to_dict()],
+            errors=[_safe_failure(exc)],
         )
     except Exception as exc:  # fail closed at the CLI boundary
         result.update(
             ok=False,
             status="failed",
             state="internal_error",
-            errors=[_error("STATUS_RUNTIME_ERROR", str(exc))],
+            errors=[_safe_failure(exc)],
         )
     return _finish(result, command)
 
@@ -387,6 +413,14 @@ def render_summary(result: Mapping[str, Any]) -> str:
             if vfy.get("return_phase"):
                 lines.append(f"Return Phase：{vfy['return_phase']}")
         rls = projection.get("rls_projection")
+        if rls and rls.get("targets"):
+            lines.append("RLS 目标待选择（不会自动选择第一个）：")
+            for target in rls["targets"]:
+                lines.append(
+                    f"- {target.get('release_target')} | {target.get('artifact_reference')} | "
+                    f"Release Conclusion={target.get('release_conclusion')} | "
+                    f"Artifact Gate={target.get('artifact_gate')}"
+                )
         if rls and rls.get("artifact_reference"):
             lines.append(f"RLS Artifact：{rls['artifact_reference']}")
             lines.append(f"Release Conclusion：{rls['release_conclusion']}")
@@ -434,7 +468,7 @@ def render_summary(result: Mapping[str, Any]) -> str:
 
 
 def emit(result: Mapping[str, Any], output: str) -> None:
-    if result.get("state") == "meta" and output != "debug":
+    if result.get("state") == "meta" and output == "summary":
         print(result.get("display", ""))
     elif output == "summary":
         print(render_summary(result))
@@ -451,14 +485,11 @@ def main(argv: Sequence[str] | None = None) -> int:
         emit(result, parsed.output)
         return 0 if result["ok"] else 2
     except (OSError, json.JSONDecodeError, SkillArgumentError) as exc:
-        error = (
-            exc.to_dict()
-            if isinstance(exc, SkillArgumentError)
-            else _error("INTERFACE_SPEC_INVALID", str(exc))
-        )
+        error = _safe_failure(exc, "INTERFACE_SPEC_INVALID")
         print(
             json.dumps(
-                {"contract": RESULT_CONTRACT, "ok": False, "errors": [error]},
+                {**_base_result("auto", None), "ok": False, "status": "failed",
+                 "state": "invalid_request", "errors": [error]},
                 ensure_ascii=False,
                 sort_keys=True,
             )

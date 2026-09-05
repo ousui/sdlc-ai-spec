@@ -1,0 +1,52 @@
+{
+  "repository": "ousui/sdlc-ai-spec",
+  "start_main_sha": "3a2f13082fe2f661081ded74e45f860da2046bd1",
+  "start_main_tree": "a5b0898738d749db9238f13f8bedb471a251ee6b",
+  "vfy_design_snapshot_sha": "ea49c1df955bc71ec1af84d6104f3cd801c73ea2",
+  "vfy_design_snapshot_tree": "f37bc0790b2fe589fe6b1f2e535f4ed929ed91f4",
+  "vfy_design_pr_number": 7,
+  "vfy_design_pr_state": "OPEN_DRAFT",
+  "vfy_design_pr_body_head": "ea49c1df955bc71ec1af84d6104f3cd801c73ea2",
+  "stale_pr_body_head": false,
+  "start_vfy_impl_ref": "a12382c2d0f0dc6ca54021b4fec26d5874eb169f",
+  "start_rls_ref": "3c2ad87568ace3a03b8b0134dd4e5404e7798841",
+  "prior_rls_design_head": "90c8641a91d9a01f7e54a9c0d03673f375c93fdf",
+  "prior_probe_ancestor_removed": true,
+  "imp_implementation_subject_sha": "207a4a16bea8979faee0474cc43cb642cef1f655",
+  "imp_delivery_sha": "86aaa04a0238d3151606073e89219eea0d60b7d3",
+  "imp_handoff_path": "docs/plugin-development/work-items/sdlc-400-imp/evidence/207a4a16bea8979faee0474cc43cb642cef1f655/impl-imp-v2-handoff.md",
+  "imp_final_result_path": "docs/plugin-development/work-items/sdlc-400-imp/evidence/207a4a16bea8979faee0474cc43cb642cef1f655/impl-imp-v2-final-result.json",
+  "imp_evidence_manifest_path": "docs/plugin-development/work-items/sdlc-400-imp/evidence/207a4a16bea8979faee0474cc43cb642cef1f655/impl-imp-v2-evidence.sha256",
+  "vfy_design_input_paths": [
+    "docs/plugin-development/work-items/sdlc-500-vfy/DESIGN.md",
+    "docs/plugin-development/work-items/sdlc-500-vfy/EVAL-PLAN.md",
+    "docs/plugin-development/work-items/sdlc-500-vfy/goal/02-IMP-VFY-INTERFACE.md",
+    "docs/plugin-development/work-items/sdlc-500-vfy/goal/03-ARCHITECTURE.md",
+    "docs/plugin-development/work-items/sdlc-500-vfy/goal/04-STATE-MACHINE.md",
+    "docs/plugin-development/work-items/sdlc-500-vfy/goal/05-CRITICAL-CASE-MATRIX.md",
+    "docs/plugin-development/work-items/sdlc-500-vfy/goal/06-IMPLEMENTATION-PLAN.md",
+    "docs/plugin-development/work-items/sdlc-500-vfy/goal/07-VALIDATION-CLOSE-LOOP.md",
+    "docs/plugin-development/work-items/sdlc-500-vfy/goal/08-TRACEABILITY.md"
+  ],
+  "authority_order": [
+    "docs/v1.1 specs",
+    "stable runtime contract",
+    "integrated IMP contract",
+    "frozen VFY design snapshot",
+    "RLS DESIGN/EVAL",
+    "RLS goal design",
+    "provisional implementation assumptions"
+  ],
+  "owned_refs": [
+    "design/sdlc-600-rls-goal",
+    "impl/rls-v2"
+  ],
+  "read_only_refs": [
+    "main",
+    "impl/imp-v2",
+    "design/sdlc-500-vfy-goal",
+    "impl/vfy-v2"
+  ],
+  "generated_at": "2026-09-04T05:55:44Z",
+  "provisional": true
+}

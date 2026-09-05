@@ -1,0 +1,623 @@
+{
+  "contract": "sdlc-ai-spec/rls-path-migration/v1",
+  "design_source": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+  "provisional_source": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+  "entries": [
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/DESIGN.md",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "b299623dd21b7c9166bf79beb0a766c108f62e4b",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/EVAL-PLAN.md",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "cb263f5a679da7c006b76477bc2b36492e1f5163",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/00-BASELINE.json",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "fcaaef84e5f9438284a21396facbd5a49f3b3323",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/01-DESIGN-REVIEW.md",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "f3924fc00ce007a32d88e94aaef37e13d32bdbf0",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/02-VFY-RLS-INTERFACE.md",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "ae1306eaf4169e72e8bd5502a79b7ab0556adfbc",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/03-ARCHITECTURE.md",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "d11f6a1ec4c671bef346abf80506f0e50746ef7c",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/04-STATE-MACHINE.md",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "16df26ff84873ea0f9e201228d60e4cade15a0fd",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/05-EFFECT-AUTHORIZATION.md",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "c7a69b5f64a8e86f15b94e405896bebdc524b875",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/06-CRITICAL-CASE-MATRIX.md",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "7823f315745f506eec133a02ba1dd7fcd93098fe",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/07-PROVISIONAL-IMPLEMENTATION-PLAN.md",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "5c04259703d779523574eb7e95de05d1f3ab3e4d",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/08-POST-VFY-INTEGRATION-PLAN.md",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "1677143ed0990766538cde74f3eef4a55fbd4e69",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/09-VALIDATION-CLOSE-LOOP.md",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "3faaa1aeff3bf91835844db4b2430e6ca074fcca",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/10-LOCAL-CODEX-GOAL.md",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "15ac23166a428ae3d7d3c2714faa6709daecfdea",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/11-WEB-REPORT-REVIEW.md",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "5c5815bcdfed5fdb37bb3f647dd69a0a42d29480",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/12-TRACEABILITY.md",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "08172c19b2de4d7997225260860a7632b6d1c9de",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/13-INTERFERENCE-GUARD.md",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "ad5d22faf831d85e794a50900ea99f5c7299bc8d",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/14-DESIGN-HANDOFF.md",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "ff3d33e9b9ede87cb8f8c60d3ca4a98157c848cb",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/15-FINAL-VFY-INTEGRATION-REVIEW.md",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "45abc81c65bb5c6c08bad0536f1471c6bfe80b94",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/16-LOCAL-CODEX-GOAL-FINAL-VFY.md",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "60c7b2084e808000ae357c92550e1a5e1495a22c",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/schemas/rls-delivery-result-v1.schema.json",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "2ef26238bbd4814bc0ac7a0413470c38156a716c",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/schemas/rls-provisional-result-v1.schema.json",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "d4023de3ba23cc6b71a19b794d09c1c73c7975aa",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/schemas/rls-verification-result-v1.schema.json",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "2876a17cac186a7dcee1559d355557e5f4dd5a91",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "docs/plugin-development/work-items/sdlc-600-rls/goal/schemas/vfy-release-candidate-v1.schema.json",
+      "source_commit": "8fc15b71e0a90623e6805277fd131dd1f68de0fd",
+      "source_blob": "b29e517090f62a849283e63fbe2010b11322fe22",
+      "source_mode": "100644",
+      "disposition": "migrate_then_review",
+      "reason": "保留 RLS 设计及87案例；历史启动条件由16号 Goal 取代"
+    },
+    {
+      "path": "skills/sdlc-600-rls/SKILL.md",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "cbac98a22544d068f78ae7d245a8459a898ee28c",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/agents/openai.yaml",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "4f4f82104e5f9521baf5bfb5886f0ad2c89ce7fa",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/assets/rls-template.md",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "f231959464c10688464e870680cd4476bc7cca58",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/references/600-rls-spec.md",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "c8c834345184151b6974abf75507a3b5cd64a159",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/references/contract.md",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "a631ef53afffb7b249488189aaad8435c58a5c1f",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/references/interface.json",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "9787b5e4cf6cad7872f6d73fe7b71bddbf13b9eb",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/references/source-lock.json",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "532e184e7354a57d72dbf9c58d1137b96049fd96",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/references/vfy-release-candidate-v1.schema.json",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "f9f642a005e5b04b0721f9567af209681b8bd4f0",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_authorization.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "e477fb487a3c3f673d1a4c3166f991512d74a3c8",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_builder.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "c4a9643cf3605d3f1028802318c258d486d88a2f",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_canonical.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "3e22fa1883b6fc9920c98b1d3622644a82be3087",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_common.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "3a9c079b3c52dd5c389b52abd9c2cab14714ce93",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_conclusion.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "062a8fc541db5d375b88fa0e8639382189eb03e6",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_confirmation.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "a717213399c9bc2c32bfd0ea3904da5370495132",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_contract.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "dc0f856d4636cdb408953523e34ac9cda347b837",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_domain_verifier.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "6c6409d62d3800841274cf0ad6798fac4cb9a285",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_evidence.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "a342b45efcddfc81062c20d4dd32ce00e5b71878",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_executor.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "646a960645bad54884c58bdef9e749a5ec64607f",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_handler.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "28c661383c9b5a47c42d9b1d0caf13f1b0f9aa8a",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_items.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "c75af1aebb3866364822b02cf1fdd2b9408f7c52",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_persistence.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "165e9721b2f4127f28f044db789377212dee9239",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_revision.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "adc65348d9c74e430bf9b4e9c722ba7372fd7e7b",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_scope.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "b39d078213cd6447a1d6a3d759c5ad10f0308418",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_target.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "a81cc4a42c204f6c74769087650f2bf4a047cdd9",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_verifier.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "a6835911e028bbfcfd816f11e603556fda2f4bbb",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_vfy_adapter.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "849b6a1e3ef351b996a3fc4c50e891544d562dc7",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/runtime.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "8a62a9d11fc6896d0994f2485f9223ef42ac6032",
+      "source_mode": "100755",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/evals/run_sdlc_600_rls_eval.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "9a6fc299e5f39e2f089ba3a0ece0a2b8d1b022cc",
+      "source_mode": "100755",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/evals/sdlc_600_rls_cases.json",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "6db189500746d123ba6712ce53c7bb685882bea6",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/evals/test_sdlc_600_rls_case_coverage.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "e17a29f1ed42b42545199f0b0fccb5c2a3b9cfa4",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/__init__.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "2dc27abc1145007e5449489abbc41c5c62e17646",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/fixtures/vfy-release-candidate-final-shadow-v1.json",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "e8dfeef1d13e2f1a92120e44c20ff15577ada748",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/fixtures/vfy-release-candidate-v1.json",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "2ecf32cccdeb068335033f4cafe0add30e8ac6b4",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/preweb_review.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "09b1c18b41497d407aae287b3bfe02b9e7821dbb",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/run_preintegration_validation.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "f3068fa6c10ae7c64393e40eb0de565225759ac4",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/support.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "e7fcebfd2176a32f4f78dafd22630257501991a2",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/test_authorization_binding.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "0f211bd80e27a0381f6f68bbad2b0ac099473396",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/test_canonical_contract.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "39a51cd592e39c79c77a80bfba9d29e41706eaa4",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/test_critical_cases_001_030.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "3e6e699367394cdbf2462399bf5cf1ce1375a337",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/test_critical_cases_031_060.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "db81ac4dcf347cc8b2c8c8ffc689a4717991f470",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/test_critical_cases_061_087.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "8aa2591c860d0fc2553e844f56c52c7fe257d0f9",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/test_evidence_binding.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "9c354cf64e6d981af352a287acb7fd6adbd4e1bc",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/test_fake_target.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "e544ce9446b358639f2c51a36d74711f06d8bb3e",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/test_persistence_contract.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "8409e9596709bba275381a62e1a20c54792f8162",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/test_preweb_review.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "add1839500d61bf7161d98123c2d09dbf03e15fb",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/test_revision_candidate_binding.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "55cc608f14ee8ecb8f0771d2ea1338d79c075122",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/test_runtime.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "46df17addfa8c4058bf4fc0545056d2bf95edd1d",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/test_verifier_authorization_history.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "a9d5cb75b446fb03df95904554252ffab164f76f",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tests/skill_rls/test_vfy_adapter_shadow.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "e8a83c72cfd255d61322147645694c84716d52d3",
+      "source_mode": "100644",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tools/run_rls_provisional_validation.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "f2aa364de212a56666e9da6d9a85789d89f520b3",
+      "source_mode": "100755",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tools/test_sdlc_600_rls_runtime_independence.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "8da91893e869181002792f1b79253dd626d6061e",
+      "source_mode": "100755",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    },
+    {
+      "path": "tools/validate_sdlc_600_rls_source_lock.py",
+      "source_commit": "70e6f92fd1644831c836de1e2b8a0aa567c5a979",
+      "source_blob": "1d44ac2d1e266b4b820646cb93c15652414e8927",
+      "source_mode": "100755",
+      "disposition": "planned_implementation_migration",
+      "reason": "保留现有 RLS 行为及测试；按15/16修复 Store、Canonical、最终 Authority、授权和验收，不降低 Oracle"
+    }
+  ],
+  "excluded": [
+    "old VFY design or runtime overrides",
+    "old RLS commits as parents",
+    ".github/**",
+    "internal/**",
+    "payload/**",
+    "quarantine/**",
+    "IMP or VFY Evidence overrides",
+    "other tools/**"
+  ],
+  "allowed_additions": [
+    "packages/sdlc_lifecycle/query_rls.py",
+    "RLS additive lifecycle/status wiring and tests",
+    "RLS delivery and external validation tools",
+    "RLS private runtime/tests"
+  ]
+}

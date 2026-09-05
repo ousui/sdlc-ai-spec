@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sdlc-ai-spec/rls-provisional-result/v1",
+  "title": "RLS Provisional Result",
+  "type": "object",
+  "required": [
+    "contract",
+    "provisional",
+    "status",
+    "artifact",
+    "release_contract",
+    "release_items",
+    "confirmations",
+    "release_conclusion",
+    "artifact_gate"
+  ],
+  "properties": {
+    "contract": {
+      "const": "sdlc-ai-spec/rls-provisional-result/v1"
+    },
+    "provisional": {
+      "const": true
+    },
+    "status": {
+      "type": "string"
+    },
+    "artifact": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "release_contract": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "release_items": {
+      "type": "array"
+    },
+    "confirmations": {
+      "type": "array"
+    },
+    "release_conclusion": {
+      "enum": [
+        "pending",
+        "success",
+        "partial",
+        "failed",
+        "cancelled"
+      ]
+    },
+    "artifact_gate": {
+      "enum": [
+        "pending",
+        "pass",
+        "pass_with_exception",
+        "fail"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

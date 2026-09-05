@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sdlc-ai-spec/vfy-release-candidate/v1",
+  "title": "Provisional VFY Release Candidate",
+  "type": "object",
+  "required": [
+    "contract",
+    "provisional",
+    "vfy_reference",
+    "revision_state",
+    "scope_reference",
+    "subject_references",
+    "result_references",
+    "con_ver",
+    "con_val",
+    "product_result",
+    "artifact_status",
+    "artifact_gate",
+    "early_stop",
+    "unresolved_returns",
+    "rls_applicability",
+    "release_target_obligations",
+    "evidence_references"
+  ],
+  "properties": {
+    "contract": {
+      "const": "sdlc-ai-spec/vfy-release-candidate/v1"
+    },
+    "provisional": {
+      "type": "boolean"
+    },
+    "vfy_reference": {
+      "type": "string",
+      "pattern": "^VFY-[0-9]{14}-[0-9]{2}@[1-9][0-9]*$"
+    },
+    "revision_state": {
+      "enum": [
+        "open",
+        "frozen",
+        "abandoned"
+      ]
+    },
+    "scope_reference": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subject_references": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "result_references": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "con_ver": {
+      "enum": [
+        "pending",
+        "pass",
+        "fail",
+        "waived",
+        "n/a"
+      ]
+    },
+    "con_val": {
+      "enum": [
+        "pending",
+        "pass",
+        "fail",
+        "waived",
+        "n/a"
+      ]
+    },
+    "product_result": {
+      "enum": [
+        "pending",
+        "pass",
+        "fail",
+        "waived",
+        "n/a"
+      ]
+    },
+    "artifact_status": {
+      "type": "string"
+    },
+    "artifact_gate": {
+      "enum": [
+        "pending",
+        "pass",
+        "pass_with_exception",
+        "fail"
+      ]
+    },
+    "early_stop": {
+      "type": "boolean"
+    },
+    "unresolved_returns": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rls_applicability": {
+      "enum": [
+        "required",
+        "n/a",
+        "waived",
+        "pending"
+      ]
+    },
+    "release_target_obligations": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "evidence_references": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "pending_fields": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "exception": {
+      "type": [
+        "object",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": true
+}

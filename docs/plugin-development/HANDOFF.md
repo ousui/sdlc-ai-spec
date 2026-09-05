@@ -35,11 +35,34 @@
 - `COMPATIBILITY.json` 原字节不变，40 个当前认证单元仍 NOT_RUN/receipt=null；未自签独立 ACCEPTED。
 - 当前完整记录：`work-items/post-integration-conformance/CLIENT-VALIDATION.md`、`CLIENT-VALIDATION.json`、`CLIENT-NATIVE-SUMMARY.json` 和 `CLIENT-SHA256-MANIFEST.json`。准确 DELIVERY_HEAD_SHA 见 PR #11 的交付表及提交后远程 readback；文档提交不是实际被测源码。
 
+## 本轮 Web Review 与定向修复
+
+Client 交付 `1b9326e7447a481453fbbeccd8d104a02f6c67e9` 的唯一父提交为上述被测源码。
+Web 复跑原源码 portable 10/10、普通全仓 1104/1104 通过，但独立真实路径探针发现
+`CONFORMANCE-WEB-001`：已存在的 `.sdlc` 普通文件或数据库目录被错误显示为成功的
+`not_started`。不是旧 Client 计数造假，而是未覆盖的语义反例。
+
+修复限于 Status 路径缺失判定、附加说明、51 条锁与 14 个新增测试；真实缺失仍保留
+原语义。修复字节上的 Status 52/52、原固定 14/14、coverage 4/4、安装 12 命令以及
+八锁/接口通过。该结果不代替新 exact-source strict 验证。
+
+见 `work-items/post-integration-conformance/WEB-STATUS-PATH-REVIEW.md` 和
+`WEB-STATUS-PATH-VALIDATION.json`。现有 Client 150 个日志流的完整独立字节审计尚未
+完成；历史报告和候选保持原样，四十个原生认证单元没有被升级。
+
 ## 唯一下一工作包
 
-`POST_INTEGRATION_WEB_REVIEW`：按 `work-items/post-integration-conformance/WEB-REVIEW.md`，独立审查 PR #11 的准确 source/delivery SHA、Runtime 回执、150 个流绑定、八份七维 native 候选及保留的失败轨迹。Review 可分别决定 Runtime 与逐载体候选，不推导全产品或三端兼容，不自动合并。
+`POST_INTEGRATION_STATUS_PATH_RECHECK`：按
+`work-items/post-integration-conformance/CLIENT-STATUS-PATH-RECHECK.md` 在干净准确
+修复源码上执行一次 strict 入口并提供完整证据包，随后交独立 Web Review。
+不需要重启旧七阶段/RLS Goal，也不要求重跑八个原生候选来完成 Runtime 收口。
+未核验的原生载体继续独立登记为 NOT_RUN，不推导三端认证。
 
-Status 原始 14 项 Oracle 与旧 Phase Case Expected 未改；本次实际执行取代“尚待 Client 验证”的当前描述，不覆盖历史事实。分发仓库元数据差异仍由 Maintainer 在发布前决定。
+旧 `CLIENT-SHA256-MANIFEST.json` 中 HANDOFF 的摘要仍绑定其原始交付 1b9326，
+不能用旧摘要验证本次追加修复后的文件。旧日志/Manifest 不改写，新回执另目录追加。
+Status 原十四项 Oracle 和 Phase Case Expected 保持不变。分发仓库元数据仍由
+Maintainer 发布前决定。PR #11 保持 Draft，当前 `WEB_CONFORMANCE_REVIEW` 为
+CHANGES_REQUIRED，不自签修复后的独立 ACCEPTED。
 
 ## 停止与写入边界
 

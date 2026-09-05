@@ -24,7 +24,7 @@
     {
       "contract_id": "sdlc-ai-spec/status/conformance/v1",
       "contract_version": "1",
-      "sha256": "de21fe159cd2633b43ae7f9a87c85ff1d8e8b05ff5f9c7c5e0d8a4aecf3b2f7d"
+      "sha256": "bff34db993ee4b6d7101a61155be213f3fa674009ca8ba0eb8533a1570a4d227"
     },
     {
       "contract_id": "sdlc-ai-spec/status/contract/v1",
@@ -249,7 +249,7 @@
     {
       "contract_id": "sdlc-ai-spec/status/source/skills/sdlc-status/scripts/runtime.py/v1",
       "contract_version": "1",
-      "sha256": "0d1a5630888f509158b239ed213c013ab85d9a202bb91782fc28ee0c42478fa6"
+      "sha256": "1a37963d066b49b1d35f6d935507fd5f5ccebd7099700f2e8744c1dc420a37d2"
     },
     {
       "contract_id": "sdlc-ai-spec/status/source/skills/sdlc-status/scripts/vfy_projection.py/v1",

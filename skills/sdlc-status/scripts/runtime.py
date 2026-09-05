@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import re
+import stat
 from pathlib import Path
 import sys
 from typing import Any, Callable, Mapping, Sequence
@@ -29,6 +30,8 @@ from packages.sdlc_runtime import (  # noqa: E402
     render_help,
     render_version,
 )
+
+from packages.sdlc_artifact_store import ArtifactStore  # noqa: E402
 
 from packages.sdlc_runtime.canonical import exact_artifact_reference  # noqa: E402
 
@@ -117,6 +120,39 @@ def _resolve_root(value: str | None, cwd: Path | None) -> Path:
             details={"project_root": str(path)},
         )
     return path
+
+
+def _store_is_genuinely_absent(root: Path) -> bool:
+    """Refine unavailable into absence without opening SQLite or writing files.
+
+    The public Store facade supplies its deployed path. A failed type check in
+    open_read_only can also mean a conflicting filesystem node, not absence.
+    Preserve the shared backend's policy for live symlinks; dangling links and
+    errors inspecting a present node must not become a successful empty view.
+    """
+    store_path = ArtifactStore(root, read_only=True).store_path
+    for path, expected in ((store_path.parent, stat.S_ISDIR),
+                           (store_path, stat.S_ISREG)):
+        try:
+            mode = path.lstat().st_mode
+        except FileNotFoundError:
+            return True
+        if stat.S_ISLNK(mode):
+            try:
+                mode = path.stat().st_mode
+            except FileNotFoundError as exc:
+                raise LifecycleQueryError(
+                    "Store location contains a dangling link",
+                    code="LIFECYCLE_STORE_PATH_INVALID",
+                ) from exc
+        if not expected(mode):
+            raise LifecycleQueryError(
+                "Store location has an incompatible filesystem type",
+                code="LIFECYCLE_STORE_PATH_INVALID",
+            )
+    # A valid-looking file now exists, but opening the shared Store failed.
+    # Do not retry it or infer not_started from an earlier unavailable error.
+    return False
 
 
 def _not_started(
@@ -246,16 +282,25 @@ def run_status(
 
     try:
         service = service_factory(root, plugin_root=PLUGIN_ROOT)
-    except LifecycleStoreUnavailable:
-        return _finish(
-            _not_started(
-                root,
-                command.command,
-                inspect=command.command == "inspect" or reference is not None,
-                warnings=result["warnings"],
-            ),
-            command,
+    except LifecycleStoreUnavailable as unavailable:
+        try:
+            if _store_is_genuinely_absent(root):
+                return _finish(
+                    _not_started(
+                        root,
+                        command.command,
+                        inspect=command.command == "inspect" or reference is not None,
+                        warnings=result["warnings"],
+                    ),
+                    command,
+                )
+            failure = _safe_failure(unavailable)
+        except Exception as exc:
+            failure = _safe_failure(exc, "LIFECYCLE_STORE_UNAVAILABLE")
+        result.update(
+            ok=False, status="failed", state="query_failed", errors=[failure],
         )
+        return _finish(result, command)
     except LifecycleQueryError as exc:
         result.update(
             ok=False,

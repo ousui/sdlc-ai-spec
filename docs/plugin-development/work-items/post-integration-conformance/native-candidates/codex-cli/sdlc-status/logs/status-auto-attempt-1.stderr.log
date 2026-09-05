@@ -1,0 +1,3 @@
+Reading additional input from stdin...
+2026-09-05T16:48:22.720930Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=file:///private/tmp/sdlc-native-lab-01a07250/sdlc-status/client-state/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json
+2026-09-05T16:48:22.722104Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt[0]: prompt must be at most 128 characters path=file:///private/tmp/sdlc-native-lab-01a07250/sdlc-status/client-state/.tmp/plugins/plugins/ngs-analysis/.codex-plugin/plugin.json

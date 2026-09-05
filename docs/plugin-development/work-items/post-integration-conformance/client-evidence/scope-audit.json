@@ -1,0 +1,99 @@
+{
+  "baseline_sha": "0289a5ee8d702450fb3f3bc73c89f30a11664bdb",
+  "source_sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+  "web_source_sha": "ac6d846a1b0c22d0f284c9ebffd976dc59698a99",
+  "source_changes": [
+    "AGENTS.md",
+    "docs/plugin-development/COMPATIBILITY.json",
+    "docs/plugin-development/COMPATIBILITY.md",
+    "docs/plugin-development/DEVELOPMENT.md",
+    "docs/plugin-development/HANDOFF.md",
+    "docs/plugin-development/work-items/post-integration-conformance/CLIENT-GOAL.md",
+    "docs/plugin-development/work-items/post-integration-conformance/SKILL-INVENTORY.json",
+    "docs/plugin-development/work-items/post-integration-conformance/STAGE-REVIEW.md",
+    "docs/plugin-development/work-items/post-integration-conformance/WEB-REVIEW.md",
+    "docs/plugin-development/work-items/post-integration-conformance/WEB-VALIDATION.json",
+    "docs/plugin-development/work-items/post-integration-conformance/WEB-VALIDATION.md",
+    "docs/plugin-development/work-items/post-integration-conformance/WORK-PACKAGE.md",
+    "docs/plugin-development/work-items/sdlc-status/CONFORMANCE-REVIEW.md",
+    "docs/plugin-development/work-items/sdlc-status/EVAL-RESULTS-POST-INTEGRATION.md",
+    "skills/AGENTS.md",
+    "skills/README.md",
+    "skills/sdlc-status/references/conformance.md",
+    "skills/sdlc-status/references/source-lock.json",
+    "skills/sdlc-status/scripts/runtime.py",
+    "tests/conformance/__init__.py",
+    "tests/conformance/test_skill_conformance.py",
+    "tests/evals/run_sdlc_status_eval.py",
+    "tests/evals/sdlc_status_cases.json",
+    "tests/evals/test_sdlc_status_case_coverage.py",
+    "tests/skill_status/test_build_gates.py",
+    "tests/skill_status/test_conformance.py",
+    "tools/run_post_integration_validation.py",
+    "tools/test_sdlc_status_runtime_independence.py",
+    "tools/validate_all_skill_source_locks.py",
+    "tools/validate_sdlc_status_source_lock.py",
+    "tools/validate_skill_conformance.py"
+  ],
+  "protected_path_changes": [],
+  "phase_eval_plans": {
+    "docs/plugin-development/work-items/sdlc-status/EVAL-PLAN.md": {
+      "baseline_blob": "9cb5a8e34a680e63cfca3e14a853d3809d6657ea",
+      "source_blob": "9cb5a8e34a680e63cfca3e14a853d3809d6657ea",
+      "unchanged": true
+    },
+    "docs/plugin-development/work-items/sdlc-500-vfy/EVAL-PLAN.md": {
+      "baseline_blob": "50e4b2accbbbf9f8a9148325e8119eb8ec16fe5b",
+      "source_blob": "50e4b2accbbbf9f8a9148325e8119eb8ec16fe5b",
+      "unchanged": true
+    },
+    "docs/plugin-development/work-items/sdlc-300-pln/EVAL-PLAN.md": {
+      "baseline_blob": "92581bc88a9510f386eb6e9b16e0e15b71282348",
+      "source_blob": "92581bc88a9510f386eb6e9b16e0e15b71282348",
+      "unchanged": true
+    },
+    "docs/plugin-development/work-items/sdlc-100-req/EVAL-PLAN.md": {
+      "baseline_blob": "2bf61a23f885ba4343d7a4d12cb553cd47740715",
+      "source_blob": "2bf61a23f885ba4343d7a4d12cb553cd47740715",
+      "unchanged": true
+    },
+    "docs/plugin-development/work-items/sdlc-000-ctx/EVAL-PLAN.md": {
+      "baseline_blob": "a238a51692cc9ba02b3b0a6fbaa9ec82666cbfb6",
+      "source_blob": "a238a51692cc9ba02b3b0a6fbaa9ec82666cbfb6",
+      "unchanged": true
+    },
+    "docs/plugin-development/work-items/sdlc-600-rls/EVAL-PLAN.md": {
+      "baseline_blob": "cb263f5a679da7c006b76477bc2b36492e1f5163",
+      "source_blob": "cb263f5a679da7c006b76477bc2b36492e1f5163",
+      "unchanged": true
+    },
+    "docs/plugin-development/work-items/sdlc-400-imp/EVAL-PLAN.md": {
+      "baseline_blob": "a37c4aa253da77f896d6f40d6aaec61a4e8a6491",
+      "source_blob": "a37c4aa253da77f896d6f40d6aaec61a4e8a6491",
+      "unchanged": true
+    },
+    "docs/plugin-development/work-items/sdlc-200-dsn/EVAL-PLAN.md": {
+      "baseline_blob": "094d443cf016063438d5af72f5df3c7a08571de0",
+      "source_blob": "094d443cf016063438d5af72f5df3c7a08571de0",
+      "unchanged": true
+    }
+  },
+  "web_delivery_delta": [
+    "docs/plugin-development/work-items/post-integration-conformance/WEB-VALIDATION.json",
+    "docs/plugin-development/work-items/post-integration-conformance/WEB-VALIDATION.md",
+    "docs/plugin-development/work-items/sdlc-status/EVAL-RESULTS-POST-INTEGRATION.md"
+  ],
+  "success": true,
+  "frozen_phase_test_roots": [
+    "tests/skills/test_sdlc_000_ctx.py",
+    "tests/skill_req",
+    "tests/skill_dsn",
+    "tests/skill_pln",
+    "tests/skill_imp",
+    "tests/skill_vfy",
+    "tests/skill_rls",
+    "tests/evals/run_sdlc_500_vfy_eval.py",
+    "tests/evals/run_sdlc_600_rls_eval.py"
+  ],
+  "frozen_phase_test_changes": []
+}

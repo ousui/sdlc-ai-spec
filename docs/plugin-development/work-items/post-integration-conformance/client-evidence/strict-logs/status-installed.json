@@ -1,0 +1,102 @@
+{
+  "success": true,
+  "commands": [
+    {
+      "arguments": [
+        "help"
+      ],
+      "exit_code": 0,
+      "state": "meta"
+    },
+    {
+      "arguments": [
+        "version"
+      ],
+      "exit_code": 0,
+      "state": "meta"
+    },
+    {
+      "arguments": [
+        "commands"
+      ],
+      "exit_code": 0,
+      "state": "meta"
+    },
+    {
+      "arguments": [
+        "examples"
+      ],
+      "exit_code": 0,
+      "state": "meta"
+    },
+    {
+      "arguments": [],
+      "exit_code": 0,
+      "state": "not_started"
+    },
+    {
+      "arguments": [
+        "list"
+      ],
+      "exit_code": 0,
+      "state": "not_started"
+    },
+    {
+      "arguments": [
+        "inspect",
+        "-r",
+        "REQ-20260905000000-01@1"
+      ],
+      "exit_code": 2,
+      "state": "store_unavailable"
+    },
+    {
+      "arguments": [
+        "auto",
+        "-r",
+        "REQ-20260905000000-01@1"
+      ],
+      "exit_code": 2,
+      "state": "store_unavailable"
+    },
+    {
+      "arguments": [
+        "auto",
+        "-r",
+        "latest"
+      ],
+      "exit_code": 2,
+      "state": "invalid_reference"
+    },
+    {
+      "arguments": [
+        "inspect",
+        "-r",
+        "REQ-20260905000000-01@1#AC-001"
+      ],
+      "exit_code": 2,
+      "state": "invalid_reference"
+    },
+    {
+      "arguments": [
+        "auto",
+        "--write-policy=auto"
+      ],
+      "exit_code": 0,
+      "state": "not_started"
+    },
+    {
+      "arguments": [
+        "auto",
+        "corrupt-store-fixture"
+      ],
+      "exit_code": 2,
+      "state": "query_failed"
+    }
+  ],
+  "docs_copied": 0,
+  "tests_copied": 0,
+  "sibling_skills_copied": 0,
+  "project_writes_during_query": 0,
+  "native_client_behavior": "NOT_RUN"
+}

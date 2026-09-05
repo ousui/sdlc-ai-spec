@@ -1,0 +1,47 @@
+{
+  "name": "rls-installed",
+  "attempt": 1,
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "tools/test_sdlc_600_rls_runtime_independence.py",
+    "--json-out",
+    "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/rls-installed.json"
+  ],
+  "cwd": "/private/tmp/sdlc-post-integration-01a07250",
+  "started_at": "2026-09-05T16:17:09.633891+00:00",
+  "finished_at": "2026-09-05T16:17:12.615349+00:00",
+  "duration_ms": 2981,
+  "exit_code": 0,
+  "stdout": "RLS_RUNTIME_INDEPENDENCE = PASS\n",
+  "stderr": "",
+  "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/rls-installed-attempt-1.stdout.log",
+  "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/rls-installed-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:0ed6f76d2997eed1386be2f98be6b1cc2818858ef43086686d475d0a6b1f4adf",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": {
+    "root": "/private/tmp/sdlc-post-integration-01a07250",
+    "sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+    "tree": "cb1a9aa31a2fadb8a434493b75c7a244d38d029b",
+    "parents": [
+      "ac6d846a1b0c22d0f284c9ebffd976dc59698a99"
+    ],
+    "branch": "fix/post-integration-skill-conformance",
+    "status": ""
+  },
+  "source_after": {
+    "root": "/private/tmp/sdlc-post-integration-01a07250",
+    "sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+    "tree": "cb1a9aa31a2fadb8a434493b75c7a244d38d029b",
+    "parents": [
+      "ac6d846a1b0c22d0f284c9ebffd976dc59698a99"
+    ],
+    "branch": "fix/post-integration-skill-conformance",
+    "status": ""
+  },
+  "source_unchanged": true,
+  "success": true
+}

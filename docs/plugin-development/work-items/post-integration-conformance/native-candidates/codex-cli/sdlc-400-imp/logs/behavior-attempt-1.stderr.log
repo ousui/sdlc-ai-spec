@@ -1,0 +1,6 @@
+Reading additional input from stdin...
+2026-09-05T16:41:49.629601Z  WARN codex_core_plugins::startup_sync: git sync failed for curated plugin sync; falling back to GitHub HTTP error=git fetch curated plugins repo timed out after 30s: fatal: early EOF
+2026-09-05T16:42:01.106062Z  WARN codex_core_plugins::startup_sync: GitHub HTTP sync failed for curated plugin sync; falling back to export archive error=download curated plugins archive from https://api.github.com/repos/openai/plugins/zipball/1e285826e604f66f7208f7ac4dba0fe8341d1f57 failed with status 429 Too Many Requests: The service is temporarily unable to handle this request. Please try again later.
+ backup_archive_api_url="https://chatgpt.com/backend-api/plugins/export/curated"
+2026-09-05T16:42:15.769713Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt: prompt must be at most 128 characters path=file:///private/tmp/sdlc-native-lab-01a07250/sdlc-400-imp/client-state/.tmp/plugins/plugins/build-ios-apps/.codex-plugin/plugin.json
+2026-09-05T16:42:15.770096Z  WARN codex_core_plugins::manifest: ignoring interface.defaultPrompt: maximum of 3 prompts is supported path=file:///private/tmp/sdlc-native-lab-01a07250/sdlc-400-imp/client-state/.tmp/plugins/plugins/plugin-eval/.codex-plugin/plugin.json

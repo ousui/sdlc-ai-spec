@@ -1,0 +1,9 @@
+test_missing_duplicate_reordered_or_reused_mapping_fails (tests.evals.test_sdlc_status_case_coverage.StatusCoverageTests.test_missing_duplicate_reordered_or_reused_mapping_fails) ... ok
+test_nonexistent_method_fails (tests.evals.test_sdlc_status_case_coverage.StatusCoverageTests.test_nonexistent_method_fails) ... ok
+test_registry_has_fourteen_unique_real_primaries (tests.evals.test_sdlc_status_case_coverage.StatusCoverageTests.test_registry_has_fourteen_unique_real_primaries) ... ok
+test_skip_and_expected_failure_do_not_become_pass (tests.evals.test_sdlc_status_case_coverage.StatusCoverageTests.test_skip_and_expected_failure_do_not_become_pass) ... ok
+
+----------------------------------------------------------------------
+Ran 4 tests in 0.078s
+
+OK

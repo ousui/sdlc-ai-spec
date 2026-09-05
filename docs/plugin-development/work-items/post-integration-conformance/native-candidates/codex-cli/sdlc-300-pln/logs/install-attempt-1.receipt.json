@@ -1,0 +1,29 @@
+{
+  "name": "install",
+  "attempt": 1,
+  "argv": [
+    "/Applications/ChatGPT.app/Contents/Resources/codex",
+    "plugin",
+    "add",
+    "sdlc-ai-spec@sdlc-ai-spec",
+    "--json"
+  ],
+  "cwd": "/private/tmp/sdlc-native-lab-01a07250/sdlc-300-pln/project",
+  "started_at": "2026-09-05T16:39:20.963981+00:00",
+  "finished_at": "2026-09-05T16:39:20.985167+00:00",
+  "duration_ms": 21,
+  "exit_code": 0,
+  "stdout": "{\n  \"pluginId\": \"sdlc-ai-spec@sdlc-ai-spec\",\n  \"name\": \"sdlc-ai-spec\",\n  \"marketplaceName\": \"sdlc-ai-spec\",\n  \"version\": \"0.1.0\",\n  \"installedPath\": \"/private/tmp/sdlc-native-lab-01a07250/sdlc-300-pln/client-state/plugins/cache/sdlc-ai-spec/sdlc-ai-spec/0.1.0\",\n  \"authPolicy\": \"ON_INSTALL\"\n}\n",
+  "stderr": "",
+  "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-300-pln/logs/install-attempt-1.stdout.log",
+  "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-300-pln/logs/install-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:8bfc039dd4cf8c912a2ec32510928f3acca5a3e082bc70c474c34321539c5478",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": null,
+  "source_after": null,
+  "source_unchanged": true,
+  "success": true
+}

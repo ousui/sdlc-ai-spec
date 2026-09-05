@@ -1,0 +1,191 @@
+{
+  "success": true,
+  "bound_stream_count": 46,
+  "bindings": [
+    {
+      "path": "portable-logs/runtime-contracts-attempt-1.stdout.log",
+      "sha256": "sha256:d3dc89a08c6df93affe4464617ecf5614771bf888392b4a12818d9c8cd0bda36"
+    },
+    {
+      "path": "portable-logs/runtime-contracts-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "portable-logs/interfaces-attempt-1.stdout.log",
+      "sha256": "sha256:9825a016f267883d99316e465bcb6352311d4e26d10cb9558108ae9e9e6530f7"
+    },
+    {
+      "path": "portable-logs/interfaces-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "portable-logs/inventory-attempt-1.stdout.log",
+      "sha256": "sha256:e6586fdea52884654f17b8280e58a9061d3a76024da116cbc026978fb8ab68fa"
+    },
+    {
+      "path": "portable-logs/inventory-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "portable-logs/all-source-locks-attempt-1.stdout.log",
+      "sha256": "sha256:9f8d6d0dcd73fed6f028bf5c6ef430f4588d4cc68d18f072c4f03fb76315ae5a"
+    },
+    {
+      "path": "portable-logs/all-source-locks-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "portable-logs/status-static-attempt-1.stdout.log",
+      "sha256": "sha256:0c9599b20ea9f29539581cbf56cfd4243dd37a3271f955e63d53719e26b75fa2"
+    },
+    {
+      "path": "portable-logs/status-static-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "portable-logs/status-coverage-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "portable-logs/status-coverage-attempt-1.stderr.log",
+      "sha256": "sha256:2fe411a2a120e7439e59f924329729a2ebc22c44b9e29dd6570cb0058bc0f649"
+    },
+    {
+      "path": "portable-logs/status-fixed-attempt-1.stdout.log",
+      "sha256": "sha256:4c809576826b1f2ba09af67512bcea6527f9e16e71ff086576b1092b3bea9efd"
+    },
+    {
+      "path": "portable-logs/status-fixed-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "portable-logs/status-installed-attempt-1.stdout.log",
+      "sha256": "sha256:c003c98810066dabef61f6d8a4458641f1e57c36b0f6dcf5200f1ee331523822"
+    },
+    {
+      "path": "portable-logs/status-installed-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "portable-logs/rls-fixed-attempt-1.stdout.log",
+      "sha256": "sha256:5db2dc9a73dbc9b5d827c19baa1236b1485020326af386413671877bed39645d"
+    },
+    {
+      "path": "portable-logs/rls-fixed-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "portable-logs/repo-suite-attempt-1.stdout.log",
+      "sha256": "sha256:8e5ed02e83aabeacc338988b77b77ca3a37510b834ee1731382ffbd34dd7690d"
+    },
+    {
+      "path": "portable-logs/repo-suite-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "strict-logs/runtime-contracts-attempt-1.stdout.log",
+      "sha256": "sha256:d3dc89a08c6df93affe4464617ecf5614771bf888392b4a12818d9c8cd0bda36"
+    },
+    {
+      "path": "strict-logs/runtime-contracts-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "strict-logs/interfaces-attempt-1.stdout.log",
+      "sha256": "sha256:9825a016f267883d99316e465bcb6352311d4e26d10cb9558108ae9e9e6530f7"
+    },
+    {
+      "path": "strict-logs/interfaces-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "strict-logs/inventory-attempt-1.stdout.log",
+      "sha256": "sha256:e6586fdea52884654f17b8280e58a9061d3a76024da116cbc026978fb8ab68fa"
+    },
+    {
+      "path": "strict-logs/inventory-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "strict-logs/all-source-locks-attempt-1.stdout.log",
+      "sha256": "sha256:9f8d6d0dcd73fed6f028bf5c6ef430f4588d4cc68d18f072c4f03fb76315ae5a"
+    },
+    {
+      "path": "strict-logs/all-source-locks-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "strict-logs/status-static-attempt-1.stdout.log",
+      "sha256": "sha256:0c9599b20ea9f29539581cbf56cfd4243dd37a3271f955e63d53719e26b75fa2"
+    },
+    {
+      "path": "strict-logs/status-static-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "strict-logs/status-coverage-attempt-1.stdout.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "strict-logs/status-coverage-attempt-1.stderr.log",
+      "sha256": "sha256:294a36c4685422836971f0709352984e63cae05cc27bea85fa8838c10df14c49"
+    },
+    {
+      "path": "strict-logs/status-fixed-attempt-1.stdout.log",
+      "sha256": "sha256:48c0696bf35c4dcaf50799842ffbd20e98505e093274df4b5b2a3f489ed1f260"
+    },
+    {
+      "path": "strict-logs/status-fixed-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "strict-logs/status-installed-attempt-1.stdout.log",
+      "sha256": "sha256:c003c98810066dabef61f6d8a4458641f1e57c36b0f6dcf5200f1ee331523822"
+    },
+    {
+      "path": "strict-logs/status-installed-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "strict-logs/rls-fixed-attempt-1.stdout.log",
+      "sha256": "sha256:5db2dc9a73dbc9b5d827c19baa1236b1485020326af386413671877bed39645d"
+    },
+    {
+      "path": "strict-logs/rls-fixed-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "strict-logs/repo-suite-attempt-1.stdout.log",
+      "sha256": "sha256:c18a18beccf605fd837b2b662b599fb62d2ad8e11dac1cf7cb23013603674f15"
+    },
+    {
+      "path": "strict-logs/repo-suite-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "strict-logs/vfy-strict-attempt-1.stdout.log",
+      "sha256": "sha256:6e629ccfd158fa7b7b5180212d489cd6ee6c3a46c09b4ec1f9694def57f4842c"
+    },
+    {
+      "path": "strict-logs/vfy-strict-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "strict-logs/vfy-installed-attempt-1.stdout.log",
+      "sha256": "sha256:b984d7c1847473b16fe1a4c07c97a646bd97068894d93094c66b23db61d2f38a"
+    },
+    {
+      "path": "strict-logs/vfy-installed-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "strict-logs/rls-installed-attempt-1.stdout.log",
+      "sha256": "sha256:0ed6f76d2997eed1386be2f98be6b1cc2818858ef43086686d475d0a6b1f4adf"
+    },
+    {
+      "path": "strict-logs/rls-installed-attempt-1.stderr.log",
+      "sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "statement": "Both profiles completed on the same clean exact source; every step stream hash binds the archived redacted bytes."
+}

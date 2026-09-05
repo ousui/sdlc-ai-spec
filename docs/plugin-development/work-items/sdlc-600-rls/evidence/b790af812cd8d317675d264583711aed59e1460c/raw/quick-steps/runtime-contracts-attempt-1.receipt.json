@@ -1,0 +1,44 @@
+{
+  "name": "runtime-contracts",
+  "attempt": 1,
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "tools/validate_runtime_contracts.py"
+  ],
+  "cwd": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/candidate",
+  "started_at": "2026-09-05T11:27:18.828203+00:00",
+  "finished_at": "2026-09-05T11:27:19.036996+00:00",
+  "duration_ms": 209,
+  "exit_code": 0,
+  "stdout": "runtime contract validation: PASS\nruntime contracts: 5\nformal skills: 8\n",
+  "stderr": "",
+  "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/runtime-contracts-attempt-1.stdout.log",
+  "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/quick-steps/runtime-contracts-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:d3dc89a08c6df93affe4464617ecf5614771bf888392b4a12818d9c8cd0bda36",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": {
+    "root": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/candidate",
+    "sha": "b790af812cd8d317675d264583711aed59e1460c",
+    "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+    "parents": [
+      "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_after": {
+    "root": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/candidate",
+    "sha": "b790af812cd8d317675d264583711aed59e1460c",
+    "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+    "parents": [
+      "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_unchanged": true,
+  "success": true
+}

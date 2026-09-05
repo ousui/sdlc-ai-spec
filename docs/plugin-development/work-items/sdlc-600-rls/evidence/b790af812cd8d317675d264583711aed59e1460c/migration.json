@@ -1,0 +1,774 @@
+{
+  "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+  "design_sha": "c9615cec2da3b39949a3fdd8be32396eae6db3aa",
+  "entries": [
+    {
+      "path": "packages/sdlc_lifecycle/__init__.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "c50389659a8f9844b29c161b9bc52770d31798cf",
+      "result_blob": "c50389659a8f9844b29c161b9bc52770d31798cf",
+      "mode": "100644",
+      "previous_s2_blob": "c50389659a8f9844b29c161b9bc52770d31798cf",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "packages/sdlc_lifecycle/models.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "ae6ec93f9fc6bbadd6ca112ff958ade4d331e6af",
+      "result_blob": "ae6ec93f9fc6bbadd6ca112ff958ade4d331e6af",
+      "mode": "100644",
+      "previous_s2_blob": "ae6ec93f9fc6bbadd6ca112ff958ade4d331e6af",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "packages/sdlc_lifecycle/query_rls.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "bd8d4a01d9c365b3608c7bce389308ede41637fa",
+      "result_blob": "bd8d4a01d9c365b3608c7bce389308ede41637fa",
+      "mode": "100644",
+      "previous_s2_blob": "bd8d4a01d9c365b3608c7bce389308ede41637fa",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/SKILL.md",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "d83404a44052f52b1985c2d23d06386015e22a24",
+      "result_blob": "d83404a44052f52b1985c2d23d06386015e22a24",
+      "mode": "100644",
+      "previous_s2_blob": "d83404a44052f52b1985c2d23d06386015e22a24",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/agents/openai.yaml",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "4f4f82104e5f9521baf5bfb5886f0ad2c89ce7fa",
+      "result_blob": "4f4f82104e5f9521baf5bfb5886f0ad2c89ce7fa",
+      "mode": "100644",
+      "previous_s2_blob": "4f4f82104e5f9521baf5bfb5886f0ad2c89ce7fa",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/assets/rls-template.md",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "f231959464c10688464e870680cd4476bc7cca58",
+      "result_blob": "f231959464c10688464e870680cd4476bc7cca58",
+      "mode": "100644",
+      "previous_s2_blob": "f231959464c10688464e870680cd4476bc7cca58",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/references/600-rls-spec.md",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "9cabda241b5d148cea38116595598c8216ac4a49",
+      "result_blob": "9cabda241b5d148cea38116595598c8216ac4a49",
+      "mode": "100644",
+      "previous_s2_blob": "9cabda241b5d148cea38116595598c8216ac4a49",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/references/contract.md",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "338ff99dba9cba8df756c18a50b23bc3e403f9f8",
+      "result_blob": "338ff99dba9cba8df756c18a50b23bc3e403f9f8",
+      "mode": "100644",
+      "previous_s2_blob": "338ff99dba9cba8df756c18a50b23bc3e403f9f8",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/references/interface.json",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "65e67ad3f450e75af881ad8d9f7fa0acfbbdc722",
+      "result_blob": "65e67ad3f450e75af881ad8d9f7fa0acfbbdc722",
+      "mode": "100644",
+      "previous_s2_blob": "65e67ad3f450e75af881ad8d9f7fa0acfbbdc722",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/references/source-lock.json",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "f85de1905a4e1aa514c94f7a1c67fbb7c7886e9f",
+      "result_blob": "f85de1905a4e1aa514c94f7a1c67fbb7c7886e9f",
+      "mode": "100644",
+      "previous_s2_blob": "f85de1905a4e1aa514c94f7a1c67fbb7c7886e9f",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/references/vfy-release-candidate-v1.schema.json",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "98cf80e38de063ffe4254aab1ab34dc16da6faa2",
+      "result_blob": "98cf80e38de063ffe4254aab1ab34dc16da6faa2",
+      "mode": "100644",
+      "previous_s2_blob": "98cf80e38de063ffe4254aab1ab34dc16da6faa2",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_authorization.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "e477fb487a3c3f673d1a4c3166f991512d74a3c8",
+      "result_blob": "e477fb487a3c3f673d1a4c3166f991512d74a3c8",
+      "mode": "100644",
+      "previous_s2_blob": "e477fb487a3c3f673d1a4c3166f991512d74a3c8",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_builder.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "3a481faddffba0318fc0cf2d23fb6a993e218f06",
+      "result_blob": "3a481faddffba0318fc0cf2d23fb6a993e218f06",
+      "mode": "100644",
+      "previous_s2_blob": "3a481faddffba0318fc0cf2d23fb6a993e218f06",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_canonical.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "8a4d27a05745dddcc01ee4c3cd0f8f11b0ad9285",
+      "result_blob": "8a4d27a05745dddcc01ee4c3cd0f8f11b0ad9285",
+      "mode": "100644",
+      "previous_s2_blob": "8a4d27a05745dddcc01ee4c3cd0f8f11b0ad9285",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_common.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "2e681b6ff291e2e177f9b6c3d25be3fd1810b05f",
+      "result_blob": "2e681b6ff291e2e177f9b6c3d25be3fd1810b05f",
+      "mode": "100644",
+      "previous_s2_blob": "2e681b6ff291e2e177f9b6c3d25be3fd1810b05f",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_conclusion.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "062a8fc541db5d375b88fa0e8639382189eb03e6",
+      "result_blob": "062a8fc541db5d375b88fa0e8639382189eb03e6",
+      "mode": "100644",
+      "previous_s2_blob": "062a8fc541db5d375b88fa0e8639382189eb03e6",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_confirmation.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "39de558c410097f66a7375cb1ed782218ac3ef1f",
+      "result_blob": "39de558c410097f66a7375cb1ed782218ac3ef1f",
+      "mode": "100644",
+      "previous_s2_blob": "39de558c410097f66a7375cb1ed782218ac3ef1f",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_confirmation_policy.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "d081a88c13088696e7350ddfb107864dbf659e96",
+      "result_blob": "d081a88c13088696e7350ddfb107864dbf659e96",
+      "mode": "100644",
+      "previous_s2_blob": "d081a88c13088696e7350ddfb107864dbf659e96",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_contract.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "b83cf007da0fda37a598f04aec6215154bb62ff9",
+      "result_blob": "b83cf007da0fda37a598f04aec6215154bb62ff9",
+      "mode": "100644",
+      "previous_s2_blob": "b83cf007da0fda37a598f04aec6215154bb62ff9",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_domain_verifier.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "1942361772111f4e02409c3f0b460b7f9b362576",
+      "result_blob": "1942361772111f4e02409c3f0b460b7f9b362576",
+      "mode": "100644",
+      "previous_s2_blob": "1942361772111f4e02409c3f0b460b7f9b362576",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_evidence.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "6684dfc1e47314593d552552d77e1e8aad5e8221",
+      "result_blob": "6684dfc1e47314593d552552d77e1e8aad5e8221",
+      "mode": "100644",
+      "previous_s2_blob": "6684dfc1e47314593d552552d77e1e8aad5e8221",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_exceptions.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "858bad2b4c25c0a17eb34328a4b3af4f8c376e42",
+      "result_blob": "858bad2b4c25c0a17eb34328a4b3af4f8c376e42",
+      "mode": "100644",
+      "previous_s2_blob": "858bad2b4c25c0a17eb34328a4b3af4f8c376e42",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_execution_journal.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "4bb40a446a66c52c6ab24b3eab34501376ee888c",
+      "result_blob": "4bb40a446a66c52c6ab24b3eab34501376ee888c",
+      "mode": "100644",
+      "previous_s2_blob": "4bb40a446a66c52c6ab24b3eab34501376ee888c",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_executor.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "908a63991e554ea5b57e44aea318c5c682fac2fa",
+      "result_blob": "908a63991e554ea5b57e44aea318c5c682fac2fa",
+      "mode": "100644",
+      "previous_s2_blob": "908a63991e554ea5b57e44aea318c5c682fac2fa",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_handler.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "a453aae7bf48459e6a450c81df23de4205e5b3ee",
+      "result_blob": "a453aae7bf48459e6a450c81df23de4205e5b3ee",
+      "mode": "100644",
+      "previous_s2_blob": "a453aae7bf48459e6a450c81df23de4205e5b3ee",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_human_evidence.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "ed5506d682e96912a0a13a74be7b33c641b712e8",
+      "result_blob": "ed5506d682e96912a0a13a74be7b33c641b712e8",
+      "mode": "100644",
+      "previous_s2_blob": "ed5506d682e96912a0a13a74be7b33c641b712e8",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_items.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "c2a691370193c9600b8962434dee25f4b829776d",
+      "result_blob": "c2a691370193c9600b8962434dee25f4b829776d",
+      "mode": "100644",
+      "previous_s2_blob": "c2a691370193c9600b8962434dee25f4b829776d",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_persistence.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "73e838ca2616079990ec5494fcece2c419721bdd",
+      "result_blob": "73e838ca2616079990ec5494fcece2c419721bdd",
+      "mode": "100644",
+      "previous_s2_blob": "73e838ca2616079990ec5494fcece2c419721bdd",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_revision.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "fee8be68d7dc796325e1560818769c644bb540d2",
+      "result_blob": "fee8be68d7dc796325e1560818769c644bb540d2",
+      "mode": "100644",
+      "previous_s2_blob": "fee8be68d7dc796325e1560818769c644bb540d2",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_safe_files.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "d0b72249d128481e04571b8c51136a257555fae5",
+      "result_blob": "d0b72249d128481e04571b8c51136a257555fae5",
+      "mode": "100644",
+      "previous_s2_blob": "d0b72249d128481e04571b8c51136a257555fae5",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_scope.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "b39d078213cd6447a1d6a3d759c5ad10f0308418",
+      "result_blob": "b39d078213cd6447a1d6a3d759c5ad10f0308418",
+      "mode": "100644",
+      "previous_s2_blob": "b39d078213cd6447a1d6a3d759c5ad10f0308418",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_service.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "f4ed0d144aa78addd1ba85fe43f08ac69b906dca",
+      "result_blob": "f4ed0d144aa78addd1ba85fe43f08ac69b906dca",
+      "mode": "100644",
+      "previous_s2_blob": "f4ed0d144aa78addd1ba85fe43f08ac69b906dca",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_target.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "baa956e09e63d7fcc2f0d52729c0971135b6af09",
+      "result_blob": "baa956e09e63d7fcc2f0d52729c0971135b6af09",
+      "mode": "100644",
+      "previous_s2_blob": "baa956e09e63d7fcc2f0d52729c0971135b6af09",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_trusted_effect.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "e13989c92267810ba0a849d4284f2df267736192",
+      "result_blob": "e13989c92267810ba0a849d4284f2df267736192",
+      "mode": "100644",
+      "previous_s2_blob": "e13989c92267810ba0a849d4284f2df267736192",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_verifier.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "b7f35f0fb9461eabbd61923b05a28d16eace569c",
+      "result_blob": "b7f35f0fb9461eabbd61923b05a28d16eace569c",
+      "mode": "100644",
+      "previous_s2_blob": "b7f35f0fb9461eabbd61923b05a28d16eace569c",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/rls_vfy_adapter.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "49d9be64dbd2d81fb76c088556aac862f7d7f994",
+      "result_blob": "49d9be64dbd2d81fb76c088556aac862f7d7f994",
+      "mode": "100644",
+      "previous_s2_blob": "49d9be64dbd2d81fb76c088556aac862f7d7f994",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-600-rls/scripts/runtime.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "d05be92004250cd17e8750dafe95a2ec8ced2d93",
+      "result_blob": "d05be92004250cd17e8750dafe95a2ec8ced2d93",
+      "mode": "100755",
+      "previous_s2_blob": "d05be92004250cd17e8750dafe95a2ec8ced2d93",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-status/references/rls-projection.schema.json",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "2c67d0afa0870a181671bddae53326911cf10c90",
+      "result_blob": "2c67d0afa0870a181671bddae53326911cf10c90",
+      "mode": "100644",
+      "previous_s2_blob": "2c67d0afa0870a181671bddae53326911cf10c90",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "skills/sdlc-status/scripts/runtime.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "97dc0bb81c411401130d6c0621508f73d2b6fc3b",
+      "result_blob": "97dc0bb81c411401130d6c0621508f73d2b6fc3b",
+      "mode": "100755",
+      "previous_s2_blob": "97dc0bb81c411401130d6c0621508f73d2b6fc3b",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/evals/run_sdlc_600_rls_eval.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "ed18b0fab61cb1985e71cd4252fdab56a9a723c0",
+      "result_blob": "ed18b0fab61cb1985e71cd4252fdab56a9a723c0",
+      "mode": "100755",
+      "previous_s2_blob": "ed18b0fab61cb1985e71cd4252fdab56a9a723c0",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/evals/sdlc_600_rls_cases.json",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "ced0dd0db396906b8f2b85c2499b25621f5cd244",
+      "result_blob": "ced0dd0db396906b8f2b85c2499b25621f5cd244",
+      "mode": "100644",
+      "previous_s2_blob": "ced0dd0db396906b8f2b85c2499b25621f5cd244",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/evals/test_sdlc_600_rls_case_coverage.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "78bdd9585ce611d2dc7cbe9a814bd01235e56fd6",
+      "result_blob": "78bdd9585ce611d2dc7cbe9a814bd01235e56fd6",
+      "mode": "100644",
+      "previous_s2_blob": "78bdd9585ce611d2dc7cbe9a814bd01235e56fd6",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/__init__.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "2dc27abc1145007e5449489abbc41c5c62e17646",
+      "result_blob": "2dc27abc1145007e5449489abbc41c5c62e17646",
+      "mode": "100644",
+      "previous_s2_blob": "2dc27abc1145007e5449489abbc41c5c62e17646",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/final_support.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "35f794c7d847e4712b4943704593745545273515",
+      "result_blob": "35f794c7d847e4712b4943704593745545273515",
+      "mode": "100644",
+      "previous_s2_blob": "35f794c7d847e4712b4943704593745545273515",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/fixtures/vfy-release-candidate-final-shadow-v1.json",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "e8dfeef1d13e2f1a92120e44c20ff15577ada748",
+      "result_blob": "e8dfeef1d13e2f1a92120e44c20ff15577ada748",
+      "mode": "100644",
+      "previous_s2_blob": "e8dfeef1d13e2f1a92120e44c20ff15577ada748",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/fixtures/vfy-release-candidate-v1.json",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "2ecf32cccdeb068335033f4cafe0add30e8ac6b4",
+      "result_blob": "2ecf32cccdeb068335033f4cafe0add30e8ac6b4",
+      "mode": "100644",
+      "previous_s2_blob": "2ecf32cccdeb068335033f4cafe0add30e8ac6b4",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/legacy_runtime.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "017ba15d9e43ef58bbe59bf0ba151029e0eb6fc7",
+      "result_blob": "017ba15d9e43ef58bbe59bf0ba151029e0eb6fc7",
+      "mode": "100644",
+      "previous_s2_blob": "017ba15d9e43ef58bbe59bf0ba151029e0eb6fc7",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/preweb_review.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "6a077e5373675fb0656e6838f3f471f87a74f02c",
+      "result_blob": "6a077e5373675fb0656e6838f3f471f87a74f02c",
+      "mode": "100644",
+      "previous_s2_blob": "6a077e5373675fb0656e6838f3f471f87a74f02c",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/run_preintegration_validation.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "f3068fa6c10ae7c64393e40eb0de565225759ac4",
+      "result_blob": "f3068fa6c10ae7c64393e40eb0de565225759ac4",
+      "mode": "100644",
+      "previous_s2_blob": "f3068fa6c10ae7c64393e40eb0de565225759ac4",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/support.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "a6ba6d62eeba463792937badb34906c046042e32",
+      "result_blob": "a6ba6d62eeba463792937badb34906c046042e32",
+      "mode": "100644",
+      "previous_s2_blob": "a6ba6d62eeba463792937badb34906c046042e32",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_authorization_binding.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "0f211bd80e27a0381f6f68bbad2b0ac099473396",
+      "result_blob": "0f211bd80e27a0381f6f68bbad2b0ac099473396",
+      "mode": "100644",
+      "previous_s2_blob": "0f211bd80e27a0381f6f68bbad2b0ac099473396",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_canonical_contract.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "39a51cd592e39c79c77a80bfba9d29e41706eaa4",
+      "result_blob": "39a51cd592e39c79c77a80bfba9d29e41706eaa4",
+      "mode": "100644",
+      "previous_s2_blob": "39a51cd592e39c79c77a80bfba9d29e41706eaa4",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_critical_cases_001_030.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "0c9b87c61a1b6c25abe6189f2e703b8e598daa2b",
+      "result_blob": "0c9b87c61a1b6c25abe6189f2e703b8e598daa2b",
+      "mode": "100644",
+      "previous_s2_blob": "0c9b87c61a1b6c25abe6189f2e703b8e598daa2b",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_critical_cases_031_060.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "cc7deee5afef3b67427f0d776438dfe26a5280d9",
+      "result_blob": "cc7deee5afef3b67427f0d776438dfe26a5280d9",
+      "mode": "100644",
+      "previous_s2_blob": "cc7deee5afef3b67427f0d776438dfe26a5280d9",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_critical_cases_061_087.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "8edfe156f12fe6b07c6c0f4dac9d4312316cdaf1",
+      "result_blob": "8edfe156f12fe6b07c6c0f4dac9d4312316cdaf1",
+      "mode": "100644",
+      "previous_s2_blob": "8edfe156f12fe6b07c6c0f4dac9d4312316cdaf1",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_critical_cases_final.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "2ede5c2a0fd3d3a72fba113e759c1b9afc85a9e7",
+      "result_blob": "2ede5c2a0fd3d3a72fba113e759c1b9afc85a9e7",
+      "mode": "100644",
+      "previous_s2_blob": "2ede5c2a0fd3d3a72fba113e759c1b9afc85a9e7",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_current_exceptions.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "332fcdefd6957db65748c1e356633b880a1c8ecf",
+      "result_blob": "332fcdefd6957db65748c1e356633b880a1c8ecf",
+      "mode": "100644",
+      "previous_s2_blob": "332fcdefd6957db65748c1e356633b880a1c8ecf",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_delivery_guards.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "5c29b7579e23448f3eb992b6d910e0f23e987331",
+      "result_blob": "5c29b7579e23448f3eb992b6d910e0f23e987331",
+      "mode": "100644",
+      "previous_s2_blob": "5c29b7579e23448f3eb992b6d910e0f23e987331",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_effect_safety.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "feb296fac40e048842ee4af3730a130e7fcf6e53",
+      "result_blob": "feb296fac40e048842ee4af3730a130e7fcf6e53",
+      "mode": "100644",
+      "previous_s2_blob": "feb296fac40e048842ee4af3730a130e7fcf6e53",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_evidence_binding.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "9c354cf64e6d981af352a287acb7fd6adbd4e1bc",
+      "result_blob": "9c354cf64e6d981af352a287acb7fd6adbd4e1bc",
+      "mode": "100644",
+      "previous_s2_blob": "9c354cf64e6d981af352a287acb7fd6adbd4e1bc",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_fake_target.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "a9c610fab32f6134cf4c4726f672976f845db0af",
+      "result_blob": "a9c610fab32f6134cf4c4726f672976f845db0af",
+      "mode": "100644",
+      "previous_s2_blob": "a9c610fab32f6134cf4c4726f672976f845db0af",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_final_boundaries.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "c88da6e9fd1ff082610e97e3a6359a89a56a2ad8",
+      "result_blob": "c88da6e9fd1ff082610e97e3a6359a89a56a2ad8",
+      "mode": "100644",
+      "previous_s2_blob": "c88da6e9fd1ff082610e97e3a6359a89a56a2ad8",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_final_lifecycle.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "0d7d3ad98f20863fc1274fd78ba23bfd8bc7d71d",
+      "result_blob": "0d7d3ad98f20863fc1274fd78ba23bfd8bc7d71d",
+      "mode": "100644",
+      "previous_s2_blob": "0d7d3ad98f20863fc1274fd78ba23bfd8bc7d71d",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_final_store.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "58256376a3baea368adc40951690c594f0fca4ee",
+      "result_blob": "58256376a3baea368adc40951690c594f0fca4ee",
+      "mode": "100644",
+      "previous_s2_blob": "58256376a3baea368adc40951690c594f0fca4ee",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_persistence_contract.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "ed048b4e58bcdc58b6c32655f69e110f23af85d1",
+      "result_blob": "ed048b4e58bcdc58b6c32655f69e110f23af85d1",
+      "mode": "100644",
+      "previous_s2_blob": "ed048b4e58bcdc58b6c32655f69e110f23af85d1",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_preweb_review.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "9bab2634e161e8153fbf7095ca6e676675b1944a",
+      "result_blob": "9bab2634e161e8153fbf7095ca6e676675b1944a",
+      "mode": "100644",
+      "previous_s2_blob": "9bab2634e161e8153fbf7095ca6e676675b1944a",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_revision_candidate_binding.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "55cc608f14ee8ecb8f0771d2ea1338d79c075122",
+      "result_blob": "55cc608f14ee8ecb8f0771d2ea1338d79c075122",
+      "mode": "100644",
+      "previous_s2_blob": "55cc608f14ee8ecb8f0771d2ea1338d79c075122",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_runtime.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "930bf56c29d60104651cec3e3c9944a380d2b13f",
+      "result_blob": "930bf56c29d60104651cec3e3c9944a380d2b13f",
+      "mode": "100644",
+      "previous_s2_blob": "930bf56c29d60104651cec3e3c9944a380d2b13f",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_verifier_authorization_history.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "a9d5cb75b446fb03df95904554252ffab164f76f",
+      "result_blob": "a9d5cb75b446fb03df95904554252ffab164f76f",
+      "mode": "100644",
+      "previous_s2_blob": "a9d5cb75b446fb03df95904554252ffab164f76f",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_vfy_adapter_shadow.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "e8a83c72cfd255d61322147645694c84716d52d3",
+      "result_blob": "e8a83c72cfd255d61322147645694c84716d52d3",
+      "mode": "100644",
+      "previous_s2_blob": "e8a83c72cfd255d61322147645694c84716d52d3",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_web_repair_confirmation.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "2148e2d91bd8da4011e78569c51da85bbda3c58f",
+      "result_blob": "2148e2d91bd8da4011e78569c51da85bbda3c58f",
+      "mode": "100644",
+      "previous_s2_blob": "2148e2d91bd8da4011e78569c51da85bbda3c58f",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_web_repair_confirmation_batch.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "19eb08ad1dd743c426d701da7cd28d44c3a7e83b",
+      "result_blob": "19eb08ad1dd743c426d701da7cd28d44c3a7e83b",
+      "mode": "100644",
+      "previous_s2_blob": "19eb08ad1dd743c426d701da7cd28d44c3a7e83b",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_web_repair_redaction.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "a43f02b8f8e6ad35203b92854fca34511d8058cc",
+      "result_blob": "a43f02b8f8e6ad35203b92854fca34511d8058cc",
+      "mode": "100644",
+      "previous_s2_blob": "a43f02b8f8e6ad35203b92854fca34511d8058cc",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tests/skill_rls/test_web_repair_redaction_propagation.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "fa0ecad0c33cdd702237e75e4cc44d6123f6db0f",
+      "result_blob": "fa0ecad0c33cdd702237e75e4cc44d6123f6db0f",
+      "mode": "100644",
+      "previous_s2_blob": null,
+      "reason": "New 56 propagation regressions"
+    },
+    {
+      "path": "tests/skill_rls/test_web_repair_store.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "3dbb36973515c8e8515ab3094b519754fbe587e2",
+      "result_blob": "3dbb36973515c8e8515ab3094b519754fbe587e2",
+      "mode": "100644",
+      "previous_s2_blob": "3dbb36973515c8e8515ab3094b519754fbe587e2",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tools/review_rls_effect_boundary.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "2d106dbd01fdeba31b421e9c49f36b1bc55ffa01",
+      "result_blob": "2d106dbd01fdeba31b421e9c49f36b1bc55ffa01",
+      "mode": "100644",
+      "previous_s2_blob": "2d106dbd01fdeba31b421e9c49f36b1bc55ffa01",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tools/rls_fixture_chain.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "923eb41d78d7d75ed620476393e88e6de59eb12f",
+      "result_blob": "923eb41d78d7d75ed620476393e88e6de59eb12f",
+      "mode": "100644",
+      "previous_s2_blob": "923eb41d78d7d75ed620476393e88e6de59eb12f",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tools/rls_validation_support.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "a7fb955175a2a48b739965f6c5deec280c037de1",
+      "result_blob": "a7fb955175a2a48b739965f6c5deec280c037de1",
+      "mode": "100644",
+      "previous_s2_blob": "89bf3cc13de639b95e5aa10421b8e6ef7265bae6",
+      "reason": "Committed Web propagation repair"
+    },
+    {
+      "path": "tools/run_external_rls_integration.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "04bc44cf62e7a8656ce6748352c934418ae23f02",
+      "result_blob": "04bc44cf62e7a8656ce6748352c934418ae23f02",
+      "mode": "100644",
+      "previous_s2_blob": "04bc44cf62e7a8656ce6748352c934418ae23f02",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tools/run_rls_delivery_validation.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "84703f03be5963f1731693050bbb9788525bf006",
+      "result_blob": "84703f03be5963f1731693050bbb9788525bf006",
+      "mode": "100644",
+      "previous_s2_blob": "84703f03be5963f1731693050bbb9788525bf006",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tools/run_rls_provisional_validation.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "f2aa364de212a56666e9da6d9a85789d89f520b3",
+      "result_blob": "f2aa364de212a56666e9da6d9a85789d89f520b3",
+      "mode": "100755",
+      "previous_s2_blob": "f2aa364de212a56666e9da6d9a85789d89f520b3",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tools/run_rls_test_suite.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "a0e55a1b851db52f041865d9657feb66f01ed63c",
+      "result_blob": "a0e55a1b851db52f041865d9657feb66f01ed63c",
+      "mode": "100644",
+      "previous_s2_blob": "a0e55a1b851db52f041865d9657feb66f01ed63c",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tools/test_sdlc_600_rls_runtime_independence.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "2c3abdeb13078c4b49e116e5f5ea82bf11922954",
+      "result_blob": "2c3abdeb13078c4b49e116e5f5ea82bf11922954",
+      "mode": "100755",
+      "previous_s2_blob": "2c3abdeb13078c4b49e116e5f5ea82bf11922954",
+      "reason": "Preserve S2 implementation unchanged"
+    },
+    {
+      "path": "tools/validate_rls_delivery_source.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "d83eb3e856cb4087db55e263fa10f1de1542653b",
+      "result_blob": "d83eb3e856cb4087db55e263fa10f1de1542653b",
+      "mode": "100644",
+      "previous_s2_blob": "edd3f00857d4c5feb9a665942bef7252430213a4",
+      "reason": "Register new test and exclude previous repair ancestry"
+    },
+    {
+      "path": "tools/validate_sdlc_600_rls_source_lock.py",
+      "source_sha": "ac0c3a8abbb975b8f1d7b4b630a5a902e4603759",
+      "source_blob": "64fcb48ace07594a1430a037dc15a1fb9af746c4",
+      "result_blob": "64fcb48ace07594a1430a037dc15a1fb9af746c4",
+      "mode": "100755",
+      "previous_s2_blob": "64fcb48ace07594a1430a037dc15a1fb9af746c4",
+      "reason": "Preserve S2 implementation unchanged"
+    }
+  ],
+  "count": 85,
+  "old_evidence_migrated": false,
+  "old_history_merged": false
+}

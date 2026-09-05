@@ -1,0 +1,48 @@
+{
+  "name": "source",
+  "attempt": 1,
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "tools/validate_rls_delivery_source.py",
+    "--source-sha",
+    "b790af812cd8d317675d264583711aed59e1460c",
+    "--json-out",
+    "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/source.json"
+  ],
+  "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+  "started_at": "2026-09-05T11:39:39.067580+00:00",
+  "finished_at": "2026-09-05T11:39:39.536643+00:00",
+  "duration_ms": 469,
+  "exit_code": 0,
+  "stdout": "RLS_SOURCE_GUARD = PASS\n",
+  "stderr": "",
+  "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/source-attempt-1.stdout.log",
+  "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/raw/attest-steps/fresh-external-steps/source-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:bd8075fbc0fc78b3a77ac8c5efcf3c374469df0640153e1ca2f19d32bb1d6d00",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": {
+    "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+    "sha": "b790af812cd8d317675d264583711aed59e1460c",
+    "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+    "parents": [
+      "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_after": {
+    "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-fresh-attest-5r_b1ss3/subject",
+    "sha": "b790af812cd8d317675d264583711aed59e1460c",
+    "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+    "parents": [
+      "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_unchanged": true,
+  "success": true
+}

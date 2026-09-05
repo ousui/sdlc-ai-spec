@@ -1,0 +1,98 @@
+{
+  "success": true,
+  "source": {
+    "root": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-probe-exact-s3-0p2g0r2l/source",
+    "sha": "b790af812cd8d317675d264583711aed59e1460c",
+    "tree": "817bb68a30c4179fc11e0235a82dec55e200bda8",
+    "parents": [
+      "c9615cec2da3b39949a3fdd8be32396eae6db3aa"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "policy": "sdlc-ai-spec/validation-redaction/v2",
+  "probes": [
+    {
+      "id": "separate",
+      "success": true,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "first_writes_verified": 3
+    },
+    {
+      "id": "equals",
+      "success": true,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "first_writes_verified": 3
+    },
+    {
+      "id": "json-fields",
+      "success": true,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "first_writes_verified": 3
+    },
+    {
+      "id": "cross-stream",
+      "success": true,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "first_writes_verified": 3
+    },
+    {
+      "id": "duplicate-keys",
+      "success": true,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "first_writes_verified": 3
+    },
+    {
+      "id": "timeout",
+      "success": true,
+      "expected_exit": 124,
+      "actual_exit": 124,
+      "first_writes_verified": 3
+    },
+    {
+      "id": "exception",
+      "success": true,
+      "expected_exit": 127,
+      "actual_exit": 127,
+      "first_writes_verified": 3
+    },
+    {
+      "id": "nonzero",
+      "success": true,
+      "expected_exit": 7,
+      "actual_exit": 7,
+      "first_writes_verified": 3
+    },
+    {
+      "id": "original-inputs",
+      "success": true,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "first_writes_verified": 3
+    },
+    {
+      "id": "audit-bindings",
+      "success": true,
+      "expected_exit": 0,
+      "actual_exit": 0,
+      "first_writes_verified": 3
+    },
+    {
+      "id": "child-safe-writer",
+      "success": true,
+      "child_artifact_sha256": "sha256:22f35019221aa75f774624be213f272834c49d656acf7eb232d39ea5444bf65d"
+    },
+    {
+      "id": "nested-first-write",
+      "success": true,
+      "first_writes_verified": 1
+    }
+  ],
+  "synthetic_only": true,
+  "sensitive_context_persisted": false
+}

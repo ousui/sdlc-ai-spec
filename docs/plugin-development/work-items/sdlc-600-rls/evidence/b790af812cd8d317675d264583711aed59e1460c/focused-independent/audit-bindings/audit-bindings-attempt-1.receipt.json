@@ -1,0 +1,30 @@
+{
+  "name": "audit-bindings",
+  "attempt": 1,
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "-c",
+    "import json,sys; print(json.dumps({\"password\":[REDACTED]],\"echo\":sys.argv[-1],\"effect_authorization\":{\"authorization_id\":\"grant-001\",\"source_sha\":\"a\"*40,\"digest\":\"sha256:\"+\"b\"*64},\"verdict\":\"approved\"}))",
+    "--password",
+    "[REDACTED]"
+  ],
+  "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-independent-probes-nb6kxkmi",
+  "started_at": "2026-09-05T11:51:43.755088+00:00",
+  "finished_at": "2026-09-05T11:51:43.774964+00:00",
+  "duration_ms": 20,
+  "exit_code": 0,
+  "stdout": "{\"password\": \"[REDACTED]\", \"echo\": \"[REDACTED]\", \"effect_authorization\": {\"authorization_id\": \"grant-001\", \"source_sha\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\", \"digest\": \"sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"}, \"verdict\": \"approved\"}\n",
+  "stderr": "",
+  "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/audit-bindings/audit-bindings-attempt-1.stdout.log",
+  "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/audit-bindings/audit-bindings-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:7f8f88a627cd5975e73fa7581f946675361650bc5270890c96386e55efd54b7a",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": true,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": null,
+  "source_after": null,
+  "source_unchanged": true,
+  "success": true
+}

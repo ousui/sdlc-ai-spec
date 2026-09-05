@@ -1,0 +1,10 @@
+Traceback (most recent call last):
+  File "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/candidate/docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/verify_evidence.py", line 237, in <module>
+    print(json.dumps(verify(args.repository, args.directory), ensure_ascii=False))
+                     ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/candidate/docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/verify_evidence.py", line 226, in verify
+    extended = verify_propagation(repo, evidence, result, archived, reports)
+  File "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/candidate/docs/plugin-development/work-items/sdlc-600-rls/evidence/b790af812cd8d317675d264583711aed59e1460c/verify_evidence.py", line 99, in verify_propagation
+    assert len(passed) == len(set(passed)) == suite['tests_run'] == count
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

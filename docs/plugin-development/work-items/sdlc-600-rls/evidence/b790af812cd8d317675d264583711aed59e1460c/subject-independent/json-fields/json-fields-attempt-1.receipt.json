@@ -1,0 +1,29 @@
+{
+  "name": "json-fields",
+  "attempt": 1,
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "-c",
+    "import sys,json; v=sys.argv[-1]; print(json.dumps({\"diagnostic\":v,\"password\":[REDACTED]}))",
+    "[REDACTED]"
+  ],
+  "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-independent-probes-rw5qsu_j",
+  "started_at": "2026-09-05T11:51:44.494963+00:00",
+  "finished_at": "2026-09-05T11:51:44.514547+00:00",
+  "duration_ms": 20,
+  "exit_code": 0,
+  "stdout": "{\"diagnostic\": \"[REDACTED]\", \"password\": \"[REDACTED]\"}\n",
+  "stderr": "",
+  "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/json-fields/json-fields-attempt-1.stdout.log",
+  "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/json-fields/json-fields-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:7367ace5f6db034db2fd0b5015ba2764d9b502592a00396175d7b976b579640d",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": true,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": null,
+  "source_after": null,
+  "source_unchanged": true,
+  "success": true
+}

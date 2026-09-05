@@ -1,0 +1,32 @@
+{
+  "name": "child-safe-writer",
+  "attempt": 1,
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "-c",
+    "import sys; from pathlib import Path; sys.path.insert(0,sys.argv[1]); from tools.rls_validation_support import write_json; write_json(Path(sys.argv[2]), {\"diagnostic\":sys.argv[-1],\"nested\":{\"password\":[REDACTED]]}}); sys.stdout.write(Path(sys.argv[2]).read_text())",
+    "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-probe-exact-s3-0p2g0r2l/source",
+    "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/nested-safe-writer.json",
+    "--password",
+    "[REDACTED]"
+  ],
+  "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-independent-probes-rw5qsu_j",
+  "started_at": "2026-09-05T11:51:44.772199+00:00",
+  "finished_at": "2026-09-05T11:51:44.809167+00:00",
+  "duration_ms": 37,
+  "exit_code": 0,
+  "stdout": "{\n  \"diagnostic\": \"[REDACTED]\",\n  \"nested\": {\n    \"password\": \"[REDACTED]\"\n  }\n}\n",
+  "stderr": "",
+  "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/child-safe-writer/child-safe-writer-attempt-1.stdout.log",
+  "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/subject-independent-v2/child-safe-writer/child-safe-writer-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:22f35019221aa75f774624be213f272834c49d656acf7eb232d39ea5444bf65d",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": true,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": null,
+  "source_after": null,
+  "source_unchanged": true,
+  "success": true
+}

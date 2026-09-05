@@ -1,0 +1,30 @@
+{
+  "name": "separate",
+  "attempt": 1,
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "-c",
+    "import sys; v=sys.argv[-1].split(\"=\",1)[-1]; print(v); print(v,file=sys.stderr)",
+    "--password",
+    "[REDACTED]"
+  ],
+  "cwd": "/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/rls-independent-probes-nb6kxkmi",
+  "started_at": "2026-09-05T11:51:43.454875+00:00",
+  "finished_at": "2026-09-05T11:51:43.473700+00:00",
+  "duration_ms": 19,
+  "exit_code": 0,
+  "stdout": "[REDACTED]\n",
+  "stderr": "[REDACTED]\n",
+  "stdout_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/separate/separate-attempt-1.stdout.log",
+  "stderr_log": "/Users/shuaiw/.local/state/sdlc-ai-spec/rls-propagation-20260905-01a07149/focused-independent-v2/separate/separate-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+  "stderr_sha256": "sha256:d1a7b60df83a72fc820ce76f1883d30dc36f3980ce7570692f7fe30e98ce5b7e",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": true,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": null,
+  "source_after": null,
+  "source_unchanged": true,
+  "success": true
+}

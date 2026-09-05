@@ -1,0 +1,11 @@
+source_sha = 5ea3ba9aa7288021c4d99b14cff76ec0fc405841
+base_sha = 638e27221b13d74208b54f78530cf338f67879af
+{"attempts": [{"attempt": 1, "delay_before_seconds": 0, "duration_ms": 4389, "exit_code": 0, "finished_at": "2026-09-05T01:44:45Z", "started_at": "2026-09-05T01:44:41Z", "stderr_log": "quick-logs/focused_deterministic_tests-attempt-1.stderr.log", "stderr_sha256": "sha256:6606ac66c709040a1d8e00d22fe52efe814b2ed3b7c4d3af55ef68ce1188fff1", "stdout_log": "quick-logs/focused_deterministic_tests-attempt-1.stdout.log", "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "transient_network_failure": false}], "base_sha": "638e27221b13d74208b54f78530cf338f67879af", "command": ["/opt/homebrew/opt/python@3.14/bin/python3.14", "-m", "unittest", "tests.skill_vfy.test_runtime", "tests.skill_vfy.test_source_lock", "tests.evals.test_sdlc_500_vfy_case_coverage"], "cwd": ".", "duration_ms": 4389, "exit_code": 0, "finished_at": "2026-09-05T01:44:45Z", "name": "focused_deterministic_tests", "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841", "started_at": "2026-09-05T01:44:41Z", "status": "PASS", "stderr_log": "quick-logs/focused_deterministic_tests-attempt-1.stderr.log", "stderr_sha256": "sha256:6606ac66c709040a1d8e00d22fe52efe814b2ed3b7c4d3af55ef68ce1188fff1", "stdout_log": "quick-logs/focused_deterministic_tests-attempt-1.stdout.log", "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"}
+STDOUT
+
+STDERR
+.............
+----------------------------------------------------------------------
+Ran 13 tests in 4.155s
+
+OK

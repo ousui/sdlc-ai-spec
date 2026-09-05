@@ -1,0 +1,28 @@
+[2026-09-05T01:52:57.605229+00:00] fixture/spring-probe: create real CTX
+[2026-09-05T01:52:57.639207+00:00] fixture/spring-probe: create real REQ
+[2026-09-05T01:52:57.645315+00:00] fixture/spring-probe: create real DSN
+[2026-09-05T01:52:57.652605+00:00] fixture/spring-probe: create real PLN and select WI-001
+[2026-09-05T01:52:57.661618+00:00] fixture/spring-probe: acquire Claim, execute README edit and complete IMP
+[2026-09-05T01:52:57.944023+00:00] fixture/spring-probe: read-only IMP check and lifecycle projection
+[2026-09-05T01:52:58.067650+00:00] fixture/spring-probe: cleanup restored exact initial Git state
+[2026-09-05T01:52:58.104063+00:00] fixture/go-vue-probe: create real CTX
+[2026-09-05T01:52:58.141240+00:00] fixture/go-vue-probe: create real REQ
+[2026-09-05T01:52:58.147210+00:00] fixture/go-vue-probe: create real DSN
+[2026-09-05T01:52:58.155010+00:00] fixture/go-vue-probe: create real PLN and select WI-001
+[2026-09-05T01:52:58.163818+00:00] fixture/go-vue-probe: acquire Claim, execute README edit and complete IMP
+[2026-09-05T01:52:58.442154+00:00] fixture/go-vue-probe: read-only IMP check and lifecycle projection
+[2026-09-05T01:52:58.564865+00:00] fixture/go-vue-probe: cleanup restored exact initial Git state
+[2026-09-05T01:52:58Z] CTX: execute external_imp._create_context
+[2026-09-05T01:52:58Z] REQ: execute external_imp._create_requirement
+[2026-09-05T01:52:58Z] DSN: execute external_imp._create_design
+[2026-09-05T01:52:58Z] PLN: execute external_imp._create_plan
+[2026-09-05T01:52:58Z] IMP: execute external_imp._complete_imp
+[2026-09-05T01:52:59Z] VFY: execute VfyHandler.create+run
+[2026-09-05T01:52:59Z] fixture/springgear: cleanup restored exact initial state
+[2026-09-05T01:52:59Z] CTX: execute external_imp._create_context
+[2026-09-05T01:52:59Z] REQ: execute external_imp._create_requirement
+[2026-09-05T01:52:59Z] DSN: execute external_imp._create_design
+[2026-09-05T01:52:59Z] PLN: execute external_imp._create_plan
+[2026-09-05T01:52:59Z] IMP: execute external_imp._complete_imp
+[2026-09-05T01:53:00Z] VFY: execute VfyHandler.create+run
+[2026-09-05T01:53:00Z] fixture/gin-vue-admin: cleanup restored exact initial state

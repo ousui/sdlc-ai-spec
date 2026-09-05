@@ -1,0 +1,383 @@
+{
+  "check_read_only": true,
+  "commands": [
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin/skills/sdlc-500-vfy/scripts/runtime.py",
+        "help"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/project",
+      "exit_code": 0,
+      "name": "help",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "68497804a53be7d64b800e80c9e990d12b30e5da31625bf69089c80b32967c07"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin/skills/sdlc-500-vfy/scripts/runtime.py",
+        "version"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/project",
+      "exit_code": 0,
+      "name": "version",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "c1a4a857be468d1fad357ff73120cb458b873d36eb8ca2b0a8ac5ab6f3a04371"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin/skills/sdlc-500-vfy/scripts/runtime.py",
+        "commands"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/project",
+      "exit_code": 0,
+      "name": "commands",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "e660464101c2ee8a65f6697c1d5558842a95250739ae8b556a8c75b424eff4d7"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin/skills/sdlc-500-vfy/scripts/runtime.py",
+        "examples"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/project",
+      "exit_code": 0,
+      "name": "examples",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "95c092a6d02cd84a143dd18d0316cf782fb8025a12fa3a0d809b5c62f1ed4230"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin/skills/sdlc-500-vfy/scripts/runtime.py",
+        "create",
+        "--project-root",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/project",
+        "--output",
+        "json",
+        "--input",
+        "PLN-20260904010000-01@1",
+        "--input",
+        "IMP-20260904010000-01@1/RESULT-RES-001"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/project",
+      "exit_code": 0,
+      "name": "create",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "74be64fec97c9a49b5e809999eaa82e41e4842e9995e9687f6b31ec2d01b6a68"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin/skills/sdlc-500-vfy/scripts/runtime.py",
+        "run",
+        "--project-root",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/project",
+        "--reference",
+        "VFY-20260905014712-01@1",
+        "--output",
+        "json"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/project",
+      "exit_code": 0,
+      "name": "run",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "14a298761f2fc17247479a0fb716dc8ed376727369256fd5d53bff68e585abef"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "\nimport json\nfrom pathlib import Path\nimport sys\n\ninstalled = Path(sys.argv[1])\nroot = Path(sys.argv[2])\nlabel = sys.argv[3]\nmode = sys.argv[4]\nsys.path[:0] = [str(installed), str(installed / \"skills/sdlc-500-vfy/scripts\")]\n\nfrom packages.sdlc_artifact_store import compute_sha256\nfrom packages.sdlc_runtime.authority import (\n    DELEGATED_AUTHORITY_HEADERS,\n    DELEGATED_EXCLUDED_AUTHORITY,\n    DELEGATED_INDEPENDENCE,\n)\nfrom vfy_handler import VfyHandler\n\nstate = json.load(sys.stdin)\nbindings = VfyHandler(root).confirmation_requirements(state)\nauthority_dir = root / \".sdlc/authority\"\nauthority_dir.mkdir(parents=True, exist_ok=True)\nif mode == \"human\":\n    raw = b\"decision: approved\\nauthority: product owner\\n\"\n    authority = authority_dir / f\"vfy-installed-{label}-human.txt\"\n    authority.write_bytes(raw)\n    accepted = [\n        f\"{state['artifact']['reference']}#{item['id']}\"\n        for item in state.get(\"exceptions\", [])\n        if item.get(\"state\") in {\"active\", \"carried\"}\n    ]\n    print(json.dumps({\n        \"mode\": \"human\",\n        \"confirmer\": \"installed-product-owner\",\n        \"role\": \"Product Owner\",\n        \"authority_reference\": authority.relative_to(root).as_posix() + \"@\" + compute_sha256(raw),\n        \"accepted_exception_references\": accepted,\n        \"confirmed_at\": \"2026-09-04T10:30:00Z\",\n        **bindings,\n    }, sort_keys=True))\n    raise SystemExit(0)\nif mode != \"delegated\":\n    raise SystemExit(\"unsupported confirmation mode\")\nbasis = authority_dir / f\"vfy-installed-{label}-delegation.txt\"\nbasis.write_text(\"Independent deterministic VFY contract review authority.\\n\", encoding=\"utf-8\")\nbasis_reference = basis.relative_to(root).as_posix() + \"@\" + compute_sha256(basis.read_bytes())\nreviewer = \"installed-independent-reviewer\"\nexecutors = {\n    item[\"executor_identity\"]\n    for item in state[\"methods\"]\n    if item[\"disposition\"] in {\"required\", \"embedded\"}\n}\nif len(executors) != 1:\n    raise SystemExit(\"installed fixture requires one exact Executor identity\")\nexecutor = next(iter(executors))\nvalues = (\n    basis_reference,\n    reviewer,\n    \"Delegated Independent Reviewer\",\n    executor,\n    DELEGATED_INDEPENDENCE,\n    bindings[\"control_input_digest\"],\n    bindings[\"evaluation_contract_set\"],\n    bindings[\"check_set_result_digest\"],\n    DELEGATED_EXCLUDED_AUTHORITY,\n)\nraw = (\"\\n\".join((\n    \"---\",\n    \"contract: sdlc-ai-spec/final-confirmation-authority/v1\",\n    f\"artifact: {state['artifact']['reference']}\",\n    \"decision: approved\",\n    \"decided_at: 2026-09-04T10:30:00Z\",\n    \"---\",\n    \"\",\n    \"| \" + \" | \".join(DELEGATED_AUTHORITY_HEADERS) + \" |\",\n    \"|\" + \"|\".join(\"---\" for _ in DELEGATED_AUTHORITY_HEADERS) + \"|\",\n    \"| \" + \" | \".join(values) + \" |\",\n)) + \"\\n\").encode(\"utf-8\")\nauthority = authority_dir / f\"vfy-installed-{label}-confirmation.md\"\nauthority.write_bytes(raw)\nprint(json.dumps({\n    \"mode\": \"delegated\",\n    \"confirmer\": reviewer,\n    \"role\": \"Delegated Independent Reviewer\",\n    \"reviewed_executor\": executor,\n    \"authority_reference\": authority.relative_to(root).as_posix() + \"@\" + compute_sha256(raw),\n    \"accepted_exception_references\": [],\n    \"confirmed_at\": \"2026-09-04T10:30:00Z\",\n    **bindings,\n}, sort_keys=True))\n",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/project",
+        "pass",
+        "delegated"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/project",
+      "exit_code": 0,
+      "name": "delegated_confirmation_pass",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "47146dc058e093daa393f491d51cbadaba9f39208586b410868291f703ca8a44"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin/skills/sdlc-500-vfy/scripts/runtime.py",
+        "run",
+        "--project-root",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/project",
+        "--reference",
+        "VFY-20260905014712-01@1",
+        "--output",
+        "json"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/project",
+      "exit_code": 0,
+      "name": "finalize",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "8ab3c2e4f5e2f7ae6d10d39a22a033fd7394d9edc9da2b3fbcf31496158d3681"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin/skills/sdlc-500-vfy/scripts/runtime.py",
+        "check",
+        "--project-root",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/project",
+        "--reference",
+        "VFY-20260905014712-01@1",
+        "--output",
+        "json"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/project",
+      "exit_code": 0,
+      "name": "check",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "15a87f557e8262d0ed574b29ff1c72ba54691a1867b3e8ea5f44ffbb2413200d"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin/skills/sdlc-500-vfy/scripts/runtime.py",
+        "revise",
+        "--project-root",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/project",
+        "--reference",
+        "VFY-20260905014712-01@1",
+        "--output",
+        "json",
+        "--input",
+        "PLN-20260904010000-01@1",
+        "--input",
+        "IMP-20260904010000-01@1/RESULT-RES-001"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/project",
+      "exit_code": 0,
+      "name": "revise",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "f89d6e2563ec45f5792fc5fa096a1e3edd961b80cffa38de96c9a7c2639abd50"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin/skills/sdlc-500-vfy/scripts/runtime.py",
+        "create",
+        "--project-root",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/return-project",
+        "--output",
+        "json",
+        "--input",
+        "PLN-20260904010000-01@1",
+        "--input",
+        "IMP-20260904010000-01@1/RESULT-RES-001"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/return-project",
+      "exit_code": 0,
+      "name": "return_create",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "92ef2ff5103cc2819efec609560e0a92a4729b333590d10c96957b65bfd52eeb"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin/skills/sdlc-500-vfy/scripts/runtime.py",
+        "run",
+        "--project-root",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/return-project",
+        "--reference",
+        "VFY-20260905014714-01@1",
+        "--output",
+        "json"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/return-project",
+      "exit_code": 0,
+      "name": "return",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "76fa814dd608ae13a0db5c01babf15494cb83fda470da4bf4030728e93cdad25"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "\nimport json\nfrom pathlib import Path\nimport sys\n\ninstalled = Path(sys.argv[1])\nroot = Path(sys.argv[2])\nlabel = sys.argv[3]\nmode = sys.argv[4]\nsys.path[:0] = [str(installed), str(installed / \"skills/sdlc-500-vfy/scripts\")]\n\nfrom packages.sdlc_artifact_store import compute_sha256\nfrom packages.sdlc_runtime.authority import (\n    DELEGATED_AUTHORITY_HEADERS,\n    DELEGATED_EXCLUDED_AUTHORITY,\n    DELEGATED_INDEPENDENCE,\n)\nfrom vfy_handler import VfyHandler\n\nstate = json.load(sys.stdin)\nbindings = VfyHandler(root).confirmation_requirements(state)\nauthority_dir = root / \".sdlc/authority\"\nauthority_dir.mkdir(parents=True, exist_ok=True)\nif mode == \"human\":\n    raw = b\"decision: approved\\nauthority: product owner\\n\"\n    authority = authority_dir / f\"vfy-installed-{label}-human.txt\"\n    authority.write_bytes(raw)\n    accepted = [\n        f\"{state['artifact']['reference']}#{item['id']}\"\n        for item in state.get(\"exceptions\", [])\n        if item.get(\"state\") in {\"active\", \"carried\"}\n    ]\n    print(json.dumps({\n        \"mode\": \"human\",\n        \"confirmer\": \"installed-product-owner\",\n        \"role\": \"Product Owner\",\n        \"authority_reference\": authority.relative_to(root).as_posix() + \"@\" + compute_sha256(raw),\n        \"accepted_exception_references\": accepted,\n        \"confirmed_at\": \"2026-09-04T10:30:00Z\",\n        **bindings,\n    }, sort_keys=True))\n    raise SystemExit(0)\nif mode != \"delegated\":\n    raise SystemExit(\"unsupported confirmation mode\")\nbasis = authority_dir / f\"vfy-installed-{label}-delegation.txt\"\nbasis.write_text(\"Independent deterministic VFY contract review authority.\\n\", encoding=\"utf-8\")\nbasis_reference = basis.relative_to(root).as_posix() + \"@\" + compute_sha256(basis.read_bytes())\nreviewer = \"installed-independent-reviewer\"\nexecutors = {\n    item[\"executor_identity\"]\n    for item in state[\"methods\"]\n    if item[\"disposition\"] in {\"required\", \"embedded\"}\n}\nif len(executors) != 1:\n    raise SystemExit(\"installed fixture requires one exact Executor identity\")\nexecutor = next(iter(executors))\nvalues = (\n    basis_reference,\n    reviewer,\n    \"Delegated Independent Reviewer\",\n    executor,\n    DELEGATED_INDEPENDENCE,\n    bindings[\"control_input_digest\"],\n    bindings[\"evaluation_contract_set\"],\n    bindings[\"check_set_result_digest\"],\n    DELEGATED_EXCLUDED_AUTHORITY,\n)\nraw = (\"\\n\".join((\n    \"---\",\n    \"contract: sdlc-ai-spec/final-confirmation-authority/v1\",\n    f\"artifact: {state['artifact']['reference']}\",\n    \"decision: approved\",\n    \"decided_at: 2026-09-04T10:30:00Z\",\n    \"---\",\n    \"\",\n    \"| \" + \" | \".join(DELEGATED_AUTHORITY_HEADERS) + \" |\",\n    \"|\" + \"|\".join(\"---\" for _ in DELEGATED_AUTHORITY_HEADERS) + \"|\",\n    \"| \" + \" | \".join(values) + \" |\",\n)) + \"\\n\").encode(\"utf-8\")\nauthority = authority_dir / f\"vfy-installed-{label}-confirmation.md\"\nauthority.write_bytes(raw)\nprint(json.dumps({\n    \"mode\": \"delegated\",\n    \"confirmer\": reviewer,\n    \"role\": \"Delegated Independent Reviewer\",\n    \"reviewed_executor\": executor,\n    \"authority_reference\": authority.relative_to(root).as_posix() + \"@\" + compute_sha256(raw),\n    \"accepted_exception_references\": [],\n    \"confirmed_at\": \"2026-09-04T10:30:00Z\",\n    **bindings,\n}, sort_keys=True))\n",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/return-project",
+        "return",
+        "delegated"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/return-project",
+      "exit_code": 0,
+      "name": "delegated_confirmation_return",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "7886077492fdad0d9cb094c5ad673b8b188138549065d70f45f220e4287f82ad"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin/skills/sdlc-500-vfy/scripts/runtime.py",
+        "run",
+        "--project-root",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/return-project",
+        "--reference",
+        "VFY-20260905014714-01@1",
+        "--output",
+        "json"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/return-project",
+      "exit_code": 0,
+      "name": "return_finalize",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "621eeaef763d2e0071d7db10e1a252cb67b34f8043cb023f04e9152d69f75b69"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "\nimport json\nfrom pathlib import Path\nimport sys\n\ninstalled = Path(sys.argv[1])\nsys.path[:0] = [\n    str(installed),\n    str(installed / \"skills/sdlc-status/scripts\"),\n]\nfrom packages.sdlc_lifecycle.query_vfy import project_vfy_state\nfrom vfy_projection import project_vfy_status\n\nstate = json.load(sys.stdin)\nprint(json.dumps({\n    \"lifecycle\": project_vfy_state(state).to_dict(),\n    \"status\": project_vfy_status(state),\n}, sort_keys=True))\n",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/return-project",
+      "exit_code": 0,
+      "name": "lifecycle_projection",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "2f553494469642ac9c3ecfecbc83a8f837c10cb2cc89d1ad44f11e32355c2b95"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin/skills/sdlc-500-vfy/scripts/runtime.py",
+        "create",
+        "--project-root",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/exception-project",
+        "--output",
+        "json"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/exception-project",
+      "exit_code": 0,
+      "name": "exception_create",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "a58f7a40b5a77fbc9b3129ac4d1926a22f9dfe00731ced7e35cb872ef59cf1d8"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "\nimport json\nfrom pathlib import Path\nimport sys\n\ninstalled = Path(sys.argv[1])\nroot = Path(sys.argv[2])\nlabel = sys.argv[3]\nmode = sys.argv[4]\nsys.path[:0] = [str(installed), str(installed / \"skills/sdlc-500-vfy/scripts\")]\n\nfrom packages.sdlc_artifact_store import compute_sha256\nfrom packages.sdlc_runtime.authority import (\n    DELEGATED_AUTHORITY_HEADERS,\n    DELEGATED_EXCLUDED_AUTHORITY,\n    DELEGATED_INDEPENDENCE,\n)\nfrom vfy_handler import VfyHandler\n\nstate = json.load(sys.stdin)\nbindings = VfyHandler(root).confirmation_requirements(state)\nauthority_dir = root / \".sdlc/authority\"\nauthority_dir.mkdir(parents=True, exist_ok=True)\nif mode == \"human\":\n    raw = b\"decision: approved\\nauthority: product owner\\n\"\n    authority = authority_dir / f\"vfy-installed-{label}-human.txt\"\n    authority.write_bytes(raw)\n    accepted = [\n        f\"{state['artifact']['reference']}#{item['id']}\"\n        for item in state.get(\"exceptions\", [])\n        if item.get(\"state\") in {\"active\", \"carried\"}\n    ]\n    print(json.dumps({\n        \"mode\": \"human\",\n        \"confirmer\": \"installed-product-owner\",\n        \"role\": \"Product Owner\",\n        \"authority_reference\": authority.relative_to(root).as_posix() + \"@\" + compute_sha256(raw),\n        \"accepted_exception_references\": accepted,\n        \"confirmed_at\": \"2026-09-04T10:30:00Z\",\n        **bindings,\n    }, sort_keys=True))\n    raise SystemExit(0)\nif mode != \"delegated\":\n    raise SystemExit(\"unsupported confirmation mode\")\nbasis = authority_dir / f\"vfy-installed-{label}-delegation.txt\"\nbasis.write_text(\"Independent deterministic VFY contract review authority.\\n\", encoding=\"utf-8\")\nbasis_reference = basis.relative_to(root).as_posix() + \"@\" + compute_sha256(basis.read_bytes())\nreviewer = \"installed-independent-reviewer\"\nexecutors = {\n    item[\"executor_identity\"]\n    for item in state[\"methods\"]\n    if item[\"disposition\"] in {\"required\", \"embedded\"}\n}\nif len(executors) != 1:\n    raise SystemExit(\"installed fixture requires one exact Executor identity\")\nexecutor = next(iter(executors))\nvalues = (\n    basis_reference,\n    reviewer,\n    \"Delegated Independent Reviewer\",\n    executor,\n    DELEGATED_INDEPENDENCE,\n    bindings[\"control_input_digest\"],\n    bindings[\"evaluation_contract_set\"],\n    bindings[\"check_set_result_digest\"],\n    DELEGATED_EXCLUDED_AUTHORITY,\n)\nraw = (\"\\n\".join((\n    \"---\",\n    \"contract: sdlc-ai-spec/final-confirmation-authority/v1\",\n    f\"artifact: {state['artifact']['reference']}\",\n    \"decision: approved\",\n    \"decided_at: 2026-09-04T10:30:00Z\",\n    \"---\",\n    \"\",\n    \"| \" + \" | \".join(DELEGATED_AUTHORITY_HEADERS) + \" |\",\n    \"|\" + \"|\".join(\"---\" for _ in DELEGATED_AUTHORITY_HEADERS) + \"|\",\n    \"| \" + \" | \".join(values) + \" |\",\n)) + \"\\n\").encode(\"utf-8\")\nauthority = authority_dir / f\"vfy-installed-{label}-confirmation.md\"\nauthority.write_bytes(raw)\nprint(json.dumps({\n    \"mode\": \"delegated\",\n    \"confirmer\": reviewer,\n    \"role\": \"Delegated Independent Reviewer\",\n    \"reviewed_executor\": executor,\n    \"authority_reference\": authority.relative_to(root).as_posix() + \"@\" + compute_sha256(raw),\n    \"accepted_exception_references\": [],\n    \"confirmed_at\": \"2026-09-04T10:30:00Z\",\n    **bindings,\n}, sort_keys=True))\n",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/exception-project",
+        "exception",
+        "human"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/exception-project",
+      "exit_code": 0,
+      "name": "human_confirmation_exception",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "7e9e18f009b2478b1570bacbf3149e281c97967dbe2887fd3f3b991a91f24d44"
+    },
+    {
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/plugin/skills/sdlc-500-vfy/scripts/runtime.py",
+        "auto",
+        "--project-root",
+        "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/exception-project",
+        "--output",
+        "json"
+      ],
+      "cwd": "/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-installed-s7pse4ft/exception-project",
+      "exit_code": 0,
+      "name": "exception_finalize",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_sha256": "9098f7be7988252081b9657ab2abdc46975db94b7272644bf8368c753091c806"
+    }
+  ],
+  "contract": "sdlc-ai-spec/vfy-runtime-independence-result/v1",
+  "exception_projection": {
+    "artifact_gate": "pass_with_exception",
+    "artifact_status": "ready_with_exception",
+    "product_result": "waived"
+  },
+  "installed_boundary": {
+    "agents_present": false,
+    "claude_present": false,
+    "docs_present": false,
+    "handoff_present": false,
+    "packages": true,
+    "scripts": true,
+    "skills": [
+      "_shared",
+      "sdlc-500-vfy",
+      "sdlc-status"
+    ],
+    "tests_present": false
+  },
+  "installed_digest": "4e1cf2d3e34f67514c1749a78d1b7939aa3f39981afc9342d42bbd7dcd229f08",
+  "meta_commands": [
+    "help",
+    "version",
+    "commands",
+    "examples"
+  ],
+  "operations": [
+    "create",
+    "run",
+    "revise",
+    "check",
+    "Return",
+    "Exception",
+    "Lifecycle projection"
+  ],
+  "pass_projection": {
+    "artifact_gate": "pass",
+    "product_result": "pass",
+    "rls_ready": false
+  },
+  "project_final_digest": "4963626f18285fa48ca88a6b85e9f7bb5858b8d7f3d1c1d3726425d24020956d",
+  "project_initial_digest": "4963626f18285fa48ca88a6b85e9f7bb5858b8d7f3d1c1d3726425d24020956d",
+  "return_project_final_digest": "4963626f18285fa48ca88a6b85e9f7bb5858b8d7f3d1c1d3726425d24020956d",
+  "return_project_initial_digest": "4963626f18285fa48ca88a6b85e9f7bb5858b8d7f3d1c1d3726425d24020956d",
+  "return_projection": {
+    "artifact_gate": "pass",
+    "artifact_reference": "VFY-20260905014714-01@1",
+    "artifact_status": "ready",
+    "early_stop": false,
+    "next_action": "RETURN_UPSTREAM",
+    "next_phase": "IMP",
+    "product_result": "fail",
+    "return_phase": "IMP",
+    "revision_state": "frozen",
+    "rls_applicability": "n/a",
+    "rls_ready": false,
+    "unresolved_controls": [],
+    "unresolved_returns": [
+      "RET-001"
+    ]
+  },
+  "status": "PASS",
+  "status_projection": {
+    "artifact_gate": "pass",
+    "artifact_reference": "VFY-20260905014714-01@1",
+    "artifact_status": "ready",
+    "display": {
+      "artifact": "Artifact Gate: pass",
+      "downstream": "RLS ready: no",
+      "product": "Product Result: fail"
+    },
+    "early_stop": false,
+    "next_action": "RETURN_UPSTREAM",
+    "next_phase": "IMP",
+    "phase": "VFY",
+    "product_result": "fail",
+    "return_phase": "IMP",
+    "revision_state": "frozen",
+    "rls_applicability": "n/a",
+    "rls_ready": false,
+    "unresolved_returns": [
+      "RET-001"
+    ]
+  }
+}

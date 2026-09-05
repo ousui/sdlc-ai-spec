@@ -1,0 +1,94 @@
+{
+  "artifact_assertions": [
+    {
+      "path": "vfy-real-projects.json",
+      "project_count": 2,
+      "sha256": "sha256:53b9087c690aa8e0517e9e6e2663b7a4e6164dbbf2b58688de1cdcfd7f7c7bc7",
+      "status": "PASS"
+    }
+  ],
+  "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+  "command_count": 1,
+  "commands": [
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 18274,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:49:09Z",
+          "started_at": "2026-09-05T01:48:50Z",
+          "stderr_log": "external-logs/two_exact_external_projects-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "external-logs/two_exact_external_projects-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:35c94bb9492afef41cde74783fc54c66f0136899359d863e02793be18e0646ef",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/run_external_vfy_integration.py",
+        "--source-sha",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+        "--base-sha",
+        "638e27221b13d74208b54f78530cf338f67879af",
+        "--json-out",
+        "/private/tmp/vfy-web007-validation/5ea3ba9/vfy-real-projects.json",
+        "--log-out",
+        "/private/tmp/vfy-web007-validation/5ea3ba9/vfy-real-projects.log"
+      ],
+      "cwd": ".",
+      "duration_ms": 18274,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:49:09Z",
+      "name": "two_exact_external_projects",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:48:50Z",
+      "status": "PASS",
+      "stderr_log": "external-logs/two_exact_external_projects-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "external-logs/two_exact_external_projects-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:35c94bb9492afef41cde74783fc54c66f0136899359d863e02793be18e0646ef"
+    }
+  ],
+  "contract": "sdlc-ai-spec/vfy-delivery-validation/v1",
+  "duration_ms": 18342,
+  "evidence_digest": "sha256:943ed99f3a0b3510b85227f03d2c6101371162bc5f4c74799cc8faa47a7aa97e",
+  "finished_at": "2026-09-05T01:49:09Z",
+  "first_failure": null,
+  "github_actions_authority": false,
+  "integration_mode": "PREMERGE_DIRECT_DESIGN_ANCESTRY",
+  "main_modified": false,
+  "missing_is_skip": false,
+  "postflight": {
+    "branch": "local/vfy-repair-web007",
+    "clean": true,
+    "head": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+    "local_main_sha": "3a2f13082fe2f661081ded74e45f860da2046bd1",
+    "origin_design_head": "638e27221b13d74208b54f78530cf338f67879af",
+    "origin_main_sha": "3a2f13082fe2f661081ded74e45f860da2046bd1",
+    "parent": "638e27221b13d74208b54f78530cf338f67879af",
+    "subject": "feat(vfy): implement deterministic verification phase",
+    "tree": "d1ec752587e296a80adf611ce5057cb14917c837"
+  },
+  "preflight": {
+    "branch": "local/vfy-repair-web007",
+    "clean": true,
+    "head": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+    "local_main_sha": "3a2f13082fe2f661081ded74e45f860da2046bd1",
+    "origin_design_head": "638e27221b13d74208b54f78530cf338f67879af",
+    "origin_main_sha": "3a2f13082fe2f661081ded74e45f860da2046bd1",
+    "parent": "638e27221b13d74208b54f78530cf338f67879af",
+    "subject": "feat(vfy): implement deterministic verification phase",
+    "tree": "d1ec752587e296a80adf611ce5057cb14917c837"
+  },
+  "profile": "external",
+  "rls_started": false,
+  "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+  "source_tree": "d1ec752587e296a80adf611ce5057cb14917c837",
+  "started_at": "2026-09-05T01:48:50Z",
+  "status": "PASS",
+  "workflow_created": false
+}

@@ -1,0 +1,903 @@
+{
+  "artifact_assertions": [
+    {
+      "expected_failures": 0,
+      "passed": 80,
+      "path": "attest-fixed-eval.json",
+      "sha256": "sha256:b26e84ddc78b11419c3704cf880378bdfee2605029109d0f6b941655c13b31ae",
+      "skipped": 0,
+      "status": "PASS"
+    },
+    {
+      "path": "attest-real-projects.json",
+      "project_count": 2,
+      "sha256": "sha256:488a0fd20775264ecc90c0bae0ef4ca45949310c6e1f55aacc82a0ca5186d919",
+      "status": "PASS"
+    }
+  ],
+  "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+  "command_count": 23,
+  "commands": [
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 9,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:01Z",
+          "started_at": "2026-09-05T01:51:01Z",
+          "stderr_log": "attest-logs/quick__diff_check-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/quick__diff_check-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "git",
+        "diff",
+        "--check",
+        "638e27221b13d74208b54f78530cf338f67879af..5ea3ba9aa7288021c4d99b14cff76ec0fc405841"
+      ],
+      "cwd": ".",
+      "duration_ms": 9,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:01Z",
+      "name": "quick__diff_check",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:01Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/quick__diff_check-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/quick__diff_check-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 170,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:02Z",
+          "started_at": "2026-09-05T01:51:01Z",
+          "stderr_log": "attest-logs/quick__python_syntax_import-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/quick__python_syntax_import-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:f902f348caedb3413c66ca1555d677d863df7672c5c60910e6f0ad62a4452523",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "import ast\nimport importlib.util\nfrom pathlib import Path\nimport subprocess\nimport sys\n\nroot = Path.cwd()\nbase, source = sys.argv[1:3]\nchanged = subprocess.check_output(\n    [\"git\", \"diff\", \"--name-only\", f\"{base}..{source}\"], text=True\n).splitlines()\nfiles = [root / name for name in changed if name.endswith(\".py\")]\nfor path in files:\n    if not path.is_file():\n        raise SystemExit(f\"missing changed Python path: {path}\")\n    ast.parse(path.read_text(encoding=\"utf-8\"), filename=str(path))\nscripts = root / \"skills/sdlc-500-vfy/scripts\"\nsys.path[:0] = [str(root), str(scripts)]\nfor path in sorted(scripts.glob(\"vfy_*.py\")):\n    __import__(path.stem)\nruntime = scripts / \"runtime.py\"\nspec = importlib.util.spec_from_file_location(\"vfy_quick_runtime\", runtime)\nif spec is None or spec.loader is None:\n    raise SystemExit(\"VFY Runtime import spec unavailable\")\nmodule = importlib.util.module_from_spec(spec)\nspec.loader.exec_module(module)\nprint(f\"AST={len(files)} VFY_IMPORTS=PASS\")",
+        "638e27221b13d74208b54f78530cf338f67879af",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841"
+      ],
+      "cwd": ".",
+      "duration_ms": 170,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:02Z",
+      "name": "quick__python_syntax_import",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:01Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/quick__python_syntax_import-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/quick__python_syntax_import-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:f902f348caedb3413c66ca1555d677d863df7672c5c60910e6f0ad62a4452523"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 32,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:02Z",
+          "started_at": "2026-09-05T01:51:02Z",
+          "stderr_log": "attest-logs/quick__json_parse-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/quick__json_parse-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:a200bd554c568ec54e306dcd9439ff2be25dc9373787feb6c88be2671a12512e",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "import json\nfrom pathlib import Path\nimport subprocess\nimport sys\n\nroot = Path.cwd()\nbase, source = sys.argv[1:3]\nchanged = subprocess.check_output(\n    [\"git\", \"diff\", \"--name-only\", f\"{base}..{source}\"], text=True\n).splitlines()\nfiles = [root / name for name in changed if name.endswith(\".json\")]\nfor path in files:\n    if not path.is_file():\n        raise SystemExit(f\"missing changed JSON path: {path}\")\n    json.loads(path.read_text(encoding=\"utf-8\"))\nprint(f\"JSON={len(files)} PASS\")",
+        "638e27221b13d74208b54f78530cf338f67879af",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841"
+      ],
+      "cwd": ".",
+      "duration_ms": 32,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:02Z",
+      "name": "quick__json_parse",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:02Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/quick__json_parse-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/quick__json_parse-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:a200bd554c568ec54e306dcd9439ff2be25dc9373787feb6c88be2671a12512e"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 23,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:02Z",
+          "started_at": "2026-09-05T01:51:02Z",
+          "stderr_log": "attest-logs/quick__skill_interface-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/quick__skill_interface-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:00c0ad6f817f38f52e379bc9d5dd839f3125f09f5d65490df2e5233b9fbf5a06",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_skill_interfaces.py"
+      ],
+      "cwd": ".",
+      "duration_ms": 23,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:02Z",
+      "name": "quick__skill_interface",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:02Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/quick__skill_interface-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/quick__skill_interface-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:00c0ad6f817f38f52e379bc9d5dd839f3125f09f5d65490df2e5233b9fbf5a06"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 38,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:02Z",
+          "started_at": "2026-09-05T01:51:02Z",
+          "stderr_log": "attest-logs/quick__source_lock_structure-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/quick__source_lock_structure-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:ade22f1e9f61cecfbc09143ea7db8b0d6edbbd21ae32e160e6ecc298ae0aeea4",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_sdlc_500_vfy_source_lock.py"
+      ],
+      "cwd": ".",
+      "duration_ms": 38,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:02Z",
+      "name": "quick__source_lock_structure",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:02Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/quick__source_lock_structure-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/quick__source_lock_structure-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:ade22f1e9f61cecfbc09143ea7db8b0d6edbbd21ae32e160e6ecc298ae0aeea4"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 4366,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:06Z",
+          "started_at": "2026-09-05T01:51:02Z",
+          "stderr_log": "attest-logs/quick__critical_case_coverage-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/quick__critical_case_coverage-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:6d33fba29987ffbcdadedf8ac8c60aef84d85632a06480274278b7242c7c1e08",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_sdlc_500_vfy_case_coverage.py"
+      ],
+      "cwd": ".",
+      "duration_ms": 4366,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:06Z",
+      "name": "quick__critical_case_coverage",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:02Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/quick__critical_case_coverage-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/quick__critical_case_coverage-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:6d33fba29987ffbcdadedf8ac8c60aef84d85632a06480274278b7242c7c1e08"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 4420,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:10Z",
+          "started_at": "2026-09-05T01:51:06Z",
+          "stderr_log": "attest-logs/quick__focused_deterministic_tests-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:d35bfd119ad5e4d07a54999616d16785002e0fed1123f472fa3267620d6efa78",
+          "stdout_log": "attest-logs/quick__focused_deterministic_tests-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-m",
+        "unittest",
+        "tests.skill_vfy.test_runtime",
+        "tests.skill_vfy.test_source_lock",
+        "tests.evals.test_sdlc_500_vfy_case_coverage"
+      ],
+      "cwd": ".",
+      "duration_ms": 4420,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:10Z",
+      "name": "quick__focused_deterministic_tests",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:06Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/quick__focused_deterministic_tests-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:d35bfd119ad5e4d07a54999616d16785002e0fed1123f472fa3267620d6efa78",
+      "stdout_log": "attest-logs/quick__focused_deterministic_tests-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 1099,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:12Z",
+          "started_at": "2026-09-05T01:51:10Z",
+          "stderr_log": "attest-logs/quick__web_review_guard-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/quick__web_review_guard-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:2d05799302926c250aaba1a21c8679a808d36832f0ff8f181af465d4c25de994",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/review_sdlc_500_vfy_implementation.py"
+      ],
+      "cwd": ".",
+      "duration_ms": 1099,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:12Z",
+      "name": "quick__web_review_guard",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:10Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/quick__web_review_guard-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/quick__web_review_guard-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:2d05799302926c250aaba1a21c8679a808d36832f0ff8f181af465d4c25de994"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 31,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:12Z",
+          "started_at": "2026-09-05T01:51:12Z",
+          "stderr_log": "attest-logs/quick__subject_path_whitelist-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/quick__subject_path_whitelist-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:5c0b6adfbd6d8827f1c7fe710d1c45c1c097d2a105b6b86987c91001c49284e7",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "from pathlib import Path\nimport subprocess\nimport sys\n\nbase, source = sys.argv[1:3]\nchanged = subprocess.check_output(\n    [\"git\", \"diff\", \"--name-only\", f\"{base}..{source}\"], text=True\n).splitlines()\nprefixes = (\n    \"skills/sdlc-500-vfy/\",\n    \"tests/skill_vfy/\",\n)\nexact = {\n    \"packages/sdlc_lifecycle/query_vfy.py\",\n    \"packages/sdlc_lifecycle/__init__.py\",\n    \"packages/sdlc_lifecycle/models.py\",\n    \"packages/sdlc_lifecycle/CONTRACT.md\",\n    \"skills/sdlc-status/SKILL.md\",\n    \"skills/sdlc-status/references/contract.md\",\n    \"skills/sdlc-status/references/status-result.schema.json\",\n    \"skills/sdlc-status/scripts/runtime.py\",\n    \"skills/sdlc-status/scripts/vfy_projection.py\",\n    \"tests/evals/run_sdlc_500_vfy_eval.py\",\n    \"tests/evals/sdlc_500_vfy_cases.json\",\n    \"tests/evals/test_sdlc_500_vfy_case_coverage.py\",\n    \"tests/evals/vfy_case_harness.py\",\n    \"tests/evals/vfy_case_harness_hardened.py\",\n    \"tests/system_integration/test_external_vfy_integration.py\",\n    \"tests/skill_imp/test_lifecycle.py\",\n    \"tests/skill_status/test_imp.py\",\n    \"tools/validate_sdlc_500_vfy_case_coverage.py\",\n    \"tools/validate_sdlc_500_vfy_source_lock.py\",\n    \"tools/test_sdlc_500_vfy_runtime_independence.py\",\n    \"tools/review_sdlc_500_vfy_implementation.py\",\n    \"tools/run_external_vfy_integration.py\",\n    \"tools/run_vfy_delivery_validation.py\",\n}\nunknown = [name for name in changed if name not in exact and not name.startswith(prefixes)]\nforbidden = [\n    name for name in changed\n    if name.startswith(\".github/\")\n    or \"sdlc-600-rls\" in name\n    or \"/skill_rls/\" in name\n    or name.startswith(\"tests/skill_rls/\")\n    or (name.startswith(\"tools/\") and \"rls\" in Path(name).name.lower())\n    or \"/evidence/\" in name\n]\nif unknown:\n    raise SystemExit(\"unknown Subject paths: \" + \", \".join(unknown))\nif forbidden:\n    raise SystemExit(\"forbidden Workflow/RLS/Evidence paths: \" + \", \".join(forbidden))\nprint(f\"WHITELIST={len(changed)} NO_WORKFLOW_RLS_EVIDENCE=PASS\")",
+        "638e27221b13d74208b54f78530cf338f67879af",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841"
+      ],
+      "cwd": ".",
+      "duration_ms": 31,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:12Z",
+      "name": "quick__subject_path_whitelist",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:12Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/quick__subject_path_whitelist-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/quick__subject_path_whitelist-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:5c0b6adfbd6d8827f1c7fe710d1c45c1c097d2a105b6b86987c91001c49284e7"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 7,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:12Z",
+          "started_at": "2026-09-05T01:51:12Z",
+          "stderr_log": "attest-logs/quick__design_authority_bytes-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/quick__design_authority_bytes-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "git",
+        "diff",
+        "--quiet",
+        "638e27221b13d74208b54f78530cf338f67879af..5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+        "--",
+        "docs/plugin-development/work-items/sdlc-500-vfy/DESIGN.md",
+        "docs/plugin-development/work-items/sdlc-500-vfy/EVAL-PLAN.md",
+        "docs/plugin-development/work-items/sdlc-500-vfy/goal"
+      ],
+      "cwd": ".",
+      "duration_ms": 7,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:12Z",
+      "name": "quick__design_authority_bytes",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:12Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/quick__design_authority_bytes-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/quick__design_authority_bytes-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 13640,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:25Z",
+          "started_at": "2026-09-05T01:51:12Z",
+          "stderr_log": "attest-logs/phase__vfy_suite-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:73bf97558a6b28708a09b8ebf6e383fd876faefe1c1b6000bedc7ab3ec75227a",
+          "stdout_log": "attest-logs/phase__vfy_suite-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests/skill_vfy",
+        "-p",
+        "test_*.py"
+      ],
+      "cwd": ".",
+      "duration_ms": 13640,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:25Z",
+      "name": "phase__vfy_suite",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:12Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/phase__vfy_suite-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:73bf97558a6b28708a09b8ebf6e383fd876faefe1c1b6000bedc7ab3ec75227a",
+      "stdout_log": "attest-logs/phase__vfy_suite-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 4360,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:30Z",
+          "started_at": "2026-09-05T01:51:25Z",
+          "stderr_log": "attest-logs/phase__fixed_eval_80-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/phase__fixed_eval_80-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:b26e84ddc78b11419c3704cf880378bdfee2605029109d0f6b941655c13b31ae",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tests/evals/run_sdlc_500_vfy_eval.py",
+        "--json-out",
+        "/private/tmp/vfy-web007-validation/5ea3ba9/attest-fixed-eval.json"
+      ],
+      "cwd": ".",
+      "duration_ms": 4360,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:30Z",
+      "name": "phase__fixed_eval_80",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:25Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/phase__fixed_eval_80-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/phase__fixed_eval_80-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:b26e84ddc78b11419c3704cf880378bdfee2605029109d0f6b941655c13b31ae"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 12767,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:42Z",
+          "started_at": "2026-09-05T01:51:30Z",
+          "stderr_log": "attest-logs/phase__lifecycle_status_regression-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:292e6a3a1ed7b67550610917161b5aa72f63cc6cdf5fd56673d2b243062b2212",
+          "stdout_log": "attest-logs/phase__lifecycle_status_regression-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-m",
+        "unittest",
+        "tests.skill_vfy.test_lifecycle",
+        "tests.skill_imp.test_lifecycle",
+        "tests.skill_status.test_imp"
+      ],
+      "cwd": ".",
+      "duration_ms": 12767,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:42Z",
+      "name": "phase__lifecycle_status_regression",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:30Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/phase__lifecycle_status_regression-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:292e6a3a1ed7b67550610917161b5aa72f63cc6cdf5fd56673d2b243062b2212",
+      "stdout_log": "attest-logs/phase__lifecycle_status_regression-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 26,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:42Z",
+          "started_at": "2026-09-05T01:51:42Z",
+          "stderr_log": "attest-logs/full__skill_interface-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/full__skill_interface-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:00c0ad6f817f38f52e379bc9d5dd839f3125f09f5d65490df2e5233b9fbf5a06",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_skill_interfaces.py"
+      ],
+      "cwd": ".",
+      "duration_ms": 26,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:42Z",
+      "name": "full__skill_interface",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:42Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/full__skill_interface-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/full__skill_interface-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:00c0ad6f817f38f52e379bc9d5dd839f3125f09f5d65490df2e5233b9fbf5a06"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 39,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:42Z",
+          "started_at": "2026-09-05T01:51:42Z",
+          "stderr_log": "attest-logs/full__final_source_lock-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/full__final_source_lock-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:50474aa9829754d5102353995342cf825a456275a0e04c8ba2daeba44bd8c55d",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_sdlc_500_vfy_source_lock.py",
+        "--require-final"
+      ],
+      "cwd": ".",
+      "duration_ms": 39,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:42Z",
+      "name": "full__final_source_lock",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:42Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/full__final_source_lock-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/full__final_source_lock-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:50474aa9829754d5102353995342cf825a456275a0e04c8ba2daeba44bd8c55d"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 3495,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:46Z",
+          "started_at": "2026-09-05T01:51:42Z",
+          "stderr_log": "attest-logs/full__installed_runtime_independence-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/full__installed_runtime_independence-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:c57d29960582c9b0655c7660573e1ca96ec7f7518bc07df35f25719a636fc007",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/test_sdlc_500_vfy_runtime_independence.py"
+      ],
+      "cwd": ".",
+      "duration_ms": 3495,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:46Z",
+      "name": "full__installed_runtime_independence",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:42Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/full__installed_runtime_independence-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/full__installed_runtime_independence-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:c57d29960582c9b0655c7660573e1ca96ec7f7518bc07df35f25719a636fc007"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 133,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:46Z",
+          "started_at": "2026-09-05T01:51:46Z",
+          "stderr_log": "attest-logs/full__runtime_contract_boundary-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/full__runtime_contract_boundary-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:d9a6bae01c226a9b018b6ad43f007d724b93984586b0fb878ae5911f03383cec",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/validate_runtime_contracts.py"
+      ],
+      "cwd": ".",
+      "duration_ms": 133,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:46Z",
+      "name": "full__runtime_contract_boundary",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:46Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/full__runtime_contract_boundary-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/full__runtime_contract_boundary-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:d9a6bae01c226a9b018b6ad43f007d724b93984586b0fb878ae5911f03383cec"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 1122,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:51:47Z",
+          "started_at": "2026-09-05T01:51:46Z",
+          "stderr_log": "attest-logs/full__web_review_guard-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/full__web_review_guard-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:063320b6e3df0f4b01c07bdc63588491b489807a4d43e0ddc5dd53f777fb8475",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/review_sdlc_500_vfy_implementation.py"
+      ],
+      "cwd": ".",
+      "duration_ms": 1122,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:51:47Z",
+      "name": "full__web_review_guard",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:46Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/full__web_review_guard-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/full__web_review_guard-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:063320b6e3df0f4b01c07bdc63588491b489807a4d43e0ddc5dd53f777fb8475"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 72745,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:53:00Z",
+          "started_at": "2026-09-05T01:51:47Z",
+          "stderr_log": "attest-logs/full__full_repository_regression-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:bf9fbebdc7ac60d3c0867ecca226c1104eafafcb8acaf4dc1a6d318450626c92",
+          "stdout_log": "attest-logs/full__full_repository_regression-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:339370ab9405b46778af9cd91b87462c3b2d99a1b23c65260662b7ac7f176277",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-p",
+        "test_*.py"
+      ],
+      "cwd": ".",
+      "duration_ms": 72745,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:53:00Z",
+      "name": "full__full_repository_regression",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:51:47Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/full__full_repository_regression-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:bf9fbebdc7ac60d3c0867ecca226c1104eafafcb8acaf4dc1a6d318450626c92",
+      "stdout_log": "attest-logs/full__full_repository_regression-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:339370ab9405b46778af9cd91b87462c3b2d99a1b23c65260662b7ac7f176277"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 36,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:53:00Z",
+          "started_at": "2026-09-05T01:53:00Z",
+          "stderr_log": "attest-logs/full__subject_path_whitelist-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/full__subject_path_whitelist-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:5c0b6adfbd6d8827f1c7fe710d1c45c1c097d2a105b6b86987c91001c49284e7",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "from pathlib import Path\nimport subprocess\nimport sys\n\nbase, source = sys.argv[1:3]\nchanged = subprocess.check_output(\n    [\"git\", \"diff\", \"--name-only\", f\"{base}..{source}\"], text=True\n).splitlines()\nprefixes = (\n    \"skills/sdlc-500-vfy/\",\n    \"tests/skill_vfy/\",\n)\nexact = {\n    \"packages/sdlc_lifecycle/query_vfy.py\",\n    \"packages/sdlc_lifecycle/__init__.py\",\n    \"packages/sdlc_lifecycle/models.py\",\n    \"packages/sdlc_lifecycle/CONTRACT.md\",\n    \"skills/sdlc-status/SKILL.md\",\n    \"skills/sdlc-status/references/contract.md\",\n    \"skills/sdlc-status/references/status-result.schema.json\",\n    \"skills/sdlc-status/scripts/runtime.py\",\n    \"skills/sdlc-status/scripts/vfy_projection.py\",\n    \"tests/evals/run_sdlc_500_vfy_eval.py\",\n    \"tests/evals/sdlc_500_vfy_cases.json\",\n    \"tests/evals/test_sdlc_500_vfy_case_coverage.py\",\n    \"tests/evals/vfy_case_harness.py\",\n    \"tests/evals/vfy_case_harness_hardened.py\",\n    \"tests/system_integration/test_external_vfy_integration.py\",\n    \"tests/skill_imp/test_lifecycle.py\",\n    \"tests/skill_status/test_imp.py\",\n    \"tools/validate_sdlc_500_vfy_case_coverage.py\",\n    \"tools/validate_sdlc_500_vfy_source_lock.py\",\n    \"tools/test_sdlc_500_vfy_runtime_independence.py\",\n    \"tools/review_sdlc_500_vfy_implementation.py\",\n    \"tools/run_external_vfy_integration.py\",\n    \"tools/run_vfy_delivery_validation.py\",\n}\nunknown = [name for name in changed if name not in exact and not name.startswith(prefixes)]\nforbidden = [\n    name for name in changed\n    if name.startswith(\".github/\")\n    or \"sdlc-600-rls\" in name\n    or \"/skill_rls/\" in name\n    or name.startswith(\"tests/skill_rls/\")\n    or (name.startswith(\"tools/\") and \"rls\" in Path(name).name.lower())\n    or \"/evidence/\" in name\n]\nif unknown:\n    raise SystemExit(\"unknown Subject paths: \" + \", \".join(unknown))\nif forbidden:\n    raise SystemExit(\"forbidden Workflow/RLS/Evidence paths: \" + \", \".join(forbidden))\nprint(f\"WHITELIST={len(changed)} NO_WORKFLOW_RLS_EVIDENCE=PASS\")",
+        "638e27221b13d74208b54f78530cf338f67879af",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841"
+      ],
+      "cwd": ".",
+      "duration_ms": 36,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:53:00Z",
+      "name": "full__subject_path_whitelist",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:53:00Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/full__subject_path_whitelist-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/full__subject_path_whitelist-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:5c0b6adfbd6d8827f1c7fe710d1c45c1c097d2a105b6b86987c91001c49284e7"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 7,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:53:00Z",
+          "started_at": "2026-09-05T01:53:00Z",
+          "stderr_log": "attest-logs/full__design_authority_bytes-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/full__design_authority_bytes-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "git",
+        "diff",
+        "--quiet",
+        "638e27221b13d74208b54f78530cf338f67879af..5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+        "--",
+        "docs/plugin-development/work-items/sdlc-500-vfy/DESIGN.md",
+        "docs/plugin-development/work-items/sdlc-500-vfy/EVAL-PLAN.md",
+        "docs/plugin-development/work-items/sdlc-500-vfy/goal"
+      ],
+      "cwd": ".",
+      "duration_ms": 7,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:53:00Z",
+      "name": "full__design_authority_bytes",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:53:00Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/full__design_authority_bytes-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/full__design_authority_bytes-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 18458,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:53:18Z",
+          "started_at": "2026-09-05T01:53:00Z",
+          "stderr_log": "attest-logs/external__two_exact_external_projects-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/external__two_exact_external_projects-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:3cf8da13c2350a1b603ae5e64c9a84fd06c491cae12556210999ca7dc30a67d4",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "tools/run_external_vfy_integration.py",
+        "--source-sha",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+        "--base-sha",
+        "638e27221b13d74208b54f78530cf338f67879af",
+        "--json-out",
+        "/private/tmp/vfy-web007-validation/5ea3ba9/attest-real-projects.json",
+        "--log-out",
+        "/private/tmp/vfy-web007-validation/5ea3ba9/attest-real-projects.log"
+      ],
+      "cwd": ".",
+      "duration_ms": 18458,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:53:18Z",
+      "name": "external__two_exact_external_projects",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:53:00Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/external__two_exact_external_projects-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/external__two_exact_external_projects-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:3cf8da13c2350a1b603ae5e64c9a84fd06c491cae12556210999ca7dc30a67d4"
+    },
+    {
+      "attempts": [
+        {
+          "attempt": 1,
+          "delay_before_seconds": 0,
+          "duration_ms": 21,
+          "exit_code": 0,
+          "finished_at": "2026-09-05T01:53:18Z",
+          "started_at": "2026-09-05T01:53:18Z",
+          "stderr_log": "attest-logs/independent_review-attempt-1.stderr.log",
+          "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "stdout_log": "attest-logs/independent_review-attempt-1.stdout.log",
+          "stdout_sha256": "sha256:1e58b201f6ca2eab9ad29de08086a2b8a38b5ec843a3df3a0a89442934134af8",
+          "transient_network_failure": false
+        }
+      ],
+      "base_sha": "638e27221b13d74208b54f78530cf338f67879af",
+      "command": [
+        "/opt/homebrew/opt/python@3.14/bin/python3.14",
+        "-c",
+        "from pathlib import Path\nimport sys\n\npath = Path(sys.argv[1])\nsource, base = sys.argv[2:4]\nif not path.is_file():\n    raise SystemExit(f\"missing independent review: {path}\")\ntext = path.read_text(encoding=\"utf-8\")\nrequired = (\n    \"VFY_DESIGN_REVIEW = PASS\",\n    f\"Implementation Subject SHA = {source}\",\n    f\"Design Head SHA = {base}\",\n    \"Blocker = 0\",\n    \"Major = 0\",\n)\nmissing = [item for item in required if item not in text]\nif missing:\n    raise SystemExit(\"independent review is incomplete: \" + \", \".join(missing))\nprint(\"INDEPENDENT_REVIEW=PASS Blocker=0 Major=0\")",
+        "/private/tmp/vfy-web007-validation/5ea3ba9/vfy-design-review.md",
+        "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+        "638e27221b13d74208b54f78530cf338f67879af"
+      ],
+      "cwd": ".",
+      "duration_ms": 21,
+      "exit_code": 0,
+      "finished_at": "2026-09-05T01:53:18Z",
+      "name": "independent_review",
+      "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+      "started_at": "2026-09-05T01:53:18Z",
+      "status": "PASS",
+      "stderr_log": "attest-logs/independent_review-attempt-1.stderr.log",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "attest-logs/independent_review-attempt-1.stdout.log",
+      "stdout_sha256": "sha256:1e58b201f6ca2eab9ad29de08086a2b8a38b5ec843a3df3a0a89442934134af8"
+    }
+  ],
+  "contract": "sdlc-ai-spec/vfy-delivery-validation/v1",
+  "duration_ms": 137195,
+  "evidence_digest": "sha256:d643eb6a061aff64dd607051fd1f499bb46efe475f7fe2f2e1338ec675a334db",
+  "finished_at": "2026-09-05T01:53:19Z",
+  "first_failure": null,
+  "github_actions_authority": false,
+  "integration_mode": "PREMERGE_DIRECT_DESIGN_ANCESTRY",
+  "main_modified": false,
+  "missing_is_skip": false,
+  "postflight": {
+    "branch": "DETACHED",
+    "clean": true,
+    "head": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+    "local_main_sha": "3a2f13082fe2f661081ded74e45f860da2046bd1",
+    "origin_design_head": "638e27221b13d74208b54f78530cf338f67879af",
+    "origin_main_sha": "3a2f13082fe2f661081ded74e45f860da2046bd1",
+    "parent": "638e27221b13d74208b54f78530cf338f67879af",
+    "subject": "feat(vfy): implement deterministic verification phase",
+    "tree": "d1ec752587e296a80adf611ce5057cb14917c837"
+  },
+  "preflight": {
+    "branch": "DETACHED",
+    "clean": true,
+    "head": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+    "local_main_sha": "3a2f13082fe2f661081ded74e45f860da2046bd1",
+    "origin_design_head": "638e27221b13d74208b54f78530cf338f67879af",
+    "origin_main_sha": "3a2f13082fe2f661081ded74e45f860da2046bd1",
+    "parent": "638e27221b13d74208b54f78530cf338f67879af",
+    "subject": "feat(vfy): implement deterministic verification phase",
+    "tree": "d1ec752587e296a80adf611ce5057cb14917c837"
+  },
+  "profile": "attest",
+  "rls_started": false,
+  "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841",
+  "source_tree": "d1ec752587e296a80adf611ce5057cb14917c837",
+  "started_at": "2026-09-05T01:51:01Z",
+  "status": "PASS",
+  "workflow_created": false
+}

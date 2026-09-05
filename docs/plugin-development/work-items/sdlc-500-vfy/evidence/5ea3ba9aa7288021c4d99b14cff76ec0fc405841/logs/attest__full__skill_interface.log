@@ -1,0 +1,10 @@
+source_sha = 5ea3ba9aa7288021c4d99b14cff76ec0fc405841
+base_sha = 638e27221b13d74208b54f78530cf338f67879af
+{"attempts": [{"attempt": 1, "delay_before_seconds": 0, "duration_ms": 26, "exit_code": 0, "finished_at": "2026-09-05T01:51:42Z", "started_at": "2026-09-05T01:51:42Z", "stderr_log": "attest-logs/full__skill_interface-attempt-1.stderr.log", "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "stdout_log": "attest-logs/full__skill_interface-attempt-1.stdout.log", "stdout_sha256": "sha256:00c0ad6f817f38f52e379bc9d5dd839f3125f09f5d65490df2e5233b9fbf5a06", "transient_network_failure": false}], "base_sha": "638e27221b13d74208b54f78530cf338f67879af", "command": ["/opt/homebrew/opt/python@3.14/bin/python3.14", "tools/validate_skill_interfaces.py"], "cwd": ".", "duration_ms": 26, "exit_code": 0, "finished_at": "2026-09-05T01:51:42Z", "name": "full__skill_interface", "source_sha": "5ea3ba9aa7288021c4d99b14cff76ec0fc405841", "started_at": "2026-09-05T01:51:42Z", "status": "PASS", "stderr_log": "attest-logs/full__skill_interface-attempt-1.stderr.log", "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855", "stdout_log": "attest-logs/full__skill_interface-attempt-1.stdout.log", "stdout_sha256": "sha256:00c0ad6f817f38f52e379bc9d5dd839f3125f09f5d65490df2e5233b9fbf5a06"}
+STDOUT
+skill interface validation: PASS
+formal skills: 7
+interface contract: sdlc-ai-spec/runtime/skill-interface/v1
+authority source locks: unchanged
+
+STDERR

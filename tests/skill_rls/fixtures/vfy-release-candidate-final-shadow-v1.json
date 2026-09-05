@@ -1,0 +1,143 @@
+{
+  "fixture_contract": "sdlc-ai-spec/rls-vfy-final-shape-shadow/v1",
+  "fixture_authority": "VFY_REPAIR_SOURCE_SHADOW",
+  "provisional": true,
+  "vfy_repair_snapshot_sha": "1d2af1ad8d20c3935a72b632b47a14b62910b6ff",
+  "cases": {
+    "pass": {
+      "contract": "sdlc-ai-spec/vfy-release-candidate/v1",
+      "provisional": false,
+      "vfy_reference": "VFY-20260904170000-123@2",
+      "revision_state": "frozen",
+      "artifact_status": "ready",
+      "artifact_gate": "pass",
+      "early_stop": false,
+      "pending_fields": [],
+      "scope_reference": "PLN-20260904120000-101@3",
+      "subject_references": [
+        "IMP-20260904130000-101@4/RES-001"
+      ],
+      "result_references": [
+        "IMP-20260904130000-101@4/RES-001"
+      ],
+      "subject_current_valid": true,
+      "imp_chain_current_valid": true,
+      "con_ver": "pass",
+      "con_val": "pass",
+      "product_result": "pass",
+      "unresolved_returns": [],
+      "rls_applicability": "required",
+      "release_target_obligations": [
+        {
+          "reference": "VFY-20260904170000-123@2#VFM-001",
+          "confirmation": "target version and basic availability",
+          "expected": "release 2.0.0 is observable",
+          "evidence_requirement": "immutable target-side snapshot"
+        }
+      ],
+      "evidence_references": [
+        "VFY-20260904170000-123@2/VFY-EVD-001"
+      ],
+      "exception": null,
+      "exception_references": [],
+      "source_digest": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "rls_ready": true
+    },
+    "n/a": {
+      "contract": "sdlc-ai-spec/vfy-release-candidate/v1",
+      "provisional": false,
+      "vfy_reference": "VFY-20260904170001-123@2",
+      "revision_state": "frozen",
+      "artifact_status": "ready",
+      "artifact_gate": "pass",
+      "early_stop": false,
+      "pending_fields": [],
+      "scope_reference": "PLN-20260904120000-101@3",
+      "subject_references": [
+        "IMP-20260904130000-101@4/RES-001"
+      ],
+      "result_references": [
+        "IMP-20260904130000-101@4/RES-001"
+      ],
+      "subject_current_valid": true,
+      "imp_chain_current_valid": true,
+      "con_ver": "pass",
+      "con_val": "pass",
+      "product_result": "pass",
+      "unresolved_returns": [],
+      "rls_applicability": "n/a",
+      "release_target_obligations": [
+        {
+          "reference": "VFY-20260904170000-123@2#VFM-001",
+          "confirmation": "target version and basic availability",
+          "expected": "release 2.0.0 is observable",
+          "evidence_requirement": "immutable target-side snapshot"
+        }
+      ],
+      "evidence_references": [
+        "VFY-20260904170000-123@2/VFY-EVD-001"
+      ],
+      "exception": null,
+      "exception_references": [],
+      "source_digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "rls_ready": false
+    },
+    "fail_with_exception": {
+      "contract": "sdlc-ai-spec/vfy-release-candidate/v1",
+      "provisional": false,
+      "vfy_reference": "VFY-20260904170002-123@2",
+      "revision_state": "frozen",
+      "artifact_status": "ready_with_exception",
+      "artifact_gate": "pass_with_exception",
+      "early_stop": false,
+      "pending_fields": [],
+      "scope_reference": "PLN-20260904120000-101@3",
+      "subject_references": [
+        "IMP-20260904130000-101@4/RES-001"
+      ],
+      "result_references": [
+        "IMP-20260904130000-101@4/RES-001"
+      ],
+      "subject_current_valid": true,
+      "imp_chain_current_valid": true,
+      "con_ver": "fail",
+      "con_val": "pass",
+      "product_result": "fail",
+      "unresolved_returns": [],
+      "rls_applicability": "required",
+      "release_target_obligations": [
+        {
+          "reference": "VFY-20260904170000-123@2#VFM-001",
+          "confirmation": "target version and basic availability",
+          "expected": "release 2.0.0 is observable",
+          "evidence_requirement": "immutable target-side snapshot"
+        }
+      ],
+      "evidence_references": [
+        "VFY-20260904170000-123@2/VFY-EVD-001"
+      ],
+      "exception": {
+        "id": "EX-001",
+        "state": "active",
+        "origin_reference": "VFY-20260904170002-123@2#EX-001",
+        "scope": [
+          "product_result:fail"
+        ],
+        "reason": "accepted risk",
+        "known_risk": "known",
+        "compensating_control": "sandbox only",
+        "approval": "authority",
+        "revisit_condition": "next revision",
+        "downstream_obligation": "confirm on release target",
+        "resolution_references": [],
+        "accepts_product_failure": true,
+        "authority_verified": true
+      },
+      "exception_references": [
+        "VFY-20260904170002-123@2#EX-001"
+      ],
+      "source_digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "rls_ready": true
+    }
+  }
+}

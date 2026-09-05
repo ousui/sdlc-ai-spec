@@ -1,0 +1,66 @@
+{
+  "contract": "sdlc-ai-spec/source-lock/v1",
+  "provisional": false,
+  "status": "FINAL",
+  "vfy_upstream_sha": "46509eb6688df30e71ed094132b2d10e81ceb2ac",
+  "vfy_schema_blob": "98cf80e38de063ffe4254aab1ab34dc16da6faa2",
+  "vfy_schema_sha256": "15aff25625c2d43c29e62129ea3aaff9ee5ab45dd146eecff2b417e135d98027",
+  "entries": [
+    {
+      "path": "packages/sdlc_artifact_store/__init__.py",
+      "sha256": "0a1905869b41ba749970122ec6e1924dd4c563199432886fdf7d124fda2b32dd"
+    },
+    {
+      "path": "packages/sdlc_artifact_store/models.py",
+      "sha256": "9e776cca6ac415aa12db0576aaf19ca5c259cb34363b735c38f5ec577ecbd4ae"
+    },
+    {
+      "path": "packages/sdlc_lifecycle/query_rls.py",
+      "sha256": "fdca61c2223791ae5e70891fbe851456111f1fd663b26494967c48caddb7ac6e"
+    },
+    {
+      "path": "packages/sdlc_lifecycle/query_vfy.py",
+      "sha256": "acf2dc56c71dc284efc4eaf0299f2d84c594c7e08e94ff4fe1f275ab64529b7c"
+    },
+    {
+      "path": "packages/sdlc_phasekit/models.py",
+      "sha256": "d4f5fc227a0f50fbc274161bb0efbfc700410d18091979fc5be499f97586bce7"
+    },
+    {
+      "path": "packages/sdlc_runtime/authority.py",
+      "sha256": "5e989f9eee4325b36776ead5090667f7672578281ba24da5a14fcff73b9647dd"
+    },
+    {
+      "path": "packages/sdlc_runtime/canonical.py",
+      "sha256": "c3fb0b1cfcfcd4d828d5a092b70f14c01925f56cb17ea6914d6c765005998c55"
+    },
+    {
+      "path": "packages/sdlc_runtime/control_inputs.py",
+      "sha256": "5551b9632c04c47928df04449518f39f333d4fab8f8833f8d4398723c9503409"
+    },
+    {
+      "path": "skills/_shared/contracts/skill-interface.md",
+      "sha256": "3ac6ee7bf0599b8dd5930fc6a65a2623b7dea5238b7231de62a362545d526163"
+    },
+    {
+      "path": "skills/sdlc-600-rls/references/600-rls-spec.md",
+      "sha256": "62124c713958f833d3e093c0a05743fcbde3dc40ed1dfac5eb5a857846210faa"
+    },
+    {
+      "path": "skills/sdlc-600-rls/references/contract.md",
+      "sha256": "85f2aff50d18579968a597e40fd5b7efdbbef48f3982986cbfe7dfe13ed1efda"
+    },
+    {
+      "path": "skills/sdlc-600-rls/references/interface.json",
+      "sha256": "f5bdad45d6a7de984893ec556b443470e18fdf62dd30503a2d2e7c8259f22633"
+    },
+    {
+      "path": "skills/sdlc-600-rls/references/vfy-release-candidate-v1.schema.json",
+      "sha256": "15aff25625c2d43c29e62129ea3aaff9ee5ab45dd146eecff2b417e135d98027"
+    },
+    {
+      "path": "skills/sdlc-status/references/rls-projection.schema.json",
+      "sha256": "2c25a3430822ff402dd0a6bb65d1c83946cf67e07dc653f9564825eca554ac91"
+    }
+  ]
+}

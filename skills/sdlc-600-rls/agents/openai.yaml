@@ -1,0 +1,5 @@
+policy:
+  allow_implicit_invocation: false
+interface:
+  display_name: "SDLC 600 RLS"
+  short_description: "在独立效果授权下执行本地受控发版并记录目标结论"

@@ -386,6 +386,12 @@ def render_summary(result: Mapping[str, Any]) -> str:
             lines.append("RLS ready：" + ("是" if vfy.get("rls_ready") else "否"))
             if vfy.get("return_phase"):
                 lines.append(f"Return Phase：{vfy['return_phase']}")
+        rls = projection.get("rls_projection")
+        if rls and rls.get("artifact_reference"):
+            lines.append(f"RLS Artifact：{rls['artifact_reference']}")
+            lines.append(f"Release Conclusion：{rls['release_conclusion']}")
+            lines.append(f"RLS Artifact Gate：{rls['artifact_gate']}")
+            lines.append(f"RLS 后续动作：{rls['next_action']}")
         blockers = projection.get("blockers", [])
         if blockers:
             lines.append(f"阻塞项：{len(blockers)}")

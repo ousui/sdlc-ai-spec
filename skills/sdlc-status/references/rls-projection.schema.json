@@ -1,0 +1,8 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sdlc-ai-spec/rls-status-projection/v1",
+  "type": [
+    "object",
+    "null"
+  ]
+}

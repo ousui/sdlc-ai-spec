@@ -149,6 +149,7 @@ class LifecycleProjection:
     vfy_inputs: tuple[str, ...] = ()
     vfy_results: tuple[Mapping[str, Any], ...] = ()
     vfy_projection: Mapping[str, Any] | None = None
+    rls_projection: Mapping[str, Any] | None = None
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -163,6 +164,7 @@ class LifecycleProjection:
             "current_claims": [item.to_dict() for item in self.current_claims],
             "vfy_inputs": list(self.vfy_inputs),
             "vfy_results": [dict(item) for item in self.vfy_results],
+            "rls_projection": dict(self.rls_projection) if self.rls_projection is not None else None,
             "vfy_projection": (
                 dict(self.vfy_projection)
                 if self.vfy_projection is not None

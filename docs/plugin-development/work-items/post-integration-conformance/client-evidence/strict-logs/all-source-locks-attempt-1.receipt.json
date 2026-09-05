@@ -1,0 +1,47 @@
+{
+  "name": "all-source-locks",
+  "attempt": 1,
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "tools/validate_all_skill_source_locks.py",
+    "--json-out",
+    "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/locks.json"
+  ],
+  "cwd": "/private/tmp/sdlc-post-integration-01a07250",
+  "started_at": "2026-09-05T16:13:24.576756+00:00",
+  "finished_at": "2026-09-05T16:13:25.025227+00:00",
+  "duration_ms": 448,
+  "exit_code": 0,
+  "stdout": "{\n  \"contract\": \"sdlc-ai-spec/all-skill-lock-result/v1\",\n  \"success\": true,\n  \"skills\": [\n    {\n      \"skill\": \"sdlc-000-ctx\",\n      \"success\": true\n    },\n    {\n      \"skill\": \"sdlc-100-req\",\n      \"success\": true,\n      \"exit_code\": 0,\n      \"stdout\": \"sdlc-100-req source lock: PASS\\ncontracts: 8\\n\",\n      \"stderr\": \"\"\n    },\n    {\n      \"skill\": \"sdlc-200-dsn\",\n      \"success\": true,\n      \"exit_code\": 0,\n      \"stdout\": \"sdlc-200-dsn source lock: PASS\\ncontracts: 26\\nbundled runtime contracts: 17\\n\",\n      \"stderr\": \"\"\n    },\n    {\n      \"skill\": \"sdlc-300-pln\",\n      \"success\": true,\n      \"exit_code\": 0,\n      \"stdout\": \"PLN source lock: PASS (13)\\n\",\n      \"stderr\": \"\"\n    },\n    {\n      \"skill\": \"sdlc-400-imp\",\n      \"success\": true,\n      \"exit_code\": 0,\n      \"stdout\": \"IMP source lock: PASS (16)\\n\",\n      \"stderr\": \"\"\n    },\n    {\n      \"skill\": \"sdlc-500-vfy\",\n      \"success\": true,\n      \"exit_code\": 0,\n      \"stdout\": \"{\\n  \\\"contract\\\": \\\"sdlc-ai-spec/vfy-source-lock-validation/v1\\\",\\n  \\\"contract_count\\\": 18,\\n  \\\"contracts\\\": [\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/runtime/artifact-store/v1\\\",\\n      \\\"path\\\": \\\"packages/sdlc_artifact_store/CONTRACT.md\\\",\\n      \\\"sha256\\\": \\\"500f2d327dfd734974d73eda2857ca2e3663ceaf6f8c48a92b925612cf25fc81\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/runtime/artifact/v1\\\",\\n      \\\"path\\\": \\\"skills/_shared/contracts/artifact-runtime.md\\\",\\n      \\\"sha256\\\": \\\"8e86f76153d6e7309647daa4edbdd05c0083c2ddda135279d35bd98f40a17f3c\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/runtime/imp-claim/v1\\\",\\n      \\\"path\\\": \\\"packages/sdlc_claim_provider/CONTRACT.md\\\",\\n      \\\"sha256\\\": \\\"0330e6dd7584362286692dd46128671809cf8892dc107458881873ffab82d8c9\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/runtime/kernel/v1\\\",\\n      \\\"path\\\": \\\"packages/sdlc_runtime/CONTRACT.md\\\",\\n      \\\"sha256\\\": \\\"9614a4fdc0e475b2c740d3b49908778d022065abc0d93e609eea534d379a54b7\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/runtime/lifecycle/v1\\\",\\n      \\\"path\\\": \\\"packages/sdlc_lifecycle/CONTRACT.md\\\",\\n      \\\"sha256\\\": \\\"08b2afa9daaee4ea87694472ee473a26c350493d3a5f14c5e9d02500b3aaffc7\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/runtime/phase/v1\\\",\\n      \\\"path\\\": \\\"skills/_shared/contracts/phase-runtime.md\\\",\\n      \\\"sha256\\\": \\\"0ef203f6de99f055cbf2e9c06f927ea827be31ad3b700d2c2760e4cc42c76eb3\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/runtime/resource-result/v1\\\",\\n      \\\"path\\\": \\\"packages/sdlc_resource/CONTRACT.md\\\",\\n      \\\"sha256\\\": \\\"d62486d80f308e7b7ef7459f79894d7f77defccd71e0349f6d8eb0b539a52d20\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/runtime/skill-execution/v1\\\",\\n      \\\"path\\\": \\\"skills/_shared/contracts/skill-execution.md\\\",\\n      \\\"sha256\\\": \\\"b05f03cc1987c9eed431040e2f5626880cbc07e44e5a9c48d93fdbc8cd352bc7\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/runtime/skill-inputs/v1\\\",\\n      \\\"path\\\": \\\"skills/_shared/contracts/skill-inputs.md\\\",\\n      \\\"sha256\\\": \\\"cf36e527a1b51887059889c4122d1b182dbc6e64a79037f3a217095a5b37782f\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/runtime/skill-interface/v1\\\",\\n      \\\"path\\\": \\\"skills/_shared/contracts/skill-interface.md\\\",\\n      \\\"sha256\\\": \\\"3ac6ee7bf0599b8dd5930fc6a65a2623b7dea5238b7231de62a362545d526163\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/runtime/status/v1\\\",\\n      \\\"path\\\": \\\"skills/sdlc-status/references/contract.md\\\",\\n      \\\"sha256\\\": \\\"c80f9eea06777d9fb3214cd80bd834eb202853bc1e2bd24e76bc8b1126927f04\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/runtime/vfy-interface/v1\\\",\\n      \\\"path\\\": \\\"skills/sdlc-500-vfy/references/interface.json\\\",\\n      \\\"sha256\\\": \\\"ab0929e8cf2c8825359c11295710b69ebe688c22b3fe8f0919f6a42985126e5d\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/runtime/vfy/v1\\\",\\n      \\\"path\\\": \\\"skills/sdlc-500-vfy/references/contract.md\\\",\\n      \\\"sha256\\\": \\\"c116153f4cb2f4c222267a1545cd931bfde8c1331fcd38e44d004fee924a9a45\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/schema/status-result/v1\\\",\\n      \\\"path\\\": \\\"skills/sdlc-status/references/status-result.schema.json\\\",\\n      \\\"sha256\\\": \\\"8832b5a37ec73259385b86a4fb5808f020fc8b6f8d5737f312b9190726c239e1\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/schema/vfy-release-candidate/v1\\\",\\n      \\\"path\\\": \\\"skills/sdlc-500-vfy/references/vfy-release-candidate-v1.schema.json\\\",\\n      \\\"sha256\\\": \\\"15aff25625c2d43c29e62129ea3aaff9ee5ab45dd146eecff2b417e135d98027\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/spec/artifact-store/v1.1\\\",\\n      \\\"path\\\": \\\"docs/v1.1/artifact-store-spec.md\\\",\\n      \\\"sha256\\\": \\\"b340ca2a38dfe0f7409acaa8f9ac559e8872bed44725037889528e3d167d4764\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/spec/core/v1.1\\\",\\n      \\\"path\\\": \\\"docs/v1.1/core-spec.md\\\",\\n      \\\"sha256\\\": \\\"1eefa7a138f2d221140137a5fac0f5429b7f847273fe9d70e891ace6c3b7a89b\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/spec/vfy/v1.1\\\",\\n      \\\"path\\\": \\\"skills/sdlc-500-vfy/references/500-vfy-spec.md\\\",\\n      \\\"sha256\\\": \\\"ea0aa412195b1d9f68b74dc39506e5aae635aa599f9099be3b2780f7508e6aad\\\"\\n    }\\n  ],\\n  \\\"design_source_count\\\": 3,\\n  \\\"design_sources\\\": [\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/spec/artifact-store/v1.1\\\",\\n      \\\"git_blob\\\": \\\"070e515e2de434dac3b64268ee78b90b4ac8b82a\\\",\\n      \\\"path\\\": \\\"docs/v1.1/artifact-store-spec.md\\\",\\n      \\\"sha256\\\": \\\"b340ca2a38dfe0f7409acaa8f9ac559e8872bed44725037889528e3d167d4764\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/spec/core/v1.1\\\",\\n      \\\"git_blob\\\": \\\"3da47515a44c58d54ef4ec474019c9e57ab694f4\\\",\\n      \\\"path\\\": \\\"docs/v1.1/core-spec.md\\\",\\n      \\\"sha256\\\": \\\"1eefa7a138f2d221140137a5fac0f5429b7f847273fe9d70e891ace6c3b7a89b\\\"\\n    },\\n    {\\n      \\\"contract_id\\\": \\\"sdlc-ai-spec/spec/vfy/v1.1\\\",\\n      \\\"git_blob\\\": \\\"270e1291e450a129d842833b996a75c57d45b58e\\\",\\n      \\\"path\\\": \\\"docs/v1.1/500-vfy-spec.md\\\",\\n      \\\"sha256\\\": \\\"ea0aa412195b1d9f68b74dc39506e5aae635aa599f9099be3b2780f7508e6aad\\\"\\n    }\\n  ],\\n  \\\"provisional\\\": false,\\n  \\\"require_final\\\": false,\\n  \\\"status\\\": \\\"PASS\\\"\\n}\\n\",\n      \"stderr\": \"\"\n    },\n    {\n      \"skill\": \"sdlc-600-rls\",\n      \"success\": true,\n      \"exit_code\": 0,\n      \"stdout\": \"RLS_FINAL_SOURCE_LOCK = PASS (14 bundled sources)\\n\",\n      \"stderr\": \"\"\n    },\n    {\n      \"skill\": \"sdlc-status\",\n      \"success\": true,\n      \"exit_code\": 0,\n      \"stdout\": \"{\\\"contracts\\\": 51, \\\"skill\\\": \\\"sdlc-status\\\", \\\"success\\\": true}\\n\",\n      \"stderr\": \"\"\n    }\n  ]\n}\n",
+  "stderr": "",
+  "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/all-source-locks-attempt-1.stdout.log",
+  "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/all-source-locks-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:9f8d6d0dcd73fed6f028bf5c6ef430f4588d4cc68d18f072c4f03fb76315ae5a",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": {
+    "root": "/private/tmp/sdlc-post-integration-01a07250",
+    "sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+    "tree": "cb1a9aa31a2fadb8a434493b75c7a244d38d029b",
+    "parents": [
+      "ac6d846a1b0c22d0f284c9ebffd976dc59698a99"
+    ],
+    "branch": "fix/post-integration-skill-conformance",
+    "status": ""
+  },
+  "source_after": {
+    "root": "/private/tmp/sdlc-post-integration-01a07250",
+    "sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+    "tree": "cb1a9aa31a2fadb8a434493b75c7a244d38d029b",
+    "parents": [
+      "ac6d846a1b0c22d0f284c9ebffd976dc59698a99"
+    ],
+    "branch": "fix/post-integration-skill-conformance",
+    "status": ""
+  },
+  "source_unchanged": true,
+  "success": true
+}

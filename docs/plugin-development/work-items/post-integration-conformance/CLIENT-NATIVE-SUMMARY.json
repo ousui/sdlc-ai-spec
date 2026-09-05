@@ -1,0 +1,100 @@
+{
+  "contract": "sdlc-ai-spec/client-native-observation-summary/v1",
+  "source_sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+  "surface": "codex-cli",
+  "observed_skills": 8,
+  "candidates": [
+    {
+      "skill": "sdlc-000-ctx",
+      "behavior_result": "PASS",
+      "formal_runtime_execution": "OBSERVED",
+      "runtime_invocation_count": 1,
+      "final_json_rewritten": true,
+      "nonzero_command_count": 2,
+      "host_error_count": 0,
+      "candidate": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/native-receipt.json",
+      "runtime_snapshot_sha256": "9304d6e4610d1d27683757b5396b036c1dd4b6aa05072f557b8b8820bfbba99d"
+    },
+    {
+      "skill": "sdlc-100-req",
+      "behavior_result": "PARTIAL",
+      "formal_runtime_execution": "NOT_RUN_PRECHECK_REFUSAL",
+      "runtime_invocation_count": 0,
+      "final_json_rewritten": false,
+      "nonzero_command_count": 2,
+      "host_error_count": 0,
+      "candidate": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/native-receipt.json",
+      "runtime_snapshot_sha256": "ef5865c18f17f84c40745a1f428537c55cdfbbb6d40e23d7086cc8e3583aa570"
+    },
+    {
+      "skill": "sdlc-200-dsn",
+      "behavior_result": "PASS",
+      "formal_runtime_execution": "OBSERVED",
+      "runtime_invocation_count": 1,
+      "final_json_rewritten": false,
+      "nonzero_command_count": 1,
+      "host_error_count": 0,
+      "candidate": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/native-receipt.json",
+      "runtime_snapshot_sha256": "d2e311cf676df82886670aec75ebb56e968650fac9ef58a2fbfd41521c2c3fe4"
+    },
+    {
+      "skill": "sdlc-300-pln",
+      "behavior_result": "PASS",
+      "formal_runtime_execution": "OBSERVED",
+      "runtime_invocation_count": 1,
+      "final_json_rewritten": false,
+      "nonzero_command_count": 1,
+      "host_error_count": 0,
+      "candidate": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/native-receipt.json",
+      "runtime_snapshot_sha256": "af55b0e6c15ebb65731e3395693aa28b4ace241120ea00db17dde5fa89fddee0"
+    },
+    {
+      "skill": "sdlc-400-imp",
+      "behavior_result": "PASS",
+      "formal_runtime_execution": "OBSERVED",
+      "runtime_invocation_count": 1,
+      "final_json_rewritten": true,
+      "nonzero_command_count": 1,
+      "host_error_count": 0,
+      "candidate": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/native-receipt.json",
+      "runtime_snapshot_sha256": "ff702a0467a8336504f5d58228b9e39b34415edf2026f151a14dcc4b798a1369"
+    },
+    {
+      "skill": "sdlc-500-vfy",
+      "behavior_result": "PASS",
+      "formal_runtime_execution": "OBSERVED",
+      "runtime_invocation_count": 1,
+      "final_json_rewritten": false,
+      "nonzero_command_count": 1,
+      "host_error_count": 0,
+      "candidate": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/native-receipt.json",
+      "runtime_snapshot_sha256": "83b34af8b14fac5e092f20b91133c84073b987baf81749c9b5ff201d91d99c93"
+    },
+    {
+      "skill": "sdlc-600-rls",
+      "behavior_result": "PASS",
+      "formal_runtime_execution": "OBSERVED",
+      "runtime_invocation_count": 1,
+      "final_json_rewritten": false,
+      "nonzero_command_count": 3,
+      "host_error_count": 0,
+      "candidate": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/native-receipt.json",
+      "runtime_snapshot_sha256": "412a93a6eb940894a8fbaa3372144629bdd8c8c9b4cb45345fec41626ae407a8"
+    },
+    {
+      "skill": "sdlc-status",
+      "behavior_result": "PASS",
+      "formal_runtime_execution": "OBSERVED",
+      "runtime_invocation_count": 1,
+      "final_json_rewritten": false,
+      "nonzero_command_count": 1,
+      "host_error_count": 0,
+      "candidate": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/native-receipt.json",
+      "runtime_snapshot_sha256": "91538c201b017843b3108c2677cbceedc1f1c39f6c1006e4269bc834d79d8913"
+    }
+  ],
+  "native_accepted_cells": [],
+  "compatibility_ledger": "UNCHANGED_40_NOT_RUN",
+  "independent_review_required": true,
+  "real_target_effects": 0
+}

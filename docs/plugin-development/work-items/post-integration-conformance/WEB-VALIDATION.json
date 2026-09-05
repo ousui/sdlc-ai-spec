@@ -1,0 +1,70 @@
+{
+  "contract": "sdlc-ai-spec/web-conformance-checkpoint/v1",
+  "classification": "PRODUCER_EXECUTION_CHECKPOINT_NOT_INDEPENDENT_ACCEPTANCE",
+  "baseline_main_sha": "0289a5ee8d702450fb3f3bc73c89f30a11664bdb",
+  "validated_source_sha": "ac6d846a1b0c22d0f284c9ebffd976dc59698a99",
+  "validated_source_tree": "0f8a6cb91b40016a32a06f15b72d255219cb4de5",
+  "branch": "fix/post-integration-skill-conformance",
+  "pull_request": 11,
+  "portable_profile": {
+    "result": "PASS",
+    "steps": 10,
+    "process_stream_bindings_verified": 20
+  },
+  "all_skill_source_locks": {
+    "result": "PASS",
+    "skills": 8,
+    "status_lock_entries": 51
+  },
+  "status_fixed_eval": {
+    "result": "PASS",
+    "cases": 14,
+    "coverage_guard_tests": 4
+  },
+  "repository_ordinary_regression": {
+    "result": "PASS",
+    "tests": 1104,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "expected_failures": 0,
+    "unexpected_successes": 0
+  },
+  "new_tests": {
+    "executed": 40,
+    "inside_repository_suite": 36,
+    "separate_coverage_guard": 4
+  },
+  "installed_copy": {
+    "status": "PASS_12_COMMANDS",
+    "vfy": "PASS",
+    "rls": "PASS"
+  },
+  "source_and_scope": {
+    "clean_before_after": true,
+    "changed_source_paths": 28,
+    "phase_runtime_changed": false,
+    "phase_eval_plans_changed": false,
+    "shared_packages_changed": false,
+    "historical_evidence_changed": false,
+    "workflow_changed": false,
+    "main_written": false
+  },
+  "not_claimed": {
+    "strict_vfy_80": "NOT_RUN_OS_SANDBOX_UNAVAILABLE",
+    "native_client_cells": "0_VERIFIED_OF_40_CURRENT_CELLS",
+    "independent_web_review": "REQUIRED",
+    "production_release": "FORBIDDEN"
+  },
+  "real_target_effects": 0,
+  "archive_files": {
+    "final-v2-portable.json": "a30ed8a6265629b5e6295443e8517b53c12381405d87122b584e4c4425a0369e",
+    "execution-audit-final.json": "97484c6fe1bad2c71b80fad92395a94e062d401b0304aa6980f23db9c4708a32",
+    "installed-extras-v2.json": "ff03fe3332fb0ee8051e991fd7cb34f3b216875d6d2202f5cdc50a27f8e9f602",
+    "final-v2-portable-logs/repo-suite.json": "c7263be7bd19299d7fde50b5c0f32206ed8daf7d0c2c3b611a59deb7865571b7",
+    "final-v2-portable-logs/status-fixed.json": "9579b2b1b602500f2b9fc61d9c5f94d03648a482399ce41c4b333c75df974b2b",
+    "final-v2-portable-logs/rls-fixed.json": "e77521d76dc6e273ef4bb893f7066d56f5b68c6a3ae78d88d21737ddd03fa8ca"
+  },
+  "raw_archive_location": "Delivered Web attachment contains original result JSON, receipts/logs, retained failures and Git/source backup; this compact record is not a substitute for raw-log review.",
+  "client_goal": "docs/plugin-development/work-items/post-integration-conformance/CLIENT-GOAL.md"
+}

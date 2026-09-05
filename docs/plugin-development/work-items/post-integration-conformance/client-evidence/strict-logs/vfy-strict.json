@@ -1,0 +1,2242 @@
+{
+  "complete_fixed_eval": true,
+  "contract": "sdlc-ai-spec/vfy-fixed-eval-result/v1",
+  "expected_failures": 0,
+  "expected_full_count": 80,
+  "failed": 0,
+  "generated_at": "2026-09-05T16:17:05Z",
+  "passed": 80,
+  "registry": "tests/evals/sdlc_500_vfy_cases.json",
+  "results": [
+    {
+      "case_id": "VFY-E001",
+      "error": null,
+      "result": {
+        "authority_compiled": true,
+        "operation": "auto"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E002",
+      "error": null,
+      "result": {
+        "error": "VFY_SCOPE_AMBIGUOUS",
+        "message": "Exactly one complete Delivery Scope must be selected"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E003",
+      "error": null,
+      "result": {
+        "authority_compiled": true,
+        "inputs": [
+          "CTX-20260904010000-01@1",
+          "DSN-20260904010000-01@1",
+          "IMP-20260904010000-01@1",
+          "PLN-20260904010000-01@1"
+        ]
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E004",
+      "error": null,
+      "result": {
+        "executed_methods": [
+          "VFM-001"
+        ],
+        "projection": {
+          "artifact_gate": "pending",
+          "artifact_reference": "VFY-20260905161702-01@1",
+          "control_resolutions": [],
+          "early_stop": false,
+          "gate_checks": [
+            {
+              "id": "VFY-G-001",
+              "note": "Scope and current terminal Subject Set are exact.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-002",
+              "note": "Authoritative Target Set is complete.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-003",
+              "note": "Method Purpose, obligations and frozen contract are complete.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-004",
+              "note": "Method Results bind actual Subjects and immutable Evidence.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-005",
+              "note": "Target, CON-VER and CON-VAL aggregation is deterministic.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-006",
+              "note": "Returns and Control recovery preserve owning authority.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-007",
+              "note": "Evidence and Exception closure are valid.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-008",
+              "note": "Product result and downstream applicability remain distinct.",
+              "result": "pass"
+            }
+          ],
+          "next_action": "RUN_PENDING_METHOD",
+          "ok": true,
+          "pending_methods": [
+            "VFM-002"
+          ],
+          "product_result": "pending",
+          "rls_ready": false,
+          "unresolved_controls": [],
+          "unresolved_returns": [],
+          "verification_digest": "sha256:1055ec8d9a252420aacae53ea363460a063acff76e0a9959fe7646db6ffee081"
+        },
+        "state": {
+          "artifact": {
+            "artifact_status": "waiting_input",
+            "base_revision": null,
+            "id": "VFY-20260905161702-01",
+            "reference": "VFY-20260905161702-01@1",
+            "revision": 1,
+            "revision_state": "open"
+          },
+          "artifact_gate": "pending",
+          "authority_compiled": false,
+          "context_reference": "CTX-20260904100000-01@1",
+          "contract": "sdlc-ai-spec/vfy-state/v1",
+          "control_authorities": [],
+          "control_inputs": [],
+          "control_resolutions": [],
+          "early_stop": false,
+          "early_stop_basis": null,
+          "evidence": [
+            {
+              "environment": {
+                "data_contract": "current exact Subject workspace",
+                "project_root": "."
+              },
+              "evidence_requirement": "Immutable path observation",
+              "executor_identity": "fixture-automated",
+              "id": "EVD-001",
+              "method_id": "VFM-001",
+              "observed": {
+                "exists": true,
+                "kind": "file_exists",
+                "path": "README.md",
+                "source_after": "sha256:945691503ee1e584aedfe3e9a928671961267a4a4976f1416d4049ac2defe37a",
+                "source_before": "sha256:945691503ee1e584aedfe3e9a928671961267a4a4976f1416d4049ac2defe37a"
+              },
+              "observed_at": "2026-09-05T16:17:02Z",
+              "reference": "EVD-001@sha256:0c726bddcc47d4550e75f350e0501495e4db83017a8e7d8bf766e8fedef7f9ef",
+              "result": "pass",
+              "sha256": "sha256:0c726bddcc47d4550e75f350e0501495e4db83017a8e7d8bf766e8fedef7f9ef",
+              "source_evidence": null,
+              "subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-001"
+              ]
+            }
+          ],
+          "exceptions": [],
+          "final_confirmation": null,
+          "fixed_conclusions": [
+            {
+              "basis_references": [
+                "VFM-001",
+                "EVD-001@sha256:0c726bddcc47d4550e75f350e0501495e4db83017a8e7d8bf766e8fedef7f9ef"
+              ],
+              "conclusion": "pass",
+              "dimension": "verification",
+              "exception_references": [],
+              "id": "CON-VER",
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-001"
+              ]
+            },
+            {
+              "basis_references": [
+                "VFM-002"
+              ],
+              "conclusion": "pending",
+              "dimension": "validation",
+              "exception_references": [],
+              "id": "CON-VAL",
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-002"
+              ]
+            }
+          ],
+          "gate_checks": [
+            {
+              "id": "VFY-G-001",
+              "note": "Scope and current terminal Subject Set are exact.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-002",
+              "note": "Authoritative Target Set is complete.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-003",
+              "note": "Method Purpose, obligations and frozen contract are complete.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-004",
+              "note": "Method Results bind actual Subjects and immutable Evidence.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-005",
+              "note": "Target, CON-VER and CON-VAL aggregation is deterministic.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-006",
+              "note": "Returns and Control recovery preserve owning authority.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-007",
+              "note": "Evidence and Exception closure are valid.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-008",
+              "note": "Product result and downstream applicability remain distinct.",
+              "result": "pass"
+            }
+          ],
+          "input_references": [
+            "DSN-20260904100500-01@1",
+            "IMP-20260904102000-01@1",
+            "PLN-20260904101000-01@1"
+          ],
+          "method_results": [
+            {
+              "actual_result": "{\"exists\": true, \"kind\": \"file_exists\", \"path\": \"README.md\", \"source_after\": \"sha256:945691503ee1e584aedfe3e9a928671961267a4a4976f1416d4049ac2defe37a\", \"source_before\": \"sha256:945691503ee1e584aedfe3e9a928671961267a4a4976f1416d4049ac2defe37a\"}",
+              "actual_subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "evidence_references": [
+                "EVD-001@sha256:0c726bddcc47d4550e75f350e0501495e4db83017a8e7d8bf766e8fedef7f9ef"
+              ],
+              "method_id": "VFM-001",
+              "result": "pass",
+              "return_references": []
+            },
+            {
+              "actual_result": "Not executed",
+              "actual_subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "evidence_references": [],
+              "method_id": "VFM-002",
+              "result": "pending",
+              "return_references": []
+            }
+          ],
+          "methods": [
+            {
+              "disposition": "required",
+              "environment": {
+                "data_contract": "current exact Subject workspace",
+                "project_root": "."
+              },
+              "evidence_requirement": "Immutable path observation",
+              "exception_reference": null,
+              "execution_mode": "automated",
+              "executor_identity": "fixture-automated",
+              "id": "VFM-001",
+              "method_type": "inspection",
+              "n_a_basis": null,
+              "obligation_references": [
+                "DSN-20260904100500-01@1#VFP-001",
+                "PLN-20260904101000-01@1#WI-001"
+              ],
+              "pass_criteria": "README.md exists in the exact Subject workspace",
+              "procedure": {
+                "kind": "file_exists",
+                "path": "README.md"
+              },
+              "purpose": "verification",
+              "subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-001"
+              ],
+              "title": "Inspect required file"
+            },
+            {
+              "disposition": "required",
+              "environment": {
+                "data_contract": "current exact Subject workspace",
+                "project_root": "."
+              },
+              "evidence_requirement": "Immutable basic-use observation",
+              "exception_reference": null,
+              "execution_mode": "automated",
+              "executor_identity": "fixture-automated",
+              "id": "VFM-002",
+              "method_type": "demonstration",
+              "n_a_basis": null,
+              "obligation_references": [
+                "DSN-20260904100500-01@1#VFP-002",
+                "PLN-20260904101000-01@1#WI-001"
+              ],
+              "pass_criteria": "The delivered entry point is observable",
+              "procedure": {
+                "kind": "file_exists",
+                "path": "README.md"
+              },
+              "purpose": "validation",
+              "subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-002"
+              ],
+              "title": "Validate intended basic use"
+            }
+          ],
+          "next_action": "RUN_PENDING_METHOD",
+          "open_items": [],
+          "owner_artifact_inputs": [],
+          "pre_execution_contract_digest": "sha256:27011c7ec5773ea167de061278884cb90ac432ecdcbb1515687fc01ac17af007",
+          "product_result": "pending",
+          "profile": "full",
+          "release_target_obligations": [],
+          "returns": [],
+          "rls_applicability": "required",
+          "rls_ready": false,
+          "scope": {
+            "delivery_scope": [
+              "resource:app"
+            ],
+            "disposition": "required",
+            "disposition_basis": null,
+            "imp_work_items": [
+              {
+                "binding_reference": "PLN-20260904101000-01@1#WI-001",
+                "depends_on": [],
+                "reference": "PLN-20260904101000-01@1#WI-001",
+                "resource_ids": [
+                  "app"
+                ],
+                "target_phase": "IMP"
+              }
+            ],
+            "input_references": [
+              "CTX-20260904100000-01@1"
+            ],
+            "phase": "PLN",
+            "raw": {
+              "delivery_scope": [
+                "resource:app"
+              ],
+              "disposition": "required",
+              "imp_work_items": [
+                {
+                  "binding_reference": "PLN-20260904101000-01@1#WI-001",
+                  "depends_on": [],
+                  "reference": "PLN-20260904101000-01@1#WI-001",
+                  "resource_ids": [
+                    "app"
+                  ],
+                  "target_phase": "IMP"
+                }
+              ],
+              "input_references": [
+                "CTX-20260904100000-01@1"
+              ],
+              "reference": "PLN-20260904101000-01@1"
+            },
+            "reference": "PLN-20260904101000-01@1",
+            "scope_digest": null
+          },
+          "subject_set_digest": "sha256:ebb0167885c0b648d8a820433ac6b269d82d269cfa4faf4f9d728079f55fb4a0",
+          "subjects": [
+            {
+              "attempt": "attempt-001",
+              "baseline_reference": "vcs:git:0000000000000000000000000000000000000000",
+              "binding_lineage": "PLN-20260904101000-01@1#WI-001",
+              "claim_state": "completed",
+              "cumulative_changed_scope": [
+                "path:app/README.md"
+              ],
+              "current_valid": true,
+              "dependency_chain_valid": true,
+              "dependency_result_references": [],
+              "imp_revision_reference": "IMP-20260904102000-01@1",
+              "imp_revision_state": "frozen",
+              "reference": "IMP-20260904102000-01@1/RES-001",
+              "resource_id": "app",
+              "result_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+            }
+          ],
+          "supporting_members": [],
+          "target_conclusions": [
+            {
+              "basis_references": [
+                "VFM-001",
+                "EVD-001@sha256:0c726bddcc47d4550e75f350e0501495e4db83017a8e7d8bf766e8fedef7f9ef"
+              ],
+              "conclusion": "pass",
+              "dimension_projections": {
+                "verification": "pass"
+              },
+              "exception_reference": null,
+              "purpose": "verification",
+              "target_reference": "DSN-20260904100500-01@1#VFO-001"
+            },
+            {
+              "basis_references": [
+                "VFM-002"
+              ],
+              "conclusion": "pending",
+              "dimension_projections": {
+                "validation": "pending"
+              },
+              "exception_reference": null,
+              "purpose": "validation",
+              "target_reference": "DSN-20260904100500-01@1#VFO-002"
+            }
+          ],
+          "targets": [
+            {
+              "obligation_references": [
+                "DSN-20260904100500-01@1#VFP-001"
+              ],
+              "purpose": "verification",
+              "reference": "DSN-20260904100500-01@1#VFO-001",
+              "source_kind": "vfo",
+              "summary": "The exact result contains the required file"
+            },
+            {
+              "obligation_references": [
+                "DSN-20260904100500-01@1#VFP-002"
+              ],
+              "purpose": "validation",
+              "reference": "DSN-20260904100500-01@1#VFO-002",
+              "source_kind": "vfo",
+              "summary": "The delivered result supports its intended basic use"
+            }
+          ],
+          "title": "Fixture verification"
+        },
+        "status": "updated",
+        "waiting_methods": []
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E005",
+      "error": null,
+      "result": {
+        "state": {
+          "artifact": {
+            "artifact_status": "waiting_input",
+            "base_revision": 1,
+            "id": "VFY-20260905161702-01",
+            "reference": "VFY-20260905161702-01@2",
+            "revision": 2,
+            "revision_state": "open"
+          },
+          "artifact_gate": "pending",
+          "authority_compiled": false,
+          "context_reference": "CTX-20260904100000-01@1",
+          "contract": "sdlc-ai-spec/vfy-state/v1",
+          "control_authorities": [],
+          "control_inputs": [],
+          "control_resolutions": [],
+          "early_stop": false,
+          "early_stop_basis": null,
+          "evidence": [],
+          "exceptions": [],
+          "final_confirmation": null,
+          "fixed_conclusions": [
+            {
+              "basis_references": [
+                "VFM-001"
+              ],
+              "conclusion": "pending",
+              "dimension": "verification",
+              "exception_references": [],
+              "id": "CON-VER",
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-001"
+              ]
+            },
+            {
+              "basis_references": [
+                "VFM-002"
+              ],
+              "conclusion": "pending",
+              "dimension": "validation",
+              "exception_references": [],
+              "id": "CON-VAL",
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-002"
+              ]
+            }
+          ],
+          "gate_checks": [],
+          "input_references": [
+            "DSN-20260904100500-01@1",
+            "IMP-20260904102000-01@1",
+            "PLN-20260904101000-01@1"
+          ],
+          "method_results": [
+            {
+              "actual_result": "Not executed",
+              "actual_subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "evidence_references": [],
+              "method_id": "VFM-001",
+              "result": "pending",
+              "return_references": []
+            },
+            {
+              "actual_result": "Not executed",
+              "actual_subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "evidence_references": [],
+              "method_id": "VFM-002",
+              "result": "pending",
+              "return_references": []
+            }
+          ],
+          "methods": [
+            {
+              "disposition": "required",
+              "environment": {
+                "data_contract": "current exact Subject workspace",
+                "project_root": "."
+              },
+              "evidence_requirement": "Immutable path observation",
+              "exception_reference": null,
+              "execution_mode": "automated",
+              "executor_identity": "fixture-automated",
+              "id": "VFM-001",
+              "method_type": "inspection",
+              "n_a_basis": null,
+              "obligation_references": [
+                "DSN-20260904100500-01@1#VFP-001",
+                "PLN-20260904101000-01@1#WI-001"
+              ],
+              "pass_criteria": "README.md exists in the exact Subject workspace",
+              "procedure": {
+                "kind": "file_exists",
+                "path": "README.md"
+              },
+              "purpose": "verification",
+              "subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-001"
+              ],
+              "title": "Inspect required file"
+            },
+            {
+              "disposition": "required",
+              "environment": {
+                "data_contract": "current exact Subject workspace",
+                "project_root": "."
+              },
+              "evidence_requirement": "Immutable basic-use observation",
+              "exception_reference": null,
+              "execution_mode": "automated",
+              "executor_identity": "fixture-automated",
+              "id": "VFM-002",
+              "method_type": "demonstration",
+              "n_a_basis": null,
+              "obligation_references": [
+                "DSN-20260904100500-01@1#VFP-002",
+                "PLN-20260904101000-01@1#WI-001"
+              ],
+              "pass_criteria": "The delivered entry point is observable",
+              "procedure": {
+                "kind": "file_exists",
+                "path": "README.md"
+              },
+              "purpose": "validation",
+              "subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-002"
+              ],
+              "title": "Validate intended basic use"
+            }
+          ],
+          "next_action": "RUN_PENDING_METHOD",
+          "open_items": [],
+          "owner_artifact_inputs": [],
+          "pre_execution_contract_digest": "sha256:fa3d4d9df1c6706aa80e6114bb0534e2f5c0481fcc1658b25db5edeb684c0ec2",
+          "product_result": "pending",
+          "profile": "full",
+          "release_target_obligations": [],
+          "returns": [],
+          "rls_applicability": "required",
+          "rls_ready": false,
+          "scope": {
+            "delivery_scope": [
+              "resource:app"
+            ],
+            "disposition": "required",
+            "disposition_basis": null,
+            "imp_work_items": [
+              {
+                "binding_reference": "PLN-20260904101000-01@1#WI-001",
+                "depends_on": [],
+                "reference": "PLN-20260904101000-01@1#WI-001",
+                "resource_ids": [
+                  "app"
+                ],
+                "target_phase": "IMP"
+              }
+            ],
+            "input_references": [
+              "CTX-20260904100000-01@1"
+            ],
+            "phase": "PLN",
+            "raw": {
+              "delivery_scope": [
+                "resource:app"
+              ],
+              "disposition": "required",
+              "imp_work_items": [
+                {
+                  "binding_reference": "PLN-20260904101000-01@1#WI-001",
+                  "depends_on": [],
+                  "reference": "PLN-20260904101000-01@1#WI-001",
+                  "resource_ids": [
+                    "app"
+                  ],
+                  "target_phase": "IMP"
+                }
+              ],
+              "input_references": [
+                "CTX-20260904100000-01@1"
+              ],
+              "reference": "PLN-20260904101000-01@1"
+            },
+            "reference": "PLN-20260904101000-01@1",
+            "scope_digest": null
+          },
+          "subject_set_digest": "sha256:1bc5f689ececbee3c56187351e8b6e53a04fcb48226cc723f075662a44c7aa86",
+          "subjects": [
+            {
+              "attempt": "attempt-001",
+              "baseline_reference": "vcs:git:0000000000000000000000000000000000000000",
+              "binding_lineage": "PLN-20260904101000-01@1#WI-001",
+              "claim_state": "completed",
+              "cumulative_changed_scope": [
+                "path:app/README.md"
+              ],
+              "current_valid": true,
+              "dependency_chain_valid": true,
+              "dependency_result_references": [],
+              "imp_revision_reference": "IMP-20260904102000-01@1",
+              "imp_revision_state": "frozen",
+              "reference": "IMP-20260904102000-01@1/RES-001",
+              "resource_id": "app",
+              "result_digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+            }
+          ],
+          "supporting_members": [],
+          "target_conclusions": [
+            {
+              "basis_references": [
+                "VFM-001"
+              ],
+              "conclusion": "pending",
+              "dimension_projections": {
+                "verification": "pending"
+              },
+              "exception_reference": null,
+              "purpose": "verification",
+              "target_reference": "DSN-20260904100500-01@1#VFO-001"
+            },
+            {
+              "basis_references": [
+                "VFM-002"
+              ],
+              "conclusion": "pending",
+              "dimension_projections": {
+                "validation": "pending"
+              },
+              "exception_reference": null,
+              "purpose": "validation",
+              "target_reference": "DSN-20260904100500-01@1#VFO-002"
+            }
+          ],
+          "targets": [
+            {
+              "obligation_references": [
+                "DSN-20260904100500-01@1#VFP-001"
+              ],
+              "purpose": "verification",
+              "reference": "DSN-20260904100500-01@1#VFO-001",
+              "source_kind": "vfo",
+              "summary": "The exact result contains the required file"
+            },
+            {
+              "obligation_references": [
+                "DSN-20260904100500-01@1#VFP-002"
+              ],
+              "purpose": "validation",
+              "reference": "DSN-20260904100500-01@1#VFO-002",
+              "source_kind": "vfo",
+              "summary": "The delivered result supports its intended basic use"
+            }
+          ],
+          "title": "Fixture verification"
+        },
+        "status": "revised"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E006",
+      "error": null,
+      "result": {
+        "digest_unchanged": true
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E007",
+      "error": null,
+      "result": {
+        "command": "help",
+        "contract": "sdlc-ai-spec/skill-command-result/v1",
+        "display": "sdlc-500-vfy 0.3.0\n\nUsage: /sdlc-500-vfy [command] [options] [-- request text]\n\nCommands:\n  auto       根据准确 Scope、当前 Subject Set 和已有 VFY 状态选择 create、run、revise 或 check。\n  create     从 repeatable exact input 编译 VFY Contract，并执行当前安全可执行 Method。\n  run        执行或记录当前 open Revision 中选定的 pending Method。\n  revise     基于新的权威 Subject 或 Control Input 创建新 Revision；无变化返回 NO_CHANGE。\n  check      从准确持久化 Reference 绝对只读复核 Scope、Subject、Evidence、Return 与 Gate。\n  help       显示用途、参数和副作用边界。\n  version    显示 Skill 与接口版本。\n  commands   列出全部命令及是否写入。\n  examples   显示准确 Reference 与 Method 选择示例。\n\nCommon options:\n  -h, --help\n  -V, --version\n      --commands\n      --examples\n  -o, --operation VALUE\n  -p, --project-root PATH\n  -r, --reference REF\n  -d, --decision-policy user|model|experiment\n  -w, --write-policy auto|confirm|deny\n  -n, --dry-run\n  -f, --output summary|json|debug\n\nVFY options:\n  -i, --input REF    repeatable exact Scope/Subject/Control/Exception input\n  -r, --reference REF exact persisted VFY Revision for run/revise/check\n  -m, --method VFM-NNN repeatable selected Method for run\n      persistent create/revise compiles Authority from --input\n",
+        "effects": [],
+        "ok": true,
+        "state": "meta"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E008",
+      "error": null,
+      "result": {
+        "error": "VFY_METHOD_NOT_READY",
+        "message": "Selected Method does not exist"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E009",
+      "error": null,
+      "result": {
+        "executed_methods": [
+          "VFM-001",
+          "VFM-002"
+        ],
+        "projection": {
+          "artifact_gate": "pass",
+          "artifact_reference": "VFY-20260905161703-01@1",
+          "control_resolutions": [],
+          "early_stop": false,
+          "gate_checks": [
+            {
+              "id": "VFY-G-001",
+              "note": "Scope and current terminal Subject Set are exact.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-002",
+              "note": "Authoritative Target Set is complete.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-003",
+              "note": "Method Purpose, obligations and frozen contract are complete.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-004",
+              "note": "Method Results bind actual Subjects and immutable Evidence.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-005",
+              "note": "Target, CON-VER and CON-VAL aggregation is deterministic.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-006",
+              "note": "Returns and Control recovery preserve owning authority.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-007",
+              "note": "Evidence and Exception closure are valid.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-008",
+              "note": "Product result and downstream applicability remain distinct.",
+              "result": "pass"
+            }
+          ],
+          "next_action": "RESOLVE_RLS_APPLICABILITY",
+          "ok": true,
+          "pending_methods": [],
+          "product_result": "pass",
+          "rls_ready": false,
+          "unresolved_controls": [],
+          "unresolved_returns": [],
+          "verification_digest": "sha256:dfb5adc17e8d28f0b4468418194308432c9b7a198602cbb4ca24f20cb63c5d3d"
+        },
+        "state": {
+          "artifact": {
+            "artifact_status": "draft",
+            "base_revision": null,
+            "id": "VFY-20260905161703-01",
+            "reference": "VFY-20260905161703-01@1",
+            "revision": 1,
+            "revision_state": "open"
+          },
+          "artifact_gate": "pass",
+          "authority_compiled": false,
+          "context_reference": "CTX-20260904100000-01@1",
+          "contract": "sdlc-ai-spec/vfy-state/v1",
+          "control_authorities": [],
+          "control_inputs": [],
+          "control_resolutions": [],
+          "early_stop": false,
+          "early_stop_basis": null,
+          "evidence": [
+            {
+              "environment": {
+                "data_contract": "current exact Subject workspace",
+                "project_root": "."
+              },
+              "evidence_requirement": "Immutable path observation",
+              "executor_identity": "fixture-automated",
+              "id": "EVD-001",
+              "method_id": "VFM-001",
+              "observed": {
+                "exists": true,
+                "kind": "file_exists",
+                "path": "README.md",
+                "source_after": "sha256:945691503ee1e584aedfe3e9a928671961267a4a4976f1416d4049ac2defe37a",
+                "source_before": "sha256:945691503ee1e584aedfe3e9a928671961267a4a4976f1416d4049ac2defe37a"
+              },
+              "observed_at": "2026-09-05T16:17:03Z",
+              "reference": "EVD-001@sha256:1f41d45dfcb65f24a40f14ef3bb0438c083aa7e2570e88cc00c4f7d3a38d54d5",
+              "result": "pass",
+              "sha256": "sha256:1f41d45dfcb65f24a40f14ef3bb0438c083aa7e2570e88cc00c4f7d3a38d54d5",
+              "source_evidence": null,
+              "subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-001"
+              ]
+            },
+            {
+              "environment": {
+                "data_contract": "current exact Subject workspace",
+                "project_root": "."
+              },
+              "evidence_requirement": "Immutable basic-use observation",
+              "executor_identity": "fixture-automated",
+              "id": "EVD-002",
+              "method_id": "VFM-002",
+              "observed": {
+                "exists": true,
+                "kind": "file_exists",
+                "path": "README.md",
+                "source_after": "sha256:945691503ee1e584aedfe3e9a928671961267a4a4976f1416d4049ac2defe37a",
+                "source_before": "sha256:945691503ee1e584aedfe3e9a928671961267a4a4976f1416d4049ac2defe37a"
+              },
+              "observed_at": "2026-09-05T16:17:03Z",
+              "reference": "EVD-002@sha256:2fe6b2cfda37cca7ede726c133db401ae2cb3ada2d5b5ab36abcadbc2b502161",
+              "result": "pass",
+              "sha256": "sha256:2fe6b2cfda37cca7ede726c133db401ae2cb3ada2d5b5ab36abcadbc2b502161",
+              "source_evidence": null,
+              "subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-002"
+              ]
+            }
+          ],
+          "exceptions": [],
+          "final_confirmation": null,
+          "fixed_conclusions": [
+            {
+              "basis_references": [
+                "VFM-001",
+                "EVD-001@sha256:1f41d45dfcb65f24a40f14ef3bb0438c083aa7e2570e88cc00c4f7d3a38d54d5"
+              ],
+              "conclusion": "pass",
+              "dimension": "verification",
+              "exception_references": [],
+              "id": "CON-VER",
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-001"
+              ]
+            },
+            {
+              "basis_references": [
+                "VFM-002",
+                "EVD-002@sha256:2fe6b2cfda37cca7ede726c133db401ae2cb3ada2d5b5ab36abcadbc2b502161"
+              ],
+              "conclusion": "pass",
+              "dimension": "validation",
+              "exception_references": [],
+              "id": "CON-VAL",
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-002"
+              ]
+            }
+          ],
+          "gate_checks": [
+            {
+              "id": "VFY-G-001",
+              "note": "Scope and current terminal Subject Set are exact.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-002",
+              "note": "Authoritative Target Set is complete.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-003",
+              "note": "Method Purpose, obligations and frozen contract are complete.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-004",
+              "note": "Method Results bind actual Subjects and immutable Evidence.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-005",
+              "note": "Target, CON-VER and CON-VAL aggregation is deterministic.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-006",
+              "note": "Returns and Control recovery preserve owning authority.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-007",
+              "note": "Evidence and Exception closure are valid.",
+              "result": "pass"
+            },
+            {
+              "id": "VFY-G-008",
+              "note": "Product result and downstream applicability remain distinct.",
+              "result": "pass"
+            }
+          ],
+          "input_references": [
+            "DSN-20260904100500-01@1",
+            "IMP-20260904102000-01@1",
+            "PLN-20260904101000-01@1"
+          ],
+          "method_results": [
+            {
+              "actual_result": "{\"exists\": true, \"kind\": \"file_exists\", \"path\": \"README.md\", \"source_after\": \"sha256:945691503ee1e584aedfe3e9a928671961267a4a4976f1416d4049ac2defe37a\", \"source_before\": \"sha256:945691503ee1e584aedfe3e9a928671961267a4a4976f1416d4049ac2defe37a\"}",
+              "actual_subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "evidence_references": [
+                "EVD-001@sha256:1f41d45dfcb65f24a40f14ef3bb0438c083aa7e2570e88cc00c4f7d3a38d54d5"
+              ],
+              "method_id": "VFM-001",
+              "result": "pass",
+              "return_references": []
+            },
+            {
+              "actual_result": "{\"exists\": true, \"kind\": \"file_exists\", \"path\": \"README.md\", \"source_after\": \"sha256:945691503ee1e584aedfe3e9a928671961267a4a4976f1416d4049ac2defe37a\", \"source_before\": \"sha256:945691503ee1e584aedfe3e9a928671961267a4a4976f1416d4049ac2defe37a\"}",
+              "actual_subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "evidence_references": [
+                "EVD-002@sha256:2fe6b2cfda37cca7ede726c133db401ae2cb3ada2d5b5ab36abcadbc2b502161"
+              ],
+              "method_id": "VFM-002",
+              "result": "pass",
+              "return_references": []
+            }
+          ],
+          "methods": [
+            {
+              "disposition": "required",
+              "environment": {
+                "data_contract": "current exact Subject workspace",
+                "project_root": "."
+              },
+              "evidence_requirement": "Immutable path observation",
+              "exception_reference": null,
+              "execution_mode": "automated",
+              "executor_identity": "fixture-automated",
+              "id": "VFM-001",
+              "method_type": "inspection",
+              "n_a_basis": null,
+              "obligation_references": [
+                "DSN-20260904100500-01@1#VFP-001",
+                "PLN-20260904101000-01@1#WI-001"
+              ],
+              "pass_criteria": "README.md exists in the exact Subject workspace",
+              "procedure": {
+                "kind": "file_exists",
+                "path": "README.md"
+              },
+              "purpose": "verification",
+              "subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-001"
+              ],
+              "title": "Inspect required file"
+            },
+            {
+              "disposition": "required",
+              "environment": {
+                "data_contract": "current exact Subject workspace",
+                "project_root": "."
+              },
+              "evidence_requirement": "Immutable basic-use observation",
+              "exception_reference": null,
+              "execution_mode": "automated",
+              "executor_identity": "fixture-automated",
+              "id": "VFM-002",
+              "method_type": "demonstration",
+              "n_a_basis": null,
+              "obligation_references": [
+                "DSN-20260904100500-01@1#VFP-002",
+                "PLN-20260904101000-01@1#WI-001"
+              ],
+              "pass_criteria": "The delivered entry point is observable",
+              "procedure": {
+                "kind": "file_exists",
+                "path": "README.md"
+              },
+              "purpose": "validation",
+              "subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-002"
+              ],
+              "title": "Validate intended basic use"
+            }
+          ],
+          "next_action": "RESOLVE_RLS_APPLICABILITY",
+          "open_items": [],
+          "owner_artifact_inputs": [],
+          "pre_execution_contract_digest": "sha256:27011c7ec5773ea167de061278884cb90ac432ecdcbb1515687fc01ac17af007",
+          "product_result": "pass",
+          "profile": "full",
+          "release_target_obligations": [],
+          "returns": [],
+          "rls_applicability": "required",
+          "rls_ready": false,
+          "scope": {
+            "delivery_scope": [
+              "resource:app"
+            ],
+            "disposition": "required",
+            "disposition_basis": null,
+            "imp_work_items": [
+              {
+                "binding_reference": "PLN-20260904101000-01@1#WI-001",
+                "depends_on": [],
+                "reference": "PLN-20260904101000-01@1#WI-001",
+                "resource_ids": [
+                  "app"
+                ],
+                "target_phase": "IMP"
+              }
+            ],
+            "input_references": [
+              "CTX-20260904100000-01@1"
+            ],
+            "phase": "PLN",
+            "raw": {
+              "delivery_scope": [
+                "resource:app"
+              ],
+              "disposition": "required",
+              "imp_work_items": [
+                {
+                  "binding_reference": "PLN-20260904101000-01@1#WI-001",
+                  "depends_on": [],
+                  "reference": "PLN-20260904101000-01@1#WI-001",
+                  "resource_ids": [
+                    "app"
+                  ],
+                  "target_phase": "IMP"
+                }
+              ],
+              "input_references": [
+                "CTX-20260904100000-01@1"
+              ],
+              "reference": "PLN-20260904101000-01@1"
+            },
+            "reference": "PLN-20260904101000-01@1",
+            "scope_digest": null
+          },
+          "subject_set_digest": "sha256:ebb0167885c0b648d8a820433ac6b269d82d269cfa4faf4f9d728079f55fb4a0",
+          "subjects": [
+            {
+              "attempt": "attempt-001",
+              "baseline_reference": "vcs:git:0000000000000000000000000000000000000000",
+              "binding_lineage": "PLN-20260904101000-01@1#WI-001",
+              "claim_state": "completed",
+              "cumulative_changed_scope": [
+                "path:app/README.md"
+              ],
+              "current_valid": true,
+              "dependency_chain_valid": true,
+              "dependency_result_references": [],
+              "imp_revision_reference": "IMP-20260904102000-01@1",
+              "imp_revision_state": "frozen",
+              "reference": "IMP-20260904102000-01@1/RES-001",
+              "resource_id": "app",
+              "result_digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+            }
+          ],
+          "supporting_members": [],
+          "target_conclusions": [
+            {
+              "basis_references": [
+                "VFM-001",
+                "EVD-001@sha256:1f41d45dfcb65f24a40f14ef3bb0438c083aa7e2570e88cc00c4f7d3a38d54d5"
+              ],
+              "conclusion": "pass",
+              "dimension_projections": {
+                "verification": "pass"
+              },
+              "exception_reference": null,
+              "purpose": "verification",
+              "target_reference": "DSN-20260904100500-01@1#VFO-001"
+            },
+            {
+              "basis_references": [
+                "VFM-002",
+                "EVD-002@sha256:2fe6b2cfda37cca7ede726c133db401ae2cb3ada2d5b5ab36abcadbc2b502161"
+              ],
+              "conclusion": "pass",
+              "dimension_projections": {
+                "validation": "pass"
+              },
+              "exception_reference": null,
+              "purpose": "validation",
+              "target_reference": "DSN-20260904100500-01@1#VFO-002"
+            }
+          ],
+          "targets": [
+            {
+              "obligation_references": [
+                "DSN-20260904100500-01@1#VFP-001"
+              ],
+              "purpose": "verification",
+              "reference": "DSN-20260904100500-01@1#VFO-001",
+              "source_kind": "vfo",
+              "summary": "The exact result contains the required file"
+            },
+            {
+              "obligation_references": [
+                "DSN-20260904100500-01@1#VFP-002"
+              ],
+              "purpose": "validation",
+              "reference": "DSN-20260904100500-01@1#VFO-002",
+              "source_kind": "vfo",
+              "summary": "The delivered result supports its intended basic use"
+            }
+          ],
+          "title": "Fixture verification"
+        },
+        "status": "updated",
+        "waiting_methods": []
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E010",
+      "error": null,
+      "result": {
+        "scope": "PLN-20260904010000-01@1",
+        "work_items": [
+          {
+            "binding_reference": "PLN-20260904010000-01@1#WI-001",
+            "depends_on": [],
+            "reference": "PLN-20260904010000-01@1#WI-001",
+            "resource_ids": [
+              "repo"
+            ],
+            "target_phase": "IMP"
+          }
+        ]
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E011",
+      "error": null,
+      "result": {
+        "delivery_scope": [
+          "resource:app"
+        ],
+        "disposition": "n/a",
+        "disposition_basis": "PLN is authoritatively not applicable for this complete Scope",
+        "imp_work_items": [],
+        "input_references": [
+          "CTX-20260904100000-01@1"
+        ],
+        "phase": "DSN",
+        "raw": {
+          "delivery_scope": [
+            "resource:app"
+          ],
+          "disposition": "n/a",
+          "disposition_basis": "PLN is authoritatively not applicable for this complete Scope",
+          "imp_work_items": [],
+          "input_references": [
+            "CTX-20260904100000-01@1"
+          ],
+          "reference": "DSN-20260904100500-01@1"
+        },
+        "reference": "DSN-20260904100500-01@1",
+        "scope_digest": null
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E012",
+      "error": null,
+      "result": {
+        "error": "VFY_SCOPE_AMBIGUOUS",
+        "message": "Exactly one complete Delivery Scope must be selected"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E013",
+      "error": null,
+      "result": {
+        "error": "VFY_SUBJECT_NOT_CURRENT",
+        "message": "Only the Current completed Claim can provide a VFY Subject"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E014",
+      "error": null,
+      "result": {
+        "error": "VFY_SUBJECT_NOT_CURRENT",
+        "message": "Only the Current completed Claim can provide a VFY Subject"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E015",
+      "error": null,
+      "result": {
+        "subjects": [
+          "IMP-20260904010000-01@1/RESULT-RES-001"
+        ]
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E016",
+      "error": null,
+      "result": {
+        "error": "VFY_DEPENDENCY_CHAIN_INVALID",
+        "message": "Subject dependency Result chain is not current-valid"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E017",
+      "error": null,
+      "result": {
+        "error": "VFY_SUBJECT_NOT_CURRENT",
+        "message": "Subject must use an immutable Product Result locator"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E018",
+      "error": null,
+      "result": {
+        "error": "VFY_INPUT_AUTHORITY_MISMATCH"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E019",
+      "error": null,
+      "result": {
+        "error": "VFY_SUBJECT_NOT_CURRENT",
+        "message": "Current Subject readback differs from the frozen VFY Contract"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E020",
+      "error": null,
+      "result": {
+        "targets": 2
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E021",
+      "error": null,
+      "result": {
+        "targets": 2
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E022",
+      "error": null,
+      "result": {
+        "targets": 3
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E023",
+      "error": null,
+      "result": {
+        "error": "VFY_TARGET_SET_INVALID",
+        "message": "Authoritative VFY Target Set is required"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E024",
+      "error": null,
+      "result": {
+        "error": "VFY_TARGET_SET_INVALID",
+        "message": "Target source kind conflicts with its exact reference"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E025",
+      "error": null,
+      "result": {
+        "error": "VFY_PURPOSE_MISMATCH",
+        "message": "A both Target requires proof for verification and validation dimensions"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E026",
+      "error": null,
+      "result": {
+        "method_type": "inspection"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E027",
+      "error": null,
+      "result": {
+        "method_type": "analysis"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E028",
+      "error": null,
+      "result": {
+        "method_type": "demonstration"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E029",
+      "error": null,
+      "result": {
+        "method_type": "test"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E030",
+      "error": null,
+      "result": {
+        "error": "VFY_METHOD_NOT_READY",
+        "message": "Method Type must be inspection, analysis, demonstration or test"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E031",
+      "error": null,
+      "result": {
+        "error": "VFY_METHOD_COVERAGE_INCOMPLETE",
+        "message": "Every authoritative Target must be covered by at least one Method"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E032",
+      "error": null,
+      "result": {
+        "error": "VFY_METHOD_COVERAGE_INCOMPLETE",
+        "message": "Every Method requires Target and Subject references"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E033",
+      "error": null,
+      "result": {
+        "error": "VFY_PURPOSE_MISMATCH",
+        "message": "Method Purpose is incompatible with its Target"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E034",
+      "error": null,
+      "result": {
+        "error": "VFY_METHOD_COVERAGE_INCOMPLETE",
+        "message": "One or more upstream VFY obligations are not mapped to a Method"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E035",
+      "error": null,
+      "result": {
+        "error": "VFY_METHOD_COVERAGE_INCOMPLETE",
+        "message": "One or more upstream VFY obligations are not mapped to a Method"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E036",
+      "error": null,
+      "result": {
+        "error": "VFY_METHOD_COVERAGE_INCOMPLETE",
+        "message": "One or more upstream VFY obligations are not mapped to a Method"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E037",
+      "error": null,
+      "result": {
+        "error": "VFY_METHOD_NOT_READY",
+        "message": "Method requires pass criteria and Evidence requirement"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E038",
+      "error": null,
+      "result": {
+        "error": "VFY_METHOD_NOT_READY",
+        "message": "n/a requires objective non-applicability, not execution unavailability"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E039",
+      "error": null,
+      "result": {
+        "error": "VFY_METHOD_NOT_READY",
+        "message": "A waived Method requires an exact active Exception reference"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E040",
+      "error": null,
+      "result": {
+        "error": "VFY_METHOD_NOT_READY",
+        "message": "Method Type must be inspection, analysis, demonstration or test"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E041",
+      "error": null,
+      "result": {
+        "actual_result": "{\"argv\": [\"python3\", \"-m\", \"unittest\", \"test_vfy_command_fixture\"], \"containment\": \"os-sandbox\", \"cwd\": \".\", \"exit_code\": 0, \"isolated_after\": \"sha256:2e813d350dbcb15d3794062cfdac638321f49fa09dc8733c243ab1628425b7b8\", \"isolated_before\": \"sha256:95ecddf0a0b38386671e57615f879eb7b8624a279ea8bf566b8cf65a7a366f94\", \"kind\": \"command\", \"network\": \"disabled\", \"output_budget_bytes\": 65536, \"policy\": \"deterministic-test-v1\", \"source_after\": \"sha256:844d1149e541b1172b86e31addda1572cf75eef3c7294f8ca03b839d0811b771\", \"source_before\": \"sha256:844d1149e541b1172b86e31addda1572cf75eef3c7294f8ca03b839d0811b771\", \"stderr\": \".\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nOK\\n\", \"stdout\": \"\", \"timed_out\": false, \"workspace\": \"isolated-copy\"}",
+        "actual_subject_references": [
+          "IMP-20260904102000-01@1/RES-001"
+        ],
+        "evidence_references": [
+          "EVD-001@sha256:dc628a0b0b7df4267b4a41b01499b129be375fc1bfa829763b4e20468e3950ea"
+        ],
+        "method_id": "VFM-001",
+        "result": "pass",
+        "return_references": []
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E042",
+      "error": null,
+      "result": {
+        "error": "VFY_METHOD_NOT_READY"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E043",
+      "error": null,
+      "result": {
+        "waiting": [
+          "VFM-001"
+        ]
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E044",
+      "error": null,
+      "result": {
+        "error": "VFY_EVIDENCE_INSUFFICIENT",
+        "message": "Manual evaluator differs from the frozen Method executor identity"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E045",
+      "error": null,
+      "result": {
+        "error": "VFY_SUBJECT_NOT_CURRENT",
+        "message": "Actual Method Subject differs from the frozen Method Contract"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E046",
+      "error": null,
+      "result": {
+        "actual_result": "{\"argv\": [\"python3\", \"-m\", \"unittest\", \"test_vfy_command_fixture\"], \"containment\": \"os-sandbox\", \"cwd\": \".\", \"exit_code\": 1, \"isolated_after\": \"sha256:e4a41c7a11fad66b3ca8cce1437f7cae5d12ed104077ca2cef48c30cce03118f\", \"isolated_before\": \"sha256:afd317b07d9fd9ac134a2a17b755342ef9a0af6f1144fe2ba54764d6125a9ac5\", \"kind\": \"command\", \"network\": \"disabled\", \"output_budget_bytes\": 65536, \"policy\": \"deterministic-test-v1\", \"source_after\": \"sha256:004cc259dea82b78b5eb8af837a386db18e2d6688fda9af5c658c77953fcbe98\", \"source_before\": \"sha256:004cc259dea82b78b5eb8af837a386db18e2d6688fda9af5c658c77953fcbe98\", \"stderr\": \"F\\n======================================================================\\nFAIL: test_result (test_vfy_command_fixture.CommandFixture.test_result)\\n----------------------------------------------------------------------\\nTraceback (most recent call last):\\n  File \\\"/private/var/folders/k9/zv9qrcrn1f32drkcdhms3gx80000gn/T/vfy-command-fkm57hnt/workspace/test_vfy_command_fixture.py\\\", line 5, in test_result\\n    self.fail('expected failure')\\n    ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^\\nAssertionError: expected failure\\n\\n----------------------------------------------------------------------\\nRan 1 test in 0.000s\\n\\nFAILED (failures=1)\\n\", \"stdout\": \"\", \"timed_out\": false, \"workspace\": \"isolated-copy\"}",
+        "actual_subject_references": [
+          "IMP-20260904102000-01@1/RES-001"
+        ],
+        "evidence_references": [
+          "EVD-001@sha256:af76f6eda33d91dbb85961ec1002418dcbac598ff2c3e9724eeb138343659a1a"
+        ],
+        "method_id": "VFM-001",
+        "result": "fail",
+        "return_references": []
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E047",
+      "error": null,
+      "result": {
+        "error": "VFY_SECRET_REJECTED",
+        "message": "Secret-like content cannot enter a VFY Artifact or Evidence"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E048",
+      "error": null,
+      "result": {
+        "error": "VFY_EVIDENCE_INSUFFICIENT",
+        "message": "Evidence digest or immutable reference does not match canonical bytes"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E049",
+      "error": null,
+      "result": {
+        "error": "VFY_EVIDENCE_INSUFFICIENT",
+        "message": "Evidence requires Method, Target, Subject, result, observation, environment, executor, time and requirement metadata"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E050",
+      "error": null,
+      "result": {
+        "actual_result": "{\"actual_subjects\": [\"IMP-20260904102000-01@1/RES-001\"], \"expected_subjects\": [\"IMP-20260904102000-01@1/RES-001\"], \"immutable\": true, \"kind\": \"evidence_review\", \"source_after\": \"sha256:945691503ee1e584aedfe3e9a928671961267a4a4976f1416d4049ac2defe37a\", \"source_before\": \"sha256:945691503ee1e584aedfe3e9a928671961267a4a4976f1416d4049ac2defe37a\", \"source_digest\": \"sha256:4444444444444444444444444444444444444444444444444444444444444444\"}",
+        "actual_subject_references": [
+          "IMP-20260904102000-01@1/RES-001"
+        ],
+        "evidence_references": [
+          "EVD-001@sha256:07ef7c50db258c48a51d2c0ef481352c592abfd80e6121945d34053f96d2a536"
+        ],
+        "method_id": "VFM-001",
+        "result": "pass",
+        "return_references": []
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E051",
+      "error": null,
+      "result": {
+        "actual_result": "{\"actual_subjects\": [\"vcs:git:8888888888888888888888888888888888888888\"], \"expected_subjects\": [\"IMP-20260904102000-01@1/RES-001\"], \"immutable\": true, \"kind\": \"evidence_review\", \"source_after\": \"sha256:945691503ee1e584aedfe3e9a928671961267a4a4976f1416d4049ac2defe37a\", \"source_before\": \"sha256:945691503ee1e584aedfe3e9a928671961267a4a4976f1416d4049ac2defe37a\", \"source_digest\": \"sha256:4444444444444444444444444444444444444444444444444444444444444444\"}",
+        "actual_subject_references": [
+          "IMP-20260904102000-01@1/RES-001"
+        ],
+        "evidence_references": [
+          "EVD-001@sha256:59b37c379e0742e04d22b1ff2eb23d86cedfd996bff6105055264ea810ab4203"
+        ],
+        "method_id": "VFM-001",
+        "result": "fail",
+        "return_references": []
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E052",
+      "error": null,
+      "result": {
+        "product": "pass"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E053",
+      "error": null,
+      "result": {
+        "gate": "pass",
+        "product": "fail"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E054",
+      "error": null,
+      "result": {
+        "error": "VFY_FINAL_CONFIRMATION_STALE",
+        "message": "Pre-execution Contract changed after it was frozen"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E055",
+      "error": null,
+      "result": {
+        "error": "VFY_PURPOSE_MISMATCH",
+        "message": "A both Target requires proof for verification and validation dimensions"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E056",
+      "error": null,
+      "result": {
+        "control": "VFY-20260904120000-01@1#RET-001",
+        "return_phase": "IMP"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E057",
+      "error": null,
+      "result": {
+        "control": "VFY-20260904120000-01@1#RET-001",
+        "return_phase": "REQ"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E058",
+      "error": null,
+      "result": {
+        "control": "VFY-20260904120000-01@1#RET-001",
+        "return_phase": "DSN"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E059",
+      "error": null,
+      "result": {
+        "control": "VFY-20260904120000-01@1#RET-001",
+        "return_phase": "PLN"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E060",
+      "error": null,
+      "result": {
+        "error": "CONTROL_INPUT_INVALID"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E061",
+      "error": null,
+      "result": {
+        "control": "VFY-20260904120000-01@1#RET-001",
+        "status": "open"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E062",
+      "error": null,
+      "result": {
+        "control": "VFY-20260904120000-01@1#RET-001",
+        "status": "resolved"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E063",
+      "error": null,
+      "result": {
+        "error": "VFY_CONTROL_INVALID"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E064",
+      "error": null,
+      "result": {
+        "control": "RLS-20260904120000-01@1#RLI-001",
+        "status": "resolved"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E065",
+      "error": null,
+      "result": {
+        "early_stop": true
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E066",
+      "error": null,
+      "result": {
+        "error": "VFY_EARLY_STOP_INVALID",
+        "message": "Early-stop basis must prove failure validity and Return attribution"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E067",
+      "error": null,
+      "result": {
+        "actual_result": "Not executed because a verified failure checkpoint requires upstream rework",
+        "actual_subject_references": [
+          "IMP-20260904102000-01@1/RES-001"
+        ],
+        "evidence_references": [],
+        "method_id": "VFM-002",
+        "result": "pending",
+        "return_references": [
+          "VFY-20260905161704-01@1#RET-001"
+        ]
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E068",
+      "error": null,
+      "result": {
+        "next": "IMP"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E069",
+      "error": null,
+      "result": {
+        "error": "VFY_EARLY_STOP_INVALID",
+        "message": "An open fact can still change failure validity or Return attribution"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E070",
+      "error": null,
+      "result": {
+        "error": "VFY_CONCLUSION_INCONSISTENT",
+        "message": "Stored Target or fixed Conclusion differs from deterministic aggregation"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E071",
+      "error": null,
+      "result": {
+        "reference": "VFY-20260905161704-01@1"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E072",
+      "error": null,
+      "result": {
+        "state": {
+          "artifact": {
+            "artifact_status": "waiting_input",
+            "base_revision": 1,
+            "id": "VFY-20260905161704-01",
+            "reference": "VFY-20260905161704-01@2",
+            "revision": 2,
+            "revision_state": "open"
+          },
+          "artifact_gate": "pending",
+          "authority_compiled": false,
+          "context_reference": "CTX-20260904100000-01@1",
+          "contract": "sdlc-ai-spec/vfy-state/v1",
+          "control_authorities": [],
+          "control_inputs": [],
+          "control_resolutions": [],
+          "early_stop": false,
+          "early_stop_basis": null,
+          "evidence": [],
+          "exceptions": [],
+          "final_confirmation": null,
+          "fixed_conclusions": [
+            {
+              "basis_references": [
+                "VFM-001"
+              ],
+              "conclusion": "pending",
+              "dimension": "verification",
+              "exception_references": [],
+              "id": "CON-VER",
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-001"
+              ]
+            },
+            {
+              "basis_references": [
+                "VFM-002"
+              ],
+              "conclusion": "pending",
+              "dimension": "validation",
+              "exception_references": [],
+              "id": "CON-VAL",
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-002"
+              ]
+            }
+          ],
+          "gate_checks": [],
+          "input_references": [
+            "DSN-20260904100500-01@1",
+            "IMP-20260904102000-01@1",
+            "PLN-20260904101000-01@1"
+          ],
+          "method_results": [
+            {
+              "actual_result": "Not executed",
+              "actual_subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "evidence_references": [],
+              "method_id": "VFM-001",
+              "result": "pending",
+              "return_references": []
+            },
+            {
+              "actual_result": "Not executed",
+              "actual_subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "evidence_references": [],
+              "method_id": "VFM-002",
+              "result": "pending",
+              "return_references": []
+            }
+          ],
+          "methods": [
+            {
+              "disposition": "required",
+              "environment": {
+                "data_contract": "current exact Subject workspace",
+                "project_root": "."
+              },
+              "evidence_requirement": "Immutable path observation",
+              "exception_reference": null,
+              "execution_mode": "automated",
+              "executor_identity": "fixture-automated",
+              "id": "VFM-001",
+              "method_type": "inspection",
+              "n_a_basis": null,
+              "obligation_references": [
+                "DSN-20260904100500-01@1#VFP-001",
+                "PLN-20260904101000-01@1#WI-001"
+              ],
+              "pass_criteria": "README.md exists in the exact Subject workspace",
+              "procedure": {
+                "kind": "file_exists",
+                "path": "README.md"
+              },
+              "purpose": "verification",
+              "subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-001"
+              ],
+              "title": "Inspect required file"
+            },
+            {
+              "disposition": "required",
+              "environment": {
+                "data_contract": "current exact Subject workspace",
+                "project_root": "."
+              },
+              "evidence_requirement": "Immutable basic-use observation",
+              "exception_reference": null,
+              "execution_mode": "automated",
+              "executor_identity": "fixture-automated",
+              "id": "VFM-002",
+              "method_type": "demonstration",
+              "n_a_basis": null,
+              "obligation_references": [
+                "DSN-20260904100500-01@1#VFP-002",
+                "PLN-20260904101000-01@1#WI-001"
+              ],
+              "pass_criteria": "The delivered entry point is observable",
+              "procedure": {
+                "kind": "file_exists",
+                "path": "README.md"
+              },
+              "purpose": "validation",
+              "subject_references": [
+                "IMP-20260904102000-01@1/RES-001"
+              ],
+              "target_references": [
+                "DSN-20260904100500-01@1#VFO-002"
+              ],
+              "title": "Validate intended basic use"
+            }
+          ],
+          "next_action": "RUN_PENDING_METHOD",
+          "open_items": [],
+          "owner_artifact_inputs": [],
+          "pre_execution_contract_digest": "sha256:b8ff9433c9846586ee46bbbb850471e38c4a7dc5535e54c8f9cf03af26cd4b2a",
+          "product_result": "pending",
+          "profile": "full",
+          "release_target_obligations": [],
+          "returns": [],
+          "rls_applicability": "required",
+          "rls_ready": false,
+          "scope": {
+            "delivery_scope": [
+              "resource:app"
+            ],
+            "disposition": "required",
+            "disposition_basis": null,
+            "imp_work_items": [
+              {
+                "binding_reference": "PLN-20260904101000-01@1#WI-001",
+                "depends_on": [],
+                "reference": "PLN-20260904101000-01@1#WI-001",
+                "resource_ids": [
+                  "app"
+                ],
+                "target_phase": "IMP"
+              }
+            ],
+            "input_references": [
+              "CTX-20260904100000-01@1"
+            ],
+            "phase": "PLN",
+            "raw": {
+              "delivery_scope": [
+                "resource:app"
+              ],
+              "disposition": "required",
+              "imp_work_items": [
+                {
+                  "binding_reference": "PLN-20260904101000-01@1#WI-001",
+                  "depends_on": [],
+                  "reference": "PLN-20260904101000-01@1#WI-001",
+                  "resource_ids": [
+                    "app"
+                  ],
+                  "target_phase": "IMP"
+                }
+              ],
+              "input_references": [
+                "CTX-20260904100000-01@1"
+              ],
+              "reference": "PLN-20260904101000-01@1"
+            },
+            "reference": "PLN-20260904101000-01@1",
+            "scope_digest": null
+          },
+          "subject_set_digest": "sha256:a7d73ba0a5112537e7da484e472c040f1faa342f82702db3f85d00c7e48df7ae",
+          "subjects": [
+            {
+              "attempt": "attempt-001",
+              "baseline_reference": "vcs:git:0000000000000000000000000000000000000000",
+              "binding_lineage": "PLN-20260904101000-01@1#WI-001",
+              "claim_state": "completed",
+              "cumulative_changed_scope": [
+                "path:app/README.md"
+              ],
+              "current_valid": true,
+              "dependency_chain_valid": true,
+              "dependency_result_references": [],
+              "imp_revision_reference": "IMP-20260904102000-01@1",
+              "imp_revision_state": "frozen",
+              "reference": "IMP-20260904102000-01@1/RES-001",
+              "resource_id": "app",
+              "result_digest": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
+            }
+          ],
+          "supporting_members": [],
+          "target_conclusions": [
+            {
+              "basis_references": [
+                "VFM-001"
+              ],
+              "conclusion": "pending",
+              "dimension_projections": {
+                "verification": "pending"
+              },
+              "exception_reference": null,
+              "purpose": "verification",
+              "target_reference": "DSN-20260904100500-01@1#VFO-001"
+            },
+            {
+              "basis_references": [
+                "VFM-002"
+              ],
+              "conclusion": "pending",
+              "dimension_projections": {
+                "validation": "pending"
+              },
+              "exception_reference": null,
+              "purpose": "validation",
+              "target_reference": "DSN-20260904100500-01@1#VFO-002"
+            }
+          ],
+          "targets": [
+            {
+              "obligation_references": [
+                "DSN-20260904100500-01@1#VFP-001"
+              ],
+              "purpose": "verification",
+              "reference": "DSN-20260904100500-01@1#VFO-001",
+              "source_kind": "vfo",
+              "summary": "The exact result contains the required file"
+            },
+            {
+              "obligation_references": [
+                "DSN-20260904100500-01@1#VFP-002"
+              ],
+              "purpose": "validation",
+              "reference": "DSN-20260904100500-01@1#VFO-002",
+              "source_kind": "vfo",
+              "summary": "The delivered result supports its intended basic use"
+            }
+          ],
+          "title": "Fixture verification"
+        },
+        "status": "revised"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E073",
+      "error": null,
+      "result": {
+        "status": "NO_CHANGE"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E074",
+      "error": null,
+      "result": {
+        "error": "VFY_FINAL_CONFIRMATION_STALE",
+        "message": "Final Confirmation does not bind Contract, Subject, Result, Return and product boundary"
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E075",
+      "error": null,
+      "result": {
+        "abandoned": true
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E076",
+      "error": null,
+      "result": {
+        "digest_unchanged": true
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E077",
+      "error": null,
+      "result": {
+        "projection": {
+          "artifact_gate": "pass_with_exception",
+          "artifact_reference": "VFY-20260905161705-01@1",
+          "artifact_status": "ready_with_exception",
+          "early_stop": false,
+          "next_action": "CREATE_RLS",
+          "next_phase": "RLS",
+          "product_result": "waived",
+          "return_phase": null,
+          "revision_state": "frozen",
+          "rls_applicability": "required",
+          "rls_ready": true,
+          "unresolved_controls": [],
+          "unresolved_returns": []
+        },
+        "release_candidate": {
+          "artifact_gate": "pass_with_exception",
+          "artifact_status": "ready_with_exception",
+          "con_val": "pass",
+          "con_ver": "waived",
+          "contract": "sdlc-ai-spec/vfy-release-candidate/v1",
+          "early_stop": false,
+          "evidence_references": [
+            "EVD-001@sha256:f8c39d750e20f96bd0087de197170227004bbb96ee7e845d5170e6aef6d932e0"
+          ],
+          "exception": null,
+          "exception_references": [
+            "DSN-20260904100500-01@1#EX-001"
+          ],
+          "imp_chain_current_valid": true,
+          "pending_fields": [],
+          "product_result": "waived",
+          "provisional": false,
+          "release_target_obligations": [],
+          "result_references": [
+            "IMP-20260904102000-01@1/RES-001"
+          ],
+          "revision_state": "frozen",
+          "rls_applicability": "required",
+          "rls_ready": true,
+          "scope_reference": "PLN-20260904101000-01@1",
+          "source_digest": "sha256:fe5b0be7b57fc86571f9c0ee396af5ec77c3cf246b24ad1f3c63dd010dfc9def",
+          "subject_current_valid": true,
+          "subject_references": [
+            "IMP-20260904102000-01@1/RES-001"
+          ],
+          "unresolved_returns": [],
+          "vfy_reference": "VFY-20260905161705-01@1"
+        }
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E078",
+      "error": null,
+      "result": {
+        "artifact_gate": "pass",
+        "artifact_reference": "VFY-20260905161705-01@1",
+        "artifact_status": "ready",
+        "early_stop": false,
+        "next_action": "RETURN_UPSTREAM",
+        "next_phase": "IMP",
+        "product_result": "fail",
+        "return_phase": "IMP",
+        "revision_state": "frozen",
+        "rls_applicability": "required",
+        "rls_ready": false,
+        "unresolved_controls": [],
+        "unresolved_returns": [
+          "RET-001",
+          "RET-002"
+        ]
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E079",
+      "error": null,
+      "result": {
+        "projections": [
+          {
+            "artifact_gate": "pass",
+            "artifact_reference": "VFY-20260905161705-01@1",
+            "artifact_status": "ready",
+            "early_stop": false,
+            "next_action": "LIFECYCLE_COMPLETE",
+            "next_phase": null,
+            "product_result": "pass",
+            "return_phase": null,
+            "revision_state": "frozen",
+            "rls_applicability": "n/a",
+            "rls_ready": false,
+            "unresolved_controls": [],
+            "unresolved_returns": []
+          },
+          {
+            "artifact_gate": "pass_with_exception",
+            "artifact_reference": "VFY-20260905161705-01@1",
+            "artifact_status": "ready_with_exception",
+            "early_stop": false,
+            "next_action": "LIFECYCLE_COMPLETE",
+            "next_phase": null,
+            "product_result": "pass",
+            "return_phase": null,
+            "revision_state": "frozen",
+            "rls_applicability": "waived",
+            "rls_ready": false,
+            "unresolved_controls": [],
+            "unresolved_returns": []
+          }
+        ]
+      },
+      "status": "PASS"
+    },
+    {
+      "case_id": "VFY-E080",
+      "error": null,
+      "result": {
+        "artifact_gate": "pass",
+        "artifact_status": "ready",
+        "product_result": "fail"
+      },
+      "status": "PASS"
+    }
+  ],
+  "selected_count": 80,
+  "skipped": 0,
+  "status": "PASS"
+}

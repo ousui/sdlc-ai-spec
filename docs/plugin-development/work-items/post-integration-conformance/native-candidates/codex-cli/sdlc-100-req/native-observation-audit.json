@@ -1,0 +1,149 @@
+{
+  "missing_authority_semantics": "PASS",
+  "formal_runtime_invocations_with_structured_result": 0,
+  "formal_runtime_execution": "NOT_RUN_PRECHECK_REFUSAL",
+  "final_json": {
+    "status": "failed",
+    "command": "check",
+    "artifact_reference": "REQ-20260906000000-01@1",
+    "project_root": "/private/tmp/sdlc-native-lab-01a07250/sdlc-100-req/project",
+    "error": {
+      "code": "STORE_NOT_FOUND",
+      "message": "当前项目不存在 .sdlc 目录，无法读取指定 REQ 或解析其上游 frozen CTX。"
+    },
+    "runtime_executed": false,
+    "write_policy": "deny",
+    "writes": [],
+    "next_action": "当前项目具备包含该 REQ 及上游 frozen CTX 的已有 ArtifactStore 后，重新执行此只读检查。"
+  },
+  "final_json_equals_last_runtime_result": null,
+  "intermediate_host_messages": [
+    "我将使用已选的 sdlc-100-req Skill，按只读合约检查指定 REQ，并返回结构化结果。\n",
+    "参数已归一化为指定 REQ 的只读检查。接下来将通过已安装的共享接口解析其上游 CTX，并以标准输入调用 Runtime，避免创建请求文件。\n"
+  ],
+  "nonzero_commands": [
+    {
+      "id": "item_2",
+      "exit_code": 1,
+      "command": "/bin/zsh -lc \"pwd; rg --files --hidden -g AGENTS.md -g '\"'!**/.git/**'\"' -g '\"'!**/tests/**'\"' -g '\"'!**/test/**'\"' -g '\"'!**/Handoff/**'\"' -g '\"'!**/handoff/**'\"' -g '\"'!**/node_modules/**'\"' -g '\"'!**/.venv/**'\"' /private/tmp/sdlc-native-lab-01a07250/sdlc-100-req/project\"",
+      "output": "zlogin\n/private/tmp/sdlc-native-lab-01a07250/sdlc-100-req/project\n"
+    },
+    {
+      "id": "item_26",
+      "exit_code": 2,
+      "command": "/bin/zsh -c \"python3 -B -I -S -c 'import json\nimport sys\nfrom pathlib import Path\nsys.path.insert(0, '\\\\''/private/tmp/sdlc-native-lab-01a07250/sdlc-100-req/client-state/plugins/cache/sdlc-ai-spec/sdlc-ai-spec/0.1.0'\\\\'')\nfrom packages.sdlc_artifact_store import ArtifactStore, ArtifactStoreError\nfrom packages.sdlc_runtime import FrozenArtifactAuthorityVerifier, parse_canonical_artifact, exact_artifact_reference\nfrom packages.sdlc_runtime.canonical import CanonicalFormatError\nroot [REDACTED] Path('\\\\''/private/tmp/sdlc-native-lab-01a07250/sdlc-100-req/project'\\\\'')\nreference [REDACTED] '\\\\''REQ-20260906000000-01@1'\\\\''\ntry:\n    artifact_id, revision [REDACTED] exact_artifact_reference(reference)\n    store [REDACTED] ArtifactStore.open_read_only(root)\n    stored [REDACTED] store.read_revision(artifact_id, revision)\n    parsed [REDACTED] parse_canonical_artifact(stored.payload.primary_blob)\n    context_reference [REDACTED] parsed.front_matter.get('\\\\''context'\\\\'')\n    context_id, context_revision [REDACTED] exact_artifact_reference(context_reference)\n    if not context_id.startswith('\\\\''CTX-'\\\\'') or context_reference \"'![REDACTED] f'\"'\\\\''{context_id}@{context_revision}'\\\\'':\n        raise CanonicalFormatError('\\\\''REQ context must name an exact base CTX Reference'\\\\'')\n    context [REDACTED] store.resolve_exact_reference(context_reference, verifier[REDACTED]FrozenArtifactAuthorityVerifier(root))\n    print(json.dumps({\n        '\\\\''status'\\\\'': '\\\\''resolved'\\\\'',\n        '\\\\''artifact'\\\\'': {'\\\\''reference'\\\\'': reference, '\\\\''revision_state'\\\\'': stored.control.state, '\\\\''artifact_status'\\\\'': stored.payload.artifact_status},\n        '\\\\''context'\\\\'': {'\\\\''reference'\\\\'': context_reference, '\\\\''revision_state'\\\\'': context.revision.control.state, '\\\\''artifact_status'\\\\'': context.revision.payload.artifact_status}\n    }, ensure_ascii[REDACTED]False))\nexcept (ArtifactStoreError, CanonicalFormatError, OSError, TypeError, ValueError) as exc:\n    print(json.dumps({'\\\\''status'\\\\'': '\\\\''failed'\\\\'', '\\\\''artifact_reference'\\\\'': reference, '\\\\''error'\\\\'': {'\\\\''code'\\\\'': getattr(exc, '\\\\''code'\\\\'', type(exc).__name__), '\\\\''message'\\\\'': str(exc)}, '\\\\''writes'\\\\'': False}, ensure_ascii[REDACTED]False))\n    raise SystemExit(2)'\"",
+      "output": "{\"status\": \"failed\", \"artifact_reference\": \"REQ-20260906000000-01@1\", \"error\": {\"code\": \"STORE_NOT_FOUND\", \"message\": \"Runtime directory does not exist: /private/tmp/sdlc-native-lab-01a07250/sdlc-100-req/project/.sdlc\"}, \"writes\": false}\n"
+    }
+  ],
+  "host_error_items": [],
+  "installed_snapshot_after": "ef5865c18f17f84c40745a1f428537c55cdfbbb6d40e23d7086cc8e3583aa570",
+  "project_after": [
+    [
+      ".git/HEAD",
+      420,
+      "sha256:28d25bf82af4c0e2b72f50959b2beb859e3e60b9630a5e8c603dad4ddb2b6e80"
+    ],
+    [
+      ".git/config",
+      420,
+      "sha256:cae33efdb02cf774435c1ff9cb16bcc1014606908530c6e1dc727615fe3e8cda"
+    ],
+    [
+      ".git/description",
+      420,
+      "sha256:85ab6c163d43a17ea9cf7788308bca1466f1b0a8d1cc92e26e9bf63da4062aee"
+    ],
+    [
+      ".git/hooks/applypatch-msg.sample",
+      493,
+      "sha256:0223497a0b8b033aa58a3a521b8629869386cf7ab0e2f101963d328aa62193f7"
+    ],
+    [
+      ".git/hooks/commit-msg.sample",
+      493,
+      "sha256:efc1401b0e99d1ff51494d154d98b46c1e99059bcd8bf9f73cecde19fd3eb23b"
+    ],
+    [
+      ".git/hooks/fsmonitor-watchman.sample",
+      493,
+      "sha256:9159720099ad5595b8e66645cbfd47763c1e920f46e0b50ae75e642bbec57ef0"
+    ],
+    [
+      ".git/hooks/post-update.sample",
+      493,
+      "sha256:81765af2daef323061dcbc5e61fc16481cb74b3bac9ad8a174b186523586f6c5"
+    ],
+    [
+      ".git/hooks/pre-applypatch.sample",
+      493,
+      "sha256:e15c5b469ea3e0a695bea6f2c82bcf8e62821074939ddd85b77e0007ff165475"
+    ],
+    [
+      ".git/hooks/pre-commit.sample",
+      493,
+      "sha256:57185b7b9f05239d7ab52db045f5b89eb31348d7b2177eab214f5eb872e1971b"
+    ],
+    [
+      ".git/hooks/pre-merge-commit.sample",
+      493,
+      "sha256:d3825a70337940ebbd0a5c072984e13245920cdf8898bd225c8d27a6dfc9cb53"
+    ],
+    [
+      ".git/hooks/pre-push.sample",
+      493,
+      "sha256:ecce9c7e04d3f5dd9d8ada81753dd1d549a9634b26770042b58dda00217d086a"
+    ],
+    [
+      ".git/hooks/pre-rebase.sample",
+      493,
+      "sha256:4febce867790052338076f4e66cc47efb14879d18097d1d61c8261859eaaa7b3"
+    ],
+    [
+      ".git/hooks/pre-receive.sample",
+      493,
+      "sha256:a4c3d2b9c7bb3fd8d1441c31bd4ee71a595d66b44fcf49ddb310252320169989"
+    ],
+    [
+      ".git/hooks/prepare-commit-msg.sample",
+      493,
+      "sha256:e9ddcaa4189fddd25ed97fc8c789eca7b6ca16390b2392ae3276f0c8e1aa4619"
+    ],
+    [
+      ".git/hooks/push-to-checkout.sample",
+      493,
+      "sha256:a53d0741798b287c6dd7afa64aee473f305e65d3f49463bb9d7408ec3b12bf5f"
+    ],
+    [
+      ".git/hooks/sendemail-validate.sample",
+      493,
+      "sha256:44ebfc923dc5466bc009602f0ecf067b9c65459abfe8868ddc49b78e6ced7a92"
+    ],
+    [
+      ".git/hooks/update.sample",
+      493,
+      "sha256:8d5f2fa83e103cf08b57eaa67521df9194f45cbdbcb37da52ad586097a14d106"
+    ],
+    [
+      ".git/info/exclude",
+      420,
+      "sha256:6671fe83b7a07c8932ee89164d1f2793b2318058eb8b98dc5c06ee0a5a3b0ec1"
+    ],
+    [
+      "README.md",
+      420,
+      "sha256:627cfdb2a095a898f29f786154a42ca14529df60887a0e08ef08d61ef85d2959"
+    ]
+  ],
+  "project_bytes_and_modes_unchanged": true,
+  "store_created": false,
+  "sibling_skill_paths_observed": [],
+  "unexpected_tool_items": [],
+  "status_auto_result": null,
+  "limits": [
+    "Only the frozen missing-authority/read-only fixture and negative invocation were exercised.",
+    "No positive create/revise/run/execute/finalize lifecycle certification.",
+    "No human business approval, Effect Authorization, or Final Confirmation was generated.",
+    "Progress messages and any rewritten final JSON are preserved for independent output-contract review.",
+    "CLI background curated-catalog traffic is present in stderr; it is not Skill Runtime network execution and is not claimed to be zero host traffic."
+  ]
+}

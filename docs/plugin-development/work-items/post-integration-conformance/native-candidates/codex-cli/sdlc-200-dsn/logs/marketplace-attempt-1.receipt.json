@@ -1,0 +1,30 @@
+{
+  "name": "marketplace",
+  "attempt": 1,
+  "argv": [
+    "/Applications/ChatGPT.app/Contents/Resources/codex",
+    "plugin",
+    "marketplace",
+    "add",
+    "/private/tmp/sdlc-native-lab-01a07250/sdlc-200-dsn/marketplace",
+    "--json"
+  ],
+  "cwd": "/private/tmp/sdlc-native-lab-01a07250/sdlc-200-dsn/project",
+  "started_at": "2026-09-05T16:37:46.090345+00:00",
+  "finished_at": "2026-09-05T16:37:46.108766+00:00",
+  "duration_ms": 18,
+  "exit_code": 0,
+  "stdout": "{\n  \"marketplaceName\": \"sdlc-ai-spec\",\n  \"installedRoot\": \"/private/tmp/sdlc-native-lab-01a07250/sdlc-200-dsn/marketplace\",\n  \"alreadyAdded\": false\n}\n",
+  "stderr": "",
+  "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-200-dsn/logs/marketplace-attempt-1.stdout.log",
+  "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-200-dsn/logs/marketplace-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:d30e19e56a9919e65ad02b20ce77d524b5c7cfe401f00cb397e832b057994c93",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": null,
+  "source_after": null,
+  "source_unchanged": true,
+  "success": true
+}

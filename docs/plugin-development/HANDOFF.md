@@ -1,76 +1,69 @@
 # Plugin Development Handoff
 
-## 当前基线
+## 当前集成基线
 
-- 远端 `main`：`0c38135e3e8bdad0d60d674c93ad42078e880134`。
-- `main` 最新 validate：success。
-- 已完成正式能力：
-  - `sdlc-000-ctx`
-  - `sdlc-100-req`
-  - `sdlc-200-dsn`
-  - Lifecycle Query Graph
-  - `sdlc-status`
-- 当前 Design Branch：`design/remaining-phase-skills`。
-- 本分支只包含开发期 Design、Eval Plan、Architecture 和 Handoff；未创建新的正式 Skill Runtime。
+本交接替代旧“remaining phases 待批准/未开始”的实时状态。旧记录保留在 Git：`0289a5ee8d702450fb3f3bc73c89f30a11664bdb:docs/plugin-development/HANDOFF.md`。不改写历史结果或冻结 Eval Plan。
 
-## 批量设计状态
+- 本轮起点 main：`0289a5ee8d702450fb3f3bc73c89f30a11664bdb`。
+- Tree：`bb1aa513fe9a67a6cbec0775a6570fae6e50f877`，与已接受 RLS E3 相等。
+- 修复分支：`fix/post-integration-skill-conformance`；唯一新 Draft PR：#11。
+- 当前目标：跨 Skill 的实现一致性、Status 缺口和 Client 证据范围；不是重新实现七阶段。
 
-| Skill | Design | Eval Plan | Maintainer Decision | Implement |
-|---|---|---|---|---|
-| `sdlc-300-pln` | ready | ready | pending | not started |
-| `sdlc-400-imp` | ready | ready | pending | not started |
-| `sdlc-500-vfy` | ready | ready | pending | not started |
-| `sdlc-600-rls` | ready | ready | pending | not started |
+## 阶段矩阵
 
-共同设计基线：
+| Skill | 当前源码/交付状态 | 历史证据与当前限制 |
+|---|---|---|
+| CTX 000 | Runtime、Eval、锁、Lifecycle 已集成 | 历史 Portable 和 Codex CLI 实际报告存在；不代表当前八 Skill / 五载体全部 Verified |
+| REQ 100 | Runtime、固定评测、锁、Lifecycle 已集成 | 历史 Codex 静态 Partial；本轮 Codex CLI 已触发，但在 Authority 预检拒绝，正式 Runtime NOT_RUN；候选待独立复核 |
+| DSN 200 | Runtime、33 Case、锁、Lifecycle 已集成 | 历史 Portable 通过；真实 Client 证据仍需逐载体验证 |
+| PLN 300 | Runtime、19 Critical tests、锁、Lifecycle 已集成 | 历史结果为指定源码；不外推为当前宿主认证 |
+| IMP 400 | accepted Runtime 和正式 Evidence 已集成 | Subject `207a4a16bea8979faee0474cc43cb642cef1f655`；本轮不改写 |
+| VFY 500 | accepted Runtime、80 Case 和正式 Evidence 已集成 | Subject `5ea3ba9aa7288021c4d99b14cff76ec0fc405841`；本轮 macOS strict 80/80；CLI 只读候选待独立复核 |
+| RLS 600 | accepted S3、87 Case 和正式 Evidence 已集成 | Subject `b790af812cd8d317675d264583711aed59e1460c`；仅 Fake/Sandbox，不是生产批准 |
+| sdlc-status | 已修复准确引用/只读错误边界和展示；增加锁、14 Case 独立映射与安装测试 | 新源码的最终执行结果见本工作包回执；独立 Review 未自签 |
 
-```text
-docs/plugin-development/architecture/remaining-phase-skill-design.md
-docs/plugin-development/architecture/remaining-phase-interface-extension.md
-docs/plugin-development/architecture/remaining-phase-foundations.md
-```
+完整八 Skill 路径索引：`work-items/post-integration-conformance/SKILL-INVENTORY.json`。
+当前 Client 认证：`COMPATIBILITY.json`；历史报告保持原始字节。`NOT_RUN` 是本轮当前部署认证状态，不撤销历史限定范围内的成功。
 
-## 关键设计决定
+## 本轮 Client 执行
 
-1. 一阶段一个主 Skill；不按平台、语言、测试工具或执行方式拆兄弟 Skill。
-2. `sdlc-300-pln` 统一拥有 Delivery Scope、Work Item Set、Coverage 和 Dependency Authority。
-3. `sdlc-400-imp` 实现前先完成共享 Claim Provider 与 immutable Resource Result Foundation。
-4. `sdlc-500-vfy` 统一管理 Inspection、Analysis、Demonstration、Test，不拆 QA/Test Skill。
-5. `sdlc-600-rls` 保持平台中立；外部 Target Effect 必须使用与 `write_policy` 分离的准确授权。
-6. 所有 Skill 继承 Shared Skill Interface，裸调用合法，默认只在真实决策或高影响副作用时询问用户。
-7. Phase Interface 从固定精确命令集合扩展为核心命令子集加已声明附加命令；现有 Skill 行为保持不变。
-8. Claim、Resource Result、Execution Evidence 和 Effect Authorization 的逻辑 Contract 已冻结，物理实现按后续 Foundation 工作包完成。
-9. Design 可以批量完成；Approval、Implement、Evaluate、Adapt、Review、Finalize 必须逐 Skill 进行。
+- 实际被测源码：`fb1d8fb989e5e31d75cd6f311c0e5e663437262d`，tree `cb1a9aa31a2fadb8a434493b75c7a244d38d029b`。
+- 与 Web 实际被测源码 `ac6d846a1b0c22d0f284c9ebffd976dc59698a99` 的 Runtime、测试和验证器字节一致；Client 对收到的完整 Head 重新执行。
+- Portable 10/10、Strict 13/13；普通回归各 1104/1104；Status 14/14 与安装 12 命令、VFY strict 80/80、RLS 87/87、八锁和 VFY/RLS 安装验证通过。
+- Codex CLI `0.153.4`：八个 Skill 独立原生安装、registry discovery、显式调用和未调用对照均有归档。七个 Skill 实际调用正式 Runtime；REQ 只到前置 Authority 拒绝，Behavior PARTIAL。
+- 只读/缺输入 Fixture 不外推正向写入和完整生命周期。JSON 进度消息、CTX/IMP 最终 JSON 改写、宿主失败尝试和所有非零退出均保留，等待独立判断。
+- `COMPATIBILITY.json` 原字节不变，40 个当前认证单元仍 NOT_RUN/receipt=null；未自签独立 ACCEPTED。
+- 当前完整记录：`work-items/post-integration-conformance/CLIENT-VALIDATION.md`、`CLIENT-VALIDATION.json`、`CLIENT-NATIVE-SUMMARY.json` 和 `CLIENT-SHA256-MANIFEST.json`。准确 DELIVERY_HEAD_SHA 见 PR #11 的交付表及提交后远程 readback；文档提交不是实际被测源码。
 
-## 实现顺序
+## 本轮 Web Review 与定向修复
 
-```text
-sdlc-300-pln
-    ↓
-Claim Provider + Resource Result Foundation
-    ↓
-sdlc-400-imp
-    ↓
-sdlc-500-vfy
-    ↓
-sdlc-600-rls
-```
+Client 交付 `1b9326e7447a481453fbbeccd8d104a02f6c67e9` 的唯一父提交为上述被测源码。
+Web 复跑原源码 portable 10/10、普通全仓 1104/1104 通过，但独立真实路径探针发现
+`CONFORMANCE-WEB-001`：已存在的 `.sdlc` 普通文件或数据库目录被错误显示为成功的
+`not_started`。不是旧 Client 计数造假，而是未覆盖的语义反例。
 
-不得在前一项尚未合入 `main` 且联合 CI 未通过时实现后一项。
+修复限于 Status 路径缺失判定、附加说明、51 条锁与 14 个新增测试；真实缺失仍保留
+原语义。修复字节上的 Status 52/52、原固定 14/14、coverage 4/4、安装 12 命令以及
+八锁/接口通过。该结果不代替新 exact-source strict 验证。
+
+见 `work-items/post-integration-conformance/WEB-STATUS-PATH-REVIEW.md` 和
+`WEB-STATUS-PATH-VALIDATION.json`。现有 Client 150 个日志流的完整独立字节审计尚未
+完成；历史报告和候选保持原样，四十个原生认证单元没有被升级。
 
 ## 唯一下一工作包
 
-Maintainer 对本分支中的四份 Design Contract、四份 Eval Plan 和三份共同架构设计进行批量审查，并作出以下之一：
+`POST_INTEGRATION_STATUS_PATH_RECHECK`：按
+`work-items/post-integration-conformance/CLIENT-STATUS-PATH-RECHECK.md` 在干净准确
+修复源码上执行一次 strict 入口并提供完整证据包，随后交独立 Web Review。
+不需要重启旧七阶段/RLS Goal，也不要求重跑八个原生候选来完成 Runtime 收口。
+未核验的原生载体继续独立登记为 NOT_RUN，不推导三端认证。
 
-```text
-APPROVE_REMAINING_PHASE_DESIGNS
-CORRECT_REMAINING_PHASE_DESIGNS
-```
+旧 `CLIENT-SHA256-MANIFEST.json` 中 HANDOFF 的摘要仍绑定其原始交付 1b9326，
+不能用旧摘要验证本次追加修复后的文件。旧日志/Manifest 不改写，新回执另目录追加。
+Status 原十四项 Oracle 和 Phase Case Expected 保持不变。分发仓库元数据仍由
+Maintainer 发布前决定。PR #11 保持 Draft，当前 `WEB_CONFORMANCE_REVIEW` 为
+CHANGES_REQUIRED，不自签修复后的独立 ACCEPTED。
 
-批准只表示设计与 Foundation 逻辑边界可以作为后续工作基线，不授权同时实现四个 Skill。批准后第一个实现工作包固定为：
+## 停止与写入边界
 
-```text
-sdlc-300-pln implement
-```
-
-不得在本设计分支创建 `SKILL.md`、Runtime、Fixture、Source Lock、Adapter、Claim Provider 或外部执行代码；不得自动 merge、tag 或 release。
+只推进本修复分支，保持 Draft。main、已接受各阶段 Evidence、`docs/v1.x/**`、共享包与 `.github/**` 不修改，不创建发布效果，不重新合并历史 PR，不重建 RLS S4/E4。当前包不包含最终发布版本提升、Marketplace 发布或完整业务产品验收。

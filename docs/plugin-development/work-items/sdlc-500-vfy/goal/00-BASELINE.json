@@ -1,0 +1,30 @@
+{
+  "contract": "sdlc-ai-spec/vfy-goal-baseline/v1",
+  "repository": "ousui/sdlc-ai-spec",
+  "base_main_sha": "3a2f13082fe2f661081ded74e45f860da2046bd1",
+  "base_main_tree": "a5b0898738d749db9238f13f8bedb471a251ee6b",
+  "imp_implementation_subject_sha": "207a4a16bea8979faee0474cc43cb642cef1f655",
+  "imp_delivery_sha": "86aaa04a0238d3151606073e89219eea0d60b7d3",
+  "imp_delivery_tree": "a5b0898738d749db9238f13f8bedb471a251ee6b",
+  "imp_handoff_path": "docs/plugin-development/work-items/sdlc-400-imp/evidence/207a4a16bea8979faee0474cc43cb642cef1f655/impl-imp-v2-handoff.md",
+  "imp_result_path": "docs/plugin-development/work-items/sdlc-400-imp/evidence/207a4a16bea8979faee0474cc43cb642cef1f655/impl-imp-v2-final-result.json",
+  "imp_evidence_manifest_path": "docs/plugin-development/work-items/sdlc-400-imp/evidence/207a4a16bea8979faee0474cc43cb642cef1f655/impl-imp-v2-repository.sha256",
+  "old_vfy_ref": "a12382c2d0f0dc6ca54021b4fec26d5874eb169f",
+  "generated_at": "2026-09-04T01:42:31Z",
+  "imp_integration_mode": "TREE_EQUIVALENT",
+  "authority_order": [
+    "docs/v1.1/500-vfy-spec.md",
+    "skills/_shared/** stable runtime contracts",
+    "integrated IMP runtime",
+    "IMP handoff and evidence",
+    "VFY DESIGN.md and EVAL-PLAN.md",
+    "goal implementation plan"
+  ],
+  "current_integration_binding": {
+    "git_physical_base": "3a2f13082fe2f661081ded74e45f860da2046bd1",
+    "semantic_imp_subject": "207a4a16bea8979faee0474cc43cb642cef1f655",
+    "imp_delivery_checkpoint": "86aaa04a0238d3151606073e89219eea0d60b7d3",
+    "vfy_implementation_parent": "design/sdlc-500-vfy-goal@<DESIGN_HEAD_SHA>",
+    "vfy_pr_base": "main"
+  }
+}

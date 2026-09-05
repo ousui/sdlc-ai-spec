@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ousui.github.io/sdlc-ai-spec/schemas/vfy-delivery-result-v1.schema.json",
+  "title": "VFY Delivery Result v1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract",
+    "status",
+    "repository",
+    "base_main_sha",
+    "design_head_sha",
+    "implementation_subject_sha",
+    "evidence_delivery_head_sha",
+    "imp_implementation_subject_sha",
+    "critical_cases",
+    "profiles",
+    "evidence_manifest_sha256",
+    "main_modified",
+    "pr_merged",
+    "rls_started"
+  ],
+  "properties": {
+    "contract": {"const": "sdlc-ai-spec/vfy-delivery-result/v1"},
+    "status": {"enum": ["PASS", "HARD_BLOCKED"]},
+    "repository": {"const": "ousui/sdlc-ai-spec"},
+    "base_main_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "design_head_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "implementation_subject_sha": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+    "evidence_delivery_head_sha": {"type": ["string", "null"], "pattern": "^[0-9a-f]{40}$"},
+    "imp_implementation_subject_sha": {"const": "207a4a16bea8979faee0474cc43cb642cef1f655"},
+    "critical_cases": {"enum": ["80/80 PASS", "NOT_PASS"]},
+    "profiles": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["quick", "phase", "full", "external", "attest"],
+      "properties": {
+        "quick": {"enum": ["PASS", "FAIL", "NOT_RUN"]},
+        "phase": {"enum": ["PASS", "FAIL", "NOT_RUN"]},
+        "full": {"enum": ["PASS", "FAIL", "NOT_RUN"]},
+        "external": {"enum": ["PASS", "FAIL", "NOT_RUN"]},
+        "attest": {"enum": ["PASS", "FAIL", "NOT_RUN"]}
+      }
+    },
+    "evidence_manifest_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+    "main_modified": {"const": false},
+    "pr_merged": {"const": false},
+    "rls_started": {"const": false},
+    "first_real_blocker": {"type": ["string", "null"]},
+    "recovery": {"type": ["string", "null"]}
+  }
+}

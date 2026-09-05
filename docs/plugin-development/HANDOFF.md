@@ -1,76 +1,36 @@
 # Plugin Development Handoff
 
-## 当前基线
+## 当前集成基线
 
-- 远端 `main`：`0c38135e3e8bdad0d60d674c93ad42078e880134`。
-- `main` 最新 validate：success。
-- 已完成正式能力：
-  - `sdlc-000-ctx`
-  - `sdlc-100-req`
-  - `sdlc-200-dsn`
-  - Lifecycle Query Graph
-  - `sdlc-status`
-- 当前 Design Branch：`design/remaining-phase-skills`。
-- 本分支只包含开发期 Design、Eval Plan、Architecture 和 Handoff；未创建新的正式 Skill Runtime。
+本交接替代旧“remaining phases 待批准/未开始”的实时状态。旧记录保留在 Git：`0289a5ee8d702450fb3f3bc73c89f30a11664bdb:docs/plugin-development/HANDOFF.md`。不改写历史结果或冻结 Eval Plan。
 
-## 批量设计状态
+- 本轮起点 main：`0289a5ee8d702450fb3f3bc73c89f30a11664bdb`。
+- Tree：`bb1aa513fe9a67a6cbec0775a6570fae6e50f877`，与已接受 RLS E3 相等。
+- 修复分支：`fix/post-integration-skill-conformance`；唯一新 Draft PR：#11。
+- 当前目标：跨 Skill 的实现一致性、Status 缺口和 Client 证据范围；不是重新实现七阶段。
 
-| Skill | Design | Eval Plan | Maintainer Decision | Implement |
-|---|---|---|---|---|
-| `sdlc-300-pln` | ready | ready | pending | not started |
-| `sdlc-400-imp` | ready | ready | pending | not started |
-| `sdlc-500-vfy` | ready | ready | pending | not started |
-| `sdlc-600-rls` | ready | ready | pending | not started |
+## 阶段矩阵
 
-共同设计基线：
+| Skill | 当前源码/交付状态 | 历史证据与当前限制 |
+|---|---|---|
+| CTX 000 | Runtime、Eval、锁、Lifecycle 已集成 | 历史 Portable 和 Codex CLI 实际报告存在；不代表当前八 Skill / 五载体全部 Verified |
+| REQ 100 | Runtime、固定评测、锁、Lifecycle 已集成 | 历史 Codex 静态 Partial；真实宿主行为 Unknown；兼容层重构不在本轮 |
+| DSN 200 | Runtime、33 Case、锁、Lifecycle 已集成 | 历史 Portable 通过；真实 Client 证据仍需逐载体验证 |
+| PLN 300 | Runtime、19 Critical tests、锁、Lifecycle 已集成 | 历史结果为指定源码；不外推为当前宿主认证 |
+| IMP 400 | accepted Runtime 和正式 Evidence 已集成 | Subject `207a4a16bea8979faee0474cc43cb642cef1f655`；本轮不改写 |
+| VFY 500 | accepted Runtime、80 Case 和正式 Evidence 已集成 | Subject `5ea3ba9aa7288021c4d99b14cff76ec0fc405841`；严格执行仍需可用 OS 沙箱 |
+| RLS 600 | accepted S3、87 Case 和正式 Evidence 已集成 | Subject `b790af812cd8d317675d264583711aed59e1460c`；仅 Fake/Sandbox，不是生产批准 |
+| sdlc-status | 已修复准确引用/只读错误边界和展示；增加锁、14 Case 独立映射与安装测试 | 新源码的最终执行结果见本工作包回执；独立 Review 未自签 |
 
-```text
-docs/plugin-development/architecture/remaining-phase-skill-design.md
-docs/plugin-development/architecture/remaining-phase-interface-extension.md
-docs/plugin-development/architecture/remaining-phase-foundations.md
-```
-
-## 关键设计决定
-
-1. 一阶段一个主 Skill；不按平台、语言、测试工具或执行方式拆兄弟 Skill。
-2. `sdlc-300-pln` 统一拥有 Delivery Scope、Work Item Set、Coverage 和 Dependency Authority。
-3. `sdlc-400-imp` 实现前先完成共享 Claim Provider 与 immutable Resource Result Foundation。
-4. `sdlc-500-vfy` 统一管理 Inspection、Analysis、Demonstration、Test，不拆 QA/Test Skill。
-5. `sdlc-600-rls` 保持平台中立；外部 Target Effect 必须使用与 `write_policy` 分离的准确授权。
-6. 所有 Skill 继承 Shared Skill Interface，裸调用合法，默认只在真实决策或高影响副作用时询问用户。
-7. Phase Interface 从固定精确命令集合扩展为核心命令子集加已声明附加命令；现有 Skill 行为保持不变。
-8. Claim、Resource Result、Execution Evidence 和 Effect Authorization 的逻辑 Contract 已冻结，物理实现按后续 Foundation 工作包完成。
-9. Design 可以批量完成；Approval、Implement、Evaluate、Adapt、Review、Finalize 必须逐 Skill 进行。
-
-## 实现顺序
-
-```text
-sdlc-300-pln
-    ↓
-Claim Provider + Resource Result Foundation
-    ↓
-sdlc-400-imp
-    ↓
-sdlc-500-vfy
-    ↓
-sdlc-600-rls
-```
-
-不得在前一项尚未合入 `main` 且联合 CI 未通过时实现后一项。
+完整八 Skill 路径索引：`work-items/post-integration-conformance/SKILL-INVENTORY.json`。
+当前 Client 认证：`COMPATIBILITY.json`；历史报告保持原始字节。`NOT_RUN` 是本轮当前部署认证状态，不撤销历史限定范围内的成功。
 
 ## 唯一下一工作包
 
-Maintainer 对本分支中的四份 Design Contract、四份 Eval Plan 和三份共同架构设计进行批量审查，并作出以下之一：
+`POST_INTEGRATION_CLIENT_VALIDATION`：读取 `work-items/post-integration-conformance/CLIENT-GOAL.md`。先核验此修复分支 exact HEAD，然后执行 strict post-integration 验证；真实 Client 适配一次只处理一个实际可用的 Client/Surface。其余载体保留 NOT_RUN，不因此伪造总体认证或启动所有 Client。
 
-```text
-APPROVE_REMAINING_PHASE_DESIGNS
-CORRECT_REMAINING_PHASE_DESIGNS
-```
+现有 Status Eval Plan 的 14 项 Oracle 不变。原 Plan 的“CI green”条款在本次用户明确 local/Web-first 且不使用 Actions 执行的修复包中，由 exact-source、本地归档与独立 Review 承担执行证据；旧 Plan 不被静默修改，具体限制记入新结果。
 
-批准只表示设计与 Foundation 逻辑边界可以作为后续工作基线，不授权同时实现四个 Skill。批准后第一个实现工作包固定为：
+## 停止与写入边界
 
-```text
-sdlc-300-pln implement
-```
-
-不得在本设计分支创建 `SKILL.md`、Runtime、Fixture、Source Lock、Adapter、Claim Provider 或外部执行代码；不得自动 merge、tag 或 release。
+只推进本修复分支，保持 Draft。main、已接受各阶段 Evidence、`docs/v1.x/**`、共享包与 `.github/**` 不修改，不创建发布效果，不重新合并历史 PR，不重建 RLS S4/E4。当前包不包含最终发布版本提升、Marketplace 发布或完整业务产品验收。

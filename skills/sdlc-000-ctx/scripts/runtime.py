@@ -659,7 +659,7 @@ def _normalize_context(
             continue
         digest = compute_sha256(raw_bytes)
         supplied_digest = raw.get("sha256")
-        if supplied_digest is not None and supplied_digest not in {digest, "sha256:" + digest}:
+        if supplied_digest is not None and supplied_digest not in {digest, digest.removeprefix("sha256:")}:
             errors.append({"code": "CTX_CONTENT_INVALID", "message": f"Digest mismatch for {member_id}"})
             continue
         all_ids.add(member_id)
@@ -851,7 +851,7 @@ def _render_markdown(
 
     lines += ["## 支撑产物清单 Supporting Artifact Manifest", ""]
     if model["members"]:
-        member_rows = [[item["member_id"], "supporting", item["canonical_name"], item["media_type"], item["purpose"], "sha256:" + item["sha256"], "N/A"] for item in model["members"]]
+        member_rows = [[item["member_id"], "supporting", item["canonical_name"], item["media_type"], item["purpose"], item["sha256"], "N/A"] for item in model["members"]]
     else:
         member_rows = [["None", "none", "N/A", "N/A", "N/A", "N/A", "No supporting artifacts"]]
     lines += _table(["Member ID", "Type", "Path or Reference", "Media Type", "Purpose", "SHA-256 Digest", "Empty Reason"], member_rows) + [""]
@@ -1391,7 +1391,7 @@ def _validate_ctx_tables(
                 ),
                 "Supporting Evidence",
             ),
-            "sha256:" + item.sha256, "N/A",
+            item.sha256, "N/A",
         ]
         for item in stored.payload.members
     ]

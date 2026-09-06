@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from copy import deepcopy
+import unicodedata
 from typing import Any, Mapping, Sequence
 
 from packages.sdlc_phasekit import CheckOutcome, PhaseInputs, refs, rows, text
@@ -19,6 +20,23 @@ from pln_common import (
 
 def _outcome(result: str, message: str) -> CheckOutcome:
     return CheckOutcome(result=result, message=message)
+
+
+def _has_minimum_detail(value: str, minimum_words: int) -> bool:
+    """Preserve the existing Latin-word heuristic without requiring CJK spaces.
+
+    Wide/fullwidth letters in unsegmented scripts count towards a conservative
+    character floor. Punctuation, numbers and symbols do not. This is only a
+    detail heuristic: objective completion/evidence still needs actual review.
+    """
+    if len(value.split()) >= minimum_words:
+        return True
+    unsegmented_letters = sum(
+        unicodedata.category(char) == "Lo"
+        and unicodedata.east_asian_width(char) in {"W", "F"}
+        for char in value
+    )
+    return unsegmented_letters >= minimum_words * 4
 
 
 def _check_graph(work_items: Sequence[Mapping[str, Any]]) -> tuple[bool, str]:
@@ -133,9 +151,9 @@ def _analyze(candidate: Mapping[str, Any], phase_inputs: PhaseInputs):
         role = str(item.get("responsible_role") or "").strip()
         if not role:
             role_pending = True
-        if completion.casefold() in GENERIC_COMPLETION or len(completion.split()) < 3:
+        if completion.casefold() in GENERIC_COMPLETION or not _has_minimum_detail(completion, 3):
             checks["PLN-G-003"] = _outcome("fail", "Completion Criteria is not independently decidable")
-        if expected.casefold() in GENERIC_EVIDENCE or len(expected.split()) < 2:
+        if expected.casefold() in GENERIC_EVIDENCE or not _has_minimum_detail(expected, 2):
             checks["PLN-G-003"] = _outcome("fail", "Expected Evidence is not reproducible")
         if any(reference not in authoritative_obligations for reference in (*sources, *constraints)):
             checks["PLN-G-006"] = _outcome("fail", "Work Item introduces a source/constraint outside authoritative scope")

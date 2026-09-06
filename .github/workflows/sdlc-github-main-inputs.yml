@@ -1,0 +1,35 @@
+name: sdlc-github-main-inputs
+on:
+  push:
+    branches: [impl/sdlc-github-foundation-v1]
+    paths: [.github/workflows/sdlc-github-main-inputs.yml]
+permissions:
+  contents: read
+jobs:
+  source-inputs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Export exact credential-free merge inputs
+        shell: bash
+        run: |
+          set -euo pipefail
+          MAIN=7a454c76b62c41525fa3990dffdaa9a52b975679
+          WORK=f0c32a06cb65a4718486ab23e7aad95b71df7791
+          git cat-file -e "$MAIN^{commit}"
+          git cat-file -e "$WORK^{commit}"
+          git update-ref refs/merge-input/main "$MAIN"
+          mkdir merge-input
+          git bundle create merge-input/repository.bundle HEAD refs/merge-input/main
+          git rev-parse HEAD > merge-input/WORK-HEAD.txt
+          printf '%s\n' "$MAIN" > merge-input/MAIN-HEAD.txt
+          sha256sum merge-input/repository.bundle > merge-input/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sdlc-github-main-merge-inputs
+          path: merge-input/
+          retention-days: 7

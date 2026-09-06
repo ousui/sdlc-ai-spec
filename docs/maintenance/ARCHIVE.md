@@ -50,3 +50,26 @@ SHA，不把本地 archive refs 推送到远程，不需要重新导入过程文
 - native 自动认证台账与其模拟证书测试：本轮明确移出门禁。长期库存检查继续存在，不删除实际 Runtime 测试。
 
 文件级删除 SHA-256、字节数和替代说明随本次仓库外交付包提供；Git diff 是新增提交的精确路径清单。大量回归测试虽然名字含 repair/web，并不等于废物；授权、篡改、并发、路径与失败恢复测试不会为减少数量而删除。
+
+## sdlc-github 过程历史
+
+当前树仅保留 `DESIGN.md`、`EVAL-PLAN.md`、`INSTALL.md`、`HANDOFF.md` 与简明 README。
+以下过程记录不再作为当前源码噪声保留，但 Git 历史不重写：
+
+| 历史节点 | 精确对象 | 可恢复内容 |
+|---|---|---|
+| 批准设计 | `97c5f17bfcdb2751d446a89b068db2400436631d` | DESIGN / EVAL / 初始 Web 执行约束 |
+| Mock/协议实现交付 | `6c476e4a58c7fc9871ce876cc7174e7e4d5e51dd` | 初始 Implementation、Client Goal、Mock Evidence |
+| 首轮真实 MCP/宿主验证 | `f0c32a06cb65a4718486ab23e7aad95b71df7791` | CLIENT-VALIDATION 与历史 Evidence |
+| Hosted 修复与定向交接 | `b7863a925e11294400a3faf65d48f965d5391ab6` | REPAIR-RESULT、定向 CLIENT-GOAL |
+| 修复后真实复验 | `d271a27c98e178c9eba95ca44ac3ab96a0d477fe` | CLIENT-REVALIDATION md/json |
+| 跨平台最终收口 | `95a6c42459b6931f1e2a957bf92a3c848e417ad3` | PORTABILITY-RESULT、最终 Handoff |
+
+恢复单文件：
+
+```bash
+git show <sha>:docs/plugin-development/work-items/sdlc-github/<path>
+```
+
+恢复整个历史 Work Item 时使用独立目录或 `git archive`，不要把过程报告重新回填当前运行树。
+真实 Token、稳定 `.local` 状态和仓库外运行证据从未以源码文件替代；unknown 请求只能使用原活动数据根继续只读核对。

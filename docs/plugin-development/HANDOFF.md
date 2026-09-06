@@ -1,6 +1,6 @@
 # 当前工程交接
 
-七个阶段 CTX → REQ → DSN → PLN → IMP → VFY → RLS 及只读 sdlc-status 均已实现。当前工作包是统一样式、修复评测引用、测试去重与过程归档清理，不重新开发七阶段。
+七个阶段 CTX → REQ → DSN → PLN → IMP → VFY → RLS、只读 sdlc-status 及非 Phase 支撑 sdlc-github 均已实现。当前工作包是统一样式、修复评测引用、测试去重与过程归档清理，不重新开发七阶段。
 
 ## 本轮分支
 
@@ -41,3 +41,10 @@ ID、覆盖与观察值；真正已标记秘密仍脱敏，若与证明字段冲
 落盘 ID 和实际 collection，补齐指定历史对象备份后交 Web 审查。此前整理、八个
 Skill 样式和有效测试覆盖保持不变；不重启旧阶段 Goal、原生认证或多轮重复套件。
 不修改 main，不执行生产效果，不自动合并 PR #12。
+
+
+## sdlc-github 独立工作项
+
+`sdlc-github-foundation/v1` 已由 Maintainer 于 2026-09-07 接受，当前仅等待 PR #14 的显式 Ready/Review/Merge 决定；
+该状态不改变上方维护清理工作包的唯一下一动作。历史 Goal/Repair/Revalidation/Portability 报告已按全局 ARCHIVE 索引恢复，
+当前树不再承载多轮过程副本。

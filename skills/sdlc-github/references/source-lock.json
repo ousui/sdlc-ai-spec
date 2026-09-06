@@ -14,12 +14,12 @@
     {
       "contract_id": "sdlc-ai-spec/github/source/claude-manifest/v1",
       "contract_version": "1",
-      "sha256": "06c7d554be1ac0addab95c34ffa7c4c59584d55f0fbade1b68adbee57365cb5a"
+      "sha256": "e9c52091abf6dee3caf521b9be9a25bd19b8e07633feaaf53c61270e766af690"
     },
     {
       "contract_id": "sdlc-ai-spec/github/source/codex-manifest/v1",
       "contract_version": "1",
-      "sha256": "43a5735ccb1454b552f8ee891129cf47f6e9a10807db657a913225cdd8048e7f"
+      "sha256": "01be055d62bf145e15c7225f74874358b93ec782ce27fcbd23a8000b86aa42c4"
     },
     {
       "contract_id": "sdlc-ai-spec/github/source/config/github/claude-code.mcp.json/v1",
@@ -39,7 +39,7 @@
     {
       "contract_id": "sdlc-ai-spec/github/source/cursor-manifest/v1",
       "contract_version": "1",
-      "sha256": "e77f94286d543b5f80dfe4868ed121f47efa541a68ebb79b3fc92f8fb715eb9c"
+      "sha256": "8be4fcd00c7dd52de116ae7a89300ab031ef1b9ac1e998100e5fed18c9933d59"
     },
     {
       "contract_id": "sdlc-ai-spec/github/source/github-result/v1",

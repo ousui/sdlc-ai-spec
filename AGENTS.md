@@ -70,6 +70,9 @@ sdlc-500-vfy
 sdlc-600-rls
 ```
 
+非 Phase Utility / Support Skill 使用稳定 `sdlc-<name>`，当前包括 `sdlc-status` 与 `sdlc-github`；
+它们不占用 Phase 编号、不判断 Phase Gate，外部写入仍需独立授权。
+
 规则：
 
 - 目录名和 Front Matter `name` 必须一致并使用英文 lowercase kebab-case。
@@ -88,7 +91,7 @@ sdlc-600-rls
 - 可以使用 `packages/**` 和运行时 `scripts/**` 的共享确定性能力；
 - 不依赖兄弟业务 Skill；
 - 删除 `docs/**` 后，受支持行为仍可执行；
-- 不联网、不自动安装依赖、不静默降级。仅显式 sdlc-github 操作经其固定官方 MCP Transport 联网，不授权其他 Phase 或 Skill。
+- 不联网、不自动安装依赖、不静默降级；唯一联网例外是显式 `sdlc-github` 操作经其固定官方 MCP Transport，且不授权其他 Phase / Utility Skill。
 
 设计期 Source 与运行时 Contract 使用单向关系：
 

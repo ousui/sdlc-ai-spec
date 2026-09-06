@@ -1,6 +1,6 @@
 {
   "name": "sdlc-ai-spec",
-  "version": "0.1.0",
+  "version": "0.9.0",
   "description": "为软件研发与变更交付提供本地优先的 SDLC 规范、共享运行合约与执行基础。",
   "author": {
     "name": "Blade",

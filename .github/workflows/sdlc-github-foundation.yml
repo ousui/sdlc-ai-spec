@@ -36,7 +36,13 @@ jobs:
           python -m pip download --require-hashes --only-binary=:all: -r bridge/requirements.lock -d bridge/wheels
           python -m pip install --no-index --find-links bridge/wheels --require-hashes -r bridge/requirements.lock
           python -m pip freeze > bridge/INSTALLED.txt
+          curl --fail --silent --show-error --location --max-time 90 https://codeload.github.com/github/github-mcp-server/tar.gz/refs/tags/v1.12.0 -o bridge/upstream-v1.12.0.tar.gz
           find bridge -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > bridge/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sdlc-github-build-${{ github.sha }}
+          path: bridge/
+          retention-days: 7
       - name: Run implemented fixed verification (no credentials or GitHub business effects)
         shell: bash
         run: |

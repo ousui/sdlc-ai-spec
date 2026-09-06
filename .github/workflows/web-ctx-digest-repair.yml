@@ -1,0 +1,134 @@
+name: web-ctx-digest-repair
+on:
+  push:
+    branches: [verify/web-realflow-v1]
+    paths: [.github/workflows/web-ctx-digest-repair.yml]
+permissions:
+  contents: write
+jobs:
+  repair:
+    if: github.repository == 'ousui/sdlc-ai-spec' && github.ref == 'refs/heads/verify/web-realflow-v1'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: verify/web-realflow-v1
+      - name: Apply the three exact reviewed replacements and regression tests
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('skills/sdlc-000-ctx/scripts/runtime.py')
+          text = p.read_text()
+          replacements = [
+              ('supplied_digest not in {digest, "sha256:" + digest}', 'supplied_digest not in {digest, digest.removeprefix("sha256:")}'),
+              ('item["purpose"], "sha256:" + item["sha256"], "N/A"', 'item["purpose"], item["sha256"], "N/A"'),
+              ('"sha256:" + item.sha256, "N/A",', 'item.sha256, "N/A",'),
+          ]
+          for old, new in replacements:
+              if text.count(old) != 1:
+                  raise SystemExit('Expected one exact original occurrence; refusing source drift: ' + old)
+              text = text.replace(old, new)
+          p.write_text(text)
+          Path('tests/skills/test_ctx_member_digest.py').write_text('''"""WEB-RF-001: verify the external digest contract, not renderer self-consistency."""
+          from copy import deepcopy
+          from dataclasses import replace
+          import hashlib
+          import unittest
+          from tests.skills import test_sdlc_000_ctx as fixture
+
+          class CtxMemberDigestTests(unittest.TestCase):
+              def setUp(self):
+                  self.fixture = fixture.CtxRuntimeTests()
+                  self.fixture.setUp()
+                  self.addCleanup(self.fixture.tearDown)
+                  self.raw = 'SpringGear JDK21 observation\\n'
+                  self.hex = hashlib.sha256(self.raw.encode()).hexdigest()
+                  self.request = self.fixture.invocation()
+                  self.request['inputs']['supporting_members'] = [{
+                      'member_id': 'SUP-001', 'canonical_name': 'observation.md',
+                      'media_type': 'text/markdown', 'purpose': 'Reproducible observation',
+                      'content': self.raw,
+                  }]
+              def build(self, request=None):
+                  return fixture.runtime.build_payload(request or self.request,
+                      artifact_id='CTX-20260907000000-01', revision=1,
+                      base_revision=None, now=fixture.FIXED_TIME)
+              def test_rendered_manifest_has_exactly_one_algorithm_prefix(self):
+                  product = self.build()
+                  self.assertFalse(product.errors, product.errors)
+                  raw = product.payload.primary_blob.decode()
+                  self.assertNotIn('sha256:sha256:', raw)
+                  row = next(line for line in raw.splitlines() if line.startswith('| SUP-001 |'))
+                  self.assertEqual(row.split('|')[6].strip(), 'sha256:' + self.hex)
+              def test_explicit_bare_digest_is_accepted(self):
+                  request = deepcopy(self.request)
+                  request['inputs']['supporting_members'][0]['sha256'] = self.hex
+                  self.assertFalse(self.build(request).errors)
+              def test_explicit_prefixed_digest_is_accepted(self):
+                  request = deepcopy(self.request)
+                  request['inputs']['supporting_members'][0]['sha256'] = 'sha256:' + self.hex
+                  self.assertFalse(self.build(request).errors)
+              def test_explicit_double_prefix_is_rejected(self):
+                  request = deepcopy(self.request)
+                  request['inputs']['supporting_members'][0]['sha256'] = 'sha256:sha256:' + self.hex
+                  self.assertTrue(self.build(request).errors)
+              def test_actual_stored_projection_passes_readonly_check(self):
+                  created = self.fixture.invoke(self.request)
+                  a = created['artifact']
+                  self.assertIsNotNone(a, created)
+                  checked = self.fixture.invoke(self.fixture.invocation('check', reference=f"{a['id']}@{a['revision']}"))
+                  self.assertTrue(checked['ok'], checked)
+                  self.assertEqual(checked['gate']['result'], 'pending')
+              def test_verifier_rejects_double_prefix_even_if_payload_digest_is_recomputed(self):
+                  created = self.fixture.invoke(self.request)
+                  a = created['artifact']
+                  store = fixture.runtime.ArtifactStore.open_read_only(self.fixture.project_root)
+                  stored = store.read_revision(a['id'], a['revision'])
+                  old = stored.payload.primary_blob
+                  new = old.replace(('sha256:' + self.hex).encode(), ('sha256:sha256:' + self.hex).encode())
+                  self.assertNotEqual(old, new)
+                  payload = replace(stored.payload, primary_blob=new, primary_sha256=fixture.runtime.compute_sha256(new))
+                  errors, _, _ = fixture.runtime.validate_stored_revision(replace(stored, payload=payload))
+                  self.assertIn('CORE-G-003', errors)
+              def test_wrong_member_digest_still_rejected(self):
+                  request = deepcopy(self.request)
+                  request['inputs']['supporting_members'][0]['sha256'] = 'sha256:' + '0' * 64
+                  self.assertTrue(self.build(request).errors)
+          ''')
+          PY
+      - name: Targeted regression and exact source commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/ctx-evidence"
+          python3 -B -m unittest tests.skills.test_ctx_member_digest tests.skills.test_sdlc_000_ctx -v 2>&1 | tee "$RUNNER_TEMP/ctx-evidence/targeted.log"
+          git diff --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add skills/sdlc-000-ctx/scripts/runtime.py tests/skills/test_ctx_member_digest.py
+          git commit -m 'fix(ctx): canonicalize supporting member digest exactly once'
+          git rev-parse HEAD > "$RUNNER_TEMP/ctx-evidence/source.sha"
+          git diff HEAD^ HEAD > "$RUNNER_TEMP/ctx-evidence/repair.patch"
+      - name: Full existing contract regression on final exact commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -B tools/validate.py --profile full --source-sha "$(git rev-parse HEAD)" --json-out "$RUNNER_TEMP/ctx-evidence/full.json" 2>&1 | tee "$RUNNER_TEMP/ctx-evidence/full.log"
+      - name: Publish only the authorized non-main repair branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/verify/web-realflow-v1
+          test -z "$(git status --porcelain)"
+          git push origin HEAD:refs/heads/verify/web-realflow-v1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ctx-digest-repair-${{ github.sha }}
+          path: ${{ runner.temp }}/ctx-evidence/
+          if-no-files-found: error
+          retention-days: 30

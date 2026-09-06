@@ -213,3 +213,7 @@ report.xml
 junit.xml
 
 *.local.md
+
+# Opt-in GitHub instance data is never versioned or distributed.
+.local/
+.cache/

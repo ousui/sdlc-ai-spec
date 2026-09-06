@@ -13,5 +13,6 @@
     "software-delivery",
     "artifact"
   ],
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "mcpServers": "./config/github/cursor.mcp.json"
 }

@@ -23,7 +23,7 @@
 - 不读取 `docs/**`；
 - 不依赖开发 Handoff 或 AGENTS；
 - 使用随 Plugin 打包的 Skill 私有资源、`skills/_shared/**` 和 `packages/**`；
-- 不联网、不安装依赖；
+- 不联网、不安装依赖；唯一例外为显式 `sdlc-github` 操作经其固定 GitHub MCP Transport 联网，其他 Phase/支撑 Runtime 不继承此例外；
 - 删除 `docs/**` 后行为仍可执行。
 
 ## Standard Output

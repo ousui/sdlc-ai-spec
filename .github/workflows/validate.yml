@@ -15,6 +15,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      - name: Install explicitly locked GitHub test dependencies
+        run: python3 -m pip install --require-hashes -r packages/sdlc_github/requirements.lock
+      - run: python3 tools/validate_all_skill_source_locks.py
       - run: python3 -m compileall packages scripts skills
       - run: python3 tools/validate_runtime_contracts.py
       - run: python3 tools/validate_skill_interfaces.py

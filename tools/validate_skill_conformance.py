@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Check all eight Skills and exact-scope native evidence; never invent host results."""
+"""Check the frozen eight-Skill ledger plus separately governed opt-in extensions."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 SKILLS = tuple([f"sdlc-{number:03d}-{name}" for number, name in
                 ((0,"ctx"),(100,"req"),(200,"dsn"),(300,"pln"),(400,"imp"),(500,"vfy"),(600,"rls"))] + ["sdlc-status"])
+EXTENSIONS = ("sdlc-github",)
 SURFACES = ("codex-cli", "codex-app", "claude-code-cli", "cursor-ide", "cursor-cli")
 DIMENSIONS = ("installation", "discovery", "explicit_invocation", "negative_invocation", "behavior", "permissions", "installed_independence")
 LEDGER = "docs/plugin-development/COMPATIBILITY.json"
@@ -42,6 +43,15 @@ def runtime_snapshot(root: Path, skill: str, surface: str, *, source_sha: str | 
     platform = ".codex-plugin" if surface.startswith("codex") else ".cursor-plugin" if surface.startswith("cursor") else ".claude-plugin"
     dirs = ["packages", "scripts", "skills/_shared", "skills/" + skill, platform]
     if surface.startswith("codex"): dirs.append(".agents/plugins")
+    manifest = root / platform / "plugin.json"
+    if manifest.is_file():
+        mcp = json.loads(manifest.read_bytes()).get("mcpServers")
+        if isinstance(mcp, str):
+            relative = mcp.removeprefix("./")
+            file_path(root, relative)
+            config_dir = str(PurePosixPath(relative).parent)
+            require(config_dir != ".", "MCP configuration requires an explicit directory")
+            if config_dir not in dirs: dirs.append(config_dir)
     rows = []
     if source_sha:
         listing = subprocess.run(["git", "-C", str(root), "ls-tree", "-r", "-z", source_sha, "--", *dirs], capture_output=True, timeout=10)
@@ -135,7 +145,7 @@ def validate(root: Path = ROOT, *, required_surface: str | None = None):
     from packages.sdlc_runtime import load_skill_interface, parse_skill_command
     require(required_surface is None or required_surface in SURFACES, "unknown required surface")
     actual = sorted(path.name for path in (root / "skills").iterdir() if path.is_dir() and not path.name.startswith("_"))
-    require(actual == sorted(SKILLS), "formal Skill inventory differs")
+    require(actual == sorted((*SKILLS, *EXTENSIONS)), "formal Skill inventory differs")
     require(not (root / "skills/_shared/SKILL.md").exists(), "shared resources became callable")
     inventory = json.loads(file_path(root, INDEX).read_bytes())
     require([row["skill"] for row in inventory["skills"]] == list(SKILLS), "inventory incomplete")
@@ -156,11 +166,28 @@ def validate(root: Path = ROOT, *, required_surface: str | None = None):
             require(isinstance(row[field], str), "invalid inventory path")
         for path in row["test_roots"]: require((root / path).exists(), "test source missing")
         checked.append({"skill": name, "declared_commands": list(spec.command_names), "layout": "PASS"})
+    # The legacy evidence ledger is immutable for this work package. New GitHub
+    # native evidence belongs to its own work item and is never inherited here.
+    from tools.validate_sdlc_github_source_lock import validate as validate_github_lock
+    validate_github_lock(root)
+    extension_rows = []
+    for name in EXTENSIONS:
+        base = "skills/" + name
+        for relative in (base+"/SKILL.md", base+"/references/interface.json", base+"/references/contract.md",
+                         base+"/references/source-lock.json", base+"/agents/openai.yaml",
+                         "docs/plugin-development/work-items/"+name+"/DESIGN.md",
+                         "docs/plugin-development/work-items/"+name+"/EVAL-PLAN.md"):
+            file_path(root, relative)
+        spec = load_skill_interface(root / base / "references/interface.json")
+        require(spec.skill == name and spec.default_command == "auto", "extension interface mismatch")
+        require("disable-model-invocation: true" in (root/base/"SKILL.md").read_text(), "extension implicit invocation enabled")
+        require("allow_implicit_invocation: false" in (root/base/"agents/openai.yaml").read_text(), "extension Codex implicit invocation enabled")
+        extension_rows.append({"skill":name,"portable_structure":"PASS","native":"NOT_CLAIMED; separate work-item evidence required"})
     ledger = json.loads(file_path(root, LEDGER).read_bytes())
     native = validate_ledger(root, ledger, required_surface)
     verify_summary(file_path(root, "docs/plugin-development/COMPATIBILITY.md").read_text(), ledger)
-    return {"contract":"sdlc-ai-spec/skill-conformance-result/v1", "success":not native["required_native_missing"],
-            "portable_structure":"PASS", "skills":checked, "native":native, "native_certification":"NOT_CLAIMED_BY_STATIC_VALIDATION"}
+    return {"contract":"sdlc-ai-spec/skill-conformance-result/v1", "success":not native["required_native_missing"] and not (required_surface and EXTENSIONS),
+            "portable_structure":"PASS", "extensions":extension_rows, "extensions_require_separate_native_evidence": bool(required_surface and EXTENSIONS), "skills":checked, "native":native, "native_certification":"NOT_CLAIMED_BY_STATIC_VALIDATION"}
 
 
 if __name__ == "__main__":

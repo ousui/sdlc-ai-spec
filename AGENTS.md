@@ -88,7 +88,7 @@ sdlc-600-rls
 - 可以使用 `packages/**` 和运行时 `scripts/**` 的共享确定性能力；
 - 不依赖兄弟业务 Skill；
 - 删除 `docs/**` 后，受支持行为仍可执行；
-- 不联网、不自动安装依赖、不静默降级。
+- 除显式调用 `sdlc-github` 经其声明 Transport 访问固定 GitHub Remote MCP 外，不联网；不自动安装依赖、不静默降级。
 
 设计期 Source 与运行时 Contract 使用单向关系：
 

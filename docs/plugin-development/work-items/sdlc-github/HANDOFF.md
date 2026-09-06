@@ -1,30 +1,22 @@
-# sdlc-github — 设计交接
+# sdlc-github — 实施工作包交接
 
-## 当前状态
+## 当前范围
 
-- Work Item：`sdlc-github-foundation/v1`。
-- Design：ready；Maintainer decision：pending。
-- 实施：not started。
-- 当前分支：`design/sdlc-github-foundation-v1`。
-- 审查基线：`main@9d9dbf8bc1b9241f80af53cdf5b0426fcbfe3ab9`。
-- 本分支仅新增本目录的设计、验证计划、执行提示与交接，不创建正式Skill或修改现有运行时代码。
-
-## 唯一权威输入
-
-- DESIGN.md：目标、能力、接口、认证、目录、结果与实现边界。
-- EVAL-PLAN.md：固定验收项、分层Oracle和证据要求。
-- EXECUTE-WEB.md：获批准后的新会话任务。
+- Work Item：sdlc-github-foundation/v1。
+- Maintainer 已在本会话明确批准设计提交：`97c5f17bfcdb2751d446a89b068db2400436631d`。
+- 本轮附加指令：完成全部代码与内容，先通过 Mock；真实连接、Token 和本地宿主验证留给 Client。
+- 独立分支：`impl/sdlc-github-foundation-v1`；既有 Draft PR #14。
+- 生产实现、确定性测试、真实 stdio/Fake HTTP MCP、三份安装配置已完成；准确被测源码 SHA 和最终运行结果由随后文档提交的 WEB-VALIDATION 登记。
+- 本文不改变 DESIGN.md、EVAL-PLAN.md 的已批准定义；批准依据是用户明确指令，不是 Agent 自行批准。
 
 ## 唯一下一工作包
 
-Maintainer批准本设计后，按EXECUTE-WEB.md在 `impl/sdlc-github-foundation-v1` 完成Web实施与可运行验证。新会话实际发送该提示词即构成所述工作包的明确批准；本设计会话不自行记录approved。
+本地 `CLIENT-GOAL.md`：只执行真实 GitHub、双实例真实身份与 Codex/Cursor/Claude Code 原生验证，保存独立证据，再移交一次 fresh-context Web Review。不是交给 Client 补写主体 Runtime。
 
-## 本轮验证范围
+## 并行和安全边界
 
-核对仓库当前工程规则、共享接口、非Phase Skill样式与官方MCP工具文档；检查设计操作计数、链接、文件范围和文本格式。
+不改根级共享 HANDOFF、其他 Work Item、docs/v1.x、ArtifactStore 或各 Phase 业务语义。不修改 main/其他分支，不 merge、tag、release、强推或自动扩大宿主权限。真实测试仍限定先前授权仓库及本次标记对象；没有可靠 Fixture 的操作保持 BLOCKED，不创建禁止的 Tag/Release 来凑齐覆盖。
 
-Runtime Contract Validator、运行时单元测试、真实MCP调用、三个客户端与长任务均属于实施后的验证，本设计轮未执行，不报告PASS。
+## 状态含义
 
-## 并行边界
-
-不修改共享 `docs/plugin-development/HANDOFF.md`，不调整其他工作包。实施仅使用自身分支；完成后需要独立Review。设计PR与实施PR的存在不构成main合并或发布授权。
+代码/Mock 完成与产品接受分开。C/D 未运行时整体未接受，PR 保持 Draft。记录中要分别列源代码 SHA、实测 SHA、文档交付 SHA、远端实际 HEAD；只有本地 Git Bundle 中存在的提交不得称已推送。

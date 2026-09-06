@@ -15,5 +15,6 @@
     "software-delivery",
     "artifact"
   ],
-  "skills": "./skills/"
+  "skills": "./skills/",
+  "mcpServers": "./config/github/claude-code.mcp.json"
 }

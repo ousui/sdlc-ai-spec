@@ -456,7 +456,7 @@
       "tests": [
         "tests.skill_imp.test_method.MethodTests.test_failed_local_check_cannot_freeze_or_claim_vfy_ready",
         "tests.skill_imp.test_method.MethodTests.test_external_effect_or_arbitrary_command_check_is_never_executed",
-        "tests.skill_status.test_imp.ImpStatusTests.test_completed_summary_separates_vfy_readiness_from_skill_availability"
+        "tests.skill_status.test_imp.ImpStatusTests.test_completed_summary_separates_vfy_readiness_and_installed_skill"
       ]
     },
     {
@@ -475,7 +475,7 @@
       "id": "IMP-E048",
       "tests": [
         "tests.skill_imp.test_state_machine.StateMachineTests.test_freeze_always_precedes_claim_complete",
-        "tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_frozen_completed_result_is_ready_but_missing_vfy_skill_is_explicit",
+        "tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_frozen_completed_result_is_ready_and_installed_vfy_is_explicit",
         "tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_query_reuse_reads_current_claim_after_completion",
         "tests.skill_imp.test_lifecycle.ImpLifecycleTests.test_direct_req_binding_has_current_claim_and_vfy_input",
         "tests.skill_status.test_imp.ImpStatusTests.test_cli_json_includes_current_claim_and_exact_vfy_input"

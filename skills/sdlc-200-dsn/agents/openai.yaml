@@ -1,5 +1,5 @@
 policy:
   allow_implicit_invocation: false
 interface:
-  display_name: "SDLC 200 DSN"
-  short_description: "创建、修订和检查设计 DSN Artifact Set"
+  display_name: "SDLC 200 · 设计（DSN）"
+  short_description: "从完整 REQ Scope 构造 DSN Artifact Set，承接全部设计义务；16 个 Domain 是私有契约，不是独立 Skill。"

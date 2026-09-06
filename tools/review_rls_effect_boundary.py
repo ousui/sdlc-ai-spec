@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 import sys
 ROOT=Path(__file__).resolve().parents[1];sys.path.insert(0,str(ROOT))
-from tests.skill_rls.preweb_review import scan_runtime_source
+from tools.review_rls_contract import scan_runtime_source
 from tools.run_rls_test_suite import run
 from tools.rls_validation_support import digest, write_json
 

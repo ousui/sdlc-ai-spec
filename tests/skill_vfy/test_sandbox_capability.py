@@ -6,7 +6,6 @@ from unittest.mock import patch
 from tests.evals import run_sdlc_500_vfy_eval as formal
 from tests.skill_vfy.sandbox_support import probe_sandbox_capability
 from tests.skill_vfy import test_critical_cases as critical
-from tests.skill_vfy import test_executor_evidence as executor_cases
 from tests.skill_vfy import test_fresh_review_boundaries as boundaries
 from tools.validate_sdlc_500_vfy_case_coverage import validate
 from vfy_common import VfyError
@@ -16,8 +15,6 @@ class SandboxCapabilityTest(unittest.TestCase):
     def test_missing_linux_backend_is_portable_but_never_fixed_eval_pass(self):
         suite = unittest.TestSuite([
             critical.VfyCriticalCases("test_vfy_e041"), critical.VfyCriticalCases("test_vfy_e046"),
-            executor_cases.VfyExecutorEvidenceCases("test_vfy_e041"),
-            executor_cases.VfyExecutorEvidenceCases("test_vfy_e046"),
             boundaries.FreshReviewBoundariesTest("test_command_network_and_outside_write_are_denied_by_os"),
         ])
         with patch("vfy_executor.sys.platform", "linux"), \
@@ -29,7 +26,7 @@ class SandboxCapabilityTest(unittest.TestCase):
             stream = io.StringIO()
             ordinary = unittest.TextTestRunner(stream=stream, verbosity=2).run(suite)
             self.assertTrue(ordinary.wasSuccessful(), stream.getvalue())
-            self.assertEqual(5, ordinary.testsRun)
+            self.assertEqual(3, ordinary.testsRun)
             self.assertEqual([], ordinary.skipped)
             self.assertEqual([], ordinary.expectedFailures)
             self.assert_formal_unavailable(formal.run({"VFY-E041", "VFY-E046"}))

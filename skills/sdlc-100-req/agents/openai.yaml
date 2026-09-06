@@ -1,5 +1,5 @@
 policy:
   allow_implicit_invocation: false
 interface:
-  display_name: "SDLC 100 REQ"
-  short_description: "创建、修订和检查需求 REQ Artifact"
+  display_name: "SDLC 100 · 需求（REQ）"
+  short_description: "把用户需求和准确 frozen CTX 转为有来源、范围、需求项与验收标准的 REQ；不替业务方决定含糊需求。"

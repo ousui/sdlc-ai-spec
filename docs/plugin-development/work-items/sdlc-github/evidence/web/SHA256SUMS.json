@@ -1,5 +1,5 @@
 {
-  "CHECKS.json": "5018a2df38940eac68f8d1f72f7a3512f07ff6f2c015e58ce11f8e1533cee59f",
+  "CHECKS.json": "c360b0bd1a9d7f2f925227ad1c65fec04242a1f4246bd99aca7a0601a732fa17",
   "OPERATIONS.json": "ac79c39c97d0e9e9685c59970040ffdc2a3fcb06ba6b80d4551d5ef8a1a07fa1",
   "SOURCE-SHA256.json": "cf603515948de96bca2a6d2c5e532a5603c0254d6c73279a05bc2672c3c9d507",
   "all-source-locks.log": "38bec423eb075a397468de26e5f27bee7bd9c6dc6f896741cd0eac94c1294d7c",
@@ -9,6 +9,7 @@
   "dsn-installed-copy.log": "56f9d7001755aed922779f4d0b6498af8f422838033c33979a47274dd11663e8",
   "dsn-source-lock.log": "af1d9364c0f9952cea9dbbd275d90496bce3611b1f1166111ac4c77a753a6605",
   "full-regression.log": "c935d1024b5556ac89a0d8eee0c23622641bb97fb0c5dfbfb46872f9b7fc8795",
+  "integration/SHA256SUMS.json": "c28dc098c8c92023723a6f18c61ec7bcbb395ee6e5a88069a0c03d400234240e",
   "integration/VALIDATION.json": "cac6d9a5be022ab8239b9253176f2a6be0f65b4ce9387c861af2635bba566f32",
   "integration/integration/protocol-evidence/test_all_32_operations_and_annotations.json": "04ec8f073963146a4e4587e7e076cb2cdd2ab368123b5f2f52a089316c40fce2",
   "integration/integration/protocol-evidence/test_installed_copy_three_sequential_host_configs.json": "7fe55a3def9eccb9fed479cdd07f83bffa1c0fe5efc90ef553ba119a13324966",
@@ -19,12 +20,14 @@
   "integration/integration/unittest.log": "79aa6af16ae82f8e79f97b994694efc5ee5be9b41bb0e9457853b6d0a053f791",
   "integration.log": "8d0a11089a532dfec13ef3b7c9bc73668d8cf8096e77e95f6b7352981371fe6e",
   "lifecycle-query.log": "e10027882021b289e8c0d83429195db1eef8ed718ac1575abd7269e4cdcdc032",
+  "offline/SHA256SUMS.json": "88d3e89281cec905402b34e12a3a9e608dc41d73bc40b04f45e82cb38e443719",
   "offline/VALIDATION.json": "89253e41811d3d8198583e07783f9cacd5ee14f5b16784af99ddf4ee232a02df",
   "offline/offline/unittest.log": "d6ac8cde2d9e39ccc881466725b8dacdb0cde49146d05b9d6cc53514aa5319f1",
   "offline.log": "d0721862e45969abe28ab35221c286954ffa44caad275c907f90a627e5b2d7f1",
   "pln-evals.log": "88eedf3c9d9a32f2483329edcf5d4f4013ce6a0bed6cb4609346ca85545faa97",
   "pln-installed-copy.log": "e78fdb2f6d10488713cc9fa2f62363472efedd06a789623085a62bc7301ab9c8",
   "pln-source-lock.log": "d624f9ea0db17927e760e27a452784c957b7168a6714d4f3ad40f0e19ed7bb68",
+  "prepare/SHA256SUMS.json": "99e48a685354493701055ac9d3369dd6951c1331464311bb8fb5e47c3b94333d",
   "prepare/VALIDATION.json": "55f32989dd7c201500565fb8daeb17158b7dd1be2b4604f59c1077757a324bd2",
   "prepare/prepare/WORKSPACE-SHA256.json": "a9e067e810775d55d8369e67c5435ca87b792a5326e6f33de08c35334e97bf43",
   "prepare/prepare/native-templates/claude-code.json": "b8e4638078752820bee4961b3021463130f77a6a2f5541f384a9c7ae1d33b1e8",
@@ -36,6 +39,7 @@
   "runtime-contracts.log": "df975fdb2aedae6f8396c60f5f3b5e9fcf075ea513860fefda3dd356bd74d3ea",
   "sdlc-status.log": "0c9599b20ea9f29539581cbf56cfd4243dd37a3271f955e63d53719e26b75fa2",
   "skill-interfaces.log": "f41d3a121491ee91d204d88ebf4542829fa8af1d8728858f7ec7632049499105",
-  "source-commit-check.log": "8d4e49318f2ae5180d776ed81c11d3ff58c77cbb3d5b2d3b56585cf00c2a0778",
+  "source-commit-check.log": "85ce483be651dffafcf3c0f8e2366f25fbe35df8a0dae2b092d319400f3b415c",
+  "source-commit-check.raw.log.gz": "d573764ddd16709d482e6e3c4c8111045439286cd48dadd16f67caa0a1405667",
   "status-installed-copy.log": "c003c98810066dabef61f6d8a4458641f1e57c36b0f6dcf5200f1ee331523822"
 }

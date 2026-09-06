@@ -1,0 +1,11 @@
+test_all_32_operations_and_annotations (tests.skill_github.test_protocol.ProtocolTests.test_all_32_operations_and_annotations) ... ok
+test_installed_copy_three_sequential_host_configs (tests.skill_github.test_protocol.ProtocolTests.test_installed_copy_three_sequential_host_configs) ... ok
+test_production_discovery_missing_auth_and_invalid_args_offline (tests.skill_github.test_protocol.ProtocolTests.test_production_discovery_missing_auth_and_invalid_args_offline) ... ok
+test_real_process_crash_no_replay_and_readonly_reconcile (tests.skill_github.test_protocol.ProtocolTests.test_real_process_crash_no_replay_and_readonly_reconcile) ... ok
+test_restart_cache_clear_and_token_identity (tests.skill_github.test_protocol.ProtocolTests.test_restart_cache_clear_and_token_identity) ... ok
+test_wire_auth_error_does_not_echo_credential (tests.skill_github.test_protocol.ProtocolTests.test_wire_auth_error_does_not_echo_credential) ... ok
+
+----------------------------------------------------------------------
+Ran 6 tests in 13.232s
+
+OK

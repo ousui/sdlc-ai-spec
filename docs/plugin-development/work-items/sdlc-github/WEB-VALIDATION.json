@@ -291,8 +291,11 @@
       "status": "PASS",
       "duration_seconds": 0.004,
       "log": "source-commit-check.log",
-      "log_sha256": "8d4e49318f2ae5180d776ed81c11d3ff58c77cbb3d5b2d3b56585cf00c2a0778",
-      "implementation_sha": "b035880a6135c1f126ae1a35e1c173221f28807a"
+      "log_sha256": "85ce483be651dffafcf3c0f8e2366f25fbe35df8a0dae2b092d319400f3b415c",
+      "implementation_sha": "b035880a6135c1f126ae1a35e1c173221f28807a",
+      "original_log_sha256": "8d4e49318f2ae5180d776ed81c11d3ff58c77cbb3d5b2d3b56585cf00c2a0778",
+      "original_log_gzip": "source-commit-check.raw.log.gz",
+      "archive_normalization": "Readable copy removes redundant final blank line for git diff --check; gzip preserves the exact raw command output."
     },
     {
       "id": "offline",

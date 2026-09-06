@@ -1,0 +1,32 @@
+test_duplicate_work_item_semantics_are_rejected (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_duplicate_work_item_semantics_are_rejected) ... ok
+test_generic_completion_or_evidence_is_not_sufficient (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_generic_completion_or_evidence_is_not_sufficient) ... ok
+test_missing_responsible_role_remains_action_required (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_missing_responsible_role_remains_action_required) ... ok
+test_non_required_phase_cannot_have_pseudo_work_item (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_non_required_phase_cannot_have_pseudo_work_item) ... ok
+test_path_token_must_belong_to_declared_resource (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_path_token_must_belong_to_declared_resource) ... ok
+test_required_rls_work_item_has_exactly_one_environment (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_required_rls_work_item_has_exactly_one_environment) ... ok
+test_unconfirmed_obligation_and_scope_expansion_fail (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_unconfirmed_obligation_and_scope_expansion_fail) ... ok
+test_unknown_authority_fields_are_rejected (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_unknown_authority_fields_are_rejected) ... ok
+test_vfy_is_always_required_and_needs_work_item (tests.skill_pln.test_contract_matrix.PlnContractMatrixTests.test_vfy_is_always_required_and_needs_work_item) ... ok
+test_parallel_earliest_work_items_are_all_projected (tests.skill_pln.test_lifecycle.PlnLifecycleTests.test_parallel_earliest_work_items_are_all_projected) ... ok
+test_ready_plan_projects_exact_imp_binding (tests.skill_pln.test_lifecycle.PlnLifecycleTests.test_ready_plan_projects_exact_imp_binding) ... ok
+test_candidate_cannot_override_upstream_pln_applicability (tests.skill_pln.test_runtime.PlnRuntimeTests.test_candidate_cannot_override_upstream_pln_applicability) ... ok
+test_check_is_read_only (tests.skill_pln.test_runtime.PlnRuntimeTests.test_check_is_read_only) ... ok
+test_create_freezes_complete_plan (tests.skill_pln.test_runtime.PlnRuntimeTests.test_create_freezes_complete_plan) ... ok
+test_dependency_cycle_and_later_phase_fail (tests.skill_pln.test_runtime.PlnRuntimeTests.test_dependency_cycle_and_later_phase_fail) ... ok
+test_missing_confirmation_persists_open_revision (tests.skill_pln.test_runtime.PlnRuntimeTests.test_missing_confirmation_persists_open_revision) ... ok
+test_non_required_and_pending_do_not_allocate (tests.skill_pln.test_runtime.PlnRuntimeTests.test_non_required_and_pending_do_not_allocate) ... ok
+test_open_revise_frozen_no_change_and_change (tests.skill_pln.test_runtime.PlnRuntimeTests.test_open_revise_frozen_no_change_and_change) ... ok
+test_same_resource_work_items_require_dependency_chain (tests.skill_pln.test_runtime.PlnRuntimeTests.test_same_resource_work_items_require_dependency_chain) ... ok
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.679s
+
+OK
+PLN source lock: PASS (13)
+sdlc-pln runtime independence: PASS
+development docs copied: 0
+external dependencies installed: 0
+project writes during read-only check: 0
+sdlc-pln eval: PASS
+critical cases: 19
+runtime independence: PASS

@@ -1,0 +1,4 @@
+skill interface validation: PASS
+formal skills: 8
+interface contract: sdlc-ai-spec/runtime/skill-interface/v1
+authority source locks: unchanged

@@ -1,0 +1,47 @@
+{
+  "name": "status-installed",
+  "attempt": 1,
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "tools/test_sdlc_status_runtime_independence.py",
+    "--json-out",
+    "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-installed.json"
+  ],
+  "cwd": "/private/tmp/sdlc-pr11-status-recheck.QyXXsk",
+  "started_at": "2026-09-06T03:02:38.117711+00:00",
+  "finished_at": "2026-09-06T03:02:39.224042+00:00",
+  "duration_ms": 1106,
+  "exit_code": 0,
+  "stdout": "sdlc-status runtime independence: PASS\ncommands: 12\nnative Client behavior: NOT_RUN\n",
+  "stderr": "",
+  "stdout_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-installed-attempt-1.stdout.log",
+  "stderr_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-installed-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:c003c98810066dabef61f6d8a4458641f1e57c36b0f6dcf5200f1ee331523822",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": {
+    "root": "/private/tmp/sdlc-pr11-status-recheck.QyXXsk",
+    "sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+    "tree": "d90e81a94e5b7b5628eb6849cef15bb3f96deb36",
+    "parents": [
+      "1b9326e7447a481453fbbeccd8d104a02f6c67e9"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_after": {
+    "root": "/private/tmp/sdlc-pr11-status-recheck.QyXXsk",
+    "sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+    "tree": "d90e81a94e5b7b5628eb6849cef15bb3f96deb36",
+    "parents": [
+      "1b9326e7447a481453fbbeccd8d104a02f6c67e9"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_unchanged": true,
+  "success": true
+}

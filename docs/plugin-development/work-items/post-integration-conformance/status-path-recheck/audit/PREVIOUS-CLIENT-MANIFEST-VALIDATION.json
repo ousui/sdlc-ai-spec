@@ -1,0 +1,16 @@
+{
+  "contract": "sdlc-ai-spec/previous-client-manifest-validation/v1",
+  "validated_at": "2026-09-06T03:17:31.882680+00:00",
+  "delivery_commit": "1b9326e7447a481453fbbeccd8d104a02f6c67e9",
+  "manifest_path": "docs/plugin-development/work-items/post-integration-conformance/CLIENT-SHA256-MANIFEST.json",
+  "manifest_sha256": "cfd440244bdccd4cb279e8d0cfc354ce9cc98a51ee395a8e07f236d975b89bc1",
+  "manifest_unchanged_since_delivery": true,
+  "manifest_source_sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+  "files_checked": 340,
+  "mismatches": [],
+  "old_process_receipts": 75,
+  "old_bound_streams": 150,
+  "old_archive_audit_success": true,
+  "native_candidates": 8,
+  "success": true
+}

@@ -1,0 +1,49 @@
+{
+  "contract": "sdlc-ai-spec/status-path-control-mapping/v1",
+  "source_sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+  "test_source": "tests/skill_status/test_store_absence.py",
+  "test_source_sha256": "fc81fb99b32b4e0ecdd6e6c3882646a52e18ae82154190036a09161751ab73c9",
+  "all_new_tests_executed": [
+    "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_dangling_database_link_is_not_an_absent_store",
+    "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_dangling_runtime_link_is_not_an_absent_store",
+    "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_database_directory_is_not_a_successful_not_started_view",
+    "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_exact_reference_still_fails_when_store_is_genuinely_absent",
+    "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_inspection_error_is_bounded_and_not_an_absence_fallback",
+    "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_installed_copy_rejects_conflict_without_siblings_or_development_files",
+    "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_legitimate_absence_preserves_bare_auto_and_list",
+    "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_live_directory_link_retains_the_shared_backend_policy",
+    "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_live_link_to_wrong_runtime_type_is_invalid",
+    "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_meta_commands_do_not_run_store_diagnostics",
+    "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_present_valid_database_after_unavailable_never_downgrades",
+    "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_real_cli_json_reports_path_conflict_with_nonzero_exit",
+    "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_reference_failure_precedes_conflicting_store_path",
+    "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_runtime_file_is_not_a_successful_not_started_view"
+  ],
+  "controls": {
+    "malformed_sdlc_regular_file_bytes_and_mode_unchanged": [
+      "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_runtime_file_is_not_a_successful_not_started_view"
+    ],
+    "malformed_database_directory_bytes_and_mode_unchanged": [
+      "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_database_directory_is_not_a_successful_not_started_view"
+    ],
+    "dangling_links_bytes_and_mode_unchanged": [
+      "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_dangling_runtime_link_is_not_an_absent_store",
+      "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_dangling_database_link_is_not_an_absent_store"
+    ],
+    "genuine_absence_bytes_and_mode_unchanged": [
+      "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_legitimate_absence_preserves_bare_auto_and_list",
+      "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_exact_reference_still_fails_when_store_is_genuinely_absent"
+    ],
+    "json_single_document_exit_2_no_stderr": [
+      "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_real_cli_json_reports_path_conflict_with_nonzero_exit",
+      "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_installed_copy_rejects_conflict_without_siblings_or_development_files"
+    ],
+    "no_initialization_or_sibling_invocation": [
+      "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_present_valid_database_after_unavailable_never_downgrades",
+      "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_meta_commands_do_not_run_store_diagnostics",
+      "tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_installed_copy_rejects_conflict_without_siblings_or_development_files"
+    ]
+  },
+  "all_mapped_ids_executed": true,
+  "result": "PASS"
+}

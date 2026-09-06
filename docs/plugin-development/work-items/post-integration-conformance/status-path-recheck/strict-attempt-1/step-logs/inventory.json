@@ -1,0 +1,130 @@
+{
+  "contract": "sdlc-ai-spec/skill-conformance-result/v1",
+  "success": true,
+  "portable_structure": "PASS",
+  "skills": [
+    {
+      "skill": "sdlc-000-ctx",
+      "declared_commands": [
+        "auto",
+        "create",
+        "revise",
+        "check",
+        "help",
+        "version",
+        "commands",
+        "examples"
+      ],
+      "layout": "PASS"
+    },
+    {
+      "skill": "sdlc-100-req",
+      "declared_commands": [
+        "auto",
+        "create",
+        "revise",
+        "check",
+        "help",
+        "version",
+        "commands",
+        "examples"
+      ],
+      "layout": "PASS"
+    },
+    {
+      "skill": "sdlc-200-dsn",
+      "declared_commands": [
+        "auto",
+        "create",
+        "revise",
+        "check",
+        "help",
+        "version",
+        "commands",
+        "examples"
+      ],
+      "layout": "PASS"
+    },
+    {
+      "skill": "sdlc-300-pln",
+      "declared_commands": [
+        "auto",
+        "create",
+        "revise",
+        "check",
+        "help",
+        "version",
+        "commands",
+        "examples"
+      ],
+      "layout": "PASS"
+    },
+    {
+      "skill": "sdlc-400-imp",
+      "declared_commands": [
+        "auto",
+        "create",
+        "revise",
+        "check",
+        "abandon",
+        "help",
+        "version",
+        "commands",
+        "examples"
+      ],
+      "layout": "PASS"
+    },
+    {
+      "skill": "sdlc-500-vfy",
+      "declared_commands": [
+        "auto",
+        "create",
+        "run",
+        "revise",
+        "check",
+        "help",
+        "version",
+        "commands",
+        "examples"
+      ],
+      "layout": "PASS"
+    },
+    {
+      "skill": "sdlc-600-rls",
+      "declared_commands": [
+        "auto",
+        "create",
+        "execute",
+        "confirm",
+        "revise",
+        "check",
+        "cancel",
+        "finalize",
+        "help",
+        "version",
+        "commands",
+        "examples"
+      ],
+      "layout": "PASS"
+    },
+    {
+      "skill": "sdlc-status",
+      "declared_commands": [
+        "auto",
+        "list",
+        "inspect",
+        "help",
+        "version",
+        "commands",
+        "examples"
+      ],
+      "layout": "PASS"
+    }
+  ],
+  "native": {
+    "verified": 0,
+    "total": 40,
+    "required_native_missing": []
+  },
+  "native_certification": "NOT_CLAIMED_BY_STATIC_VALIDATION"
+}

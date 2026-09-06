@@ -1,0 +1,42 @@
+{
+  "contract": "sdlc-ai-spec/validation-launch-failure/v1",
+  "attempt": 1,
+  "requested_command": [
+    "python3",
+    "-B",
+    "-m",
+    "unittest",
+    "tests.skill_status.test_store_absence",
+    "-v"
+  ],
+  "wrapper_resolved_executable": "/usr/bin/python3",
+  "wrapper_python_version": "3.9.6",
+  "failure_stage": "accepted_redaction_helper_import_before_test_spawn",
+  "test_process_started": false,
+  "exit_code": 1,
+  "stdout": "",
+  "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/private/tmp/sdlc-pr11-status-recheck.QyXXsk/tools/rls_validation_support.py\", line 56, in <module>\n    def _text(raw: bytes | str | None) -> str:\nTypeError: unsupported operand type(s) for |: type and type\n",
+  "source_before": {
+    "root": "/private/tmp/sdlc-pr11-status-recheck.QyXXsk",
+    "sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+    "tree": "d90e81a94e5b7b5628eb6849cef15bb3f96deb36",
+    "parents": [
+      "1b9326e7447a481453fbbeccd8d104a02f6c67e9"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_after": {
+    "root": "/private/tmp/sdlc-pr11-status-recheck.QyXXsk",
+    "sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+    "tree": "d90e81a94e5b7b5628eb6849cef15bb3f96deb36",
+    "parents": [
+      "1b9326e7447a481453fbbeccd8d104a02f6c67e9"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_unchanged": true,
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "persistence_note": "Reconstructed exactly from captured launcher output; original wrapper failed before run_step could persist a receipt."
+}

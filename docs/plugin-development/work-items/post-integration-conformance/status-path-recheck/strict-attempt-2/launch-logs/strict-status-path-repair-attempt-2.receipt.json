@@ -1,0 +1,51 @@
+{
+  "name": "strict-status-path-repair",
+  "attempt": 2,
+  "argv": [
+    "/opt/homebrew/bin/python3",
+    "-B",
+    "tools/run_post_integration_validation.py",
+    "--profile",
+    "strict",
+    "--source-sha",
+    "295d98260e3def713dc72b12c458aa2baa8372f4",
+    "--json-out",
+    "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair.json"
+  ],
+  "cwd": "/private/tmp/sdlc-pr11-status-recheck.QyXXsk",
+  "started_at": "2026-09-06T03:07:40.345617+00:00",
+  "finished_at": "2026-09-06T03:11:40.039535+00:00",
+  "duration_ms": 239748,
+  "exit_code": 0,
+  "stdout": "POST_INTEGRATION = PASS\nNATIVE_CLIENTS = NOT_RUN\n",
+  "stderr": "",
+  "stdout_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry-launch-logs/strict-status-path-repair-attempt-2.stdout.log",
+  "stderr_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry-launch-logs/strict-status-path-repair-attempt-2.stderr.log",
+  "stdout_sha256": "sha256:eb44549e5760a6421dcd3588a872a22edf495a0f49510212f5242203d851ae24",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": {
+    "root": "/private/tmp/sdlc-pr11-status-recheck.QyXXsk",
+    "sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+    "tree": "d90e81a94e5b7b5628eb6849cef15bb3f96deb36",
+    "parents": [
+      "1b9326e7447a481453fbbeccd8d104a02f6c67e9"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_after": {
+    "root": "/private/tmp/sdlc-pr11-status-recheck.QyXXsk",
+    "sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+    "tree": "d90e81a94e5b7b5628eb6849cef15bb3f96deb36",
+    "parents": [
+      "1b9326e7447a481453fbbeccd8d104a02f6c67e9"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_unchanged": true,
+  "success": true
+}

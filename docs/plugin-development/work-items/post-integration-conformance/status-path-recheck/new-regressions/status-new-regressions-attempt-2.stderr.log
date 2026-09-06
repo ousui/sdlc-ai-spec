@@ -1,0 +1,19 @@
+test_dangling_database_link_is_not_an_absent_store (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_dangling_database_link_is_not_an_absent_store) ... ok
+test_dangling_runtime_link_is_not_an_absent_store (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_dangling_runtime_link_is_not_an_absent_store) ... ok
+test_database_directory_is_not_a_successful_not_started_view (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_database_directory_is_not_a_successful_not_started_view) ... ok
+test_exact_reference_still_fails_when_store_is_genuinely_absent (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_exact_reference_still_fails_when_store_is_genuinely_absent) ... ok
+test_inspection_error_is_bounded_and_not_an_absence_fallback (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_inspection_error_is_bounded_and_not_an_absence_fallback) ... ok
+test_installed_copy_rejects_conflict_without_siblings_or_development_files (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_installed_copy_rejects_conflict_without_siblings_or_development_files) ... ok
+test_legitimate_absence_preserves_bare_auto_and_list (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_legitimate_absence_preserves_bare_auto_and_list) ... ok
+test_live_directory_link_retains_the_shared_backend_policy (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_live_directory_link_retains_the_shared_backend_policy) ... ok
+test_live_link_to_wrong_runtime_type_is_invalid (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_live_link_to_wrong_runtime_type_is_invalid) ... ok
+test_meta_commands_do_not_run_store_diagnostics (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_meta_commands_do_not_run_store_diagnostics) ... ok
+test_present_valid_database_after_unavailable_never_downgrades (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_present_valid_database_after_unavailable_never_downgrades) ... ok
+test_real_cli_json_reports_path_conflict_with_nonzero_exit (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_real_cli_json_reports_path_conflict_with_nonzero_exit) ... ok
+test_reference_failure_precedes_conflicting_store_path (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_reference_failure_precedes_conflicting_store_path) ... ok
+test_runtime_file_is_not_a_successful_not_started_view (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_runtime_file_is_not_a_successful_not_started_view) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.193s
+
+OK

@@ -1,0 +1,62 @@
+{
+  "contract": "sdlc-ai-spec/status-path-recheck-result/v1",
+  "classification": "PRODUCER_EXACT_SOURCE_RUNTIME_RECHECK_NOT_WEB_ACCEPTANCE",
+  "observed_at": "2026-09-06T03:17:32.261186+00:00",
+  "result": "PASS",
+  "source_sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+  "source_tree": "d90e81a94e5b7b5628eb6849cef15bb3f96deb36",
+  "source_parent": "1b9326e7447a481453fbbeccd8d104a02f6c67e9",
+  "new_status_regressions": {
+    "passed": 14,
+    "total": 14,
+    "attempts": 2,
+    "first_attempt_test_process_started": false
+  },
+  "strict": {
+    "final_success": true,
+    "final_steps": 13,
+    "attempts": 2,
+    "first_attempt_failure": "VFY OS containment blocked by outer sandbox",
+    "final_os_containment": "PASS"
+  },
+  "status_fixed_eval": {
+    "passed": 14,
+    "total": 14
+  },
+  "status_installed_commands": 12,
+  "status_source_lock_entries": 51,
+  "vfy_strict": {
+    "passed": 80,
+    "total": 80
+  },
+  "rls_fixed_eval": {
+    "passed": 87,
+    "total": 87
+  },
+  "repository_tests": {
+    "executed": 1118,
+    "unique_ids": 1118
+  },
+  "failures": 0,
+  "errors": 0,
+  "skipped": 0,
+  "expected_failures": 0,
+  "unexpected_successes": 0,
+  "new_process_receipts": 27,
+  "new_bound_streams": 54,
+  "previous_client_manifest": "PASS_340_FILES_AT_1b9326",
+  "previous_client_process_receipts": 75,
+  "previous_client_bound_streams": 150,
+  "previous_native_candidates": 8,
+  "native_accepted_cells": [],
+  "compatibility_ledger": "UNCHANGED_40_NOT_RUN_RECEIPT_NULL",
+  "web_conformance_review": "REQUIRED",
+  "real_target_effects": 0,
+  "main_modified": false,
+  "phase_runtime_modified": false,
+  "shared_packages_modified": false,
+  "workflows_modified": false,
+  "pr_merged": false,
+  "pr_draft_required": true,
+  "delivery_head_binding": "The evidence/Handoff commit that has this tested source as its sole parent; exact SHA is recorded after commit and push readback."
+}

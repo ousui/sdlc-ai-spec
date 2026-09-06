@@ -1,0 +1,656 @@
+{
+  "contract": "sdlc-ai-spec/status-path-recheck-manifest/v1",
+  "source_sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+  "self_excluded": true,
+  "scope": "New status-path-recheck evidence and updated global Handoff; previous Client evidence and manifests remain bound by their original delivery tree.",
+  "files": [
+    {
+      "path": "docs/plugin-development/HANDOFF.md",
+      "sha256": "ac1959b36a89b6e42b93be8fe83d8d231eb5f40cae413deb24ff70e1eeb39897",
+      "bytes": 6262,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/STATUS-PATH-RECHECK.json",
+      "sha256": "11178edc52639cc19b31dfc1653a6d73d6bd4c58c8702bd7b62391e10fedc920",
+      "bytes": 1900,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/STATUS-PATH-RECHECK.md",
+      "sha256": "7ae72ad6be144f3d70b5571162ee92c846cb4fe4d8f2a92603ec31ff8ade1f48",
+      "bytes": 5541,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/attempts/launcher/status-new-regressions-attempt-1.launch-failure.json",
+      "sha256": "21214c33f11d999b0167814774561b58eab7c763ab132b38b18e836855bacd6e",
+      "bytes": 1599,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/audit/CREDENTIAL-SCAN.json",
+      "sha256": "7ca12856a51c75c1d680b6e42ef51897b7ac7e9580063eff908a70e77115710f",
+      "bytes": 171,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/audit/NEW-ARCHIVE-AUDIT.json",
+      "sha256": "260625c05fad1cfd45f96fc4e186db081d75b40b9a603c2e6413abd0ad205e66",
+      "bytes": 25037,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/audit/PREVIOUS-CLIENT-MANIFEST-VALIDATION.json",
+      "sha256": "1778e7a16e65d3cbdaacdab62f73090a4872a2c13f98e6a6f4e55c7cf6bbac17",
+      "bytes": 692,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/audit/SOURCE-IDENTITY.json",
+      "sha256": "64cca45bb2816d4feed58cc5fd2408855c2d880d62a1885f52a9f03629a0e338",
+      "bytes": 1348,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/audit/STATUS-CONTROL-MAPPING.json",
+      "sha256": "ad4492a2620997f88534d0dbe24ddc0afa5267460d5bc26763700e5f7132e108",
+      "bytes": 3945,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/audit/UNIQUE-TEST-AUDIT.json",
+      "sha256": "383184b076bd0aae0c633d3eed9c2f1ceb1d484caa39ba5eae5f3d5700fddbf0",
+      "bytes": 127052,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/new-regressions/status-new-regressions-attempt-2.receipt.json",
+      "sha256": "d2fb353066c4118d38e405784051de5d98354a4254de76576ef61f1fe1d2dc62",
+      "bytes": 4397,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/new-regressions/status-new-regressions-attempt-2.stderr.log",
+      "sha256": "326ad0da4f40a53818426a3286503dcd9d0d5becbc0c51e72a10a1fa6dda6b01",
+      "bytes": 2697,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/new-regressions/status-new-regressions-attempt-2.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/launch-logs/strict-status-path-repair-attempt-1.receipt.json",
+      "sha256": "9f204a9aa328c791b199c17be9d00847c613f5a3c00e6c8518c16aa2076c893b",
+      "bytes": 1917,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/launch-logs/strict-status-path-repair-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/launch-logs/strict-status-path-repair-attempt-1.stdout.log",
+      "sha256": "15a38314a1aeb43cf87d1ed8feeebaa4f60b3d201e5ee03aa2bbe2297012ca7a",
+      "bytes": 57,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/all-source-locks-attempt-1.receipt.json",
+      "sha256": "ed64628f4338149077ea3089e2f72ef5dfb02cd8dda1377d852be2f3f27be4cf",
+      "bytes": 9300,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/all-source-locks-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/all-source-locks-attempt-1.stdout.log",
+      "sha256": "9f8d6d0dcd73fed6f028bf5c6ef430f4588d4cc68d18f072c4f03fb76315ae5a",
+      "bytes": 6620,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/interfaces-attempt-1.receipt.json",
+      "sha256": "833a22bcd3baf44b210d80ba7e6a5899be2bba5e68da032283dc1e6e27a2c170",
+      "bytes": 1793,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/interfaces-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/interfaces-attempt-1.stdout.log",
+      "sha256": "9825a016f267883d99316e465bcb6352311d4e26d10cb9558108ae9e9e6530f7",
+      "bytes": 144,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/inventory-attempt-1.receipt.json",
+      "sha256": "b4a2e7afa458e76984831a6b012501b22f5da2c63979ce08d1ef79adc305fd7c",
+      "bytes": 1786,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/inventory-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/inventory-attempt-1.stdout.log",
+      "sha256": "e6586fdea52884654f17b8280e58a9061d3a76024da116cbc026978fb8ab68fa",
+      "bytes": 25,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/inventory.json",
+      "sha256": "c3f9e1a342a943d30ef9f32c7e0378400f3d863f444df6fd8235b572382064cc",
+      "bytes": 2356,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/locks.json",
+      "sha256": "9f8d6d0dcd73fed6f028bf5c6ef430f4588d4cc68d18f072c4f03fb76315ae5a",
+      "bytes": 6620,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/repo-suite-attempt-1.receipt.json",
+      "sha256": "3c9992b7654ee24af19305c3925a148c3462808b4b45188593c4f977409c8db2",
+      "bytes": 187501,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/repo-suite-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/repo-suite-attempt-1.stdout.log",
+      "sha256": "150f67cd347d8f128cdf4b17514d80fe8aa45e2c5fbf8bce08888dbdbb509374",
+      "bytes": 184402,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/repo-suite.json",
+      "sha256": "ec480812e94108b12ff0ee05dc9c0e481a401d70bf46b806030d8f5151871322",
+      "bytes": 183767,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/rls-fixed-attempt-1.receipt.json",
+      "sha256": "fbeeb94156f5cae1236877a61d52878047799e9ea518662a9ee64c0b8e45412e",
+      "bytes": 1792,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/rls-fixed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/rls-fixed-attempt-1.stdout.log",
+      "sha256": "5db2dc9a73dbc9b5d827c19baa1236b1485020326af386413671877bed39645d",
+      "bytes": 28,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/rls-fixed.json",
+      "sha256": "5a9baf47f264ac8b648964fd88559d518c5afa9aee405a53c0df98ee0b247043",
+      "bytes": 14179,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/runtime-contracts-attempt-1.receipt.json",
+      "sha256": "4c176fa3dfcd52dca26c10ebed1ddbe997be9eec23a93dca551e32956278f159",
+      "bytes": 1742,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/runtime-contracts-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/runtime-contracts-attempt-1.stdout.log",
+      "sha256": "d3dc89a08c6df93affe4464617ecf5614771bf888392b4a12818d9c8cd0bda36",
+      "bytes": 72,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/status-coverage-attempt-1.receipt.json",
+      "sha256": "165acf66de5615a4871ba6909ba0174476711493931ab8447a81fd0a1a7d86df",
+      "bytes": 2471,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/status-coverage-attempt-1.stderr.log",
+      "sha256": "48170c9d8f9bcf59aecb49aafb67c8e22689c926f8020c658be6c51f1ecf12f4",
+      "bytes": 758,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/status-coverage-attempt-1.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/status-fixed-attempt-1.receipt.json",
+      "sha256": "5dba3e6686e407f083d0d8d8f9a5c4a8373bb8e504ad942f93584b7d143e462b",
+      "bytes": 4181,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/status-fixed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/status-fixed-attempt-1.stdout.log",
+      "sha256": "e88f502e20feefc6bcf38c9a8e1590d3750d2e4304c40345bd285d6776f7d5dd",
+      "bytes": 2388,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/status-fixed.json",
+      "sha256": "d750ad6e1c9012ed316fcfc0c6c516d9f1aa2e946d9d87ed736983c49cc195bf",
+      "bytes": 4432,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/status-installed-attempt-1.receipt.json",
+      "sha256": "f6f1200b45c9d9aa1c19150eae3c20973d69a80eae2349e8494f26f184b92f42",
+      "bytes": 1887,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/status-installed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/status-installed-attempt-1.stdout.log",
+      "sha256": "c003c98810066dabef61f6d8a4458641f1e57c36b0f6dcf5200f1ee331523822",
+      "bytes": 84,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/status-installed.json",
+      "sha256": "22514512105d16a78a5c45956b384eb56fb7f609d43c1a6e1e2a395699470e6f",
+      "bytes": 1738,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/status-static-attempt-1.receipt.json",
+      "sha256": "f0eabf05c419eca1f2b06c576fbdb654a2b7d9a01c76c0246eda9cee24faa750",
+      "bytes": 1703,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/status-static-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/status-static-attempt-1.stdout.log",
+      "sha256": "0c9599b20ea9f29539581cbf56cfd4243dd37a3271f955e63d53719e26b75fa2",
+      "bytes": 51,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/vfy-strict-attempt-1.receipt.json",
+      "sha256": "98bc866586bf141d99326e33698c734b9e857c3deb60358bbb3ee24140d0b782",
+      "bytes": 61344,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/vfy-strict-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/vfy-strict-attempt-1.stdout.log",
+      "sha256": "81b1580b78df73c89d58568ab0a06232fcc4a26354a49c616af52b3b6d2e7fd8",
+      "bytes": 54272,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/step-logs/vfy-strict.json",
+      "sha256": "3b62d61834e2a31eafebef8f22c5645f050ed4a055bf80eacf62d96a2009b047",
+      "bytes": 78970,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-1/strict-status-path-repair.json",
+      "sha256": "b94951e4b2105c4b46e88a273f11ce135ab751159d463ab1b955db831760e163",
+      "bytes": 7353,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/launch-logs/strict-status-path-repair-attempt-2.receipt.json",
+      "sha256": "ffa5ab0c714c2aedacbec0551d6b510b54820a9d6e42b2df21419a71f0f419d9",
+      "bytes": 1933,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/launch-logs/strict-status-path-repair-attempt-2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/launch-logs/strict-status-path-repair-attempt-2.stdout.log",
+      "sha256": "eb44549e5760a6421dcd3588a872a22edf495a0f49510212f5242203d851ae24",
+      "bytes": 49,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/all-source-locks-attempt-1.receipt.json",
+      "sha256": "53aae54f540a56221515288a73bf1f2047b997e4a91a6cd584d01dc31e38f45b",
+      "bytes": 9339,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/all-source-locks-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/all-source-locks-attempt-1.stdout.log",
+      "sha256": "9f8d6d0dcd73fed6f028bf5c6ef430f4588d4cc68d18f072c4f03fb76315ae5a",
+      "bytes": 6620,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/interfaces-attempt-1.receipt.json",
+      "sha256": "358f691f48a49425ea7267a5c0a8db0af671c4f153627a2a43a17b5144366160",
+      "bytes": 1819,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/interfaces-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/interfaces-attempt-1.stdout.log",
+      "sha256": "9825a016f267883d99316e465bcb6352311d4e26d10cb9558108ae9e9e6530f7",
+      "bytes": 144,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/inventory-attempt-1.receipt.json",
+      "sha256": "1a31bdf68b7bdcb6119936f79155cbaf50dadf7aa55cdca49c2e712136ec6302",
+      "bytes": 1825,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/inventory-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/inventory-attempt-1.stdout.log",
+      "sha256": "e6586fdea52884654f17b8280e58a9061d3a76024da116cbc026978fb8ab68fa",
+      "bytes": 25,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/inventory.json",
+      "sha256": "c3f9e1a342a943d30ef9f32c7e0378400f3d863f444df6fd8235b572382064cc",
+      "bytes": 2356,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/locks.json",
+      "sha256": "9f8d6d0dcd73fed6f028bf5c6ef430f4588d4cc68d18f072c4f03fb76315ae5a",
+      "bytes": 6620,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/repo-suite-attempt-1.receipt.json",
+      "sha256": "248ec112fd60935973b07436d11e32ef3d15dfbbddcd513c131a1af38f1616dc",
+      "bytes": 187540,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/repo-suite-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/repo-suite-attempt-1.stdout.log",
+      "sha256": "d38ff22b7f256ed8da6cde3ea113786d076421028fee053212911d8588436b82",
+      "bytes": 184402,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/repo-suite.json",
+      "sha256": "1de0d0090551541a4822c2cb4098c607c83804c39604a9b3bdbcc6127c7c359a",
+      "bytes": 183767,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/rls-fixed-attempt-1.receipt.json",
+      "sha256": "fb317f5ae3a03e3b9c036eb9b0be49a8b18d89462137cec2bb864e8311569936",
+      "bytes": 1831,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/rls-fixed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/rls-fixed-attempt-1.stdout.log",
+      "sha256": "5db2dc9a73dbc9b5d827c19baa1236b1485020326af386413671877bed39645d",
+      "bytes": 28,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/rls-fixed.json",
+      "sha256": "f34b914bb35f3bc5e1c03fdee9f89d3795217cfb54923c65b538e4455fca09ac",
+      "bytes": 14179,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/rls-installed-attempt-1.receipt.json",
+      "sha256": "989ced74a840aa1af45d3887c76c75456c4e3941289662751c207d654b1146a7",
+      "bytes": 1861,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/rls-installed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/rls-installed-attempt-1.stdout.log",
+      "sha256": "0ed6f76d2997eed1386be2f98be6b1cc2818858ef43086686d475d0a6b1f4adf",
+      "bytes": 32,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/rls-installed.json",
+      "sha256": "0dea9740aa3516593ca211cf1306d2634d61815899dc7e9bb0eb7561c65f5501",
+      "bytes": 85579,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/runtime-contracts-attempt-1.receipt.json",
+      "sha256": "8ae4cd51eeefa853c9ae6124fb331778f379c9d699f3f74eae631e2870d67968",
+      "bytes": 1768,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/runtime-contracts-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/runtime-contracts-attempt-1.stdout.log",
+      "sha256": "d3dc89a08c6df93affe4464617ecf5614771bf888392b4a12818d9c8cd0bda36",
+      "bytes": 72,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/status-coverage-attempt-1.receipt.json",
+      "sha256": "71f8ed8644d998c12b1afaf2f89c2a05a84b7f9ddf217f92d28760e9667115e4",
+      "bytes": 2497,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/status-coverage-attempt-1.stderr.log",
+      "sha256": "48170c9d8f9bcf59aecb49aafb67c8e22689c926f8020c658be6c51f1ecf12f4",
+      "bytes": 758,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/status-coverage-attempt-1.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/status-fixed-attempt-1.receipt.json",
+      "sha256": "957443acff9a2f2b1855b49da9e13bf0b4fe3f17b903eb7bc96991c285ec5c38",
+      "bytes": 4220,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/status-fixed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/status-fixed-attempt-1.stdout.log",
+      "sha256": "be7cb96d52dc5e9f4f67f8d3e9e2bd9e4d5065215440f270dc519f8f46d34c12",
+      "bytes": 2388,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/status-fixed.json",
+      "sha256": "d28fd903e1dc92a44aafb92cc59ac509ec36782448464e99803943ea861c7d18",
+      "bytes": 4432,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/status-installed-attempt-1.receipt.json",
+      "sha256": "3c435085333acd19429564d63325a335a05c5b84f5e8419bf486413122140356",
+      "bytes": 1926,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/status-installed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/status-installed-attempt-1.stdout.log",
+      "sha256": "c003c98810066dabef61f6d8a4458641f1e57c36b0f6dcf5200f1ee331523822",
+      "bytes": 84,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/status-installed.json",
+      "sha256": "22514512105d16a78a5c45956b384eb56fb7f609d43c1a6e1e2a395699470e6f",
+      "bytes": 1738,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/status-static-attempt-1.receipt.json",
+      "sha256": "927b0040223375e8125ee5f922de38f8a9f846b155dfd85f40fbf11fa03cfee8",
+      "bytes": 1729,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/status-static-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/status-static-attempt-1.stdout.log",
+      "sha256": "0c9599b20ea9f29539581cbf56cfd4243dd37a3271f955e63d53719e26b75fa2",
+      "bytes": 51,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/vfy-installed-attempt-1.receipt.json",
+      "sha256": "ececbc982872805522769616d40f30e6daf8906da108bae500675732771cd246",
+      "bytes": 30277,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/vfy-installed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/vfy-installed-attempt-1.stdout.log",
+      "sha256": "2ffa6d4946c74907a6fdfafc529c0110f18ee94273ee91b7a058099097d6d294",
+      "bytes": 26185,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/vfy-strict-attempt-1.receipt.json",
+      "sha256": "22eaed24942539ace05f74df1cbc2108f3c7d8e7ba64c6116cccc5a55744cc26",
+      "bytes": 59038,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/vfy-strict-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/vfy-strict-attempt-1.stdout.log",
+      "sha256": "76033490fd028a65877897c601b02358838b385c8be7519c132e1ae7fe9eb61c",
+      "bytes": 51818,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/step-logs/vfy-strict.json",
+      "sha256": "7e2bb112b6cda1b28a53242651513f4c21c50ec976b5d7f2d113838a3fdb5abb",
+      "bytes": 76612,
+      "mode": "0644"
+    },
+    {
+      "path": "docs/plugin-development/work-items/post-integration-conformance/status-path-recheck/strict-attempt-2/strict-status-path-repair.json",
+      "sha256": "e8089cda6376c7d2a08e63f5ee6e740c4fe5988dae421073aa56f641f3e52aa6",
+      "bytes": 9171,
+      "mode": "0644"
+    }
+  ]
+}

@@ -1,0 +1,445 @@
+{
+  "contract": "sdlc-ai-spec/status-path-new-archive-audit/v1",
+  "source_sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "process_receipts": 27,
+  "bound_streams": 54,
+  "bindings": [
+    {
+      "receipt": "new-regressions/status-new-regressions-attempt-2.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/new-regressions-logs/status-new-regressions-attempt-2.stdout.log",
+      "archive_path": "new-regressions/status-new-regressions-attempt-2.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "new-regressions/status-new-regressions-attempt-2.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/new-regressions-logs/status-new-regressions-attempt-2.stderr.log",
+      "archive_path": "new-regressions/status-new-regressions-attempt-2.stderr.log",
+      "sha256": "326ad0da4f40a53818426a3286503dcd9d0d5becbc0c51e72a10a1fa6dda6b01",
+      "bytes": 2697
+    },
+    {
+      "receipt": "strict-attempt-1/launch-logs/strict-status-path-repair-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-launch-logs/strict-status-path-repair-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-1/launch-logs/strict-status-path-repair-attempt-1.stdout.log",
+      "sha256": "15a38314a1aeb43cf87d1ed8feeebaa4f60b3d201e5ee03aa2bbe2297012ca7a",
+      "bytes": 57
+    },
+    {
+      "receipt": "strict-attempt-1/launch-logs/strict-status-path-repair-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-launch-logs/strict-status-path-repair-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-1/launch-logs/strict-status-path-repair-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/all-source-locks-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/all-source-locks-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-2/step-logs/all-source-locks-attempt-1.stdout.log",
+      "sha256": "9f8d6d0dcd73fed6f028bf5c6ef430f4588d4cc68d18f072c4f03fb76315ae5a",
+      "bytes": 6620
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/all-source-locks-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/all-source-locks-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-2/step-logs/all-source-locks-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/interfaces-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/interfaces-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-2/step-logs/interfaces-attempt-1.stdout.log",
+      "sha256": "9825a016f267883d99316e465bcb6352311d4e26d10cb9558108ae9e9e6530f7",
+      "bytes": 144
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/interfaces-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/interfaces-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-2/step-logs/interfaces-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/inventory-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/inventory-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-2/step-logs/inventory-attempt-1.stdout.log",
+      "sha256": "e6586fdea52884654f17b8280e58a9061d3a76024da116cbc026978fb8ab68fa",
+      "bytes": 25
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/inventory-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/inventory-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-2/step-logs/inventory-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/repo-suite-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/repo-suite-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-2/step-logs/repo-suite-attempt-1.stdout.log",
+      "sha256": "d38ff22b7f256ed8da6cde3ea113786d076421028fee053212911d8588436b82",
+      "bytes": 184402
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/repo-suite-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/repo-suite-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-2/step-logs/repo-suite-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/rls-fixed-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/rls-fixed-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-2/step-logs/rls-fixed-attempt-1.stdout.log",
+      "sha256": "5db2dc9a73dbc9b5d827c19baa1236b1485020326af386413671877bed39645d",
+      "bytes": 28
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/rls-fixed-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/rls-fixed-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-2/step-logs/rls-fixed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/rls-installed-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/rls-installed-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-2/step-logs/rls-installed-attempt-1.stdout.log",
+      "sha256": "0ed6f76d2997eed1386be2f98be6b1cc2818858ef43086686d475d0a6b1f4adf",
+      "bytes": 32
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/rls-installed-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/rls-installed-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-2/step-logs/rls-installed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/runtime-contracts-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/runtime-contracts-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-2/step-logs/runtime-contracts-attempt-1.stdout.log",
+      "sha256": "d3dc89a08c6df93affe4464617ecf5614771bf888392b4a12818d9c8cd0bda36",
+      "bytes": 72
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/runtime-contracts-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/runtime-contracts-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-2/step-logs/runtime-contracts-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/status-coverage-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/status-coverage-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-2/step-logs/status-coverage-attempt-1.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/status-coverage-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/status-coverage-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-2/step-logs/status-coverage-attempt-1.stderr.log",
+      "sha256": "48170c9d8f9bcf59aecb49aafb67c8e22689c926f8020c658be6c51f1ecf12f4",
+      "bytes": 758
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/status-fixed-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/status-fixed-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-2/step-logs/status-fixed-attempt-1.stdout.log",
+      "sha256": "be7cb96d52dc5e9f4f67f8d3e9e2bd9e4d5065215440f270dc519f8f46d34c12",
+      "bytes": 2388
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/status-fixed-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/status-fixed-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-2/step-logs/status-fixed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/status-installed-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/status-installed-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-2/step-logs/status-installed-attempt-1.stdout.log",
+      "sha256": "c003c98810066dabef61f6d8a4458641f1e57c36b0f6dcf5200f1ee331523822",
+      "bytes": 84
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/status-installed-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/status-installed-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-2/step-logs/status-installed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/status-static-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/status-static-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-2/step-logs/status-static-attempt-1.stdout.log",
+      "sha256": "0c9599b20ea9f29539581cbf56cfd4243dd37a3271f955e63d53719e26b75fa2",
+      "bytes": 51
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/status-static-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/status-static-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-2/step-logs/status-static-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/vfy-installed-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/vfy-installed-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-2/step-logs/vfy-installed-attempt-1.stdout.log",
+      "sha256": "2ffa6d4946c74907a6fdfafc529c0110f18ee94273ee91b7a058099097d6d294",
+      "bytes": 26185
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/vfy-installed-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/vfy-installed-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-2/step-logs/vfy-installed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/vfy-strict-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/vfy-strict-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-2/step-logs/vfy-strict-attempt-1.stdout.log",
+      "sha256": "76033490fd028a65877897c601b02358838b385c8be7519c132e1ae7fe9eb61c",
+      "bytes": 51818
+    },
+    {
+      "receipt": "strict-attempt-2/step-logs/vfy-strict-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry/strict-status-path-repair-logs/vfy-strict-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-2/step-logs/vfy-strict-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-2/launch-logs/strict-status-path-repair-attempt-2.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry-launch-logs/strict-status-path-repair-attempt-2.stdout.log",
+      "archive_path": "strict-attempt-2/launch-logs/strict-status-path-repair-attempt-2.stdout.log",
+      "sha256": "eb44549e5760a6421dcd3588a872a22edf495a0f49510212f5242203d851ae24",
+      "bytes": 49
+    },
+    {
+      "receipt": "strict-attempt-2/launch-logs/strict-status-path-repair-attempt-2.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-retry-launch-logs/strict-status-path-repair-attempt-2.stderr.log",
+      "archive_path": "strict-attempt-2/launch-logs/strict-status-path-repair-attempt-2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/all-source-locks-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/all-source-locks-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-1/step-logs/all-source-locks-attempt-1.stdout.log",
+      "sha256": "9f8d6d0dcd73fed6f028bf5c6ef430f4588d4cc68d18f072c4f03fb76315ae5a",
+      "bytes": 6620
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/all-source-locks-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/all-source-locks-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-1/step-logs/all-source-locks-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/interfaces-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/interfaces-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-1/step-logs/interfaces-attempt-1.stdout.log",
+      "sha256": "9825a016f267883d99316e465bcb6352311d4e26d10cb9558108ae9e9e6530f7",
+      "bytes": 144
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/interfaces-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/interfaces-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-1/step-logs/interfaces-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/inventory-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/inventory-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-1/step-logs/inventory-attempt-1.stdout.log",
+      "sha256": "e6586fdea52884654f17b8280e58a9061d3a76024da116cbc026978fb8ab68fa",
+      "bytes": 25
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/inventory-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/inventory-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-1/step-logs/inventory-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/repo-suite-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/repo-suite-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-1/step-logs/repo-suite-attempt-1.stdout.log",
+      "sha256": "150f67cd347d8f128cdf4b17514d80fe8aa45e2c5fbf8bce08888dbdbb509374",
+      "bytes": 184402
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/repo-suite-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/repo-suite-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-1/step-logs/repo-suite-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/rls-fixed-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/rls-fixed-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-1/step-logs/rls-fixed-attempt-1.stdout.log",
+      "sha256": "5db2dc9a73dbc9b5d827c19baa1236b1485020326af386413671877bed39645d",
+      "bytes": 28
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/rls-fixed-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/rls-fixed-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-1/step-logs/rls-fixed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/runtime-contracts-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/runtime-contracts-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-1/step-logs/runtime-contracts-attempt-1.stdout.log",
+      "sha256": "d3dc89a08c6df93affe4464617ecf5614771bf888392b4a12818d9c8cd0bda36",
+      "bytes": 72
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/runtime-contracts-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/runtime-contracts-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-1/step-logs/runtime-contracts-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/status-coverage-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-coverage-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-1/step-logs/status-coverage-attempt-1.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/status-coverage-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-coverage-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-1/step-logs/status-coverage-attempt-1.stderr.log",
+      "sha256": "48170c9d8f9bcf59aecb49aafb67c8e22689c926f8020c658be6c51f1ecf12f4",
+      "bytes": 758
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/status-fixed-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-fixed-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-1/step-logs/status-fixed-attempt-1.stdout.log",
+      "sha256": "e88f502e20feefc6bcf38c9a8e1590d3750d2e4304c40345bd285d6776f7d5dd",
+      "bytes": 2388
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/status-fixed-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-fixed-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-1/step-logs/status-fixed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/status-installed-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-installed-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-1/step-logs/status-installed-attempt-1.stdout.log",
+      "sha256": "c003c98810066dabef61f6d8a4458641f1e57c36b0f6dcf5200f1ee331523822",
+      "bytes": 84
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/status-installed-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-installed-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-1/step-logs/status-installed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/status-static-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-static-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-1/step-logs/status-static-attempt-1.stdout.log",
+      "sha256": "0c9599b20ea9f29539581cbf56cfd4243dd37a3271f955e63d53719e26b75fa2",
+      "bytes": 51
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/status-static-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-static-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-1/step-logs/status-static-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/vfy-strict-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/vfy-strict-attempt-1.stdout.log",
+      "archive_path": "strict-attempt-1/step-logs/vfy-strict-attempt-1.stdout.log",
+      "sha256": "81b1580b78df73c89d58568ab0a06232fcc4a26354a49c616af52b3b6d2e7fd8",
+      "bytes": 54272
+    },
+    {
+      "receipt": "strict-attempt-1/step-logs/vfy-strict-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/vfy-strict-attempt-1.stderr.log",
+      "archive_path": "strict-attempt-1/step-logs/vfy-strict-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    }
+  ],
+  "launcher_failures_without_process_receipt": [
+    "attempts/launcher/status-new-regressions-attempt-1.launch-failure.json"
+  ],
+  "success": true
+}

@@ -20,7 +20,7 @@
 | IMP 400 | accepted Runtime 和正式 Evidence 已集成 | Subject `207a4a16bea8979faee0474cc43cb642cef1f655`；本轮不改写 |
 | VFY 500 | accepted Runtime、80 Case 和正式 Evidence 已集成 | Subject `5ea3ba9aa7288021c4d99b14cff76ec0fc405841`；本轮 macOS strict 80/80；CLI 只读候选待独立复核 |
 | RLS 600 | accepted S3、87 Case 和正式 Evidence 已集成 | Subject `b790af812cd8d317675d264583711aed59e1460c`；仅 Fake/Sandbox，不是生产批准 |
-| sdlc-status | 已修复准确引用/只读错误边界和展示；增加锁、14 Case 独立映射与安装测试 | 新源码的最终执行结果见本工作包回执；独立 Review 未自签 |
+| sdlc-status | 已修复准确引用/只读错误边界和展示；增加锁、14 Case 独立映射与安装测试 | 修复源码 `295d982...` 的 exact-source strict 与新增回归已通过；独立 Web Review 未自签 |
 
 完整八 Skill 路径索引：`work-items/post-integration-conformance/SKILL-INVENTORY.json`。
 当前 Client 认证：`COMPATIBILITY.json`；历史报告保持原始字节。`NOT_RUN` 是本轮当前部署认证状态，不撤销历史限定范围内的成功。
@@ -43,19 +43,23 @@ Web 复跑原源码 portable 10/10、普通全仓 1104/1104 通过，但独立�
 `not_started`。不是旧 Client 计数造假，而是未覆盖的语义反例。
 
 修复限于 Status 路径缺失判定、附加说明、51 条锁与 14 个新增测试；真实缺失仍保留
-原语义。修复字节上的 Status 52/52、原固定 14/14、coverage 4/4、安装 12 命令以及
-八锁/接口通过。该结果不代替新 exact-source strict 验证。
+原语义。后续 Client 已在准确修复源码
+`295d98260e3def713dc72b12c458aa2baa8372f4` 上完成新增 14/14 和 strict 13/13；
+普通仓库回归为 1118 个唯一 ID，VFY strict 80/80、RLS 87/87。首次 strict 因外层
+嵌套沙箱阻止内部 containment 而停在 VFY 78/80，失败证据保留；解除外层阻断后的
+最终 VFY 仍真实启用自身 OS containment，没有 capability-only 或无沙箱降级。
 
-见 `work-items/post-integration-conformance/WEB-STATUS-PATH-REVIEW.md` 和
-`WEB-STATUS-PATH-VALIDATION.json`。现有 Client 150 个日志流的完整独立字节审计尚未
-完成；历史报告和候选保持原样，四十个原生认证单元没有被升级。
+见 `work-items/post-integration-conformance/WEB-STATUS-PATH-REVIEW.md`、
+`WEB-STATUS-PATH-VALIDATION.json` 和 `status-path-recheck/STATUS-PATH-RECHECK.md`。
+旧 Manifest 已在原交付 `1b9326...` 的 Git tree 内逐项复核；历史报告和八个候选
+保持原样，四十个原生认证单元没有被升级。完整新旧字节仍需由 Web 附件独立审阅。
 
 ## 唯一下一工作包
 
-`POST_INTEGRATION_STATUS_PATH_RECHECK`：按
-`work-items/post-integration-conformance/CLIENT-STATUS-PATH-RECHECK.md` 在干净准确
-修复源码上执行一次 strict 入口并提供完整证据包，随后交独立 Web Review。
-不需要重启旧七阶段/RLS Goal，也不要求重跑八个原生候选来完成 Runtime 收口。
+`POST_INTEGRATION_WEB_STATUS_PATH_REVIEW`：独立读取 PR #11 最新准确 source/delivery
+身份、`status-path-recheck/` 新回执及已上传的 byte-complete 新旧证据归档，复核
+Status 路径修复与 Runtime-only 结论。不得由本次 producer 自签 ACCEPTED。
+不需要重启旧七阶段/RLS Goal，也不要求重跑八个原生候选来完成 Runtime 收口；
 未核验的原生载体继续独立登记为 NOT_RUN，不推导三端认证。
 
 旧 `CLIENT-SHA256-MANIFEST.json` 中 HANDOFF 的摘要仍绑定其原始交付 1b9326，

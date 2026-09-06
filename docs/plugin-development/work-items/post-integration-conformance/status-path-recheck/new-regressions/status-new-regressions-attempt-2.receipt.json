@@ -1,0 +1,48 @@
+{
+  "name": "status-new-regressions",
+  "attempt": 2,
+  "argv": [
+    "/opt/homebrew/bin/python3",
+    "-B",
+    "-m",
+    "unittest",
+    "tests.skill_status.test_store_absence",
+    "-v"
+  ],
+  "cwd": "/private/tmp/sdlc-pr11-status-recheck.QyXXsk",
+  "started_at": "2026-09-06T03:02:07.058252+00:00",
+  "finished_at": "2026-09-06T03:02:07.587937+00:00",
+  "duration_ms": 530,
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "test_dangling_database_link_is_not_an_absent_store (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_dangling_database_link_is_not_an_absent_store) ... ok\ntest_dangling_runtime_link_is_not_an_absent_store (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_dangling_runtime_link_is_not_an_absent_store) ... ok\ntest_database_directory_is_not_a_successful_not_started_view (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_database_directory_is_not_a_successful_not_started_view) ... ok\ntest_exact_reference_still_fails_when_store_is_genuinely_absent (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_exact_reference_still_fails_when_store_is_genuinely_absent) ... ok\ntest_inspection_error_is_bounded_and_not_an_absence_fallback (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_inspection_error_is_bounded_and_not_an_absence_fallback) ... ok\ntest_installed_copy_rejects_conflict_without_siblings_or_development_files (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_installed_copy_rejects_conflict_without_siblings_or_development_files) ... ok\ntest_legitimate_absence_preserves_bare_auto_and_list (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_legitimate_absence_preserves_bare_auto_and_list) ... ok\ntest_live_directory_link_retains_the_shared_backend_policy (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_live_directory_link_retains_the_shared_backend_policy) ... ok\ntest_live_link_to_wrong_runtime_type_is_invalid (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_live_link_to_wrong_runtime_type_is_invalid) ... ok\ntest_meta_commands_do_not_run_store_diagnostics (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_meta_commands_do_not_run_store_diagnostics) ... ok\ntest_present_valid_database_after_unavailable_never_downgrades (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_present_valid_database_after_unavailable_never_downgrades) ... ok\ntest_real_cli_json_reports_path_conflict_with_nonzero_exit (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_real_cli_json_reports_path_conflict_with_nonzero_exit) ... ok\ntest_reference_failure_precedes_conflicting_store_path (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_reference_failure_precedes_conflicting_store_path) ... ok\ntest_runtime_file_is_not_a_successful_not_started_view (tests.skill_status.test_store_absence.StatusStoreAbsenceTests.test_runtime_file_is_not_a_successful_not_started_view) ... ok\n\n----------------------------------------------------------------------\nRan 14 tests in 0.193s\n\nOK\n",
+  "stdout_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/new-regressions-logs/status-new-regressions-attempt-2.stdout.log",
+  "stderr_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/new-regressions-logs/status-new-regressions-attempt-2.stderr.log",
+  "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "stderr_sha256": "sha256:326ad0da4f40a53818426a3286503dcd9d0d5becbc0c51e72a10a1fa6dda6b01",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": {
+    "root": "/private/tmp/sdlc-pr11-status-recheck.QyXXsk",
+    "sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+    "tree": "d90e81a94e5b7b5628eb6849cef15bb3f96deb36",
+    "parents": [
+      "1b9326e7447a481453fbbeccd8d104a02f6c67e9"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_after": {
+    "root": "/private/tmp/sdlc-pr11-status-recheck.QyXXsk",
+    "sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+    "tree": "d90e81a94e5b7b5628eb6849cef15bb3f96deb36",
+    "parents": [
+      "1b9326e7447a481453fbbeccd8d104a02f6c67e9"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "source_unchanged": true,
+  "success": true
+}

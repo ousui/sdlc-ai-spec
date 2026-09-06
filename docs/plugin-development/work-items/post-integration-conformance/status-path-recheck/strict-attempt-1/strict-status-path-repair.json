@@ -1,0 +1,143 @@
+{
+  "contract": "sdlc-ai-spec/post-integration-validation/v1",
+  "profile": "strict",
+  "source_sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+  "success": false,
+  "steps": [
+    {
+      "name": "runtime-contracts",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:d3dc89a08c6df93affe4464617ecf5614771bf888392b4a12818d9c8cd0bda36",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/runtime-contracts-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/runtime-contracts-attempt-1.stderr.log",
+      "duration_ms": 319
+    },
+    {
+      "name": "interfaces",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:9825a016f267883d99316e465bcb6352311d4e26d10cb9558108ae9e9e6530f7",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/interfaces-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/interfaces-attempt-1.stderr.log",
+      "duration_ms": 173
+    },
+    {
+      "name": "inventory",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:e6586fdea52884654f17b8280e58a9061d3a76024da116cbc026978fb8ab68fa",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/inventory-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/inventory-attempt-1.stderr.log",
+      "duration_ms": 217
+    },
+    {
+      "name": "all-source-locks",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:9f8d6d0dcd73fed6f028bf5c6ef430f4588d4cc68d18f072c4f03fb76315ae5a",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/all-source-locks-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/all-source-locks-attempt-1.stderr.log",
+      "duration_ms": 552
+    },
+    {
+      "name": "status-static",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:0c9599b20ea9f29539581cbf56cfd4243dd37a3271f955e63d53719e26b75fa2",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-static-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-static-attempt-1.stderr.log",
+      "duration_ms": 177
+    },
+    {
+      "name": "status-coverage",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "sha256:48170c9d8f9bcf59aecb49aafb67c8e22689c926f8020c658be6c51f1ecf12f4",
+      "stdout_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-coverage-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-coverage-attempt-1.stderr.log",
+      "duration_ms": 307
+    },
+    {
+      "name": "status-fixed",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:e88f502e20feefc6bcf38c9a8e1590d3750d2e4304c40345bd285d6776f7d5dd",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-fixed-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-fixed-attempt-1.stderr.log",
+      "duration_ms": 1565
+    },
+    {
+      "name": "status-installed",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:c003c98810066dabef61f6d8a4458641f1e57c36b0f6dcf5200f1ee331523822",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-installed-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/status-installed-attempt-1.stderr.log",
+      "duration_ms": 1106
+    },
+    {
+      "name": "rls-fixed",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:5db2dc9a73dbc9b5d827c19baa1236b1485020326af386413671877bed39645d",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/rls-fixed-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/rls-fixed-attempt-1.stderr.log",
+      "duration_ms": 54393
+    },
+    {
+      "name": "repo-suite",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:150f67cd347d8f128cdf4b17514d80fe8aa45e2c5fbf8bce08888dbdbb509374",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/repo-suite-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/repo-suite-attempt-1.stderr.log",
+      "duration_ms": 166097
+    },
+    {
+      "name": "vfy-strict",
+      "exit_code": 2,
+      "success": false,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:81b1580b78df73c89d58568ab0a06232fcc4a26354a49c616af52b3b6d2e7fd8",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/vfy-strict-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-pr11-status-evidence.FKMb4R/strict-status-path-repair-logs/vfy-strict-attempt-1.stderr.log",
+      "duration_ms": 4249
+    }
+  ],
+  "native_clients": "NOT_RUN",
+  "strict_vfy_execution": "NOT_RUN",
+  "real_target_effects": 0,
+  "source_before": {
+    "root": "/private/tmp/sdlc-pr11-status-recheck.QyXXsk",
+    "sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+    "tree": "d90e81a94e5b7b5628eb6849cef15bb3f96deb36",
+    "parents": [
+      "1b9326e7447a481453fbbeccd8d104a02f6c67e9"
+    ],
+    "branch": "",
+    "status": ""
+  },
+  "error": "first failing step: vfy-strict"
+}

@@ -1,0 +1,33 @@
+{
+  "contract": "sdlc-ai-spec/status-path-source-identity/v1",
+  "observed_at": "2026-09-06T03:17:29.268982+00:00",
+  "repository": "ousui/sdlc-ai-spec",
+  "branch": "fix/post-integration-skill-conformance",
+  "source_sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+  "source_tree": "d90e81a94e5b7b5628eb6849cef15bb3f96deb36",
+  "source_parent": "1b9326e7447a481453fbbeccd8d104a02f6c67e9",
+  "baseline_main_sha": "0289a5ee8d702450fb3f3bc73c89f30a11664bdb",
+  "baseline_main_tree": "bb1aa513fe9a67a6cbec0775a6570fae6e50f877",
+  "remote_branch_sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+  "pull_request": {
+    "baseRefName": "main",
+    "baseRefOid": "0289a5ee8d702450fb3f3bc73c89f30a11664bdb",
+    "headRefName": "fix/post-integration-skill-conformance",
+    "headRefOid": "295d98260e3def713dc72b12c458aa2baa8372f4",
+    "isDraft": true,
+    "number": 11,
+    "state": "OPEN",
+    "title": "fix(conformance): repair Status path conflicts; pending exact-source recheck",
+    "url": "https://github.com/ousui/sdlc-ai-spec/pull/11"
+  },
+  "source_state": {
+    "root": "/private/tmp/sdlc-pr11-status-recheck.QyXXsk",
+    "sha": "295d98260e3def713dc72b12c458aa2baa8372f4",
+    "tree": "d90e81a94e5b7b5628eb6849cef15bb3f96deb36",
+    "parents": [
+      "1b9326e7447a481453fbbeccd8d104a02f6c67e9"
+    ],
+    "branch": "",
+    "status": ""
+  }
+}

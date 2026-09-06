@@ -1,0 +1,47 @@
+{
+  "name": "status-fixed",
+  "attempt": 1,
+  "argv": [
+    "/opt/homebrew/opt/python@3.14/bin/python3.14",
+    "-B",
+    "tests/evals/run_sdlc_status_eval.py",
+    "--json-out",
+    "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/status-fixed.json"
+  ],
+  "cwd": "/private/tmp/sdlc-post-integration-01a07250",
+  "started_at": "2026-09-05T16:09:32.168917+00:00",
+  "finished_at": "2026-09-05T16:09:33.728507+00:00",
+  "duration_ms": 1560,
+  "exit_code": 0,
+  "stdout": "test_bare_missing_store_is_not_started_and_writes_nothing (tests.skill_status.test_runtime.StatusRuntimeTests.test_bare_missing_store_is_not_started_and_writes_nothing) ... ok\ntest_auto_exact_missing_store_is_not_a_successful_overview (tests.skill_status.test_conformance.StatusConformanceTests.test_auto_exact_missing_store_is_not_a_successful_overview) ... ok\ntest_ctx_only_recommends_req_without_writes (tests.skill_status.test_conformance.StatusConformanceTests.test_ctx_only_recommends_req_without_writes) ... ok\ntest_auto_inspects_single_requirement (tests.skill_status.test_runtime.StatusRuntimeTests.test_auto_inspects_single_requirement) ... ok\ntest_multiple_requirements_require_user_selection (tests.skill_status.test_runtime.StatusRuntimeTests.test_multiple_requirements_require_user_selection) ... ok\ntest_exact_inspect_preserves_projection_and_read_only_state (tests.skill_status.test_conformance.StatusConformanceTests.test_exact_inspect_preserves_projection_and_read_only_state) ... ok\ntest_symbolic_member_wrong_phase_rejected_before_store (tests.skill_status.test_conformance.StatusConformanceTests.test_symbolic_member_wrong_phase_rejected_before_store) ... ok\ntest_meta_commands_do_not_resolve_project (tests.skill_status.test_runtime.StatusRuntimeTests.test_meta_commands_do_not_resolve_project) ... ok\ntest_aliases_normalize_to_one_exact_inspection (tests.skill_status.test_conformance.StatusConformanceTests.test_aliases_normalize_to_one_exact_inspection) ... ok\ntest_status_uses_no_artifact_or_claim_mutation_api (tests.skill_status.test_imp.ImpStatusTests.test_status_uses_no_artifact_or_claim_mutation_api) ... ok\ntest_summary_json_debug_describe_same_projection (tests.skill_status.test_conformance.StatusConformanceTests.test_summary_json_debug_describe_same_projection) ... ok\ntest_docs_free_installed_copy_is_read_only (tests.skill_status.test_build_gates.StatusInstalledTests.test_docs_free_installed_copy_is_read_only) ... ok\ntest_skill_has_no_sibling_invocation (tests.skill_status.test_runtime.StatusRuntimeTests.test_skill_has_no_sibling_invocation) ... ok\ntest_corrupt_store_fails_closed_without_modification (tests.skill_status.test_runtime.StatusRuntimeTests.test_corrupt_store_fails_closed_without_modification) ... ok\n\n----------------------------------------------------------------------\nRan 14 tests in 1.365s\n\nOK\nSTATUS_FIXED_EVAL = 14/14 PASS\n",
+  "stderr": "",
+  "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/status-fixed-attempt-1.stdout.log",
+  "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/status-fixed-attempt-1.stderr.log",
+  "stdout_sha256": "sha256:4c809576826b1f2ba09af67512bcea6527f9e16e71ff086576b1092b3bea9efd",
+  "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "redaction_policy": "sdlc-ai-spec/validation-redaction/v2",
+  "redaction_applied": false,
+  "stream_hashes_bind": "ARCHIVED_REDACTED_UTF8_BYTES",
+  "source_before": {
+    "root": "/private/tmp/sdlc-post-integration-01a07250",
+    "sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+    "tree": "cb1a9aa31a2fadb8a434493b75c7a244d38d029b",
+    "parents": [
+      "ac6d846a1b0c22d0f284c9ebffd976dc59698a99"
+    ],
+    "branch": "fix/post-integration-skill-conformance",
+    "status": ""
+  },
+  "source_after": {
+    "root": "/private/tmp/sdlc-post-integration-01a07250",
+    "sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+    "tree": "cb1a9aa31a2fadb8a434493b75c7a244d38d029b",
+    "parents": [
+      "ac6d846a1b0c22d0f284c9ebffd976dc59698a99"
+    ],
+    "branch": "fix/post-integration-skill-conformance",
+    "status": ""
+  },
+  "source_unchanged": true,
+  "success": true
+}

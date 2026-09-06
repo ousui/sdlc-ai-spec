@@ -1,0 +1,29 @@
+{
+  "source": {
+    "root": "/private/tmp/sdlc-post-integration-01a07250",
+    "sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+    "tree": "cb1a9aa31a2fadb8a434493b75c7a244d38d029b",
+    "parents": [
+      "ac6d846a1b0c22d0f284c9ebffd976dc59698a99"
+    ],
+    "branch": "fix/post-integration-skill-conformance",
+    "status": ""
+  },
+  "versions": {
+    "codex_cli": "codex-cli 0.153.4",
+    "python": "Python 3.14.7",
+    "os": "macOS 26.5.1 (25F80)"
+  },
+  "observed_surface": "codex-cli",
+  "operator": "Codex producer validator / 01a07250-d15b-73a0-a586-f8dbddabee17",
+  "configuration_basis": "Inherited model/reasoning values from the existing local CLI configuration, without modifying the real configuration. Native sessions use disposable client state and read-only OS sandbox.",
+  "auth_handling": "Existing CLI auth is referenced by a private symlink; no authentication bytes were read or copied by the validation harness. Client-state directories are excluded from the archive.",
+  "official_native_entry_reference": "https://learn.chatgpt.com/docs/build-skills",
+  "installation_reference": "https://learn.chatgpt.com/docs/build-plugins",
+  "raw_archive_policy": "tools.rls_validation_support.run_step collects subprocess streams in memory and redacts them before first validation archive persistence; all digests bind archived bytes.",
+  "native_candidate_scope": "Fresh per-skill installation, discovery from explicit invocation, no-skill control, exact missing-authority checks, no-write and installed runtime independence. Positive write/effect/final-confirmation lifecycle paths are not part of this native fixture.",
+  "acceptance": "Independent review required; no accepted native cells.",
+  "configured_model": "gpt-6-astra",
+  "configured_reasoning_effort": "max",
+  "actual_model_execution_metadata": "Not independently recorded in the CLI JSON event streams; configured values are not an execution attestation."
+}

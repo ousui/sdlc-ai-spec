@@ -1,0 +1,174 @@
+{
+  "contract": "sdlc-ai-spec/post-integration-validation/v1",
+  "profile": "strict",
+  "source_sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+  "success": true,
+  "steps": [
+    {
+      "name": "runtime-contracts",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:d3dc89a08c6df93affe4464617ecf5614771bf888392b4a12818d9c8cd0bda36",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/runtime-contracts-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/runtime-contracts-attempt-1.stderr.log",
+      "duration_ms": 240
+    },
+    {
+      "name": "interfaces",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:9825a016f267883d99316e465bcb6352311d4e26d10cb9558108ae9e9e6530f7",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/interfaces-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/interfaces-attempt-1.stderr.log",
+      "duration_ms": 53
+    },
+    {
+      "name": "inventory",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:e6586fdea52884654f17b8280e58a9061d3a76024da116cbc026978fb8ab68fa",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/inventory-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/inventory-attempt-1.stderr.log",
+      "duration_ms": 99
+    },
+    {
+      "name": "all-source-locks",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:9f8d6d0dcd73fed6f028bf5c6ef430f4588d4cc68d18f072c4f03fb76315ae5a",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/all-source-locks-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/all-source-locks-attempt-1.stderr.log",
+      "duration_ms": 448
+    },
+    {
+      "name": "status-static",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:0c9599b20ea9f29539581cbf56cfd4243dd37a3271f955e63d53719e26b75fa2",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/status-static-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/status-static-attempt-1.stderr.log",
+      "duration_ms": 63
+    },
+    {
+      "name": "status-coverage",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "sha256:294a36c4685422836971f0709352984e63cae05cc27bea85fa8838c10df14c49",
+      "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/status-coverage-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/status-coverage-attempt-1.stderr.log",
+      "duration_ms": 193
+    },
+    {
+      "name": "status-fixed",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:48c0696bf35c4dcaf50799842ffbd20e98505e093274df4b5b2a3f489ed1f260",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/status-fixed-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/status-fixed-attempt-1.stderr.log",
+      "duration_ms": 1382
+    },
+    {
+      "name": "status-installed",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:c003c98810066dabef61f6d8a4458641f1e57c36b0f6dcf5200f1ee331523822",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/status-installed-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/status-installed-attempt-1.stderr.log",
+      "duration_ms": 988
+    },
+    {
+      "name": "rls-fixed",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:5db2dc9a73dbc9b5d827c19baa1236b1485020326af386413671877bed39645d",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/rls-fixed-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/rls-fixed-attempt-1.stderr.log",
+      "duration_ms": 49697
+    },
+    {
+      "name": "repo-suite",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:c18a18beccf605fd837b2b662b599fb62d2ad8e11dac1cf7cb23013603674f15",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/repo-suite-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/repo-suite-attempt-1.stderr.log",
+      "duration_ms": 163984
+    },
+    {
+      "name": "vfy-strict",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:6e629ccfd158fa7b7b5180212d489cd6ee6c3a46c09b4ec1f9694def57f4842c",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/vfy-strict-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/vfy-strict-attempt-1.stderr.log",
+      "duration_ms": 4305
+    },
+    {
+      "name": "vfy-installed",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:b984d7c1847473b16fe1a4c07c97a646bd97068894d93094c66b23db61d2f38a",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/vfy-installed-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/vfy-installed-attempt-1.stderr.log",
+      "duration_ms": 3659
+    },
+    {
+      "name": "rls-installed",
+      "exit_code": 0,
+      "success": true,
+      "source_unchanged": true,
+      "stdout_sha256": "sha256:0ed6f76d2997eed1386be2f98be6b1cc2818858ef43086686d475d0a6b1f4adf",
+      "stderr_sha256": "sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stdout_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/rls-installed-attempt-1.stdout.log",
+      "stderr_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/rls-installed-attempt-1.stderr.log",
+      "duration_ms": 2981
+    }
+  ],
+  "native_clients": "NOT_RUN",
+  "strict_vfy_execution": "PASS",
+  "real_target_effects": 0,
+  "source_before": {
+    "root": "/private/tmp/sdlc-post-integration-01a07250",
+    "sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+    "tree": "cb1a9aa31a2fadb8a434493b75c7a244d38d029b",
+    "parents": [
+      "ac6d846a1b0c22d0f284c9ebffd976dc59698a99"
+    ],
+    "branch": "fix/post-integration-skill-conformance",
+    "status": ""
+  },
+  "source_after": {
+    "root": "/private/tmp/sdlc-post-integration-01a07250",
+    "sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+    "tree": "cb1a9aa31a2fadb8a434493b75c7a244d38d029b",
+    "parents": [
+      "ac6d846a1b0c22d0f284c9ebffd976dc59698a99"
+    ],
+    "branch": "fix/post-integration-skill-conformance",
+    "status": ""
+  }
+}

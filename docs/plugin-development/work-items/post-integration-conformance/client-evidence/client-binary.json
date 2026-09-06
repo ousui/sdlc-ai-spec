@@ -1,0 +1,7 @@
+{
+  "path": "/Applications/ChatGPT.app/Contents/Resources/codex",
+  "sha256": "4ca47945439f9251fe35f4cbe071369192cd9a6c5a3a17b75c7a11ad548a9c7f",
+  "mode": "0o755",
+  "version_stdout": "codex-cli 0.153.4\n",
+  "version_exit_code": 0
+}

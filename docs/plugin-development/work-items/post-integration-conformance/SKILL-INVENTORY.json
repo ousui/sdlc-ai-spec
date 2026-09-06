@@ -1,0 +1,78 @@
+{
+  "contract": "sdlc-ai-spec/skill-inventory/v1",
+  "baseline_main_sha": "0289a5ee8d702450fb3f3bc73c89f30a11664bdb",
+  "skills": [
+    {
+      "skill": "sdlc-000-ctx",
+      "runtime_entry": "skills/sdlc-000-ctx/scripts/runtime.py",
+      "design": "docs/plugin-development/work-items/sdlc-000-ctx/DESIGN.md",
+      "eval_plan": "docs/plugin-development/work-items/sdlc-000-ctx/EVAL-PLAN.md",
+      "test_roots": [
+        "tests/skills/test_sdlc_000_ctx.py"
+      ]
+    },
+    {
+      "skill": "sdlc-100-req",
+      "runtime_entry": "skills/sdlc-100-req/scripts/runtime_final.py",
+      "design": "docs/plugin-development/work-items/sdlc-100-req/DESIGN.md",
+      "eval_plan": "docs/plugin-development/work-items/sdlc-100-req/EVAL-PLAN.md",
+      "test_roots": [
+        "tests/skill_req"
+      ]
+    },
+    {
+      "skill": "sdlc-200-dsn",
+      "runtime_entry": "skills/sdlc-200-dsn/scripts/runtime.py",
+      "design": "docs/plugin-development/work-items/sdlc-200-dsn/DESIGN.md",
+      "eval_plan": "docs/plugin-development/work-items/sdlc-200-dsn/EVAL-PLAN.md",
+      "test_roots": [
+        "tests/skill_dsn"
+      ]
+    },
+    {
+      "skill": "sdlc-300-pln",
+      "runtime_entry": "skills/sdlc-300-pln/scripts/runtime.py",
+      "design": "docs/plugin-development/work-items/sdlc-300-pln/DESIGN.md",
+      "eval_plan": "docs/plugin-development/work-items/sdlc-300-pln/EVAL-PLAN.md",
+      "test_roots": [
+        "tests/skill_pln"
+      ]
+    },
+    {
+      "skill": "sdlc-400-imp",
+      "runtime_entry": "skills/sdlc-400-imp/scripts/runtime.py",
+      "design": "docs/plugin-development/work-items/sdlc-400-imp/DESIGN.md",
+      "eval_plan": "docs/plugin-development/work-items/sdlc-400-imp/EVAL-PLAN.md",
+      "test_roots": [
+        "tests/skill_imp"
+      ]
+    },
+    {
+      "skill": "sdlc-500-vfy",
+      "runtime_entry": "skills/sdlc-500-vfy/scripts/runtime.py",
+      "design": "docs/plugin-development/work-items/sdlc-500-vfy/DESIGN.md",
+      "eval_plan": "docs/plugin-development/work-items/sdlc-500-vfy/EVAL-PLAN.md",
+      "test_roots": [
+        "tests/skill_vfy"
+      ]
+    },
+    {
+      "skill": "sdlc-600-rls",
+      "runtime_entry": "skills/sdlc-600-rls/scripts/runtime.py",
+      "design": "docs/plugin-development/work-items/sdlc-600-rls/DESIGN.md",
+      "eval_plan": "docs/plugin-development/work-items/sdlc-600-rls/EVAL-PLAN.md",
+      "test_roots": [
+        "tests/skill_rls"
+      ]
+    },
+    {
+      "skill": "sdlc-status",
+      "runtime_entry": "skills/sdlc-status/scripts/runtime.py",
+      "design": "docs/plugin-development/work-items/sdlc-status/DESIGN.md",
+      "eval_plan": "docs/plugin-development/work-items/sdlc-status/EVAL-PLAN.md",
+      "test_roots": [
+        "tests/skill_status"
+      ]
+    }
+  ]
+}

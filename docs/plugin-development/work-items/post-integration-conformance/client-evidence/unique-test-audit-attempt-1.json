@@ -1,0 +1,18 @@
+{
+  "classification": "LOCAL_AUDIT_FORMAT_ASSUMPTION",
+  "result": {
+    "portable": {
+      "test_count": 1104,
+      "observed_unique_test_rows": 944,
+      "observed_test_rows": 944,
+      "unique_rows_match_count": false
+    },
+    "strict": {
+      "test_count": 1104,
+      "observed_unique_test_rows": 944,
+      "observed_test_rows": 944,
+      "unique_rows_match_count": false
+    }
+  },
+  "reason": "A first same-line ok regex omitted tests whose docstrings or ResourceWarning split the unittest verbose output. Original suite count and outcomes were unchanged."
+}

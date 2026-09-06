@@ -1,0 +1,18 @@
+{
+  "observed_at": "2026-09-05T17:03:58.517008+00:00",
+  "removed_private_auth_references": [
+    "sdlc-000-ctx",
+    "sdlc-100-req",
+    "sdlc-200-dsn",
+    "sdlc-300-pln",
+    "sdlc-400-imp",
+    "sdlc-500-vfy",
+    "sdlc-600-rls",
+    "sdlc-status"
+  ],
+  "count": 8,
+  "real_auth_file_read_or_copied_by_harness": false,
+  "real_auth_target_removed": false,
+  "client_state_directories_archived": false,
+  "fixtures_and_installed_cache_retained": true
+}

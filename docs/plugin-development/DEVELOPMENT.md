@@ -103,7 +103,7 @@ skills/sdlc-NNN-xxx/
 ├── assets/
 ├── scripts/
 ├── agents/
-└── evals/
+└── evals/                     可选开发资源；正式评测可位于 tests/**
 ```
 
 ### 5.3 Shared Package
@@ -252,3 +252,9 @@ python3 tools/validate_runtime_contracts.py
 python3 -m unittest discover -s tests -p 'test_*.py' -v
 git diff --check
 ```
+
+## Eval 布局与执行证据边界
+
+开发期固定案例、Oracle 和 Fixture 可集中位于 `tests/evals/**`、`tests/skill_*/**`、`tests/skills/**`，结果与 Handoff 位于对应 Work Item。不存在 `skills/<name>/evals/` 不表示缺少评测；不创建空占位目录。安装后的 Runtime 不依赖开发评测、`docs/**` 或仓库 Agent 指令。
+
+目录、静态元数据、普通 Python 回归和 installed-copy 执行是不同层次的证据，均不能代替真实 Client 的 Discovery / Invocation / Behavior。当前阶段与历史报告的适用范围见 `docs/plugin-development/HANDOFF.md` 和逐 Skill 的 `COMPATIBILITY.json`；这些文件仅供开发期使用。

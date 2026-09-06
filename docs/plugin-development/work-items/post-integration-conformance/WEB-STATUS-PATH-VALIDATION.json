@@ -1,0 +1,152 @@
+{
+  "contract": "sdlc-ai-spec/web-status-path-repair-checkpoint/v1",
+  "classification": "FOCUSED_PATCH_VALIDATION_NOT_FINAL_ATTESTATION",
+  "reviewed_source_sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+  "reviewed_client_delivery_sha": "1b9326e7447a481453fbbeccd8d104a02f6c67e9",
+  "remote_publication_parent": "1b9326e7447a481453fbbeccd8d104a02f6c67e9",
+  "review_verdict_for_old_source": "CHANGES_REQUIRED",
+  "finding": "CONFORMANCE-WEB-001",
+  "repair_status": "READY_FOR_CLIENT_RECHECK",
+  "source_files": {
+    "skills/sdlc-status/scripts/runtime.py": {
+      "sha256": "1a37963d066b49b1d35f6d935507fd5f5ccebd7099700f2e8744c1dc420a37d2",
+      "git_blob": "9c27d94030a5455b7c55161ba9e579f01d4daf1e"
+    },
+    "skills/sdlc-status/references/conformance.md": {
+      "sha256": "bff34db993ee4b6d7101a61155be213f3fa674009ca8ba0eb8533a1570a4d227",
+      "git_blob": "479ac602ee993000adfec201f108428d7f423fc4"
+    },
+    "skills/sdlc-status/references/source-lock.json": {
+      "sha256": "b404bd57337760a62060751fdfb94258a399969a5cab8022d0b9bc35373d4f67",
+      "git_blob": "cb3fa5508615e41f06fc08abfaab9a9fbe9e9b30"
+    },
+    "tests/skill_status/test_store_absence.py": {
+      "sha256": "fc81fb99b32b4e0ecdd6e6c3882646a52e18ae82154190036a09161751ab73c9",
+      "git_blob": "3afd944de7ce20b35afad43c5d79c38474454fac"
+    }
+  },
+  "started_at": "2026-09-05T17:44:34.658010+00:00",
+  "ended_at": "2026-09-05T17:46:11.810684+00:00",
+  "files_unchanged": true,
+  "steps": [
+    {
+      "name": "compile",
+      "exit_code": 0,
+      "duration_seconds": 2.882,
+      "stdout": "compile.stdout.log",
+      "stderr": "compile.stderr.log",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "status-tests",
+      "exit_code": 0,
+      "duration_seconds": 24.676,
+      "stdout": "status-tests.stdout.log",
+      "stderr": "status-tests.stderr.log",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "d83a882562e14fc29fab03627f3c2847c4f4ea997eefd6bba0acafabb0cc10ce"
+    },
+    {
+      "name": "runtime-contracts",
+      "exit_code": 0,
+      "duration_seconds": 3.018,
+      "stdout": "runtime-contracts.stdout.log",
+      "stderr": "runtime-contracts.stderr.log",
+      "stdout_sha256": "d3dc89a08c6df93affe4464617ecf5614771bf888392b4a12818d9c8cd0bda36",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "interfaces",
+      "exit_code": 0,
+      "duration_seconds": 2.62,
+      "stdout": "interfaces.stdout.log",
+      "stderr": "interfaces.stderr.log",
+      "stdout_sha256": "9825a016f267883d99316e465bcb6352311d4e26d10cb9558108ae9e9e6530f7",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "conformance",
+      "exit_code": 0,
+      "duration_seconds": 3.022,
+      "stdout": "conformance.stdout.log",
+      "stderr": "conformance.stderr.log",
+      "stdout_sha256": "e6586fdea52884654f17b8280e58a9061d3a76024da116cbc026978fb8ab68fa",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "all-source-locks",
+      "exit_code": 0,
+      "duration_seconds": 21.928,
+      "stdout": "all-source-locks.stdout.log",
+      "stderr": "all-source-locks.stderr.log",
+      "stdout_sha256": "9f8d6d0dcd73fed6f028bf5c6ef430f4588d4cc68d18f072c4f03fb76315ae5a",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "status-static",
+      "exit_code": 0,
+      "duration_seconds": 2.813,
+      "stdout": "status-static.stdout.log",
+      "stderr": "status-static.stderr.log",
+      "stdout_sha256": "0c9599b20ea9f29539581cbf56cfd4243dd37a3271f955e63d53719e26b75fa2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "status-coverage",
+      "exit_code": 0,
+      "duration_seconds": 3.081,
+      "stdout": "status-coverage.stdout.log",
+      "stderr": "status-coverage.stderr.log",
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderr_sha256": "f64872af0807562dfc70b3112f4b5f4ec7b88938b7e119f0802e87ec07b7ec6f"
+    },
+    {
+      "name": "status-fixed",
+      "exit_code": 0,
+      "duration_seconds": 17.88,
+      "stdout": "status-fixed.stdout.log",
+      "stderr": "status-fixed.stderr.log",
+      "stdout_sha256": "85177dc218ecbe250baba4f32b1ee4a16c7f2536b5403997d44179f347024f47",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "status-installed",
+      "exit_code": 0,
+      "duration_seconds": 15.229,
+      "stdout": "status-installed.stdout.log",
+      "stderr": "status-installed.stderr.log",
+      "stdout_sha256": "c003c98810066dabef61f6d8a4458641f1e57c36b0f6dcf5200f1ee331523822",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "new_tests": 14,
+  "all_status_tests": 52,
+  "status_fixed_cases": 14,
+  "status_coverage_tests": 4,
+  "status_installed_commands": 12,
+  "status_source_lock_entries": 51,
+  "original_source_portable": {
+    "success": true,
+    "steps": 10,
+    "repository_tests": 1104,
+    "source_clean_before_after": true
+  },
+  "old_source_reproduction": {
+    "methods": 6,
+    "failing_subtest_assertions": 21,
+    "errors": 0
+  },
+  "post_repair_strict": "NOT_RUN",
+  "post_repair_full_repository": "NOT_RUN",
+  "native_accepted_cells": [],
+  "native_unverified_cells": 40,
+  "client_full_archive_audit": "NOT_COMPLETED_75_RECEIPTS_150_STREAMS_ARE_PRODUCER_COUNTS",
+  "raw_log_location": "Chat delivery attachment; digests above bind files under results/repair-checks/",
+  "main_modified": false,
+  "seven_phase_runtimes_modified": false,
+  "shared_packages_modified": false,
+  "real_target_effects": 0,
+  "pr_merged": false,
+  "previous_client_receipts_and_manifests_modified": false
+}

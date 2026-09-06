@@ -1,0 +1,274 @@
+{
+  "contract": "sdlc-ai-spec/skill-client-matrix/v1",
+  "working_repository": "ousui/sdlc-ai-spec",
+  "distribution_repository": "goedgecloud/sdlc-ai-spec",
+  "distribution_target_decision": "UNCONFIRMED; metadata retained, not silently rewritten",
+  "skills": [
+    {
+      "skill": "sdlc-000-ctx",
+      "historical_evidence": [
+        {
+          "path": "docs/plugin-development/work-items/sdlc-000-ctx/ADAPT-CODEX-RESULTS.md",
+          "sha256": "3b4f16881aa09170b226dca156e62b2b1aa8a94a41dc5788e5f155c8b1a36fb4",
+          "scope": "Historical report only; not a certificate for current runtime bytes or other Skills/surfaces"
+        }
+      ],
+      "surfaces": [
+        {
+          "surface": "codex-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "codex-app",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "claude-code-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "cursor-ide",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "cursor-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        }
+      ]
+    },
+    {
+      "skill": "sdlc-100-req",
+      "historical_evidence": [
+        {
+          "path": "docs/plugin-development/work-items/sdlc-100-req/ADAPT-CODEX-RESULTS.md",
+          "sha256": "c83e09ee8066611f335d8e52d8e2f9ef1cdfb35cf0166ac3d1b10dced1b580de",
+          "scope": "Historical report only; not a certificate for current runtime bytes or other Skills/surfaces"
+        }
+      ],
+      "surfaces": [
+        {
+          "surface": "codex-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "codex-app",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "claude-code-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "cursor-ide",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "cursor-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        }
+      ]
+    },
+    {
+      "skill": "sdlc-200-dsn",
+      "historical_evidence": [
+        {
+          "path": "docs/plugin-development/work-items/sdlc-200-dsn/ADAPT-CODEX-RESULTS.md",
+          "sha256": "c98b5042bd9e0c8c8a79313d23fbafb1d7e9d4f846fc9094183b011ad7a69600",
+          "scope": "Historical report only; not a certificate for current runtime bytes or other Skills/surfaces"
+        }
+      ],
+      "surfaces": [
+        {
+          "surface": "codex-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "codex-app",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "claude-code-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "cursor-ide",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "cursor-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        }
+      ]
+    },
+    {
+      "skill": "sdlc-300-pln",
+      "historical_evidence": [],
+      "surfaces": [
+        {
+          "surface": "codex-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "codex-app",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "claude-code-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "cursor-ide",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "cursor-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        }
+      ]
+    },
+    {
+      "skill": "sdlc-400-imp",
+      "historical_evidence": [],
+      "surfaces": [
+        {
+          "surface": "codex-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "codex-app",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "claude-code-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "cursor-ide",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "cursor-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        }
+      ]
+    },
+    {
+      "skill": "sdlc-500-vfy",
+      "historical_evidence": [],
+      "surfaces": [
+        {
+          "surface": "codex-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "codex-app",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "claude-code-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "cursor-ide",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "cursor-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        }
+      ]
+    },
+    {
+      "skill": "sdlc-600-rls",
+      "historical_evidence": [],
+      "surfaces": [
+        {
+          "surface": "codex-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "codex-app",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "claude-code-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "cursor-ide",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "cursor-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        }
+      ]
+    },
+    {
+      "skill": "sdlc-status",
+      "historical_evidence": [],
+      "surfaces": [
+        {
+          "surface": "codex-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "codex-app",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "claude-code-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "cursor-ide",
+          "status": "NOT_RUN",
+          "receipt": null
+        },
+        {
+          "surface": "cursor-cli",
+          "status": "NOT_RUN",
+          "receipt": null
+        }
+      ]
+    }
+  ]
+}

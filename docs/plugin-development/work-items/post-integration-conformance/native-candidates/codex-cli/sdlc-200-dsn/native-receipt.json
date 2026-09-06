@@ -1,0 +1,123 @@
+{
+  "contract": "sdlc-ai-spec/native-skill-receipt/v1",
+  "observation_source": "native_host",
+  "skill": "sdlc-200-dsn",
+  "surface": "codex-cli",
+  "source_sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+  "client_version": "codex-cli 0.153.4",
+  "observed_at": "2026-09-05T16:39:20.823296+00:00",
+  "operator": "Codex producer validator / 01a07250-d15b-73a0-a586-f8dbddabee17",
+  "runtime_snapshot_sha256": "d2e311cf676df82886670aec75ebb56e968650fac9ef58a2fbfd41521c2c3fe4",
+  "checks": [
+    {
+      "id": "installation",
+      "result": "PASS",
+      "evidence": [
+        {
+          "path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/install-attempt-1.stdout.log",
+          "sha256": "79b549ada09cd35ca6410756f1aa8e7c8dc0f05ae99679cdef7996ce19c7777a"
+        },
+        {
+          "path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/install-attempt-1.observation.json",
+          "sha256": "26baed5bd694966602ebff5a0373a3c599ae76fa415a99de8c8a53f22e949915"
+        }
+      ]
+    },
+    {
+      "id": "discovery",
+      "result": "PASS",
+      "evidence": [
+        {
+          "path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/registry-discovery-attempt-1.stdout.log",
+          "sha256": "f2256f29c99994fdaa6c944bfa4a05a2d797d0e839ea3cbe42a55a5b15c93344"
+        }
+      ]
+    },
+    {
+      "id": "explicit_invocation",
+      "result": "PASS",
+      "evidence": [
+        {
+          "path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/behavior-attempt-1.receipt.json",
+          "sha256": "f21707bbc9f07924519587eb4835928af56d843cad7e615ed49915e92db0cff3"
+        },
+        {
+          "path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/behavior-attempt-1.stdout.log",
+          "sha256": "fb2b89d33976d477a2338a05303bf1c7b77b243759118c209c8b86c091bcb87c"
+        }
+      ]
+    },
+    {
+      "id": "negative_invocation",
+      "result": "PASS",
+      "evidence": [
+        {
+          "path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/negative-attempt-1.stdout.log",
+          "sha256": "61fefd6827aa7656b3386cd35fb89d28f0160218e116089df7aee41663f5374d"
+        },
+        {
+          "path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/negative-attempt-1.observation.json",
+          "sha256": "36a9677ae12d431def9bd67fb934c5cf312cff4ec54ff5bd855ddd0d7e51440f"
+        }
+      ]
+    },
+    {
+      "id": "behavior",
+      "result": "PASS",
+      "evidence": [
+        {
+          "path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/behavior-attempt-1.stdout.log",
+          "sha256": "fb2b89d33976d477a2338a05303bf1c7b77b243759118c209c8b86c091bcb87c"
+        },
+        {
+          "path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/native-observation-audit.json",
+          "sha256": "c41205d1af5b7bfe49a3f7f2061effc932d1f9c0212110cbb29f8c8005fe96a9"
+        }
+      ]
+    },
+    {
+      "id": "permissions",
+      "result": "PASS",
+      "evidence": [
+        {
+          "path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/discovery-attempt-1.stdout.log",
+          "sha256": "0ac26a94eb2448e704baa61ca1b476d8fda6213f55274a09bed8285997e4de3a"
+        },
+        {
+          "path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/behavior-attempt-1.observation.json",
+          "sha256": "3ac4665922466a28f24888c39bfbdac30a970d331f737909080d2374a1fd5d42"
+        },
+        {
+          "path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/native-observation-audit.json",
+          "sha256": "c41205d1af5b7bfe49a3f7f2061effc932d1f9c0212110cbb29f8c8005fe96a9"
+        }
+      ]
+    },
+    {
+      "id": "installed_independence",
+      "result": "PASS",
+      "evidence": [
+        {
+          "path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/fixture-plan.json",
+          "sha256": "ce450d96abc16f5f49e94c0b48591b7c14df8f0cad6074749fc4b728bece3682"
+        },
+        {
+          "path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/behavior-attempt-1.stdout.log",
+          "sha256": "fb2b89d33976d477a2338a05303bf1c7b77b243759118c209c8b86c091bcb87c"
+        },
+        {
+          "path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/native-observation-audit.json",
+          "sha256": "c41205d1af5b7bfe49a3f7f2061effc932d1f9c0212110cbb29f8c8005fe96a9"
+        }
+      ]
+    }
+  ],
+  "classification": "UNREVIEWED_CANDIDATE_NOT_ACCEPTED",
+  "scope": "Frozen missing-authority/read-only fixture, installation and invocation controls; not full lifecycle compatibility.",
+  "independent_review_required": true,
+  "formal_runtime_execution": "OBSERVED",
+  "open_observations": [
+    "JSON-mode progress messages are present; assess the host output boundary independently."
+  ],
+  "real_target_effects": 0
+}

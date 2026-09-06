@@ -1,0 +1,26 @@
+{
+  "source": {
+    "root": "/private/tmp/sdlc-post-integration-01a07250",
+    "sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+    "tree": "cb1a9aa31a2fadb8a434493b75c7a244d38d029b",
+    "parents": [
+      "ac6d846a1b0c22d0f284c9ebffd976dc59698a99"
+    ],
+    "branch": "fix/post-integration-skill-conformance",
+    "status": ""
+  },
+  "main_sha": "0289a5ee8d702450fb3f3bc73c89f30a11664bdb",
+  "main_tree": "bb1aa513fe9a67a6cbec0775a6570fae6e50f877",
+  "remote_main_ref": "0289a5ee8d702450fb3f3bc73c89f30a11664bdb",
+  "remote_branch_ref": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+  "original_checkout": {
+    "root": "/Users/shuaiw/Workspace/goedge.cloud/sdlc-ai-spec",
+    "sha": "0289a5ee8d702450fb3f3bc73c89f30a11664bdb",
+    "tree": "bb1aa513fe9a67a6cbec0775a6570fae6e50f877",
+    "parents": [
+      "f537e8f25fe498e1bb0304a76bd6be713275b955"
+    ],
+    "branch": "main",
+    "status": ""
+  }
+}

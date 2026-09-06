@@ -1,0 +1,1211 @@
+{
+  "contract": "sdlc-ai-spec/client-archive-audit/v1",
+  "success": true,
+  "process_receipts": 75,
+  "bound_streams": 150,
+  "bindings": [
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/all-source-locks-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/all-source-locks-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/all-source-locks-attempt-1.stdout.log",
+      "sha256": "9f8d6d0dcd73fed6f028bf5c6ef430f4588d4cc68d18f072c4f03fb76315ae5a",
+      "bytes": 6620
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/all-source-locks-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/all-source-locks-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/all-source-locks-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/interfaces-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/interfaces-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/interfaces-attempt-1.stdout.log",
+      "sha256": "9825a016f267883d99316e465bcb6352311d4e26d10cb9558108ae9e9e6530f7",
+      "bytes": 144
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/interfaces-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/interfaces-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/interfaces-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/inventory-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/inventory-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/inventory-attempt-1.stdout.log",
+      "sha256": "e6586fdea52884654f17b8280e58a9061d3a76024da116cbc026978fb8ab68fa",
+      "bytes": 25
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/inventory-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/inventory-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/inventory-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/repo-suite-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/repo-suite-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/repo-suite-attempt-1.stdout.log",
+      "sha256": "8e5ed02e83aabeacc338988b77b77ca3a37510b834ee1731382ffbd34dd7690d",
+      "bytes": 181804
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/repo-suite-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/repo-suite-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/repo-suite-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/rls-fixed-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/rls-fixed-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/rls-fixed-attempt-1.stdout.log",
+      "sha256": "5db2dc9a73dbc9b5d827c19baa1236b1485020326af386413671877bed39645d",
+      "bytes": 28
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/rls-fixed-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/rls-fixed-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/rls-fixed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/runtime-contracts-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/runtime-contracts-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/runtime-contracts-attempt-1.stdout.log",
+      "sha256": "d3dc89a08c6df93affe4464617ecf5614771bf888392b4a12818d9c8cd0bda36",
+      "bytes": 72
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/runtime-contracts-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/runtime-contracts-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/runtime-contracts-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/status-coverage-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/status-coverage-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/status-coverage-attempt-1.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/status-coverage-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/status-coverage-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/status-coverage-attempt-1.stderr.log",
+      "sha256": "2fe411a2a120e7439e59f924329729a2ebc22c44b9e29dd6570cb0058bc0f649",
+      "bytes": 758
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/status-fixed-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/status-fixed-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/status-fixed-attempt-1.stdout.log",
+      "sha256": "4c809576826b1f2ba09af67512bcea6527f9e16e71ff086576b1092b3bea9efd",
+      "bytes": 2388
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/status-fixed-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/status-fixed-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/status-fixed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/status-installed-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/status-installed-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/status-installed-attempt-1.stdout.log",
+      "sha256": "c003c98810066dabef61f6d8a4458641f1e57c36b0f6dcf5200f1ee331523822",
+      "bytes": 84
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/status-installed-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/status-installed-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/status-installed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/status-static-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/status-static-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/status-static-attempt-1.stdout.log",
+      "sha256": "0c9599b20ea9f29539581cbf56cfd4243dd37a3271f955e63d53719e26b75fa2",
+      "bytes": 51
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/status-static-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/portable-logs/status-static-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/portable-logs/status-static-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/preflight/client-version-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/preflight/client-version-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/preflight/client-version-attempt-1.stdout.log",
+      "sha256": "616dba4e87de2b1f07e61fe30ff4a5b3b075986c986c466ac5d244597eac0f36",
+      "bytes": 18
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/preflight/client-version-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/preflight/client-version-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/preflight/client-version-attempt-1.stderr.log",
+      "sha256": "3087f13b0d34323fbc05177ef68ae53dc523d9acaf6c0c63852825479db5af2a",
+      "bytes": 104
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/preflight/os-sandbox-probe-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/preflight/os-sandbox-probe-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/preflight/os-sandbox-probe-attempt-1.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/preflight/os-sandbox-probe-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/preflight/os-sandbox-probe-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/preflight/os-sandbox-probe-attempt-1.stderr.log",
+      "sha256": "d34a4e4359a4dc36526cf5b363da32f7b7594a3a09eea17cbdfd6425b052d93e",
+      "bytes": 53
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/preflight/os-sandbox-probe-attempt-2.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/preflight/os-sandbox-probe-attempt-2.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/preflight/os-sandbox-probe-attempt-2.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/preflight/os-sandbox-probe-attempt-2.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/preflight/os-sandbox-probe-attempt-2.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/preflight/os-sandbox-probe-attempt-2.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/all-source-locks-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/all-source-locks-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/all-source-locks-attempt-1.stdout.log",
+      "sha256": "9f8d6d0dcd73fed6f028bf5c6ef430f4588d4cc68d18f072c4f03fb76315ae5a",
+      "bytes": 6620
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/all-source-locks-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/all-source-locks-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/all-source-locks-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/interfaces-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/interfaces-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/interfaces-attempt-1.stdout.log",
+      "sha256": "9825a016f267883d99316e465bcb6352311d4e26d10cb9558108ae9e9e6530f7",
+      "bytes": 144
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/interfaces-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/interfaces-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/interfaces-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/inventory-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/inventory-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/inventory-attempt-1.stdout.log",
+      "sha256": "e6586fdea52884654f17b8280e58a9061d3a76024da116cbc026978fb8ab68fa",
+      "bytes": 25
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/inventory-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/inventory-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/inventory-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/repo-suite-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/repo-suite-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/repo-suite-attempt-1.stdout.log",
+      "sha256": "c18a18beccf605fd837b2b662b599fb62d2ad8e11dac1cf7cb23013603674f15",
+      "bytes": 181804
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/repo-suite-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/repo-suite-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/repo-suite-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/rls-fixed-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/rls-fixed-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/rls-fixed-attempt-1.stdout.log",
+      "sha256": "5db2dc9a73dbc9b5d827c19baa1236b1485020326af386413671877bed39645d",
+      "bytes": 28
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/rls-fixed-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/rls-fixed-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/rls-fixed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/rls-installed-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/rls-installed-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/rls-installed-attempt-1.stdout.log",
+      "sha256": "0ed6f76d2997eed1386be2f98be6b1cc2818858ef43086686d475d0a6b1f4adf",
+      "bytes": 32
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/rls-installed-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/rls-installed-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/rls-installed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/runtime-contracts-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/runtime-contracts-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/runtime-contracts-attempt-1.stdout.log",
+      "sha256": "d3dc89a08c6df93affe4464617ecf5614771bf888392b4a12818d9c8cd0bda36",
+      "bytes": 72
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/runtime-contracts-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/runtime-contracts-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/runtime-contracts-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/status-coverage-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/status-coverage-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/status-coverage-attempt-1.stdout.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/status-coverage-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/status-coverage-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/status-coverage-attempt-1.stderr.log",
+      "sha256": "294a36c4685422836971f0709352984e63cae05cc27bea85fa8838c10df14c49",
+      "bytes": 758
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/status-fixed-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/status-fixed-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/status-fixed-attempt-1.stdout.log",
+      "sha256": "48c0696bf35c4dcaf50799842ffbd20e98505e093274df4b5b2a3f489ed1f260",
+      "bytes": 2388
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/status-fixed-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/status-fixed-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/status-fixed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/status-installed-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/status-installed-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/status-installed-attempt-1.stdout.log",
+      "sha256": "c003c98810066dabef61f6d8a4458641f1e57c36b0f6dcf5200f1ee331523822",
+      "bytes": 84
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/status-installed-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/status-installed-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/status-installed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/status-static-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/status-static-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/status-static-attempt-1.stdout.log",
+      "sha256": "0c9599b20ea9f29539581cbf56cfd4243dd37a3271f955e63d53719e26b75fa2",
+      "bytes": 51
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/status-static-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/status-static-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/status-static-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/vfy-installed-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/vfy-installed-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/vfy-installed-attempt-1.stdout.log",
+      "sha256": "b984d7c1847473b16fe1a4c07c97a646bd97068894d93094c66b23db61d2f38a",
+      "bytes": 26185
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/vfy-installed-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/vfy-installed-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/vfy-installed-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/vfy-strict-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/vfy-strict-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/vfy-strict-attempt-1.stdout.log",
+      "sha256": "6e629ccfd158fa7b7b5180212d489cd6ee6c3a46c09b4ec1f9694def57f4842c",
+      "bytes": 51866
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/vfy-strict-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/strict-logs/vfy-strict-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/client-evidence/strict-logs/vfy-strict-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/behavior-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-000-ctx/logs/behavior-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/behavior-attempt-1.stdout.log",
+      "sha256": "222b7eef295c5506427992eabc608ac4cabf0b2fb16c15870b726ce55543ec69",
+      "bytes": 158413
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/behavior-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-000-ctx/logs/behavior-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/behavior-attempt-1.stderr.log",
+      "sha256": "977a728abdaddcce9633f98e096601e5796d40bb648297a04ae3824fabe5e31f",
+      "bytes": 1282
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/discovery-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-000-ctx/logs/discovery-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/discovery-attempt-1.stdout.log",
+      "sha256": "00e82e28c267f082d9fbb3f3f7db6293e57c9800d71eafa2dbc9704d9803d381",
+      "bytes": 9750
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/discovery-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-000-ctx/logs/discovery-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/discovery-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/install-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-000-ctx/logs/install-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/install-attempt-1.stdout.log",
+      "sha256": "05e7f421e35708dff1e8bc1bb26b8f2c43f05453224bd8aded85b0ade07c8233",
+      "bytes": 293
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/install-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-000-ctx/logs/install-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/install-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/marketplace-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-000-ctx/logs/marketplace-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/marketplace-attempt-1.stdout.log",
+      "sha256": "94385812bcdd7c355b9b985805922109be39570c2c5ef646dfbcd02bd4d37d08",
+      "bytes": 150
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/marketplace-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-000-ctx/logs/marketplace-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/marketplace-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/negative-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-000-ctx/logs/negative-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/negative-attempt-1.stdout.log",
+      "sha256": "92db785bff223e70beb1601273f867aaa588d6e9571b566c8225d9bd401762ce",
+      "bytes": 1099
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/negative-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-000-ctx/logs/negative-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/negative-attempt-1.stderr.log",
+      "sha256": "1aa26269eb1cc57f86b235a03cda53c004edb5b1e9fc99d4da4f00843293d721",
+      "bytes": 39
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/registry-discovery-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-000-ctx/logs/registry-discovery-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/registry-discovery-attempt-1.stdout.log",
+      "sha256": "d8f092cd85135adddda15ce08e7a6261ef83ba5e0d76ccfcd71fba0ec6c7fa47",
+      "bytes": 16651
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/registry-discovery-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-000-ctx/logs/registry-discovery-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-000-ctx/logs/registry-discovery-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/behavior-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-100-req/logs/behavior-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/behavior-attempt-1.stdout.log",
+      "sha256": "80e451120e59d3ba80905d16b68477547d4965144ef356ad5dbac0b90472072d",
+      "bytes": 143524
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/behavior-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-100-req/logs/behavior-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/behavior-attempt-1.stderr.log",
+      "sha256": "99db135d6e30094aaf0ef87d312d76194bf6b1b6f224d15beebaf6507c655beb",
+      "bytes": 1535
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/discovery-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-100-req/logs/discovery-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/discovery-attempt-1.stdout.log",
+      "sha256": "7d496bddf5076fcbfa1572b4594f4b75700acec68398e0528694219fa8c625ea",
+      "bytes": 9751
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/discovery-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-100-req/logs/discovery-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/discovery-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/install-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-100-req/logs/install-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/install-attempt-1.stdout.log",
+      "sha256": "5ba9cbde80521883ac48a4468868d09b05ca139a51d7e9aedfb32d76470c4fa5",
+      "bytes": 293
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/install-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-100-req/logs/install-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/install-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/marketplace-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-100-req/logs/marketplace-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/marketplace-attempt-1.stdout.log",
+      "sha256": "016555fcfd6c8d693f7cdd2aab5c563b285acc569e5a2c13bced388e28508f0e",
+      "bytes": 150
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/marketplace-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-100-req/logs/marketplace-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/marketplace-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/negative-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-100-req/logs/negative-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/negative-attempt-1.stdout.log",
+      "sha256": "3b3e11fe3ec0bd75509a0caefa359692c4ba42657860f43f4e6645c43b2e51bd",
+      "bytes": 1113
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/negative-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-100-req/logs/negative-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/negative-attempt-1.stderr.log",
+      "sha256": "1aa26269eb1cc57f86b235a03cda53c004edb5b1e9fc99d4da4f00843293d721",
+      "bytes": 39
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/registry-discovery-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-100-req/logs/registry-discovery-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/registry-discovery-attempt-1.stdout.log",
+      "sha256": "7998433fdb7a66ec4b03d81d07588759d2fde726f6f2f665e2721a18ad66f77a",
+      "bytes": 16369
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/registry-discovery-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-100-req/logs/registry-discovery-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-100-req/logs/registry-discovery-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/behavior-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-200-dsn/logs/behavior-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/behavior-attempt-1.stdout.log",
+      "sha256": "fb2b89d33976d477a2338a05303bf1c7b77b243759118c209c8b86c091bcb87c",
+      "bytes": 18732
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/behavior-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-200-dsn/logs/behavior-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/behavior-attempt-1.stderr.log",
+      "sha256": "6c900921458ad93ed02792ddc0f6b9be4c6edc69b4f600c4caaff1aa9a435294",
+      "bytes": 1282
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/discovery-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-200-dsn/logs/discovery-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/discovery-attempt-1.stdout.log",
+      "sha256": "0ac26a94eb2448e704baa61ca1b476d8fda6213f55274a09bed8285997e4de3a",
+      "bytes": 9751
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/discovery-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-200-dsn/logs/discovery-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/discovery-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/install-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-200-dsn/logs/install-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/install-attempt-1.stdout.log",
+      "sha256": "79b549ada09cd35ca6410756f1aa8e7c8dc0f05ae99679cdef7996ce19c7777a",
+      "bytes": 293
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/install-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-200-dsn/logs/install-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/install-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/marketplace-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-200-dsn/logs/marketplace-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/marketplace-attempt-1.stdout.log",
+      "sha256": "d30e19e56a9919e65ad02b20ce77d524b5c7cfe401f00cb397e832b057994c93",
+      "bytes": 150
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/marketplace-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-200-dsn/logs/marketplace-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/marketplace-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/negative-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-200-dsn/logs/negative-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/negative-attempt-1.stdout.log",
+      "sha256": "61fefd6827aa7656b3386cd35fb89d28f0160218e116089df7aee41663f5374d",
+      "bytes": 1100
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/negative-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-200-dsn/logs/negative-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/negative-attempt-1.stderr.log",
+      "sha256": "1aa26269eb1cc57f86b235a03cda53c004edb5b1e9fc99d4da4f00843293d721",
+      "bytes": 39
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/registry-discovery-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-200-dsn/logs/registry-discovery-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/registry-discovery-attempt-1.stdout.log",
+      "sha256": "f2256f29c99994fdaa6c944bfa4a05a2d797d0e839ea3cbe42a55a5b15c93344",
+      "bytes": 16449
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/registry-discovery-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-200-dsn/logs/registry-discovery-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-200-dsn/logs/registry-discovery-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/behavior-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-300-pln/logs/behavior-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/behavior-attempt-1.stdout.log",
+      "sha256": "ae6dd9071e0f2beb3eea887f47eb208ae1e9db17b768c8fccf34fad6308df435",
+      "bytes": 13651
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/behavior-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-300-pln/logs/behavior-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/behavior-attempt-1.stderr.log",
+      "sha256": "9bc01c8a3a553ce4c06185db70997b7590ab31337fcb371aa56f9a6540fb083c",
+      "bytes": 741
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/discovery-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-300-pln/logs/discovery-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/discovery-attempt-1.stdout.log",
+      "sha256": "06b0a7aaae79dc65f96e32065cf43071aa7aa9c84726852b0c42995d21e25a54",
+      "bytes": 9748
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/discovery-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-300-pln/logs/discovery-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/discovery-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/install-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-300-pln/logs/install-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/install-attempt-1.stdout.log",
+      "sha256": "8bfc039dd4cf8c912a2ec32510928f3acca5a3e082bc70c474c34321539c5478",
+      "bytes": 293
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/install-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-300-pln/logs/install-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/install-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/marketplace-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-300-pln/logs/marketplace-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/marketplace-attempt-1.stdout.log",
+      "sha256": "bfe228339ad69fe497c41fa0a6e623b6e2d58d26157df9c8b44f8103a78e5f8e",
+      "bytes": 150
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/marketplace-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-300-pln/logs/marketplace-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/marketplace-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/negative-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-300-pln/logs/negative-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/negative-attempt-1.stdout.log",
+      "sha256": "f670780b8f764b25c3d14461223bf7730302f20ed3855384d1d4c2fb17d8ab64",
+      "bytes": 1097
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/negative-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-300-pln/logs/negative-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/negative-attempt-1.stderr.log",
+      "sha256": "1aa26269eb1cc57f86b235a03cda53c004edb5b1e9fc99d4da4f00843293d721",
+      "bytes": 39
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/registry-discovery-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-300-pln/logs/registry-discovery-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/registry-discovery-attempt-1.stdout.log",
+      "sha256": "3d6ccc552c6a3d9c33e4c6c269216181d46b73041eb5139947de045b335434b1",
+      "bytes": 16409
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/registry-discovery-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-300-pln/logs/registry-discovery-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-300-pln/logs/registry-discovery-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/behavior-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-400-imp/logs/behavior-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/behavior-attempt-1.stdout.log",
+      "sha256": "fc114730615575e39f7484095f10c153f4392218ace3320b3ca79f6c4be67d50",
+      "bytes": 31187
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/behavior-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-400-imp/logs/behavior-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/behavior-attempt-1.stderr.log",
+      "sha256": "d4759ada77c2a4253ebe31e237702ff20a90f9375cae9b5163365347d7580b30",
+      "bytes": 1282
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/discovery-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-400-imp/logs/discovery-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/discovery-attempt-1.stdout.log",
+      "sha256": "e426a3c71382bc067a3e1a696f6632d41c3104449a737d53021048be5bcf6228",
+      "bytes": 9751
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/discovery-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-400-imp/logs/discovery-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/discovery-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/install-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-400-imp/logs/install-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/install-attempt-1.stdout.log",
+      "sha256": "69f209f40b9715adca0671a94abc4c6b6285669fbcad4e21c7dfcfda2669cd6a",
+      "bytes": 293
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/install-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-400-imp/logs/install-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/install-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/marketplace-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-400-imp/logs/marketplace-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/marketplace-attempt-1.stdout.log",
+      "sha256": "472bd382c566c388455f8a28e6188631601ab9a4d29ec38336386fb39f7be1d9",
+      "bytes": 150
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/marketplace-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-400-imp/logs/marketplace-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/marketplace-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/negative-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-400-imp/logs/negative-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/negative-attempt-1.stdout.log",
+      "sha256": "9381087fe901c8988730ebbf1b431d4eade6a861eef2bfd77270344db2333d91",
+      "bytes": 1100
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/negative-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-400-imp/logs/negative-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/negative-attempt-1.stderr.log",
+      "sha256": "1aa26269eb1cc57f86b235a03cda53c004edb5b1e9fc99d4da4f00843293d721",
+      "bytes": 39
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/registry-discovery-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-400-imp/logs/registry-discovery-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/registry-discovery-attempt-1.stdout.log",
+      "sha256": "9cad375652fa40414e98551b4ef03efcd2faafd3b55bc7340a2cf47dc2404b74",
+      "bytes": 16535
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/registry-discovery-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-400-imp/logs/registry-discovery-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-400-imp/logs/registry-discovery-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/behavior-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-500-vfy/logs/behavior-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/behavior-attempt-1.stdout.log",
+      "sha256": "5c5c9247c080c3408a15c1ada8baf37c21e343e2818dc5df72025cfa8daa23f3",
+      "bytes": 18532
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/behavior-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-500-vfy/logs/behavior-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/behavior-attempt-1.stderr.log",
+      "sha256": "4340d742508ed8adb110bd1028ded8059c16c294c42eac8a91dd22f36e60fa68",
+      "bytes": 1282
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/discovery-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-500-vfy/logs/discovery-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/discovery-attempt-1.stdout.log",
+      "sha256": "844c2a33bccb9a35411807275bc88961863116a55fd53ce2ace3abb4df688b6c",
+      "bytes": 9750
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/discovery-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-500-vfy/logs/discovery-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/discovery-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/install-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-500-vfy/logs/install-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/install-attempt-1.stdout.log",
+      "sha256": "20d0f2238b3279adf3740b8a8bedde12cfaf89553a2b477ca1a240f2389db810",
+      "bytes": 293
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/install-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-500-vfy/logs/install-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/install-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/marketplace-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-500-vfy/logs/marketplace-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/marketplace-attempt-1.stdout.log",
+      "sha256": "ae78ad79c4b7b8dc83a789cfc5b99af175c388ab3878e074f67465eb84939a27",
+      "bytes": 150
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/marketplace-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-500-vfy/logs/marketplace-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/marketplace-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/negative-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-500-vfy/logs/negative-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/negative-attempt-1.stdout.log",
+      "sha256": "941995c230bfb226582818849de35987f902b7af4016a9faf890d71c06afbd3d",
+      "bytes": 1093
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/negative-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-500-vfy/logs/negative-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/negative-attempt-1.stderr.log",
+      "sha256": "1aa26269eb1cc57f86b235a03cda53c004edb5b1e9fc99d4da4f00843293d721",
+      "bytes": 39
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/registry-discovery-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-500-vfy/logs/registry-discovery-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/registry-discovery-attempt-1.stdout.log",
+      "sha256": "d7559525b8687b3f1527835efcd502645a98372a083f05a50e3cd0a5628c020c",
+      "bytes": 16493
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/registry-discovery-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-500-vfy/logs/registry-discovery-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-500-vfy/logs/registry-discovery-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/behavior-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-600-rls/logs/behavior-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/behavior-attempt-1.stdout.log",
+      "sha256": "53b519cf5b4b8050bdfd9cd79b3179ee4df6ff0160d47e5b033ba8dc17a115d0",
+      "bytes": 63417
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/behavior-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-600-rls/logs/behavior-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/behavior-attempt-1.stderr.log",
+      "sha256": "8aff180b68d2dac1bd16097a1de73a776e600036dcf46998208349c84c0654d2",
+      "bytes": 1535
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/discovery-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-600-rls/logs/discovery-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/discovery-attempt-1.stdout.log",
+      "sha256": "93a8b7a9408977b0b151ec053d7b8be2bc11a9bee582eda90426792f1c5987e1",
+      "bytes": 9751
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/discovery-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-600-rls/logs/discovery-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/discovery-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/install-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-600-rls/logs/install-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/install-attempt-1.stdout.log",
+      "sha256": "6e038173ec03df2c91d920c042da33ea0eb729ec3cc1b840860812f509a3806e",
+      "bytes": 293
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/install-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-600-rls/logs/install-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/install-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/marketplace-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-600-rls/logs/marketplace-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/marketplace-attempt-1.stdout.log",
+      "sha256": "5ad4dc02cc02d623aa96b4b46f07d856d4d6524bf5393e6b85bf475ed9209100",
+      "bytes": 150
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/marketplace-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-600-rls/logs/marketplace-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/marketplace-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/negative-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-600-rls/logs/negative-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/negative-attempt-1.stdout.log",
+      "sha256": "13f5463f83a18521665f672b09925c3d5c1760c49ea9a9a1059efd7d07ed3b81",
+      "bytes": 1119
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/negative-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-600-rls/logs/negative-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/negative-attempt-1.stderr.log",
+      "sha256": "1aa26269eb1cc57f86b235a03cda53c004edb5b1e9fc99d4da4f00843293d721",
+      "bytes": 39
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/registry-discovery-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-600-rls/logs/registry-discovery-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/registry-discovery-attempt-1.stdout.log",
+      "sha256": "6886af2056e4d89204f2fab2bbbc04891330724be3e9cb6f336362b73aba4173",
+      "bytes": 16529
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/registry-discovery-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-600-rls/logs/registry-discovery-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-600-rls/logs/registry-discovery-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/behavior-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-status/logs/behavior-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/behavior-attempt-1.stdout.log",
+      "sha256": "ace45a305782ad829c7d157747944230b65072f617fb0979df34c19df85291ec",
+      "bytes": 5767
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/behavior-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-status/logs/behavior-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/behavior-attempt-1.stderr.log",
+      "sha256": "d0096a96b7b646dda37b4d1ded472fe87f382028fb22808d5334c294d38898a7",
+      "bytes": 251
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/discovery-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-status/logs/discovery-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/discovery-attempt-1.stdout.log",
+      "sha256": "40e12ca837ec178412c40922d5d7724c4e001a191cb09980da8173cb2f32cd74",
+      "bytes": 9747
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/discovery-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-status/logs/discovery-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/discovery-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/install-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-status/logs/install-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/install-attempt-1.stdout.log",
+      "sha256": "80c52a7e59936cb7dd9c29f51133962c542427dbf45423f67ccfaa73f95ef620",
+      "bytes": 292
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/install-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-status/logs/install-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/install-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/marketplace-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-status/logs/marketplace-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/marketplace-attempt-1.stdout.log",
+      "sha256": "0091e0dde13808705b9a60884b6f2c2222669baa3ccebbe89dc32277a9e32bc7",
+      "bytes": 149
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/marketplace-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-status/logs/marketplace-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/marketplace-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/negative-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-status/logs/negative-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/negative-attempt-1.stdout.log",
+      "sha256": "983efd6bb9099158ab91be8a5028fbe185df412541784116a691ab3cb300f906",
+      "bytes": 1114
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/negative-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-status/logs/negative-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/negative-attempt-1.stderr.log",
+      "sha256": "1aa26269eb1cc57f86b235a03cda53c004edb5b1e9fc99d4da4f00843293d721",
+      "bytes": 39
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/registry-discovery-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-status/logs/registry-discovery-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/registry-discovery-attempt-1.stdout.log",
+      "sha256": "49f33c7791f7ce592ef15c83c4aacfff2a02148be182af2a52ef890999748f4a",
+      "bytes": 16379
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/registry-discovery-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-status/logs/registry-discovery-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/registry-discovery-attempt-1.stderr.log",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/status-auto-attempt-1.receipt.json",
+      "stream": "stdout",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-status/logs/status-auto-attempt-1.stdout.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/status-auto-attempt-1.stdout.log",
+      "sha256": "9c6a393d3e94f0cbb43c1490d73dd1df41d1b8bbf21b0676a0a13f98ea0132ef",
+      "bytes": 6935
+    },
+    {
+      "receipt": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/status-auto-attempt-1.receipt.json",
+      "stream": "stderr",
+      "original_log": "/private/tmp/sdlc-conformance-evidence-01a07250/native/sdlc-status/logs/status-auto-attempt-1.stderr.log",
+      "archive_path": "docs/plugin-development/work-items/post-integration-conformance/native-candidates/codex-cli/sdlc-status/logs/status-auto-attempt-1.stderr.log",
+      "sha256": "35c24acd5e5ca15a13171588f4ef5fa6857439b9147421ada98094f15b4a268b",
+      "bytes": 587
+    }
+  ],
+  "hash_scope": "Archived redacted UTF-8 bytes. Process receipts retain their original sha256: prefix; archive/candidate hashes use bare hex.",
+  "nested_stream_bindings": "PASS",
+  "native_candidate_checks": "Eight candidates, ordered seven dimensions, nonempty byte-bound repository paths, exact current source snapshots; no independent_review or ACCEPTED fields added."
+}

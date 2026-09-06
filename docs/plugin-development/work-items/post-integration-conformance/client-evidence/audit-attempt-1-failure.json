@@ -1,0 +1,6 @@
+{
+  "classification": "LOCAL_AUDIT_HARNESS_ERROR_NOT_RUNTIME_FAILURE",
+  "error": "Initial ad hoc audit compared a bare hex digest against the accepted sha256: prefixed digest format. No source/log was altered.",
+  "retained_error": "AssertionError: portable-logs/runtime-contracts-attempt-1.stdout.log",
+  "resolution": "Use the accepted tools.rls_validation_support.digest representation for process receipts."
+}

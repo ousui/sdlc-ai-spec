@@ -1,0 +1,21 @@
+{
+  "source": {
+    "root": "/private/tmp/sdlc-post-integration-01a07250",
+    "sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+    "tree": "cb1a9aa31a2fadb8a434493b75c7a244d38d029b",
+    "parents": [
+      "ac6d846a1b0c22d0f284c9ebffd976dc59698a99"
+    ],
+    "branch": "fix/post-integration-skill-conformance",
+    "status": ""
+  },
+  "main_sha": "0289a5ee8d702450fb3f3bc73c89f30a11664bdb",
+  "remote_main_sha": "0289a5ee8d702450fb3f3bc73c89f30a11664bdb",
+  "remote_branch_sha": "fb1d8fb989e5e31d75cd6f311c0e5e663437262d",
+  "web_validated_source_sha": "ac6d846a1b0c22d0f284c9ebffd976dc59698a99",
+  "platform": "macOS-26.5.1-arm64-arm-64bit-Mach-O",
+  "python": "3.14.7 (main, Aug  5 2026, 10:29:49) [Clang 21.0.0 (clang-2100.1.1.101)]",
+  "sandbox_exec": "/usr/bin/sandbox-exec",
+  "bwrap": null,
+  "worktrees": "worktree /Users/shuaiw/Workspace/goedge.cloud/sdlc-ai-spec\nHEAD 0289a5ee8d702450fb3f3bc73c89f30a11664bdb\nbranch refs/heads/main\n\nworktree /private/tmp/sdlc-post-integration-01a07250\nHEAD fb1d8fb989e5e31d75cd6f311c0e5e663437262d\nbranch refs/heads/fix/post-integration-skill-conformance"
+}

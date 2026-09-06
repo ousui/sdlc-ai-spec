@@ -57,6 +57,11 @@ def validate_text(root: Path, skill: str, text: str) -> dict:
     policy = (base / 'agents/openai.yaml').read_text(encoding='utf-8')
     require('allow_implicit_invocation: false' in policy, skill + ': Codex explicit-only policy missing')
     require(json.dumps(titles[0], ensure_ascii=False) in policy, skill + ': UI title differs')
+    blurb = re.search(r'^\s*short_description:\s*(".*")\s*$', policy, re.M)
+    require(blurb is not None, skill + ': quoted UI short_description missing')
+    description = json.loads(blurb.group(1))
+    require(isinstance(description, str) and 25 <= len(description) <= 64,
+            skill + ': UI short_description must be 25–64 characters')
     for marker in ('decision_policy', 'write_policy', 'scripts/sdlc_skill_interface.py', 'references/interface.json', 'Final Confirmation', 'Gate'):
         require(marker in text, skill + ': essential boundary not documented: ' + marker)
     return {'skill':skill, 'commands':len(rows), 'parameters':len(params), 'lines':len(text.splitlines()), 'status':'PASS'}

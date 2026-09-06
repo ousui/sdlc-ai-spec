@@ -2,4 +2,4 @@ policy:
   allow_implicit_invocation: false
 interface:
   display_name: "SDLC 400 · 实施（IMP）"
-  short_description: "领取一个准确实施 Binding，保存真实 Baseline，并在 Claim Scope 内执行已批准 Method，产生不可变 Result。"
+  short_description: "在准确实施范围和授权下执行方法，保存基线、结果与可追溯检查记录。"

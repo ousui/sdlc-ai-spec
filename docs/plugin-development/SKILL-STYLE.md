@@ -12,13 +12,14 @@
 - https://agentskills.io/specification
 - https://developers.openai.com/codex/skills/ （现重定向至官方 Build skills）
 - https://github.com/openai/skills/blob/main/skills/.system/skill-creator/SKILL.md ，已读 Blob `72bc0b97e7a6476254a9d5c424c9971748402ec3`
+- https://github.com/openai/skills/blob/main/skills/.system/skill-creator/references/openai_yaml.md ，UI 短描述 25–64 字符，已读 Blob `da5629f8de500ec6f81291d239a2d9c68d1d9044`
 - https://code.claude.com/docs/zh-CN/skills
 - https://github.com/anthropics/skills/blob/main/skills/skill-creator/SKILL.md ，已读 Blob `65b3a402dbd09b8e83f9d637c6b553875189085c`
 - https://cursor.com/docs/skills
 
 ## 固定结构
 
-YAML 保留 name、清晰中文 description、disable-model-invocation: true；目录与 name 一致。一个 H1 使用 `SDLC 编号 · 中文名称（缩写）`，Utility 无编号。Codex display_name 与 H1 一致，allow_implicit_invocation 保持 false。
+YAML 保留 name、清晰中文 description、disable-model-invocation: true；目录与 name 一致。一个 H1 使用 `SDLC 编号 · 中文名称（缩写）`，Utility 无编号。Codex display_name 与 H1 一致，allow_implicit_invocation 保持 false；short_description 按官方说明控制在 25–64 个字符，以便列表快速浏览。
 
 七个 H2 顺序：适用范围 → 约定与边界 → 子命令 → 参数 → 执行流程 → 输出与完成条件 → 资源索引。目标 80–130 行，硬上限 200 行；超出时将详细表结构与算法放入 references，入口明确何时读取，不整包加载。
 

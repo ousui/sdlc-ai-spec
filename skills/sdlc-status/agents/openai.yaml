@@ -2,4 +2,4 @@ policy:
   allow_implicit_invocation: false
 interface:
   display_name: "SDLC · 生命周期状态"
-  short_description: "严格只读地展示准确 REQ 生命周期、阻塞与全部候选下一动作；Projection 不构成 Canonical Authority。"
+  short_description: "只读查看准确需求的生命周期、阻塞与下一动作，完整展示多个候选。"

@@ -31,3 +31,17 @@ class SkillStyleTests(unittest.TestCase):
 
     def test_duplicate_or_reordered_section_rejected(self):
         with self.assertRaises(ValueError): validate_text(ROOT, self.skill, self.text+'\n## 参数\n')
+
+    def test_oversized_ui_description_rejected(self):
+        from pathlib import Path
+        from unittest.mock import patch
+        original = Path.read_text
+        target = ROOT / 'skills' / self.skill / 'agents/openai.yaml'
+        def read(path, *args, **kwargs):
+            value = original(path, *args, **kwargs)
+            if path == target:
+                import re
+                value = re.sub(r'short_description:.*', 'short_description: "' + 'x' * 65 + '"', value)
+            return value
+        with patch.object(Path, 'read_text', new=read), self.assertRaisesRegex(ValueError, '25–64'):
+            validate_text(ROOT, self.skill, self.text)

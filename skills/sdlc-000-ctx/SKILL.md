@@ -4,43 +4,62 @@ description: 显式创建、修订或严格只读检查项目上下文 CTX；裸
 disable-model-invocation: true
 ---
 
-# SDLC Project Context
+# SDLC 000 · 项目上下文（CTX）
 
-本 Skill 将项目扫描、参数默认值、Evidence 组织、内部 Invocation 和 Runtime 调用封装为统一 SOP。用户无需编写长提示词或手工填写 Evidence ID、Basis、Confirmation JSON、Digest 或 Manifest。
+## 适用范围
 
-## 快速使用
+采集项目事实、确认项目边界并维护唯一 CTX Lineage；不编写后续阶段产物。 内部 Evidence ID、Digest、Manifest 与 Invocation 由 Skill 整理，用户无需手填内部 JSON。
 
 ```text
 /sdlc-000-ctx
 /sdlc-000-ctx create
-/sdlc-000-ctx check -r CTX-...@1
-/sdlc-000-ctx -h
+/sdlc-000-ctx --create
 ```
 
-完整命令、版本和示例由 `references/interface.json` 定义。调用后先使用共享参数解析器归一化命令：
+## 约定与边界
 
-```text
-python3 <plugin-root>/scripts/sdlc_skill_interface.py \
-  --spec <plugin-root>/skills/sdlc-000-ctx/references/interface.json \
-  -- <invocation-tail>
-```
+从显式调用到结束保持 Exclusive Skill Execution，不调用兄弟 Skill，不传递授权。只使用本 Skill 与共享 Runtime/ArtifactStore；不直接 SQL、不复制 Store Schema、不使用文件或数据库 fallback，不读取开发期文档、测试或 Handoff。
 
-支持子命令、GNU 长参数、短参数和兼容别名。`help / version / commands / examples` 只展示预定义信息，不扫描项目、不调用 Runtime、不写入。
+事实区分 observed / referenced / confirmed；缺口进入 Open Items，不猜测。Authority 使用准确数字 Revision，不使用 branch/tag/PR/latest/current 或标题相似度。`decision_policy=user` 默认由用户决定多解业务问题；model/experiment 需明确授权，实验还需范围、指标、成本和停止条件。
 
-## 默认行为
+`write_policy` 不替代业务批准、Exception、Final Confirmation 或独立效果授权。check/inspect 不修复、不初始化、不创建旁车。Git、远端、安装、项目外写入不属于本 Skill 的默认许可；真实 Secret 不进入 Artifact、日志或输出。
 
-公共默认值：
+标准 ArtifactStore 写入按 auto/confirm/deny 处理；auto 显式调用封装 Runtime 所需 `write` confirmation，不重复询问，但不伪造 Final Confirmation。
 
-```text
-command=auto
-project_root=auto
-decision_policy=user
-write_policy=auto
-dry_run=false
-output=summary
-```
+## 子命令
 
-`command=auto` 使用确定性规则：
+以 [interface.json](references/interface.json) 为命令 Authority；元命令 help/version/commands/examples 不扫描项目、不读取业务 stdin、不打开 Store。
+
+| 子命令 | 职责 | 可能写入 |
+|---|---|---|
+| `auto` | 根据唯一工作区、已有 CTX 和请求意图自动选择 create、revise 或 check。 | 是，须满足本阶段授权 |
+| `create` | 扫描当前项目并创建项目上下文 CTX。 | 是，须满足本阶段授权 |
+| `revise` | 修订准确 CTX Revision；open 原地修订，frozen 创建新 Revision。 | 是，须满足本阶段授权 |
+| `check` | 严格只读检查准确 CTX Revision。 | 否 |
+| `help` | 显示用途、默认行为、公共参数和写入边界。 | 否 |
+| `version` | 显示 Skill Version 与 Interface Contract。 | 否 |
+| `commands` | 列出本 Skill 支持的命令。 | 否 |
+| `examples` | 显示常用调用示例。 | 否 |
+
+## 参数
+
+先按共享 Parser 归一化公共参数，再由本 Skill 注册扩展。公共参数描述不意味着旧 JSON Runtime 可直接接受所有 CLI 开关：CTX/REQ 先构造标准 Invocation，再通过 stdin 调用其正式入口；其他阶段使用本 Skill 的 CLI。
+
+| 参数 | 短参数 | 语义／默认值 |
+|---|---|---|
+| `--command` | `-c` | `auto`；也可直接写子命令，兼容 `--operation/-o` |
+| `--project-root` | `-p` | 宿主提供的唯一当前工作区；多个项目时选择，不猜测 |
+| `--reference` | `-r` | 准确 `TYPE-ID@数字Revision`；修改/检查时按命令要求提供 |
+| `--decision-policy` | `-d` | `user`（默认）/ `model` / `experiment`；后两者需要明确授权 |
+| `--write-policy` | `-w` | `auto`（默认）/ `confirm` / `deny`；仅约束本阶段允许的标准写入 |
+| `--dry-run` | `-n` | 默认 `false`；不生成权威完成结论，不替代 check |
+| `--output` | `-f` | `summary`（默认）/ `json` / `debug` |
+
+`--` 后为请求正文，不是新增开关。help 支持 `-h`，version 支持 `-V`；其他兼容别名以共享 parser 为准。多个工作区、Revision 或操作均不猜选。
+
+## 执行流程
+
+
 
 1. 当前唯一工作区没有 CTX：`create`；
 2. 唯一 materialized open CTX：`revise`；
@@ -49,8 +68,6 @@ output=summary
 5. 多个合法项目、Lineage、Revision 或操作：请求用户选择，不猜测。
 
 `project_root=auto` 只接受宿主提供的唯一现存工作区。多个 workspace、worktree、嵌套独立仓库或目标不唯一时，展示候选并请求一次决策。
-
-## 只读预检与项目事实
 
 在提交 Runtime 前，读取完成 CTX 所需的最小项目内容，例如 README、构建清单、目录、入口、配置、部署定义、工程规则和已有 ArtifactStore：
 
@@ -61,24 +78,10 @@ output=summary
 
 当当前工作区是唯一版本化项目、没有嵌套独立项目冲突且用户没有指定更广边界时，默认 Project Boundary 为：当前 Project Root 内的版本化工程资源及项目本地构建、配置、测试和部署资产；不包含外部系统、其他仓库或运行实例。裸调用接受该文档化默认值。若 monorepo、产品体系或外部资源边界存在多个合法定义，按 `decision_policy` 处理。
 
-## 决策与写入
-
-- `decision_policy=user`：默认。存在多个合法业务选择时，给出推荐、原因和备选，由用户决定；
-- `decision_policy=model`：仅在用户明确授权时由模型选择并记录理由和风险；
-- `decision_policy=experiment`：仅在用户授权且可定义候选、指标、成本和停止条件时执行测试后选择。
-
-- `write_policy=auto`：显式调用即授权本 Skill 的标准项目内 ArtifactStore 写入；内部自动生成 Runtime 所需 `write` confirmation，不重复询问；
-- `write_policy=confirm`：首次标准写入前请求一次自然语言确认；
-- `write_policy=deny`：不得写入，只允许 check 或 dry-run 边界。
-
-Git、工作区外文件、远程系统、依赖安装、删除或覆盖 frozen 内容始终需要独立明确授权。
-
-## Runtime 执行
-
 只有参数完整、确定性默认值已解决、必要业务决策已完成后，才构造 `sdlc-ai-spec/runtime-invocation/v1` 并调用：
 
 ```text
-python3 <plugin-root>/skills/sdlc-000-ctx/scripts/runtime.py <invocation.json>
+python3 <plugin-root>/skills/sdlc-000-ctx/scripts/runtime.py < invocation.json
 ```
 
 - `create/revise` 使用共享 ArtifactStore 与 ContextLineageRegistry；
@@ -86,10 +89,18 @@ python3 <plugin-root>/skills/sdlc-000-ctx/scripts/runtime.py <invocation.json>
 - 不调用兄弟业务 Skill，不传递当前授权，不使用文件或其他数据库 fallback；
 - `PROJECT_BOUNDARY_CONFIRMATION_REQUIRED` 等内部门禁由本 Skill 转换为自然语言决策，不把底层 JSON 直接交给普通用户。
 
-## 用户输出
+## 输出与完成条件
+
+`summary` 默认只呈现事实、准确 Artifact、Gate、已执行写入、阻塞和下一动作。`json` 只返回正式 Runtime 的结构化结果，不添加进度文本、不改写字段或说明；调试信息不混入 JSON。`debug` 展示有界诊断，先脱敏。
 
 `output=summary` 默认只展示：状态、实际完成内容、Artifact、主要依据、实际写入、待决策项和唯一下一动作。
 
 `output=json` 只返回结构化结果；`output=debug` 才展示参数归一化、Evidence、内部 Invocation 和 Runtime Result，且不得泄露 Secret。
 
 只有 frozen 且 `ready / ready_with_exception` 的准确 Revision 提供 Context Authority。`action_required / blocked / failed` 时立即停止并给出一条可执行主动作。
+
+## 资源索引
+
+- 先读 [运行契约](references/contract.md) 和 [命令定义](references/interface.json)。
+- 执行入口：[runtime](scripts/runtime.py)；共用参数：`scripts/sdlc_skill_interface.py` 与 [共享接口](../_shared/contracts/skill-interface.md)。
+- [独占执行约定](../_shared/contracts/skill-execution.md)；仅在处理相应业务对象时按契约读取 bundled references/assets，不整包加载。

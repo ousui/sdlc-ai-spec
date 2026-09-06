@@ -4,32 +4,64 @@ description: 显式调用时，领取一个准确实施 Binding，保存真实 B
 disable-model-invocation: true
 ---
 
-# IMP 实施
+# SDLC 400 · 实施（IMP）
 
-从调用到结束遵守 [Exclusive Skill Execution](../_shared/contracts/skill-execution.md)。
-不调用其他 Skill / Plugin，不读取开发文档，不重新解释上游决定。
-运行时只使用本 Skill、共享 Runtime 与正式 Foundation。
+## 适用范围
 
-## 入口
+领取一个准确实施 Binding，保存真实 Baseline，并在 Claim Scope 内执行已批准 Method，产生不可变 Result。 内部 Evidence ID、Digest、Manifest 与 Invocation 由 Skill 整理，用户无需手填内部 JSON。
 
-使用 scripts/runtime.py。公共参数经共享 scripts/sdlc_skill_interface.py 所用的
-Parser 归一化；阶段参数由同一共享 Parser 的 Extension 注册。
-命令和示例以 references/interface.json 为准：
-auto、create、revise、check、abandon、help、version、commands、examples。
+```text
+/sdlc-400-imp
+/sdlc-400-imp create -b PLN-20260903090000-01@1#WI-001 --owner executor-a
+/sdlc-400-imp revise -r IMP-20260903100000-01@1 -i VFY-20260903110000-01@1#RET-001 --owner executor-a
+```
 
-- --binding / -b：完整 PLN@Revision#WI，或允许直接实施的完整 REQ/DSN@Revision。
-- --input / -i：可重复的准确前驱、上游或 Rework 引用，保持首次出现顺序。
-- --owner：稳定执行身份；未提供时只读取 SDLC_EXECUTOR_TOKEN。
-- --reference / -r：revise/check/abandon 的准确 IMP Revision。
-- decision_policy 不能授权改变 Requirement、Design 或 Plan；多个候选必须让用户选择。
-- write_policy=deny 仅允许只读检查和 Method Preview。
-- write_policy=confirm 在第一次产品写入前展示准确摘要并获得确认。
-- write_policy=auto 仅允许准确 Baseline 和 Claim Scope 内的项目写入。
+## 约定与边界
 
-help/version/commands/examples 不读取项目、stdin 业务 Payload、Owner、Claim 或 Store。
-Unknown / latest / current / 模糊 Revision 一律失败关闭，不按分支、标题或最近 Artifact 选择。
+从显式调用到结束保持 Exclusive Skill Execution，不调用兄弟 Skill，不传递授权。只使用本 Skill 与共享 Runtime/ArtifactStore；不直接 SQL、不复制 Store Schema、不使用文件或数据库 fallback，不读取开发期文档、测试或 Handoff。
 
-## 工作流程
+事实区分 observed / referenced / confirmed；缺口进入 Open Items，不猜测。Authority 使用准确数字 Revision，不使用 branch/tag/PR/latest/current 或标题相似度。`decision_policy=user` 默认由用户决定多解业务问题；model/experiment 需明确授权，实验还需范围、指标、成本和停止条件。
+
+`write_policy` 不替代业务批准、Exception、Final Confirmation 或独立效果授权。check/inspect 不修复、不初始化、不创建旁车。Git、远端、安装、项目外写入不属于本 Skill 的默认许可；真实 Secret 不进入 Artifact、日志或输出。
+
+IMP 的 auto 仅允许准确 Baseline 和 Claim Scope 内项目写入；confirm 在首次产品写入前确认准确摘要；deny 只允许只读检查和 Method Preview。决策策略不授权改变 REQ/DSN/PLN。
+
+## 子命令
+
+以 [interface.json](references/interface.json) 为命令 Authority；元命令 help/version/commands/examples 不扫描项目、不读取业务 stdin、不打开 Store。
+
+| 子命令 | 职责 | 可能写入 |
+|---|---|---|
+| `auto` | 根据唯一准确 Binding、Current Claim 和合法 Rework 选择操作。 | 是，须满足本阶段授权 |
+| `create` | 准确领取 Binding，保存 Baseline 与 Method，在 Scope 内实施并形成 Result。 | 是，须满足本阶段授权 |
+| `revise` | 继续 active/open Attempt，或依据合法 Rework 创建同 Artifact 的新 Attempt。 | 是，须满足本阶段授权 |
+| `check` | 严格只读复核 Context、Binding、Claim、Result、Dependency 和 Gate。 | 否 |
+| `abandon` | 校验 Owner、Attempt 和 Revision，先终止 open Revision，再终止 active Claim。 | 是，须满足本阶段授权 |
+| `help` | 显示命令、参数及 Scope 内写入边界。 | 否 |
+| `version` | 显示 Skill 和 Interface 版本。 | 否 |
+| `commands` | 列出全部命令及副作用说明。 | 否 |
+| `examples` | 显示准确 Binding 与 Artifact Reference 的使用示例。 | 否 |
+
+## 参数
+
+先按共享 Parser 归一化公共参数，再由本 Skill 注册扩展。公共参数描述不意味着旧 JSON Runtime 可直接接受所有 CLI 开关：CTX/REQ 先构造标准 Invocation，再通过 stdin 调用其正式入口；其他阶段使用本 Skill 的 CLI。
+
+| 参数 | 短参数 | 语义／默认值 |
+|---|---|---|
+| `--command` | `-c` | `auto`；也可直接写子命令，兼容 `--operation/-o` |
+| `--project-root` | `-p` | 宿主提供的唯一当前工作区；多个项目时选择，不猜测 |
+| `--reference` | `-r` | 准确 `TYPE-ID@数字Revision`；修改/检查时按命令要求提供 |
+| `--decision-policy` | `-d` | `user`（默认）/ `model` / `experiment`；后两者需要明确授权 |
+| `--write-policy` | `-w` | `auto`（默认）/ `confirm` / `deny`；仅约束本阶段允许的标准写入 |
+| `--dry-run` | `-n` | 默认 `false`；不生成权威完成结论，不替代 check |
+| `--output` | `-f` | `summary`（默认）/ `json` / `debug` |
+| `--input` | `-i` | 可重复；准确前驱、上游或 Rework，保持首次出现顺序 |
+| `--binding` | `-b` | 准确 `PLN@Revision#WI-NNN`，或合法直达的 REQ/DSN Revision |
+| `--owner` | `—` | 稳定执行身份；缺省读取 `SDLC_EXECUTOR_TOKEN`，不代表额外权限 |
+
+`--` 后为请求正文，不是新增开关。help 支持 `-h`，version 支持 `-V`；其他兼容别名以共享 parser 为准。多个工作区、Revision 或操作均不猜选。
+
+## 执行流程
 
 1. 解析唯一 Project Root 和 Binding。PLN required 时必须选中一个 Target Phase=IMP 的准确 WI。
 2. 从 ArtifactStore 读取准确 PLN 的真实 Context、Scope、依赖和上游链。IMP Context 必须等于该 CTX Reference。
@@ -64,7 +96,9 @@ Unknown / latest / current / 模糊 Revision 一律失败关闭，不按分支�
 required 必须有 Step 和固定方法块；n/a 有客观理由；waived 有已批准 Exception。
 pending 不可通过 Readiness 或 Gate。Step 按语义动作、事务和失败边界组织。
 
-## 完成边界
+## 输出与完成条件
+
+`summary` 默认只呈现事实、准确 Artifact、Gate、已执行写入、阻塞和下一动作。`json` 只返回正式 Runtime 的结构化结果，不添加进度文本、不改写字段或说明；调试信息不混入 JSON。`debug` 展示有界诊断，先脱敏。
 
 局部 Checks 只表示 VFY ready。Artifact frozen 且 Current Claim completed 才可交给 VFY。
 不宣称完整产品验证、发布通过或 RLS 可发布；不自动执行下一阶段。
@@ -73,3 +107,9 @@ pending 不可通过 Readiness 或 Gate。Step 按语义动作、事务和失败
 共享 Effect Authorization 只用于外部发布效果，不能把它转换成 IMP 的本地或越界授权。
 遇到产品执行中断，保留准确 Baseline、已持久化 Method 和现场，停止并明确恢复或 abandon；
 不得从现场变化倒签 Claim、静默重放或推断完成。
+
+## 资源索引
+
+- 先读 [运行契约](references/contract.md) 和 [命令定义](references/interface.json)。
+- 执行入口：[runtime](scripts/runtime.py)；共用参数：`scripts/sdlc_skill_interface.py` 与 [共享接口](../_shared/contracts/skill-interface.md)。
+- [独占执行约定](../_shared/contracts/skill-execution.md)；仅在处理相应业务对象时按契约读取 bundled references/assets，不整包加载。

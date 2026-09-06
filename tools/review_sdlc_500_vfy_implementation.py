@@ -49,7 +49,7 @@ def main() -> int:
     returns = text("skills/sdlc-500-vfy/scripts/vfy_returns.py")
     verifier = text("skills/sdlc-500-vfy/scripts/vfy_verifier.py")
     exceptions = text("skills/sdlc-500-vfy/scripts/vfy_exceptions.py")
-    delivery = text("tools/run_vfy_delivery_validation.py")
+    delivery = text("tools/validate.py")
 
     require("compile_candidate" in runtime and "command.input_references" in runtime,
             "public CLI does not compile repeatable exact inputs")

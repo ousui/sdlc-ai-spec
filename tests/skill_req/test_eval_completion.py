@@ -10,10 +10,15 @@ from packages.sdlc_artifact_store import (
     compute_sha256,
 )
 from packages.sdlc_artifact_store.catalog import ArtifactCatalog
-from skill_req.test_review_fixes import ReviewFixTests, runtime
+from pathlib import Path
+import sys
+import unittest
+ROOT = Path(__file__).resolve().parents[2]
+if str(ROOT) not in sys.path: sys.path.insert(0, str(ROOT))
+from tests.skill_req.support import RequirementFixture, runtime
 
 
-class RequirementCriticalEvalCompletionTests(ReviewFixTests):
+class RequirementCriticalEvalCompletionTests(RequirementFixture, unittest.TestCase):
     """Critical cases that were not independently asserted by the original suite."""
 
     def test_frozen_effective_revise_allocates_next_revision(self):

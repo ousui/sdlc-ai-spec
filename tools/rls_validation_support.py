@@ -1,5 +1,7 @@
 """RLS process receipts; redact in memory before any log or JSON persistence."""
 from datetime import datetime, timezone
+import base64
+import binascii
 import hashlib
 import json
 import os
@@ -64,6 +66,11 @@ def _add_secret(value, values):
         value = str(value)
         if value and value != REDACTED:
             values.add(value)
+            # Explicitly labelled secrets retain the whole value and the auth
+            # payload, even for malformed tokens; never whitelist credentials.
+            auth = _AUTH.fullmatch(value)
+            if auth:
+                values.add(auth[0].split(None, 1)[1])
             if len(values) > _MAX_VALUES:
                 raise ValueError("redaction context exceeds its safe limit")
 
@@ -153,12 +160,31 @@ def _discover_text(text, values, depth=0):
     _discover_syntax(text, values)
 
 
+def _is_auth_value(match):
+    """Recognize unlabelled Basic credentials, not ordinary 'basic use' prose.
+
+    RFC 7617 encodes a user-id, colon and password as Base64. Explicit secret
+    labels/headers remain conservative for malformed values. Bearer recognition
+    is unchanged. Missing Base64 padding is accepted conservatively as well.
+    """
+    scheme, token = match[0].split(None, 1)
+    if scheme.lower() != "basic":
+        return True
+    if re.fullmatch(r"[A-Za-z0-9+/]+={0,2}", token) is None:
+        return False
+    try:
+        raw = base64.b64decode(token + "=" * (-len(token) % 4), validate=True)
+    except (binascii.Error, ValueError):
+        return False
+    return b":" in raw
+
+
 def _discover_syntax(text, values):
     for match in _TOKEN.finditer(text):
         _add_secret(match[0], values)
     for match in _AUTH.finditer(text):
-        _add_secret(match[0], values)
-        _add_secret(match[0].split(None, 1)[1], values)
+        if _is_auth_value(match):
+            _add_secret(match[0], values)
     for match in _PRIVATE_KEY.finditer(text):
         _add_secret(match[0], values)
     for match in _URL_CREDENTIALS.finditer(text):
@@ -236,7 +262,7 @@ class _Redactor:
         text = self._literal.sub(lambda match: REDACTED, text)
         text = _PRIVATE_KEY.sub(REDACTED, text)
         text = _TOKEN.sub(REDACTED, text)
-        text = _AUTH.sub(REDACTED, text)
+        text = _AUTH.sub(lambda match: REDACTED if _is_auth_value(match) else match[0], text)
         text = _URL_CREDENTIALS.sub(lambda match: match[1] + REDACTED + "@", text)
         text = _HEADER.sub(lambda match: match[1] + ": " + REDACTED, text)
         def assignment(match):

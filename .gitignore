@@ -214,6 +214,7 @@ junit.xml
 
 *.local.md
 
-# Opt-in GitHub instance data is never versioned or distributed.
-.local/
-.cache/
+# Local maintenance / execution archives; never part of the installed plugin
+.validation/
+.maintenance-cache/
+*.bundle

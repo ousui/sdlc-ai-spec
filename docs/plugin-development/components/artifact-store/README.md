@@ -80,8 +80,4 @@ Phase Skill 不应让 Agent 手工串联多个 CLI 命令。推荐由单一
 
 ## Test Evidence
 
-见：
-
-```text
-docs/plugin-development/components/artifact-store/TEST-RESULTS.md
-```
+历史结果从 [归档索引](../../../maintenance/ARCHIVE.md) 的清理前准确 Git 对象恢复。当前验证使用 [统一测试入口](../../../TESTING.md)，不再向源码树追加逐次日志。

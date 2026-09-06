@@ -1,5 +1,5 @@
 policy:
   allow_implicit_invocation: false
 interface:
-  display_name: "SDLC 400 IMP"
-  short_description: "准确领取实施范围并生成不可变结果与局部检查"
+  display_name: "SDLC 400 · 实施（IMP）"
+  short_description: "在准确实施范围和授权下执行方法，保存基线、结果与可追溯检查记录。"

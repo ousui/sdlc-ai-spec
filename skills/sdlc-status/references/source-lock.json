@@ -14,7 +14,7 @@
     {
       "contract_id": "sdlc-ai-spec/runtime/skill-execution/v1",
       "contract_version": "1",
-      "sha256": "2caa2f6d1bc9ad796f09fbec5b1e0d1a032ae73fa604888919f5ddeda0430e92"
+      "sha256": "b05f03cc1987c9eed431040e2f5626880cbc07e44e5a9c48d93fdbc8cd352bc7"
     },
     {
       "contract_id": "sdlc-ai-spec/runtime/skill-interface/v1",
@@ -34,7 +34,7 @@
     {
       "contract_id": "sdlc-ai-spec/status/entry/v1",
       "contract_version": "1",
-      "sha256": "d7340b62eb2a216c4d4cb5eafb7d9e1ff30b159ce721505dacdc97fca1978d79"
+      "sha256": "7cd8001827703bf5162c792dc8007bfd0d90ec1f9f4b92f792b46e4aca682bfe"
     },
     {
       "contract_id": "sdlc-ai-spec/status/interface/v1",
@@ -220,11 +220,6 @@
       "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/envelopes.py/v1",
       "contract_version": "1",
       "sha256": "d116e20fa7b7b4d7a62ad7d7c981f27210bacec33d5ceeba88bea0449abc5ad9"
-    },
-    {
-      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/local_paths.py/v1",
-      "contract_version": "1",
-      "sha256": "41509d7fab6c3f0b6e776326cda6fc0379e667e4ec48f4f698a39bd7ed30a52c"
     },
     {
       "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/phase.py/v1",

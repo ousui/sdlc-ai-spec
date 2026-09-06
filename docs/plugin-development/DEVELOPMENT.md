@@ -226,7 +226,7 @@ design → approval → implement → evaluate → adapt → review → finalize
 3. 只保留平台 Manifest、`skills/**`、`packages/**`、`scripts/**`；
 4. 执行核心 Fixture；
 5. 扫描 Runtime，不得存在 `docs/v1.x` 路径依赖；
-6. 验证不需要外网或运行时额外安装；显式 GitHub 集成的协议测试可通过测试专用依赖注入访问 loopback Fake MCP，不扩大其他 Runtime 网络边界。
+6. 验证不需要网络或额外安装。
 
 失败时不得发布。
 
@@ -255,10 +255,10 @@ git diff --check
 
 ## Eval 布局与执行证据边界
 
-开发期固定案例、Oracle 和 Fixture 可集中位于 `tests/evals/**`、`tests/skill_*/**`、`tests/skills/**`，结果与 Handoff 位于对应 Work Item。不存在 `skills/<name>/evals/` 不表示缺少评测；不创建空占位目录。安装后的 Runtime 不依赖开发评测、`docs/**` 或仓库 Agent 指令。
+开发期固定案例、Oracle 和 Fixture 可集中位于 `tests/evals/**`、`tests/skill_*/**`、`tests/skills/**`，结果写入仓库外，当前交接使用紧凑索引。不存在 `skills/<name>/evals/` 不表示缺少评测；不创建空占位目录。安装后的 Runtime 不依赖开发评测、`docs/**` 或仓库 Agent 指令。
 
-目录、静态元数据、普通 Python 回归和 installed-copy 执行是不同层次的证据，均不能代替真实 Client 的 Discovery / Invocation / Behavior。当前阶段与历史报告的适用范围见 `docs/plugin-development/HANDOFF.md` 和逐 Skill 的 `COMPATIBILITY.json`；这些文件仅供开发期使用。
+目录、静态元数据、普通 Python 回归和 installed-copy 执行是不同层次的证据，均不能代替真实 Client 的 Discovery / Invocation / Behavior。当前阶段与历史报告的适用范围见 `docs/plugin-development/HANDOFF.md` 和`COMPATIBILITY.md`；这些文件仅供开发期使用。
 
-## 显式 GitHub 基础能力例外
+## 维护与统一格式
 
-非 Phase `sdlc-github` 允许通过唯一声明的 `packages/sdlc_github/transport.py` 使用官方 SDK 连接固定 GitHub Remote MCP；其余 Runtime 不获得网络权限。PAT 仅由实例进程环境注入，依赖仅在获准构建环境显式安装。固定协议测试使用 loopback Fake HTTP MCP；安装验证、真实上游与三个宿主原生行为分别记证据，不互相替代。
+正式 Skill 遵守 `docs/plugin-development/SKILL-STYLE.md` 的七节结构、命令/参数表和精简约束，运行 `tools/validate_skill_style.py`。测试统一见 `docs/TESTING.md`，长期日志和历史 Goal 不进入当前源码树。原生 Client 独立认证按 Maintainer 于 2026-09-06 的决定暂停作为门禁，用户手动反馈不伪造正式证书。

@@ -1,5 +1,5 @@
 policy:
   allow_implicit_invocation: false
 interface:
-  display_name: "SDLC 200 DSN"
-  short_description: "创建、修订和检查设计 DSN Artifact Set"
+  display_name: "SDLC 200 · 设计（DSN）"
+  short_description: "从准确需求建立完整设计与领域成员，保留范围、验证策略及证据闭包。"

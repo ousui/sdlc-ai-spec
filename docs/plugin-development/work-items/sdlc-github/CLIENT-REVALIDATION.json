@@ -7,7 +7,7 @@
   "tested_delivery_head": "b7863a925e11294400a3faf65d48f965d5391ab6",
   "main_baseline": "7a454c76b62c41525fa3990dffdaa9a52b975679",
   "branch": "impl/sdlc-github-foundation-v1",
-  "remote": "git@github.com:ousui/sdlc-ai-spec.git",
+  "remote": "verified; exact connection address retained in original external evidence",
   "final_head_receipt": "DELIVERY.json in external delivery directory; generated after this report commit",
   "actor": {"id": 2839512, "login": "ousui"},
   "repository": "ousui/sdlc-ai-monitor",
@@ -45,5 +45,6 @@
   },
   "next_work_package": "Web Review: inspect retained macOS full Fixture reproduction and Tag/host blockers; authorize follow-up scope separately",
   "source_write_scope": ["CLIENT-REVALIDATION.md", "CLIENT-REVALIDATION.json"],
-  "history_preserved": true
+  "history_preserved": true,
+  "report_normalization": {"original_commit": "d271a27c98e178c9eba95ca44ac3ab96a0d477fe", "changed_fields": ["remote"], "results_unchanged": true, "external_archive_unchanged": true}
 }

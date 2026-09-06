@@ -33,3 +33,7 @@ SHA=$(git rev-parse HEAD)
 
 统一集合已包括 GitHub 离线/真实 stdio 到 Fake HTTP/安装/修复反例，只运行一次，不再叠加私有套件。full 不声明 VFY 的 strict OS 沙箱执行。
 真实 GitHub 定向复验见当前 Client 提示词；不要使用旧归档 Goal 强制再做三端认证或重放旧 live 批次。
+
+## Python 环境与 READY 的边界
+
+`--check-install` 的 READY 仅表示固定依赖包版本匹配，不验证或认证解释器版本。3.12/3.13 是现有声明范围；当前回归选用 Python 3.13。Client 的 Python 3.14.7 运行结果仍保留为环境差异，不因依赖 READY 扩大支持声明。测试自建临时目录先解析为已存在的物理路径；这不允许生产 Runtime 接受未经核对的符号链接，也不修改用户稳定数据根。

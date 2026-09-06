@@ -38,7 +38,7 @@ class SimulatedCrash(BaseException):
 class RuntimeTests(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
         self.temp = tempfile.TemporaryDirectory()
-        self.root = Path(self.temp.name)
+        self.root = Path(self.temp.name).resolve(strict=True)
         self.backend = Backend()
         self.transport = FakeTransport(self.backend)
         self.service = GithubService(self.root, transport=self.transport)
@@ -440,7 +440,7 @@ class CompilerAndTargetTests(unittest.TestCase):
 
     def test_body_file_and_leading_dash_body(self):
         with tempfile.TemporaryDirectory() as d:
-            file=Path(d)/'body';file.write_text('explicit body')
+            file=Path(d).resolve(strict=True)/'body';file.write_text('explicit body')
             text=['issue-create','--repo','example/project','--title','test','--body-file',str(file),'--expected-actor-id','101']
             r=COMPILER.compile_invocation(text);self.assertEqual(r['arguments']['body'],'explicit body')
             file.unlink();file.symlink_to('/etc/passwd')
@@ -493,7 +493,7 @@ class ConcurrentProcessTests(unittest.TestCase):
         context=multiprocessing.get_context('spawn')
         with tempfile.TemporaryDirectory() as d:
             event=context.Event();queue=context.Queue()
-            workers=[context.Process(target=process_worker,args=(d,event,queue)) for _ in range(2)]
+            workers=[context.Process(target=process_worker,args=(str(Path(d).resolve(strict=True)),event,queue)) for _ in range(2)]
             for worker in workers:worker.start()
             event.set();results=[queue.get(timeout=30) for _ in workers]
             for worker in workers:worker.join(30);self.assertEqual(worker.exitcode,0)

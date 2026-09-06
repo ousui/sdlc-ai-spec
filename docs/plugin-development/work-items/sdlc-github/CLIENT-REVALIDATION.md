@@ -4,7 +4,7 @@
 
 - Runtime：`9491c0ef7d9d017d666cca71917e1c3679346824`。
 - 初始本地 HEAD：`f0c32a06cb65a4718486ab23e7aad95b71df7791`；干净快进后执行 HEAD：`b7863a925e11294400a3faf65d48f965d5391ab6`。
-- 实施分支：`impl/sdlc-github-foundation-v1`；已验证 `origin = git@github.com:ousui/sdlc-ai-spec.git`。Runtime 到执行 HEAD 仅 4 个本工作包文档；本报告只新增 md/json。
+- 实施分支：`impl/sdlc-github-foundation-v1`；已验证当前仓库的远端身份；精确连接地址保留在原始外部证据中，不作为源码内连接配置。Runtime 到执行 HEAD 仅 4 个本工作包文档；本报告只新增 md/json。
 - 已包含 main `7a454c76b62c41525fa3990dffdaa9a52b975679`。[PR #14](https://github.com/ousui/sdlc-ai-spec/pull/14) 实测 open / Draft。
 - 最终报告提交与 push 后的准确 HEAD 见外部 `DELIVERY.json`，在本报告提交后生成，避免提交 SHA 自引用。
 
@@ -54,3 +54,7 @@
 - 临时目录 `/private/tmp/sdlc-github-revalidation-20260906T140413Z` 保留供复查；长期证据已复制到上述仓库外交付目录。旧失败、旧 Goal 与历史日志仍按现有 ARCHIVE 索引保留，未作为新版本 PASS。
 
 **唯一下一工作包：Web Review**，审查本批次 full 的 macOS Fixture 复现及两类 Tag / 宿主执行阻塞，决定后续修复或补证范围。旧 unknown 持续仅允许原 UUID 的只读核对。本次交接登记在这两份紧凑报告内；不改其他工作包、不进入实现阶段；PR #14 继续 Draft，不 merge、Tag、Release 或强推。
+
+## 报告规范化说明
+
+仅移出远端连接地址，不改 Runtime SHA、批次、计数、PASS/FAIL/BLOCKED、归档摘要或状态保护记录。未规范化原文固定保存在提交 `d271a27c98e178c9eba95ca44ac3ab96a0d477fe`；本轮原始外部归档及其 SHA256 不变。这项说明不将旧 full 失败改写为成功。

@@ -1,31 +1,9 @@
-# sdlc-github — 实施工作包交接
+# sdlc-github 合并与修复交接
 
-## 当前范围
-
-- Work Item：sdlc-github-foundation/v1。
-- Maintainer 已在本会话明确批准设计提交：`97c5f17bfcdb2751d446a89b068db2400436631d`。
-- 本轮附加指令：完成全部代码与内容，先通过 Mock；真实连接、Token 和本地宿主验证留给 Client。
-- 独立分支：`impl/sdlc-github-foundation-v1`；既有 Draft PR #14。
-- 生产实现、确定性测试、真实 stdio/Fake HTTP MCP、三份安装配置已完成；准确被测源码 SHA 为 `b035880a6135c1f126ae1a35e1c173221f28807a`；最终 Web 程序结果为 offline 212、integration 6、全仓 1336 项通过，完整证据见 WEB-VALIDATION。
-- 本文不改变 DESIGN.md、EVAL-PLAN.md 的已批准定义；批准依据是用户明确指令，不是 Agent 自行批准。
-
-## 唯一下一工作包
-
-Fresh-context Web Review：固定本次 Client 证据提交，先读 `CLIENT-VALIDATION.md` / `CLIENT-VALIDATION.json` / `SHA256SUMS`，独立核对真实 MCP、三端原生记录和 unknown intent。Client 验证已自然结束；不得重放未知请求或继承旧源码 PASS。
-
-## 并行和安全边界
-
-不改根级共享 HANDOFF、其他 Work Item、docs/v1.x、ArtifactStore 或各 Phase 业务语义。不修改 main/其他分支，不 merge、tag、release、强推或自动扩大宿主权限。真实测试仍限定先前授权仓库及本次标记对象；没有可靠 Fixture 的操作保持 BLOCKED，不创建禁止的 Tag/Release 来凑齐覆盖。
-
-## 状态含义
-
-代码/Mock 完成与产品接受分开。C/D 未运行时整体未接受，PR 保持 Draft。记录中要分别列源代码 SHA、实测 SHA、文档交付 SHA、远端实际 HEAD；只有本地 Git Bundle 中存在的提交不得称已推送。
-
-## 本次 Client 验证结果（2026-09-06）
-
-- 起始交付 HEAD 为 `6c476e4a58c7fc9871ce876cc7174e7e4d5e51dd`；Runtime 保持 `b035880a6135c1f126ae1a35e1c173221f28807a`，没有源码修复。
-- 实际连续入口 exit 1：32 操作 25 PASS / 1 FAIL / 6 BLOCKED，另有 status partial FAIL。212 offline、6 protocol、1336 全仓回归 PASS；首次 macOS 临时路径失败及修正环境后的重跑都已保存。
-- Codex 固定 9 项原生证据 Oracle PASS，但首次解释器/合约路径错误和发现扫描仍需审查；Cursor 同名旧插件优先导致 BLOCKED；Claude Code 原生发现成功，模型服务 HTTP 522 阻断后续流程。
-- 第二真实账号、既有 Tag/Release、PR checks 权限及上游 Schema 不兼容等缺口见 CLIENT-VALIDATION。
-- 请求 `56de6913-edfc-4beb-bc98-a0f0265b7be5` 在真实崩溃后仍为 unknown；intent 保留，之后无业务写入。禁止换 ID、清除状态或自动重放。
-- Issue #4/#5、Draft PR #6 均已关闭并确认读回；普通评论未创建。PR #14 保持 Draft，产品未接受。
+- 工作分支：impl/sdlc-github-foundation-v1；PR #14 保持 Draft。
+- 本轮用户明确授权先合入 main、再在 Web 直接修复；合并提交 1f9340923b66ea2bc06b0ab58a145fa4fbb0b6dc，main 基线 7a454c76b62c41525fa3990dffdaa9a52b975679。
+- 修复范围为 R1–R8，准确修复提交和验证结果由交付说明登记；原设计文档未更改。
+- 唯一下一项是修复后的真实 GitHub 定向复验，不重跑旧全流程，也不要求三端原生认证；主仓规则已暂停该门禁。
+- 历史报告/日志/旧 Goal 不重写，按 ARCHIVE 恢复；新日志保存在仓库外，不增加数百份源码内证据。
+- 原 unknown 请求 56de6913-edfc-4beb-bc98-a0f0265b7be5 保持原始状态与 request_id，仅可只读核对。不得把“未找到”当作无效果。
+- 不改 main/其他工作分支、其他工作包交接，不 merge PR、不 tag/release、不扩大 Token 权限。

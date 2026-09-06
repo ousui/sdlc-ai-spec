@@ -1,7 +1,0 @@
-commit b035880a6135c1f126ae1a35e1c173221f28807a
-Author:     SHUAI.W <x@ousui.org>
-AuthorDate: Sun Sep 6 10:07:22 2026 +0000
-Commit:     SHUAI.W <x@ousui.org>
-CommitDate: Sun Sep 6 10:07:22 2026 +0000
-
-    fix(sdlc-github): preserve HTTP status and durable client request identities

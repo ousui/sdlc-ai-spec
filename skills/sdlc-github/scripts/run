@@ -1,0 +1,4 @@
+#!/bin/sh
+# Installation replaces this offline guard with an interpreter-bound launcher.
+printf '%s\n' '{"ok":false,"status":"blocked","errors":[{"code":"INSTALLATION_REQUIRED","message":"Use the explicit installer to bind the compiler interpreter; no fallback was attempted."}],"effects":[]}'
+exit 2

@@ -1,0 +1,20 @@
+{
+  "contract": "sdlc-ai-spec/github-history-index/v1",
+  "source_commit": "f0c32a06cb65a4718486ab23e7aad95b71df7791",
+  "work_item_tree": "0db14a765fb39271d0aa775dd7af0e1961b3cb25",
+  "archive": "sdlc-github-history-f0c32a0.tar.gz",
+  "archive_sha256": "81ca5b6e5bc2d6d0d07077dd1020a88ac1c5b6a752209dca093aceb03535b345",
+  "immutable_paths": [
+    "CLIENT-VALIDATION.md",
+    "CLIENT-VALIDATION.json",
+    "SHA256SUMS",
+    "client-evidence/",
+    "WEB-VALIDATION.md",
+    "WEB-VALIDATION.json",
+    "evidence/web/",
+    "CLIENT-GOAL.md"
+  ],
+  "restore": "git show f0c32a06cb65a4718486ab23e7aad95b71df7791:docs/plugin-development/work-items/sdlc-github/<path>",
+  "unknown_request_id": "56de6913-edfc-4beb-bc98-a0f0265b7be5",
+  "policy": "Historical bytes are not rewritten. Recover from the immutable commit or archive; new execution evidence belongs outside the checkout. No local user state or remote test object was changed."
+}

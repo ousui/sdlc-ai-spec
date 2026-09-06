@@ -7,6 +7,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import shlex
 import stat
 import subprocess
 import sys
@@ -82,6 +83,11 @@ def install(host, destination: Path, data_root: Path, python: Path, *, source=RO
         target.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(source/relative, target)
         target.chmod(0o644)
+    # The Skill invokes this exact relative launcher; never PATH's system Python.
+    launcher = destination / 'skills/sdlc-github/scripts/run'
+    launcher.write_text('#!/bin/sh\nset -eu\nHERE=$(CDPATH= cd -P "$(dirname "$0")" && pwd)\n'
+                       + 'exec ' + shlex.quote(str(python)) + ' -B "$HERE/runtime.py" "$@"\n')
+    launcher.chmod(0o755)
     config = render_config(host, python, destination, data_root)
     config_path = destination / f'config/github/{host}.mcp.json'
     config_path.write_text(json.dumps(config, ensure_ascii=False, indent=2)+'\n')
@@ -95,7 +101,9 @@ def install(host, destination: Path, data_root: Path, python: Path, *, source=RO
     receipt = {'contract': 'sdlc-ai-spec/github-install/v1', 'host': host, 'python': str(python),
                'plugin': str(destination), 'data_root': str(data_root), 'configuration': str(config_path),
                'registration': 'plugin manifest; standalone fragment is an alternative, never add both',
-               'native_status': 'NOT_RUN', 'dependencies': dependency_result, 'files': inventory}
+               'native_status': 'NOT_RUN', 'native_gate': 'OUT_OF_SCOPE_MANUAL_FEEDBACK',
+               'compiler_launcher': str(launcher), 'generated_files': [str(launcher.relative_to(destination))],
+               'dependencies': dependency_result, 'files': inventory}
     (destination/'INSTALL.json').write_text(json.dumps(receipt,ensure_ascii=False,indent=2)+'\n')
     return receipt
 

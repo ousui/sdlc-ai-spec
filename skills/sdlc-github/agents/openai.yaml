@@ -1,6 +1,6 @@
 interface:
-  display_name: "SDLC GitHub"
-  short_description: "显式 GitHub 读取与受控基础协作写入"
-  default_prompt: "使用 $sdlc-github 核对当前账户与本次明确的 GitHub 目标。"
+  display_name: "SDLC GitHub · 仓库协作"
+  short_description: "显式读取准确 GitHub 对象、核对当前身份并以防重放回执执行基础协作写入"
+  default_prompt: "使用 $sdlc-github 和其已安装的 scripts/run 处理明确授权的 GitHub 对象。"
 policy:
   allow_implicit_invocation: false

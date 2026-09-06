@@ -143,7 +143,7 @@ def main(argv=None):
         response = compile_invocation(sys.argv[1:] if argv is None else argv)
         response = redact(response)
     except (SkillArgumentError, GithubError) as error:
-        response = {"ok": False, "status": "blocked", "errors": [{"code": error.code, "message": "Invalid invocation; use help. No network or remote effect."}], "effects": [], "output": "json"}
+        response = {"ok": False, "status": "blocked", "errors": [{"code": error.code, "message": "Use the installed scripts/run launcher and its pinned Python dependencies." if error.code == "DEPENDENCY_UNAVAILABLE" else "Invalid invocation; use help. No network or remote effect."}], "effects": [], "output": "json"}
     if response.get("output") == "json" or response.get("output") == "debug":
         print(json.dumps(response, ensure_ascii=False, sort_keys=True))
     else:

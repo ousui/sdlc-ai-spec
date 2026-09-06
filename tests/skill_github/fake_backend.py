@@ -41,7 +41,11 @@ WRITE_NAMES = {"issue_write", "add_issue_comment", "create_pull_request", "updat
 
 
 def definitions():
-    return {k: types.Tool(name=k, inputSchema={"type": "object", "properties": deepcopy(props), "required": list(required), "additionalProperties": False}) for k, (props, required) in SCHEMAS.items()}
+    tools = {k: types.Tool(name=k, inputSchema={"type": "object", "properties": deepcopy(props), "required": list(required), "additionalProperties": False}) for k, (props, required) in SCHEMAS.items()}
+    fixture = json.loads((Path(__file__).parent / "fixtures/hosted-contracts.json").read_text())
+    for op, name in (("issue.list", "list_issues"), ("comment.create", "add_issue_comment")):
+        tools[name] = types.Tool(name=name, inputSchema=fixture["schemas"][op])
+    return tools
 
 
 def envelope(value):
@@ -132,9 +136,9 @@ class Backend:
             return value if tool == "get_commit" else self.page([value], a)
         if tool in {"get_tag", "list_tags"}:
             value = {"name": "v1.0.0", "tag": "v1.0.0", "sha": "a" * 40, "commit": {"sha": "a" * 40}}
-            return value if tool == "get_tag" else self.page([value], a)
+            return {"ref": "refs/tags/" + a["tag"], "object": {"type": "commit", "sha": "a" * 40}} if tool == "get_tag" else self.page([value], a)
         if tool == "list_issues":
-            return self.page([x for x in self.objects.values() if "draft" not in x], a, "issues", cursor=True)
+            return self.page([x for x in self.objects.values() if "draft" not in x and (not a.get("state") or x["state"].upper() == a["state"])], a, "issues", cursor=True)
         if tool == "list_pull_requests":
             return self.page([x for x in self.objects.values() if "draft" in x], a, "pull_requests")
         if tool in {"issue_read", "pull_request_read"}:
@@ -160,9 +164,12 @@ class Backend:
         if tool == "actions_list":
             key, records = {"list_workflows": ("workflows", [{"id": 99, "path": ".github/workflows/ci.yml"}]),
                             "list_workflow_runs": ("workflow_runs", [{"id": 100, "status": "completed"}]),
-                            "list_workflow_jobs": ("jobs", [{"id": 101, "status": "completed"}]),
+                            "list_workflow_jobs": ("jobs", [{"id": 101, "run_id": 100, "status": "completed"}]),
                             "list_workflow_run_artifacts": ("artifacts", [{"id": 102, "name": "synthetic"}])}[method]
-            return self.page(records, a, key)
+            if method == "list_workflow_jobs":
+                records[0]["run_id"] = int(a["resource_id"])
+            paged = self.page(records, a, key)
+            return {"jobs": paged} if method == "list_workflow_jobs" and isinstance(paged, dict) else paged
         if tool == "actions_get":
             return {"id": int(a["resource_id"]), "status": "completed", "conclusion": "success"}
         if tool == "get_job_logs":

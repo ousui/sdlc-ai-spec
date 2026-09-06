@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Single fixed entry: offline, real loopback protocol, prepare, live, native, client."""
+"""Targeted GitHub diagnostics; repository acceptance uses tools/validate.py full."""
 from __future__ import annotations
 import argparse
 import asyncio
@@ -60,7 +60,7 @@ class RecordingResult(unittest.TextTestResult):
 
 
 def run_tests(layer,output):
-    modules=['tests.skill_github.test_offline','tests.skill_github.test_installation','tests.skill_github.test_client'] if layer=='offline' else ['tests.skill_github.test_protocol']
+    modules=['tests.skill_github.test_offline','tests.skill_github.test_installation','tests.skill_github.test_client','tests.skill_github.test_review_repairs','tests.skill_github.test_repair_installation'] if layer=='offline' else ['tests.skill_github.test_protocol']
     from unittest.mock import patch
     stream=io.StringIO();start=time.monotonic()
     env={'SDLC_GITHUB_TOKEN':'','SDLC_GITHUB_TOKEN_B':'','SDLC_GITHUB_TEST_EVIDENCE':str(output/'protocol-evidence')}
@@ -97,8 +97,8 @@ def prepare(output,meta):
         hashes={p.relative_to(workspace).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(workspace.rglob('*')) if p.is_file()}
         manifest.write_text(json.dumps(hashes,sort_keys=True,indent=2)+'\n')
     return {'layer':'prepare' ,'status':'PASS','live_status':'NOT_RUN','native_status':'NOT_RUN',
-            'required_local_inputs':['Exact runtime SHA','Host-installed Python with the hashed dependency lock','SDLC_GITHUB_TOKEN in host environment',
-              'Explicit fixture repository/existing head/base and Actions run','Existing Tag/Release fixture, or record BLOCKED','Native host execution and original sanitized transcripts'],
+            'native_gate':'OUT_OF_SCOPE_MANUAL_FEEDBACK','required_local_inputs':['Exact runtime SHA','Host-installed Python with the hashed dependency lock','SDLC_GITHUB_TOKEN in host environment',
+              'Explicit fixture repository/existing head/base and Actions run','Existing Tag/Release fixture, or record BLOCKED','Native host feedback is optional, not an acceptance gate'],
             'note':'Preparation does not validate PAT permissions or native behavior.'}
 
 
@@ -118,7 +118,7 @@ def main(argv=None):
         meta=metadata(args.implementation_sha)
         if args.layer in {'live','identity','native','client'} and not args.implementation_sha:
             raise ValueError('Live/native/client batch requires an exact implementation SHA')
-        layers=['offline','integration','live','identity','native'] if args.layer=='client' else [args.layer]
+        layers=['live'] if args.layer=='client' else [args.layer]
         results=[]
         for layer in layers:
             folder=output/layer;folder.mkdir(exist_ok=True)

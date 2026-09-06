@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the maintained eight-Skill inventory, without native-client certification."""
+"""Validate the maintained Skill inventory, without native-client certification."""
 from __future__ import annotations
 import argparse
 import hashlib
@@ -12,7 +12,7 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 SKILLS = tuple([f"sdlc-{number:03d}-{name}" for number, name in
-                ((0,"ctx"),(100,"req"),(200,"dsn"),(300,"pln"),(400,"imp"),(500,"vfy"),(600,"rls"))] + ["sdlc-status"])
+                ((0,"ctx"),(100,"req"),(200,"dsn"),(300,"pln"),(400,"imp"),(500,"vfy"),(600,"rls"))] + ["sdlc-status", "sdlc-github"])
 SURFACES = ("codex-cli", "codex-app", "claude-code-cli", "cursor-ide", "cursor-cli")
 DIMENSIONS = ("installation", "discovery", "explicit_invocation", "negative_invocation", "behavior", "permissions", "installed_independence")
 INDEX = "docs/plugin-development/SKILL-INVENTORY.json"

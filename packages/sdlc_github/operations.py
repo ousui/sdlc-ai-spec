@@ -90,6 +90,8 @@ def operation_schema(name: str, *, discriminator=False) -> dict:
     fields = ("repository", *op.fields, *(WRITE_CONTROL if op.write else ()))
     properties = {k: deepcopy(FIELDS[k]) for k in fields}
     required = ["repository", *op.required]
+    if name == "comment.create":
+        properties["body"] = {**properties["body"], "minLength": 1, "pattern": r"\S"}
     if op.write:
         required += ["expected_actor_id", "request_id"]
         if "state" in properties:
@@ -122,7 +124,10 @@ def tool_schema(tool: str) -> dict:
 
 
 def validate_request(tool: str, payload: dict) -> tuple[str, dict]:
-    from jsonschema import Draft202012Validator
+    try:
+        from jsonschema import Draft202012Validator
+    except ImportError:
+        raise GithubError("DEPENDENCY_UNAVAILABLE") from None
     schema = tool_schema(tool)
     if not isinstance(payload, dict) or not Draft202012Validator(schema).is_valid(payload):
         raise GithubError("ARGUMENT_INVALID")
@@ -171,6 +176,11 @@ def map_upstream(name: str, data: dict) -> tuple[str, dict]:
         if field == "number":
             dest = "pullNumber" if op.tool in {"pull_request_read", "update_pull_request"} else "issue_number"
         mapped[dest] = str(data[field]) if dest == "resource_id" else data[field]
+    if name == "issue.list" and "state" in mapped:
+        if mapped["state"] == "all":
+            mapped.pop("state")
+        else:
+            mapped["state"] = mapped["state"].upper()
     if name == "pr.create":
         mapped["draft"] = True
     if name == "actions.logs":

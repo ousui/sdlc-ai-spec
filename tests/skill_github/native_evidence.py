@@ -15,6 +15,26 @@ CHECKS=('discovery','explicit_invocation','approval_denial','write_readback','re
         'no_implicit_invocation','exclusive_execution','workspace_isolation','secret_scan')
 
 
+def check_workspace_access(trace):
+    if (type(trace.get('file_count')) is not int or trace['file_count'] < 10000
+            or not trace.get('before_sha256') or trace['before_sha256'] != trace.get('after_sha256')):
+        raise ValueError('Workspace file integrity is not evidenced')
+    access = trace.get('workspace_access')
+    if not isinstance(access, dict) or access.get('complete') is not True or not isinstance(access.get('events'), list):
+        raise ValueError('Hashes cannot prove absence of enumeration, search or content reads')
+    for event in access['events']:
+        if not isinstance(event, dict) or not isinstance(event.get('path'), str) or not event['path']:
+            raise ValueError('Invalid access observation')
+        if event.get('actor') == 'host_discovery':
+            if event.get('action') not in {'enumerate', 'search', 'read'}:
+                raise ValueError('Discovery cannot authorize workspace mutation')
+        elif event.get('actor') == 'skill':
+            if event.get('scope') != 'declared_plugin' or event.get('action') != 'read':
+                raise ValueError('Skill delegated an unrelated scan/read/write')
+        else:
+            raise ValueError('Unknown attribution cannot support a no-scan conclusion')
+
+
 def template(host,sha,lock_sha):
     return {'contract':'sdlc-ai-spec/github-native-evidence/v1','host':host,'host_version':None,
             'runtime_sha':sha,'dependency_lock_sha256':lock_sha,
@@ -56,10 +76,10 @@ def validate_native(directory,sha,lock_sha):
                 if name=='restart_receipt' and (trace.get('process_restarted') is not True or not any(c.get('tool')=='sdlc_github_operation_status' and c.get('result',{}).get('effect')=='confirmed' for c in calls)):raise ValueError('No restarted receipt result')
                 if name=='no_implicit_invocation' and any(c.get('tool') in TOOLS for c in calls):raise ValueError('Implicit invocation occurred')
                 if name=='exclusive_execution' and trace.get('sibling_skill_invocations')!=[]:raise ValueError('Sibling isolation not evidenced')
-                if name=='workspace_isolation' and (type(trace.get('file_count')) is not int or trace['file_count']<10000 or not trace.get('before_sha256') or trace['before_sha256']!=trace.get('after_sha256')):raise ValueError('Workspace isolation not evidenced')
+                if name=='workspace_isolation':check_workspace_access(trace)
                 if name=='secret_scan' and (trace.get('secret_findings')!=[] or trace.get('files_scanned',0)<1):raise ValueError('Secret scan incomplete')
             rows.append({'host':host,'status':'BLOCKED' if missing else 'PASS','pending_checks':missing,'record_sha256':hashlib.sha256(path.read_bytes()).hexdigest()})
         except (ValueError,TypeError,KeyError,OSError,AttributeError,GithubError):
             rows.append({'host':host,'status':'FAIL','reason':'Native evidence is malformed, unsafe, unbound, or does not satisfy its oracle'})
     return {'layer':'native','status':'FAIL' if any(x['status']=='FAIL' for x in rows) else 'BLOCKED' if any(x['status']=='BLOCKED' for x in rows) else 'PASS',
-            'meaning':'Native evidence package checks, not simulated native execution. Fresh-context review must inspect original host transcripts.', 'hosts':rows}
+            'gate':'OUT_OF_SCOPE_MANUAL_FEEDBACK','meaning':'Optional feedback integrity checks, not a mandatory certificate. Original traces remain necessary; hashes alone do not prove no scans.', 'hosts':rows}

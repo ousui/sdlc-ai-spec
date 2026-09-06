@@ -1,8 +1,0 @@
-{
-  "pluginId": "sdlc-ai-spec@sdlc-github-client-validation",
-  "name": "sdlc-ai-spec",
-  "marketplaceName": "sdlc-github-client-validation",
-  "version": "0.1.0",
-  "installedPath": "~/.codex-bdgroup/plugins/cache/sdlc-github-client-validation/sdlc-ai-spec/0.1.0",
-  "authPolicy": "ON_INSTALL"
-}

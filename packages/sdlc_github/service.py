@@ -28,6 +28,18 @@ def items(value) -> list:
     raise GithubError("UPSTREAM_INVALID")
 
 
+def normalize_response(operation: str, data: Any) -> Any:
+    """Unwrap only the observed jobs envelope; never recursively find an array."""
+    if operation == "actions.jobs" and isinstance(data, dict) and isinstance(data.get("jobs"), dict):
+        if set(data) != {"jobs"}:
+            raise GithubError("UPSTREAM_INVALID")  # conflicting outer metadata
+        inner = data["jobs"]
+        if not isinstance(inner.get("jobs"), list):
+            raise GithubError("UPSTREAM_INVALID")
+        return inner
+    return data
+
+
 def pagination(operation: str, data: Any, request: dict) -> dict:
     mode = OPERATIONS[operation].pagination
     if mode == "none":
@@ -43,7 +55,10 @@ def pagination(operation: str, data: Any, request: dict) -> dict:
         if mode == "page":
             total = data.get("total_count", data.get("totalCount"))
             if isinstance(total, int) and not isinstance(total, bool) and total >= 0:
-                more = request.get("page", 1) * request.get("per_page", 30) < total
+                consumed = request.get("page", 1) * request.get("per_page", 30)
+                if operation == "actions.jobs":
+                    consumed = (request.get("page", 1) - 1) * request.get("per_page", 30) + len(items(data))
+                more = consumed < total
             info = data.get("pagination", {})
             if isinstance(info, dict) and isinstance(info.get("has_more"), bool):
                 more = info["has_more"]
@@ -155,13 +170,33 @@ def validate_data(operation: str, data: Any, request: dict) -> None:
                     raise GithubError("UPSTREAM_INVALID")
                 if key == "sha" and not re.fullmatch(r"[0-9a-f]{40}", value):
                     raise GithubError("UPSTREAM_INVALID")
+        if operation == "actions.jobs":
+            if isinstance(data, dict) and "total_count" in data:
+                total = data["total_count"]
+                if type(total) is not int or total < len(entries):
+                    raise GithubError("UPSTREAM_INVALID")
+            for entry in entries:
+                if type(entry.get("id")) is not int or entry["id"] < 1:
+                    raise GithubError("UPSTREAM_INVALID")
+                if "run_id" in entry and (type(entry["run_id"]) is not int or entry["run_id"] != request["run_id"]):
+                    raise GithubError("TARGET_MISMATCH")
     elif shape == "commit":
         if not isinstance(data, dict) or not re.fullmatch(r"[0-9a-f]{40}", str(data.get("sha", ""))):
             raise GithubError("UPSTREAM_INVALID")
         if re.fullmatch(r"[0-9a-f]{40}", request["sha"]) and data["sha"] != request["sha"]:
             raise GithubError("TARGET_MISMATCH")
     elif shape == "tag":
-        if not isinstance(data, dict) or not any(data.get(k) for k in ("sha", "commit", "tag")):
+        if not isinstance(data, dict) or ("ref" in data) == ("tag" in data):
+            raise GithubError("UPSTREAM_INVALID")
+        reference = "ref" in data
+        expected = "refs/tags/" + request["tag"] if reference else request["tag"]
+        if data.get("ref" if reference else "tag") != expected:
+            raise GithubError("TARGET_MISMATCH")
+        obj = data.get("object")
+        if (not isinstance(obj, dict) or obj.get("type") not in ({"commit"} if reference else {"commit", "tag"})
+                or not isinstance(obj.get("sha"), str) or not re.fullmatch(r"[0-9a-f]{40}", obj["sha"])):
+            raise GithubError("UPSTREAM_INVALID")
+        if not reference and (not isinstance(data.get("sha"), str) or not re.fullmatch(r"[0-9a-f]{40}", data["sha"])):
             raise GithubError("UPSTREAM_INVALID")
     elif shape == "release":
         if not isinstance(data, dict) or type(data.get("id")) is not int or data["id"] < 1 or not isinstance(data.get("tag_name"), str) or not data["tag_name"]:
@@ -330,6 +365,7 @@ class GithubService:
             raise GithubError("CAPABILITY_UNAVAILABLE")
         tool, args = map_upstream(operation, data)
         value = await upstream.call(tool, args, operation)
+        value = normalize_response(operation, value)
         validate_data(operation, value, data)
         return value
 
@@ -339,7 +375,7 @@ class GithubService:
         value, partial = bounded_data(operation, value)
         return result(operation, actor=actor, repository=data["repository"], target=self._target(data), data=value,
                       pagination=paging, status="partial" if partial else "completed",
-                      completeness="partial" if partial else "unknown" if paging["has_more"] == "unknown" else "partial" if paging["has_more"] else "complete",
+                      completeness="partial" if partial else "unknown" if paging["has_more"] == "unknown" else "partial" if paging["has_more"] or data.get("page", 1) > 1 or data.get("after") else "complete",
                       warnings=[{"code": "RESULT_LIMIT", "message": "Truncated/linked content is not a complete result."}] if partial else [],
                       next_action="Read an explicitly selected next page; do not infer complete coverage." if paging["has_more"] is not False else None)
 
@@ -518,6 +554,8 @@ class GithubService:
             value = await self._raw_read(operation, query, upstream)
             values.extend(items(value))
             p = pagination(operation, value, query)
+            if isinstance(value, dict) and any(value.get(k) for k in ("truncated", "filtered", "incomplete_results")):
+                return values, False
             if p["has_more"] is False:
                 return values, True
             if p["has_more"] == "unknown":
@@ -532,11 +570,31 @@ class GithubService:
                 query["page"] = p["next_page"]
         return values, False
 
+    def _inconclusive(self, intent, stored, error=None):
+        """Append a failed observation without downgrading an observed effect."""
+        previous = stored["result"] if stored else None
+        if previous and previous.get("effect") == "confirmed":
+            answer = deepcopy(previous)
+            answer.update(ok=False, status="partial", completeness="partial")
+            answer["warnings"].append({"code": "READBACK_FAILED", "message": "Prior write remains confirmed; current read-only verification is inconclusive."})
+            answer["next_action"] = "Preserve the original receipt; reconcile read-only, never replay."
+        else:
+            answer = failure(intent["operation"], GithubError("EFFECT_UNKNOWN", effect="unknown"),
+                             actor=intent["actor"], repository=intent["repository"], target=intent["target"],
+                             receipt=deepcopy(previous.get("receipt")) if previous else None)
+        if error:
+            answer["warnings"].append({"code": error.code, "message": str(error)})
+        try:
+            self.records.save_receipt(intent, answer, observation=True)
+        except GithubError:
+            answer["warnings"].append({"code": "STORAGE_FAILED", "message": "Observation not persisted; original intent/receipt retained."})
+        answer["operation"] = "operation_status"
+        return answer
+
     async def _reconcile(self, data, actor, upstream):
         intent, receipt = self.records.load(actor["id"], data["repository"], data["request_id"])
-        unknown = failure("operation_status", GithubError("EFFECT_UNKNOWN", effect="unknown"), actor=actor, repository=data["repository"])
         if intent is None:
-            return unknown
+            return failure("operation_status", GithubError("EFFECT_UNKNOWN", effect="unknown"), actor=actor, repository=data["repository"])
         if receipt and receipt["result"]["status"] == "completed":
             answer = deepcopy(receipt["result"])
             answer["operation"] = "operation_status"
@@ -562,16 +620,26 @@ class GithubService:
                     kind = operation.split(".")[0]
                     readop, query = kind + ".list", {"repository": intent["repository"], "state": "all"}
                 entries, complete = await self._collect(readop, query, upstream)
-                matches = [x for x in entries if marker(intent["request_id"]) in field_value(x, "body") and attributes_match(x, intent["expected_hashes"]) and x.get("user", {}).get("id") == actor["id"]]
+                # Count ALL marker-bearing candidates before filtering attributes or actor.
+                matches = [x for x in entries if isinstance(field_value(x, "body"), str)
+                           and marker(intent["request_id"]) in field_value(x, "body")]
                 if not complete or len(matches) != 1:
-                    return unknown
+                    return self._inconclusive(intent, receipt)
                 readback = matches[0]
                 meta = object_meta(readback, intent["repository"], "comment" if operation == "comment.create" else kind, query.get("number"))
+                if (not attributes_match(readback, intent["expected_hashes"])
+                        or not isinstance(readback.get("user"), dict) or readback["user"].get("id") != actor["id"]
+                        or meta["subject_type"] != kind):
+                    return self._inconclusive(intent, receipt)
             if readback is None:
-                return unknown
+                return self._inconclusive(intent, receipt)
             answer = self._write_result(intent, meta, readback, reconciled=True)
-            self.records.save_receipt(intent, answer, observation=True)
+            try:
+                self.records.save_receipt(intent, answer, observation=True)
+            except GithubError:
+                answer.update(ok=False, status="partial")
+                answer["warnings"].append({"code": "STORAGE_FAILED", "message": "Readback confirmed, observation not persisted; do not replay."})
             answer["operation"] = "operation_status"
             return answer
-        except GithubError:
-            return unknown
+        except GithubError as error:
+            return self._inconclusive(intent, receipt, error)

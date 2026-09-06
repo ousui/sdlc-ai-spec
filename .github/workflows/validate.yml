@@ -1,35 +1,43 @@
 name: validate
-
 on:
   push:
+    branches: [main]
   pull_request:
-
 permissions:
   contents: read
-
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.12"
-      - name: Install explicitly locked GitHub test dependencies
-        run: python3 -m pip install --require-hashes -r packages/sdlc_github/requirements.lock
-      - run: python3 tools/validate_all_skill_source_locks.py
-      - run: python3 -m compileall packages scripts skills
-      - run: python3 tools/validate_runtime_contracts.py
-      - run: python3 tools/validate_skill_interfaces.py
-      - run: python3 tools/validate_lifecycle_query.py
-      - run: python3 tools/validate_sdlc_status.py
-      - run: python3 tools/validate_sdlc_100_req_source_lock.py
-      - run: python3 tools/validate_sdlc_200_dsn_source_lock.py
-      - run: python3 tools/validate_sdlc_300_pln_source_lock.py
-      - run: python3 tools/test_sdlc_100_req_runtime_independence.py
-      - run: python3 tools/test_sdlc_200_dsn_runtime_independence.py
-      - run: python3 tools/test_sdlc_300_pln_runtime_independence.py
-      - run: python3 tools/test_sdlc_status_runtime_independence.py
-      - run: python3 tests/evals/run_sdlc_200_dsn_eval.py
-      - run: python3 tests/evals/run_sdlc_300_pln_eval.py
-      - run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+          python-version: '3.13'
+      - name: Install explicitly locked test dependencies
+        run: python -m pip install --require-hashes -r packages/sdlc_github/requirements.lock
+      - name: Unified one-pass full regression
+        env:
+          SDLC_GITHUB_TOKEN: ''
+          SDLC_GITHUB_TOKEN_B: ''
+          PYTHONDONTWRITEBYTECODE: '1'
+        run: |
+          set -euo pipefail
+          SOURCE=$(git rev-parse HEAD)
+          python -B tools/validate.py --profile full --source-sha "$SOURCE" --json-out "$RUNNER_TEMP/sdlc-validation/full.json"
+      - name: Preserve exact credential-free source and evidence
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/sdlc-validation"
+          git bundle create "$RUNNER_TEMP/sdlc-validation/source.bundle" HEAD
+          git rev-parse HEAD > "$RUNNER_TEMP/sdlc-validation/SOURCE-SHA.txt"
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sdlc-validation-${{ github.event.pull_request.head.sha || github.sha }}
+          path: ${{ runner.temp }}/sdlc-validation/
+          retention-days: 7

@@ -11,6 +11,7 @@ sys.path.insert(0, str(ROOT))
 HEADINGS = ('适用范围', '约定与边界', '子命令', '参数', '执行流程', '输出与完成条件', '资源索引')
 COMMON = ('--command', '--project-root', '--reference', '--decision-policy', '--write-policy', '--dry-run', '--output')
 EXTENSIONS = {
+    'sdlc-github': ('--repo', '--url', '--kind', '--number', '--title', '--body', '--body-file', '--head', '--base', '--state', '--page', '--per-page', '--after', '--request-id', '--path', '--ref', '--sha', '--workflow-id', '--run-id', '--job-id', '--tag', '--subject-type', '--expected-actor-id', '--reconcile'),
     'sdlc-200-dsn': ('--input',), 'sdlc-300-pln': ('--input',),
     'sdlc-400-imp': ('--input', '--binding', '--owner'),
     'sdlc-500-vfy': ('--input', '--method'),

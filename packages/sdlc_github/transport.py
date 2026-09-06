@@ -132,7 +132,9 @@ class Upstream:
                   "sha": "a" * 40, "number": 1, "tag": "v1.0.0", "head": "topic", "base": "main",
                   "title": "Probe", "body": "", "state": "open", "page": 1, "per_page": 100,
                   "after": "cursor", "workflow_id": "ci.yml", "run_id": 1, "job_id": 1, "subject_type": "issue"}
-        # Map every allowed field, not only fields in one successful invocation.
+        if operation == "comment.create":
+            sample["body"] = "Capability probe"
+        # Probe valid variants through the same production mapper, never edit wire values.
         try:
             name, args = map_upstream(operation, sample)
             self.check(name, args)
@@ -143,8 +145,16 @@ class Upstream:
                 accepted = typ if isinstance(typ, list) else [typ]
                 if expected not in accepted and not (expected == "integer" and "number" in accepted) and "enum" not in schema:
                     return False
-            if "state" in args:
-                self.check(name, {**args, "state": "closed"})
+            if "state" in op.fields:
+                states = (None, "open", "closed") if op.write else (None, "open", "closed", "all")
+                for state in states:
+                    candidate = dict(sample)
+                    if state is None:
+                        candidate.pop("state", None)
+                    else:
+                        candidate["state"] = state
+                    tool, mapped = map_upstream(operation, candidate)
+                    self.check(tool, mapped)
             return True
         except GithubError:
             return False

@@ -73,6 +73,15 @@
       "test_roots": [
         "tests/skill_status"
       ]
+    },
+    {
+      "skill": "sdlc-github",
+      "runtime_entry": "skills/sdlc-github/scripts/runtime.py",
+      "design": "docs/plugin-development/work-items/sdlc-github/DESIGN.md",
+      "eval_plan": "docs/plugin-development/work-items/sdlc-github/EVAL-PLAN.md",
+      "test_roots": [
+        "tests/skill_github"
+      ]
     }
   ]
 }

@@ -74,7 +74,7 @@
     {
       "contract_id": "sdlc-ai-spec/github/source/packages/sdlc_github/operations.py/v1",
       "contract_version": "1",
-      "sha256": "ad74e39655aac8a80ba84892bacd8c69809e2a97b7f0e9246be1818ddcb5c9a6"
+      "sha256": "600c7792bc904867368b9d1d909301bf6c75c6b000f360b52c0633ecec6d5513"
     },
     {
       "contract_id": "sdlc-ai-spec/github/source/packages/sdlc_github/records.py/v1",
@@ -89,7 +89,7 @@
     {
       "contract_id": "sdlc-ai-spec/github/source/packages/sdlc_github/service.py/v1",
       "contract_version": "1",
-      "sha256": "b5823d7deaf4d6320c0aab0b0a455079fcb91ad29d125038b4a324587032a6c8"
+      "sha256": "31670ebdb515a39d454e707ceab09662bd4490f5a05440bea4316115b13658bb"
     },
     {
       "contract_id": "sdlc-ai-spec/github/source/packages/sdlc_github/targets.py/v1",
@@ -99,7 +99,7 @@
     {
       "contract_id": "sdlc-ai-spec/github/source/packages/sdlc_github/transport.py/v1",
       "contract_version": "1",
-      "sha256": "e15afeca7bf6f8ba7d5d34d3fff2ccb2e2646f96c4dcff23f814334f3e15664d"
+      "sha256": "eb71b7baa5c87a82f172f5919d89b3ae0362697d75744726af477a19341e28b5"
     },
     {
       "contract_id": "sdlc-ai-spec/github/source/shared-execution/v1",
@@ -119,12 +119,12 @@
     {
       "contract_id": "sdlc-ai-spec/github/source/skills/sdlc-github/SKILL.md/v1",
       "contract_version": "1",
-      "sha256": "8c285336de2f7c57ceba665394b6e6f84c1c4208a3b5669166be81b97c1971d7"
+      "sha256": "8318fc35f8535a42202b4ee47af9370f62c8497a61d0fe90a85421243cde02f6"
     },
     {
       "contract_id": "sdlc-ai-spec/github/source/skills/sdlc-github/agents/openai.yaml/v1",
       "contract_version": "1",
-      "sha256": "bcc0bae76c51b89eebbc0eb90bb86918c1520752e5bf59086c149a00a8ba7d1d"
+      "sha256": "2810544bdb1f032b87ab8246bede1666923bc2d38708cd5c32dc164fe8e012a2"
     },
     {
       "contract_id": "sdlc-ai-spec/github/source/skills/sdlc-github/references/contract.md/v1",
@@ -137,9 +137,14 @@
       "sha256": "eae005f93c72956d67ada04f76380a85614ada540ae822fa8e49aaede679d5b9"
     },
     {
+      "contract_id": "sdlc-ai-spec/github/source/skills/sdlc-github/scripts/run/v1",
+      "contract_version": "1",
+      "sha256": "1d62253d70bbc58901065d4463807932b9acf3a22937741cfd4d9e6539d46e07"
+    },
+    {
       "contract_id": "sdlc-ai-spec/github/source/skills/sdlc-github/scripts/runtime.py/v1",
       "contract_version": "1",
-      "sha256": "04e992dc510528ce905447534e3111429568d41c865508df992ca86c66a4dfe3"
+      "sha256": "e5496e9e76dd86a587137d02603acdaabc916be465585507ed8ada011bea2960"
     },
     {
       "contract_id": "sdlc-ai-spec/github/source/stdio-entry/v1",

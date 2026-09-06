@@ -12,6 +12,17 @@
 
 原生 Client 独立留痕不在本轮门禁内。用户报告已手动试用，未记录轨迹，不据此生成正式认证台账。
 
+Client 已在独立干净工作树对 Web 交付 Head
+`6c1c342c639921c81335a3c4c47dacdd4595d59e` 执行统一入口的 `e2e`
+profile。一次去重全仓为 962/962，IMP 82/82、VFY 80/80、RLS 87/87、
+Status 14/14，且无 skip、expectedFailure 或 unexpectedSuccess；严格 VFY
+使用 macOS `sandbox-exec`。两个固定项目均完成 CTX→RLS 本地 Sandbox 链并
+恢复原始状态，安装、远程写入和真实目标效果均为 0。该结果是本轮 Runtime
+验收，不是独立 Maintainer 接受；原始日志、源码快照和摘要仅在仓库外交付包中
+保存。
+
 ## 下一工作包
 
-先完成本分支代码、样式及普通 full 验证；随后从干净 exact-SHA 工作树执行一次 e2e，覆盖严格 VFY 和两个本地项目的 CTX→RLS 链。具体操作见 [Client 全流程工作包](../maintenance/CLIENT-GOAL.md)。保留实际失败日志；不安装依赖、不产生生产效果、不自动合并。
+在 PR #12 保持 Draft 的前提下，由 Maintainer/Web 审查最终差异、最终 exact-SHA
+验收回执及仓库外归档摘要，再决定是否一次合入 `main`。不重复已退役流程、不执行
+生产效果、不自动合并。

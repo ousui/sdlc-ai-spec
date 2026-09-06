@@ -1,0 +1,30 @@
+{
+  "work_item": "sdlc-github-foundation/v1",
+  "merged_main_sha": "7a454c76b62c41525fa3990dffdaa9a52b975679",
+  "merge_commit": "1f9340923b66ea2bc06b0ab58a145fa4fbb0b6dc",
+  "runtime_sha": "9491c0ef7d9d017d666cca71917e1c3679346824",
+  "source_tree": "03d8615b8853af8192ee8bc5eed34eba0ee5e3c2",
+  "source_unchanged": true,
+  "full_status": "PASS",
+  "unique_tests": 1206,
+  "github_tests": 231,
+  "new_regression_tests": 13,
+  "formal_cases": {
+    "IMP": 82,
+    "RLS": 87,
+    "STATUS": 14,
+    "VFY": 80
+  },
+  "full_exit_code": 0,
+  "native_client_gate": "OUT_OF_SCOPE",
+  "strict_vfy_execution": "NOT_RUN",
+  "real_github_revalidation": "NOT_RUN",
+  "real_unknown_request": "56de6913-edfc-4beb-bc98-a0f0265b7be5",
+  "real_unknown_replayed": false,
+  "old_evidence": {
+    "commit": "f0c32a06cb65a4718486ab23e7aad95b71df7791",
+    "archive_sha256": "81ca5b6e5bc2d6d0d07077dd1020a88ac1c5b6a752209dca093aceb03535b345"
+  },
+  "evidence_report_sha256": "cd930c4b5f03f140a3f7a38b9a2d9a91db0e1065e0b69bbcdc78aa7bd5128667",
+  "suite_receipt_sha256": "c25056fb8fc8c17c0d7d36b1f3c11fb54535e5a6ecd22e6f096dc62ba5411544"
+}

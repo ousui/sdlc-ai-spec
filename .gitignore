@@ -213,3 +213,8 @@ report.xml
 junit.xml
 
 *.local.md
+
+# Local maintenance / execution archives; never part of the installed plugin
+.validation/
+.maintenance-cache/
+*.bundle

@@ -103,7 +103,7 @@ docs/v1.x → Design / Build / Review → bundled runtime
 - 多个业务 Skill 共同遵守的运行合约放在 `skills/_shared/**`。
 - `skills/_shared/**` 不得包含 `SKILL.md`，不能成为可调用 Skill。
 - 单个 Skill 私有的运行规则、模板和脚本放在自己的目录。
-- 开发期 Eval / Oracle / Fixture 统一放在 `tests/evals/**`、`tests/skill_*/**` 或 `tests/skills/**`；归档结果放在对应 Work Item。
+- 开发期 Eval / Oracle / Fixture 统一放在 `tests/evals/**`、`tests/skill_*/**` 或 `tests/skills/**`；执行结果写入仓库外；仅保留紧凑交接及可恢复历史索引。
 - Skill 内 `evals/` 是按需的开发资源，不是必需空目录；安装包不得依赖这些 Eval 才能运行。
 - 只有共享的确定性能力放在 `packages/**` 或根级运行时 `scripts/**`。
 - 构建期工具放在 `tools/**`；构建期工具可以读取 `docs/**`，运行时代码不可以。
@@ -153,3 +153,7 @@ scripts/sdlc_artifact_store.py
 4. 更新 Handoff，只登记一个下一工作包；
 5. 明确已验证、未验证和已知限制；
 6. 达到停止条件后结束。
+
+## 维护与统一格式
+
+正式 Skill 遵守 `docs/plugin-development/SKILL-STYLE.md` 的七节结构、命令/参数表和精简约束，运行 `tools/validate_skill_style.py`。测试统一见 `docs/TESTING.md`，长期日志和历史 Goal 不进入当前源码树。原生 Client 独立认证按 Maintainer 于 2026-09-06 的决定暂停作为门禁，用户手动反馈不伪造正式证书。

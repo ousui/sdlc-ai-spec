@@ -1,5 +1,5 @@
 policy:
   allow_implicit_invocation: false
 interface:
-  display_name: "SDLC 500 VFY"
-  short_description: "验证准确产品结果并形成可信结论"
+  display_name: "SDLC 500 · 验证与确认（VFY）"
+  short_description: "围绕完整实施结果执行受控验证，分别记录产品结论、返工与产物门禁。"

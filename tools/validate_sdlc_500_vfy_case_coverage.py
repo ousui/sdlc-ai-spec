@@ -16,23 +16,14 @@ REGISTRY = ROOT / "tests/evals/sdlc_500_vfy_cases.json"
 HARNESS_FILE = ROOT / "tests/evals/vfy_case_harness.py"
 EXPECTED_IDS = [f"VFY-E{index:03d}" for index in range(1, 81)]
 EXPECTED_TESTS = [f"test_vfy_e{index:03d}" for index in range(1, 81)]
-GROUPS = (
-    (1, 9, "test_interface", "VfyInterfaceCases"),
-    (10, 19, "test_scope_subject", "VfyScopeSubjectCases"),
-    (20, 25, "test_targets", "VfyTargetCases"),
-    (26, 40, "test_methods", "VfyMethodCases"),
-    (41, 51, "test_executor_evidence", "VfyExecutorEvidenceCases"),
-    (52, 64, "test_conclusions_returns", "VfyConclusionReturnCases"),
-    (65, 70, "test_early_stop", "VfyEarlyStopCases"),
-    (71, 80, "test_revision_lifecycle", "VfyRevisionLifecycleCases"),
-)
+GROUPS = ((1, 80, "test_critical_cases", "VfyCriticalCases"),)
 
 
 def fail(message: str) -> None:
     raise ValueError(message)
 
 
-def validate() -> dict[str, Any]:
+def validate(*, execute: bool = True) -> dict[str, Any]:
     payload = json.loads(REGISTRY.read_text(encoding="utf-8"))
     if payload.get("contract") != "sdlc-ai-spec/fixed-eval-cases/v1":
         fail("wrong registry contract")
@@ -58,8 +49,8 @@ def validate() -> dict[str, Any]:
     if str(ROOT) not in sys.path:
         sys.path.insert(0, str(ROOT))
     from tests.skill_vfy.sandbox_support import probe_sandbox_capability
-    capability = probe_sandbox_capability()
-    if not capability["available"]:
+    capability = probe_sandbox_capability() if execute else {"available": False}
+    if execute and not capability["available"]:
         fail("Critical Case execution requires sandbox capability: " + json.dumps(capability["error"]))
     primary_ids: list[str] = []
     suite = unittest.TestSuite()
@@ -88,24 +79,26 @@ def validate() -> dict[str, Any]:
             suite.addTest(instance)
     if len(primary_ids) != 80 or len(set(primary_ids)) != 80:
         fail("Primary Tests are duplicated or incomplete")
-    execution = unittest.TextTestRunner(stream=io.StringIO(), verbosity=0).run(suite)
-    if execution.testsRun != 80:
-        fail(f"Coverage Guard executed {execution.testsRun} tests instead of 80")
-    if execution.failures or execution.errors or execution.skipped or execution.expectedFailures:
-        fail(
-            "Critical primary tests did not all execute and pass: "
-            f"failures={len(execution.failures)} errors={len(execution.errors)} "
-            f"skipped={len(execution.skipped)} expected_failures={len(execution.expectedFailures)}"
-        )
+    execution = None
+    if execute:
+        execution = unittest.TextTestRunner(stream=io.StringIO(), verbosity=0).run(suite)
+        if execution.testsRun != 80:
+            fail(f"Coverage Guard executed {execution.testsRun} tests instead of 80")
+        if execution.failures or execution.errors or execution.skipped or execution.expectedFailures:
+            fail(
+                "Critical primary tests did not all execute and pass: "
+                f"failures={len(execution.failures)} errors={len(execution.errors)} "
+                f"skipped={len(execution.skipped)} expected_failures={len(execution.expectedFailures)}"
+            )
 
     return {
         "contract": "sdlc-ai-spec/vfy-case-coverage-result/v1",
-        "status": "PASS",
+        "status": "PASS" if execute else "STRUCTURE_ONLY",
         "case_count": 80,
         "unique_case_ids": 80,
         "unique_primary_tests": 80,
         "oracle_branches": len(expected),
-        "executed_primary_tests": execution.testsRun,
+        "executed_primary_tests": execution.testsRun if execution else 0,
         "skipped": 0,
         "expected_failures": 0,
         "registry": str(REGISTRY.relative_to(ROOT)),

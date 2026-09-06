@@ -105,13 +105,11 @@ packages/sdlc_artifact_store/
 
 ## 当前状态
 
-- 稳定领域规范保留在 `docs/v1.1/`；
-- Local SQLite ArtifactStore Foundation 已实现并通过自动化测试；
-- 共享 Skill Runtime Contract、Frozen Artifact Authority 与跨阶段 Control Input Resolver
-  已建立；
-- 第一个正式 Phase Skill `sdlc-000-ctx` 已实现、评测、完成 Codex CLI TUI 适配与独立
-  Review，并获 Maintainer 最终接受；
-- Cursor、Claude Code 与 Codex Desktop / App 尚未完成行为验证。
+七阶段 CTX → REQ → DSN → PLN → IMP → VFY → RLS 与 sdlc-status 已实现。RLS 仅执行本地 Fake/Sandbox，生产发布不在当前能力范围。业务过程产物写入项目 ArtifactStore；开发测试日志不回填源码仓库。
+
+原生 Client 留痕暂不作为门禁；Maintainer 报告已手动使用，但未保存自动化认证记录。当前 Runtime 测试与手动反馈分别表述，不宣称全部载体正式认证。
+
+维护验证从 [docs/TESTING.md](docs/TESTING.md) 开始；格式遵守 [Skill 样式约定](docs/plugin-development/SKILL-STYLE.md)。历史执行证据通过 [归档索引](docs/maintenance/ARCHIVE.md) 恢复，不影响安装 Runtime。
 
 ## 文档入口
 

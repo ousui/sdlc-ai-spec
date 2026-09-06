@@ -8,8 +8,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 from tools.rls_validation_support import run_step, digest
-from tools.run_rls_delivery_validation import validate
-from tools.validate_rls_delivery_source import allowed
+from tools.validate import validate
 from tools.run_external_rls_integration import project_snapshot, file_snapshot
 from tests.evals.test_sdlc_600_rls_case_coverage import load_case_map, verify_original_oracles
 from tests.evals.run_sdlc_600_rls_eval import run
@@ -83,7 +82,8 @@ class DeliveryGuardTests(unittest.TestCase):
             self.assertFalse(result["success"]);self.assertEqual(0,result["tests_run"])
             self.assertEqual("missing primary",json.loads(output.read_bytes())["error"])
 
-    def test_source_whitelist_has_no_wildcard_tools_or_vfy_mutations(self):
-        for path in ("tools/unrelated.py","skills/sdlc-500-vfy/scripts/vfy_handler.py","packages/sdlc_artifact_store/sqlite_store.py",".github/workflows/rls.yml"):
-            self.assertFalse(allowed(path))
-        self.assertTrue(allowed("packages/sdlc_lifecycle/query_rls.py"))
+    def test_validation_rejects_output_inside_source_before_writing(self):
+        from tools.validate import ROOT
+        with self.assertRaises(ValueError):
+            validate("quick", "0" * 40, ROOT / "must-not-write.json")
+        self.assertFalse((ROOT / "must-not-write.json").exists())

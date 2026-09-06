@@ -97,6 +97,13 @@ class InstallationTests(unittest.TestCase):
                 with self.assertRaises(httpx.HTTPStatusError) as caught:response.raise_for_status()
                 self.assertEqual(classify(caught.exception),expected)
 
+    def test_http_status_cannot_be_confused_with_a_number_in_the_url(self):
+        import httpx
+        request=httpx.Request("POST","https://example.invalid/issues/401")
+        response=httpx.Response(500,request=request)
+        with self.assertRaises(httpx.HTTPStatusError) as caught:response.raise_for_status()
+        self.assertEqual(classify(caught.exception),"UPSTREAM_FAILED")
+
     def test_invalid_upstream_schema_fails_closed(self):
         item=types.Tool(name='get_me',inputSchema={'type':'object','properties':{},'required':['x','x']})
         with self.assertRaises(GithubError) as caught:Upstream(None,{'get_me':item}).check('get_me',{})

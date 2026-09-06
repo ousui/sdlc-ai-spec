@@ -15,7 +15,7 @@ from mcp import types
 from packages.sdlc_github.models import canonical, GithubError
 from packages.sdlc_github.operations import READS,WRITES,TOOLS
 from packages.sdlc_github.service import GithubService
-from tests.skill_github.client import LiveBatch, fixture_config, evidence_summary, run_live, run_identity
+from tests.skill_github.client import LiveBatch, fixture_config, evidence_summary, run_live, run_identity, atomic_json
 from tests.skill_github.native_evidence import validate_native,template,CHECKS,HOSTS
 from tests.skill_github.fake_backend import Backend,FakeTransport
 from tests.skill_github.oracle import REPO
@@ -65,6 +65,11 @@ class ClientTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(len(self.backend.writes),1)
         state=json.loads((self.root/'out/run-state.json').read_text())
         self.assertEqual(set(state['requests']),{'issue.create'})
+
+    async def test_batch_state_fsyncs_file_and_rename_directory(self):
+        with patch("tests.skill_github.client.os.fsync",wraps=os.fsync) as sync:
+            atomic_json(self.root/"durable-state.json",{"request_id":"synthetic"})
+        self.assertEqual(sync.call_count,2)
 
     async def test_different_fixture_cannot_reuse_batch(self):
         await LiveBatch(self.session,self.fixture,self.root/'out').run()

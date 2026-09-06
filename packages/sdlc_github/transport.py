@@ -27,6 +27,10 @@ def classify(error: BaseException | str) -> str:
         return next((c for c in codes if c != "DISCONNECTED"), "DISCONNECTED")
     if isinstance(error, GithubError):
         return error.code
+    # HTTP status is authoritative; IDs in a URL/message must not impersonate it.
+    http_status = getattr(getattr(error, "response", None), "status_code", None)
+    if isinstance(http_status, int):
+        return {401: "AUTH_FAILED", 403: "PERMISSION_DENIED", 404: "NOT_FOUND_OR_INACCESSIBLE", 429: "RATE_LIMITED"}.get(http_status, "UPSTREAM_FAILED")
     text = str(error).lower()
     if isinstance(error, (TimeoutError, asyncio.TimeoutError)) or "timed out" in text or "timeout" in type(error).__name__.lower():
         return "TIMEOUT"

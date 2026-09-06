@@ -99,7 +99,7 @@
     {
       "contract_id": "sdlc-ai-spec/github/source/packages/sdlc_github/transport.py/v1",
       "contract_version": "1",
-      "sha256": "6dfc7ead4378ff305f0492acec6021458c47b40260b95200b3b0a1d8f2137288"
+      "sha256": "e15afeca7bf6f8ba7d5d34d3fff2ccb2e2646f96c4dcff23f814334f3e15664d"
     },
     {
       "contract_id": "sdlc-ai-spec/github/source/shared-execution/v1",

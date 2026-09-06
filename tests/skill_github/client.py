@@ -53,6 +53,9 @@ def atomic_json(path:Path,value):
         os.fsync(fd)
     finally:os.close(fd)
     os.replace(temp,path)
+    parent_fd=os.open(path.parent,os.O_RDONLY|os.O_DIRECTORY)
+    try:os.fsync(parent_fd)
+    finally:os.close(parent_fd)
 
 
 def evidence_summary(value):

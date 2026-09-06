@@ -179,4 +179,3 @@ class RequirementFixture:
             ],
             "options": {"dry_run": False},
         }
-

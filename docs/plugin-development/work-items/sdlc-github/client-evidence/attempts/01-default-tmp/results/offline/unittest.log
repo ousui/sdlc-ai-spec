@@ -1,0 +1,1017 @@
+test_bare_auto_status (tests.skill_github.test_offline.CompilerAndTargetTests.test_bare_auto_status) ... ok
+test_body_file_and_leading_dash_body (tests.skill_github.test_offline.CompilerAndTargetTests.test_body_file_and_leading_dash_body) ... ERROR
+test_error_classification (tests.skill_github.test_offline.CompilerAndTargetTests.test_error_classification) ... ok
+test_meta_commands_and_aliases (tests.skill_github.test_offline.CompilerAndTargetTests.test_meta_commands_and_aliases) ... ok
+test_parser_all_operation_invocations (tests.skill_github.test_offline.CompilerAndTargetTests.test_parser_all_operation_invocations) ... ok
+test_parser_failures (tests.skill_github.test_offline.CompilerAndTargetTests.test_parser_failures) ... ok
+test_request_id_generated_and_can_be_reused (tests.skill_github.test_offline.CompilerAndTargetTests.test_request_id_generated_and_can_be_reused) ... ok
+test_schema_shapes (tests.skill_github.test_offline.CompilerAndTargetTests.test_schema_shapes) ... ok
+test_shared_command_aliases (tests.skill_github.test_offline.CompilerAndTargetTests.test_shared_command_aliases) ... ok
+test_standard_urls (tests.skill_github.test_offline.CompilerAndTargetTests.test_standard_urls) ... ok
+test_unique_remote_only (tests.skill_github.test_offline.CompilerAndTargetTests.test_unique_remote_only) ... ok
+test_url_escapes_conflicts_and_ambiguous_refs (tests.skill_github.test_offline.CompilerAndTargetTests.test_url_escapes_conflicts_and_ambiguous_refs) ... ok
+test_two_processes_one_claim (tests.skill_github.test_offline.ConcurrentProcessTests.test_two_processes_one_claim) ... FAIL
+test_actor_namespaces_are_isolated (tests.skill_github.test_offline.RuntimeTests.test_actor_namespaces_are_isolated) ... FAIL
+test_all_crash_windows (tests.skill_github.test_offline.RuntimeTests.test_all_crash_windows) ...
+  test_all_crash_windows (tests.skill_github.test_offline.RuntimeTests.test_all_crash_windows) (point='before_intent') ... FAIL
+  test_all_crash_windows (tests.skill_github.test_offline.RuntimeTests.test_all_crash_windows) (point='after_intent_before_send') ... FAIL
+  test_all_crash_windows (tests.skill_github.test_offline.RuntimeTests.test_all_crash_windows) (point='after_send') ... FAIL
+  test_all_crash_windows (tests.skill_github.test_offline.RuntimeTests.test_all_crash_windows) (point='after_success_before_readback') ... FAIL
+  test_all_crash_windows (tests.skill_github.test_offline.RuntimeTests.test_all_crash_windows) (point='before_receipt') ... FAIL
+  test_all_crash_windows (tests.skill_github.test_offline.RuntimeTests.test_all_crash_windows) (point='after_receipt') ... FAIL
+test_branches_must_exist_and_differ (tests.skill_github.test_offline.RuntimeTests.test_branches_must_exist_and_differ) ... ok
+test_cache_deletion_preserves_receipt (tests.skill_github.test_offline.RuntimeTests.test_cache_deletion_preserves_receipt) ... ok
+test_comment_past_first_page_without_metadata (tests.skill_github.test_offline.RuntimeTests.test_comment_past_first_page_without_metadata) ... FAIL
+test_comment_pr_target (tests.skill_github.test_offline.RuntimeTests.test_comment_pr_target) ... FAIL
+test_conflicting_id_never_replays (tests.skill_github.test_offline.RuntimeTests.test_conflicting_id_never_replays) ... FAIL
+test_context_cleanup_cannot_erase_effect (tests.skill_github.test_offline.RuntimeTests.test_context_cleanup_cannot_erase_effect) ... FAIL
+test_corrupt_record_blocks_replay (tests.skill_github.test_offline.RuntimeTests.test_corrupt_record_blocks_replay) ... ERROR
+test_cursor_and_page_bounds (tests.skill_github.test_offline.RuntimeTests.test_cursor_and_page_bounds) ... ok
+test_disconnect_after_write_never_replays (tests.skill_github.test_offline.RuntimeTests.test_disconnect_after_write_never_replays) ... FAIL
+test_drift_actions_artifacts (tests.skill_github.test_offline.RuntimeTests.test_drift_actions_artifacts) ... ok
+test_drift_actions_jobs (tests.skill_github.test_offline.RuntimeTests.test_drift_actions_jobs) ... ok
+test_drift_actions_logs (tests.skill_github.test_offline.RuntimeTests.test_drift_actions_logs) ... ok
+test_drift_actions_run (tests.skill_github.test_offline.RuntimeTests.test_drift_actions_run) ... ok
+test_drift_actions_runs (tests.skill_github.test_offline.RuntimeTests.test_drift_actions_runs) ... ok
+test_drift_actions_workflows (tests.skill_github.test_offline.RuntimeTests.test_drift_actions_workflows) ... ok
+test_drift_comment_create (tests.skill_github.test_offline.RuntimeTests.test_drift_comment_create) ... FAIL
+test_drift_issue_comments (tests.skill_github.test_offline.RuntimeTests.test_drift_issue_comments) ... ok
+test_drift_issue_create (tests.skill_github.test_offline.RuntimeTests.test_drift_issue_create) ... FAIL
+test_drift_issue_get (tests.skill_github.test_offline.RuntimeTests.test_drift_issue_get) ... ok
+test_drift_issue_list (tests.skill_github.test_offline.RuntimeTests.test_drift_issue_list) ... ok
+test_drift_issue_update (tests.skill_github.test_offline.RuntimeTests.test_drift_issue_update) ... FAIL
+test_drift_pr_checks (tests.skill_github.test_offline.RuntimeTests.test_drift_pr_checks) ... ok
+test_drift_pr_comments (tests.skill_github.test_offline.RuntimeTests.test_drift_pr_comments) ... ok
+test_drift_pr_create (tests.skill_github.test_offline.RuntimeTests.test_drift_pr_create) ... FAIL
+test_drift_pr_diff (tests.skill_github.test_offline.RuntimeTests.test_drift_pr_diff) ... ok
+test_drift_pr_files (tests.skill_github.test_offline.RuntimeTests.test_drift_pr_files) ... ok
+test_drift_pr_get (tests.skill_github.test_offline.RuntimeTests.test_drift_pr_get) ... ok
+test_drift_pr_list (tests.skill_github.test_offline.RuntimeTests.test_drift_pr_list) ... ok
+test_drift_pr_review_comments (tests.skill_github.test_offline.RuntimeTests.test_drift_pr_review_comments) ... ok
+test_drift_pr_reviews (tests.skill_github.test_offline.RuntimeTests.test_drift_pr_reviews) ... ok
+test_drift_pr_status (tests.skill_github.test_offline.RuntimeTests.test_drift_pr_status) ... ok
+test_drift_pr_update (tests.skill_github.test_offline.RuntimeTests.test_drift_pr_update) ... FAIL
+test_drift_release_get (tests.skill_github.test_offline.RuntimeTests.test_drift_release_get) ... ok
+test_drift_release_latest (tests.skill_github.test_offline.RuntimeTests.test_drift_release_latest) ... ok
+test_drift_release_list (tests.skill_github.test_offline.RuntimeTests.test_drift_release_list) ... ok
+test_drift_repo_branches (tests.skill_github.test_offline.RuntimeTests.test_drift_repo_branches) ... ok
+test_drift_repo_commit (tests.skill_github.test_offline.RuntimeTests.test_drift_repo_commit) ... ok
+test_drift_repo_commits (tests.skill_github.test_offline.RuntimeTests.test_drift_repo_commits) ... ok
+test_drift_repo_files (tests.skill_github.test_offline.RuntimeTests.test_drift_repo_files) ... ok
+test_drift_repo_tag (tests.skill_github.test_offline.RuntimeTests.test_drift_repo_tag) ... ok
+test_drift_repo_tags (tests.skill_github.test_offline.RuntimeTests.test_drift_repo_tags) ... ok
+test_dry_run_all_writes_no_intent (tests.skill_github.test_offline.RuntimeTests.test_dry_run_all_writes_no_intent) ...
+  test_dry_run_all_writes_no_intent (tests.skill_github.test_offline.RuntimeTests.test_dry_run_all_writes_no_intent) (name='issue.update') ... FAIL
+  test_dry_run_all_writes_no_intent (tests.skill_github.test_offline.RuntimeTests.test_dry_run_all_writes_no_intent) (name='pr.create') ... FAIL
+  test_dry_run_all_writes_no_intent (tests.skill_github.test_offline.RuntimeTests.test_dry_run_all_writes_no_intent) (name='issue.create') ... FAIL
+  test_dry_run_all_writes_no_intent (tests.skill_github.test_offline.RuntimeTests.test_dry_run_all_writes_no_intent) (name='pr.update') ... FAIL
+  test_dry_run_all_writes_no_intent (tests.skill_github.test_offline.RuntimeTests.test_dry_run_all_writes_no_intent) (name='comment.create') ... FAIL
+test_duplicate_returns_persisted_receipt (tests.skill_github.test_offline.RuntimeTests.test_duplicate_returns_persisted_receipt) ... FAIL
+test_empty_claim_after_crash_blocks_replay (tests.skill_github.test_offline.RuntimeTests.test_empty_claim_after_crash_blocks_replay) ... ok
+test_failure_actions_artifacts (tests.skill_github.test_offline.RuntimeTests.test_failure_actions_artifacts) ... ok
+test_failure_actions_jobs (tests.skill_github.test_offline.RuntimeTests.test_failure_actions_jobs) ... ok
+test_failure_actions_logs (tests.skill_github.test_offline.RuntimeTests.test_failure_actions_logs) ... ok
+test_failure_actions_run (tests.skill_github.test_offline.RuntimeTests.test_failure_actions_run) ... ok
+test_failure_actions_runs (tests.skill_github.test_offline.RuntimeTests.test_failure_actions_runs) ... ok
+test_failure_actions_workflows (tests.skill_github.test_offline.RuntimeTests.test_failure_actions_workflows) ... ok
+test_failure_comment_create (tests.skill_github.test_offline.RuntimeTests.test_failure_comment_create) ... FAIL
+test_failure_issue_comments (tests.skill_github.test_offline.RuntimeTests.test_failure_issue_comments) ... ok
+test_failure_issue_create (tests.skill_github.test_offline.RuntimeTests.test_failure_issue_create) ... FAIL
+test_failure_issue_get (tests.skill_github.test_offline.RuntimeTests.test_failure_issue_get) ... ok
+test_failure_issue_list (tests.skill_github.test_offline.RuntimeTests.test_failure_issue_list) ... ok
+test_failure_issue_update (tests.skill_github.test_offline.RuntimeTests.test_failure_issue_update) ... FAIL
+test_failure_pr_checks (tests.skill_github.test_offline.RuntimeTests.test_failure_pr_checks) ... ok
+test_failure_pr_comments (tests.skill_github.test_offline.RuntimeTests.test_failure_pr_comments) ... ok
+test_failure_pr_create (tests.skill_github.test_offline.RuntimeTests.test_failure_pr_create) ... FAIL
+test_failure_pr_diff (tests.skill_github.test_offline.RuntimeTests.test_failure_pr_diff) ... ok
+test_failure_pr_files (tests.skill_github.test_offline.RuntimeTests.test_failure_pr_files) ... ok
+test_failure_pr_get (tests.skill_github.test_offline.RuntimeTests.test_failure_pr_get) ... ok
+test_failure_pr_list (tests.skill_github.test_offline.RuntimeTests.test_failure_pr_list) ... ok
+test_failure_pr_review_comments (tests.skill_github.test_offline.RuntimeTests.test_failure_pr_review_comments) ... ok
+test_failure_pr_reviews (tests.skill_github.test_offline.RuntimeTests.test_failure_pr_reviews) ... ok
+test_failure_pr_status (tests.skill_github.test_offline.RuntimeTests.test_failure_pr_status) ... ok
+test_failure_pr_update (tests.skill_github.test_offline.RuntimeTests.test_failure_pr_update) ... FAIL
+test_failure_release_get (tests.skill_github.test_offline.RuntimeTests.test_failure_release_get) ... ok
+test_failure_release_latest (tests.skill_github.test_offline.RuntimeTests.test_failure_release_latest) ... ok
+test_failure_release_list (tests.skill_github.test_offline.RuntimeTests.test_failure_release_list) ... ok
+test_failure_repo_branches (tests.skill_github.test_offline.RuntimeTests.test_failure_repo_branches) ... ok
+test_failure_repo_commit (tests.skill_github.test_offline.RuntimeTests.test_failure_repo_commit) ... ok
+test_failure_repo_commits (tests.skill_github.test_offline.RuntimeTests.test_failure_repo_commits) ... ok
+test_failure_repo_files (tests.skill_github.test_offline.RuntimeTests.test_failure_repo_files) ... ok
+test_failure_repo_tag (tests.skill_github.test_offline.RuntimeTests.test_failure_repo_tag) ... ok
+test_failure_repo_tags (tests.skill_github.test_offline.RuntimeTests.test_failure_repo_tags) ... ok
+test_fifo_receipt_cannot_block (tests.skill_github.test_offline.RuntimeTests.test_fifo_receipt_cannot_block) ... ERROR
+test_hardlink_receipt_is_rejected (tests.skill_github.test_offline.RuntimeTests.test_hardlink_receipt_is_rejected) ... ERROR
+test_issue_update_rejects_pr_number (tests.skill_github.test_offline.RuntimeTests.test_issue_update_rejects_pr_number) ... FAIL
+test_large_workspace_no_scan_or_code_pollution (tests.skill_github.test_offline.RuntimeTests.test_large_workspace_no_scan_or_code_pollution) ... ok
+test_local_receipt_requires_verified_instance_identity (tests.skill_github.test_offline.RuntimeTests.test_local_receipt_requires_verified_instance_identity) ... ERROR
+test_mapping_actions_artifacts (tests.skill_github.test_offline.RuntimeTests.test_mapping_actions_artifacts) ... ok
+test_mapping_actions_jobs (tests.skill_github.test_offline.RuntimeTests.test_mapping_actions_jobs) ... ok
+test_mapping_actions_logs (tests.skill_github.test_offline.RuntimeTests.test_mapping_actions_logs) ... ok
+test_mapping_actions_run (tests.skill_github.test_offline.RuntimeTests.test_mapping_actions_run) ... ok
+test_mapping_actions_runs (tests.skill_github.test_offline.RuntimeTests.test_mapping_actions_runs) ... ok
+test_mapping_actions_workflows (tests.skill_github.test_offline.RuntimeTests.test_mapping_actions_workflows) ... ok
+test_mapping_comment_create (tests.skill_github.test_offline.RuntimeTests.test_mapping_comment_create) ... FAIL
+test_mapping_issue_comments (tests.skill_github.test_offline.RuntimeTests.test_mapping_issue_comments) ... ok
+test_mapping_issue_create (tests.skill_github.test_offline.RuntimeTests.test_mapping_issue_create) ... FAIL
+test_mapping_issue_get (tests.skill_github.test_offline.RuntimeTests.test_mapping_issue_get) ... ok
+test_mapping_issue_list (tests.skill_github.test_offline.RuntimeTests.test_mapping_issue_list) ... ok
+test_mapping_issue_update (tests.skill_github.test_offline.RuntimeTests.test_mapping_issue_update) ... FAIL
+test_mapping_pr_checks (tests.skill_github.test_offline.RuntimeTests.test_mapping_pr_checks) ... ok
+test_mapping_pr_comments (tests.skill_github.test_offline.RuntimeTests.test_mapping_pr_comments) ... ok
+test_mapping_pr_create (tests.skill_github.test_offline.RuntimeTests.test_mapping_pr_create) ... FAIL
+test_mapping_pr_diff (tests.skill_github.test_offline.RuntimeTests.test_mapping_pr_diff) ... ok
+test_mapping_pr_files (tests.skill_github.test_offline.RuntimeTests.test_mapping_pr_files) ... ok
+test_mapping_pr_get (tests.skill_github.test_offline.RuntimeTests.test_mapping_pr_get) ... ok
+test_mapping_pr_list (tests.skill_github.test_offline.RuntimeTests.test_mapping_pr_list) ... ok
+test_mapping_pr_review_comments (tests.skill_github.test_offline.RuntimeTests.test_mapping_pr_review_comments) ... ok
+test_mapping_pr_reviews (tests.skill_github.test_offline.RuntimeTests.test_mapping_pr_reviews) ... ok
+test_mapping_pr_status (tests.skill_github.test_offline.RuntimeTests.test_mapping_pr_status) ... ok
+test_mapping_pr_update (tests.skill_github.test_offline.RuntimeTests.test_mapping_pr_update) ... FAIL
+test_mapping_release_get (tests.skill_github.test_offline.RuntimeTests.test_mapping_release_get) ... ok
+test_mapping_release_latest (tests.skill_github.test_offline.RuntimeTests.test_mapping_release_latest) ... ok
+test_mapping_release_list (tests.skill_github.test_offline.RuntimeTests.test_mapping_release_list) ... ok
+test_mapping_repo_branches (tests.skill_github.test_offline.RuntimeTests.test_mapping_repo_branches) ... ok
+test_mapping_repo_commit (tests.skill_github.test_offline.RuntimeTests.test_mapping_repo_commit) ... ok
+test_mapping_repo_commits (tests.skill_github.test_offline.RuntimeTests.test_mapping_repo_commits) ... ok
+test_mapping_repo_files (tests.skill_github.test_offline.RuntimeTests.test_mapping_repo_files) ... ok
+test_mapping_repo_tag (tests.skill_github.test_offline.RuntimeTests.test_mapping_repo_tag) ... ok
+test_mapping_repo_tags (tests.skill_github.test_offline.RuntimeTests.test_mapping_repo_tags) ... ok
+test_missing_token_is_offline (tests.skill_github.test_offline.RuntimeTests.test_missing_token_is_offline) ... ok
+test_omitted_body_kept_explicit_empty_clears (tests.skill_github.test_offline.RuntimeTests.test_omitted_body_kept_explicit_empty_clears) ... FAIL
+test_permission_actions_artifacts (tests.skill_github.test_offline.RuntimeTests.test_permission_actions_artifacts) ... ok
+test_permission_actions_jobs (tests.skill_github.test_offline.RuntimeTests.test_permission_actions_jobs) ... ok
+test_permission_actions_logs (tests.skill_github.test_offline.RuntimeTests.test_permission_actions_logs) ... ok
+test_permission_actions_run (tests.skill_github.test_offline.RuntimeTests.test_permission_actions_run) ... ok
+test_permission_actions_runs (tests.skill_github.test_offline.RuntimeTests.test_permission_actions_runs) ... ok
+test_permission_actions_workflows (tests.skill_github.test_offline.RuntimeTests.test_permission_actions_workflows) ... ok
+test_permission_comment_create (tests.skill_github.test_offline.RuntimeTests.test_permission_comment_create) ... FAIL
+test_permission_issue_comments (tests.skill_github.test_offline.RuntimeTests.test_permission_issue_comments) ... ok
+test_permission_issue_create (tests.skill_github.test_offline.RuntimeTests.test_permission_issue_create) ... FAIL
+test_permission_issue_get (tests.skill_github.test_offline.RuntimeTests.test_permission_issue_get) ... ok
+test_permission_issue_list (tests.skill_github.test_offline.RuntimeTests.test_permission_issue_list) ... ok
+test_permission_issue_update (tests.skill_github.test_offline.RuntimeTests.test_permission_issue_update) ... FAIL
+test_permission_pr_checks (tests.skill_github.test_offline.RuntimeTests.test_permission_pr_checks) ... ok
+test_permission_pr_comments (tests.skill_github.test_offline.RuntimeTests.test_permission_pr_comments) ... ok
+test_permission_pr_create (tests.skill_github.test_offline.RuntimeTests.test_permission_pr_create) ... FAIL
+test_permission_pr_diff (tests.skill_github.test_offline.RuntimeTests.test_permission_pr_diff) ... ok
+test_permission_pr_files (tests.skill_github.test_offline.RuntimeTests.test_permission_pr_files) ... ok
+test_permission_pr_get (tests.skill_github.test_offline.RuntimeTests.test_permission_pr_get) ... ok
+test_permission_pr_list (tests.skill_github.test_offline.RuntimeTests.test_permission_pr_list) ... ok
+test_permission_pr_review_comments (tests.skill_github.test_offline.RuntimeTests.test_permission_pr_review_comments) ... ok
+test_permission_pr_reviews (tests.skill_github.test_offline.RuntimeTests.test_permission_pr_reviews) ... ok
+test_permission_pr_status (tests.skill_github.test_offline.RuntimeTests.test_permission_pr_status) ... ok
+test_permission_pr_update (tests.skill_github.test_offline.RuntimeTests.test_permission_pr_update) ... FAIL
+test_permission_release_get (tests.skill_github.test_offline.RuntimeTests.test_permission_release_get) ... ok
+test_permission_release_latest (tests.skill_github.test_offline.RuntimeTests.test_permission_release_latest) ... ok
+test_permission_release_list (tests.skill_github.test_offline.RuntimeTests.test_permission_release_list) ... ok
+test_permission_repo_branches (tests.skill_github.test_offline.RuntimeTests.test_permission_repo_branches) ... ok
+test_permission_repo_commit (tests.skill_github.test_offline.RuntimeTests.test_permission_repo_commit) ... ok
+test_permission_repo_commits (tests.skill_github.test_offline.RuntimeTests.test_permission_repo_commits) ... ok
+test_permission_repo_files (tests.skill_github.test_offline.RuntimeTests.test_permission_repo_files) ... ok
+test_permission_repo_tag (tests.skill_github.test_offline.RuntimeTests.test_permission_repo_tag) ... ok
+test_permission_repo_tags (tests.skill_github.test_offline.RuntimeTests.test_permission_repo_tags) ... ok
+test_policy_deny_is_zero_network (tests.skill_github.test_offline.RuntimeTests.test_policy_deny_is_zero_network) ... ok
+test_pr_cannot_set_draft_false_or_reviewers (tests.skill_github.test_offline.RuntimeTests.test_pr_cannot_set_draft_false_or_reviewers) ... ok
+test_pr_update_rejects_issue_number (tests.skill_github.test_offline.RuntimeTests.test_pr_update_rejects_issue_number) ... FAIL
+test_private_modes_and_content_minimization (tests.skill_github.test_offline.RuntimeTests.test_private_modes_and_content_minimization) ... ok
+test_readback_failure_preserves_confirmed_effect (tests.skill_github.test_offline.RuntimeTests.test_readback_failure_preserves_confirmed_effect) ... FAIL
+test_readonly_disk_is_zero_write (tests.skill_github.test_offline.RuntimeTests.test_readonly_disk_is_zero_write) ... FAIL
+test_receipt_storage_failure_keeps_intent_and_effect (tests.skill_github.test_offline.RuntimeTests.test_receipt_storage_failure_keeps_intent_and_effect) ... FAIL
+test_resource_link_is_partial_never_downloaded (tests.skill_github.test_offline.RuntimeTests.test_resource_link_is_partial_never_downloaded) ... ok
+test_schema_external_ref_is_never_resolved (tests.skill_github.test_offline.RuntimeTests.test_schema_external_ref_is_never_resolved) ... ok
+test_secrets_redacted_from_output_and_rejected_in_input (tests.skill_github.test_offline.RuntimeTests.test_secrets_redacted_from_output_and_rejected_in_input) ... ok
+test_status_catalog_and_no_startup_effect (tests.skill_github.test_offline.RuntimeTests.test_status_catalog_and_no_startup_effect) ... ok
+test_symlink_namespace_blocks_before_write (tests.skill_github.test_offline.RuntimeTests.test_symlink_namespace_blocks_before_write) ... ok
+test_symlink_root_rejected (tests.skill_github.test_offline.RuntimeTests.test_symlink_root_rejected) ... ok
+test_token_snapshot_does_not_switch (tests.skill_github.test_offline.RuntimeTests.test_token_snapshot_does_not_switch) ... ok
+test_truncated_diff_and_log_are_partial (tests.skill_github.test_offline.RuntimeTests.test_truncated_diff_and_log_are_partial) ... ok
+test_unknown_marker_missing_or_multiple_stays_unknown (tests.skill_github.test_offline.RuntimeTests.test_unknown_marker_missing_or_multiple_stays_unknown) ... ok
+test_unknown_pagination_not_inferred_from_short_or_empty_page (tests.skill_github.test_offline.RuntimeTests.test_unknown_pagination_not_inferred_from_short_or_empty_page) ... ok
+test_unrelated_new_upstream_tool_not_exposed (tests.skill_github.test_offline.RuntimeTests.test_unrelated_new_upstream_tool_not_exposed) ... ok
+test_update_reconciliation_is_state_observation (tests.skill_github.test_offline.RuntimeTests.test_update_reconciliation_is_state_observation) ... ERROR
+test_write_response_only_message_is_unknown (tests.skill_github.test_offline.RuntimeTests.test_write_response_only_message_is_unknown) ... FAIL
+test_write_response_wrong_url_is_unknown (tests.skill_github.test_offline.RuntimeTests.test_write_response_wrong_url_is_unknown) ... ok
+test_wrong_actor_is_zero_write (tests.skill_github.test_offline.RuntimeTests.test_wrong_actor_is_zero_write) ... ok
+test_config_three_native_grammars_and_unique_registration (tests.skill_github.test_installation.InstallationTests.test_config_three_native_grammars_and_unique_registration) ... ok
+test_data_and_cache_excluded_from_distribution (tests.skill_github.test_installation.InstallationTests.test_data_and_cache_excluded_from_distribution) ... ok
+test_http_exception_classification_is_not_disconnection (tests.skill_github.test_installation.InstallationTests.test_http_exception_classification_is_not_disconnection) ... ok
+test_http_status_cannot_be_confused_with_a_number_in_the_url (tests.skill_github.test_installation.InstallationTests.test_http_status_cannot_be_confused_with_a_number_in_the_url) ... ok
+test_installer_never_reads_or_expands_token (tests.skill_github.test_installation.InstallationTests.test_installer_never_reads_or_expands_token) ... ok
+test_invalid_upstream_schema_fails_closed (tests.skill_github.test_installation.InstallationTests.test_invalid_upstream_schema_fails_closed) ... ok
+test_limits_count_json_escapes (tests.skill_github.test_installation.InstallationTests.test_limits_count_json_escapes) ... ok
+test_malformed_intent_cannot_be_replayed (tests.skill_github.test_installation.InstallationTests.test_malformed_intent_cannot_be_replayed) ... ok
+test_narrow_transport_exception_does_not_allow_other_httpx (tests.skill_github.test_installation.InstallationTests.test_narrow_transport_exception_does_not_allow_other_httpx) ... ok
+test_network_transport_cannot_import_arbitrary_socket (tests.skill_github.test_installation.InstallationTests.test_network_transport_cannot_import_arbitrary_socket) ... ok
+test_phase_may_not_import_optin_github_service (tests.skill_github.test_installation.InstallationTests.test_phase_may_not_import_optin_github_service) ... ok
+test_refuses_existing_code_and_overlapping_roots (tests.skill_github.test_installation.InstallationTests.test_refuses_existing_code_and_overlapping_roots) ... ok
+test_refuses_symlink_destination (tests.skill_github.test_installation.InstallationTests.test_refuses_symlink_destination) ... ok
+test_batch_state_fsyncs_file_and_rename_directory (tests.skill_github.test_client.ClientTests.test_batch_state_fsyncs_file_and_rename_directory) ... ok
+test_different_fixture_cannot_reuse_batch (tests.skill_github.test_client.ClientTests.test_different_fixture_cannot_reuse_batch) ... ok
+test_fixture_secrets_rejected (tests.skill_github.test_client.ClientTests.test_fixture_secrets_rejected) ... ok
+test_full_live_controller_against_synthetic_service_all32 (tests.skill_github.test_client.ClientTests.test_full_live_controller_against_synthetic_service_all32) ... ok
+test_identity_missing_second_token_never_starts_a_process (tests.skill_github.test_client.ClientTests.test_identity_missing_second_token_never_starts_a_process) ... ok
+test_missing_live_token_does_not_start_process (tests.skill_github.test_client.ClientTests.test_missing_live_token_does_not_start_process) ... ok
+test_missing_release_fixture_is_blocked_not_empty_list_pass (tests.skill_github.test_client.ClientTests.test_missing_release_fixture_is_blocked_not_empty_list_pass) ... ok
+test_no_write_flag_means_zero_mutations (tests.skill_github.test_client.ClientTests.test_no_write_flag_means_zero_mutations) ... ok
+test_private_body_not_archived (tests.skill_github.test_client.ClientTests.test_private_body_not_archived) ... ok
+test_resume_batch_reuses_request_ids_without_new_writes (tests.skill_github.test_client.ClientTests.test_resume_batch_reuses_request_ids_without_new_writes) ... ok
+test_unknown_effect_stops_all_subsequent_writes (tests.skill_github.test_client.ClientTests.test_unknown_effect_stops_all_subsequent_writes) ... ok
+test_declared_pass_without_original_trace_fails (tests.skill_github.test_client.NativeEvidenceTests.test_declared_pass_without_original_trace_fails) ... ok
+test_missing_native_hosts_is_blocked (tests.skill_github.test_client.NativeEvidenceTests.test_missing_native_hosts_is_blocked) ... ok
+test_not_run_templates_cannot_pass (tests.skill_github.test_client.NativeEvidenceTests.test_not_run_templates_cannot_pass) ... ok
+test_runtime_binding_mismatch_rejected (tests.skill_github.test_client.NativeEvidenceTests.test_runtime_binding_mismatch_rejected) ... ok
+
+======================================================================
+ERROR: test_body_file_and_leading_dash_body (tests.skill_github.test_offline.CompilerAndTargetTests.test_body_file_and_leading_dash_body)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$SOURCE/tests/skill_github/test_offline.py", line 445, in test_body_file_and_leading_dash_body
+    r=COMPILER.compile_invocation(text);self.assertEqual(r['arguments']['body'],'explicit body')
+  File "$SOURCE/skills/sdlc-github/scripts/runtime.py", line 122, in compile_invocation
+    raise GithubError("ARGUMENT_INVALID") from None
+packages.sdlc_github.models.GithubError: Parameters do not match the fixed operation schema; consult help.
+
+======================================================================
+ERROR: test_corrupt_record_blocks_replay (tests.skill_github.test_offline.RuntimeTests.test_corrupt_record_blocks_replay)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$SOURCE/tests/skill_github/test_offline.py", line 256, in test_corrupt_record_blocks_replay
+    path=next(self.root.rglob('intent.json'));path.write_text('{"partial":')
+StopIteration
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+RuntimeError: coroutine raised StopIteration
+
+======================================================================
+ERROR: test_fifo_receipt_cannot_block (tests.skill_github.test_offline.RuntimeTests.test_fifo_receipt_cannot_block)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$SOURCE/tests/skill_github/test_offline.py", line 289, in test_fifo_receipt_cannot_block
+    receipt=next(self.root.rglob('receipt.json'));receipt.unlink();os.mkfifo(receipt,0o600)
+StopIteration
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+RuntimeError: coroutine raised StopIteration
+
+======================================================================
+ERROR: test_hardlink_receipt_is_rejected (tests.skill_github.test_offline.RuntimeTests.test_hardlink_receipt_is_rejected)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$SOURCE/tests/skill_github/test_offline.py", line 283, in test_hardlink_receipt_is_rejected
+    receipt=next(self.root.rglob('receipt.json'));os.link(receipt,self.root/'copy')
+StopIteration
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+RuntimeError: coroutine raised StopIteration
+
+======================================================================
+ERROR: test_local_receipt_requires_verified_instance_identity (tests.skill_github.test_offline.RuntimeTests.test_local_receipt_requires_verified_instance_identity)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 115, in test_local_receipt_requires_verified_instance_identity
+    payload = {'repository': REPO, 'expected_actor_id':101, 'request_id':r['receipt']['request_id']}
+                                                                         ~~~~~~~~~~~~^^^^^^^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable
+
+======================================================================
+ERROR: test_update_reconciliation_is_state_observation (tests.skill_github.test_offline.RuntimeTests.test_update_reconciliation_is_state_observation)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 235, in test_update_reconciliation_is_state_observation
+    out=await self.service.handle('sdlc_github_operation_status',{'repository':REPO,'expected_actor_id':101,'request_id':r['receipt']['request_id'],'reconcile':True})
+                                                                                                                         ~~~~~~~~~~~~^^^^^^^^^^^^^^
+TypeError: 'NoneType' object is not subscriptable
+
+======================================================================
+FAIL: test_two_processes_one_claim (tests.skill_github.test_offline.ConcurrentProcessTests.test_two_processes_one_claim)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$SOURCE/tests/skill_github/test_offline.py", line 500, in test_two_processes_one_claim
+    self.assertEqual(sum(r[1] for r in results),1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_actor_namespaces_are_isolated (tests.skill_github.test_offline.RuntimeTests.test_actor_namespaces_are_isolated)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 110, in test_actor_namespaces_are_isolated
+    self.assertTrue(r['ok']); self.assertEqual(len(self.backend.writes), 2)
+    ~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_all_crash_windows (tests.skill_github.test_offline.RuntimeTests.test_all_crash_windows) (point='before_intent')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$SOURCE/tests/skill_github/test_offline.py", line 245, in test_all_crash_windows
+    with self.assertRaises(SimulatedCrash):await self.invoke('issue.create',request_id=rid)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: SimulatedCrash not raised
+
+======================================================================
+FAIL: test_all_crash_windows (tests.skill_github.test_offline.RuntimeTests.test_all_crash_windows) (point='after_intent_before_send')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$SOURCE/tests/skill_github/test_offline.py", line 245, in test_all_crash_windows
+    with self.assertRaises(SimulatedCrash):await self.invoke('issue.create',request_id=rid)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: SimulatedCrash not raised
+
+======================================================================
+FAIL: test_all_crash_windows (tests.skill_github.test_offline.RuntimeTests.test_all_crash_windows) (point='after_send')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$SOURCE/tests/skill_github/test_offline.py", line 245, in test_all_crash_windows
+    with self.assertRaises(SimulatedCrash):await self.invoke('issue.create',request_id=rid)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: SimulatedCrash not raised
+
+======================================================================
+FAIL: test_all_crash_windows (tests.skill_github.test_offline.RuntimeTests.test_all_crash_windows) (point='after_success_before_readback')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$SOURCE/tests/skill_github/test_offline.py", line 245, in test_all_crash_windows
+    with self.assertRaises(SimulatedCrash):await self.invoke('issue.create',request_id=rid)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: SimulatedCrash not raised
+
+======================================================================
+FAIL: test_all_crash_windows (tests.skill_github.test_offline.RuntimeTests.test_all_crash_windows) (point='before_receipt')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$SOURCE/tests/skill_github/test_offline.py", line 245, in test_all_crash_windows
+    with self.assertRaises(SimulatedCrash):await self.invoke('issue.create',request_id=rid)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: SimulatedCrash not raised
+
+======================================================================
+FAIL: test_all_crash_windows (tests.skill_github.test_offline.RuntimeTests.test_all_crash_windows) (point='after_receipt')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$SOURCE/tests/skill_github/test_offline.py", line 245, in test_all_crash_windows
+    with self.assertRaises(SimulatedCrash):await self.invoke('issue.create',request_id=rid)
+         ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+AssertionError: SimulatedCrash not raised
+
+======================================================================
+FAIL: test_comment_past_first_page_without_metadata (tests.skill_github.test_offline.RuntimeTests.test_comment_past_first_page_without_metadata)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 141, in test_comment_past_first_page_without_metadata
+    self.assertTrue(r['ok']); self.assertTrue(any(a.get('page') == 2 for t,a in self.backend.calls if t == 'issue_read'))
+    ~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_comment_pr_target (tests.skill_github.test_offline.RuntimeTests.test_comment_pr_target)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 135, in test_comment_pr_target
+    self.assertTrue(r['ok']); self.assertIn('/pull/2#issuecomment-', r['receipt']['url'])
+    ~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_conflicting_id_never_replays (tests.skill_github.test_offline.RuntimeTests.test_conflicting_id_never_replays)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 104, in test_conflicting_id_never_replays
+    self.assertEqual(r['errors'][0]['code'], 'REQUEST_CONFLICT'); self.assertEqual(len(self.backend.writes), 1)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'REQUEST_CONFLICT'
+- STORAGE_UNSAFE
++ REQUEST_CONFLICT
+
+
+======================================================================
+FAIL: test_context_cleanup_cannot_erase_effect (tests.skill_github.test_offline.RuntimeTests.test_context_cleanup_cannot_erase_effect)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 204, in test_context_cleanup_cannot_erase_effect
+    self.assertEqual(r['effect'], 'confirmed'); self.assertTrue(r['ok'])
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'unknown' != 'confirmed'
+- unknown
++ confirmed
+
+
+======================================================================
+FAIL: test_disconnect_after_write_never_replays (tests.skill_github.test_offline.RuntimeTests.test_disconnect_after_write_never_replays)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 189, in test_disconnect_after_write_never_replays
+    await self.invoke('issue.create'); self.assertEqual(len(self.backend.writes), 1)
+                                       ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_drift_comment_create (tests.skill_github.test_offline.RuntimeTests.test_drift_comment_create)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 397, in test
+    self.assertEqual(r['errors'][0]['code'],'CAPABILITY_UNAVAILABLE');self.assertFalse(self.backend.writes)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'CAPABILITY_UNAVAILABLE'
+- STORAGE_UNSAFE
++ CAPABILITY_UNAVAILABLE
+
+
+======================================================================
+FAIL: test_drift_issue_create (tests.skill_github.test_offline.RuntimeTests.test_drift_issue_create)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 397, in test
+    self.assertEqual(r['errors'][0]['code'],'CAPABILITY_UNAVAILABLE');self.assertFalse(self.backend.writes)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'CAPABILITY_UNAVAILABLE'
+- STORAGE_UNSAFE
++ CAPABILITY_UNAVAILABLE
+
+
+======================================================================
+FAIL: test_drift_issue_update (tests.skill_github.test_offline.RuntimeTests.test_drift_issue_update)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 397, in test
+    self.assertEqual(r['errors'][0]['code'],'CAPABILITY_UNAVAILABLE');self.assertFalse(self.backend.writes)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'CAPABILITY_UNAVAILABLE'
+- STORAGE_UNSAFE
++ CAPABILITY_UNAVAILABLE
+
+
+======================================================================
+FAIL: test_drift_pr_create (tests.skill_github.test_offline.RuntimeTests.test_drift_pr_create)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 397, in test
+    self.assertEqual(r['errors'][0]['code'],'CAPABILITY_UNAVAILABLE');self.assertFalse(self.backend.writes)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'CAPABILITY_UNAVAILABLE'
+- STORAGE_UNSAFE
++ CAPABILITY_UNAVAILABLE
+
+
+======================================================================
+FAIL: test_drift_pr_update (tests.skill_github.test_offline.RuntimeTests.test_drift_pr_update)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 397, in test
+    self.assertEqual(r['errors'][0]['code'],'CAPABILITY_UNAVAILABLE');self.assertFalse(self.backend.writes)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'CAPABILITY_UNAVAILABLE'
+- STORAGE_UNSAFE
++ CAPABILITY_UNAVAILABLE
+
+
+======================================================================
+FAIL: test_dry_run_all_writes_no_intent (tests.skill_github.test_offline.RuntimeTests.test_dry_run_all_writes_no_intent) (name='issue.update')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$SOURCE/tests/skill_github/test_offline.py", line 92, in test_dry_run_all_writes_no_intent
+    self.assertTrue(r['ok']); self.assertEqual(r['effect'], 'none')
+    ~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_dry_run_all_writes_no_intent (tests.skill_github.test_offline.RuntimeTests.test_dry_run_all_writes_no_intent) (name='pr.create')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$SOURCE/tests/skill_github/test_offline.py", line 92, in test_dry_run_all_writes_no_intent
+    self.assertTrue(r['ok']); self.assertEqual(r['effect'], 'none')
+    ~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_dry_run_all_writes_no_intent (tests.skill_github.test_offline.RuntimeTests.test_dry_run_all_writes_no_intent) (name='issue.create')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$SOURCE/tests/skill_github/test_offline.py", line 92, in test_dry_run_all_writes_no_intent
+    self.assertTrue(r['ok']); self.assertEqual(r['effect'], 'none')
+    ~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_dry_run_all_writes_no_intent (tests.skill_github.test_offline.RuntimeTests.test_dry_run_all_writes_no_intent) (name='pr.update')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$SOURCE/tests/skill_github/test_offline.py", line 92, in test_dry_run_all_writes_no_intent
+    self.assertTrue(r['ok']); self.assertEqual(r['effect'], 'none')
+    ~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_dry_run_all_writes_no_intent (tests.skill_github.test_offline.RuntimeTests.test_dry_run_all_writes_no_intent) (name='comment.create')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "$SOURCE/tests/skill_github/test_offline.py", line 92, in test_dry_run_all_writes_no_intent
+    self.assertTrue(r['ok']); self.assertEqual(r['effect'], 'none')
+    ~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_duplicate_returns_persisted_receipt (tests.skill_github.test_offline.RuntimeTests.test_duplicate_returns_persisted_receipt)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 99, in test_duplicate_returns_persisted_receipt
+    self.assertEqual(first, second); self.assertEqual(len(self.backend.writes), 1)
+                                     ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+======================================================================
+FAIL: test_failure_comment_create (tests.skill_github.test_offline.RuntimeTests.test_failure_comment_create)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 387, in test
+    self.assertFalse(r['ok']);self.assertEqual(r['errors'][0]['code'],'PERMISSION_DENIED' if code==403 else 'UPSTREAM_FAILED')
+                              ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'UPSTREAM_FAILED'
+- STORAGE_UNSAFE
++ UPSTREAM_FAILED
+
+
+======================================================================
+FAIL: test_failure_issue_create (tests.skill_github.test_offline.RuntimeTests.test_failure_issue_create)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 387, in test
+    self.assertFalse(r['ok']);self.assertEqual(r['errors'][0]['code'],'PERMISSION_DENIED' if code==403 else 'UPSTREAM_FAILED')
+                              ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'UPSTREAM_FAILED'
+- STORAGE_UNSAFE
++ UPSTREAM_FAILED
+
+
+======================================================================
+FAIL: test_failure_issue_update (tests.skill_github.test_offline.RuntimeTests.test_failure_issue_update)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 387, in test
+    self.assertFalse(r['ok']);self.assertEqual(r['errors'][0]['code'],'PERMISSION_DENIED' if code==403 else 'UPSTREAM_FAILED')
+                              ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'UPSTREAM_FAILED'
+- STORAGE_UNSAFE
++ UPSTREAM_FAILED
+
+
+======================================================================
+FAIL: test_failure_pr_create (tests.skill_github.test_offline.RuntimeTests.test_failure_pr_create)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 387, in test
+    self.assertFalse(r['ok']);self.assertEqual(r['errors'][0]['code'],'PERMISSION_DENIED' if code==403 else 'UPSTREAM_FAILED')
+                              ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'UPSTREAM_FAILED'
+- STORAGE_UNSAFE
++ UPSTREAM_FAILED
+
+
+======================================================================
+FAIL: test_failure_pr_update (tests.skill_github.test_offline.RuntimeTests.test_failure_pr_update)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 387, in test
+    self.assertFalse(r['ok']);self.assertEqual(r['errors'][0]['code'],'PERMISSION_DENIED' if code==403 else 'UPSTREAM_FAILED')
+                              ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'UPSTREAM_FAILED'
+- STORAGE_UNSAFE
++ UPSTREAM_FAILED
+
+
+======================================================================
+FAIL: test_issue_update_rejects_pr_number (tests.skill_github.test_offline.RuntimeTests.test_issue_update_rejects_pr_number)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 127, in test_issue_update_rejects_pr_number
+    self.assertEqual(r['errors'][0]['code'], 'TARGET_MISMATCH'); self.assertFalse(self.backend.writes)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'TARGET_MISMATCH'
+- STORAGE_UNSAFE
++ TARGET_MISMATCH
+
+
+======================================================================
+FAIL: test_mapping_comment_create (tests.skill_github.test_offline.RuntimeTests.test_mapping_comment_create)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 374, in test
+    self.assertTrue(r['ok'],r)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^
+AssertionError: False is not true : {'contract': 'sdlc-ai-spec/github-result/v1', 'ok': False, 'status': 'unknown', 'operation': 'comment.create', 'actor': {'id': 101, 'login': 'fixture-101'}, 'repository': 'example/project', 'target': None, 'data': None, 'pagination': {'mode': 'none', 'has_more': False, 'next_page': None, 'next_cursor': None}, 'completeness': 'unknown', 'effect': 'unknown', 'receipt': None, 'errors': [{'code': 'STORAGE_UNSAFE', 'message': 'Data root or state entry is not a safe private filesystem object.'}], 'warnings': [], 'next_action': 'Inspect operation_status without replay.'}
+
+======================================================================
+FAIL: test_mapping_issue_create (tests.skill_github.test_offline.RuntimeTests.test_mapping_issue_create)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 374, in test
+    self.assertTrue(r['ok'],r)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^
+AssertionError: False is not true : {'contract': 'sdlc-ai-spec/github-result/v1', 'ok': False, 'status': 'unknown', 'operation': 'issue.create', 'actor': {'id': 101, 'login': 'fixture-101'}, 'repository': 'example/project', 'target': None, 'data': None, 'pagination': {'mode': 'none', 'has_more': False, 'next_page': None, 'next_cursor': None}, 'completeness': 'unknown', 'effect': 'unknown', 'receipt': None, 'errors': [{'code': 'STORAGE_UNSAFE', 'message': 'Data root or state entry is not a safe private filesystem object.'}], 'warnings': [], 'next_action': 'Inspect operation_status without replay.'}
+
+======================================================================
+FAIL: test_mapping_issue_update (tests.skill_github.test_offline.RuntimeTests.test_mapping_issue_update)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 374, in test
+    self.assertTrue(r['ok'],r)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^
+AssertionError: False is not true : {'contract': 'sdlc-ai-spec/github-result/v1', 'ok': False, 'status': 'unknown', 'operation': 'issue.update', 'actor': {'id': 101, 'login': 'fixture-101'}, 'repository': 'example/project', 'target': None, 'data': None, 'pagination': {'mode': 'none', 'has_more': False, 'next_page': None, 'next_cursor': None}, 'completeness': 'unknown', 'effect': 'unknown', 'receipt': None, 'errors': [{'code': 'STORAGE_UNSAFE', 'message': 'Data root or state entry is not a safe private filesystem object.'}], 'warnings': [], 'next_action': 'Inspect operation_status without replay.'}
+
+======================================================================
+FAIL: test_mapping_pr_create (tests.skill_github.test_offline.RuntimeTests.test_mapping_pr_create)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 374, in test
+    self.assertTrue(r['ok'],r)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^
+AssertionError: False is not true : {'contract': 'sdlc-ai-spec/github-result/v1', 'ok': False, 'status': 'unknown', 'operation': 'pr.create', 'actor': {'id': 101, 'login': 'fixture-101'}, 'repository': 'example/project', 'target': None, 'data': None, 'pagination': {'mode': 'none', 'has_more': False, 'next_page': None, 'next_cursor': None}, 'completeness': 'unknown', 'effect': 'unknown', 'receipt': None, 'errors': [{'code': 'STORAGE_UNSAFE', 'message': 'Data root or state entry is not a safe private filesystem object.'}], 'warnings': [], 'next_action': 'Inspect operation_status without replay.'}
+
+======================================================================
+FAIL: test_mapping_pr_update (tests.skill_github.test_offline.RuntimeTests.test_mapping_pr_update)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 374, in test
+    self.assertTrue(r['ok'],r)
+    ~~~~~~~~~~~~~~~^^^^^^^^^^^
+AssertionError: False is not true : {'contract': 'sdlc-ai-spec/github-result/v1', 'ok': False, 'status': 'unknown', 'operation': 'pr.update', 'actor': {'id': 101, 'login': 'fixture-101'}, 'repository': 'example/project', 'target': None, 'data': None, 'pagination': {'mode': 'none', 'has_more': False, 'next_page': None, 'next_cursor': None}, 'completeness': 'unknown', 'effect': 'unknown', 'receipt': None, 'errors': [{'code': 'STORAGE_UNSAFE', 'message': 'Data root or state entry is not a safe private filesystem object.'}], 'warnings': [], 'next_action': 'Inspect operation_status without replay.'}
+
+======================================================================
+FAIL: test_omitted_body_kept_explicit_empty_clears (tests.skill_github.test_offline.RuntimeTests.test_omitted_body_kept_explicit_empty_clears)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 147, in test_omitted_body_kept_explicit_empty_clears
+    self.assertTrue(r['ok']); self.assertEqual(self.backend.issue['body'], 'keep this')
+    ~~~~~~~~~~~~~~~^^^^^^^^^
+AssertionError: False is not true
+
+======================================================================
+FAIL: test_permission_comment_create (tests.skill_github.test_offline.RuntimeTests.test_permission_comment_create)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 387, in test
+    self.assertFalse(r['ok']);self.assertEqual(r['errors'][0]['code'],'PERMISSION_DENIED' if code==403 else 'UPSTREAM_FAILED')
+                              ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'PERMISSION_DENIED'
+- STORAGE_UNSAFE
++ PERMISSION_DENIED
+
+
+======================================================================
+FAIL: test_permission_issue_create (tests.skill_github.test_offline.RuntimeTests.test_permission_issue_create)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 387, in test
+    self.assertFalse(r['ok']);self.assertEqual(r['errors'][0]['code'],'PERMISSION_DENIED' if code==403 else 'UPSTREAM_FAILED')
+                              ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'PERMISSION_DENIED'
+- STORAGE_UNSAFE
++ PERMISSION_DENIED
+
+
+======================================================================
+FAIL: test_permission_issue_update (tests.skill_github.test_offline.RuntimeTests.test_permission_issue_update)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 387, in test
+    self.assertFalse(r['ok']);self.assertEqual(r['errors'][0]['code'],'PERMISSION_DENIED' if code==403 else 'UPSTREAM_FAILED')
+                              ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'PERMISSION_DENIED'
+- STORAGE_UNSAFE
++ PERMISSION_DENIED
+
+
+======================================================================
+FAIL: test_permission_pr_create (tests.skill_github.test_offline.RuntimeTests.test_permission_pr_create)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 387, in test
+    self.assertFalse(r['ok']);self.assertEqual(r['errors'][0]['code'],'PERMISSION_DENIED' if code==403 else 'UPSTREAM_FAILED')
+                              ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'PERMISSION_DENIED'
+- STORAGE_UNSAFE
++ PERMISSION_DENIED
+
+
+======================================================================
+FAIL: test_permission_pr_update (tests.skill_github.test_offline.RuntimeTests.test_permission_pr_update)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 387, in test
+    self.assertFalse(r['ok']);self.assertEqual(r['errors'][0]['code'],'PERMISSION_DENIED' if code==403 else 'UPSTREAM_FAILED')
+                              ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'PERMISSION_DENIED'
+- STORAGE_UNSAFE
++ PERMISSION_DENIED
+
+
+======================================================================
+FAIL: test_pr_update_rejects_issue_number (tests.skill_github.test_offline.RuntimeTests.test_pr_update_rejects_issue_number)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 131, in test_pr_update_rejects_issue_number
+    self.assertEqual(r['errors'][0]['code'], 'TARGET_MISMATCH'); self.assertFalse(self.backend.writes)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'TARGET_MISMATCH'
+- STORAGE_UNSAFE
++ TARGET_MISMATCH
+
+
+======================================================================
+FAIL: test_readback_failure_preserves_confirmed_effect (tests.skill_github.test_offline.RuntimeTests.test_readback_failure_preserves_confirmed_effect)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 177, in test_readback_failure_preserves_confirmed_effect
+    self.assertEqual((r['status'], r['effect']), ('partial','confirmed'))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: ('unknown', 'unknown') != ('partial', 'confirmed')
+
+First differing element 0:
+'unknown'
+'partial'
+
+- ('unknown', 'unknown')
++ ('partial', 'confirmed')
+
+======================================================================
+FAIL: test_readonly_disk_is_zero_write (tests.skill_github.test_offline.RuntimeTests.test_readonly_disk_is_zero_write)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 303, in test_readonly_disk_is_zero_write
+    self.assertEqual(r['errors'][0]['code'],'STORAGE_FAILED');self.assertFalse(self.backend.writes)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 'STORAGE_UNSAFE' != 'STORAGE_FAILED'
+- STORAGE_UNSAFE
++ STORAGE_FAILED
+
+
+======================================================================
+FAIL: test_receipt_storage_failure_keeps_intent_and_effect (tests.skill_github.test_offline.RuntimeTests.test_receipt_storage_failure_keeps_intent_and_effect)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 210, in test_receipt_storage_failure_keeps_intent_and_effect
+    self.assertEqual((r['status'],r['effect']), ('partial','confirmed'))
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Tuples differ: ('unknown', 'unknown') != ('partial', 'confirmed')
+
+First differing element 0:
+'unknown'
+'partial'
+
+- ('unknown', 'unknown')
++ ('partial', 'confirmed')
+
+======================================================================
+FAIL: test_write_response_only_message_is_unknown (tests.skill_github.test_offline.RuntimeTests.test_write_response_only_message_is_unknown)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/runners.py", line 128, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.7/Frameworks/Python.framework/Versions/3.14/lib/python3.14/asyncio/base_events.py", line 720, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File "$SOURCE/tests/skill_github/test_offline.py", line 167, in test_write_response_only_message_is_unknown
+    await self.invoke('issue.create'); self.assertEqual(len(self.backend.writes), 1)
+                                       ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 0 != 1
+
+----------------------------------------------------------------------
+Ran 212 tests in 3.200s
+
+FAILED (failures=46, errors=6)

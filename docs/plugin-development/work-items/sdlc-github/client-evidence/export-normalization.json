@@ -1,0 +1,167 @@
+{
+  "policy": "No credentials, token digests, full rendered host configuration, private file body, private diff, or job log content exported. Native tool responses contain only necessary identity and synthetic test objects. Local paths normalized. Pre-normalization inner SHA256SUMS.json files omitted; use the top-level archive SHA256SUMS. Terminal display padding/trailing whitespace and surplus final blank lines are normalized for clean Git patches; structured native response events preserve tool values.",
+  "transformed_files": [
+    {
+      "file": "results/integration/protocol-evidence/test_all_32_operations_and_annotations.json",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "2f835c6634b7c6238f562b66f016fa5bdcfea48a1416ab5b9bb8ca48300e2cc7",
+      "archive_sha256": "f0eaf4d3be0d2051672a70512d64e423aaf7e38571b5447870c7eb36ab794392"
+    },
+    {
+      "file": "results/integration/protocol-evidence/test_installed_copy_three_sequential_host_configs.json",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "4189884635e34161b00c585f9e15e7d3861c48ca3c2926788bc784eee34c7a1b",
+      "archive_sha256": "a4b052374fd9a38a97f3c11ac18f1b6a6cc94770508be4e619476c8069b8cab8"
+    },
+    {
+      "file": "results/integration/protocol-evidence/test_production_discovery_missing_auth_and_invalid_args_offline.json",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "d3f9f5c4ac06cfc7302673849b0591f04e6adcbf02b8991cc542c46cbbd450fa",
+      "archive_sha256": "609c0b43f5cec7722794cfd9fa9c0ba6a83aff1eb8fb4f59abedcfe2a7dded14"
+    },
+    {
+      "file": "results/integration/protocol-evidence/test_real_process_crash_no_replay_and_readonly_reconcile.json",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "ac56cea6ba95e3c15d93d8763f18c03987601aa1ca5e07254194b9b085e270f3",
+      "archive_sha256": "3b50e5ae5195538e41a3bf6fe42a42ce5a2eacaf4ef67e90f08d537b572e6d96"
+    },
+    {
+      "file": "results/integration/protocol-evidence/test_restart_cache_clear_and_token_identity.json",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "2f4734fc6618bf4f520a00be22111a6f1dd275bf375ca11f2732ff329b7550c4",
+      "archive_sha256": "0ee21f372e20a34e080f5dbb4f979813e082f00d4739846a3a588ba597037ef7"
+    },
+    {
+      "file": "results/integration/protocol-evidence/test_wire_auth_error_does_not_echo_credential.json",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "a302acca9280f65f67462e5e9111d9ef5dd0d04a0250ce5e5ad92a1081e40081",
+      "archive_sha256": "9d4620aa229b4103a719715b34b8be5a58ee3162affdb2c972d6847d45ccd50f"
+    },
+    {
+      "file": "regression/unittest.stderr.log",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "be287b82363502a877e093832da417f8dae68308bc70b39e69b2e0be072f59e5",
+      "archive_sha256": "59bd80422ef1ac1f352ca01bc6f219334373127aa3718de82c51dacf530c0867"
+    },
+    {
+      "file": "attempts/01-default-tmp/client.stderr.log",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "fc16661a69c708830845483cb97dec9d9396e43f5199696fc569b3adc13788f4",
+      "archive_sha256": "79e87ebd8bc51d0729991f4a4d67258c71db3d30b3b59d57d122845bedaa0a6e"
+    },
+    {
+      "file": "attempts/01-default-tmp/client.stdout.log",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "4e8f1ac5fb30cce359817c8a6d9e2662d6dcd3cc97dc429b4708ed43094e2ef8",
+      "archive_sha256": "4241f1b29649451e90d06b30d1027e56a6d5bba487f488b41c6a5e2d9bb6a806"
+    },
+    {
+      "file": "attempts/01-default-tmp/results/integration/protocol-evidence/test_all_32_operations_and_annotations.json",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "c2b6d9cad0a31bebd4a0694d0c809bd73a7a502d8f39cefac132fd0c0477021d",
+      "archive_sha256": "e8b0ec3a8dd42093b6aa0d1a625b02dcf13503aa5841e43ced1c1f01db360269"
+    },
+    {
+      "file": "attempts/01-default-tmp/results/integration/protocol-evidence/test_installed_copy_three_sequential_host_configs.json",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "a76d11bd4867dc6a3d13abcbe50c8ad788b42bc3f05989c0a415f80c5ac1c482",
+      "archive_sha256": "13452b43f21d26b59bef003f5cf4621a324aa89ece29b1a949fb106968c9d710"
+    },
+    {
+      "file": "attempts/01-default-tmp/results/integration/protocol-evidence/test_production_discovery_missing_auth_and_invalid_args_offline.json",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "d3f9f5c4ac06cfc7302673849b0591f04e6adcbf02b8991cc542c46cbbd450fa",
+      "archive_sha256": "609c0b43f5cec7722794cfd9fa9c0ba6a83aff1eb8fb4f59abedcfe2a7dded14"
+    },
+    {
+      "file": "attempts/01-default-tmp/results/integration/protocol-evidence/test_real_process_crash_no_replay_and_readonly_reconcile.json",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "615e7bfdf63571ac2d4b5acd86ebf93d1a521ab954e75b9a559f132a422ef381",
+      "archive_sha256": "281ac0599fbdbfd7be1b56db9ca25f7f62aada793b5ca4fa2991767aaf840082"
+    },
+    {
+      "file": "attempts/01-default-tmp/results/integration/protocol-evidence/test_restart_cache_clear_and_token_identity.json",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "0b54817b0365a685c2ec672ca338288c2c02b07e8ded1e28cbc1d3fb9b5d34bd",
+      "archive_sha256": "cfb4b528281e39a5d18a2f2adbfeb1e4043e7c175647989f9c695aa4631d0c09"
+    },
+    {
+      "file": "attempts/01-default-tmp/results/integration/protocol-evidence/test_wire_auth_error_does_not_echo_credential.json",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "a302acca9280f65f67462e5e9111d9ef5dd0d04a0250ce5e5ad92a1081e40081",
+      "archive_sha256": "9d4620aa229b4103a719715b34b8be5a58ee3162affdb2c972d6847d45ccd50f"
+    },
+    {
+      "file": "attempts/01-default-tmp/results/offline/unittest.log",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged; terminal/log trailing whitespace and surplus final blank lines removed",
+      "source_sha256": "b473d53393931ef41e6f5bb282bcbdd77166877726638b66f118469b9722a4b5",
+      "archive_sha256": "2d0bdf5f70d339fc3765de5a2a70e75beddb1ae626a7a7ff708520e8301080df"
+    },
+    {
+      "file": "attempts/02-canonical-tmp/stderr.log",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "523526ffc7d3b46ca80bdcfa909654d0947aea102025251f83fddbc1c560506e",
+      "archive_sha256": "139ec6451924d7c3aaa6fba2c778798069daac3cfb3fc6301703194b4634e786"
+    },
+    {
+      "file": "attempts/02-canonical-tmp/stdout.log",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "76170f9f3ba9a331399c6f9475144400ddbe890383e23df9359f95c51996d355",
+      "archive_sha256": "385e3acc1cf7e52d018beb34d326c0880c23bdd88c70fef660938866a98ac5c2"
+    },
+    {
+      "file": "setup/prepare.stdout.log",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "c5664d55ab9c8cd5fdeb6a98af468d9e2fa7bc16169b02f21ede6144714a5bca",
+      "archive_sha256": "7347b81a474c50ee1bac066b4527f5e47afcfba2d4c77732759a0ef1466c5c9a"
+    },
+    {
+      "file": "host-evidence/cursor/launch.json",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "3708b76bcbfdba3fdc4c8ee3890601cc1386d715fb9606bba423c2cbc570c29e",
+      "archive_sha256": "ad88b22ca8d973d9d257a350d8fe837ca31c9d5c246cef03b37ae42c70fe11da"
+    },
+    {
+      "file": "setup/install-cursor.stdout.log",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "5cac6310f1689e3a5594efabc9d323287d1b887712aeaee650ad67dd7ba9a7e4",
+      "archive_sha256": "89738d5e586dcad368a31bdfd3dddc39d7a5686e640ca883cab8a710553d3e56"
+    },
+    {
+      "file": "setup/install-claude-code.stdout.log",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "9da3929fcf6a2414fa49b5c925c58f8e5ba9892e4f936201b985d94e1adb87f9",
+      "archive_sha256": "33f64d1954c065b556ac53b3102492965f85340dec17c6ad761453ada925bb2d"
+    },
+    {
+      "file": "setup/install-codex.stdout.log",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "afa28d7e9d246af1965cdfe789fedf51fcc673770d1c2e52290439892d645df5",
+      "archive_sha256": "63ea5dfcdb4c9be45c49df2b1b16f42e064a5ece0aa4b5444fa6629deaa186be"
+    },
+    {
+      "file": "host-evidence/codex-marketplace-add.stdout.log",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "500d0bac56bf9c370448f770718b000deaf9dd532cc054394f575189ece810a9",
+      "archive_sha256": "39cd98c0d6e93297ed4ae8066ee9ad79d4f9487feff823ffab150e40e3254f41"
+    },
+    {
+      "file": "host-evidence/codex-plugin-add.stdout.log",
+      "normalization": "Local path prefix replaced; semantic tool results unchanged",
+      "source_sha256": "470af4d090a6dcb02616e00dce8f98f4290f2da01cbc755094d7703bf9993c81",
+      "archive_sha256": "6066cd346d1b41673606041d62227a810150c93195081563a78d1127657f8bf1"
+    },
+    {
+      "file": "native/codex/session1.native-terminal.txt",
+      "normalization": "Terminal/log trailing whitespace and surplus final blank lines removed; no semantic fields changed",
+      "source_sha256": "9d65cd8f49e6dc34f8c4903a59099b9c05eab4f1c4e59cdaec1228560c10cf1c",
+      "archive_sha256": "73315535f0ba676bf7a987f70bbae51464568903a96bd548a91d0ef965c299f3"
+    },
+    {
+      "file": "native/codex/session2.native-terminal.txt",
+      "normalization": "Terminal/log trailing whitespace and surplus final blank lines removed; no semantic fields changed",
+      "source_sha256": "3ff607f0f0a272f53fe62b25857a68830061b941a07f56a07114b5e19d1def39",
+      "archive_sha256": "45597d742850bca6d4aa880ae3db849aa7865e78a67987ca010d982bd983b3fc"
+    }
+  ]
+}

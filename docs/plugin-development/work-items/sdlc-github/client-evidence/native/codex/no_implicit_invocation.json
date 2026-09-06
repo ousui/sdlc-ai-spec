@@ -1,0 +1,10 @@
+{
+  "host": "codex",
+  "runtime_sha": "b035880a6135c1f126ae1a35e1c173221f28807a",
+  "calls": [],
+  "original_transcripts": [
+    "codex/session2.native-events.json"
+  ],
+  "turn_id": "01a0766f-0bee-7620-a2d5-ce528cec2a4d",
+  "prompt": "请用三句话解释 GitHub Issue 和 Pull Request 的区别。"
+}

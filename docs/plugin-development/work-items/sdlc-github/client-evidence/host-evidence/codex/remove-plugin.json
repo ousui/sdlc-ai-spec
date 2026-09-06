@@ -1,0 +1,5 @@
+{
+  "exit_code": 0,
+  "stdout": "{\n  \"pluginId\": \"sdlc-ai-spec@sdlc-github-client-validation\",\n  \"name\": \"sdlc-ai-spec\",\n  \"marketplaceName\": \"sdlc-github-client-validation\"\n}\n",
+  "stderr": ""
+}

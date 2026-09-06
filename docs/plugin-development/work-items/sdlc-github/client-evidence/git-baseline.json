@@ -1,0 +1,14 @@
+{
+  "recorded_at": "2026-09-06T12:06:38.588633+00:00",
+  "branch": "impl/sdlc-github-foundation-v1",
+  "starting_head": "6c476e4a58c7fc9871ce876cc7174e7e4d5e51dd",
+  "head_before_evidence_export": "6c476e4a58c7fc9871ce876cc7174e7e4d5e51dd",
+  "runtime_sha": "b035880a6135c1f126ae1a35e1c173221f28807a",
+  "approved_design_sha": "97c5f17bfcdb2751d446a89b068db2400436631d",
+  "approved_design_is_ancestor": true,
+  "source_scope_diff": "",
+  "source_changed": false,
+  "last_observed_remote_head": "6c476e4a58c7fc9871ce876cc7174e7e4d5e51dd",
+  "remote": "https://github.com/ousui/sdlc-ai-spec",
+  "worktree_clean_before_export": true
+}

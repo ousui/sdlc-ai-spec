@@ -1,0 +1,20 @@
+{
+  "purpose": "Auxiliary exact Job selector only; NOT Runtime Oracle",
+  "command": [
+    "gh",
+    "api",
+    "repos/ousui/sdlc-ai-monitor/actions/runs/34021751640/jobs",
+    "--jq",
+    "[.jobs[]|{id,run_id,status,conclusion,html_url}]"
+  ],
+  "exit_code": 0,
+  "jobs": [
+    {
+      "conclusion": "success",
+      "html_url": "https://github.com/ousui/sdlc-ai-monitor/actions/runs/34021751640/job/101455494899",
+      "id": 101455494899,
+      "run_id": 34021751640,
+      "status": "completed"
+    }
+  ]
+}

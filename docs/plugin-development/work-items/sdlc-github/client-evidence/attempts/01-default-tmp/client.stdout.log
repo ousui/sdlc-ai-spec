@@ -1,0 +1,1 @@
+{"status": "FAIL", "report": "$GH_WORK/results/VALIDATION.json", "layers": [{"layer": "offline", "status": "FAIL", "tests_run": 212, "passed": 169}, {"layer": "integration", "status": "PASS", "tests_run": 6, "passed": 6}, {"layer": "live", "status": "BLOCKED"}, {"layer": "identity", "status": "BLOCKED"}, {"layer": "native", "status": "BLOCKED"}]}

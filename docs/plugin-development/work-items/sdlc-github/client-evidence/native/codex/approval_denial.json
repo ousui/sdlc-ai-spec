@@ -1,0 +1,22 @@
+{
+  "host": "codex",
+  "runtime_sha": "b035880a6135c1f126ae1a35e1c173221f28807a",
+  "calls": [
+    {
+      "tool": "sdlc_github_issue_create",
+      "request_id": "614b3f87-394b-4a95-8cb3-ae2542c389da",
+      "host_result": "user cancelled MCP tool call",
+      "executed": false
+    }
+  ],
+  "host_permission_decision": "denied",
+  "remote_effect": "none",
+  "write_tool_executed": false,
+  "original_transcripts": [
+    "codex/session1.native-events.json",
+    "codex/session2.native-events.json",
+    "codex/session1.native-terminal.txt",
+    "codex/session2.native-terminal.txt"
+  ],
+  "verification": "Actual native permission UI option 4 Cancel selected by the test operator; native tool failure duration 0; no corresponding intent/receipt exists."
+}

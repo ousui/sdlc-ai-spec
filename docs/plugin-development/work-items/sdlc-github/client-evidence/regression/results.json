@@ -1,0 +1,51 @@
+[
+  {
+    "check": "compileall",
+    "status": "PASS",
+    "exit_code": 0,
+    "command": [
+      "$PY",
+      "-m",
+      "compileall",
+      "packages",
+      "scripts"
+    ]
+  },
+  {
+    "check": "runtime-contracts",
+    "status": "PASS",
+    "exit_code": 0,
+    "command": [
+      "$PY",
+      "-B",
+      "tools/validate_runtime_contracts.py"
+    ]
+  },
+  {
+    "check": "source-lock",
+    "status": "PASS",
+    "exit_code": 0,
+    "command": [
+      "$PY",
+      "-B",
+      "tools/validate_sdlc_github_source_lock.py"
+    ]
+  },
+  {
+    "check": "unittest",
+    "status": "PASS",
+    "exit_code": 0,
+    "command": [
+      "$PY",
+      "-B",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "tests",
+      "-p",
+      "test_*.py",
+      "-v"
+    ]
+  }
+]

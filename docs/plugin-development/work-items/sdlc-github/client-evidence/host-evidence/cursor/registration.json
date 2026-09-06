@@ -1,0 +1,6 @@
+{
+  "native_load": "documented ~/.cursor/plugins/local symlink",
+  "source": "installed/cursor",
+  "existing_same_name_marketplace_plugin": true,
+  "note": "Existing marketplace plugin takes precedence per official docs; checking actual native discovery."
+}

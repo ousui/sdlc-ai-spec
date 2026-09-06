@@ -11,7 +11,7 @@
 
 ## 唯一下一工作包
 
-本地 `CLIENT-GOAL.md`：只执行真实 GitHub、双实例真实身份与 Codex/Cursor/Claude Code 原生验证，保存独立证据，再移交一次 fresh-context Web Review。不是交给 Client 补写主体 Runtime。
+Fresh-context Web Review：固定本次 Client 证据提交，先读 `CLIENT-VALIDATION.md` / `CLIENT-VALIDATION.json` / `SHA256SUMS`，独立核对真实 MCP、三端原生记录和 unknown intent。Client 验证已自然结束；不得重放未知请求或继承旧源码 PASS。
 
 ## 并行和安全边界
 
@@ -20,3 +20,12 @@
 ## 状态含义
 
 代码/Mock 完成与产品接受分开。C/D 未运行时整体未接受，PR 保持 Draft。记录中要分别列源代码 SHA、实测 SHA、文档交付 SHA、远端实际 HEAD；只有本地 Git Bundle 中存在的提交不得称已推送。
+
+## 本次 Client 验证结果（2026-09-06）
+
+- 起始交付 HEAD 为 `6c476e4a58c7fc9871ce876cc7174e7e4d5e51dd`；Runtime 保持 `b035880a6135c1f126ae1a35e1c173221f28807a`，没有源码修复。
+- 实际连续入口 exit 1：32 操作 25 PASS / 1 FAIL / 6 BLOCKED，另有 status partial FAIL。212 offline、6 protocol、1336 全仓回归 PASS；首次 macOS 临时路径失败及修正环境后的重跑都已保存。
+- Codex 固定 9 项原生证据 Oracle PASS，但首次解释器/合约路径错误和发现扫描仍需审查；Cursor 同名旧插件优先导致 BLOCKED；Claude Code 原生发现成功，模型服务 HTTP 522 阻断后续流程。
+- 第二真实账号、既有 Tag/Release、PR checks 权限及上游 Schema 不兼容等缺口见 CLIENT-VALIDATION。
+- 请求 `56de6913-edfc-4beb-bc98-a0f0265b7be5` 在真实崩溃后仍为 unknown；intent 保留，之后无业务写入。禁止换 ID、清除状态或自动重放。
+- Issue #4/#5、Draft PR #6 均已关闭并确认读回；普通评论未创建。PR #14 保持 Draft，产品未接受。

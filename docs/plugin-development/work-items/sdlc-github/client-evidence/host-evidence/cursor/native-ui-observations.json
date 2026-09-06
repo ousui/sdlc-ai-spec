@@ -1,0 +1,29 @@
+{
+  "host": "cursor",
+  "host_version": "3.19.13",
+  "runtime_sha": "b035880a6135c1f126ae1a35e1c173221f28807a",
+  "status": "BLOCKED",
+  "observed_at": "2026-09-06T11:43:56.983714+00:00",
+  "source": "Native Cursor accessibility UI read through CUA; excerpts transcribed from tool output, not a generated host conversation",
+  "workspace": "~/Workspace/goedge.cloud/sdlc-github-foundation-delivery/sdlc-github-client/preparation/prepare/workspace",
+  "observations": [
+    {
+      "surface": "Customize > Skills",
+      "excerpt": "sdlc-ai-spec 8; sdlc-000-ctx; sdlc-100-req; sdlc-200-dsn; sdlc-300-pln; sdlc-400-imp; Show 3 more",
+      "meaning": "Existing marketplace version remains selected; new sdlc-github skill is not discovered."
+    },
+    {
+      "surface": "Customize > MCPs",
+      "excerpt": "Connected 1; Configure github; Plugin; 44 tools, 4 resources enabled",
+      "meaning": "No sdlc_github server or its eight tools is registered in the native host."
+    }
+  ],
+  "mechanism": "Official local plugin symlink under ~/.cursor/plugins/local/sdlc-ai-spec, then actual cursor --new-window invocation",
+  "documentation": "https://prod.cursor.com/docs/plugins",
+  "blocker": "An existing same-name marketplace plugin takes precedence over the local plugin. No isolated version selection was available in the observed native UI. Existing user plugin was preserved.",
+  "native_write_attempts": 0,
+  "temporary_symlink_removed": true,
+  "test_window_closed": true,
+  "global_auto_approve_changed": false,
+  "installed_payload_changed": false
+}

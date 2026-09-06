@@ -1,0 +1,75 @@
+{
+  "case": "test_production_discovery_missing_auth_and_invalid_args_offline",
+  "rows": [
+    {
+      "tool": "sdlc_github_status",
+      "arguments": {},
+      "result": {
+        "contract": "sdlc-ai-spec/github-result/v1",
+        "ok": false,
+        "status": "blocked",
+        "operation": "status",
+        "actor": null,
+        "repository": null,
+        "target": null,
+        "data": null,
+        "pagination": {
+          "mode": "none",
+          "has_more": false,
+          "next_page": null,
+          "next_cursor": null
+        },
+        "completeness": "unknown",
+        "effect": "none",
+        "receipt": null,
+        "errors": [
+          {
+            "code": "AUTH_REQUIRED",
+            "message": "Set SDLC_GITHUB_TOKEN in the host environment, then restart this instance."
+          }
+        ],
+        "warnings": [],
+        "next_action": "Set SDLC_GITHUB_TOKEN in the host environment, then restart this instance."
+      }
+    },
+    {
+      "tool": "sdlc_github_issue_create",
+      "arguments": {
+        "repository": "example/project",
+        "extra": "forbidden"
+      },
+      "result": {
+        "contract": "sdlc-ai-spec/github-result/v1",
+        "ok": false,
+        "status": "blocked",
+        "operation": "issue.create",
+        "actor": null,
+        "repository": null,
+        "target": null,
+        "data": null,
+        "pagination": {
+          "mode": "none",
+          "has_more": false,
+          "next_page": null,
+          "next_cursor": null
+        },
+        "completeness": "unknown",
+        "effect": "none",
+        "receipt": null,
+        "errors": [
+          {
+            "code": "ARGUMENT_INVALID",
+            "message": "Parameters do not match the fixed operation schema; consult help."
+          }
+        ],
+        "warnings": [],
+        "next_action": "Parameters do not match the fixed operation schema; consult help."
+      }
+    }
+  ],
+  "upstream": {
+    "calls": [],
+    "writes": 0
+  },
+  "http_stderr": "$GH_WORK/venv/lib/python3.14/site-packages/pydantic_settings/sources/utils.py:47: IncompleteFieldDefinitionWarning: Field 'lifespan' has an incomplete definition: its annotation contains an unresolved forward reference, so settings sources may fail to correctly resolve its value. Call `model_rebuild()` on the model where the field is defined, once all the referenced types are defined.\n  warnings.warn(\n"
+}

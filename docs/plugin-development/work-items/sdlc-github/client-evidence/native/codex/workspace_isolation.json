@@ -1,0 +1,17 @@
+{
+  "host": "codex",
+  "runtime_sha": "b035880a6135c1f126ae1a35e1c173221f28807a",
+  "calls": [],
+  "file_count": 10000,
+  "before_sha256": "0a301e9043c8322142ccce293a73ba9400bfc7776359ec3a421d2aaf14aa145c",
+  "after_sha256": "0a301e9043c8322142ccce293a73ba9400bfc7776359ec3a421d2aaf14aa145c",
+  "original_files_unchanged": true,
+  "extra_files": [],
+  "original_transcripts": [
+    "codex/session1.native-events.json",
+    "codex/session2.native-events.json",
+    "codex/session1.native-terminal.txt",
+    "codex/session2.native-terminal.txt"
+  ],
+  "limitation": "Initial host skill discovery enumerated workspace directories and searched for AGENTS.md/SKILL.md. No fixture body was read and no original file changed. This is retained for GH-24 review, not hidden as zero scanning."
+}

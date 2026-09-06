@@ -1,0 +1,1636 @@
+{
+  "contract": "sdlc-ai-spec/github-client-validation/v1",
+  "recorded_at": "2026-09-06T12:11:03.237140+00:00",
+  "work_item": "sdlc-github-foundation/v1",
+  "status": "FAIL",
+  "completion": "All runnable cases in this bounded batch were exercised; unresolved environment/schema blockers handed to fresh-context Web Review. Product not accepted.",
+  "repository": "ousui/sdlc-ai-spec",
+  "branch": "impl/sdlc-github-foundation-v1",
+  "draft_pr": "https://github.com/ousui/sdlc-ai-spec/pull/14",
+  "starting_sha": "6c476e4a58c7fc9871ce876cc7174e7e4d5e51dd",
+  "runtime_sha": "b035880a6135c1f126ae1a35e1c173221f28807a",
+  "approved_design_sha": "97c5f17bfcdb2751d446a89b068db2400436631d",
+  "delivery_commit": "The exact commit containing this report; resolve from its Git history. It is a documents/evidence commit and is not a new Runtime SHA.",
+  "source_changed": false,
+  "dependency_lock_sha256": "49665bdee4d204ef52b7b4c08da97fbd11bfb70d8c760ccb950a5333e6feabda",
+  "python": "3.14.7",
+  "remote_mcp": {
+    "endpoint": "https://api.githubcopilot.com/mcp/",
+    "production_entry": "scripts/sdlc_github_mcp.py",
+    "status": "FAIL",
+    "actor": {
+      "id": 2839512,
+      "login": "ousui"
+    },
+    "identity_verified": true,
+    "native_behavior_not_inferred_from_sdk": true,
+    "upstream_calls": "not externally observed"
+  },
+  "run_id": "d46c3043-808f-47b3-afd4-3457f9604c09",
+  "native_run_id": "2e19ac09-23c8-4bad-9a4f-2098849503a8",
+  "fixture": {
+    "repository": "ousui/sdlc-ai-monitor",
+    "head": "fixture/sdlc-github-20260906",
+    "base": "main",
+    "file_path": "README.md",
+    "workflow_id": "351428147",
+    "run_id": 34021751640,
+    "job_id": 101455494899,
+    "sha": "900eb9b34ac9f3bcb114d885ce2371fff4e5d56f",
+    "tag": null,
+    "tag_repository": null
+  },
+  "continuous_entry": {
+    "command": "$PY tests/skill_github/validate.py --layer client --implementation-sha b035880a6135c1f126ae1a35e1c173221f28807a --fixture \"$GH_WORK/fixture.json\" --data-root \"$GH_WORK/data/live\" --native-evidence \"$GH_WORK/native\" --allow-test-writes --output \"$GH_WORK/results\"",
+    "order": [
+      "offline",
+      "integration",
+      "live",
+      "identity",
+      "native"
+    ],
+    "attempts": [
+      {
+        "attempt": 1,
+        "status": "FAIL",
+        "exit_code": 1,
+        "reason": "Noncanonical macOS default tempfile root rejected by filesystem guard; live layer not run",
+        "evidence": "client-evidence/attempts/01-default-tmp"
+      },
+      {
+        "attempt": 2,
+        "status": "FAIL",
+        "exit_code": 1,
+        "process_environment": {
+          "TMPDIR": "$GH_WORK/test-tmp",
+          "PYTHONDONTWRITEBYTECODE": "1"
+        },
+        "reason": "Same source/data/fixture/results, canonical external tempfile root; 212 offline and 6 protocol PASS; real failures retained",
+        "evidence": "client-evidence/attempts/02-canonical-tmp"
+      }
+    ]
+  },
+  "deterministic_validation": {
+    "offline": {
+      "status": "PASS",
+      "tests": 212
+    },
+    "integration": {
+      "status": "PASS",
+      "tests": 6
+    },
+    "regression": {
+      "status": "PASS",
+      "tests": 1336
+    },
+    "compileall": "PASS",
+    "runtime_contracts": "PASS",
+    "source_lock": "PASS",
+    "evidence": "client-evidence/regression/results.json"
+  },
+  "operation_coverage": {
+    "total": 32,
+    "read": {
+      "PASS": 21,
+      "BLOCKED": 5,
+      "FAIL": 1
+    },
+    "write": {
+      "PASS": 4,
+      "BLOCKED": 1
+    },
+    "combined": {
+      "PASS": 25,
+      "BLOCKED": 6,
+      "FAIL": 1
+    },
+    "operations": [
+      {
+        "operation": "issue.create",
+        "status": "PASS",
+        "tool": "sdlc_github_issue_create",
+        "arguments": {
+          "repository": "ousui/sdlc-ai-monitor",
+          "expected_actor_id": 2839512,
+          "write_policy": "auto",
+          "dry_run": false,
+          "title": "[sdlc-github-eval:d46c3043-808f-47b3-afd4-3457f9604c09] issue",
+          "body": "Authorized synthetic GitHub foundation evaluation. Preserve this object and its operation markers for review.",
+          "request_id": "be1191fd-27af-4143-afa7-46b50ecd83a9"
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "issue.create",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": null,
+          "pagination": {
+            "mode": "none",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "complete",
+          "effect": "confirmed",
+          "receipt": {
+            "request_id": "be1191fd-27af-4143-afa7-46b50ecd83a9",
+            "operation": "issue.create",
+            "remote_id": "5364780819",
+            "url": "https://github.com/ousui/sdlc-ai-monitor/issues/5",
+            "record_state": "completed",
+            "time": "2026-09-06T11:53:55.364318+00:00",
+            "readback_verified": true
+          },
+          "errors": [],
+          "warnings": [],
+          "next_action": null,
+          "response_sha256": "da1d89efd8143064439c68cf31468117059894f0b898271b6c2adc0a287982e3",
+          "identifiers": {
+            "number": 5,
+            "id": "5364780819",
+            "url": "https://github.com/ousui/sdlc-ai-monitor/issues/5",
+            "state": "open"
+          }
+        }
+      },
+      {
+        "operation": "pr.create",
+        "status": "PASS",
+        "tool": "sdlc_github_pr_create",
+        "arguments": {
+          "repository": "ousui/sdlc-ai-monitor",
+          "expected_actor_id": 2839512,
+          "write_policy": "auto",
+          "dry_run": false,
+          "head": "fixture/sdlc-github-20260906",
+          "base": "main",
+          "title": "[sdlc-github-eval:d46c3043-808f-47b3-afd4-3457f9604c09] draft",
+          "body": "Authorized synthetic GitHub foundation evaluation. Preserve this object and its operation markers for review.",
+          "request_id": "dc9354af-6c61-47f6-b296-07d0b198c8f3"
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "pr.create",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "head": "fixture/sdlc-github-20260906",
+            "base": "main"
+          },
+          "pagination": {
+            "mode": "none",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "complete",
+          "effect": "confirmed",
+          "receipt": {
+            "request_id": "dc9354af-6c61-47f6-b296-07d0b198c8f3",
+            "operation": "pr.create",
+            "remote_id": "4455996344",
+            "url": "https://github.com/ousui/sdlc-ai-monitor/pull/6",
+            "record_state": "completed",
+            "time": "2026-09-06T11:54:10.727861+00:00",
+            "readback_verified": true
+          },
+          "errors": [],
+          "warnings": [],
+          "next_action": null,
+          "response_sha256": "b1f71d73e472fe23dc3976c44c3f7bd58b77d7b12c23a3d8be08666a061da8ce",
+          "identifiers": {
+            "number": 6,
+            "id": "4455996344",
+            "url": "https://github.com/ousui/sdlc-ai-monitor/pull/6",
+            "state": "open",
+            "draft": true
+          }
+        }
+      },
+      {
+        "operation": "comment.create",
+        "status": "BLOCKED",
+        "tool": "sdlc_github_comment_create",
+        "arguments": {
+          "repository": "ousui/sdlc-ai-monitor",
+          "expected_actor_id": 2839512,
+          "write_policy": "auto",
+          "dry_run": false,
+          "subject_type": "issue",
+          "number": 5,
+          "body": "Authorized synthetic GitHub foundation evaluation. Preserve this object and its operation markers for review. Ordinary comment.",
+          "request_id": "40a9633a-bc6c-428a-8fab-ba291f4d052a"
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": false,
+          "status": "blocked",
+          "operation": "comment.create",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": null,
+          "pagination": {
+            "mode": "none",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "unknown",
+          "effect": "none",
+          "receipt": null,
+          "errors": [
+            {
+              "code": "CAPABILITY_UNAVAILABLE",
+              "message": "A required upstream tool or parameter schema is incompatible."
+            }
+          ],
+          "warnings": [],
+          "next_action": "A required upstream tool or parameter schema is incompatible.",
+          "response_sha256": "0f7a9d4a7b50224999799c79e9e7cde9c5d3ffca485bd904912172705b9988b3"
+        }
+      },
+      {
+        "operation": "repo.branches",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "repo.branches",
+          "repository": "ousui/sdlc-ai-monitor"
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "repo.branches",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": null,
+          "pagination": {
+            "mode": "page",
+            "has_more": "unknown",
+            "next_page": 2,
+            "next_cursor": null
+          },
+          "completeness": "unknown",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": "Read an explicitly selected next page; do not infer complete coverage.",
+          "response_sha256": "ba59e07f9a77a6bf93c8120932049b869bd04cdbde80ad9ef8644920bde50867",
+          "item_count": 3
+        }
+      },
+      {
+        "operation": "repo.commits",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "repo.commits",
+          "repository": "ousui/sdlc-ai-monitor",
+          "sha": "fixture/sdlc-github-20260906"
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "repo.commits",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "sha": "fixture/sdlc-github-20260906"
+          },
+          "pagination": {
+            "mode": "page",
+            "has_more": "unknown",
+            "next_page": 2,
+            "next_cursor": null
+          },
+          "completeness": "unknown",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": "Read an explicitly selected next page; do not infer complete coverage.",
+          "response_sha256": "b3bf12221ba0a9df6b7b230a525b0f89c187fdc0ff31f0f548f14ba2e89defa5",
+          "item_count": 11
+        }
+      },
+      {
+        "operation": "repo.files",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "repo.files",
+          "repository": "ousui/sdlc-ai-monitor",
+          "path": "README.md",
+          "sha": "900eb9b34ac9f3bcb114d885ce2371fff4e5d56f"
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "repo.files",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "path": "README.md",
+            "sha": "900eb9b34ac9f3bcb114d885ce2371fff4e5d56f"
+          },
+          "pagination": {
+            "mode": "none",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "complete",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": null,
+          "response_sha256": "a6419386ad2514936067f70051296b1ec270246be13aabbf56928d1f4355a4db",
+          "identifiers": {
+            "sha": "0bcbc34ce4fb9b824ac724bc91918f7c27bc168d"
+          }
+        }
+      },
+      {
+        "operation": "repo.commit",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "repo.commit",
+          "repository": "ousui/sdlc-ai-monitor",
+          "sha": "900eb9b34ac9f3bcb114d885ce2371fff4e5d56f"
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "repo.commit",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "sha": "900eb9b34ac9f3bcb114d885ce2371fff4e5d56f"
+          },
+          "pagination": {
+            "mode": "page",
+            "has_more": "unknown",
+            "next_page": 2,
+            "next_cursor": null
+          },
+          "completeness": "unknown",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": "Read an explicitly selected next page; do not infer complete coverage.",
+          "response_sha256": "73ad2168eda527fa172401d0d6dacb47266579c0f6542e82ddc8c8c5b94f751b",
+          "identifiers": {
+            "html_url": "https://github.com/ousui/sdlc-ai-monitor/commit/900eb9b34ac9f3bcb114d885ce2371fff4e5d56f",
+            "sha": "900eb9b34ac9f3bcb114d885ce2371fff4e5d56f"
+          }
+        }
+      },
+      {
+        "operation": "repo.tags",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "repo.tags",
+          "repository": "ousui/sdlc-ai-monitor"
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "repo.tags",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": null,
+          "pagination": {
+            "mode": "page",
+            "has_more": "unknown",
+            "next_page": 2,
+            "next_cursor": null
+          },
+          "completeness": "unknown",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": "Read an explicitly selected next page; do not infer complete coverage.",
+          "response_sha256": "3b8e7e1e8b3005021e19b06c10efc57bd9b980835329ceac23ec3cad87c421ba",
+          "item_count": 0
+        }
+      },
+      {
+        "operation": "repo.tag",
+        "status": "BLOCKED",
+        "reason": "Existing Tag fixture required; this batch never creates Tags",
+        "mcp_calls": 0
+      },
+      {
+        "operation": "issue.list",
+        "status": "BLOCKED",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "issue.list",
+          "repository": "ousui/sdlc-ai-monitor",
+          "state": "all"
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": false,
+          "status": "blocked",
+          "operation": "issue.list",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": null,
+          "pagination": {
+            "mode": "none",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "unknown",
+          "effect": "none",
+          "receipt": null,
+          "errors": [
+            {
+              "code": "CAPABILITY_UNAVAILABLE",
+              "message": "A required upstream tool or parameter schema is incompatible."
+            }
+          ],
+          "warnings": [],
+          "next_action": "A required upstream tool or parameter schema is incompatible.",
+          "response_sha256": "f877c37beff374932d94d8d58f5d08c012397039c5bb6a0e2bae65ab474f8c16"
+        }
+      },
+      {
+        "operation": "issue.get",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "issue.get",
+          "repository": "ousui/sdlc-ai-monitor",
+          "number": 5
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "issue.get",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "number": 5
+          },
+          "pagination": {
+            "mode": "none",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "complete",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": null,
+          "response_sha256": "afe6a14493358d0419b715b0dd5db678dafe3e1ea46875993ee200a60be38873",
+          "identifiers": {
+            "number": 5,
+            "html_url": "https://github.com/ousui/sdlc-ai-monitor/issues/5",
+            "state": "open"
+          }
+        }
+      },
+      {
+        "operation": "issue.comments",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "issue.comments",
+          "repository": "ousui/sdlc-ai-monitor",
+          "number": 5
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "issue.comments",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "number": 5
+          },
+          "pagination": {
+            "mode": "page",
+            "has_more": "unknown",
+            "next_page": 2,
+            "next_cursor": null
+          },
+          "completeness": "unknown",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": "Read an explicitly selected next page; do not infer complete coverage.",
+          "response_sha256": "fd090830ba2caf7040350bc0b463ad02295045f5529b96199ed4255a4fc4a777",
+          "item_count": 0
+        }
+      },
+      {
+        "operation": "pr.list",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "pr.list",
+          "repository": "ousui/sdlc-ai-monitor",
+          "state": "all"
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "pr.list",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": null,
+          "pagination": {
+            "mode": "page",
+            "has_more": "unknown",
+            "next_page": 2,
+            "next_cursor": null
+          },
+          "completeness": "unknown",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": "Read an explicitly selected next page; do not infer complete coverage.",
+          "response_sha256": "bc084e5be79db8e164482dab51a6e1d0fcd5082e3d2c345a8fea7a2d66ce71d4",
+          "item_count": 4
+        }
+      },
+      {
+        "operation": "pr.get",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "pr.get",
+          "repository": "ousui/sdlc-ai-monitor",
+          "number": 6
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "pr.get",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "number": 6
+          },
+          "pagination": {
+            "mode": "none",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "complete",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": null,
+          "response_sha256": "2efdf50c72c6831d090d426b0dd62576ec1b106f21139b7fb7b60cf009968a3f",
+          "identifiers": {
+            "number": 6,
+            "html_url": "https://github.com/ousui/sdlc-ai-monitor/pull/6",
+            "state": "open",
+            "draft": true
+          }
+        }
+      },
+      {
+        "operation": "pr.diff",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "pr.diff",
+          "repository": "ousui/sdlc-ai-monitor",
+          "number": 6
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "pr.diff",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "number": 6
+          },
+          "pagination": {
+            "mode": "none",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "complete",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": null,
+          "response_sha256": "15502c30de9c67250dc3af27b3b80dfce19cd6ab3938b08c141d1177ee873f9d"
+        }
+      },
+      {
+        "operation": "pr.files",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "pr.files",
+          "repository": "ousui/sdlc-ai-monitor",
+          "number": 6
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "pr.files",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "number": 6
+          },
+          "pagination": {
+            "mode": "page",
+            "has_more": "unknown",
+            "next_page": 2,
+            "next_cursor": null
+          },
+          "completeness": "unknown",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": "Read an explicitly selected next page; do not infer complete coverage.",
+          "response_sha256": "9646d648d688a651f7aa602a01aeab149bc77ec61a49b35d172b8789f6c3e3d5",
+          "item_count": 2
+        }
+      },
+      {
+        "operation": "pr.reviews",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "pr.reviews",
+          "repository": "ousui/sdlc-ai-monitor",
+          "number": 6
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "pr.reviews",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "number": 6
+          },
+          "pagination": {
+            "mode": "page",
+            "has_more": "unknown",
+            "next_page": 2,
+            "next_cursor": null
+          },
+          "completeness": "unknown",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": "Read an explicitly selected next page; do not infer complete coverage.",
+          "response_sha256": "0292a23ab6fac6c32d867dc74c57e2d8614af35e2430d8fbdfb1a80ee7fa206f",
+          "item_count": 0
+        }
+      },
+      {
+        "operation": "pr.review-comments",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "pr.review-comments",
+          "repository": "ousui/sdlc-ai-monitor",
+          "number": 6
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "pr.review-comments",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "number": 6
+          },
+          "pagination": {
+            "mode": "cursor",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "complete",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": null,
+          "response_sha256": "4de4b0142f304968e7b8942b1918762c74208508ba5282fba63f46706795b27a",
+          "identifiers": {},
+          "item_count": 0
+        }
+      },
+      {
+        "operation": "pr.comments",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "pr.comments",
+          "repository": "ousui/sdlc-ai-monitor",
+          "number": 6
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "pr.comments",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "number": 6
+          },
+          "pagination": {
+            "mode": "page",
+            "has_more": "unknown",
+            "next_page": 2,
+            "next_cursor": null
+          },
+          "completeness": "unknown",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": "Read an explicitly selected next page; do not infer complete coverage.",
+          "response_sha256": "b5bee04fa478a390cdd9d81b663decb37c063684ed401ed53d4b92343616c2ee",
+          "item_count": 0
+        }
+      },
+      {
+        "operation": "pr.checks",
+        "status": "BLOCKED",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "pr.checks",
+          "repository": "ousui/sdlc-ai-monitor",
+          "number": 6
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": false,
+          "status": "blocked",
+          "operation": "pr.checks",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": null,
+          "pagination": {
+            "mode": "none",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "unknown",
+          "effect": "none",
+          "receipt": null,
+          "errors": [
+            {
+              "code": "PERMISSION_DENIED",
+              "message": "The authenticated account cannot perform this operation."
+            }
+          ],
+          "warnings": [],
+          "next_action": "The authenticated account cannot perform this operation.",
+          "response_sha256": "e9d33adde3bc5095c187111ac4a4cedcffe319a6c275769642679920680d3b27"
+        }
+      },
+      {
+        "operation": "pr.status",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "pr.status",
+          "repository": "ousui/sdlc-ai-monitor",
+          "number": 6
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "pr.status",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "number": 6
+          },
+          "pagination": {
+            "mode": "none",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "complete",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": null,
+          "response_sha256": "a536462eac473ab72b47b543f292b839b6e42bbbcbe7958e444c7fcd43d9ba35",
+          "identifiers": {
+            "sha": "900eb9b34ac9f3bcb114d885ce2371fff4e5d56f",
+            "state": "pending"
+          }
+        }
+      },
+      {
+        "operation": "actions.workflows",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "actions.workflows",
+          "repository": "ousui/sdlc-ai-monitor"
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "actions.workflows",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": null,
+          "pagination": {
+            "mode": "page",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "complete",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": null,
+          "response_sha256": "32f224679c1fca03e8a7141667ecebc785fd9becbf837834d0a5a0183ae41d1c",
+          "identifiers": {},
+          "item_count": 1
+        }
+      },
+      {
+        "operation": "actions.runs",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "actions.runs",
+          "repository": "ousui/sdlc-ai-monitor",
+          "workflow_id": "351428147"
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "actions.runs",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "workflow_id": "351428147"
+          },
+          "pagination": {
+            "mode": "page",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "complete",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": null,
+          "response_sha256": "5b303100f098b169f1af96e829cb51bad0f141295d67ce61f268ccd56485bc67",
+          "identifiers": {},
+          "item_count": 1
+        }
+      },
+      {
+        "operation": "actions.jobs",
+        "status": "FAIL",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "actions.jobs",
+          "repository": "ousui/sdlc-ai-monitor",
+          "run_id": 34021751640
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": false,
+          "status": "failed",
+          "operation": "actions.jobs",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": null,
+          "pagination": {
+            "mode": "none",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "unknown",
+          "effect": "none",
+          "receipt": null,
+          "errors": [
+            {
+              "code": "UPSTREAM_INVALID",
+              "message": "The upstream response does not satisfy this operation's contract."
+            }
+          ],
+          "warnings": [],
+          "next_action": "The upstream response does not satisfy this operation's contract.",
+          "response_sha256": "4a53f252b08bdff6e51aff39688b6006879bbcfc59d7f265277c4175269249fc"
+        }
+      },
+      {
+        "operation": "actions.artifacts",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "actions.artifacts",
+          "repository": "ousui/sdlc-ai-monitor",
+          "run_id": 34021751640
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "actions.artifacts",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "run_id": 34021751640
+          },
+          "pagination": {
+            "mode": "page",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "complete",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": null,
+          "response_sha256": "8047133735aa2934e5ff2d9449b09cdacfb566971ba7ba868aeddf70d3524609",
+          "identifiers": {},
+          "item_count": 1
+        }
+      },
+      {
+        "operation": "actions.run",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "actions.run",
+          "repository": "ousui/sdlc-ai-monitor",
+          "run_id": 34021751640
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "actions.run",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "run_id": 34021751640
+          },
+          "pagination": {
+            "mode": "none",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "complete",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": null,
+          "response_sha256": "b71eef548c39b9e0baf8a08b43b5a3e272da8e5c3921d88db8b6be2bae0c54a6",
+          "identifiers": {
+            "id": 34021751640,
+            "html_url": "https://github.com/ousui/sdlc-ai-monitor/actions/runs/34021751640"
+          },
+          "item_count": 1
+        }
+      },
+      {
+        "operation": "actions.logs",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "actions.logs",
+          "repository": "ousui/sdlc-ai-monitor",
+          "job_id": 101455494899
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "actions.logs",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "job_id": 101455494899
+          },
+          "pagination": {
+            "mode": "none",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "complete",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": null,
+          "response_sha256": "f208988e1616c9191557cb9be22b6640cb6d90a801fb335efaa5944fcf713bf4",
+          "identifiers": {
+            "job_id": 101455494899
+          }
+        }
+      },
+      {
+        "operation": "release.list",
+        "status": "PASS",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "release.list",
+          "repository": "ousui/sdlc-ai-monitor"
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "release.list",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": null,
+          "pagination": {
+            "mode": "page",
+            "has_more": "unknown",
+            "next_page": 2,
+            "next_cursor": null
+          },
+          "completeness": "unknown",
+          "effect": "none",
+          "receipt": null,
+          "errors": [],
+          "warnings": [],
+          "next_action": "Read an explicitly selected next page; do not infer complete coverage.",
+          "response_sha256": "22d219b444ac6b8f6b4fa25da4edaaf8a8466917a8d6779b0e9e79e6af3ad3c0",
+          "item_count": 0
+        }
+      },
+      {
+        "operation": "release.get",
+        "status": "BLOCKED",
+        "reason": "Existing release/tag fixture required",
+        "mcp_calls": 0
+      },
+      {
+        "operation": "release.latest",
+        "status": "BLOCKED",
+        "tool": "sdlc_github_read",
+        "arguments": {
+          "operation": "release.latest",
+          "repository": "ousui/sdlc-ai-monitor"
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": false,
+          "status": "blocked",
+          "operation": "release.latest",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": null,
+          "pagination": {
+            "mode": "none",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "unknown",
+          "effect": "none",
+          "receipt": null,
+          "errors": [
+            {
+              "code": "NOT_FOUND_OR_INACCESSIBLE",
+              "message": "The exact target was not found or is not accessible."
+            }
+          ],
+          "warnings": [],
+          "next_action": "The exact target was not found or is not accessible.",
+          "response_sha256": "631469336c79eb7c7de21f789b79a5f85165c3b273e4b30dff80a5b725644556"
+        }
+      },
+      {
+        "operation": "issue.update",
+        "status": "PASS",
+        "tool": "sdlc_github_issue_update",
+        "arguments": {
+          "repository": "ousui/sdlc-ai-monitor",
+          "expected_actor_id": 2839512,
+          "write_policy": "auto",
+          "dry_run": false,
+          "number": 5,
+          "title": "[sdlc-github-eval:d46c3043-808f-47b3-afd4-3457f9604c09] issue verified",
+          "state": "closed",
+          "request_id": "66e011b6-d961-4733-8ed5-26a97e8c5a97"
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "issue.update",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "number": 5
+          },
+          "pagination": {
+            "mode": "none",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "complete",
+          "effect": "confirmed",
+          "receipt": {
+            "request_id": "66e011b6-d961-4733-8ed5-26a97e8c5a97",
+            "operation": "issue.update",
+            "remote_id": "5364780819",
+            "url": "https://github.com/ousui/sdlc-ai-monitor/issues/5",
+            "record_state": "completed",
+            "time": "2026-09-06T11:58:10.453055+00:00",
+            "readback_verified": true
+          },
+          "errors": [],
+          "warnings": [],
+          "next_action": null,
+          "response_sha256": "506d72edbd01f0af4adf0b1cd9eeb2bf70a9cf1ffeeb5f49346d2bb54264e85a",
+          "identifiers": {
+            "number": 5,
+            "id": "5364780819",
+            "url": "https://github.com/ousui/sdlc-ai-monitor/issues/5",
+            "state": "closed"
+          }
+        }
+      },
+      {
+        "operation": "pr.update",
+        "status": "PASS",
+        "tool": "sdlc_github_pr_update",
+        "arguments": {
+          "repository": "ousui/sdlc-ai-monitor",
+          "expected_actor_id": 2839512,
+          "write_policy": "auto",
+          "dry_run": false,
+          "number": 6,
+          "title": "[sdlc-github-eval:d46c3043-808f-47b3-afd4-3457f9604c09] draft verified",
+          "state": "closed",
+          "request_id": "e6972b98-73a4-4409-a228-d0cca4095a8e"
+        },
+        "mcp_calls": 1,
+        "upstream_calls": "not externally observed",
+        "response": {
+          "contract": "sdlc-ai-spec/github-result/v1",
+          "ok": true,
+          "status": "completed",
+          "operation": "pr.update",
+          "actor": {
+            "id": 2839512,
+            "login": "ousui"
+          },
+          "repository": "ousui/sdlc-ai-monitor",
+          "target": {
+            "number": 6
+          },
+          "pagination": {
+            "mode": "none",
+            "has_more": false,
+            "next_page": null,
+            "next_cursor": null
+          },
+          "completeness": "complete",
+          "effect": "confirmed",
+          "receipt": {
+            "request_id": "e6972b98-73a4-4409-a228-d0cca4095a8e",
+            "operation": "pr.update",
+            "remote_id": "4455996344",
+            "url": "https://github.com/ousui/sdlc-ai-monitor/pull/6",
+            "record_state": "completed",
+            "time": "2026-09-06T11:58:26.019877+00:00",
+            "readback_verified": true
+          },
+          "errors": [],
+          "warnings": [],
+          "next_action": null,
+          "response_sha256": "e8e53f4f2547cd1a7f941619e71a7e5036d8ead35c03ce5afb979c362fae5b89",
+          "identifiers": {
+            "number": 6,
+            "id": "4455996344",
+            "url": "https://github.com/ousui/sdlc-ai-monitor/pull/6",
+            "state": "closed",
+            "draft": true
+          }
+        }
+      }
+    ]
+  },
+  "native_evidence_validator": {
+    "layer": "native",
+    "status": "BLOCKED",
+    "meaning": "Native evidence package checks, not simulated native execution. Fresh-context review must inspect original host transcripts.",
+    "hosts": [
+      {
+        "host": "codex",
+        "status": "PASS",
+        "pending_checks": [],
+        "record_sha256": "bf17f67717fec44721b083e2908d64c31f9c248a4e06030c88e990e31f17331b"
+      },
+      {
+        "host": "cursor",
+        "status": "BLOCKED",
+        "reason": "Native evidence record missing"
+      },
+      {
+        "host": "claude-code",
+        "status": "BLOCKED",
+        "pending_checks": [
+          "explicit_invocation",
+          "approval_denial",
+          "write_readback",
+          "restart_receipt",
+          "no_implicit_invocation",
+          "exclusive_execution"
+        ],
+        "record_sha256": "a8598a772eb8278f1fb5ed9aa8c3b62ecf4883e12d8ac47d0ea570834a12ca5c"
+      }
+    ]
+  },
+  "native_acceptance_note": "Codex satisfies the nine fixed trace oracles after explicit interpreter guidance. Initial compiler/path failures and metadata scanning remain separate FAIL findings; native oracle PASS is not unconditional GH-24/product acceptance. Cursor and Claude Code remain independent BLOCKED results.",
+  "identity": {
+    "actor_a": {
+      "id": 2839512,
+      "login": "ousui"
+    },
+    "actor_b": null,
+    "two_real_actors": "BLOCKED",
+    "actor_mismatch_zero_effect": "PASS",
+    "reused_same_account_tokens_not_used_as_proof": true
+  },
+  "persistence": {
+    "post_write_restart": "PASS",
+    "installed_path_change": "PASS",
+    "cache_sentinel_removal": "PASS",
+    "cache_limit": "Only synthetic disposable cache sentinel; no production cache existed",
+    "concurrent_same_request_and_crash": "PASS",
+    "real_crash_window": "After durable intent, before receipt; process SIGKILL -9",
+    "unknown_request_id": "56de6913-edfc-4beb-bc98-a0f0265b7be5",
+    "unknown_effect": "unknown",
+    "readonly_reconciliation": "BLOCKED",
+    "post_unknown_write_calls": 0,
+    "separate_sdk_only_disconnect": "NOT_RUN",
+    "all_other_real_crash_windows": "NOT_RUN",
+    "limitation": "Other injection windows and isolated SDK disconnect covered by current A/B tests only, not claimed as real hosted PASS. A fixed single real crash ended business writes.",
+    "evidence": "client-evidence/persistence"
+  },
+  "findings": [
+    {
+      "id": "CLIENT-F01",
+      "status": "FAIL",
+      "operation": "actions.jobs",
+      "evidence": "client-evidence/results/live/LIVE-VALIDATION.json",
+      "diagnostic_evidence": "client-evidence/auxiliary/upstream-schema-diagnosis.json",
+      "cause": "Official response has shape {jobs:{total_count,jobs:[...]}}. The current list extractor expects an array at the jobs key and rejects this nested envelope with UPSTREAM_INVALID.",
+      "source_reference": "packages/sdlc_github/service.py:items/validate_data",
+      "source_modified": false
+    },
+    {
+      "id": "CLIENT-F02",
+      "status": "FAIL",
+      "operation": "status",
+      "evidence": "client-evidence/results/live/LIVE-VALIDATION.json",
+      "cause": "Verified actor is present, but issue.list and comment.create capabilities are false. Production status is partial/ok=false, so the unchanged controller records FAIL. This status row is additional to the 32 business operations.",
+      "source_modified": false
+    },
+    {
+      "id": "CLIENT-D01",
+      "status": "BLOCKED",
+      "operation": "issue.list",
+      "cause": "Current official list_issues state enum is OPEN/CLOSED; capability probe sends open/closed. Runtime fails closed with CAPABILITY_UNAVAILABLE.",
+      "evidence": "client-evidence/auxiliary/upstream-schema-diagnosis.json"
+    },
+    {
+      "id": "CLIENT-D02",
+      "status": "BLOCKED",
+      "operation": "comment.create",
+      "cause": "Capability probe tests body=\"\", while current add_issue_comment schema requires minLength 1. Even the authorized nonempty comment is blocked before the mutation.",
+      "evidence": "client-evidence/auxiliary/upstream-schema-diagnosis.json"
+    },
+    {
+      "id": "CLIENT-D03",
+      "status": "BLOCKED",
+      "operation": "pr.checks",
+      "cause": "Real official MCP returned PERMISSION_DENIED for the current token. No privilege expansion attempted.",
+      "evidence": "client-evidence/results/live/LIVE-VALIDATION.json"
+    },
+    {
+      "id": "CLIENT-N01",
+      "status": "FAIL",
+      "host": "codex",
+      "scope": "Initial unassisted compiler command",
+      "cause": "Native agent selected system python3; jsonschema was unavailable there. After explicit prepared-interpreter guidance, subsequent compile/write/receipt commands succeeded. The initial failure remains in original transcript; it is not silently erased by the nine fixed native checks.",
+      "evidence": "client-evidence/native/codex/session1.native-events.json"
+    },
+    {
+      "id": "CLIENT-N02",
+      "status": "FAIL",
+      "host": "codex",
+      "scope": "Initial shared-contract path resolution",
+      "cause": "Native agent first tried plugin-root/contracts/github-runtime.md, which does not exist; recovered to skills/_shared/contracts/github-runtime.md. Initial directory/AGENTS/Skill discovery also enumerated workspace metadata. No original fixture body was read or modified. GH-24 no-unnecessary-scanning acceptance needs independent review.",
+      "evidence": "client-evidence/native/codex/session1.native-events.json"
+    }
+  ],
+  "blockers": [
+    {
+      "id": "GH-03",
+      "status": "BLOCKED",
+      "reason": "No SDLC_GITHUB_TOKEN_B for a second distinct real actor. Actor A=ousui/2839512 verified; actor mismatch rejection with synthetic expected id 1 does not prove a second actor.",
+      "evidence": "client-evidence/results/VALIDATION.json"
+    },
+    {
+      "id": "TAG-RELEASE",
+      "status": "BLOCKED",
+      "operations": [
+        "repo.tag",
+        "release.get",
+        "release.latest"
+      ],
+      "reason": "Repository tags/releases were empty; no authorized existing single-object fixture. latest returned NOT_FOUND_OR_INACCESSIBLE. No tag/release was created."
+    },
+    {
+      "id": "CURSOR-NATIVE",
+      "status": "BLOCKED",
+      "reason": "Cursor 3.19.13 keeps the existing same-name marketplace plugin ahead of the local copy. Actual UI shows eight old Skills and only github with 44 tools; current sdlc_github is absent. Existing user plugin preserved.",
+      "evidence": "client-evidence/native/cursor/blocked.json"
+    },
+    {
+      "id": "CLAUDE-NATIVE",
+      "status": "BLOCKED",
+      "reason": "Claude Code 2.1.204 natively discovers the current Skill and eight tools, but its configured model provider returns HTTP 522 on both explicit Skill requests. No GitHub tool executes.",
+      "evidence": "client-evidence/native/claude-code/session1.native-events.json"
+    },
+    {
+      "id": "UNKNOWN-RECONCILE",
+      "status": "BLOCKED",
+      "request_id": "56de6913-edfc-4beb-bc98-a0f0265b7be5",
+      "reason": "Durable post-crash effect remains unknown; read-only reconcile remains unknown while issue.list capability is unavailable. Auxiliary first-page marker lookup found no object; this does not prove no remote effect. Preserve intent, do not replay.",
+      "evidence": "client-evidence/persistence/crash-race.json"
+    }
+  ],
+  "objects": [
+    {
+      "type": "issue",
+      "host": "codex",
+      "url": "https://github.com/ousui/sdlc-ai-monitor/issues/4",
+      "state": "closed",
+      "readback_verified": true
+    },
+    {
+      "type": "issue",
+      "host": "production-stdio",
+      "url": "https://github.com/ousui/sdlc-ai-monitor/issues/5",
+      "state": "closed",
+      "readback_verified": true
+    },
+    {
+      "type": "pr",
+      "host": "production-stdio",
+      "url": "https://github.com/ousui/sdlc-ai-monitor/pull/6",
+      "state": "closed",
+      "draft": true,
+      "readback_verified": true
+    }
+  ],
+  "comments_created": [],
+  "workspace": {
+    "original_file_count": 10000,
+    "original_files_unchanged": true,
+    "native_data_roots": [
+      "$GH_WORK/data/codex",
+      "$GH_WORK/data/cursor",
+      "$GH_WORK/data/claude-code"
+    ],
+    "cross_host_acceptance": "BLOCKED",
+    "reason": "Only Codex completed the whole native workload; Cursor/Claude blocked. Do not substitute installation or empty-root checks for their missing workload."
+  },
+  "secrets": {
+    "status": "PASS",
+    "report": "client-evidence/secret-scan.json",
+    "token_values_archived": false,
+    "token_hashes_archived": false
+  },
+  "temporary_resources": {
+    "stable_work_directory": "Sibling sdlc-github-client; all fixture/data/run-state/results preserved",
+    "canonical_test_tmp": "$GH_WORK/test-tmp; empty after tests",
+    "system_temp_diagnostic": "One TemporaryDirectory used for the macOS canonical-path diagnosis and automatically removed",
+    "tmp_files_created_manually": false,
+    "host_registration_cleanup": "Temporary Codex plugin and marketplace removed; Cursor test symlink removed and test window closed; Claude session-only plugin exited. Native host-owned trust/recent-session records may remain; no global auto-approve enabled."
+  },
+  "next_work_package": {
+    "type": "fresh-context Web Review",
+    "entry": "CLIENT-VALIDATION.md",
+    "companion_files": [
+      "CLIENT-VALIDATION.json",
+      "SHA256SUMS",
+      "client-evidence/native",
+      "client-evidence/persistence",
+      "WEB-VALIDATION.md"
+    ],
+    "constraints": "Keep PR Draft. Do not replay unknown request, change request IDs, delete durable records, merge, tag, release, or modify main. Any future runtime repair needs its own exact source SHA and new affected tests/native revalidation."
+  }
+}

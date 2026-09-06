@@ -6,7 +6,7 @@
 - Maintainer 已在本会话明确批准设计提交：`97c5f17bfcdb2751d446a89b068db2400436631d`。
 - 本轮附加指令：完成全部代码与内容，先通过 Mock；真实连接、Token 和本地宿主验证留给 Client。
 - 独立分支：`impl/sdlc-github-foundation-v1`；既有 Draft PR #14。
-- 生产实现、确定性测试、真实 stdio/Fake HTTP MCP、三份安装配置已完成；准确被测源码 SHA 和最终运行结果由随后文档提交的 WEB-VALIDATION 登记。
+- 生产实现、确定性测试、真实 stdio/Fake HTTP MCP、三份安装配置已完成；准确被测源码 SHA 为 `b035880a6135c1f126ae1a35e1c173221f28807a`；最终 Web 程序结果为 offline 212、integration 6、全仓 1336 项通过，完整证据见 WEB-VALIDATION。
 - 本文不改变 DESIGN.md、EVAL-PLAN.md 的已批准定义；批准依据是用户明确指令，不是 Agent 自行批准。
 
 ## 唯一下一工作包

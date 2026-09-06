@@ -1,0 +1,10 @@
+{
+  "VALIDATION.json": "cac6d9a5be022ab8239b9253176f2a6be0f65b4ce9387c861af2635bba566f32",
+  "integration/protocol-evidence/test_all_32_operations_and_annotations.json": "04ec8f073963146a4e4587e7e076cb2cdd2ab368123b5f2f52a089316c40fce2",
+  "integration/protocol-evidence/test_installed_copy_three_sequential_host_configs.json": "7fe55a3def9eccb9fed479cdd07f83bffa1c0fe5efc90ef553ba119a13324966",
+  "integration/protocol-evidence/test_production_discovery_missing_auth_and_invalid_args_offline.json": "c4acd3db14115d3657a344714addfbcfbc7b64ab48e660bec14c1af7b707f90a",
+  "integration/protocol-evidence/test_real_process_crash_no_replay_and_readonly_reconcile.json": "5a386ce190ecceac4b4f64559287ddb17c51ed014cfd8eea73ca324833d2a0f0",
+  "integration/protocol-evidence/test_restart_cache_clear_and_token_identity.json": "0b935157b972397123a3d3a7a4e3c1cf5356e77138d62ce4fd9f93b5ebc69575",
+  "integration/protocol-evidence/test_wire_auth_error_does_not_echo_credential.json": "834d369833711f9a4cdc525ac5a07517e869025a1925d72fc80591d5c8700f9b",
+  "integration/unittest.log": "79aa6af16ae82f8e79f97b994694efc5ee5be9b41bb0e9457853b6d0a053f791"
+}

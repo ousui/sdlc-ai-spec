@@ -1,0 +1,54 @@
+{
+  "contract": "sdlc-ai-spec/github-native-evidence/v1",
+  "host": "cursor",
+  "host_version": null,
+  "runtime_sha": "b035880a6135c1f126ae1a35e1c173221f28807a",
+  "dependency_lock_sha256": "49665bdee4d204ef52b7b4c08da97fbd11bfb70d8c760ccb950a5333e6feabda",
+  "checks": {
+    "discovery": {
+      "status": "NOT_RUN",
+      "trace": null,
+      "trace_sha256": null
+    },
+    "explicit_invocation": {
+      "status": "NOT_RUN",
+      "trace": null,
+      "trace_sha256": null
+    },
+    "approval_denial": {
+      "status": "NOT_RUN",
+      "trace": null,
+      "trace_sha256": null
+    },
+    "write_readback": {
+      "status": "NOT_RUN",
+      "trace": null,
+      "trace_sha256": null
+    },
+    "restart_receipt": {
+      "status": "NOT_RUN",
+      "trace": null,
+      "trace_sha256": null
+    },
+    "no_implicit_invocation": {
+      "status": "NOT_RUN",
+      "trace": null,
+      "trace_sha256": null
+    },
+    "exclusive_execution": {
+      "status": "NOT_RUN",
+      "trace": null,
+      "trace_sha256": null
+    },
+    "workspace_isolation": {
+      "status": "NOT_RUN",
+      "trace": null,
+      "trace_sha256": null
+    },
+    "secret_scan": {
+      "status": "NOT_RUN",
+      "trace": null,
+      "trace_sha256": null
+    }
+  }
+}

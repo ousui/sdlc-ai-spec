@@ -208,14 +208,14 @@ Skill 在当前用户明确要求的操作、账户和目标内执行；缺少�
 |---|---|
 | `contract` | 固定契约 ID |
 | `ok` | 仅本次目标完整达成时为 true；不表示 SDLC Gate 通过 |
-| `status` | `completed|action_required|blocked|failed|partial|unknown` |
+| `status` | `completed\|action_required\|blocked\|failed\|partial\|unknown` |
 | `operation` | 准确操作 ID；状态工具使用自己的固定 ID |
 | `actor` | 已验证 id/login；离线错误时可为 null |
 | `repository` / `target` | 准确仓库与对象标识；未知时为 null |
 | `data` | 按操作验证后的数据，保留需要的原始字段 |
 | `pagination` | 模式、下一页/游标及是否还有数据；无法判定时为 unknown |
-| `completeness` | `complete|partial|unknown`；包括分页、截断、过滤影响 |
-| `effect` | `none|confirmed|unknown`；错误不自动等于无效果 |
+| `completeness` | `complete\|partial\|unknown`；包括分页、截断、过滤影响 |
+| `effect` | `none\|confirmed\|unknown`；错误不自动等于无效果 |
 | `receipt` | 写入的 request_id、URL/远端ID、时间和本地状态；只读可为 null |
 | `warnings/errors/next_action` | 稳定错误码、脱敏信息和一个准确下一动作 |
 

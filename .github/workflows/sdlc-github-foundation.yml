@@ -1,0 +1,64 @@
+name: sdlc-github-foundation
+
+on:
+  push:
+    branches: [impl/sdlc-github-foundation-v1]
+
+permissions:
+  contents: read
+
+jobs:
+  foundation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Prepare credential-free source and pinned SDK dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p bridge/wheels
+          git bundle create bridge/repository.bundle HEAD
+          git rev-parse HEAD > bridge/SOURCE-SHA.txt
+          if test -f packages/sdlc_github/requirements.lock; then
+            cp packages/sdlc_github/requirements.lock bridge/requirements.lock
+          else
+            printf 'mcp==1.26.0\njsonschema==4.25.1\n' > bridge/requirements.in
+            python -m pip install 'uv==0.8.22'
+            uv pip compile --generate-hashes --output-file bridge/requirements.lock bridge/requirements.in
+          fi
+          python -m pip download --require-hashes --only-binary=:all: -r bridge/requirements.lock -d bridge/wheels
+          python -m pip install --no-index --find-links bridge/wheels --require-hashes -r bridge/requirements.lock
+          python -m pip freeze > bridge/INSTALLED.txt
+          find bridge -type f ! -name SHA256SUMS -print0 | sort -z | xargs -0 sha256sum > bridge/SHA256SUMS
+      - name: Run implemented fixed verification (no credentials or GitHub business effects)
+        shell: bash
+        run: |
+          set -euo pipefail
+          if test -f tests/skill_github/validate.py; then
+            python tests/skill_github/validate.py --layer offline --output bridge/offline
+            python tests/skill_github/validate.py --layer integration --output bridge/integration
+          else
+            printf 'Bootstrap only: implementation verification NOT_RUN.\n' > bridge/BOOTSTRAP.txt
+          fi
+      - name: Existing repository regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m compileall packages scripts
+          python tools/validate_runtime_contracts.py
+          python -m unittest discover -s tests -p 'test_*.py' -v > bridge/regression.log 2>&1
+          cat bridge/regression.log
+          git diff --check
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: sdlc-github-foundation-${{ github.sha }}
+          path: bridge/
+          retention-days: 7

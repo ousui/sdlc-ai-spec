@@ -21,8 +21,23 @@ Status 14/14，且无 skip、expectedFailure 或 unexpectedSuccess；严格 VFY
 验收，不是独立 Maintainer 接受；原始日志、源码快照和摘要仅在仓库外交付包中
 保存。
 
+## 最终归档复核：待一次定向重验
+
+Client 随后对 `c8f6f7263e24ea8375065833f5741fbaf4d0f190` 重跑 e2e。
+Web 审计发现 `MAINTENANCE-WEB-001`：普通短语 `basic use` 被当成 Basic
+凭据，`use` 被传播脱敏到 33 个测试 ID。962 次执行和归档哈希不等于测试身份
+完整；不得编辑旧日志或把 `[REDACTED]` 反填成猜测文本来补证。
+
+已在同一分支修复 Basic 非上下文识别，并在脱敏前后及首次落盘后核对准确测试
+ID、覆盖与观察值；真正已标记秘密仍脱敏，若与证明字段冲突则失败关闭，不设置
+身份字段免脱敏白名单。合法 tuple→JSON array 转换不视为证据损坏。
+
+旧 e2e 记录保留为历史，不能证明修复后的新源码。归档还须按 ARCHIVE 索引逐项
+验证指定历史对象；`git bundle verify` 通过不表示所有已删除侧支均被保全。
+
 ## 下一工作包
 
-在 PR #12 保持 Draft 的前提下，由 Maintainer/Web 审查最终差异、最终 exact-SHA
-验收回执及仓库外归档摘要，再决定是否一次合入 `main`。不重复已退役流程、不执行
-生产效果、不自动合并。
+按 `docs/maintenance/CLIENT-GOAL.md` 在最新干净准确提交上做一次 e2e，独立核对
+落盘 ID 和实际 collection，补齐指定历史对象备份后交 Web 审查。此前整理、八个
+Skill 样式和有效测试覆盖保持不变；不重启旧阶段 Goal、原生认证或多轮重复套件。
+不修改 main，不执行生产效果，不自动合并 PR #12。

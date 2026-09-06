@@ -13,14 +13,31 @@
 | 已接受 VFY Subject / Evidence | `5ea3ba9aa7288021c4d99b14cff76ec0fc405841` / `46509eb6688df30e71ed094132b2d10e81ceb2ac` |
 | IMP Subject / Delivery | `207a4a16bea8979faee0474cc43cb642cef1f655` / `86aaa04a0238d3151606073e89219eea0d60b7d3` |
 
-本次提供仓库外 `PRE_CLEANUP_FULL_HISTORY.bundle`，SHA-256 `d91d71a824c576a534897c2b9573e235f9521bcefa4f5c0856a37b5adef1797a`。原完整 Status 审查包 `sdlc-pr11-status-path-review-f15fefe.zip` 的 SHA-256 为 `e5d06cd930ed398ff6879bdaaff60f647db927d2cb31e38a5049905f5c821d24`。备份须下载到持久存储；不要只依赖聊天沙箱路径永久可用。
+## 备份范围与当前状态
 
-```bash
-git clone PRE_CLEANUP_FULL_HISTORY.bundle recovered-history
-cd recovered-history
-git show 9d9dbf8bc1b9241f80af53cdf5b0426fcbfe3ab9:docs/plugin-development/HANDOFF.md
-# 对原始文件核验摘要；不得把旧 Manifest 套到已修改的当前 Handoff。
-```
+此前记录的 `PRE_CLEANUP_FULL_HISTORY.bundle`（SHA-256
+`d91d71a824c576a534897c2b9573e235f9521bcefa4f5c0856a37b5adef1797a`）
+只是历史标识，当前 Client 和 Web 均未取得该文件本体，不能据此宣称已可交付。
+
+Client 上传的新 `FINAL_FULL_HISTORY.bundle` 的 SHA-256 是
+`c18decef7d6fbc0d4e9a798d510f1790e90aeb0f8e9377b3ad423b1af1ac616c`。
+独立恢复确认主线、当前源码和 Status 最终对象存在；上表六个 IMP/VFY/RLS 精确
+提交不在该包中。此前 tree-equivalent 重放保留文件内容，不使旧提交成为新 main
+的祖先。`git bundle verify` 验证自身闭包，不自动验证这张历史根清单。
+
+Web 从此前上传的已校验 RLS/Status 备份恢复补充
+`HISTORICAL_ROOTS_SUPPLEMENT.bundle`，SHA-256
+`dbb388f3346289ce2e518279fa1f9154843f883e226bf22b50d2c779a1b78d4a`。
+它通过新 bare 库 clone/fsck，含当前 main/c8、VFY/RLS Subject+Evidence、Status
+最终交付的完整祖先。**仍缺 IMP 两个精确提交，不称为全部历史备份。** IMP 原始
+文件尚可在清理前 main 树中恢复，且原精确提交在 GitHub 仍可读取；须补齐对象才
+能对整个上表签署离线恢复完成。
+
+最终交付由 CLIENT-GOAL 的限定打包步骤补齐：在独立本地备份库导入所需准确
+对象，为所有历史根设置本地 refs，生成新 bundle 并从空库恢复。逐项核对上述
+提交类型、tree、祖先和可读文件，再保存根清单与摘要。不可用同树新 SHA 充当旧
+SHA，不把本地 archive refs 推送到远程，不需要重新导入过程文件到当前工作树。
+备份放入持久存储；聊天或 /tmp 链接并非永久归档服务。
 
 ## 删除/迁移原则
 

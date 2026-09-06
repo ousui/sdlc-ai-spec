@@ -51,14 +51,15 @@ def validate(profile: str, source: str, output: Path, *, cache_root: Path | None
             write_json(output,result)
             if not receipt['success']: raise ValueError('first failing step: '+name)
         for name,args in commands: step(name,args)
-        from tools.test_plan import collect,bindings,execute
+        from tools.test_plan import collect,bindings,execute,checked_suite_receipt,require_receipt_identity
         tests=collect(); maps=bindings(tests)
         result['collection']={'unique_tests':len(tests),'registry_cases':{phase:len(rows) for phase,rows in maps.items()},'execution':'NOT_RUN'}
         # The immutable 87-case oracle and all declared IMP helper targets are checked here.
         if profile!='quick':
             started=time.monotonic(); suite=execute(tests,strict=profile in ('strict','e2e'))
             suite['source_sha']=source; suite['duration_ms']=round((time.monotonic()-started)*1000)
-            suite=redact_receipt(suite); write_json(logs/'suite.json',suite)
+            suite=checked_suite_receipt(suite,tests); write_json(logs/'suite.json',suite)
+            require_receipt_identity(suite,json.loads((logs/'suite.json').read_text()))
             result['suite']={k:v for k,v in suite.items() if k not in ('log','timings','executed_ids','successful_ids','vfy_strict_observations')}
             result['suite_receipt']=str(logs/'suite.json'); result['collection']['execution']='EXECUTED_ONCE'
             if not suite['success']: raise ValueError('test suite failed; inspect suite.json')

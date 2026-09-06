@@ -82,3 +82,40 @@ def execute(tests: dict, *, strict: bool = False) -> dict:
             'expected_failures':len(result.expectedFailures),'unexpected_successes':len(result.unexpectedSuccesses),
             'executed_ids':result.started_ids,'successful_ids':result.successful_ids,'coverage':coverage,
             'vfy_strict_observations':observations,'timings':result.timings,'log':stream.getvalue()}
+
+
+# These are audit identities or integrity-bound observations, not free prose.
+_RECEIPT_IDENTITY_FIELDS = (
+    "source_sha", "success", "tests_run", "unique_tests", "failures", "errors",
+    "skipped", "expected_failures", "unexpected_successes", "executed_ids",
+    "successful_ids", "coverage", "timings", "vfy_strict_observations",
+)
+
+
+def require_receipt_identity(original: dict, archived: dict) -> None:
+    """Fail closed, without echoing data, if sanitization changes proof fields."""
+    def wire(value):
+        # JSON legitimately represents Python tuples as arrays. Compare exact
+        # JSON values, not Python container classes, and reject non-JSON proof.
+        return json.dumps(value, ensure_ascii=False, sort_keys=True,
+                          separators=(",", ":"), allow_nan=False)
+    changed = [key for key in _RECEIPT_IDENTITY_FIELDS
+               if (key in original) != (key in archived)
+               or wire(original.get(key)) != wire(archived.get(key))]
+    if changed:
+        raise ValueError("receipt identity changed during redaction/serialization: "
+                         + ", ".join(changed))
+
+
+def checked_suite_receipt(result: dict, tests: dict) -> dict:
+    """Check real execution before and after redaction, never restore secrets."""
+    from tools.rls_validation_support import redact_receipt
+    expected = list(tests)
+    if result.get("executed_ids") != expected:
+        raise ValueError("executed test IDs do not match exact source collection")
+    successful = result.get("successful_ids", [])
+    if len(successful) != len(set(successful)) or not set(successful) <= set(expected):
+        raise ValueError("successful test IDs are invalid")
+    safe = redact_receipt(result)
+    require_receipt_identity(result, safe)
+    return safe

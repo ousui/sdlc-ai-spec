@@ -68,8 +68,14 @@ def scan_runtime(plugin):
             imports = ([item.name for item in node.names] if isinstance(node, ast.Import) else
                        [node.module or '', *(f'{node.module}.{item.name}' for item in node.names)]
                        if isinstance(node, ast.ImportFrom) else [])
+            allowed_transport = relative.as_posix() == 'packages/sdlc_github/transport.py'
+            if not allowed_transport and relative.parts[:2] not in {('packages', 'sdlc_github'), ('skills', 'sdlc-github')}:
+                if any(name == 'packages.sdlc_github' or name.startswith('packages.sdlc_github.')
+                       for name in imports) and relative.as_posix() != 'scripts/sdlc_github_mcp.py':
+                    raise RuntimeError(f'Phase imported opt-in GitHub runtime: {relative}:{node.lineno}')
+            forbidden_here = tuple(prefix for prefix in forbidden_imports if not (allowed_transport and prefix == 'httpx'))
             if any(name == prefix or name.startswith(prefix + '.')
-                   for name in imports for prefix in forbidden_imports):
+                   for name in imports for prefix in forbidden_here):
                 raise RuntimeError(f'forbidden runtime import: {relative}:{node.lineno}')
             if isinstance(node, ast.Constant) and isinstance(node.value, str) and 'api.github.com' in node.value:
                 raise RuntimeError(f'GitHub API dependency: {relative}:{node.lineno}')

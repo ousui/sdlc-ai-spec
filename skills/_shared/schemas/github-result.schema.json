@@ -1,0 +1,260 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "sdlc-ai-spec/github-result/v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contract": {
+      "const": "sdlc-ai-spec/github-result/v1"
+    },
+    "ok": {
+      "type": "boolean"
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "action_required",
+        "blocked",
+        "failed",
+        "partial",
+        "unknown"
+      ]
+    },
+    "operation": {
+      "type": "string",
+      "minLength": 1
+    },
+    "actor": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "id",
+            "login"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "id": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "login": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      ]
+    },
+    "repository": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "target": {
+      "type": [
+        "object",
+        "null"
+      ]
+    },
+    "data": {
+      "type": [
+        "object",
+        "array",
+        "string",
+        "null"
+      ]
+    },
+    "pagination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "mode",
+        "has_more",
+        "next_page",
+        "next_cursor"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "none",
+            "page",
+            "cursor"
+          ]
+        },
+        "has_more": {
+          "enum": [
+            true,
+            false,
+            "unknown"
+          ]
+        },
+        "next_page": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "completeness": {
+      "enum": [
+        "complete",
+        "partial",
+        "unknown"
+      ]
+    },
+    "effect": {
+      "enum": [
+        "none",
+        "confirmed",
+        "unknown"
+      ]
+    },
+    "receipt": {
+      "anyOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "required": [
+            "request_id",
+            "operation",
+            "remote_id",
+            "url",
+            "record_state",
+            "time",
+            "readback_verified"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "request_id": {
+              "type": "string"
+            },
+            "operation": {
+              "type": "string"
+            },
+            "remote_id": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "url": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "record_state": {
+              "enum": [
+                "completed",
+                "confirmed_partial",
+                "unknown",
+                "rejected",
+                "reconciled"
+              ]
+            },
+            "time": {
+              "type": "string"
+            },
+            "readback_verified": {
+              "type": "boolean"
+            }
+          }
+        }
+      ]
+    },
+    "next_action": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "code",
+          "message"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "code": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  },
+  "required": [
+    "contract",
+    "ok",
+    "status",
+    "operation",
+    "actor",
+    "repository",
+    "target",
+    "data",
+    "pagination",
+    "completeness",
+    "effect",
+    "receipt",
+    "next_action",
+    "errors",
+    "warnings"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "ok": {
+            "const": true
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "status": {
+            "const": "completed"
+          }
+        }
+      }
+    }
+  ]
+}

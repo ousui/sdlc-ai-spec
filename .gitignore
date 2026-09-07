@@ -218,3 +218,6 @@ junit.xml
 .validation/
 .maintenance-cache/
 *.bundle
+
+# Durable local GitHub intents/receipts are never repository source.
+.local/

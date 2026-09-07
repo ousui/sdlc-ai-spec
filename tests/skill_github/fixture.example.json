@@ -1,0 +1,12 @@
+{
+  "repository": "ousui/sdlc-ai-monitor",
+  "head": "fixture/sdlc-github-20260906",
+  "base": "main",
+  "file_path": "README.md",
+  "workflow_id": "351428147",
+  "run_id": 34021751640,
+  "job_id": null,
+  "sha": null,
+  "tag": null,
+  "tag_repository": null
+}

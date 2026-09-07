@@ -1743,7 +1743,10 @@ def _recoverable_validation_failure(exc: ArtifactStoreError) -> bool:
 
 def _open_initialized_store(root: Path, *, clock: Any) -> ArtifactStore:
     store = ArtifactStore.open_read_write(root, clock=clock)
-    deadline = time.monotonic() + INITIALIZE_RECOVERY_TIMEOUT_SECONDS
+    # The initial Store attempt may be slow (Git checks, filesystem or scheduler).
+    # Budget recovery from the first recoverable failure, not from before that
+    # attempt; a failed first attempt must not consume all retry opportunity.
+    deadline: float | None = None
     last_error: ArtifactStoreError | None = None
     while True:
         try:
@@ -1760,6 +1763,8 @@ def _open_initialized_store(root: Path, *, clock: Any) -> ArtifactStore:
                 last_error = validation_error
                 if not _recoverable_validation_failure(validation_error):
                     raise
+        if deadline is None:
+            deadline = time.monotonic() + INITIALIZE_RECOVERY_TIMEOUT_SECONDS
         if time.monotonic() >= deadline:
             assert last_error is not None
             raise last_error

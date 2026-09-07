@@ -20,12 +20,12 @@ def validate():
                            (*registry_sources(ROOT, ROOT/"skills/_shared/contracts/registry.json"), *extra))
         rows.append({"skill":"sdlc-000-ctx", "success":True})
     except Exception as exc: rows.append({"skill":"sdlc-000-ctx", "success":False, "error":str(exc)})
-    for name in ("100-req", "200-dsn", "300-pln", "400-imp", "500-vfy", "600-rls", "status"):
+    for name in ("100-req", "200-dsn", "300-pln", "400-imp", "500-vfy", "600-rls", "status", "github"):
         tool="tools/validate_sdlc_"+name.replace("-","_")+"_source_lock.py"
         p=subprocess.run([sys.executable,"-B",str(ROOT/tool)], cwd=ROOT, input=b"", capture_output=True, timeout=60)
         rows.append({"skill":"sdlc-"+name,"success":p.returncode==0,"exit_code":p.returncode,
                      "stdout":p.stdout.decode(errors="replace"),"stderr":p.stderr.decode(errors="replace")})
-    return {"contract":"sdlc-ai-spec/all-skill-lock-result/v1", "success":len(rows)==8 and all(row["success"] for row in rows), "skills":rows}
+    return {"contract":"sdlc-ai-spec/all-skill-lock-result/v1", "success":len(rows)==9 and all(row["success"] for row in rows), "skills":rows}
 
 
 if __name__ == "__main__":

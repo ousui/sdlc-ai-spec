@@ -8,7 +8,7 @@ from tools.validate_skill_conformance import ROOT, SKILLS, file_path, validate
 
 
 class SkillInventoryTests(unittest.TestCase):
-    def test_all_eight_skills_bind_real_runtime_and_contract(self):
+    def test_all_nine_skills_bind_real_runtime_and_contract(self):
         result = validate()
         self.assertTrue(result["success"])
         self.assertEqual(list(SKILLS), [row["skill"] for row in result["skills"]])
@@ -31,7 +31,7 @@ class SkillInventoryTests(unittest.TestCase):
 
     def test_all_scoped_design_and_eval_plans_retained(self):
         index = json.loads((ROOT / "docs/plugin-development/SKILL-INVENTORY.json").read_text())
-        self.assertEqual(8, len(index["skills"]))
+        self.assertEqual(9, len(index["skills"]))
         for row in index["skills"]:
             self.assertTrue(file_path(ROOT, row["design"]).stat().st_size)
             self.assertTrue(file_path(ROOT, row["eval_plan"]).stat().st_size)

@@ -56,7 +56,7 @@ def _sandbox_ready(adapter):
     elif adapter == "linux-bwrap":
         command = [
             shutil.which("bwrap"), "--die-with-parent", "--unshare-net",
-            "--ro-bind", "/", "/", "--", "/bin/true",
+            "--ro-bind", "/", "/", "--dev", "/dev", "--", "/bin/true",
         ]
     else:
         return False
@@ -98,7 +98,7 @@ def _sandboxed_command(command, temporary_root, tool):
     return [
         shutil.which("bwrap"), "--die-with-parent", "--unshare-net",
         "--ro-bind", "/", "/", "--bind", temporary, temporary,
-        "--", *command,
+        "--dev", "/dev", "--", *command,
     ], adapter
 
 

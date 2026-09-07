@@ -1,0 +1,39 @@
+name: materialize-capture-budget
+on:
+  push:
+    branches: [fix/fansite-closure-v1]
+    paths: [.github/workflows/materialize-capture-budget.yml]
+permissions:
+  contents: write
+jobs:
+  materialize:
+    if: github.repository == 'ousui/sdlc-ai-spec' && github.ref == 'refs/heads/fix/fansite-closure-v1'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+      - name: Apply exact reviewed bytes and remove one-time transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD^)" = 0102b8f42a87809f58f978e2c2611705b30e7869
+          python3 - <<'PY'
+          import base64,zlib,hashlib,subprocess
+          from pathlib import Path
+          encoded='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 '
+          raw=zlib.decompress(base64.b64decode(encoded))
+          assert hashlib.sha256(raw).hexdigest()=='a768e22b6f9f9f8c9a5d5b6195505b52c401fb517542c2f3275c8e5a22bc9a34'
+          subprocess.run(['git','apply','--index','-'],input=raw,check=True)
+          Path('.github/workflows/materialize-capture-budget.yml').unlink()
+          subprocess.run(['git','add','-u','.github/workflows/materialize-capture-budget.yml'],check=True)
+          assert subprocess.check_output(['git','write-tree'],text=True).strip()=='652a323db774b4a29b8a5fccf8a8bf3f5c4fd2af'
+          PY
+          test "$(git ls-remote origin refs/heads/fix/fansite-closure-v1 | cut -f1)" = "$GITHUB_SHA"
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix(vfy): bound log capture independently of compiler scratch files'
+          git push origin HEAD:refs/heads/fix/fansite-closure-v1

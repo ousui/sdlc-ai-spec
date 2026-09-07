@@ -36,6 +36,10 @@ class ResultTextProjectionTests(TestCase):
     def test_unicode_crlf_and_outer_spaces_have_stable_projection(self):
         self.assert_roundtrip('  状态检查完成\r\n通过：账户恢复后旧会话仍拒绝\r\n ')
 
+    def test_actual_command_json_preserves_escaped_newlines_and_paths(self):
+        self.assert_roundtrip(json.dumps({'exit_code': 0, 'stderr': 'Ran 13 tests\nOK\n',
+                                         'path': r'C:\workspace\tests', 'detail': 'left|right'}, ensure_ascii=False))
+
     def test_failure_trace_remains_a_report_not_a_success_override(self):
         self.assert_roundtrip('exit_code=1\nTraceback (most recent call last):\n  AssertionError: expected rejection\n')
 

@@ -32,7 +32,7 @@
     },
     {
       "path": "packages/sdlc_runtime/canonical.py",
-      "sha256": "c3fb0b1cfcfcd4d828d5a092b70f14c01925f56cb17ea6914d6c765005998c55"
+      "sha256": "5ef3d3a6d8fb474b9aa852d742599af32c28660b127513dfdbcc64a6cc9de295"
     },
     {
       "path": "packages/sdlc_runtime/control_inputs.py",

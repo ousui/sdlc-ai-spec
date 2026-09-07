@@ -169,7 +169,7 @@
     {
       "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_phasekit/handler.py/v1",
       "contract_version": "1",
-      "sha256": "8f5e7fc057cb15a1b492a2c8e897889e7f8f649cfb221f4a27ea16ad90358d4c"
+      "sha256": "0a5aab980867c2c960738bccb5ced3992b6f4920aacb864537192fe54d3bf314"
     },
     {
       "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_phasekit/models.py/v1",

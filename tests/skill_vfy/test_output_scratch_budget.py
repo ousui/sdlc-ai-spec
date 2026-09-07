@@ -11,6 +11,7 @@ import subprocess
 import sys
 import tempfile
 import time
+from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
@@ -20,7 +21,9 @@ from vfy_executor import _bounded_process, _SCRATCH_FILE_BUDGET_BYTES
 
 class OutputScratchBudgetTests(unittest.TestCase):
     def run_child(self, root, code, *, maximum=4096, timeout=5):
-        with patch('vfy_executor.sys.platform', 'resource-test'), \
+        # Replace vfy_executor's module-local sys reference instead of mutating
+        # the process-global sys.platform seen by vfy_process_capture.
+        with patch('vfy_executor.sys', SimpleNamespace(platform='resource-test')), \
              patch('vfy_executor._sandbox_argv', side_effect=lambda argv,*args:argv):
             return _bounded_process([sys.executable,'-I','-c',code], cwd=root,
                                     root=root, timeout=timeout, max_output=maximum)

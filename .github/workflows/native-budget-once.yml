@@ -1,0 +1,91 @@
+name: native-budget-once
+on:
+  push:
+    branches: [fix/realflow-closure-v1]
+    paths: [.github/workflows/native-budget-once.yml]
+permissions:
+  contents: read
+jobs:
+  materialize:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    outputs:
+      source: ${{ steps.commit.outputs.source }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Apply exact reviewed bytes
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = fix/realflow-closure-v1
+          test "$(git rev-parse HEAD^)" = c047951e9f1e29dcf61b67cc81252d959b74309d
+          python3 - <<'PY'
+          import base64,gzip,hashlib,subprocess
+          from pathlib import Path
+          data='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%3D'
+          # Transport must match reviewed patch bytes; no partial apply on error.
+          raw=gzip.decompress(base64.b64decode(data,validate=True))
+          assert hashlib.sha256(raw).hexdigest()=='097d75a09d057dd1661d00bdee9b6b1a92dc3fcef3cbb721a67044a4017cc520'
+          subprocess.run(['git','apply','--check','-'],input=raw,check=True)
+          subprocess.run(['git','apply','--index','-'],input=raw,check=True)
+          Path('.github/workflows/native-budget-once.yml').unlink()
+          subprocess.run(['git','add','-u'],check=True)
+          assert subprocess.check_output(['git','write-tree'],text=True).strip()=='b11a8996f123c080154f66673384f6e797cc0595'
+          PY
+      - name: Commit immutable candidate
+        id: commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$(git ls-remote origin refs/heads/fix/realflow-closure-v1 | cut -f1)" = "$GITHUB_SHA"
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix(execution): bound compiler file handles and own JVM scratch paths' -m 'Respect inherited limits and isolate temp output; preserve network/output/timeout controls. Refs ousui/test-sdlc#17.'
+          git push origin HEAD:refs/heads/fix/realflow-closure-v1
+          echo "source=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+  verify:
+    needs: materialize
+    runs-on: ubuntu-22.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.materialize.outputs.source }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Prepare containment and preserve exact provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/budget-tools" "$RUNNER_TEMP/budget-evidence"
+          if ! command -v bwrap >/dev/null; then
+            cd "$RUNNER_TEMP/budget-tools"
+            apt-get download bubblewrap
+            for p in bubblewrap_*.deb; do dpkg-deb -x "$p" extracted; done
+            echo "$PWD/extracted/usr/bin" >> "$GITHUB_PATH"
+          fi
+      - name: Strict exact-source regression
+        shell: bash
+        run: |
+          set -euo pipefail
+          sha=$(git rev-parse HEAD)
+          echo "$sha" > "$RUNNER_TEMP/budget-evidence/source.sha"
+          git bundle create "$RUNNER_TEMP/budget-evidence/source.bundle" HEAD
+          python3 -B tools/validate.py --profile strict --source-sha "$sha" --json-out "$RUNNER_TEMP/budget-evidence/strict.json" 2>&1 | tee "$RUNNER_TEMP/budget-evidence/strict.log"
+          git diff --exit-code
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-budget-${{ github.run_id }}
+          path: ${{ runner.temp }}/budget-evidence/
+          retention-days: 30
+          if-no-files-found: error

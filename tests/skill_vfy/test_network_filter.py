@@ -62,11 +62,13 @@ class NetworkFilterTests(unittest.TestCase):
                 self.assertEqual(network_filter_bytes(), os.read(descriptor, 4096))
                 self.assertIn('--seccomp', argv)
                 self.assertFalse(kwargs['shell'])
+                self.assertEqual(subprocess.PIPE, kwargs['stdout'])
+                self.assertEqual(subprocess.PIPE, kwargs['stderr'])
                 return process
             with patch('vfy_executor.sys.platform', 'linux'), \
                  patch('vfy_executor._sandbox_argv', return_value=['bwrap','--','python']), \
                  patch('vfy_executor.subprocess.Popen', side_effect=spawn), \
-                 patch('vfy_executor.os.killpg'):
+                 patch('vfy_executor.capture_process', return_value=(0,b'',b'',False)):
                 self.assertEqual((0,'','',False), _bounded_process(['python'],cwd=root,root=root,timeout=5,max_output=4096))
 
     def test_kernel_enforces_filter_in_separate_process(self):

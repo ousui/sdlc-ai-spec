@@ -9,7 +9,6 @@ from pathlib import Path, PurePosixPath
 import re
 import resource
 import shutil
-import signal
 import subprocess
 import sys
 import tempfile
@@ -26,6 +25,10 @@ from vfy_common import (
     sha256_value,
 )
 from vfy_results import build_evidence, record_result
+from vfy_process_capture import capture_process
+
+# Regular compiler output is not log output; never raise inherited limits.
+_SCRATCH_FILE_BUDGET_BYTES = 256 * 1024 * 1024
 
 _COMMAND_POLICY = "deterministic-test-v1"
 _DENIED_EXECUTABLES = frozenset(
@@ -309,11 +312,9 @@ def _bounded_process(
     timeout: int,
     max_output: int,
 ) -> tuple[int, str, str, bool]:
-    stdout_path = root / ".stdout"
-    stderr_path = root / ".stderr"
-
     def limits() -> None:
-        resource.setrlimit(resource.RLIMIT_FSIZE, (max_output, max_output))
+        file_budget = _inherited_resource_cap(resource.RLIMIT_FSIZE, _SCRATCH_FILE_BUDGET_BYTES)
+        resource.setrlimit(resource.RLIMIT_FSIZE, (file_budget, file_budget))
         nofile = _inherited_resource_cap(resource.RLIMIT_NOFILE, 1024)
         resource.setrlimit(resource.RLIMIT_NOFILE, (nofile, nofile))
         resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
@@ -358,34 +359,21 @@ def _bounded_process(
             descriptors = (network_filter.fileno(),)
             boundary = sandbox.index("--")
             sandbox[boundary:boundary] = ["--seccomp", str(descriptors[0])]
-        stdout = stack.enter_context(stdout_path.open("wb"))
-        stderr = stack.enter_context(stderr_path.open("wb"))
         process = subprocess.Popen(
             sandbox,
             cwd=cwd,
             env=environment,
             stdin=subprocess.DEVNULL,
-            stdout=stdout,
-            stderr=stderr,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             shell=False,
             pass_fds=descriptors,
             start_new_session=True,
             preexec_fn=limits if os.name == "posix" else None,
         )
-        timed_out = False
-        try:
-            code = process.wait(timeout=timeout)
-        except subprocess.TimeoutExpired:
-            timed_out = True
-            os.killpg(process.pid, signal.SIGKILL)
-            code = process.wait(timeout=10)
-        finally:
-            try:
-                os.killpg(process.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-    stdout_raw = stdout_path.read_bytes()[:max_output]
-    stderr_raw = stderr_path.read_bytes()[:max_output]
+        code, stdout_raw, stderr_raw, timed_out = capture_process(
+            process, timeout=timeout, max_output=max_output,
+        )
     require(not (code != 0 and (b"sandbox-exec: sandbox_apply:" in stderr_raw
                                 or stderr_raw.startswith(b"bwrap:"))),
             "VFY_METHOD_NOT_READY", "OS sandbox could not be activated",

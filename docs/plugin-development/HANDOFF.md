@@ -1,8 +1,20 @@
 # 当前工程交接
 
-七个阶段 CTX → REQ → DSN → PLN → IMP → VFY → RLS、只读 sdlc-status 及非 Phase 支撑 sdlc-github 均已实现。当前工作包是统一样式、修复评测引用、测试去重与过程归档清理，不重新开发七阶段。
+## 当前工作包：Skill 输入契约可靠性设计
 
-## 本轮分支
+2026-09-08，用户要求核对 CTX 输入失败是否为跨 Skill 共性问题，并制定复现、修复、技术栈覆盖及重复门禁精简计划。当前分支 `codex/bugfix`，设计基线为 `aed8eb69d2b74ec27bdcb2fb356cb02b68602289`，本次只维护设计、评测计划和此交接；未实现、未提交、未发布。当前正式业务 Skill 执行：`None`。
+
+[设计与问题清单](components/skill-contract-reliability/DESIGN.md) 和 [复现与评测计划](components/skill-contract-reliability/EVAL-PLAN.md) 均为 draft。已复现 CTX 错误全量映射、dry-run 丢失错误、时间基线未拦截，以及 DSN/PLN 元命令读取业务 stdin；三项目回归说明与代码已只读核对，不以旧 PASS 证明当前修复完成。
+
+## 唯一下一工作包
+
+W1（approval）：审阅并明确接受或调整上述设计的输入契约、错误/Gate 分离、兼容范围、有限文档实验及去重原则。此决定前不进入 implement/evaluate，不恢复全宿主原生认证门禁，也不自动修改三项目或安装缓存。
+
+## 以下为此前维护交接记录
+
+以下保留原工作包的事实与限制，不作为当前工作包或下一动作；本次未核验其外部交付是否完成。七个阶段 CTX → REQ → DSN → PLN → IMP → VFY → RLS、只读 sdlc-status 及非 Phase 支撑 sdlc-github 均已实现。此前工作包为统一样式、修复评测引用、测试去重与过程归档清理。
+
+## 历史维护分支
 
 `refactor/skill-unification-cleanup` 从 `main@9d9dbf8bc1b9241f80af53cdf5b0426fcbfe3ab9` 创建，只在同一分支追加提交，完成后一次合入。main 和历史 Git 对象保持不变。
 
@@ -35,7 +47,7 @@ ID、覆盖与观察值；真正已标记秘密仍脱敏，若与证明字段冲
 旧 e2e 记录保留为历史，不能证明修复后的新源码。归档还须按 ARCHIVE 索引逐项
 验证指定历史对象；`git bundle verify` 通过不表示所有已删除侧支均被保全。
 
-## 下一工作包
+## 历史维护后续事项（非当前下一动作）
 
 按 `docs/maintenance/CLIENT-GOAL.md` 在最新干净准确提交上做一次 e2e，独立核对
 落盘 ID 和实际 collection，补齐指定历史对象备份后交 Web 审查。此前整理、八个
@@ -46,5 +58,5 @@ Skill 样式和有效测试覆盖保持不变；不重启旧阶段 Goal、原生
 ## sdlc-github 独立工作项
 
 `sdlc-github-foundation/v1` 已由 Maintainer 于 2026-09-07 接受，当前仅等待 PR #14 的显式 Ready/Review/Merge 决定；
-该状态不改变上方维护清理工作包的唯一下一动作。历史 Goal/Repair/Revalidation/Portability 报告已按全局 ARCHIVE 索引恢复，
+该历史状态不构成当前契约修复的实施或发布授权。历史 Goal/Repair/Revalidation/Portability 报告已按全局 ARCHIVE 索引恢复，
 当前树不再承载多轮过程副本。

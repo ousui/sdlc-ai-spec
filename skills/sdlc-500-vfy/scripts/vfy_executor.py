@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import hashlib
+from contextlib import ExitStack
 import json
 import os
 from pathlib import Path, PurePosixPath
@@ -331,15 +332,29 @@ def _bounded_process(
         "GOSUMDB": "off",
         "CARGO_NET_OFFLINE": "true",
     }
-    with stdout_path.open("wb") as stdout, stderr_path.open("wb") as stderr:
+    with ExitStack() as stack:
+        sandbox = _sandbox_argv(argv, root, cwd)
+        descriptors = ()
+        if sys.platform.startswith("linux"):
+            from vfy_network_filter import network_filter_bytes
+            network_filter = stack.enter_context(tempfile.TemporaryFile(dir=root))
+            network_filter.write(network_filter_bytes())
+            network_filter.flush()
+            network_filter.seek(0)
+            descriptors = (network_filter.fileno(),)
+            boundary = sandbox.index("--")
+            sandbox[boundary:boundary] = ["--seccomp", str(descriptors[0])]
+        stdout = stack.enter_context(stdout_path.open("wb"))
+        stderr = stack.enter_context(stderr_path.open("wb"))
         process = subprocess.Popen(
-            _sandbox_argv(argv, root, cwd),
+            sandbox,
             cwd=cwd,
             env=environment,
             stdin=subprocess.DEVNULL,
             stdout=stdout,
             stderr=stderr,
             shell=False,
+            pass_fds=descriptors,
             start_new_session=True,
             preexec_fn=limits if os.name == "posix" else None,
         )

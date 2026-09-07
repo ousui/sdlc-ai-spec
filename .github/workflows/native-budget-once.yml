@@ -23,16 +23,29 @@ jobs:
         run: |
           set -euo pipefail
           test "$GITHUB_REF_NAME" = fix/realflow-closure-v1
-          test "$(git rev-parse HEAD^)" = c047951e9f1e29dcf61b67cc81252d959b74309d
+          test "$(git rev-parse HEAD^)" = 5b7572bc6720357e786eece4958ab345f27c5d94
           python3 - <<'PY'
-          import base64,gzip,hashlib,subprocess
+          import hashlib,subprocess
           from pathlib import Path
-          data='H4sIAAAAAAAC/91ZbXObSBL+7l8xx34AIsBIlrW2XLpary0nStmSy9bl4vO6KAQjCwcYwotsVWr/+3XPAAJJflGyu7V3ckXipenp6e7n6W7ietMp0fV7LyX2bvLF8/1kN3F9R2+bpu4F0W7ixF6UJrtwbNEn6mQpi41oQSbbSO94oUufiNuZmG1zzzCo8/O+OTFJ0zQ77faOruvbrb7TaDS2tOCXX4jeappas0ka/Ld4JJLp8Ri06nvhdSi4dyLWRjQMFVSGkQstuOFFTOWqt0dgh9QbqfOjPTIpZ3OVoXILpHSIJKE7JTFJAIp4oVEmbGAasSxnRn85FoKpfhBQSP44nqxou408EpMv2ZeTJWQQWTCheKgniSNleJpvgC/qsiSrBHpt1DC71hSVU3oKD7S4OLSuuofnw6G/etr6+x4cN4/ReHrfD/cTscOcbEJhbWjmCbgBuoSOyEspOTjpwvCotRjoaQKs2OaZnFIvi03IV0ejz9IXcISI3elcU9TRVyG1SSwayn8YXTRB2HcEnqndu/z6Xvr5PjkQ9+qSHHv1cTGF5eng6v8duGXyt6lj8efjq3xaHRujS7Hg9HwGmRl/fTBntuGxwwIFni8J8mkUXdtg6BLqzu7GX8YDS9vuFGXV/2zweeqVRj5aMEP65s8Px6+B0HpxPjX+Ew/kGr3Tqzj8/P6Xfc5OO5Des+nizK94fgFOL4incOR0ondbAMc9ztO29lvPg/H1/Stw/G1JzgcD/e1DqARfpqtEo2JHboT9mTZ8f1cwa8u8b0kvQVn32kEgdbl6AM4PbriUCX6P5dCFVhxP+u6M4MwQwbyeD26BiQ38+dUAaDgbbjzDhe62yHw1+BWeOGMxh4AwELhLHao5diR8gU81wXMpRqZZC5kNz/h68NvV6SeJEnHUeQviE2mXghKclny6KUzlqUUktr3EC+9JuQhJ2DQlgOeZHbuwk8BLEwPUCH1LsR4prEFkxVyQ21SSBsdk4IXKrVgTtqbMOVXMkSqWqrwpXPlHReHV+eDCGgzPBsPB+Ea9A43wJ0IyYRkkjGtFMXNokijCwauxEVffaTy2e+aBdkgae812lWnXFYmH8KbYtcJ9OQTKqYSxtDEpN10zezC2zq4H/+lrRAnsJwtcHGWw8+Wxqu7oWygbjs6AIUFbp62RTltVl5QSsqnnUwjEcxnynK6m2WpX9GxjhVhTy9dW1a0cczK6Qh2mRkx8UliwrGOIJ2Qvgxeu6s28HNEnCLDFvvTGcUb/jNr06ezGuugDvZ7Cjse8TN38aG2qVHLY43eXqHX25qndPNB+htRuHWpN84XUXikep6Ph+N9Xg3H/15tx/2R0imVNatYqwnAE4TofXa3fqZTBMmJYNdFefXM9rEW2VhVfK5s/oUcT4jKCPnchy+eUU1GsmmcYsIEKRQcYzLyFxFqZeQHX2GEJo5raf0apKiJtvg2cgnemcQnaw0LFTGsK/RCXwbJwlGFPH9n24/RGWy4MKumLPnvg0Mf6M0r6x16g5eXdDYX8P0Br3ry4Gw+Nz6/JqdHE5xqiZ0qrQyQgo9T2k9vXN9bh/UYS2VujBBVAiefm0sIfFc+thHlgFFHmBf4PUTkgfCSeogLm0qOei2pviYxhOq9M+7OzxMr/r0vlumPl+XsLfsgZiwNRM0mhqrT3I/50GVKqrWvQRkQXHQGrYJGXMJxHzPWeh8ayyCQDlgTqpnkTU8aaeQ+iTQ3nAReXjGYbg970J8bDRTnmx32nkJ9h9417LCxnUWjQ4f7Y4NQLmfCk0RGhTLsA3a5SbLUSSLMLfXKg6RxQSmyaGirjDggDSNhceBFE/jlnM62nD8e0kIR/nQU5vY7RBKU3F0xM7oWreSiC1lDHIEppY6YxaABH2CFyTu9gCh1ozBlKQ9UpC/WnxOH6w6Sh9BQvkI8spELgDe1oowKdT76knowuSCDBKZBWp1S0kNPJbnbOFFw3Xc1JFXlKprH2T12Apd2UdQWnfg5O6uy7TwVo9L57Ggx3Lv1et5eUFwNfjA1ZpgnpU5fTexpGNz2B1TegLAxxO47T/NbN9ZRNDNArA78pwTVYbSBAVxbcbNnX32kIrOuv6BG++pASLrVJVYHiJxafDV3cIrlkx//0ICOrzjSx6ulpafc1Yin0LVlfoaBCQlg3HEB0LHYVdeMa9+yNpJfFlVrOqYvoVNMQ0UQqorCbExnAvc+N5MsUJhO8TygwUsWWnJprjdV59/YE3UWxrStsHTudVin3DchW27Zgl2+Zyej5YxPQeHk2AO5MjOLF9LK+p7YkOCBjYYVBzgZgnCyxvgFsCbVdOgJxtc7J6SFj4Buot7CwvJNkkb3yWlxbJH0LVG8ga3LZC1qLDuIdWFXoHyF6YuELXhw1H0LxAi1F0J7my6jRakvpKB6c91+JXdNSZZ/tN0scb0Qx7YIl6/8nC9lfNFcC3eL1kxhwiAs2KV6PhXkYm9tximNKipUF35uAetuKK0zPaB1jYQI3FEVfctI%3D'
-          # Transport must match reviewed patch bytes; no partial apply on error.
-          raw=gzip.decompress(base64.b64decode(data,validate=True))
-          assert hashlib.sha256(raw).hexdigest()=='097d75a09d057dd1661d00bdee9b6b1a92dc3fcef3cbb721a67044a4017cc520'
-          subprocess.run(['git','apply','--check','-'],input=raw,check=True)
-          subprocess.run(['git','apply','--index','-'],input=raw,check=True)
+          p=Path('skills/sdlc-500-vfy/scripts/vfy_executor.py')
+          assert hashlib.sha256(p.read_bytes()).hexdigest()=='17e33180d51bed75b24786cd44a5c125ccf331b4f3a0f961d4a5c23504489c62'
+          s=p.read_text()
+          new='def _inherited_resource_cap(kind: int, budget: int) -> int:\n    """Apply a finite budget without raising inherited soft or hard limits."""\n    inherited = resource.getrlimit(kind)\n    return min([budget, *(v for v in inherited if v != resource.RLIM_INFINITY)])\n\n\ndef _bounded_process(\n'
+          s=s.replace('def _bounded_process(\n',new,1)
+          s=s.replace('resource.setrlimit(resource.RLIMIT_NOFILE, (64, 64))','nofile = _inherited_resource_cap(resource.RLIMIT_NOFILE, 1024)\n        resource.setrlimit(resource.RLIMIT_NOFILE, (nofile, nofile))',1)
+          s=s.replace('    environment = {\n','    scratch = root / ".tmp"\n    scratch.mkdir(exist_ok=True)\n    require(not any(c in str(scratch) for c in (\'"\', "\\n", "\\r")),\n            "VFY_METHOD_NOT_READY", "Scratch path cannot be represented as one JVM option")\n    environment = {\n',1)
+          s=s.replace('        "TMPDIR": str(root / ".tmp"),','        "TMPDIR": str(scratch),\n        # JVMs do not derive java.io.tmpdir from TMPDIR. This runtime-owned value\n        # replaces (never concatenates) untrusted caller Java option variables.\n        "JAVA_TOOL_OPTIONS": \'-Djava.io.tmpdir="\' + str(scratch) + \'"\',',1)
+          p.write_text(s)
+          assert hashlib.sha256(p.read_bytes()).hexdigest()=='1e1c57d2685843ba6888f8b409d9b5738256306c60cb2269c873eae02605d595'
+          p=Path('skills/sdlc-400-imp/scripts/imp_executor.py')
+          assert hashlib.sha256(p.read_bytes()).hexdigest()=='325ea30a42d7cb90cd7f84d807a6e97b161a338fbb9b78df7d0cd5a139e66d61'
+          s=p.read_text()
+          s=s.replace('    return {\n        "PATH": os.environ.get("PATH", ""),','    require(not any(c in str(scratch) for c in (\'"\', "\\n", "\\r")),\n            "IMP_READINESS_FAILED", "Scratch path cannot be represented as one JVM option")\n    return {\n        "PATH": os.environ.get("PATH", ""),',1)
+          s=s.replace('        "TMPDIR": str(scratch),','        "TMPDIR": str(scratch),\n        "JAVA_TOOL_OPTIONS": \'-Djava.io.tmpdir="\' + str(scratch) + \'"\',',1)
+          p.write_text(s)
+          assert hashlib.sha256(p.read_bytes()).hexdigest()=='94ad77bbe9c78e834d99933e89609d0b09fd68a8cf6bdd54280415575a5a90c7'
+          assert hashlib.sha256(Path('tests/skill_vfy/test_native_resource_budget.py').read_bytes()).hexdigest()=='22f142f5ce808e72bdebeaa5ad8db818939d13d002293bb08f5da52cd7ece342'
+          assert hashlib.sha256(Path('tests/skill_imp/test_jvm_scratch.py').read_bytes()).hexdigest()=='202780fcfcbe1175e18b5e9b276ccde29310fe00f3817d69a73cd8c2e4382118'
           Path('.github/workflows/native-budget-once.yml').unlink()
           subprocess.run(['git','add','-u'],check=True)
           assert subprocess.check_output(['git','write-tree'],text=True).strip()=='b11a8996f123c080154f66673384f6e797cc0595'

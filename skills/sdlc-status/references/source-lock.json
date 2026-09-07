@@ -144,12 +144,12 @@
     {
       "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_lifecycle/query_rls.py/v1",
       "contract_version": "1",
-      "sha256": "fdca61c2223791ae5e70891fbe851456111f1fd663b26494967c48caddb7ac6e"
+      "sha256": "e0d1f69f89ca5170fa90ba2de624347e233dbabfaa17991a69405d1ad11c05a3"
     },
     {
       "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_lifecycle/query_vfy.py/v1",
       "contract_version": "1",
-      "sha256": "acf2dc56c71dc284efc4eaf0299f2d84c594c7e08e94ff4fe1f275ab64529b7c"
+      "sha256": "804daffe480307f4ae3d69d220946372c8ae97a660121c8904208e8537959f91"
     },
     {
       "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_phasekit/__init__.py/v1",
@@ -250,6 +250,11 @@
       "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/source_lock.py/v1",
       "contract_version": "1",
       "sha256": "97afb1d50bf0f87587684a540c1a3c0d5ef861fd9921f12269ba9c6a48a0d50e"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/vfy_control_projection.py/v1",
+      "contract_version": "1",
+      "sha256": "e68c2bca6e4bb6432277405c28b7a5f4aae0f9b1a29b183ae1dd8a1bfdf45ebc"
     },
     {
       "contract_id": "sdlc-ai-spec/status/source/skills/sdlc-status/scripts/runtime.py/v1",

@@ -256,11 +256,23 @@ def _authoritative_scope(
         require(dsn["Disposition"] in {"n/a", "waived"},
                 "VFY_SCOPE_REQUIRED", "REQ fallback requires frozen DSN n/a or waived")
     subject_refs = {item["reference"] for item in subjects}
-    claims = [
-        claim
-        for claim in projection.current_claims
-        if any(row.get("result_reference") in subject_refs for row in claim.results)
-    ]
+    # Retain the exact dependency closure in Delivery Scope while selecting
+    # only the terminal Result of each Resource as an executable Subject.
+    by_artifact = {str(claim.artifact_reference): claim for claim in projection.current_claims}
+    pending = [str(item["imp_revision_reference"]) for item in subjects]
+    selected = set()
+    while pending:
+        reference = pending.pop()
+        if reference in selected:
+            continue
+        claim = by_artifact.get(reference)
+        require(claim is not None and claim.completed,
+                "VFY_DEPENDENCY_CHAIN_INVALID",
+                "Terminal Scope requires every exact current completed dependency",
+                details={"reference": reference})
+        selected.add(reference)
+        pending.extend(str(item) for item in claim.dependency_results)
+    claims = [by_artifact[reference] for reference in sorted(selected)]
     delivery_scope = sorted(
         {token for claim in claims for token in claim.execution_scope}
     )
@@ -270,7 +282,6 @@ def _authoritative_scope(
             {
                 str(row["resource"])
                 for row in claim.results
-                if row.get("result_reference") in subject_refs
             }
         )
         work_items.append(

@@ -696,6 +696,8 @@ def read_vfy_candidate(project_root, reference, *, expected_candidate=None):
     matches = [item for item in stored.payload.members if item.member_id == "VFY-STATE"]
     require(len(matches) == 1, "RLS_VFY_NOT_READY", "VFY requires one actual State Member")
     state = json.loads(matches[0].raw_bytes)
+    from packages.sdlc_runtime.vfy_control_projection import restore_control
+    state = restore_control(state, stored.payload.primary_blob, revision_state=stored.control.state, artifact_status=stored.payload.artifact_status)
     require(state.get("contract") == "sdlc-ai-spec/vfy-state/v1" and state["artifact"]["reference"] == exact,
             "RLS_VFY_NOT_READY", "VFY State contract or identity mismatch")
     require(state.get("final_confirmation") is None, "RLS_VFY_NOT_READY", "VFY State Member has unexpected Final Confirmation")

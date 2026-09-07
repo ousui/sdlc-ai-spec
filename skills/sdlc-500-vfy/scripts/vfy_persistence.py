@@ -53,6 +53,8 @@ def _state_from_stored(stored: Any) -> dict[str, Any]:
         "Stored VFY Revision must contain exactly one VFY-STATE member",
     )
     state = json.loads(matches[0].raw_bytes.decode("utf-8"))
+    from packages.sdlc_runtime.vfy_control_projection import restore_control
+    state = restore_control(state, stored.payload.primary_blob, revision_state=stored.control.state, artifact_status=stored.payload.artifact_status)
     state["final_confirmation"] = final_confirmation_from_payload(
         stored.payload.primary_blob, state
     )

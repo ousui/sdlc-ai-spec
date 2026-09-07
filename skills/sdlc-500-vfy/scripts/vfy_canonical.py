@@ -284,8 +284,7 @@ def sections(state: Mapping[str, Any]) -> tuple[tuple[str, str], ...]:
             "## 摘要 Summary",
             f"- VFY: `{state['artifact']['reference']}`\n"
             f"- Product Result: `{state['product_result']}`\n"
-            f"- Artifact Gate: `{state['artifact_gate']}`\n"
-            f"- RLS ready: `{'yes' if state['rls_ready'] else 'no'}`",
+            "- Artifact authority and downstream readiness: inspect the current Gate and read-only Status.",
         ),
         (
             "## 范围 Scope",

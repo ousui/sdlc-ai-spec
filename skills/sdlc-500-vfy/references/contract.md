@@ -39,3 +39,9 @@ All persistence uses the shared ArtifactStore public API. The VFY Runtime create
 ## Delivery validation
 
 The authoritative controller runs Skill Interface validation, Source Lock, 80 Case coverage, focused VFY tests, full repository regression, installed-copy Runtime Independence, both fixed external projects and Fresh exact-SHA Attestation. A prewritten review file is not itself an independent review result.
+
+## 独立确认的可读业务快照
+
+`VFY-STATE` 的 `control_projection=sdlc-ai-spec/vfy-state-control-projection/v2` 编码只保存业务状态与实际证据，排除随最终确认单独变化的 `final_confirmation`、`artifact_gate`、`rls_ready`、`next_action` 及 Artifact Status/Revision State。消费者从准确 Store 状态、Canonical Gate 和确认记录重建这些派生字段，仍执行原有领域、摘要和 Authority 验证，不能仅因存在投影标记宣称通过。
+
+自动 Method 完成后先持久化 open draft，CORE-G-009 和 Aggregate Gate 保持 pending。独立 Reviewer 读取该实际 Payload、全部 Member 和检查结果后形成确认；最终确认不改变业务正文和 Member 摘要。产品结果、证据或规则变化仍使旧确认失效。当前业务证据不包含下游授权；是否可进入 RLS 必须查看已冻结 Artifact 的真实 Gate 与当前 Subject。

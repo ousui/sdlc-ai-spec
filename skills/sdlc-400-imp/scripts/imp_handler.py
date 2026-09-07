@@ -34,7 +34,7 @@ from imp_readiness import (
 )
 from imp_result import (
     capture, changed_paths, changed_scope, member, read_state, registry,
-    snapshot_from_member, snapshot_reference,
+    snapshot_from_member, snapshot_reference, retained_result_snapshot,
 )
 from imp_recovery import recovery_evidence, recovery_method, verify_candidate_resources
 from imp_verifier import ImpVerifier
@@ -222,7 +222,9 @@ class ImpHandler:
                     continue
                 require(row["root"] == roots[resource], "IMP_BINDING_MISMATCH",
                         "A canonical Resource ID cannot be remapped to another root")
-                expected = snapshot_reference(store, row["result_reference"], resource, local=source_stored)
+                expected = (retained_result_snapshot(source_stored, row)
+                            if source_state["stage"] == "applied" and row["result_reference"] == "N/A"
+                            else snapshot_reference(store, row["result_reference"], resource, local=source_stored))
                 if observed_snapshots[resource] == expected:
                     owned.update((resource, path) for path in row["changed_paths"])
         owned.update(candidate_owned)
@@ -243,7 +245,9 @@ class ImpHandler:
             completed = tuple(state.get("completed_operations", []))
             validate_execution_history(method, completed, state.get("actions"))
             for row in state["resources"]:
-                expected = (snapshot_reference(store, row["result_reference"], row["resource"], local=previous)
+                expected = (retained_result_snapshot(previous, row)
+                            if state["stage"] == "applied" and row["result_reference"] == "N/A" else
+                            snapshot_reference(store, row["result_reference"], row["resource"], local=previous)
                             if state["stage"] in {"executed", "applied"} else
                             snapshot_from_member(previous, row["baseline_member"], row["resource"]))
                 observed = observed_snapshots[row["resource"]]

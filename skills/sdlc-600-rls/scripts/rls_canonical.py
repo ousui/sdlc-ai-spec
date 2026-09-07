@@ -22,6 +22,7 @@ def _state_bytes(state: Mapping[str, Any]) -> bytes:
     if not value.get("provisional", True):
         value["final_confirmation"] = None
         value["artifact"]["revision_state"] = "open"
+        value["status"] = "contract_ready"
     value.setdefault("state_contract", STATE_CONTRACT)
     return (canonical_json(value) + "\n").encode("utf-8")
 
@@ -135,7 +136,7 @@ def render_markdown(
                 ("RLS Reference", artifact["reference"]),
                 ("Release Target", contract["release_target"]),
                 ("Release Conclusion", state.get("release_conclusion")),
-                ("Artifact Gate", state.get("artifact_gate")),
+                ("Domain Check Aggregate", state.get("artifact_gate")),
                 ("Target Effect", bool(state.get("target_effect"))),
             ),
         ),
@@ -271,7 +272,8 @@ def render_markdown(
     gate = state.get("artifact_gate", "pending")
     terminal = gate in {"pass", "pass_with_exception"} and not state.get("effect_uncertain")
     confirmation = state.get("final_confirmation") or {}
-    checks = [("CORE-G-009", "Current Final Confirmation", "pass" if confirmation else "pending", "Exact current authority binding")]
+    checks = [(f"CORE-G-{i:03d}", "Canonical contract integrity", "pass" if terminal else "pending", "Recomputed identity, scope, source, evidence and member closure") for i in range(1, 9)]
+    checks.append(("CORE-G-009", "Current Final Confirmation", "pass" if confirmation else "pending", "Exact current authority binding"))
     checks.extend((f"RLS-G-{index:03d}", label, "pass" if terminal else "pending", "Recomputed by RLS domain verifier")
                   for index, label in enumerate(("Current context, VFY, immutable contract, authorized baseline and pre-execution readback", "Complete RLI, RLS Work Item, RCF, evidence and exception coverage", "Accurate target state, Release Conclusion and unique Follow-up"), 1))
     lines.extend(["## 门禁 Gate", "", *_table(CHECK_HEADERS, checks), ""])
@@ -288,7 +290,7 @@ def render_markdown(
         confirmation.get("role", "N/A"), confirmation.get("authority_reference", "N/A"),
         confirmation.get("accepted_exception_references", []), confirmation.get("confirmed_at", "N/A"),
     )
-    summary = (artifact["revision"], control_digest, evaluation, check_digest, gate,
+    summary = (artifact["revision"], control_digest, evaluation, check_digest, gate if confirmation else "pending",
                exception_refs, "rls-domain-verifier", confirmation.get("confirmed_at", "N/A"))
     return prefix + ("## 最终确认 Final Confirmation\n\n" + "\n".join(_table(FINAL_CONFIRMATION_HEADERS, (final,)))
         + "\n\n## Artifact Gate Summary\n\n" + "\n".join(_table(GATE_SUMMARY_HEADERS, (summary,))) + "\n").encode("utf-8")

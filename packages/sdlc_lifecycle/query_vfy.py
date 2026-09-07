@@ -190,6 +190,8 @@ class LifecycleQueryService(ImpLifecycleQueryService):
             return None
         _require(len(matches) == 1, "VFY_STATE_INVALID", "VFY-STATE Member is duplicated")
         state = json.loads(matches[0].raw_bytes)
+        from packages.sdlc_runtime.vfy_control_projection import restore_control
+        state = restore_control(state, stored.payload.primary_blob, revision_state=stored.control.state, artifact_status=stored.payload.artifact_status)
         _require(
             isinstance(state, dict)
             and state.get("contract") == "sdlc-ai-spec/vfy-state/v1"

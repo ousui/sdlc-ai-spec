@@ -198,7 +198,12 @@ def verify_result_set(store, stored, state, *, local_candidate=False):
         if state["stage"] == "prepared":
             require(row["result_reference"] == "N/A", "IMP_RESULT_INCOMPLETE", "Prepared Result cannot claim completion")
             continue
-        after = (retained_result_snapshot(stored, row) if local_candidate else
+        # A multi-resource operation checkpoint can precede the first creation
+        # of another declared resource. Preserve proved absence only while applied;
+        # a final executed Result still needs its usual exact Snapshot reference.
+        pending_absence = (state["stage"] == "applied" and
+                           row["result_reference"] == row["baseline_reference"] == "N/A")
+        after = (retained_result_snapshot(stored, row) if local_candidate or pending_absence else
                  snapshot_reference(store, row["result_reference"], row["resource"], local=stored))
         paths = changed_paths(before, after)
         require(row["changed_paths"] == paths and row["changed_scope"] == changed_scope(row["resource"], paths, scope),

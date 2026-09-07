@@ -22,13 +22,14 @@
 
 ## 3. Work Item
 
-正式 Phase Skill 的 Work Item 路径必须使用：
+正式 Phase Skill 的 Work Item 路径使用：
 
 ```text
 docs/plugin-development/work-items/sdlc-NNN-xxx/
 ```
 
-名称必须与目标 Skill 完全一致。
+非 Phase Utility / Support Skill 使用与其 Skill 同名的路径，例如 `work-items/sdlc-github/`。
+名称必须与目标 Skill 完全一致；Support Skill 不得借 Work Item 引入新的 Phase/Gate 语义。
 
 Design 必须区分：
 

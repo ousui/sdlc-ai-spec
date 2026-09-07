@@ -1,0 +1,80 @@
+{
+  "contract": "sdlc-ai-spec/runtime/skill-interface/v1",
+  "skill": "sdlc-github",
+  "skill_version": "0.1.0",
+  "default_command": "auto",
+  "commands": [
+    {
+      "name": "auto",
+      "description": "无意图时检查身份；有意图时先归一化。",
+      "writes": false
+    },
+    {
+      "name": "status",
+      "description": "核对当前实例的真实身份与能力。",
+      "writes": false
+    },
+    {
+      "name": "read",
+      "description": "读取一种固定 GitHub 对象。",
+      "writes": false
+    },
+    {
+      "name": "issue-create",
+      "description": "创建普通 Issue。",
+      "writes": true
+    },
+    {
+      "name": "issue-update",
+      "description": "修改准确 Issue。",
+      "writes": true
+    },
+    {
+      "name": "comment",
+      "description": "给准确 Issue 或 PR 添加普通评论。",
+      "writes": true
+    },
+    {
+      "name": "pr-create",
+      "description": "基于既有分支创建 Draft PR。",
+      "writes": true
+    },
+    {
+      "name": "pr-update",
+      "description": "修改准确 PR。",
+      "writes": true
+    },
+    {
+      "name": "receipt",
+      "description": "查询本地回执，可显式只读核对。",
+      "writes": false
+    },
+    {
+      "name": "help",
+      "description": "显示帮助。",
+      "writes": false
+    },
+    {
+      "name": "version",
+      "description": "显示打包版本。",
+      "writes": false
+    },
+    {
+      "name": "commands",
+      "description": "列出命令。",
+      "writes": false
+    },
+    {
+      "name": "examples",
+      "description": "显示调用示例。",
+      "writes": false
+    }
+  ],
+  "examples": [
+    "/sdlc-github",
+    "/sdlc-github read --repo example/project --kind repo.branches",
+    "/sdlc-github issue-create --repo example/project --title \"需求讨论\" --body \"已授权的正文\"",
+    "/sdlc-github read --repo example/project --kind actions.logs --job-id 123",
+    "/sdlc-github receipt --repo example/project --request-id UUID --expected-actor-id 123"
+  ]
+}

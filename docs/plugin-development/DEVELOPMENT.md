@@ -262,3 +262,7 @@ git diff --check
 ## 维护与统一格式
 
 正式 Skill 遵守 `docs/plugin-development/SKILL-STYLE.md` 的七节结构、命令/参数表和精简约束，运行 `tools/validate_skill_style.py`。测试统一见 `docs/TESTING.md`，长期日志和历史 Goal 不进入当前源码树。原生 Client 独立认证按 Maintainer 于 2026-09-06 的决定暂停作为门禁，用户手动反馈不伪造正式证书。
+
+## 显式 GitHub 能力例外
+
+`sdlc-github` 仅经 `packages/sdlc_github/transport.py` 使用官方 MCP SDK 访问固定官方 URL；参数编译、发现与元命令仍离线。既有 Phase 不继承此权限，不自动安装依赖或扩大凭据权限。统一 full 收集其确定性与 loopback HTTP 测试一次；真实 GitHub 复验与可选的原生使用反馈分开记录，原生独立认证不恢复为门禁。

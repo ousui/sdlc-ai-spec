@@ -8,8 +8,8 @@ class SkillStyleTests(unittest.TestCase):
         self.skill = 'sdlc-600-rls'
         self.text = (ROOT/'skills'/self.skill/'SKILL.md').read_text()
 
-    def test_all_eight_documents_follow_the_same_format(self):
-        self.assertEqual(8, len(validate()['skills']))
+    def test_all_nine_documents_follow_the_same_format(self):
+        self.assertEqual(9, len(validate()['skills']))
 
     def test_missing_section_rejected(self):
         with self.assertRaises(ValueError): validate_text(ROOT, self.skill, self.text.replace('## 参数', '## 参数说明'))

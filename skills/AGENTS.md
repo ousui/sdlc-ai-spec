@@ -11,8 +11,11 @@
 ```text
 skills/
 ├── _shared/                    多 Skill 共同运行合约；不得有 SKILL.md
-└── sdlc-NNN-xxx/               正式 Phase Skill
+├── sdlc-NNN-xxx/               正式 Phase Skill
+└── sdlc-<name>/                Utility / Support Skill，例如 sdlc-status、sdlc-github
 ```
+
+Utility / Support Skill 不占用 Phase 编号、不推进 Gate；涉及外部系统时必须有独立 Runtime Contract、显式调用和独立授权边界。
 
 正式 Skill 结构：
 
@@ -43,7 +46,7 @@ skills/sdlc-NNN-xxx/
 - 目录名与 Front Matter `name` 完全一致；
 - `name` 使用英文；
 - `description` 使用清晰中文，说明做什么、何时显式调用；
-- 一个 Skill 只实现一个阶段 Contract。
+- 一个 Phase Skill 只实现一个阶段 Contract；Utility / Support Skill 只实现一个稳定支撑职责，不复制 Phase 业务语义。
 
 ## 4. 实现准入
 
@@ -75,6 +78,7 @@ skills/sdlc-NNN-xxx/
 - `skills/_shared/contracts/skill-interface.md`
 - Artifact Skill 还必须遵守：`skills/_shared/contracts/artifact-runtime.md`
 - Phase Runtime 还必须遵守：`skills/_shared/contracts/phase-runtime.md`
+- `sdlc-github` 还必须遵守：`skills/_shared/contracts/github-runtime.md`
 
 `skills/_shared/**` 是唯一允许业务 Skill 跨目录读取的共享指令区域。不得读取其他 `skills/sdlc-*/` 的私有内容。
 
@@ -141,7 +145,7 @@ Script 必须：
 - 非交互式；
 - 输入输出稳定；
 - 明确退出码；
-- 不联网、不安装依赖、不吞错；
+- 不联网、不安装依赖、不吞错；仅显式 sdlc-github 操作经其固定官方 MCP Transport 联网，不授权其他 Phase 或 Skill。
 - 不依赖固定 CWD；
 - 有自动化测试。
 

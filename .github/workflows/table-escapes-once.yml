@@ -1,0 +1,92 @@
+name: table-escapes-once
+on:
+  push:
+    branches: [fix/realflow-closure-v1]
+    paths: [.github/workflows/table-escapes-once.yml]
+permissions:
+  contents: write
+jobs:
+  reviewed-repair:
+    if: github.repository == 'ousui/sdlc-ai-spec'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply bounded renderer-parser contract repair
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = fix/realflow-closure-v1
+          test "$(git rev-parse HEAD^)" = d2fb303ba927964295c46082c9d1b31d3325f8e3
+          mkdir -p "$RUNNER_TEMP/table-evidence"
+          python3 - <<'PY'
+          from pathlib import Path
+          import hashlib,json
+          p=Path('packages/sdlc_runtime/canonical.py');s=p.read_text()
+          old='    return tuple(cell.strip() for cell in stripped[1:-1].split("|"))'
+          new='''    # Split only unescaped delimiters and decode the escapes emitted by table().
+              # Raw rows remain unchanged below, so control/check digests bind original bytes.
+              cells: list[str] = []
+              current: list[str] = []
+              content = stripped[1:-1]
+              index = 0
+              while index < len(content):
+                  char = content[index]
+                  if char == "\\\\" and index + 1 < len(content) and content[index + 1] in {"\\\\", "|"}:
+                      current.append(content[index + 1])
+                      index += 2
+                      continue
+                  if char == "|":
+                      cells.append("".join(current).strip())
+                      current = []
+                  else:
+                      current.append(char)
+                  index += 1
+              cells.append("".join(current).strip())
+              return tuple(cells)'''
+          assert s.count(old)==1
+          p.write_text(s.replace(old,new))
+          digest=hashlib.sha256(p.read_bytes()).hexdigest()
+          assert digest=='5ef3d3a6d8fb474b9aa852d742599af32c28660b127513dfdbcc64a6cc9de295'
+          p=Path('skills/sdlc-600-rls/references/source-lock.json');s=p.read_text();j=json.loads(s)
+          entry=next(item for item in j['entries'] if item['path']=='packages/sdlc_runtime/canonical.py')
+          p.write_text(s.replace(entry['sha256'],digest))
+          p=Path('tests/skill_vfy/test_result_text_projection.py');s=p.read_text()
+          anchor='    def test_failure_trace_remains_a_report_not_a_success_override(self):'
+          extra='''    def test_actual_command_json_preserves_escaped_newlines_and_paths(self):
+                  self.assert_roundtrip(json.dumps({'exit_code': 0, 'stderr': 'Ran 13 tests\\nOK\\n',
+                                                   'path': r'C:\\workspace\\tests', 'detail': 'left|right'}, ensure_ascii=False))
+          
+          '''
+          assert s.count(anchor)==1
+          p.write_text(s.replace(anchor,extra+anchor))
+          Path('.github/workflows/table-escapes-once.yml').unlink()
+          PY
+          python3 -B tools/validate_sdlc_status_source_lock.py --write
+          python3 -B tools/validate_all_skill_source_locks.py > "$RUNNER_TEMP/table-evidence/locks.json"
+          python3 -B -m unittest tests.runtime.test_table_escaping tests.runtime.test_canonical tests.skill_vfy.test_result_text_projection tests.skill_vfy.test_persistence tests.skill_vfy.test_reviewable_confirmation -v > "$RUNNER_TEMP/table-evidence/targeted.log" 2>&1
+          git add packages/sdlc_runtime/canonical.py skills/sdlc-600-rls/references/source-lock.json skills/sdlc-status/references/source-lock.json tests/skill_vfy/test_result_text_projection.py .github/workflows/table-escapes-once.yml
+          git diff --cached --check
+          test "$(git write-tree)" = a79339266593148d801747f1b4be48d91aa34ccf
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix(runtime): decode escaped table cells without changing digest bytes'
+          git rev-parse HEAD > "$RUNNER_TEMP/table-evidence/source.sha"
+          git bundle create "$RUNNER_TEMP/table-evidence/source.bundle" HEAD
+          test "$(git ls-remote origin refs/heads/fix/realflow-closure-v1 | cut -f1)" = "$GITHUB_SHA"
+          git push origin HEAD:refs/heads/fix/realflow-closure-v1
+      - name: Verify immutable committed source
+        run: python3 -B tools/validate.py --profile full --source-sha "$(git rev-parse HEAD)" --json-out "$RUNNER_TEMP/table-evidence/full.json" > "$RUNNER_TEMP/table-evidence/full.log" 2>&1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: table-escapes-${{ github.sha }}
+          path: ${{ runner.temp }}/table-evidence/
+          if-no-files-found: error
+          retention-days: 30

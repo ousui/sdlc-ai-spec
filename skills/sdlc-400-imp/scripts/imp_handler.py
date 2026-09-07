@@ -527,7 +527,10 @@ class ImpHandler:
                                  artifact_id=claim.artifact_id, revision=claim.revision,
                                  generation=claim.generation, reason=reason)
                 raise
-        unchanged = canonical(state["method"]) == canonical(prepared["method"]) and state["stage"] == "executed"
+        unchanged = (canonical(state["method"]) == canonical(prepared["method"])
+                     and state["stage"] == "executed"
+                     and not (invocation["operation"] == "revise"
+                              and any(check.get("result") == "fail" for check in state["checks"])))
         if not unchanged or prepared["planned"]:
             state["method"] = prepared["method"]
             state["stage"], state["checks"], state["failure"] = "prepared", [], None

@@ -23,8 +23,22 @@ def main(argv):
     cwd = Path.cwd().resolve()
     if not cwd.is_relative_to(temporary):
         raise SystemExit("project check cwd escapes its temporary snapshot")
+    # -I/-S must not hide the declared snapshot or preinstalled interpreter
+    # dependencies. Add only these exact paths; never run .pth/sitecustomize,
+    # inspect PYTHONPATH, or discover another project/user installation.
+    prefixes = [Path(sys.prefix), Path(sys.base_prefix)]
+    interpreter_prefix = Path(sys.executable).absolute().parent.parent
+    if (interpreter_prefix / "pyvenv.cfg").is_file():
+        prefixes.insert(0, interpreter_prefix)
+    dependency_paths = []
+    for prefix in dict.fromkeys(prefixes):
+        for path in (prefix / "lib" / f"python{sys.version_info.major}.{sys.version_info.minor}" / "site-packages",
+                     prefix / "Lib" / "site-packages"):
+            if path.is_dir():
+                dependency_paths.append(path.resolve())
+    sys.path[:0] = [str(cwd), *(str(path) for path in dependency_paths)]
     readable = tuple(dict.fromkeys(Path(item).resolve() for item in (
-        temporary, sys.prefix, sys.base_prefix, "/System", "/Library", "/usr", "/dev",
+        temporary, sys.prefix, sys.base_prefix, *dependency_paths, "/System", "/Library", "/usr", "/dev",
     )))
     process_events = {
         "ctypes.dlopen", "os.exec", "os.fork", "os.forkpty", "os.posix_spawn",

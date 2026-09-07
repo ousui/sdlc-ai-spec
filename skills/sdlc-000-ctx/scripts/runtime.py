@@ -430,10 +430,31 @@ def _is_typed_value(value: Any) -> bool:
     return _cell(value) not in {"", "None", "N/A", "TBD", "Unknown", "-", "待定"}
 
 
+def _immutable_baseline(value: str) -> bool:
+    """Recognize explicit version/content identities, not provenance truth.
+
+    Generic vcs: revisions retain the existing abbreviated hexadecimal form.
+    New git: inputs require full object IDs. Content references bind a snapshot
+    digest (including a dirty-worktree manifest), never an observation timestamp.
+    Resolution/observation Evidence remains a separate domain obligation.
+    """
+    return bool(
+        re.fullmatch(r"vcs:[^\s@]+@[0-9a-f]{7,64}(?:\+sha256:[0-9a-f]{64})?", value)
+        or re.fullmatch(r"git:(?:[^\s@]+@)?(?:[0-9a-f]{40}|[0-9a-f]{64})(?:\+sha256:[0-9a-f]{64})?", value)
+        or re.fullmatch(r"(?:[^\s@]+@)?sha256:[0-9a-f]{64}", value)
+    )
+
+
 def _collection_row_problem(name: str, row: Mapping[str, str]) -> str | None:
     for field, allowed in COLLECTION_ENUMS.get(name, {}).items():
         if row[field] not in allowed:
             return f"{name}.{field} uses an invalid enum value"
+
+    if name == "resources":
+        baseline = row["baseline_reference"]
+        versioned = row["type"] == "repository" or row["locator"].startswith(("vcs:", "git:"))
+        if not _immutable_baseline(baseline) and (versioned or baseline not in {"None", "N/A"}):
+            return "resources.baseline_reference requires an immutable version or content digest, not a timestamp or mutable name"
 
     required_typed = {
         "resources": ("type", "name", "role", "locator"),
@@ -1078,7 +1099,7 @@ def _validate_final_confirmation(
 
 def _pending_checks(open_items: Sequence[Mapping[str, Any]], errors: Sequence[Mapping[str, Any]]) -> dict[str, tuple[str, str]]:
     if errors:
-        return {check_id: ("fail", errors[0]["message"]) for check_id in (*CORE_CHECKS, *CTX_CHECKS)}
+        return {check_id: ("pending", "Not evaluated: invalid request") for check_id in (*CORE_CHECKS, *CTX_CHECKS)}
     blocked = {value for item in open_items for value in str(item["blocked_references"]).split(", ")}
     checks: dict[str, tuple[str, str]] = {}
     for check_id in (*CORE_CHECKS, *CTX_CHECKS):
@@ -1148,7 +1169,7 @@ def build_payload(
     checks = _pending_checks(open_items, errors)
     empty_gate = {
         "revision": str(revision), "control_input_digest": "", "evaluation_contract_set": EVALUATION_CONTRACT_SET,
-        "check_set_result_digest": "", "gate_result": "fail" if errors else "pending",
+        "check_set_result_digest": "", "gate_result": "pending",
         "exception_references": "None", "evaluator": "sdlc-000-ctx-runtime", "evaluated_at": now.isoformat(timespec="seconds"),
     }
     provisional = _render_markdown(model, status="failed" if errors else "draft", open_items=open_items, checks=checks, final_confirmation=None, gate_summary=empty_gate)
@@ -1181,13 +1202,14 @@ def build_payload(
             checks = complete_checks if review_draft else _pending_checks(open_items, [])
         elif final_confirmation["result"] == "rejected":
             errors.append({"code": "FINAL_CONFIRMATION_REJECTED", "message": "Final Confirmation rejected this Revision"})
-            checks = _pending_checks([], errors)
+            checks = complete_checks
+            checks["CORE-G-009"] = ("fail", "Final Confirmation rejected this Revision")
         else:
             checks = complete_checks
             checks["CORE-G-009"] = ("pass", "Final Confirmation binds current digests")
 
     if errors:
-        gate_result = "fail"
+        gate_result = "fail" if any(outcome == "fail" for outcome, _ in checks.values()) else "pending"
         status = "failed"
     elif open_items:
         gate_result = "pending"
@@ -1850,15 +1872,17 @@ class CtxHandler:
         if dry_run:
             product = build_payload(invocation, artifact_id="CTX-00000000000000-00", revision=1, base_revision=None, now=now)
             return _artifact_result(
-                "create", ok=True, status="completed", artifact=None, gate_result=product.gate_result,
+                "create", ok=not product.errors, status="failed" if product.errors else "completed", artifact=None, gate_result=product.gate_result,
                 failed_checks=product.failed_checks, open_items=product.open_items,
                 warnings=[*product.warnings, {"code": "DRY_RUN", "message": "No Store, Artifact ID, Revision, write, freeze, or Authority was created"}],
-                errors=[], next_action=_action("REVIEW_DRY_RUN", "检查候选结果；需要持久化时另行明确写入授权", user=True),
+                errors=product.errors,
+                next_action=(_action("CORRECT_CTX_INPUT", "修正结构化 CTX 输入后重试", user=True) if product.errors
+                             else _action("REVIEW_DRY_RUN", "检查候选结果；需要持久化时另行明确写入授权", user=True)),
             )
         preliminary = build_payload(invocation, artifact_id="CTX-00000000000000-00", revision=1, base_revision=None, now=now)
         if preliminary.errors:
             return _artifact_result(
-                "create", ok=False, status="failed", artifact=None, gate_result="fail",
+                "create", ok=False, status="failed", artifact=None, gate_result=preliminary.gate_result,
                 failed_checks=preliminary.failed_checks, open_items=preliminary.open_items,
                 warnings=preliminary.warnings, errors=preliminary.errors,
                 next_action=_action("CORRECT_CTX_INPUT", "修正结构化 CTX 输入后重试", user=True),
@@ -1950,7 +1974,7 @@ class CtxHandler:
             if preview_product.errors:
                 return _artifact_result(
                     "revise", ok=False, status="failed", artifact=_artifact_view(current, authority=current.control.state == "frozen"),
-                    gate_result="fail", failed_checks=preview_product.failed_checks, open_items=preview_product.open_items,
+                    gate_result=preview_product.gate_result, failed_checks=preview_product.failed_checks, open_items=preview_product.open_items,
                     warnings=preview_product.warnings, errors=preview_product.errors,
                     next_action=_action("CORRECT_CTX_INPUT", "修正结构化 CTX 输入后重试", user=True),
                 )
@@ -2103,7 +2127,7 @@ def _verify_bundled_source_lock() -> None:
 
 def invoke(value: Mapping[str, Any], *, clock: Any = None) -> dict[str, Any]:
     operation = value.get("operation") if isinstance(value, Mapping) else None
-    safe_operation = operation if operation in {"create", "revise", "check"} else "check"
+    safe_operation = operation if isinstance(operation, str) and operation in {"create", "revise", "check"} else "check"
     if _FOUNDATION_IMPORT_ERROR is not None:
         return _bootstrap_error_result(
             safe_operation,

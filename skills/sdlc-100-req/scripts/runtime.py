@@ -38,6 +38,7 @@ from packages.sdlc_artifact_store import (  # noqa: E402
 from packages.sdlc_runtime import (  # noqa: E402
     ControlInputError,
     ControlInputResolver,
+    EnvelopeValidationError,
     FrozenArtifactAuthorityVerifier,
     authority_reference,
     compute_check_set_result_digest,
@@ -1301,9 +1302,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         request = _load_request(args.input)
         project_root = Path(_required_text(request.get("project_root"), "project_root"))
         result = execute_phase(RequirementHandler(project_root), request)
-    except (json.JSONDecodeError, OSError, RequirementRuntimeError, CanonicalFormatError) as exc:
+    except (json.JSONDecodeError, OSError, RequirementRuntimeError, CanonicalFormatError, EnvelopeValidationError) as exc:
         operation = "check"
-        if "request" in locals() and request.get("operation") in {"create", "revise", "check"}:
+        if "request" in locals() and isinstance(request.get("operation"), str) and request.get("operation") in {"create", "revise", "check"}:
             operation = request["operation"]
         result = error_result(
             operation=operation,

@@ -123,17 +123,19 @@ class RlsService:
     def revise(self, reference, vfy_reference, target, *, retry=False):
         state, _ = self.read(reference)
         candidate = read_vfy_candidate(self.root, vfy_reference)
-        if target.target_id == state["release_contract"]["release_target"]:
+        same_artifact = target.target_id == state["release_contract"]["release_target"]
+        if same_artifact:
             self._target(state, target)
         new = domain.revise(state, candidate, target=target.target_id, target_baseline=target.baseline(), retry=retry)
-        if new["artifact"]["reference"] == reference:
+        # build_provisional has no Store reservation. Its clock-based ID may equal
+        # an existing ID; that must never suppress allocation for a new Target.
+        if same_artifact and new["artifact"]["reference"] == reference:
             return new, None
         new["release_contract"]["target_locator"] = str(target.root)
         from rls_contract import pre_execution_checklist
         from rls_common import sha256_value
         new["pre_execution_checklist"] = pre_execution_checklist(new["release_contract"], new["release_items"], new["confirmations"])
         new["pre_execution_checklist_digest"] = sha256_value(new["pre_execution_checklist"])
-        same_artifact = new["artifact"]["id"] == state["artifact"]["id"]
         if same_artifact:
             new["artifact"]["allocated"] = True
         return create_revision(self.root, new, base_revision=state["artifact"]["revision"] if same_artifact else None)

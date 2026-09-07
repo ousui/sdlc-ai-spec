@@ -1,14 +1,18 @@
 # 当前工程交接
 
-## 当前工作包：Skill 输入契约可靠性设计
+## 当前工作包：Skill 输入契约可靠性修复与验证
 
-2026-09-08，用户要求核对 CTX 输入失败是否为跨 Skill 共性问题，并制定复现、修复、技术栈覆盖及重复门禁精简计划。当前分支 `codex/bugfix`，设计基线为 `aed8eb69d2b74ec27bdcb2fb356cb02b68602289`，本次只维护设计、评测计划和此交接；未实现、未提交、未发布。当前正式业务 Skill 执行：`None`。
+2026-09-08，Maintainer 明确要求评审修订后在 Web 同会话实施、验证并保存恢复点。来源 `codex/bugfix@14c167e044d7a8eeada3c826d1c41bb55bc7b01b`；反例基线 `aed8eb69d2b74ec27bdcb2fb356cb02b68602289`；修复分支 `fix/skill-contract-reliability-v1`，Draft PR #20。当前正式业务 Skill 执行：`None`（这里是插件工程修复，不是用户产品发布）。
 
-[设计与问题清单](components/skill-contract-reliability/DESIGN.md) 和 [复现与评测计划](components/skill-contract-reliability/EVAL-PLAN.md) 均为 draft。已复现 CTX 错误全量映射、dry-run 丢失错误、时间基线未拦截，以及 DSN/PLN 元命令读取业务 stdin；三项目回归说明与代码已只读核对，不以旧 PASS 证明当前修复完成。
+[DESIGN](components/skill-contract-reliability/DESIGN.md)、[EVAL-PLAN](components/skill-contract-reliability/EVAL-PLAN.md) 已按 [REVIEW](components/skill-contract-reliability/REVIEW.md) 修订。原设计的 W1 停点被本次明确连续执行授权取代；不代表最终验收或合并批准。不修改 main/codex/bugfix，不操作用户现存工作树或安装缓存，不做生产效果。
+
+基线已实际重放 CTX 全量错误映射、dry-run 丢错误、时间基线通过及 DSN/PLN 非终止 stdin 阻塞。另发现 RLS-E075 临时 ID 碰撞；相同 Runtime 不同时间可通过，必须增加强制碰撞回归而不是重试抹平。旧三项目 PASS 不用于新版本结论。
+
+Issues 已关闭（HTTP 410），使用 Draft PR #20 正文清单/追加评论及仓库外 Actions 原始产物记录恢复点，不改变仓库管理设置。源树仅保留长期契约、测试、设计与紧凑证据索引；运输或文档提交不冒充实现 Subject。
 
 ## 唯一下一工作包
 
-W1（approval）：审阅并明确接受或调整上述设计的输入契约、错误/Gate 分离、兼容范围、有限文档实验及去重原则。此决定前不进入 implement/evaluate，不恢复全宿主原生认证门禁，也不自动修改三项目或安装缓存。
+继续本分支 SCR 修复/验证：先固定原缺陷与旧合法请求，再实施最小修复和随包输入契约，随后在准确提交执行可用的统一回归/项目链。approval-bot 原快照和独立新上下文模型执行能力不可用时单列 NOT_RUN/BLOCKED，不向用户反复索取已授权操作确认，不宣称全范围 PASS。
 
 ## 以下为此前维护交接记录
 

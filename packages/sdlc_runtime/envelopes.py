@@ -48,7 +48,7 @@ def validate_invocation(value: Mapping[str, Any]) -> dict[str, Any]:
     if payload["contract"] != INVOCATION_CONTRACT:
         raise EnvelopeValidationError(f"contract must be {INVOCATION_CONTRACT}")
     operation = payload["operation"]
-    if operation not in OPERATIONS:
+    if not isinstance(operation, str) or operation not in OPERATIONS:
         raise EnvelopeValidationError(
             f"operation must be one of: {', '.join(sorted(OPERATIONS))}"
         )
@@ -200,7 +200,7 @@ def error_result(
 ) -> dict[str, Any]:
     """Build a deterministic failure/action-required result."""
 
-    if operation not in OPERATIONS:
+    if not isinstance(operation, str) or operation not in OPERATIONS:
         raise EnvelopeValidationError("operation is invalid")
     if status not in RESULT_STATUSES - {"completed"}:
         raise EnvelopeValidationError("error result status is invalid")

@@ -89,6 +89,8 @@ python3 <plugin-root>/skills/sdlc-000-ctx/scripts/runtime.py < invocation.json
 - 不调用兄弟业务 Skill，不传递当前授权，不使用文件或其他数据库 fallback；
 - `PROJECT_BOUNDARY_CONFIRMATION_REQUIRED` 等内部门禁由本 Skill 转换为自然语言决策，不把底层 JSON 直接交给普通用户。
 
+需要独立最终复核时，按运行契约显式设置 `options.prepare_confirmation=true`，先持久化并读回准确 review draft。确认者必须复核实际字节和当前检查摘要；缺少确认仍不冻结。该选项不隐藏真实业务输入缺口。
+
 ## 输出与完成条件
 
 `summary` 默认只呈现事实、准确 Artifact、Gate、已执行写入、阻塞和下一动作。`json` 只返回正式 Runtime 的结构化结果，不添加进度文本、不改写字段或说明；调试信息不混入 JSON。`debug` 展示有界诊断，先脱敏。

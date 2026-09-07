@@ -154,7 +154,7 @@ class DsnRenderer:
             )
         if not evidence_rows:
             evidence_rows = (
-                ("None", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "No Evidence supplied"),
+                ("None", "none", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "No independent Evidence"),
             )
 
         exception_rows = []
@@ -176,7 +176,7 @@ class DsnRenderer:
             )
         if not exception_rows:
             exception_rows = (
-                ("None", "N/A", "N/A", "N/A", "No exceptions", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A"),
+                ("None", "none", "N/A", "N/A", "No Exceptions", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A"),
             )
 
         applicability_rows = [
@@ -299,7 +299,7 @@ class DsnRenderer:
         pre_confirmation = ("\n".join(lines).rstrip() + "\n").encode("utf-8")
         control_digest = compute_control_input_digest(pre_confirmation)
         check_digest = "N/A"
-        if not any(item[2] == "pending" for item in check_rows):
+        if not any(item[2] == "pending" for item in check_rows if item[0] != "CORE-G-009"):
             try:
                 check_digest = compute_check_set_result_digest(
                     parse_canonical_artifact(pre_confirmation)

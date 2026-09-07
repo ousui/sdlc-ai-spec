@@ -659,7 +659,7 @@ def _normalize_context(
             continue
         digest = compute_sha256(raw_bytes)
         supplied_digest = raw.get("sha256")
-        if supplied_digest is not None and supplied_digest not in {digest, "sha256:" + digest}:
+        if supplied_digest is not None and supplied_digest not in {digest, digest.removeprefix("sha256:")}:
             errors.append({"code": "CTX_CONTENT_INVALID", "message": f"Digest mismatch for {member_id}"})
             continue
         all_ids.add(member_id)
@@ -851,7 +851,7 @@ def _render_markdown(
 
     lines += ["## 支撑产物清单 Supporting Artifact Manifest", ""]
     if model["members"]:
-        member_rows = [[item["member_id"], "supporting", item["canonical_name"], item["media_type"], item["purpose"], "sha256:" + item["sha256"], "N/A"] for item in model["members"]]
+        member_rows = [[item["member_id"], "supporting", item["canonical_name"], item["media_type"], item["purpose"], item["sha256"], "N/A"] for item in model["members"]]
     else:
         member_rows = [["None", "none", "N/A", "N/A", "N/A", "N/A", "No supporting artifacts"]]
     lines += _table(["Member ID", "Type", "Path or Reference", "Media Type", "Purpose", "SHA-256 Digest", "Empty Reason"], member_rows) + [""]
@@ -1154,6 +1154,12 @@ def build_payload(
     provisional = _render_markdown(model, status="failed" if errors else "draft", open_items=open_items, checks=checks, final_confirmation=None, gate_summary=empty_gate)
     expected: dict[str, str] = {"evaluation_contract_set": EVALUATION_CONTRACT_SET}
 
+    # Persist reviewable content before asking an independent execution to confirm.
+    # Confirmation-only waiting is a control result, not a missing domain fact.
+    prepare_confirmation = invocation.get("options", {}).get("prepare_confirmation", False)
+    if not isinstance(prepare_confirmation, bool):
+        errors.append({"code": "INVALID_PREPARE_CONFIRMATION", "message": "prepare_confirmation must be boolean"})
+    review_draft = False
     final_confirmation = None
     if not errors and not open_items:
         complete_checks = {check_id: ("pass", "Deterministic runtime validation") for check_id in (*CORE_CHECKS, *CTX_CHECKS)}
@@ -1171,7 +1177,8 @@ def build_payload(
         if confirmation_problem:
             open_items.append(_new_open_item(len(open_items) + 1, confirmation_problem, "CORE-G-009"))
             warnings.append({"code": "FINAL_CONFIRMATION_BINDINGS", "message": "Use these exact bindings in the authoritative confirmation record", "details": expected})
-            checks = _pending_checks(open_items, [])
+            review_draft = prepare_confirmation is True
+            checks = complete_checks if review_draft else _pending_checks(open_items, [])
         elif final_confirmation["result"] == "rejected":
             errors.append({"code": "FINAL_CONFIRMATION_REJECTED", "message": "Final Confirmation rejected this Revision"})
             checks = _pending_checks([], errors)
@@ -1184,7 +1191,7 @@ def build_payload(
         status = "failed"
     elif open_items:
         gate_result = "pending"
-        status = "waiting_input"
+        status = "draft" if review_draft else "waiting_input"
     else:
         active = [row["id"] for row in model["exceptions"] if row["state"] in {"active", "carried"}]
         gate_result = "pass_with_exception" if active else "pass"
@@ -1205,7 +1212,7 @@ def build_payload(
         "evaluated_at": now.isoformat(timespec="seconds"),
     }
     primary = _render_markdown(
-        model, status=status, open_items=open_items, checks=checks,
+        model, status=status, open_items=[] if review_draft else open_items, checks=checks,
         final_confirmation=final_confirmation, gate_summary=gate_summary,
     )
     payload = _canonical_payload(model, primary, status)
@@ -1391,7 +1398,7 @@ def _validate_ctx_tables(
                 ),
                 "Supporting Evidence",
             ),
-            "sha256:" + item.sha256, "N/A",
+            item.sha256, "N/A",
         ]
         for item in stored.payload.members
     ]

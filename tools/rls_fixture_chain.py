@@ -168,6 +168,8 @@ def _create_plan(
             "reason": "Explicit bounded fixture exception", "known_risk": "Known fixture residual risk",
             "compensating_control": "Observe only the local Sandbox", "approval": "Fixture Owner at 2026-09-05T00:00:00Z",
             "revisit_condition": "next release", "downstream_obligation": "RLS retains the exact scoped fixture obligation"}]
+    if exception_scope == ["phase:RLS"]:
+        plan["exceptions"][0].update(state="carried", origin_reference=design_reference + "#EX-001")
     _assert(len(plan["work_items"]) in {2, 3}, "PLN must contain IMP/VFY and optional Sandbox RLS")
     imp_item = plan["work_items"][0]
     imp_item.update(
@@ -400,6 +402,16 @@ def build_chain(root: Path, *, applicability="required", repository="fixture/rls
             value = design_builder(*args, **kwargs)
             row = next(row for row in value["lifecycle_applicability"] if row["phase"] == "RLS")
             row.update(disposition=applicability, basis="Explicit local Sandbox release with target-side confirmation")
+            # A waived Scope Input needs the actual approved Exception before
+            # PLN aggregation, not an exception fabricated later by the Plan.
+            if applicability == "waived":
+                value["exceptions"] = [{"id": "EX-001", "state": "active",
+                    "scope": "phase:RLS", "reason": "Explicit bounded fixture exception",
+                    "known_risk": "Known fixture residual risk",
+                    "compensating_control": "Observe only the local Sandbox",
+                    "approval": "Fixture Owner at 2026-09-05T00:00:00Z",
+                    "revisit_condition": "next release",
+                    "downstream_obligation": "RLS retains the exact scoped fixture obligation"}]
             return value
         with patch.object(upstream, "_design_candidate", design_candidate):
             design, _ = upstream._create_design(root, context, requirement, repository, initial["head"], (root / resource_root / "README.md").read_bytes(), resource_root)

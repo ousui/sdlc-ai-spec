@@ -16,11 +16,11 @@
     },
     {
       "path": "packages/sdlc_lifecycle/query_rls.py",
-      "sha256": "fdca61c2223791ae5e70891fbe851456111f1fd663b26494967c48caddb7ac6e"
+      "sha256": "e0d1f69f89ca5170fa90ba2de624347e233dbabfaa17991a69405d1ad11c05a3"
     },
     {
       "path": "packages/sdlc_lifecycle/query_vfy.py",
-      "sha256": "acf2dc56c71dc284efc4eaf0299f2d84c594c7e08e94ff4fe1f275ab64529b7c"
+      "sha256": "804daffe480307f4ae3d69d220946372c8ae97a660121c8904208e8537959f91"
     },
     {
       "path": "packages/sdlc_phasekit/models.py",
@@ -32,11 +32,15 @@
     },
     {
       "path": "packages/sdlc_runtime/canonical.py",
-      "sha256": "c3fb0b1cfcfcd4d828d5a092b70f14c01925f56cb17ea6914d6c765005998c55"
+      "sha256": "5ef3d3a6d8fb474b9aa852d742599af32c28660b127513dfdbcc64a6cc9de295"
     },
     {
       "path": "packages/sdlc_runtime/control_inputs.py",
       "sha256": "5551b9632c04c47928df04449518f39f333d4fab8f8833f8d4398723c9503409"
+    },
+    {
+      "path": "packages/sdlc_runtime/vfy_control_projection.py",
+      "sha256": "e68c2bca6e4bb6432277405c28b7a5f4aae0f9b1a29b183ae1dd8a1bfdf45ebc"
     },
     {
       "path": "skills/_shared/contracts/skill-interface.md",
@@ -61,6 +65,23 @@
     {
       "path": "skills/sdlc-status/references/rls-projection.schema.json",
       "sha256": "2c25a3430822ff402dd0a6bb65d1c83946cf67e07dc653f9564825eca554ac91"
+    }
+  ],
+  "contracts": [
+    {
+      "contract_id": "sdlc-ai-spec/spec/artifact-store/v1.1",
+      "contract_version": "1.1",
+      "sha256": "b340ca2a38dfe0f7409acaa8f9ac559e8872bed44725037889528e3d167d4764"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/core/v1.1",
+      "contract_version": "1.1",
+      "sha256": "1eefa7a138f2d221140137a5fac0f5429b7f847273fe9d70e891ace6c3b7a89b"
+    },
+    {
+      "contract_id": "sdlc-ai-spec/spec/release/v1.1",
+      "contract_version": "1.1",
+      "sha256": "62124c713958f833d3e093c0a05743fcbde3dc40ed1dfac5eb5a857846210faa"
     }
   ]
 }

@@ -2,10 +2,30 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 from typing import Sequence
 
 from .common import PhaseKitError
+
+SPEC_FILENAMES = {
+    "core": "core-spec.md", "artifact-store": "artifact-store-spec.md",
+    "project-context": "000-ctx-spec.md", "requirement": "100-req-spec.md",
+    "design": "200-dsn-spec.md", "plan": "300-pln-spec.md",
+    "implementation": "400-imp-spec.md", "vfy": "500-vfy-spec.md",
+    "release": "600-rls-spec.md",
+}
+
+def spec_reference(contract_id: str, digest: str) -> str:
+    """Resolve a registered immutable Spec identity; never access its path."""
+    match = re.fullmatch(r"sdlc-ai-spec/spec/([a-z-]+)/v1\.1", contract_id)
+    if not match or match[1] not in SPEC_FILENAMES:
+        raise PhaseKitError("unregistered Spec identity: " + contract_id)
+    digest = digest.removeprefix("sha256:")
+    if not re.fullmatch(r"[0-9a-f]{64}", digest):
+        raise PhaseKitError("invalid Spec SHA-256")
+    return f"docs/{'v1.1'}/{SPEC_FILENAMES[match[1]]}@sha256:{digest}"
+
 
 
 def evaluation_contract_set(
@@ -28,5 +48,5 @@ def evaluation_contract_set(
             raise PhaseKitError(f"source lock digest is missing: {contract_id}")
         if digest.startswith("sha256:"):
             digest = digest.split(":", 1)[1]
-        values.append(f"{contract_id}@sha256:{digest}")
-    return ", ".join(values)
+        values.append(spec_reference(contract_id, digest))
+    return ", ".join(sorted(set(values)))

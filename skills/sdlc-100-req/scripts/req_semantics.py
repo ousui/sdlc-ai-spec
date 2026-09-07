@@ -256,6 +256,13 @@ def validate_persisted_requirement(artifact: ParsedCanonicalArtifact) -> None:
         require_single_table(artifact, GATE_SUMMARY_HEADERS, "Gate Summary"),
         "Gate Summary",
     )
+    for record in (confirmation, summary):
+        value = record["Evaluation Contract Set"]
+        sources = parse_reference_set(value)
+        if not sources or value != ", ".join(sorted(sources)):
+            raise RequirementSemanticError("Evaluation Contract Set must use sorted canonical references")
+    if confirmation["Evaluation Contract Set"] != summary["Evaluation Contract Set"]:
+        raise RequirementSemanticError("Confirmation and Gate use different Evaluation Contract Sets")
     accepted = parse_reference_set(confirmation["Accepted Exception References"])
     summarized = parse_reference_set(summary["Exception References"])
     artifact_id = str(front.get("id"))

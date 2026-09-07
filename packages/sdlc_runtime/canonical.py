@@ -152,7 +152,26 @@ def _split_table_row(line: str) -> tuple[str, ...]:
     stripped = line.strip()
     if not stripped.startswith("|") or not stripped.endswith("|"):
         raise CanonicalFormatError("Markdown table rows must start and end with |")
-    return tuple(cell.strip() for cell in stripped[1:-1].split("|"))
+    # Split only unescaped delimiters and decode the escapes emitted by table().
+    # Raw rows remain unchanged below, so control/check digests bind original bytes.
+    cells: list[str] = []
+    current: list[str] = []
+    content = stripped[1:-1]
+    index = 0
+    while index < len(content):
+        char = content[index]
+        if char == "\\" and index + 1 < len(content) and content[index + 1] in {"\\", "|"}:
+            current.append(content[index + 1])
+            index += 2
+            continue
+        if char == "|":
+            cells.append("".join(current).strip())
+            current = []
+        else:
+            current.append(char)
+        index += 1
+    cells.append("".join(current).strip())
+    return tuple(cells)
 
 
 def _is_separator(cells: Sequence[str]) -> bool:

@@ -609,24 +609,38 @@ def _verify_exceptions(store, root, state):
 
 
 def _verify_applicability(store, root, state, projection):
+    """Read disposition from the exact selected scope, never historical nodes.
+
+    PLN's aggregate is a different canonical table from REQ/DSN lifecycle
+    applicability. A missing/invalid selected table must not fall back to an
+    earlier phase, because that would silently replace the delivery authority.
+    """
     import re
-    for phase in ("PLN", "DSN", "REQ"):
-        rows = []
-        for node in projection.nodes:
-            if node.artifact_type != phase or node.revision_state != "frozen" or node.authority_state != "valid": continue
-            parsed = parse_canonical_artifact(_exact_authority(store, root, node.reference).payload.primary_blob)
-            tables = parsed.tables
-            if phase == "PLN":
-                heading = "## 聚合适用性 Aggregated Applicability"
-                require(parsed.text.count(heading) == 1, "RLS_VFY_NOT_READY", "PLN applicability is ambiguous")
-                tables = parse_markdown_tables(re.split(r"(?m)^## ", parsed.text.split(heading, 1)[1], maxsplit=1)[0])
-            rows.extend(row for table in tables for row in table.rows if row.get("Phase") == "RLS" and "Disposition" in row)
-        if rows:
-            require(len(rows) == 1 and rows[0].get("判断依据 Basis", "").strip()
-                    and rows[0]["Disposition"] == state["rls_applicability"],
-                    "RLS_VFY_NOT_READY", "RLS applicability differs from frozen upstream authority")
-            return
-    require(False, "RLS_VFY_NOT_READY", "RLS applicability authority is missing")
+    scope = exact_scope_reference(state["scope"]["reference"])
+    selected = _exact_authority(store, root, scope)
+    phase = selected.payload.artifact_type
+    require(phase in {"PLN", "DSN", "REQ"}, "RLS_VFY_NOT_READY", "Selected scope has no lifecycle applicability")
+    parsed = parse_canonical_artifact(selected.payload.primary_blob)
+    if phase == "PLN":
+        heading = "## 聚合适用性 Aggregated Applicability"
+        headers = ("Phase", "Effective Disposition", "Host References", "Basis References", "Exception References")
+        disposition_key, basis_key = "Effective Disposition", "Basis References"
+    else:
+        heading = "## 生命周期适用性 Lifecycle Applicability"
+        headers = ("Phase", "Disposition", "Host", "判断依据 Basis")
+        disposition_key, basis_key = "Disposition", "判断依据 Basis"
+    require(parsed.text.count(heading) == 1, "RLS_VFY_NOT_READY", "Selected applicability section is missing or ambiguous")
+    section = re.split(r"(?m)^## ", parsed.text.split(heading, 1)[1], maxsplit=1)[0]
+    tables = [table for table in parse_markdown_tables(section) if table.headers == headers]
+    require(len(tables) == 1, "RLS_VFY_NOT_READY", "Selected applicability table has an invalid canonical shape")
+    rows = [row for row in tables[0].rows if row["Phase"] == "RLS"]
+    require(len(rows) == 1 and rows[0][basis_key].strip() not in {"", "None", "N/A"}
+            and rows[0][disposition_key] == state["rls_applicability"],
+            "RLS_VFY_NOT_READY", "RLS applicability differs from frozen selected scope authority")
+    if phase == "PLN":
+        basis = parse_reference_set(rows[0][basis_key])
+        inputs = set(parsed.front_matter.get("inputs", []))
+        require(bool(basis) and set(basis) <= inputs, "RLS_VFY_NOT_READY", "Aggregated applicability basis is outside selected scope inputs")
 
 
 def _verify_controls(state):
@@ -696,6 +710,8 @@ def read_vfy_candidate(project_root, reference, *, expected_candidate=None):
     matches = [item for item in stored.payload.members if item.member_id == "VFY-STATE"]
     require(len(matches) == 1, "RLS_VFY_NOT_READY", "VFY requires one actual State Member")
     state = json.loads(matches[0].raw_bytes)
+    from packages.sdlc_runtime.vfy_control_projection import restore_control
+    state = restore_control(state, stored.payload.primary_blob, revision_state=stored.control.state, artifact_status=stored.payload.artifact_status)
     require(state.get("contract") == "sdlc-ai-spec/vfy-state/v1" and state["artifact"]["reference"] == exact,
             "RLS_VFY_NOT_READY", "VFY State contract or identity mismatch")
     require(state.get("final_confirmation") is None, "RLS_VFY_NOT_READY", "VFY State Member has unexpected Final Confirmation")

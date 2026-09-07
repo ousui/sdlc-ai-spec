@@ -299,7 +299,7 @@ class ImpBuilder:
             profile=str(value["method"].get("profile", "full")),
             phase_inputs=phase_inputs,
             title=title,
-            sections=sections, checks=checks, open_items=open_items, evidence=evidence,
+            sections=sections, checks=checks, open_items=list(value["method"].get("open_items", [])), evidence=evidence,
             exceptions=exceptions,
             lifecycle_applicability=binding["lifecycle_applicability"],
             final_confirmation=final_confirmation if valid else None, gate_result=gate,

@@ -138,7 +138,7 @@ class ImpVerifier:
                             "Project Check Evidence is not bound to the immutable Result and declared adapter")
                     continue
                 command = evidence.get("command", [])
-                require(len(command) == 8 and command[-3] == spec["kind"] and command[-1] == spec.get("expected", ""),
+                require(len(command) == 8 and command[-3] == spec["kind"] and command[-1] == (spec.get("expected") if spec["kind"] in {"contains", "equals"} else "N/A"),
                         "IMP_CHECK_FAILED", "Execution Evidence is bound to another Check")
                 target = next((item for item in snapshot["entries"] if item["path"] == check["path"]), None)
                 if check["result"] == "pass":
@@ -150,7 +150,7 @@ class ImpVerifier:
                     require(observed.get("sha256") == target["sha256"], "IMP_CHECK_FAILED",
                             "Check did not observe the final immutable Subject")
         else:
-            require(state["stage"] == "prepared" and not state.get("checks"),
+            require(state["stage"] in {"prepared", "applied"} and not state.get("checks"),
                     "IMP_RESULT_INCOMPLETE", "Unsupported IMP execution state")
         builder = ImpBuilder(self.project_root)
         unsigned = builder.build(

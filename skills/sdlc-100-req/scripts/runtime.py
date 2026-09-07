@@ -263,7 +263,7 @@ def _table(headers: Sequence[str], rows: Sequence[Sequence[Any]]) -> str:
 def _evaluation_contract_set() -> str:
     root = "docs/" + "v1.1/"
     return ", ".join(
-        f"{root}{name}@sha256:{digest}" for name, digest in SPEC_HASHES.items()
+        f"{root}{name}@sha256:{digest}" for name, digest in sorted(SPEC_HASHES.items())
     )
 
 

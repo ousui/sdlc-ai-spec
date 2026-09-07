@@ -82,3 +82,9 @@ CTX 的 Evaluation Contract Set 固定绑定同一 v1.1 快照的 Core、Artifac
 - 有真实人工接受的有效 Exception：Gate=`pass_with_exception`、Status=`ready_with_exception`。
 
 只有最后两种状态允许 freeze 并返回 Authority Reference。错误码稳定映射为 `INVALID_ENVELOPE`、`TARGET_AMBIGUOUS`、`WRITE_AUTHORIZATION_REQUIRED`、`ARTIFACT_REFERENCE_REQUIRED`、`ARTIFACT_REFERENCE_INVALID`、`PROJECT_BOUNDARY_CONFIRMATION_REQUIRED`、`CTX_LINEAGE_EXISTS`、`CONTROL_RESERVATION` 及共享 ArtifactStore 错误码。
+
+## 精确确认准备
+
+当需要独立复核时，create/revise 的标准 Invocation 可显式设置布尔 `options.prepare_confirmation=true`。真实项目输入完整且仅缺少最终确认时，Runtime 持久化未冻结 draft，关闭除 CORE-G-009 外的适用检查，Result 仍为 action_required。确认等待保留在 Result，不污染用于独立摘要复核的业务正文。真实 Open Items、错误和 Exception 不隐藏。
+
+先写入并通过只读 Store 读回该准确 Revision；Reviewer 独立计算当前 Control Input Digest、Evaluation Contract Set 与 Check Set Result Digest。再以相同 context/evidence/refresh 输入和合法当前 Confirmation 执行 revise；缺记录、摘要不符、拒绝确认均不能冻结。原有未设置此选项的行为不变。

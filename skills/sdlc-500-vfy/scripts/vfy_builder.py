@@ -309,8 +309,8 @@ def confirmation_subject_digest(state: Mapping[str, Any]) -> str:
 
 
 def canonical_members(state: Mapping[str, Any]) -> tuple[CanonicalMember, ...]:
-    member_state = deepcopy(dict(state))
-    member_state["final_confirmation"] = None
+    from packages.sdlc_runtime.vfy_control_projection import business_state
+    member_state = business_state(state)
 
     def member(member_id: str, name: str, value: Any) -> CanonicalMember:
         raw = canonical_bytes(value)
@@ -376,7 +376,6 @@ def _evaluation_contract_set() -> str:
             "sdlc-ai-spec/spec/core/v1.1",
             "sdlc-ai-spec/spec/artifact-store/v1.1",
             "sdlc-ai-spec/spec/vfy/v1.1",
-            "sdlc-ai-spec/runtime/vfy/v1",
         ),
     )
 
@@ -472,7 +471,7 @@ def render_markdown(
             "phase": "RLS",
             "disposition": state["rls_applicability"],
             "host": "sdlc-600-rls",
-            "basis": state["next_action"],
+            "basis": "Authoritative Scope disposition; readiness requires current Subjects and finalized Gate",
         },
     )
     raw = render_phase_artifact(

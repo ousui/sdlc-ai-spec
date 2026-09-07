@@ -74,7 +74,7 @@ class LifecycleQueryService(VfyLifecycleQueryService):
                  "RLS state is not a final persisted contract")
         parsed = parse_canonical_artifact(stored.payload.primary_blob)
         _require(state["artifact"]["reference"] == node.reference
-                 and state["artifact_gate"] == node.gate_result
+                 and (state["artifact_gate"] == node.gate_result if node.revision_state == "frozen" else node.gate_result == "pending")
                  and state["context_reference"] == parsed.front_matter.get("context")
                  and state["input_references"] == parsed.front_matter.get("inputs"), "RLS canonical identity or authority differs")
         for key, headers in (("release_items", RLS_ITEM_HEADERS), ("confirmations", RLS_CONFIRMATION_HEADERS)):
@@ -89,6 +89,8 @@ class LifecycleQueryService(VfyLifecycleQueryService):
         summary = [row for table in parsed.tables for row in table.rows if row.get("Field") == "Conclusion"]
         _require(len(summary) == 1 and summary[0]["Value"] == state["release_conclusion"], "RLS Release Conclusion differs from Primary")
         state["artifact"]["revision_state"] = stored.control.state
+        # Domain completion never replaces the unconfirmed Canonical Artifact Gate.
+        state["artifact_gate"] = node.gate_result
         # Incomplete pre-effect intents are visible without writing or importing private RLS code.
         directory = self.project_root / ".sdlc/rls-execution" / node.reference
         if directory.is_dir():

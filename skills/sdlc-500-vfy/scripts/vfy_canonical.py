@@ -221,7 +221,7 @@ def result_rows(state: Mapping[str, Any]) -> list[tuple[str, ...]]:
         (
             str(item["method_id"]),
             str(item["result"]),
-            str(item["actual_result"]),
+            _cell(item["actual_result"], empty="N/A"),
             _cell(item.get("evidence_references")),
             _cell(item.get("return_references")),
         )

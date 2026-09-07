@@ -381,11 +381,11 @@ def _spec_reference(name: str) -> str:
         digest = SPEC_HASHES[name]
     except KeyError as exc:
         raise DsnRuntimeError(f"unknown bundled DSN contract: {name}") from exc
-    return f"{contract_id}@sha256:{digest}"
+    return f"docs/{'v1.1'}/{name}@sha256:{digest}"
 
 
 def _evaluation_contract_set() -> str:
-    return ", ".join(_spec_reference(name) for name in SPEC_HASHES)
+    return ", ".join(sorted(_spec_reference(name) for name in SPEC_HASHES))
 
 
 def _subject_digest(

@@ -31,6 +31,8 @@ class VfyDomainVerifier:
                     f"VFY-STATE must appear exactly once; found {len(members)}"
                 )
             state = json.loads(members[0].raw_bytes.decode("utf-8"))
+            from packages.sdlc_runtime.vfy_control_projection import restore_control
+            state = restore_control(state, revision.payload.primary_blob, revision_state=revision.control.state, artifact_status=revision.payload.artifact_status)
             state["final_confirmation"] = final_confirmation_from_payload(
                 revision.payload.primary_blob, state
             )

@@ -30,6 +30,9 @@ DEPENDENCY_HEADERS = (
 )
 
 
+# DSN Domain producers use VFP-<domain>-<sequence>, not only VFP-<sequence>.
+BASIS_ITEM_ID_RE = re.compile(r"(?:[A-Z]+-[0-9]{3}|VFP-[0-9]{3}-[0-9]{3})")
+
 def read_authority(store, reference):
     exact_base(reference)
     stored = store.resolve_exact_reference(
@@ -102,7 +105,7 @@ def _lineage(store, reference, context):
                             "Dependency Required State is not established by the current exact source",
                             action="RETURN_TO_PLAN")
                     basis.append(check_reference)
-                if item and re.fullmatch(r"[A-Z]+-[0-9]{3}", item):
+                if item and BASIS_ITEM_ID_RE.fullmatch(item):
                     basis.append(f"{current}#{item}")
                 if table.headers == DECISION_HEADERS:
                     if row["ID"] == "None":
@@ -124,7 +127,7 @@ def _lineage(store, reference, context):
                 for table in parse_markdown_tables(member.raw_bytes.decode("utf-8")):
                     for row in table.rows:
                         item = row.get("ID")
-                        if item and re.fullmatch(r"[A-Z]+-[0-9]{3}", item):
+                        if item and BASIS_ITEM_ID_RE.fullmatch(item):
                             basis.extend((f"{current}#{item}", f"{current}/{member.member_id}#{item}"))
         for item in refs(parsed.front_matter.get("inputs"), "upstream inputs"):
             upstream = base_ref(item)

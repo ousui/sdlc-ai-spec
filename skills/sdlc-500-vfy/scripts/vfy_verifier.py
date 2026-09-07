@@ -345,7 +345,7 @@ def verify_state(
     artifact_gate = (
         ("pass_with_exception" if has_exception else "pass")
         if finalizing
-        else ("pending" if pending or unresolved_controls else "pass")
+        else "pending"
     )
     product_downstream_eligible = state["product_result"] in {"pass", "waived", "n/a"} or (
         state["product_result"] == "fail" and failure_exception is not None
@@ -373,6 +373,8 @@ def verify_state(
         next_action = "RESOLVE_CONTROL_INPUT"
     elif pending:
         next_action = "RUN_PENDING_METHOD"
+    elif not finalizing:
+        next_action = "FINAL_CONFIRMATION_REQUIRED"
     elif state["rls_applicability"] == "required" and rls_ready:
         next_action = "ENTER_RLS"
     elif state["rls_applicability"] in {"n/a", "waived"} and product_downstream_eligible:

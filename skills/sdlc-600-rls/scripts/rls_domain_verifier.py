@@ -36,6 +36,17 @@ def state_from_stored(revision):
             or (not state.get("provisional", True) and control == "open" and revision.control.state == "frozen"),
             "RLS_CONTRACT_INVALID", "RLS state disagrees with Store control")
     state["artifact"]["revision_state"] = revision.control.state
+    if not state.get("provisional", True):
+        # RLS-STATE intentionally excludes finalization-only status changes.
+        # Restore the operational view from verified outcomes, not the placeholder
+        # used to keep the preconfirmation member digest stable.
+        if state.get("final_confirmation"):
+            state["status"] = canonical_status(state)
+        elif any(row["result"] in {"success", "partial", "fail"}
+                 for row in state["release_items"]):
+            state["status"] = "waiting_confirmation"
+        else:
+            state["status"] = "contract_ready"
     return state
 
 

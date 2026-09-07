@@ -314,34 +314,38 @@ class VfyHandler:
             projection = service.inspect_requirement(requirement.reference)
             if state["scope"]["reference"] not in {node.reference for node in projection.nodes}:
                 continue
-            current_claims = [
-                claim
-                for claim in projection.current_claims
-                if claim.completed
-            ]
-            full = {
-                str(item["result_reference"])
-                for claim in current_claims
-                for item in claim.results
-            }
-            if full != references:
+            # Current completed Claims, not this VFY's own routing/Return state,
+            # establish subject currency. Keep terminal-per-resource selection.
+            claims = {str(c.artifact_reference): c for c in projection.current_claims}
+            bindings = {str(c.binding_reference): c for c in claims.values()}
+            required = {str(w.get("binding_reference") or w["reference"])
+                        for w in state["scope"].get("imp_work_items", [])}
+            if any(b not in bindings or not bindings[b].completed for b in required):
                 continue
-            rows: list[dict[str, Any]] = []
-            for claim in current_claims:
-                for result in claim.results:
-                    reference = str(result.get("result_reference"))
-                    if reference not in full:
-                        continue
-                    rows.append(
-                        {
-                            "reference": reference,
-                            "result_digest": result["result_digest"],
-                            "binding_lineage": claim.binding_lineage,
-                            "attempt": str(claim.attempt),
-                        }
-                    )
-            if {row["reference"] for row in rows} == full:
-                matches.append(rows)
+            if any(not c.completed for c in claims.values()):
+                continue
+            def ancestors(ref, active=frozenset()):
+                require(ref not in active and ref in claims,
+                        "VFY_SUBJECT_NOT_CURRENT", "Current dependency closure is invalid")
+                result = set(claims[ref].dependency_results)
+                for dependency in claims[ref].dependency_results:
+                    result.update(ancestors(dependency, active | {ref}))
+                return result
+            parents = {ref: ancestors(ref) for ref in claims}
+            terminal = []
+            for resource in sorted({r["resource"] for c in claims.values() for r in c.results}):
+                owners = [c for c in claims.values() if any(r["resource"] == resource for r in c.results)]
+                owners = [c for c in owners if not any(c.artifact_reference in parents[o.artifact_reference]
+                          for o in owners if o.artifact_reference != c.artifact_reference)]
+                require(len(owners) == 1, "VFY_SUBJECT_NOT_CURRENT", "Ambiguous terminal resource Result")
+                owner = owners[0]
+                row = next(r for r in owner.results if r["resource"] == resource)
+                terminal.append({"reference": str(row["result_reference"]),
+                    "result_digest": row["result_digest"], "binding_lineage": owner.binding_lineage,
+                    "attempt": str(owner.attempt)})
+            if {str(item["reference"]) for item in terminal} != references:
+                continue
+            matches.append(terminal)
         require(
             len(matches) == 1,
             "VFY_SUBJECT_NOT_CURRENT",

@@ -753,7 +753,9 @@ def _create_design(
     _assert(
         result.get("ok")
         and result["artifact"]["revision_state"] == "frozen"
-        and result["artifact"]["artifact_status"] == "ready",
+        and result["artifact"]["artifact_status"] == (
+            "ready_with_exception" if any(e.get("state") in {"active", "carried"}
+                                         for e in design.get("exceptions", [])) else "ready"),
         "real DSN did not freeze ready: "
         + json.dumps(result, ensure_ascii=False, sort_keys=True),
     )

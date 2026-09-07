@@ -10,7 +10,7 @@ import sys
 
 DEFAULT_ROOT = Path(__file__).resolve().parents[1]
 LOCK_PATH = Path("skills/sdlc-600-rls/references/source-lock.json")
-EXPECTED_PATHS = sorted(['packages/sdlc_artifact_store/__init__.py', 'packages/sdlc_artifact_store/models.py', 'packages/sdlc_lifecycle/query_rls.py', 'packages/sdlc_lifecycle/query_vfy.py', 'packages/sdlc_phasekit/models.py', 'packages/sdlc_runtime/authority.py', 'packages/sdlc_runtime/canonical.py', 'packages/sdlc_runtime/control_inputs.py', 'skills/_shared/contracts/skill-interface.md', 'skills/sdlc-status/references/rls-projection.schema.json', 'skills/sdlc-600-rls/references/600-rls-spec.md', 'skills/sdlc-600-rls/references/contract.md', 'skills/sdlc-600-rls/references/interface.json', 'skills/sdlc-600-rls/references/vfy-release-candidate-v1.schema.json'])
+EXPECTED_PATHS = sorted(['packages/sdlc_artifact_store/__init__.py', 'packages/sdlc_artifact_store/models.py', 'packages/sdlc_lifecycle/query_rls.py', 'packages/sdlc_lifecycle/query_vfy.py', 'packages/sdlc_phasekit/models.py', 'packages/sdlc_runtime/authority.py', 'packages/sdlc_runtime/canonical.py', 'packages/sdlc_runtime/control_inputs.py', 'packages/sdlc_runtime/vfy_control_projection.py', 'skills/_shared/contracts/skill-interface.md', 'skills/sdlc-status/references/rls-projection.schema.json', 'skills/sdlc-600-rls/references/600-rls-spec.md', 'skills/sdlc-600-rls/references/contract.md', 'skills/sdlc-600-rls/references/interface.json', 'skills/sdlc-600-rls/references/vfy-release-candidate-v1.schema.json'])
 
 
 def validate(root: Path) -> dict:
@@ -32,6 +32,17 @@ def validate(root: Path) -> dict:
     schema = root / "skills/sdlc-600-rls/references/vfy-release-candidate-v1.schema.json"
     if hashlib.sha256(schema.read_bytes()).hexdigest() != "15aff25625c2d43c29e62129ea3aaff9ee5ab45dd146eecff2b417e135d98027":
         raise AssertionError("bundled schema differs from accepted exact bytes")
+    # Spec provenance is distinct from the Runtime byte dependency entries.
+    spec_sources = (
+        ("sdlc-ai-spec/spec/artifact-store/v1.1", "docs/v1.1/artifact-store-spec.md"),
+        ("sdlc-ai-spec/spec/core/v1.1", "docs/v1.1/core-spec.md"),
+        ("sdlc-ai-spec/spec/release/v1.1", "docs/v1.1/600-rls-spec.md"),
+    )
+    expected_specs = [{"contract_id": identity, "contract_version": "1.1",
+                       "sha256": hashlib.sha256((root / relative).read_bytes()).hexdigest()}
+                      for identity, relative in spec_sources]
+    if data.get("contracts") != expected_specs:
+        raise AssertionError("RLS evaluation Spec sources are missing, reordered or drifted")
     entries = data.get("entries")
     if not isinstance(entries, list):
         raise AssertionError("source-lock entries must be an array")

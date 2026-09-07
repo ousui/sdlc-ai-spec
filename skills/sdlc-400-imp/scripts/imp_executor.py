@@ -56,7 +56,7 @@ def _sandbox_ready(adapter):
     elif adapter == "linux-bwrap":
         command = [
             shutil.which("bwrap"), "--die-with-parent", "--unshare-net",
-            "--ro-bind", "/", "/", "--", "/bin/true",
+            "--ro-bind", "/", "/", "--dev", "/dev", "--", "/bin/true",
         ]
     else:
         return False
@@ -98,7 +98,7 @@ def _sandboxed_command(command, temporary_root, tool):
     return [
         shutil.which("bwrap"), "--die-with-parent", "--unshare-net",
         "--ro-bind", "/", "/", "--bind", temporary, temporary,
-        "--", *command,
+        "--dev", "/dev", "--", *command,
     ], adapter
 
 
@@ -210,11 +210,14 @@ def _offline_environment(temporary_root):
     scratch = Path(temporary_root) / "tmp"
     for path in (home, cache, scratch):
         path.mkdir()
+    require(not any(c in str(scratch) for c in ('"', "\n", "\r")),
+            "IMP_READINESS_FAILED", "Scratch path cannot be represented as one JVM option")
     return {
         "PATH": os.environ.get("PATH", ""),
         "HOME": str(home),
         "XDG_CACHE_HOME": str(cache),
         "TMPDIR": str(scratch),
+        "JAVA_TOOL_OPTIONS": '-Djava.io.tmpdir="' + str(scratch) + '"',
         "PYTHONPYCACHEPREFIX": str(cache / "pycache"),
         "LANG": "C.UTF-8",
         "LC_ALL": "C.UTF-8",
@@ -305,10 +308,10 @@ def preflight(project_root, binding, method, roots, snapshots, *, completed=(), 
                 "IMP_SCOPE_VIOLATION", "Operation is outside its Method Step Target")
         require(steps[step_id]["order"] >= order, "IMP_READINESS_FAILED", "Operations must follow continuous Step Order")
         order = steps[step_id]["order"]
-        require((resource, path) not in targets, "IMP_READINESS_FAILED", "Use one preconditioned operation per file")
-        targets.add((resource, path))
         if operation_digest(operation) in completed:
             continue
+        require((resource, path) not in targets, "IMP_READINESS_FAILED", "Use one preconditioned operation per file in the pending batch")
+        targets.add((resource, path))
         before = next((item for item in snapshots[resource]["entries"] if item["path"] == path), None)
         product_path = (Path(roots[resource]) / path).as_posix()
         require(product_path not in dirty or (resource, path) in owned, "IMP_BASELINE_UNRESOLVED",
@@ -387,7 +390,7 @@ def preflight(project_root, binding, method, roots, snapshots, *, completed=(), 
     return planned
 
 
-def execute(project_root, binding, planned, roots, expected_snapshots, *, guard):
+def execute(project_root, binding, planned, roots, expected_snapshots, *, guard, checkpoint=None):
     current = dict(expected_snapshots)
     applied = []
     for operation, product in planned:
@@ -399,6 +402,8 @@ def execute(project_root, binding, planned, roots, expected_snapshots, *, guard)
         apply_operations(root, resource, [product], allowed_scope=binding.execution_scope)
         current[resource] = capture(root, resource)
         applied.append(operation_digest(operation))
+        if checkpoint is not None:
+            checkpoint(current, operation)
     return current, applied
 
 
@@ -447,7 +452,7 @@ def execute_checks(project_root, method, roots, snapshots):
                     "IMP_SCOPE_VIOLATION", "Check path escapes the captured Resource")
             execution = run_command(
                 project_root,
-                [sys.executable, "-I", "-B", "-S", str(runner), check["kind"], str(target), check.get("expected", "")],
+                [sys.executable, "-I", "-B", "-S", str(runner), check["kind"], str(target), check.get("expected") if check["kind"] in {"contains", "equals"} else "N/A"],
                 timeout_seconds=30,
             )
             evidence_value = execution.raw_bytes

@@ -115,7 +115,15 @@ class ArtifactPhaseHandler:
                 "failed_checks": list(build.failed_checks) if build else [],
             },
             "open_items": [dict(item) for item in (build.open_items if build else ())],
-            "warnings": [dict(item) for item in warnings],
+            "warnings": [dict(item) for item in warnings] + ([{
+                "code": "FINAL_CONFIRMATION_BINDINGS",
+                "message": "Review the persisted candidate before confirming this exact binding",
+                "details": {
+                    "artifact_reference": f"{stored.control.artifact_id}@{stored.control.revision}",
+                    "subject_digest": build.subject_digest,
+                },
+            }] if stored is not None and build is not None
+                   and not build.final_confirmation_valid and not build.failed_checks else []),
             "errors": [dict(item) for item in errors],
             "next_action": dict(next_action) if next_action else None,
         }

@@ -2,13 +2,13 @@
 from __future__ import annotations
 
 import hashlib
+from contextlib import ExitStack
 import json
 import os
 from pathlib import Path, PurePosixPath
 import re
 import resource
 import shutil
-import signal
 import subprocess
 import sys
 import tempfile
@@ -25,6 +25,10 @@ from vfy_common import (
     sha256_value,
 )
 from vfy_results import build_evidence, record_result
+from vfy_process_capture import capture_process
+
+# Regular compiler output is not log output; never raise inherited limits.
+_SCRATCH_FILE_BUDGET_BYTES = 256 * 1024 * 1024
 
 _COMMAND_POLICY = "deterministic-test-v1"
 _DENIED_EXECUTABLES = frozenset(
@@ -294,6 +298,12 @@ def _sandbox_argv(argv: list[str], root: Path, cwd: Path) -> list[str]:
             "--chdir", str(cwd.resolve()), "--", *argv]
 
 
+def _inherited_resource_cap(kind: int, budget: int) -> int:
+    """Apply a finite budget without raising inherited soft or hard limits."""
+    inherited = resource.getrlimit(kind)
+    return min([budget, *(v for v in inherited if v != resource.RLIM_INFINITY)])
+
+
 def _bounded_process(
     argv: list[str],
     *,
@@ -302,14 +312,17 @@ def _bounded_process(
     timeout: int,
     max_output: int,
 ) -> tuple[int, str, str, bool]:
-    stdout_path = root / ".stdout"
-    stderr_path = root / ".stderr"
-
     def limits() -> None:
-        resource.setrlimit(resource.RLIMIT_FSIZE, (max_output, max_output))
-        resource.setrlimit(resource.RLIMIT_NOFILE, (64, 64))
+        file_budget = _inherited_resource_cap(resource.RLIMIT_FSIZE, _SCRATCH_FILE_BUDGET_BYTES)
+        resource.setrlimit(resource.RLIMIT_FSIZE, (file_budget, file_budget))
+        nofile = _inherited_resource_cap(resource.RLIMIT_NOFILE, 1024)
+        resource.setrlimit(resource.RLIMIT_NOFILE, (nofile, nofile))
         resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
 
+    scratch = root / ".tmp"
+    scratch.mkdir(exist_ok=True)
+    require(not any(c in str(scratch) for c in ('"', "\n", "\r")),
+            "VFY_METHOD_NOT_READY", "Scratch path cannot be represented as one JVM option")
     environment = {
         "PATH": os.environ.get("PATH", ""),
         "LANG": "C.UTF-8",
@@ -317,7 +330,10 @@ def _bounded_process(
         "PYTHONDONTWRITEBYTECODE": "1",
         "NO_COLOR": "1",
         "HOME": str(root / ".home"),
-        "TMPDIR": str(root / ".tmp"),
+        "TMPDIR": str(scratch),
+        # JVMs do not derive java.io.tmpdir from TMPDIR. This runtime-owned value
+        # replaces (never concatenates) untrusted caller Java option variables.
+        "JAVA_TOOL_OPTIONS": '-Djava.io.tmpdir="' + str(scratch) + '"',
         "XDG_CACHE_HOME": str(root / ".home/cache"),
         "GIT_TERMINAL_PROMPT": "0",
         "GIT_CONFIG_NOSYSTEM": "1",
@@ -331,32 +347,33 @@ def _bounded_process(
         "GOSUMDB": "off",
         "CARGO_NET_OFFLINE": "true",
     }
-    with stdout_path.open("wb") as stdout, stderr_path.open("wb") as stderr:
+    with ExitStack() as stack:
+        sandbox = _sandbox_argv(argv, root, cwd)
+        descriptors = ()
+        if sys.platform.startswith("linux"):
+            from vfy_network_filter import network_filter_bytes
+            network_filter = stack.enter_context(tempfile.TemporaryFile(dir=root))
+            network_filter.write(network_filter_bytes())
+            network_filter.flush()
+            network_filter.seek(0)
+            descriptors = (network_filter.fileno(),)
+            boundary = sandbox.index("--")
+            sandbox[boundary:boundary] = ["--seccomp", str(descriptors[0])]
         process = subprocess.Popen(
-            _sandbox_argv(argv, root, cwd),
+            sandbox,
             cwd=cwd,
             env=environment,
             stdin=subprocess.DEVNULL,
-            stdout=stdout,
-            stderr=stderr,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
             shell=False,
+            pass_fds=descriptors,
             start_new_session=True,
             preexec_fn=limits if os.name == "posix" else None,
         )
-        timed_out = False
-        try:
-            code = process.wait(timeout=timeout)
-        except subprocess.TimeoutExpired:
-            timed_out = True
-            os.killpg(process.pid, signal.SIGKILL)
-            code = process.wait(timeout=10)
-        finally:
-            try:
-                os.killpg(process.pid, signal.SIGKILL)
-            except ProcessLookupError:
-                pass
-    stdout_raw = stdout_path.read_bytes()[:max_output]
-    stderr_raw = stderr_path.read_bytes()[:max_output]
+        code, stdout_raw, stderr_raw, timed_out = capture_process(
+            process, timeout=timeout, max_output=max_output,
+        )
     require(not (code != 0 and (b"sandbox-exec: sandbox_apply:" in stderr_raw
                                 or stderr_raw.startswith(b"bwrap:"))),
             "VFY_METHOD_NOT_READY", "OS sandbox could not be activated",

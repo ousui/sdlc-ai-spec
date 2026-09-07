@@ -210,11 +210,14 @@ def _offline_environment(temporary_root):
     scratch = Path(temporary_root) / "tmp"
     for path in (home, cache, scratch):
         path.mkdir()
+    require(not any(c in str(scratch) for c in ('"', "\n", "\r")),
+            "IMP_READINESS_FAILED", "Scratch path cannot be represented as one JVM option")
     return {
         "PATH": os.environ.get("PATH", ""),
         "HOME": str(home),
         "XDG_CACHE_HOME": str(cache),
         "TMPDIR": str(scratch),
+        "JAVA_TOOL_OPTIONS": '-Djava.io.tmpdir="' + str(scratch) + '"',
         "PYTHONPYCACHEPREFIX": str(cache / "pycache"),
         "LANG": "C.UTF-8",
         "LC_ALL": "C.UTF-8",

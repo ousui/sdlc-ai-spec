@@ -295,6 +295,12 @@ def _sandbox_argv(argv: list[str], root: Path, cwd: Path) -> list[str]:
             "--chdir", str(cwd.resolve()), "--", *argv]
 
 
+def _inherited_resource_cap(kind: int, budget: int) -> int:
+    """Apply a finite budget without raising inherited soft or hard limits."""
+    inherited = resource.getrlimit(kind)
+    return min([budget, *(v for v in inherited if v != resource.RLIM_INFINITY)])
+
+
 def _bounded_process(
     argv: list[str],
     *,
@@ -308,9 +314,14 @@ def _bounded_process(
 
     def limits() -> None:
         resource.setrlimit(resource.RLIMIT_FSIZE, (max_output, max_output))
-        resource.setrlimit(resource.RLIMIT_NOFILE, (64, 64))
+        nofile = _inherited_resource_cap(resource.RLIMIT_NOFILE, 1024)
+        resource.setrlimit(resource.RLIMIT_NOFILE, (nofile, nofile))
         resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
 
+    scratch = root / ".tmp"
+    scratch.mkdir(exist_ok=True)
+    require(not any(c in str(scratch) for c in ('"', "\n", "\r")),
+            "VFY_METHOD_NOT_READY", "Scratch path cannot be represented as one JVM option")
     environment = {
         "PATH": os.environ.get("PATH", ""),
         "LANG": "C.UTF-8",
@@ -318,7 +329,10 @@ def _bounded_process(
         "PYTHONDONTWRITEBYTECODE": "1",
         "NO_COLOR": "1",
         "HOME": str(root / ".home"),
-        "TMPDIR": str(root / ".tmp"),
+        "TMPDIR": str(scratch),
+        # JVMs do not derive java.io.tmpdir from TMPDIR. This runtime-owned value
+        # replaces (never concatenates) untrusted caller Java option variables.
+        "JAVA_TOOL_OPTIONS": '-Djava.io.tmpdir="' + str(scratch) + '"',
         "XDG_CACHE_HOME": str(root / ".home/cache"),
         "GIT_TERMINAL_PROMPT": "0",
         "GIT_CONFIG_NOSYSTEM": "1",

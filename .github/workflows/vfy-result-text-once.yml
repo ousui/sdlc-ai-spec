@@ -1,0 +1,55 @@
+name: vfy-result-text-once
+on:
+  push:
+    branches: [fix/realflow-closure-v1]
+    paths: [.github/workflows/vfy-result-text-once.yml]
+permissions:
+  contents: write
+jobs:
+  reviewed-repair:
+    if: github.repository == 'ousui/sdlc-ai-spec'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Normalize the exact reviewed presentation field and remove transport
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF_NAME" = fix/realflow-closure-v1
+          test "$(git rev-parse HEAD^)" = 5b088ef978644308c14ec6459a44bec9fe8aedee
+          mkdir -p "$RUNNER_TEMP/result-evidence"
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('skills/sdlc-500-vfy/scripts/vfy_canonical.py')
+          s=p.read_text();old='            str(item["actual_result"]),'
+          assert s.count(old)==1,'Source drift'
+          p.write_text(s.replace(old,'            _cell(item["actual_result"], empty="N/A"),'))
+          Path('.github/workflows/vfy-result-text-once.yml').unlink()
+          PY
+          python3 -B -m unittest tests.skill_vfy.test_result_text_projection tests.skill_vfy.test_persistence tests.skill_vfy.test_reviewable_confirmation -v > "$RUNNER_TEMP/result-evidence/targeted.log" 2>&1
+          git add skills/sdlc-500-vfy/scripts/vfy_canonical.py .github/workflows/vfy-result-text-once.yml
+          git diff --cached --check
+          test "$(git write-tree)" = 196143a945e6060dabc9b9ede3f4fa3195770182
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix(vfy): compare normalized result table while retaining raw evidence'
+          git rev-parse HEAD > "$RUNNER_TEMP/result-evidence/source.sha"
+          git bundle create "$RUNNER_TEMP/result-evidence/source.bundle" HEAD
+          test "$(git ls-remote origin refs/heads/fix/realflow-closure-v1 | cut -f1)" = "$GITHUB_SHA"
+          git push origin HEAD:refs/heads/fix/realflow-closure-v1
+      - name: Verify immutable source after repair
+        run: python3 -B tools/validate.py --profile full --source-sha "$(git rev-parse HEAD)" --json-out "$RUNNER_TEMP/result-evidence/full.json" > "$RUNNER_TEMP/result-evidence/full.log" 2>&1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: vfy-result-text-${{ github.sha }}
+          path: ${{ runner.temp }}/result-evidence/
+          if-no-files-found: error
+          retention-days: 30

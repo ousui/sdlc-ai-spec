@@ -8,7 +8,7 @@ with the derived values.
 from __future__ import annotations
 
 from copy import deepcopy
-from dataclasses import asdict, is_dataclass
+from dataclasses import asdict, is_dataclass, replace
 from pathlib import Path
 import re
 from typing import Any, Iterable, Mapping
@@ -62,7 +62,17 @@ def _phase_disposition(store: ArtifactStore, projection: Any, phase: str) -> dic
                 tables = parsed.tables
             for table in tables:
                 for row in table.rows:
-                    if row.get("Phase") == phase and "Disposition" in row:
+                    if row.get("Phase") != phase:
+                        continue
+                    if owner_phase == "PLN":
+                        require(table.headers == ("Phase", "Effective Disposition", "Host References",
+                                                  "Basis References", "Exception References"),
+                                "VFY_INPUT_AUTHORITY_MISMATCH", "PLN aggregate table is not canonical")
+                        rows.append({"Phase": phase, "Disposition": row["Effective Disposition"],
+                                     "判断依据 Basis": row["Basis References"],
+                                     "Host References": row["Host References"],
+                                     "Exception References": row["Exception References"]})
+                    elif "Disposition" in row:
                         rows.append(dict(row))
         if rows:
             require(len(rows) == 1 and rows[0].get("判断依据 Basis", "").strip(),
@@ -510,6 +520,42 @@ def _assert_hint_equal(name: str, expected: Any, actual: Any) -> None:
     )
 
 
+def _scoped_projection(store: ArtifactStore, projection: Any, scope_reference: str,
+                       subjects: list[dict[str, Any]]):
+    """Keep the exact selected scope's ancestor graph, not unrelated history.
+
+    The lifecycle query intentionally includes historical revisions. Those
+    remain observable, but cannot become additional current design authority.
+    Current subject/Claim validation is unchanged and remains independently
+    enforced before and after execution.
+    """
+    by_reference = {node.reference: node for node in projection.nodes}
+    retained, active = set(), set()
+    def visit(reference):
+        require(reference not in active, "VFY_INPUT_AUTHORITY_MISMATCH", "Upstream scope cycle")
+        if reference in retained:
+            return
+        node = by_reference.get(reference)
+        require(node is not None and _ready_node(node), "VFY_INPUT_AUTHORITY_MISMATCH",
+                "Selected scope has a missing or unready exact ancestor", details={"reference": reference})
+        active.add(reference)
+        stored = store.read_revision(node.artifact_id, node.revision)
+        parsed = parse_canonical_artifact(stored.payload.primary_blob)
+        inputs = parsed.front_matter.get("inputs", [])
+        require(isinstance(inputs, list), "VFY_INPUT_AUTHORITY_MISMATCH", "Upstream inputs must be a sequence")
+        context = parsed.front_matter.get("context")
+        for value in [*inputs, *([context] if context else [])]:
+            parent = _base(str(value))
+            if parent.startswith(("CTX-", "REQ-", "DSN-", "PLN-", "IMP-")):
+                visit(parent)
+        active.remove(reference)
+        retained.add(reference)
+    visit(scope_reference)
+    for subject in subjects:
+        visit(subject["imp_revision_reference"])
+    return replace(projection, nodes=tuple(node for node in projection.nodes if node.reference in retained))
+
+
 def compile_candidate(
     project_root: Path,
     input_references: Iterable[str],
@@ -531,6 +577,7 @@ def compile_candidate(
     projection = _select_requirement_projection(service, references)
     subjects = _authoritative_subjects(projection)
     scope_reference = _select_scope_reference(references, projection, candidate_hint)
+    projection = _scoped_projection(store, projection, scope_reference, subjects)
     scope = _authoritative_scope(scope_reference, projection, subjects, candidate_hint, store)
     targets = _authoritative_targets(store, projection, candidate_hint)
 

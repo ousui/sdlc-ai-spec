@@ -18,26 +18,26 @@ jobs:
         with:
           python-version: '3.12'
       - name: Apply exact repair bytes and remove one-time transport
-        env:
-          PATCH_DATA: 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
         shell: bash
         run: |
           set -euo pipefail
           test "$GITHUB_REF_NAME" = fix/realflow-closure-v1
-          test "$(git rev-parse HEAD^)" = ea39f055926c58bc7f16c747bd743beac211c50c
+          git merge-base --is-ancestor ea39f055926c58bc7f16c747bd743beac211c50c HEAD
           mkdir -p "$RUNNER_TEMP/python-check-evidence"
           python3 - <<'PY'
-          import os,base64,zlib,hashlib,subprocess
+          import os,hashlib,subprocess
           from pathlib import Path
-          raw=zlib.decompress(base64.b64decode(os.environ['PATCH_DATA'],validate=True))
+          patch=Path('tools/closure-python-checks.patch')
+          raw=patch.read_bytes().replace(b'\n diff --git ', b'\ndiff --git ')
           assert hashlib.sha256(raw).hexdigest()=='002cfb55c5b4d110ccbc3cf4c721fc6e13eb27cdaf3e992a36118f2be718b772'
           subprocess.run(['git','apply','--check','-'],input=raw,check=True)
           subprocess.run(['git','apply','-'],input=raw,check=True)
           (Path(os.environ['RUNNER_TEMP'])/'python-check-evidence/repair.patch').write_bytes(raw)
+          patch.unlink()
           Path('.github/workflows/python-checks-once.yml').unlink()
           PY
           python3 -B -m unittest tests.skill_imp.test_python_project_imports tests.skill_imp.test_failed_check_retry tests.skill_imp.test_critical_gaps.CriticalGapTests.test_python_project_check_denies_network_processes_and_snapshot_external_writes -v 2>&1 | tee "$RUNNER_TEMP/python-check-evidence/targeted.log"
-          git add skills/sdlc-400-imp/scripts/imp_handler.py skills/sdlc-400-imp/scripts/imp_project_check.py tests/skill_imp/test_python_project_imports.py tests/skill_imp/test_failed_check_retry.py .github/workflows/python-checks-once.yml
+          git add skills/sdlc-400-imp/scripts/imp_handler.py skills/sdlc-400-imp/scripts/imp_project_check.py tests/skill_imp/test_python_project_imports.py tests/skill_imp/test_failed_check_retry.py tools/closure-python-checks.patch .github/workflows/python-checks-once.yml
           git diff --cached --check
           test "$(git write-tree)" = d50e981b5e1ca6fd0084a8465684c77fe84478a8
           git config user.name 'github-actions[bot]'

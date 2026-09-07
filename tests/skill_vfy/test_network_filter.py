@@ -65,7 +65,10 @@ class NetworkFilterTests(unittest.TestCase):
                 self.assertEqual(subprocess.PIPE, kwargs['stdout'])
                 self.assertEqual(subprocess.PIPE, kwargs['stderr'])
                 return process
+            # Exercise the Linux branch deterministically even when the repository
+            # suite itself is running on macOS/arm64.
             with patch('vfy_executor.sys.platform', 'linux'), \
+                 patch('vfy_network_filter.platform.machine', return_value='x86_64'), \
                  patch('vfy_executor._sandbox_argv', return_value=['bwrap','--','python']), \
                  patch('vfy_executor.subprocess.Popen', side_effect=spawn), \
                  patch('vfy_executor.capture_process', return_value=(0,b'',b'',False)):

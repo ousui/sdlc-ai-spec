@@ -10,14 +10,76 @@ import os
 import selectors
 import signal
 import subprocess
+import sys
 import time
+
+
+def _darwin_group_members(pgid: int) -> list[int]:
+    """Return live same-user members when Darwin rejects group signalling.
+
+    macOS can return EPERM for killpg after a process-group leader has exited
+    while descendants still exist. Enumerate only that recorded group and keep
+    the fallback fail-closed: a foreign-UID member or unavailable process table
+    is never treated as successful cleanup.
+    """
+    try:
+        result = subprocess.run(
+            ["/bin/ps", "-axo", "pid=,pgid=,uid=,stat="],
+            stdin=subprocess.DEVNULL,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            text=True,
+            timeout=5,
+            check=False,
+            env={"PATH": "/usr/bin:/bin", "LANG": "C", "LC_ALL": "C"},
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise PermissionError("cannot inspect Darwin process group after killpg EPERM") from exc
+    if result.returncode != 0:
+        raise PermissionError("cannot inspect Darwin process group after killpg EPERM")
+    current_uid = os.geteuid()
+    members: list[int] = []
+    for line in result.stdout.splitlines():
+        fields = line.split(None, 3)
+        if len(fields) != 4:
+            continue
+        pid_text, group_text, uid_text, state = fields
+        try:
+            pid, group, uid = int(pid_text), int(group_text), int(uid_text)
+        except ValueError:
+            continue
+        if group != pgid or state.startswith("Z"):
+            continue
+        if uid != current_uid:
+            raise PermissionError("Darwin process group contains a foreign-UID member")
+        members.append(pid)
+    return members
 
 
 def _kill_group(process: subprocess.Popen) -> None:
     try:
         os.killpg(process.pid, signal.SIGKILL)
+        return
     except ProcessLookupError:
-        pass
+        return
+    except PermissionError:
+        if sys.platform != "darwin":
+            raise
+    # Darwin fallback for the EPERM-on-exited-leader case: signal each live
+    # member of the exact process group, then re-read until no effect-capable
+    # member remains. Zombies are inert and are reaped by their owning parent.
+    for _ in range(8):
+        members = _darwin_group_members(process.pid)
+        if not members:
+            return
+        for pid in members:
+            try:
+                os.kill(pid, signal.SIGKILL)
+            except ProcessLookupError:
+                continue
+        time.sleep(0.01)
+    if _darwin_group_members(process.pid):
+        raise PermissionError("Darwin process group could not be terminated")
 
 
 def capture_process(

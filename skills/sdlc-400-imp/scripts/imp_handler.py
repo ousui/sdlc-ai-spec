@@ -213,7 +213,7 @@ class ImpHandler:
             )
         completed, owned = (), set()
         sources = [(stored, data) for _, stored, data in dependencies]
-        if state and state["stage"] == "executed":
+        if state and state["stage"] in {"executed", "applied"}:
             sources.append((previous, state))
         for source_stored, source_state in sources:
             for row in source_state["resources"]:
@@ -244,7 +244,7 @@ class ImpHandler:
             validate_execution_history(method, completed, state.get("actions"))
             for row in state["resources"]:
                 expected = (snapshot_reference(store, row["result_reference"], row["resource"], local=previous)
-                            if state["stage"] == "executed" else
+                            if state["stage"] in {"executed", "applied"} else
                             snapshot_from_member(previous, row["baseline_member"], row["resource"]))
                 observed = observed_snapshots[row["resource"]]
                 retained_candidate = candidates.get(row["resource"])
@@ -332,7 +332,19 @@ class ImpHandler:
                     return authorization
                 return self._implement(invocation, prepared)
         except Exception as exc:
-            return self._error(invocation, exc)
+            stored = prepared.get("stored") if prepared else None
+            claim = prepared.get("claim") if prepared else None
+            if prepared and prepared.get("binding"):
+                try:
+                    reader = provider_read_only(self.root)
+                    current = reader.resolve(prepared["binding"].reference) if reader else None
+                    if current and current.owner == prepared.get("owner", current.owner):
+                        claim = current
+                        stored = ArtifactStore.open_read_only(self.root).read_revision(current.artifact_id, current.revision)
+                except Exception:
+                    # Never manufacture state when even the durable reader fails.
+                    pass
+            return self._error(invocation, exc, stored=stored, claim=claim)
 
     def _provider(self):
         return ClaimProvider.open_read_write(self.root, clock=self.clock)
@@ -545,32 +557,37 @@ class ImpHandler:
                                            prepared["binding"], prepared["roots"], observed)
                 members = [item for item in members if item.member_id != "EVD-RECOVERY"]
                 members.append(member("EVD-RECOVERY", recovery_evidence(prepared["store"], state, observed)))
+            def checkpoint(after, operation=None):
+                nonlocal stored, members
+                if operation is not None:
+                    identity = operation_digest(operation)
+                    require(identity not in state["completed_operations"], "IMP_READINESS_FAILED", "Operation was already checkpointed")
+                    state["completed_operations"].append(identity)
+                    state["actions"].append(operation)
+                members = [item for item in members if not item.member_id.startswith(("RESULT-", "CHANGE-", "EVD-CHK-"))]
+                for row in state["resources"]:
+                    baseline = snapshot_from_member(stored, row["baseline_member"], row["resource"])
+                    paths = changed_paths(baseline, after[row["resource"]])
+                    row["changed_paths"] = paths
+                    row["changed_scope"] = changed_scope(row["resource"], paths, prepared["binding"].execution_scope)
+                    row["steps"] = sorted({op["step"] for op in state["actions"]
+                                           if op["resource"] == row["resource"] and op["path"] in paths}) if paths else []
+                    if paths:
+                        row["result_reference"] = f"{claim.artifact_id}@{claim.revision}/{row['result_member']}"
+                        row["change_reference"] = f"{claim.artifact_id}@{claim.revision}/{row['change_member']}"
+                        members.extend((member(row["result_member"], after[row["resource"]], directory="snapshots"),
+                                        member(row["change_member"], {"resource": row["resource"], "changed_paths": paths})))
+                    else:
+                        row["result_reference"], row["change_reference"] = row["baseline_reference"], "N/A"
+                state["checks"], state["stage"] = [], "applied"
+                stored, _ = self._persist(store, stored.control, claim, state, members)
+
             after, applied = execute(
                 self.root, prepared["binding"], prepared["planned"], prepared["roots"], prepared["snapshots"],
-                guard=lambda: self._guard(claim, stored.control.generation),
+                guard=lambda: self._guard(claim, stored.control.generation), checkpoint=checkpoint,
             )
             verify_replayed_candidates(after, prepared["candidates"])
-            state["completed_operations"] = list(dict.fromkeys((*state["completed_operations"], *applied)))
-            state["actions"].extend(operation for operation, _ in prepared["planned"]
-                                    if operation_digest(operation) in applied)
-            members = [item for item in members if not item.member_id.startswith(("RESULT-", "CHANGE-", "EVD-CHK-"))]
-            for row in state["resources"]:
-                baseline = snapshot_from_member(stored, row["baseline_member"], row["resource"])
-                paths = changed_paths(baseline, after[row["resource"]])
-                row["changed_paths"] = paths
-                row["changed_scope"] = changed_scope(row["resource"], paths, prepared["binding"].execution_scope)
-                row["steps"] = sorted({op["step"] for op in state["actions"]
-                                       if op["resource"] == row["resource"] and op["path"] in paths}) if paths else []
-                if paths:
-                    row["result_reference"] = f"{claim.artifact_id}@{claim.revision}/{row['result_member']}"
-                    row["change_reference"] = f"{claim.artifact_id}@{claim.revision}/{row['change_member']}"
-                    members.extend((
-                        member(row["result_member"], after[row["resource"]], directory="snapshots"),
-                        member(row["change_member"], {"resource": row["resource"], "changed_paths": paths}),
-                    ))
-                else:
-                    row["result_reference"] = row["baseline_reference"]
-                    row["change_reference"] = "N/A"
+            checkpoint(after)
             local, evidence = execute_checks(
                 self.root, state["method"], prepared["roots"], after,
             )

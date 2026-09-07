@@ -25,9 +25,8 @@ WORK_HEADERS = (
     "预期证据 Expected Evidence",
     "责任角色 Responsible Role",
 )
-DELIVERY_HEADERS = (
-    "Scope Token", "Source References", "Outcome",
-)
+DELIVERY_HEADERS = ("Source Artifact Reference", "Inclusion Basis")
+AGGREGATED_HEADERS = ("Phase", "Effective Disposition", "Host References", "Basis References", "Exception References")
 OBLIGATION_HEADERS = ("Obligation Reference", "Covered By Work Items")
 CORE_CHECKS = tuple(f"CORE-G-{index:03d}" for index in range(1, 10))
 PLN_CHECKS = tuple(f"PLN-G-{index:03d}" for index in range(1, 8))
@@ -70,11 +69,10 @@ def _merge_disposition(values: Sequence[str]) -> str:
         return "pending"
     if any(value == "required" for value in values):
         return "required"
-    # An explicit waiver is semantically stronger than n/a/embedded.
-    if any(value == "waived" for value in values):
-        return "waived"
     if any(value == "embedded" for value in values):
         return "embedded"
+    if any(value == "waived" for value in values):
+        return "waived"
     return "n/a"
 
 

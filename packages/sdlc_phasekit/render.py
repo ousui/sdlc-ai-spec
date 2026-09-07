@@ -41,10 +41,12 @@ EVIDENCE_HEADERS = (
 )
 MANIFEST_HEADERS = (
     "Member ID",
-    "Canonical Name",
+    "Type",
+    "Path or Reference",
     "Media Type",
     "Purpose",
     "SHA-256 Digest",
+    "Empty Reason",
 )
 EXCEPTION_HEADERS = (
     "ID",
@@ -119,7 +121,7 @@ def _evidence_rows(items: Sequence[Mapping[str, Any]]):
             item.get("sensitivity") or item.get("access") or "normal",
             item.get("empty_reason") or "N/A",
         ))
-    return result or [("None", "N/A", "None", "N/A", "N/A", "N/A", "N/A", "normal", "No external evidence")]
+    return result or [("None", "none", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "No independent Evidence")]
 
 
 def _exception_rows(items: Sequence[Mapping[str, Any]]):
@@ -138,7 +140,7 @@ def _exception_rows(items: Sequence[Mapping[str, Any]]):
             item.get("downstream_obligation") or "N/A",
             item.get("resolution_references") or "None",
         ))
-    return result or [("None", "N/A", "N/A", "No exception", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A", "None")]
+    return result or [("None", "none", "N/A", "N/A", "No Exceptions", "N/A", "N/A", "N/A", "N/A", "N/A", "N/A")]
 
 
 def _applicability_rows(items: Sequence[Mapping[str, Any]]):
@@ -199,9 +201,9 @@ def render_phase_artifact(
         "## Supporting Artifact Manifest", "", table(
             MANIFEST_HEADERS,
             [
-                (item.member_id, item.canonical_name, item.media_type, "Supporting phase evidence", item.sha256)
+                (item.member_id, "supporting", item.canonical_name, item.media_type, "Supporting phase evidence", item.sha256, "N/A")
                 for item in sorted(members, key=lambda member: member.member_id)
-            ] or [("None", "N/A", "N/A", "No local members", "N/A")],
+            ] or [("None", "none", "N/A", "N/A", "N/A", "N/A", "No supporting artifacts")],
         ), "",
         "## 豁免 Exceptions", "", table(EXCEPTION_HEADERS, _exception_rows(exceptions)), "",
         "## 生命周期适用性 Lifecycle Applicability", "", table(APPLICABILITY_HEADERS, _applicability_rows(lifecycle_applicability)), "",

@@ -20,7 +20,7 @@ from packages.sdlc_phasekit import (
 
 from pln_analyzer import _analyze, _outcome
 from pln_common import (
-    APPLICABILITY_HEADERS,
+    APPLICABILITY_HEADERS, AGGREGATED_HEADERS,
     DELIVERY_HEADERS,
     EVAL_SET,
     OBLIGATION_HEADERS,
@@ -52,6 +52,7 @@ class PlnBuilder:
             "pass" if final_valid else "pending",
             "Final Confirmation binds the current Plan" if final_valid else "Final Confirmation is required",
         )
+        content_open_items = list(open_items)
         if not final_valid:
             open_items.append({
                 "id": f"OPI-{len(open_items)+1:03d}",
@@ -83,17 +84,17 @@ class PlnBuilder:
         ) for item in value["work_items"]] or [
             ("None", "N/A", "No Work Item for non-required Plan", "N/A", "N/A", "None", "None", "N/A", "N/A", "N/A")
         ]
-        delivery_rows = [(
-            item.get("scope_token"),
-            ", ".join(refs(item.get("source_references"), "delivery source")) or "None",
-            item.get("outcome") or "N/A",
-        ) for item in value["delivery_scope"]] or [("None", "None", "No delivery scope")]
+        delivery_rows = [(ref, next((str(item.get("inclusion_basis") or item.get("outcome"))
+                           for item in value["delivery_scope"]
+                           if ref in refs(item.get("source_references"), "delivery source")
+                           or item.get("source_artifact_reference") == ref), "Complete authoritative Scope Input"))
+                         for ref in sorted(phase_inputs.scope_references)]
         aggregate_rows = [(
-            item.get("phase"), item.get("disposition"), item.get("host") or "N/A", item.get("basis") or "N/A"
-        ) for item in value["aggregated_applicability"]] or [
-            (item["phase"], item["disposition"], item["host"], item["basis"])
-            for item in phase_inputs.metadata.get("aggregated_applicability", ())
-        ]
+            item["phase"], item["disposition"],
+            ", ".join(item.get("host_references", [])) or "None",
+            ", ".join(item.get("basis_references", sorted(phase_inputs.scope_references))),
+            ", ".join(item.get("exception_references", [])) or "None",
+        ) for item in phase_inputs.metadata.get("aggregated_applicability", ())]
         covered_by: dict[str, list[str]] = {}
         for item in value["work_items"]:
             for reference in item["source_references"]:
@@ -114,7 +115,7 @@ class PlnBuilder:
                 ("PLN Disposition", value.get("pln_disposition")),
             ))),
             ("## 交付范围 Delivery Scope", table(DELIVERY_HEADERS, delivery_rows)),
-            ("## 聚合适用性 Aggregated Applicability", table(APPLICABILITY_HEADERS, aggregate_rows)),
+            ("## 聚合适用性 Aggregated Applicability", table(AGGREGATED_HEADERS, aggregate_rows)),
             ("## 义务覆盖 Obligations", table(OBLIGATION_HEADERS, obligation_rows)),
             ("## 工作项 Work Items", table(WORK_HEADERS, work_rows)),
         )
@@ -128,7 +129,7 @@ class PlnBuilder:
             title=str(value.get("title") or "Delivery Plan"),
             sections=sections,
             checks=checks,
-            open_items=open_items,
+            open_items=content_open_items,
             evidence=rows(value.get("evidence"), "evidence"),
             exceptions=value["exceptions"],
             lifecycle_applicability=value["lifecycle_applicability"],

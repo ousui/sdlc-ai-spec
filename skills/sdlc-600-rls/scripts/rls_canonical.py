@@ -295,8 +295,11 @@ def render_markdown(
 
 
 def evaluation_contract_set():
-    path = Path(__file__).resolve().parents[1] / "references/contract.md"
-    return "sdlc-ai-spec/rls-runtime-contract/v1@" + compute_sha256(path.read_bytes())
+    from packages.sdlc_phasekit import evaluation_contract_set as from_lock
+    return from_lock(Path(__file__).resolve().parents[1] / "references/source-lock.json", (
+        "sdlc-ai-spec/spec/core/v1.1", "sdlc-ai-spec/spec/artifact-store/v1.1",
+        "sdlc-ai-spec/spec/release/v1.1",
+    ))
 
 
 def confirmation_from_primary(primary, state):

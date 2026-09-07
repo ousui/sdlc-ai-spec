@@ -305,10 +305,10 @@ def preflight(project_root, binding, method, roots, snapshots, *, completed=(), 
                 "IMP_SCOPE_VIOLATION", "Operation is outside its Method Step Target")
         require(steps[step_id]["order"] >= order, "IMP_READINESS_FAILED", "Operations must follow continuous Step Order")
         order = steps[step_id]["order"]
-        require((resource, path) not in targets, "IMP_READINESS_FAILED", "Use one preconditioned operation per file")
-        targets.add((resource, path))
         if operation_digest(operation) in completed:
             continue
+        require((resource, path) not in targets, "IMP_READINESS_FAILED", "Use one preconditioned operation per file in the pending batch")
+        targets.add((resource, path))
         before = next((item for item in snapshots[resource]["entries"] if item["path"] == path), None)
         product_path = (Path(roots[resource]) / path).as_posix()
         require(product_path not in dirty or (resource, path) in owned, "IMP_BASELINE_UNRESOLVED",
@@ -387,7 +387,7 @@ def preflight(project_root, binding, method, roots, snapshots, *, completed=(), 
     return planned
 
 
-def execute(project_root, binding, planned, roots, expected_snapshots, *, guard):
+def execute(project_root, binding, planned, roots, expected_snapshots, *, guard, checkpoint=None):
     current = dict(expected_snapshots)
     applied = []
     for operation, product in planned:
@@ -399,6 +399,8 @@ def execute(project_root, binding, planned, roots, expected_snapshots, *, guard)
         apply_operations(root, resource, [product], allowed_scope=binding.execution_scope)
         current[resource] = capture(root, resource)
         applied.append(operation_digest(operation))
+        if checkpoint is not None:
+            checkpoint(current, operation)
     return current, applied
 
 
@@ -447,7 +449,7 @@ def execute_checks(project_root, method, roots, snapshots):
                     "IMP_SCOPE_VIOLATION", "Check path escapes the captured Resource")
             execution = run_command(
                 project_root,
-                [sys.executable, "-I", "-B", "-S", str(runner), check["kind"], str(target), check.get("expected", "")],
+                [sys.executable, "-I", "-B", "-S", str(runner), check["kind"], str(target), check.get("expected") if check["kind"] in {"contains", "equals"} else "N/A"],
                 timeout_seconds=30,
             )
             evidence_value = execution.raw_bytes

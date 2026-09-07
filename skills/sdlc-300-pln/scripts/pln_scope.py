@@ -37,6 +37,7 @@ def resolve_inputs(
     downstream: dict[str, list[Mapping[str, str]]] = {phase: [] for phase in PHASE_RANK}
     obligations: list[str] = []
     resources: list[str] = []
+    source_exceptions: dict[str, tuple[str, ...]] = {}
 
     for reference in scope:
         exact = _base(reference)
@@ -54,6 +55,10 @@ def resolve_inputs(
         elif context != candidate_context:
             raise PlnError("PLN Scope Inputs belong to different CTX revisions")
 
+        from packages.sdlc_phasekit.render import EXCEPTION_HEADERS
+        exceptions = tuple(f"{exact}#{row['ID']}" for table in find_tables(parsed, EXCEPTION_HEADERS)
+                           for row in table.rows if row.get("State") in {"active", "carried"})
+        source_exceptions[exact] = exceptions
         app_tables = find_tables(parsed, APPLICABILITY_HEADERS)
         if len(app_tables) != 1:
             raise PlnError(f"Scope Input has no unique Lifecycle Applicability: {reference}")
@@ -65,7 +70,15 @@ def resolve_inputs(
         for phase in PHASE_RANK:
             row = by_phase.get(phase)
             if row is not None:
-                downstream[phase].append(row)
+                if row["Disposition"] not in DISPOSITIONS:
+                    raise PlnError("Invalid upstream lifecycle disposition")
+                if row["Disposition"] == "embedded" and row["Host"] in {"", "N/A", "None"}:
+                    raise PlnError("Embedded applicability requires its authoritative Host")
+                if row["Disposition"] == "waived" and not exceptions:
+                    raise PlnError("Waived applicability requires an authoritative Exception")
+                downstream[phase].append(dict(row, _source=exact))
+            else:
+                raise PlnError(f"Scope Input is missing lifecycle applicability for {phase}")
 
         obligations.extend(_artifact_items(exact, parsed, resolved.revision.payload.members))
         for change_table in find_tables(parsed, CHANGE_HEADERS):
@@ -93,6 +106,10 @@ def resolve_inputs(
             "phase": phase,
             "disposition": disposition,
             "host": ", ".join(hosts) or "N/A",
+            "host_references": sorted({row["Host"] for row in phase_rows if row["Disposition"] == "embedded"}),
+            "basis_references": sorted(row["_source"] for row in phase_rows),
+            "exception_references": sorted({ref for row in phase_rows if row["Disposition"] == "waived"
+                                             for ref in source_exceptions[row["_source"]]}),
             "basis": "; ".join(bases) or "Aggregated from authoritative Scope Inputs",
         })
     # VFY is a mandatory control point even when a weak upstream producer omitted it.
@@ -106,7 +123,7 @@ def resolve_inputs(
         scope_references=scope,
         control_references=controls,
         metadata={
-            "pln_disposition": _merge_disposition(applicability),
+            "pln_disposition": "required" if len(scope) > 1 and "pending" not in applicability else _merge_disposition(applicability),
             "authoritative_obligations": tuple(dict.fromkeys(obligations)),
             "declared_resources": tuple(dict.fromkeys(resources)),
             "aggregated_applicability": tuple(aggregate_rows),

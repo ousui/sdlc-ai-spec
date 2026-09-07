@@ -115,7 +115,7 @@ class DsnBuilder:
             upstream=upstream,
             analysis=analysis,
             checks=checks,
-            open_items=tuple(open_items),
+            open_items=tuple(analysis.open_items),
             members=members,
             final_confirmation=final_confirmation if final_valid else None,
             gate_result=gate,

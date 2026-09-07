@@ -236,10 +236,22 @@ def validate_delegated_final_confirmation(
 
 
 def contains_secret(value: Any) -> bool:
-    if isinstance(value, bytes):
-        candidate = value.decode("utf-8", errors="ignore")
-    elif isinstance(value, str):
-        candidate = value
-    else:
-        candidate = json.dumps(value, ensure_ascii=False, default=_json_default)
-    return SECRET_RE.search(candidate) is not None
+    if isinstance(value, Mapping):
+        return any(contains_secret(str(key)) or contains_secret(item) for key, item in value.items())
+    if isinstance(value, (list, tuple, set)):
+        return any(contains_secret(item) for item in value)
+    candidate = value.decode("utf-8", errors="ignore") if isinstance(value, bytes) else value if isinstance(value, str) else json.dumps(value, default=_json_default)
+    matches = tuple(SECRET_RE.finditer(candidate))
+    if not matches:
+        return False
+    if candidate.lstrip().startswith(("{", "[")):
+        try:
+            parsed = json.loads(candidate)
+        except (ValueError, RecursionError):
+            pass
+        else:
+            if isinstance(parsed, (dict, list)):
+                return contains_secret(parsed)
+    from .source_secret_syntax import reference_spans
+    excluded = reference_spans(candidate)
+    return any(not any(start <= match.start() < end for start, end in excluded) for match in matches)

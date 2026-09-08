@@ -45,7 +45,7 @@ REQ 的 INPUT-09/13 必须经过正式 runtime_final 入口及无 docs/tests 的
 
 ## 5. 验证顺序
 
-开发期间运行受影响测试及配对正例。变更稳定后以干净准确源码执行一次 tools/validate.py 的最高可用且本任务所需 profile（优先 strict，环境不足则 full 并明确边界）；不先叠加执行 full＋strict＋e2e。现有统一回归保留其他阶段的安全检查，但无关缺陷不扩大本次修复范围。
+开发期间运行受影响测试及配对正例。按本轮当前版本 bugfix 的明确边界，在最终结果产生前选定复用现有 validate 工作流的 Ubuntu/macOS full 矩阵；不新增工作流或叠加 full＋strict＋e2e。完整报告准确标 full，不冒称 strict VFY 执行或原生 Client 认证。代码或测试夹具实际修正后，新的准确 Subject 执行其自身回归，旧失败保留；不无修改重跑刷绿。现有安全断言保留，测试 mock 隔离问题可作最小测试修正，不扩展产品 Runtime 功能。
 
 记录 Implementation SHA、Test SHA、源码 tree、Runtime 路径/摘要、解释器、命令、退出码、准确测试 ID、结果及未执行项。工作流触发 SHA 与被测 SHA 不相等时分别登记。发布/运输成功不代表测试通过。
 

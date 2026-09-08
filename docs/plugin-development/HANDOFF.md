@@ -1,20 +1,22 @@
 # 当前工程交接
 
-## 当前工作包：收窄后的 Skill 输入可用性修复
+## 当前工作包：当前版本 Skill 输入可用性 bugfix
 
-2026-09-08，Maintainer 明确要求以真实 CTX 阻碍和其他 Skill 同类问题为范围，以测试用例/Fixture/mock 为主。来源 `codex/bugfix@14c167e044d7a8eeada3c826d1c41bb55bc7b01b`；原问题 HEAD `93cef2f6cc07e5e7b6a1f4dd8670d448bf460ba8`；main 基线 `aed8eb69d2b74ec27bdcb2fb356cb02b68602289`。
+2026-09-08，按 Maintainer 最新指令仅修当前版本缺陷；不迭代版本、不改变 Schema/Store/命令，不增加迁移或版本选择。三平台 Manifest 保持 0.9.0。原问题 HEAD `93cef2f6cc07e5e7b6a1f4dd8670d448bf460ba8`；分支起点 `codex/bugfix@14c167e044d7a8eeada3c826d1c41bb55bc7b01b`，其父提交为指定 main 基线 `aed8eb69d2b74ec27bdcb2fb356cb02b68602289`。
 
-工作分支 `fix/skill-input-usability-v2`，Draft PR #21。收窄计划提交 `63d09ed044c7c5f536bd595a535bdf91aa306534`。本次明确授权按序修订、实施、验证并保存远端检查点；不改 main/codex/bugfix，不自动合并或发布，不改用户工作树/安装缓存。当前正式产品 Skill 执行：`None`。
+工作分支 `fix/skill-input-usability-v2`，PR #21；当前正式产品 Skill 执行：`None`。本轮已获授权修订、实施、验证和保存远端检查点，不自动 merge/release，不改用户工作树、安装缓存或其他分支。
 
-原 PR #20 和 d94a4ff 是实际存在的历史工作，上轮末尾“未写入”说明不准确；本分支没有继承旧分支的 RLS 目标分配改动。两份计划已移除首次调用/模型实验、强制三项目全链、额外 Gin-Vue-Admin；test-sdlc 仅在需要工程载体时使用。
+准确 Source/Test 为 `8acae6be334d61f30e6207f3757c02d84cb687f9`（tree `8940525f6161a7ed209eb989936c4350981473f6`）；最后 Runtime 修复是其父提交 `7294c646500d4c5f9b9180abda7285d44196c58d`，8aca 仅隔离已有预算测试的全局平台 mock，未改执行器或原预算断言。后续本交接/结果文档提交不冒充新的执行 Subject。
 
-实现包含 CTX 字段诊断、受限描述性归一化、错误/Gate 分离、dry-run 错误保留、基线表示及已提供 Member 字节摘要绑定；REQ 写前结构拒绝；DSN/PLN meta 不读业务 stdin；VFY/RLS 布尔/相关输入类型拒绝；随包字段说明和漂移测试。旧 frozen 不自动迁移，授权/最终确认/只读/CAS 仍保留。Source Lock 从实际字节重新生成而非手填。
+最终 [Run 34179980279](https://github.com/ousui/sdlc-ai-spec/actions/runs/34179980279) 的现有 Ubuntu/macOS full 矩阵各 1362/1362，通过 7 个静态步骤；0 failures/errors/skips/expectedFailure/unexpectedSuccess。两个原始 ZIP、source.bundle、测试 ID 和日志摘要已读回核对。本次 31 项输入回归包含其中；VFY full 覆盖不冒称 strict 或原生客户端认证。
 
-原问题提交上的七个核心测试方法已重放，保存 21 个失败子断言和合法配对；这不是新版本结论。开发期 CTX/REQ 既有44项回归通过；最终统一结果必须另绑准确实现 SHA。原始日志放在检出树外，PR 评论保存恢复索引。
+修复包括 CTX 输入诊断/错误与 Gate 分离/dry-run 保留错误、Evidence 与 Member 字节绑定、观察基线、受限用途归一化；REQ 正式入口写前预检；DSN/PLN meta 不读业务 stdin；VFY/RLS 输入类型错误不转换成执行选项；随包说明及漂移回归。旧合法请求可直接使用，旧 CTX/REQ frozen 检查、原 open CTX 续行及 REQ NO_CHANGE 的兼容性探针通过，无迁移或请求重写。真实信息缺口仍 pending，不自动形成授权或 ready。
+
+旧 PR #20 保留历史，不并入其额外 RLS 目标分配改动。本次不要求模型实验、真实三项目全链或新增 Gin-Vue-Admin。已有失败、输入预检遗漏及测试 mock 问题均留原始证据，不以旧 PASS 替代新结果。完整细节见 [EVAL-RESULTS](components/skill-contract-reliability/EVAL-RESULTS.md)。
 
 ## 唯一下一工作包
 
-在本分支准确、干净的实现提交上执行统一回归并回读原始报告/源码，更新 EVAL-RESULTS 与本交接。源码/测试 SHA 与运输事件 SHA 分开；未执行项和无关既有失败单列，不将其写成 PASS。不重新规划、扩展模型实验或修改无关 RLS 行为。
+Maintainer 审阅 PR #21 的准确补丁与结果并决定是否合并；当前保持未合并、未发布，勿将 PR #20 视为本次交付。无需重做规划、恢复已取消的实验/迁移门槛或改动用户现存数据；若交付后源码继续前进，按新 Diff 确定受影响回归，不搬用旧 SHA 结果。
 
 ## 以下为此前维护交接记录
 

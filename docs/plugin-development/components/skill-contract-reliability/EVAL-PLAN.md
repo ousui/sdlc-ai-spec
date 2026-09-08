@@ -8,6 +8,8 @@
 
 所有使用都是正式使用，不设置“首次调用实验”、独立模型实验或强制项目矩阵。模拟输入和 mock 仅用于测试，不冒称用户 approval-bot 实际工作树已运行、真实人工批准或生产部署。
 
+本轮为原版本 bugfix，不新增 Schema 变更验证或迁移评测。沿用原版本的请求、命令和已有 Artifact 进行正常使用回归；不添加版本协商、升级开关或用户迁移步骤。
+
 ## 2. 定向案例
 
 | ID | 案例 | Expected |
@@ -25,7 +27,9 @@
 | INPUT-11 | DSN/PLN/IMP/VFY 必要输入映射及 RLS/Status/GitHub 合约核对 | 真实字段与随包入口可发现；已有正式用例/mock 不回退；不新增无关功能 |
 | INPUT-12 | 文档/枚举投影漂移；安装包删除 docs/tests 后使用 | 漂移由测试检出；正式入口及随包示例无需开发文档或测试代码 |
 | INPUT-13 | malformed JSON 类型、选项及确认；未授权请求 | 有界结构化错误，不崩溃；无类型转换授权、无 Store/Claim/远端效果 |
-| INPUT-14 | prepare_confirmation、Supporting Member、只读/CAS/历史 frozen | 保留已有有效回归，不因去重或新输入整理而绕过 |
+| INPUT-14 | prepare_confirmation、Supporting Member、只读/CAS/历史 frozen | 保留已有有效回归，不因去重或新输入整理而绕过；原版本合法请求及已有记录可直接继续使用 |
+
+REQ 的 INPUT-09/13 必须经过正式 runtime_final 入口及无 docs/tests 的安装副本；create/revise、dry-run/非 dry-run 四路径在 Store 快照和 cleanup 前拒绝非法结构。基础 Handler 单测不能替代正式入口，保留上一轮 strict 暴露的反例。
 
 大 Case 展开为具名测试；保留原测试身份，新增子用例有明确断言。允许重构纯重复断言，但默认不删除既有有效测试。修改旧 Expected 必须说明原断言为何混淆输入错误与领域检查，且保留错误拒绝和零效果断言。
 

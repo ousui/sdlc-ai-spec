@@ -287,7 +287,7 @@ class EnvelopeTypeRegressions(unittest.TestCase):
 
 class RelatedInputRegressions(unittest.TestCase):
     def test_input_09_req_invalid_enum_rejected_before_store_even_with_write_authorization(self):
-        from tests.skill_req.test_runtime import runtime as req
+        from tests.skill_req.support import runtime as req
         with tempfile.TemporaryDirectory(prefix='scr-req-') as directory:
             root = Path(directory)
             handler = req.RequirementHandler(root)
@@ -298,7 +298,8 @@ class RelatedInputRegressions(unittest.TestCase):
                                  'inputs': {'requirement': {'sources': [{'type': 'chatty'}],
                                                            'requirements': [{'type': []}]}},
                                  'options': {'dry_run': dry}, 'confirmations': [{'type': 'write', 'approved': True}]}
-                        with patch.object(req.base.ArtifactStore, 'open_read_write', side_effect=AssertionError('unexpected write')):
+                        with patch.object(req.base.ArtifactStore, 'open_read_only', side_effect=AssertionError('unexpected read')), \
+                             patch.object(req.base.ArtifactStore, 'open_read_write', side_effect=AssertionError('unexpected write')):
                             result = getattr(handler, operation)(value)
                         self.assertFalse(result['ok'])
                         self.assertEqual({'result': 'pending', 'failed_checks': []}, result['gate'])
@@ -307,7 +308,7 @@ class RelatedInputRegressions(unittest.TestCase):
                         self.assertEqual([], list(root.iterdir()))
 
     def test_input_09_req_missing_facts_in_an_object_are_not_structural_errors(self):
-        from tests.skill_req.test_runtime import runtime as req
+        from tests.skill_req.support import runtime as req
         with tempfile.TemporaryDirectory(prefix='scr-req-') as directory:
             handler = req.RequirementHandler(Path(directory))
             self.assertIsNone(handler._input_preflight({'operation': 'create', 'inputs': {'requirement': {}}}))

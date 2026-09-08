@@ -1,0 +1,155 @@
+name: SCR input repair exact-source verification
+on:
+  push:
+    branches: [fix/skill-input-usability-v2]
+    paths: [.github/workflows/scr-input-delivery.yml]
+permissions:
+  contents: write
+concurrency:
+  group: scr-input-usability-v2
+  cancel-in-progress: false
+jobs:
+  verify:
+    if: github.repository == 'ousui/sdlc-ai-spec' && github.ref == 'refs/heads/fix/skill-input-usability-v2'
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+      SDLC_GITHUB_TOKEN: ''
+      SDLC_GITHUB_TOKEN_B: ''
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Materialize reviewed bytes and commit exact implementation with branch CAS
+        env:
+          EVENT_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/scr-input-evidence" "$RUNNER_TEMP/scr-temp"
+          echo "TMPDIR=$RUNNER_TEMP/scr-temp" >> "$GITHUB_ENV"
+          python -B - <<'PY'
+          from pathlib import Path, PurePosixPath
+          import hashlib, json, lzma, os, subprocess
+          def git(*args): return subprocess.check_output(['git', *args], text=True).strip()
+          event = os.environ['EVENT_SHA']
+          base = '63d09ed044c7c5f536bd595a535bdf91aa306534'
+          branch = 'fix/skill-input-usability-v2'
+          temporary = {f'tools/_scr_v2_payload.{i}' for i in (1,2,3)} | {'.github/workflows/scr-input-delivery.yml'}
+          assert git('rev-parse','HEAD') == event and git('rev-parse','HEAD^') == base
+          assert not git('status','--porcelain')
+          assert set(git('diff','--name-only',base,event).splitlines()) == temporary
+          assert git('ls-remote','origin','refs/heads/'+branch).split()[0] == event
+          raw = b''.join(Path(f'tools/_scr_v2_payload.{i}').read_bytes() for i in (1,2,3))
+          assert len(raw) == 29704 and hashlib.sha256(raw).hexdigest() == 'cad0ed30f033c5f630662b33fa248383571de6f16c68a79ba68f16cef1f592b6'
+          decoder = lzma.LZMADecompressor(memlimit=256*1024*1024)
+          decoded = decoder.decompress(raw, max_length=512*1024)
+          assert decoder.eof and not decoder.unused_data
+          payload = json.loads(decoded)
+          assert payload['base'] == base and payload['local_runtime_base'] == '14c167e044d7a8eeada3c826d1c41bb55bc7b01b'
+          expected = payload['files']
+          assert len(expected) == 36
+          for rel in expected:
+              p = PurePosixPath(rel)
+              assert not p.is_absolute() and '..' not in p.parts
+              assert rel.startswith(('skills/','tests/','packages/sdlc_runtime/')) or rel in {'tools/generate_input_reference.py','docs/plugin-development/HANDOFF.md'}
+              assert not rel.endswith('rls_service.py')
+          subprocess.run(['git','apply','--check','-'],input=payload['patch'],text=True,check=True)
+          subprocess.run(['git','apply','-'],input=payload['patch'],text=True,check=True)
+          for rel, blob in expected.items():
+              assert not Path(rel).is_symlink() and git('hash-object',rel) == blob, rel
+          for rel in temporary: Path(rel).unlink()
+          subprocess.run(['git','add','-A'],check=True)
+          assert set(git('diff','--cached','--name-only',base).splitlines()) == set(expected)
+          subprocess.run(['git','diff','--cached','--check'],check=True)
+          name,email = git('show','-s','--format=%an%n%ae',base).splitlines()
+          subprocess.run(['git','-c','user.name='+name,'-c','user.email='+email,'commit','-m',
+              'fix(scr): repair production input diagnostics, dry-run semantics and bundled contracts'],check=True)
+          source = git('rev-parse','HEAD'); tree = git('rev-parse','HEAD^{tree}')
+          assert not git('status','--porcelain')
+          assert git('ls-remote','origin','refs/heads/'+branch).split()[0] == event
+          subprocess.run(['git','push','origin','HEAD:refs/heads/'+branch],check=True)
+          assert git('ls-remote','origin','refs/heads/'+branch).split()[0] == source
+          out = Path(os.environ['RUNNER_TEMP'])/'scr-input-evidence'
+          (out/'SUBJECT.json').write_text(json.dumps({'event_sha':event,'plan_sha':base,
+              'implementation_sha':source,'test_source_sha':source,'tree':tree,'branch':branch,
+              'transport_payload_sha256':hashlib.sha256(raw).hexdigest(),'changed_blobs':expected},indent=2)+'\n')
+          PY
+          git config --local --unset-all http.https://github.com/.extraheader || true
+      - name: Prepare locked test dependencies and existing supported containment
+        run: |
+          set -euo pipefail
+          python -m pip install --require-hashes -r packages/sdlc_github/requirements.lock
+          if ! command -v bwrap >/dev/null; then
+            mkdir -p "$RUNNER_TEMP/scr-tools"
+            cd "$RUNNER_TEMP/scr-tools"
+            apt-get download bubblewrap
+            for package in bubblewrap_*.deb; do dpkg-deb -x "$package" extracted; done
+            echo "$PWD/extracted/usr/bin" >> "$GITHUB_PATH"
+          fi
+      - name: Preserve original failing HEAD reproduction with current independent tests
+        run: |
+          set -euo pipefail
+          python -B - <<'PY'
+          from pathlib import Path
+          import io,json,os,platform,shutil,subprocess,sys,tarfile
+          sha = '93cef2f6cc07e5e7b6a1f4dd8670d448bf460ba8'
+          out = Path(os.environ['RUNNER_TEMP'])/'scr-input-evidence'
+          root = Path(os.environ['RUNNER_TEMP'])/'scr-original93'; root.mkdir()
+          archive = subprocess.check_output(['git','archive',sha])
+          with tarfile.open(fileobj=io.BytesIO(archive)) as t: t.extractall(root,filter='data')
+          tests = root/'tests/skill_contract_reliability';tests.mkdir()
+          for name in ('__init__.py','test_regressions.py'):
+              shutil.copyfile(Path('tests/skill_contract_reliability')/name,tests/name)
+          prefix = 'tests.skill_contract_reliability.test_regressions.'
+          cases = [prefix+'CtxContractRegressions.'+name for name in (
+              'test_scr_e02_invalid_enum_does_not_fabricate_fifteen_failures',
+              'test_scr_e07_create_dry_run_preserves_builder_errors',
+              'test_scr_e07_builder_marks_unexecuted_checks_pending',
+              'test_scr_e06_observation_time_is_not_a_versioned_baseline',
+              'test_scr_e01_legacy_minimal_pair_still_previews_without_authority')]
+          cases += [prefix+'MetaCommandRegressions.'+name for name in (
+              'test_scr_e12_dsn_invalid_stdin_is_ignored','test_scr_e12_pln_invalid_stdin_is_ignored')]
+          cmd = [sys.executable,'-B','-m','unittest','-v',*cases]
+          result = subprocess.run(cmd,cwd=root,text=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=180)
+          (out/'original93-red.log').write_text(result.stdout)
+          (out/'original93-red.json').write_text(json.dumps({'runtime_sha':sha,
+              'test_source_sha':subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip(),
+              'command':cmd,'exit_code':result.returncode,'case_ids':cases,'expected':'known regressions fail on original Runtime'},indent=2)+'\n')
+          (out/'ENVIRONMENT.json').write_text(json.dumps({'python':sys.version,'executable':sys.executable,
+              'platform':platform.platform(),'temporary_root':os.environ.get('TMPDIR')},indent=2)+'\n')
+          assert result.returncode == 1 and 'Ran 7 tests' in result.stdout, result.stdout[-3000:]
+          print('Original failure reproduction retained; this is expected RED, not a new Runtime PASS.')
+          PY
+      - name: Execute unified one-pass strict regression on the clean implementation SHA
+        run: |
+          set -euo pipefail
+          SOURCE=$(git rev-parse HEAD)
+          python -B tools/validate.py --profile strict --source-sha "$SOURCE" --json-out "$RUNNER_TEMP/scr-input-evidence/strict.json" 2>&1 | tee "$RUNNER_TEMP/scr-input-evidence/strict.log"
+          test -z "$(git status --porcelain --untracked-files=all)"
+      - name: Preserve exact source and all actual results
+        if: always()
+        run: |
+          mkdir -p "$RUNNER_TEMP/scr-input-evidence"
+          git rev-parse HEAD > "$RUNNER_TEMP/scr-input-evidence/SOURCE-SHA.txt"
+          git bundle create "$RUNNER_TEMP/scr-input-evidence/source.bundle" HEAD
+          git diff --binary HEAD > "$RUNNER_TEMP/scr-input-evidence/uncommitted.patch"
+          python -B - <<'PY'
+          from pathlib import Path
+          import hashlib,json,os
+          out=Path(os.environ['RUNNER_TEMP'])/'scr-input-evidence'
+          rows={p.relative_to(out).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(out.rglob('*')) if p.is_file() and p.name!='SHA256SUMS.json'}
+          (out/'SHA256SUMS.json').write_text(json.dumps(rows,sort_keys=True,indent=2)+'\n')
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scr-input-evidence-${{ github.run_id }}-${{ github.run_attempt }}
+          path: ${{ runner.temp }}/scr-input-evidence/
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 30

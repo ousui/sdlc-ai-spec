@@ -242,6 +242,28 @@ COLLECTION_ENUMS: dict[str, dict[str, frozenset[str]]] = {
     },
 }
 
+ENGINEERING_PURPOSE_ALIASES = {
+    "构建": "build", "编译": "build", "bulid": "build", "buidl": "build",
+    "测试": "test", "运行": "run", "启动": "run", "格式化": "format",
+    "静态检查": "lint", "打包": "package", "其他": "other",
+}
+
+
+def _input_error(path: str, constraint: str, *, allowed: Iterable[str] = ()) -> dict[str, Any]:
+    details: dict[str, Any] = {"path": path, "constraint": constraint}
+    if allowed:
+        details["allowed_values"] = sorted(allowed)
+    return {"code": "CTX_CONTENT_INVALID", "message": f"{path}: {constraint}", "details": details}
+
+
+def _normalize_enum(value: Any, allowed: frozenset[str], aliases: Mapping[str, str]) -> Any:
+    if not isinstance(value, str):
+        return value
+    candidate = value.strip().casefold()
+    candidate = aliases.get(candidate, candidate)
+    return candidate if candidate in allowed else value
+
+
 DELEGATED_AUTHORITY_HEADER = (
     "Delegation Basis",
     "Reviewer Identity",
@@ -396,7 +418,7 @@ def _valid_fact(value: Any, evidence_ids: set[str]) -> tuple[dict[str, str] | No
     refs = value["basis_references"]
     if not fact_value:
         return None, "fact value must not be empty"
-    if basis not in ALLOWED_BASIS:
+    if not isinstance(basis, str) or basis not in ALLOWED_BASIS:
         return None, "basis must be observed, confirmed or referenced"
     if not isinstance(refs, list) or not refs:
         return None, "basis_references must be a non-empty array"
@@ -428,6 +450,22 @@ def _is_rfc3339(value: Any) -> bool:
 
 def _is_typed_value(value: Any) -> bool:
     return _cell(value) not in {"", "None", "N/A", "TBD", "Unknown", "-", "待定"}
+
+
+def _immutable_baseline(value: str) -> bool:
+    """Recognize explicit version/content identities, not provenance truth.
+
+    Generic vcs: revisions retain the existing abbreviated hexadecimal form.
+    New git: inputs require full object IDs. Content references bind a snapshot
+    digest (including a dirty-worktree manifest), never an observation timestamp.
+    Resolution/observation Evidence remains a separate domain obligation.
+    """
+    return bool(
+        re.fullmatch(r"vcs:[^\s@]+@[0-9a-f]{7,64}(?:\+sha256:[0-9a-f]{64})?", value)
+        or re.fullmatch(r"git:(?:[^\s@]+@)?(?:[0-9a-f]{40}|[0-9a-f]{64})(?:\+sha256:[0-9a-f]{64})?", value)
+        or re.fullmatch(r"(?:vcs:git:)?(?:[0-9a-f]{40}|[0-9a-f]{64})", value)
+        or re.fullmatch(r"(?:[^\s@]+@)?sha256:[0-9a-f]{64}", value)
+    )
 
 
 def _collection_row_problem(name: str, row: Mapping[str, str]) -> str | None:
@@ -470,9 +508,11 @@ def _normalize_context(
     base_revision: int | None,
     now: datetime,
 ) -> tuple[dict[str, Any], list[dict[str, str]], list[dict[str, Any]]]:
-    errors: list[dict[str, str]] = []
+    errors: list[dict[str, Any]] = []
     warnings: list[dict[str, Any]] = []
     open_items: list[dict[str, str]] = []
+    if context is not None and not isinstance(context, Mapping):
+        errors.append(_input_error("inputs.context", "must be an object"))
     context = context if isinstance(context, Mapping) else {}
 
     expected_context_fields = {
@@ -493,10 +533,11 @@ def _normalize_context(
     if not isinstance(evidence_input, list):
         errors.append({"code": "CTX_CONTENT_INVALID", "message": "evidence must be an array"})
         evidence_input = []
-    for raw in evidence_input:
+    for index, raw in enumerate(evidence_input):
+        path = f"inputs.evidence[{index}]"
         evidence_fields = {name for name, _ in EVIDENCE_FIELDS if name != "empty_reason"}
         if not isinstance(raw, Mapping) or set(raw) != evidence_fields:
-            errors.append({"code": "CTX_CONTENT_INVALID", "message": "Evidence row fields do not match the Contract"})
+            errors.append(_input_error(path, "requires exactly " + ", ".join(sorted(evidence_fields))))
             continue
         row_id = _cell(raw.get("id"))
         if not re.fullmatch(r"EVD-\d{3}", row_id):
@@ -504,12 +545,16 @@ def _normalize_context(
             continue
         row = {name: _reference(raw.get(name)) for name, _ in EVIDENCE_FIELDS}
         row["empty_reason"] = "N/A"
-        if (
-            any(not _is_typed_value(row[field]) for field in evidence_fields - {"id", "produced_at"})
-            or not _is_rfc3339(row["produced_at"])
-            or not re.fullmatch(r"sha256:[0-9a-f]{64}", row["integrity_or_digest"])
-        ):
-            errors.append({"code": "CTX_CONTENT_INVALID", "message": f"Evidence row is incomplete or invalid: {row_id}"})
+        problems = []
+        for field in sorted(evidence_fields - {"id", "produced_at", "integrity_or_digest"}):
+            if not _is_typed_value(row[field]):
+                problems.append(_input_error(f"{path}.{field}", "requires a non-placeholder value"))
+        if not _is_rfc3339(row["produced_at"]):
+            problems.append(_input_error(path + ".produced_at", "requires RFC 3339 with timezone"))
+        if not isinstance(raw["integrity_or_digest"], str) or not re.fullmatch(r"sha256:[0-9a-f]{64}", raw["integrity_or_digest"]):
+            problems.append(_input_error(path + ".integrity_or_digest", "requires sha256:<64 lowercase hex> computed from retained bytes"))
+        if problems:
+            errors.extend(problems)
             continue
         evidence.append(row)
     evidence.sort(key=lambda item: item["id"])
@@ -526,7 +571,15 @@ def _normalize_context(
     if not isinstance(identity_input, Mapping):
         identity_input = {}
     for key, label in IDENTITY_FIELDS:
-        fact, problem = _valid_fact(identity_input.get(key), evidence_ids)
+        supplied_fact = identity_input.get(key)
+        if isinstance(supplied_fact, Mapping):
+            basis = supplied_fact.get("basis")
+            if basis is not None and (not isinstance(basis, str) or basis not in ALLOWED_BASIS):
+                errors.append(_input_error(f"inputs.context.project_identity.{key}.basis",
+                                           "uses an invalid enum value", allowed=ALLOWED_BASIS))
+        elif supplied_fact is not None:
+            errors.append(_input_error(f"inputs.context.project_identity.{key}", "must be an object"))
+        fact, problem = _valid_fact(supplied_fact, evidence_ids)
         if problem:
             open_items.append(_new_open_item(len(open_items) + 1, f"Confirm Project Identity field: {label}", "CTX-G-002"))
         else:
@@ -558,11 +611,31 @@ def _normalize_context(
             if problem:
                 errors.append({"code": "CTX_CONTENT_INVALID", "message": f"{name}: {problem}"})
         elif isinstance(supplied, list) and supplied:
-            for raw in supplied:
+            for index, raw in enumerate(supplied):
+                path = f"inputs.context.{name}[{index}]"
                 if not isinstance(raw, Mapping) or set(raw) != {key for key, _ in fields}:
-                    errors.append({"code": "CTX_CONTENT_INVALID", "message": f"{name} row fields do not match the Contract"})
+                    errors.append(_input_error(path, "requires exactly " + ", ".join(key for key, _ in fields)))
                     continue
+                raw = dict(raw)
+                problems = []
+                for field, allowed in COLLECTION_ENUMS.get(name, {}).items():
+                    aliases = ENGINEERING_PURPOSE_ALIASES if (name, field) == ("engineering_entries", "purpose") else {}
+                    value = _normalize_enum(raw[field], allowed, aliases)
+                    if not isinstance(value, str) or value not in allowed:
+                        problems.append(_input_error(f"{path}.{field}", "uses an invalid enum value", allowed=allowed))
+                    elif value != raw[field]:
+                        warnings.append({"code": "INPUT_NORMALIZED", "message": "Normalized a descriptive enum",
+                                         "details": {"path": f"{path}.{field}", "canonical_value": value}})
+                        raw[field] = value
                 row = {key: _reference(raw[key]) for key, _ in fields}
+                if name == "resources":
+                    baseline = row["baseline_reference"]
+                    versioned = row["type"] == "repository" or row["locator"].startswith(("vcs:", "git:"))
+                    if not _immutable_baseline(baseline) and (versioned or baseline not in {"None", "N/A"}):
+                        problems.append(_input_error(path + ".baseline_reference", "requires an immutable version or content digest, not observation time or a mutable name"))
+                if problems:
+                    errors.extend(problems)
+                    continue
                 row_id = row["id"]
                 if not re.fullmatch(prefix + r"-\d{3}", row_id) or row_id in all_ids:
                     errors.append({"code": "CTX_CONTENT_INVALID", "message": f"Invalid or duplicate item ID: {row_id}"})
@@ -604,11 +677,12 @@ def _normalize_context(
     components = collections["components"]["rows"]
     component_ids = {row["id"] for row in components}
     for component in components:
+        path = f"inputs.context.components[{component['id']}]"
         dependencies = [] if component["depends_on"] == "None" else component["depends_on"].split(", ")
-        if component["resource_reference"] not in resource_ids or any(
-            dependency not in component_ids for dependency in dependencies
-        ):
-            errors.append({"code": "CTX_CONTENT_INVALID", "message": f"Component references do not close within the CTX: {component['id']}"})
+        if component["resource_reference"] not in resource_ids:
+            errors.append(_input_error(path + ".resource_reference", "must reference a valid resource in this CTX; an invalid resource row can block resolution"))
+        if any(dependency not in component_ids for dependency in dependencies):
+            errors.append(_input_error(path + ".depends_on", "requires component IDs in this CTX or None, not explanatory prose"))
 
     supporting_input = inputs.get("supporting_members", [])
     members: list[dict[str, Any]] = []
@@ -674,6 +748,17 @@ def _normalize_context(
             }
         )
     members.sort(key=lambda item: item["member_id"])
+    for item in evidence:
+        reference = item["reference"]
+        member = next((member for member in members if reference in {
+            member["member_id"], member["canonical_name"],
+            member["canonical_name"] + "@" + member["sha256"],
+        } or reference.startswith(member["canonical_name"] + "@sha256:")), None)
+        if member is not None:
+            if item["integrity_or_digest"] != member["sha256"] or (
+                "@sha256:" in reference and reference.rsplit("@", 1)[1] != member["sha256"]
+            ):
+                errors.append(_input_error(f"inputs.evidence[{item['id']}].integrity_or_digest", "must match the referenced Supporting Member bytes and reference digest"))
 
     exceptions_input = context.get("exceptions", [])
     exceptions: list[dict[str, str]] = []
@@ -771,6 +856,7 @@ def _normalize_context(
         "members": members,
         "exceptions": exceptions,
         "refresh": refresh,
+        "input_warnings": warnings,
     }
     return model, open_items, errors
 
@@ -1078,7 +1164,7 @@ def _validate_final_confirmation(
 
 def _pending_checks(open_items: Sequence[Mapping[str, Any]], errors: Sequence[Mapping[str, Any]]) -> dict[str, tuple[str, str]]:
     if errors:
-        return {check_id: ("fail", errors[0]["message"]) for check_id in (*CORE_CHECKS, *CTX_CHECKS)}
+        return {check_id: ("pending", "Not evaluated: invalid request") for check_id in (*CORE_CHECKS, *CTX_CHECKS)}
     blocked = {value for item in open_items for value in str(item["blocked_references"]).split(", ")}
     checks: dict[str, tuple[str, str]] = {}
     for check_id in (*CORE_CHECKS, *CTX_CHECKS):
@@ -1144,11 +1230,11 @@ def build_payload(
         operation=invocation["operation"],
         artifact_id=artifact_id, revision=revision, base_revision=base_revision, now=now,
     )
-    warnings: list[dict[str, Any]] = []
+    warnings: list[dict[str, Any]] = list(model["input_warnings"])
     checks = _pending_checks(open_items, errors)
     empty_gate = {
         "revision": str(revision), "control_input_digest": "", "evaluation_contract_set": EVALUATION_CONTRACT_SET,
-        "check_set_result_digest": "", "gate_result": "fail" if errors else "pending",
+        "check_set_result_digest": "", "gate_result": "pending",
         "exception_references": "None", "evaluator": "sdlc-000-ctx-runtime", "evaluated_at": now.isoformat(timespec="seconds"),
     }
     provisional = _render_markdown(model, status="failed" if errors else "draft", open_items=open_items, checks=checks, final_confirmation=None, gate_summary=empty_gate)
@@ -1181,13 +1267,16 @@ def build_payload(
             checks = complete_checks if review_draft else _pending_checks(open_items, [])
         elif final_confirmation["result"] == "rejected":
             errors.append({"code": "FINAL_CONFIRMATION_REJECTED", "message": "Final Confirmation rejected this Revision"})
-            checks = _pending_checks([], errors)
+            checks = complete_checks
+            checks["CORE-G-009"] = ("fail", "Final Confirmation rejected this Revision")
         else:
             checks = complete_checks
             checks["CORE-G-009"] = ("pass", "Final Confirmation binds current digests")
 
     if errors:
-        gate_result = "fail"
+        if not any(error["code"] == "FINAL_CONFIRMATION_REJECTED" for error in errors):
+            checks = _pending_checks([], errors)
+        gate_result = "fail" if any(outcome == "fail" for outcome, _ in checks.values()) else "pending"
         status = "failed"
     elif open_items:
         gate_result = "pending"
@@ -1826,7 +1915,7 @@ class CtxHandler:
         boundary_confirmation = _confirmation(invocation, "project_boundary")
         evidence_input = invocation["inputs"].get("evidence", [])
         evidence_ids = {
-            item.get("id") for item in evidence_input if isinstance(item, Mapping)
+            item["id"] for item in evidence_input if isinstance(item, Mapping) and isinstance(item.get("id"), str)
         } if isinstance(evidence_input, list) else set()
         fact, problem = _valid_fact(boundary_fact, evidence_ids) if isinstance(context, Mapping) else (None, "missing")
         if (
@@ -1850,18 +1939,20 @@ class CtxHandler:
         if dry_run:
             product = build_payload(invocation, artifact_id="CTX-00000000000000-00", revision=1, base_revision=None, now=now)
             return _artifact_result(
-                "create", ok=True, status="completed", artifact=None, gate_result=product.gate_result,
+                "create", ok=not product.errors, status="failed" if product.errors else "completed", artifact=None, gate_result=product.gate_result,
                 failed_checks=product.failed_checks, open_items=product.open_items,
                 warnings=[*product.warnings, {"code": "DRY_RUN", "message": "No Store, Artifact ID, Revision, write, freeze, or Authority was created"}],
-                errors=[], next_action=_action("REVIEW_DRY_RUN", "检查候选结果；需要持久化时另行明确写入授权", user=True),
+                errors=product.errors,
+                next_action=(_action("CORRECT_CTX_INPUT", "由 Agent 按契约整理输入，不改变事实或授权", user=product.gate_result == "fail") if product.errors
+                             else _action("REVIEW_DRY_RUN", "检查候选结果；需要持久化时另行明确写入授权", user=True)),
             )
         preliminary = build_payload(invocation, artifact_id="CTX-00000000000000-00", revision=1, base_revision=None, now=now)
         if preliminary.errors:
             return _artifact_result(
-                "create", ok=False, status="failed", artifact=None, gate_result="fail",
+                "create", ok=False, status="failed", artifact=None, gate_result=preliminary.gate_result,
                 failed_checks=preliminary.failed_checks, open_items=preliminary.open_items,
                 warnings=preliminary.warnings, errors=preliminary.errors,
-                next_action=_action("CORRECT_CTX_INPUT", "修正结构化 CTX 输入后重试", user=True),
+                next_action=_action("CORRECT_CTX_INPUT", "由 Agent 按契约整理输入，不改变事实或授权", user=preliminary.gate_result == "fail"),
             )
         try:
             store = _open_initialized_store(root, clock=self.clock)
@@ -1950,9 +2041,9 @@ class CtxHandler:
             if preview_product.errors:
                 return _artifact_result(
                     "revise", ok=False, status="failed", artifact=_artifact_view(current, authority=current.control.state == "frozen"),
-                    gate_result="fail", failed_checks=preview_product.failed_checks, open_items=preview_product.open_items,
+                    gate_result=preview_product.gate_result, failed_checks=preview_product.failed_checks, open_items=preview_product.open_items,
                     warnings=preview_product.warnings, errors=preview_product.errors,
-                    next_action=_action("CORRECT_CTX_INPUT", "修正结构化 CTX 输入后重试", user=True),
+                    next_action=_action("CORRECT_CTX_INPUT", "由 Agent 按契约整理输入，不改变事实或授权", user=preview_product.gate_result == "fail"),
                 )
             if current.control.state == "frozen":
                 refresh = invocation["inputs"].get("refresh")
@@ -2103,7 +2194,7 @@ def _verify_bundled_source_lock() -> None:
 
 def invoke(value: Mapping[str, Any], *, clock: Any = None) -> dict[str, Any]:
     operation = value.get("operation") if isinstance(value, Mapping) else None
-    safe_operation = operation if operation in {"create", "revise", "check"} else "check"
+    safe_operation = operation if isinstance(operation, str) and operation in {"create", "revise", "check"} else "check"
     if _FOUNDATION_IMPORT_ERROR is not None:
         return _bootstrap_error_result(
             safe_operation,

@@ -137,7 +137,8 @@ def main(argv: Sequence[str] | None = None) -> int:
     arguments = list(sys.argv[1:] if argv is None else argv)
     try:
         payload: Mapping[str, Any] = {}
-        if not sys.stdin.isatty():
+        command = parse_skill_command_with_inputs(arguments, load_skill_interface(INTERFACE_PATH))
+        if command.command not in {"help", "version", "commands", "examples"} and not sys.stdin.isatty():
             text = sys.stdin.read().strip()
             if text:
                 value = json.loads(text)

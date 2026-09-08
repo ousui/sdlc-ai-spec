@@ -39,7 +39,7 @@ WORK_ALLOWED = {
 }
 GENERIC_COMPLETION = {"done", "complete", "completed", "完成", "已完成"}
 GENERIC_EVIDENCE = {"evidence", "proof", "证据", "结果"}
-ITEM_ID_RE = re.compile(r"^(?:CHG|VFP|OBJ|OBL|EX|R|AC)-[A-Za-z0-9._-]+$")
+ITEM_ID_RE = re.compile(r"^(?:CHG|VFP|VFO|OBJ|OBL|EX|R|AC)-[A-Za-z0-9._-]+$")
 EVAL_SET = evaluation_contract_set(
     Path(__file__).resolve().parents[1] / "references/source-lock.json",
     (
@@ -85,7 +85,7 @@ def _artifact_items(reference: str, parsed, members) -> tuple[str, ...]:
                 identity = row.get("ID") or row.get("Change ID")
                 if not isinstance(identity, str) or not ITEM_ID_RE.fullmatch(identity):
                     continue
-                if identity.startswith(("CHG-", "VFP-", "OBJ-", "OBL-", "EX-", "R-", "AC-")):
+                if identity.startswith(("CHG-", "VFP-", "VFO-", "OBJ-", "OBL-", "EX-", "R-", "AC-")):
                     result.append(f"{reference}#{identity}")
 
     collect(parsed.tables)

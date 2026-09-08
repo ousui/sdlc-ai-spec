@@ -38,6 +38,7 @@ from packages.sdlc_artifact_store import (  # noqa: E402
 from packages.sdlc_runtime import (  # noqa: E402
     ControlInputError,
     ControlInputResolver,
+    EnvelopeValidationError,
     FrozenArtifactAuthorityVerifier,
     authority_reference,
     compute_check_set_result_digest,
@@ -423,7 +424,7 @@ class RequirementAnalyzer:
             checks["REQ-G-001"] = CheckOutcome("pending", "Source Input 尚未提供")
         else:
             source_invalid = any(
-                item.get("type") not in SOURCE_TYPES
+                not isinstance(item.get("type"), str) or item.get("type") not in SOURCE_TYPES
                 or not isinstance(item.get("content"), str)
                 or not item.get("content", "").strip()
                 for item in sources
@@ -458,7 +459,7 @@ class RequirementAnalyzer:
             checks["REQ-G-005"] = CheckOutcome("pending", "来源图尚未形成")
         else:
             invalid_req = any(
-                item.get("type") not in REQ_TYPES
+                not isinstance(item.get("type"), str) or item.get("type") not in REQ_TYPES
                 or not isinstance(item.get("statement"), str)
                 or not item.get("statement", "").strip()
                 for item in requirements
@@ -1045,7 +1046,44 @@ class RequirementHandler:
         self.authority_factory = authority_factory
         self.builder = RequirementBuilder(self.project_root)
 
+    def _input_preflight(self, invocation: Mapping[str, Any]) -> Mapping[str, Any] | None:
+        """Reject malformed submitted fields before allocating a Revision.
+
+        This is not an authority or domain check. Missing business facts within a
+        valid object still reach the existing Analyzer and its Open Items.
+        """
+        value = invocation["inputs"].get("requirement")
+        if value is None:
+            return self._error(invocation, "action_required", "REQ_INPUT_REQUIRED",
+                               "inputs.requirement must be provided", "PROVIDE_REQUIREMENT", True)
+        diagnostics = []
+        if not isinstance(value, Mapping):
+            diagnostics.append({"path": "inputs.requirement", "constraint": "must be an object"})
+        else:
+            for collection, allowed in (("sources", SOURCE_TYPES), ("requirements", REQ_TYPES)):
+                rows = value.get(collection, [])
+                path = "inputs.requirement." + collection
+                if not isinstance(rows, list):
+                    diagnostics.append({"path": path, "constraint": "must be an array of objects"})
+                    continue
+                for index, row in enumerate(rows):
+                    if not isinstance(row, Mapping):
+                        diagnostics.append({"path": f"{path}[{index}]", "constraint": "must be an object"})
+                    elif not isinstance(row.get("type"), str) or row["type"] not in allowed:
+                        diagnostics.append({"path": f"{path}[{index}].type", "constraint": "invalid enum", "allowed_values": sorted(allowed)})
+            if invocation["inputs"].get("final_confirmation") is not None and not isinstance(invocation["inputs"]["final_confirmation"], Mapping):
+                diagnostics.append({"path": "inputs.final_confirmation", "constraint": "must be an object"})
+        if not diagnostics:
+            return None
+        return error_result(operation=invocation["operation"], status="failed", code="REQ_CONTENT_INVALID",
+                            message="Submitted REQ fields are invalid; no Artifact was allocated or changed",
+                            details=diagnostics[:32], next_action_code="CORRECT_REQUIREMENT_INPUT",
+                            next_action_message="按字段约束整理需求输入；不改变业务事实或授权", requires_user=False)
+
     def create(self, invocation: Mapping[str, Any]) -> Mapping[str, Any]:
+        rejected = self._input_preflight(invocation)
+        if rejected is not None:
+            return rejected
         if invocation["options"].get("dry_run"):
             return self._dry_run(invocation)
         if not _write_authorized(invocation["confirmations"]):
@@ -1065,6 +1103,9 @@ class RequirementHandler:
             return self._exception(invocation, exc)
 
     def revise(self, invocation: Mapping[str, Any]) -> Mapping[str, Any]:
+        rejected = self._input_preflight(invocation)
+        if rejected is not None:
+            return rejected
         if invocation["options"].get("dry_run"):
             return self._dry_run(invocation)
         if not _write_authorized(invocation["confirmations"]):
@@ -1301,9 +1342,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         request = _load_request(args.input)
         project_root = Path(_required_text(request.get("project_root"), "project_root"))
         result = execute_phase(RequirementHandler(project_root), request)
-    except (json.JSONDecodeError, OSError, RequirementRuntimeError, CanonicalFormatError) as exc:
+    except (json.JSONDecodeError, OSError, RequirementRuntimeError, CanonicalFormatError, EnvelopeValidationError) as exc:
         operation = "check"
-        if "request" in locals() and request.get("operation") in {"create", "revise", "check"}:
+        if "request" in locals() and isinstance(request.get("operation"), str) and request.get("operation") in {"create", "revise", "check"}:
             operation = request["operation"]
         result = error_result(
             operation=operation,

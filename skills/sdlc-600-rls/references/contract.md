@@ -168,3 +168,7 @@ status 使用独立 `rls-projection.schema.json` 作 additive 扩展，既有 VF
 所有选中项先完成无写入预检；任何未知判定、终态项或错误人工记录使整个预检失败。执行时逐项重查 Target，记录真实结果并通过原共享 Store CAS 持久化，后项 I/O 失败不能丢弃已经持久化的前项结果。失败的 CAS 不声称该项已持久化。确认不执行发布效果；既有不确定效果日志仍阻止重放和假取消。
 
 正式 RCF Evidence 必须同时包含 `confirmation_binding` 与 `confirmation_evaluation`。纯 Evidence verifier 从实际 Observed 和冻结 Expected 重算自动结果；人工结果从严格绑定的记录取得，并由服务/DomainVerifier 复核原始来源。旧版本的不足记录不能自动升级成修复后的正式 Authority。准确 fail 仍可形成可信 Gate pass；未知/未执行不可以。
+
+## 操作布尔值输入
+
+CLI 业务对象中 `force_fail`、`pipeline_only`、`retry`、`write_confirmed` 必须为 JSON boolean；省略沿用原默认，字符串 "false"、数字 0/1 和数组不能隐式授权或选择模式。结构错误在创建 Service/读取或写入 Store 前拒绝，诊断只输出编译器固定 field/expected_type，不回显原始敏感输入。Effect Authorization 与最终确认仍按原合约分别校验，不增加目标分配或发布能力。

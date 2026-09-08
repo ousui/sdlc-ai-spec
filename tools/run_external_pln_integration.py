@@ -160,7 +160,7 @@ def _plan_candidate(root: Path, phase_inputs) -> dict[str, Any]:
     vfy_sources = tuple(
         reference
         for reference in obligations
-        if any(token in reference for token in ("#VFP-", "#OBJ-", "#AC-"))
+        if any(token in reference for token in ("#VFP-", "#VFO-", "#OBJ-", "#AC-"))
     )
     if not vfy_sources:
         vfy_sources = obligations

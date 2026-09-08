@@ -46,6 +46,12 @@ def apply_cleanup_fix(base) -> None:
             return
 
     def create_with_cleanup(self, invocation):
+        # runtime_final installs reviewed handlers before this wrapper. Validate
+        # here too: the reviewed handler replaces the base create/revise method.
+        # Malformed input must not even open a Store snapshot or invoke cleanup.
+        rejected = self._input_preflight(invocation)
+        if rejected is not None:
+            return rejected
         before = req_snapshot(self.project_root)
         result = original_create(self, invocation)
         if not result.get("ok") and result.get("artifact") is None:
@@ -55,6 +61,12 @@ def apply_cleanup_fix(base) -> None:
         return result
 
     def revise_with_cleanup(self, invocation):
+        # runtime_final installs reviewed handlers before this wrapper. Validate
+        # here too: the reviewed handler replaces the base create/revise method.
+        # Malformed input must not even open a Store snapshot or invoke cleanup.
+        rejected = self._input_preflight(invocation)
+        if rejected is not None:
+            return rejected
         before = req_snapshot(self.project_root)
         result = original_revise(self, invocation)
         if not result.get("ok") and result.get("artifact") is None:

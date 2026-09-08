@@ -31,6 +31,12 @@ skills/_shared/schemas/invocation.schema.json
 
 阶段变量只放入 `inputs`。
 
+DSN/PLN/IMP CLI 的 `{inputs, confirmations}` stdin 封装沿用可选字段缺省/null
+分别变为 `{}`/`[]` 的既有约定；提供非空值时 inputs 必须是对象，confirmations 必须是对象数组。
+不得先用 dict/list 强制转换错误容器。正式 Invocation 仍按上述 Schema 校验，不扩大其 null 支持范围。
+嵌套结构错误通过 `errors[].details` 给出 path、expected、actual、problem、hint；数组索引从 0 开始。
+格式整理属于 Agent 职责，不要求用户填写复杂 JSON；这不允许伪造缺失的事实、引用或授权。
+
 ## Standard Result
 
 结果必须符合：

@@ -73,37 +73,106 @@ COMPOSITE_SUBDOMAINS = (
 class DomainContractError(ValueError):
     code = "DSN_DOMAIN_INVALID"
 
+    def __init__(self, message: str, *, details: Mapping[str, Any] | None = None):
+        super().__init__(message)
+        self.details = details
+
+
+def _invalid(path: str, expected: str, value: Any, *, problem: str = "wrong_type"):
+    # Do not echo arbitrary payloads (which may contain secrets) in diagnostics.
+    actual = "null" if value is None else type(value).__name__
+    hint = f"Provide {expected} at {path}; leave unrelated fields unchanged."
+    if "evidence_references" in path:
+        hint += " Use real reference/supports/purpose values; do not invent evidence."
+    raise DomainContractError(
+        f"{path}: expected {expected}; {problem} ({actual})",
+        details={"path": path, "expected": expected, "actual": actual,
+                 "problem": problem, "hint": hint},
+    )
+
 
 def _text(value: Any, name: str, *, allow_na: bool = False) -> str:
     if not isinstance(value, str) or not value.strip():
-        raise DomainContractError(f"{name} must be a non-empty string")
+        _invalid(name, "non-empty string", value,
+                 problem="missing_or_empty" if value is None or value == "" else "wrong_type_or_blank")
     result = value.strip()
     if not allow_na and result in {"N/A", "None", "Pending"}:
-        raise DomainContractError(f"{name} must contain a concrete value")
+        _invalid(name, "concrete non-placeholder string", value, problem="placeholder")
     return result
 
 
-def _refs(value: Any, name: str, *, required: bool = True) -> tuple[str, ...]:
+def _object_rows(value: Any, path: str, *, tuples: bool = False) -> tuple[Mapping[str, Any], ...]:
     if value is None:
-        values: list[str] = []
+        return ()
+    if not isinstance(value, (list, tuple) if tuples else list):
+        _invalid(path, "array of objects or null", value)
+    for index, item in enumerate(value):
+        if not isinstance(item, Mapping):
+            _invalid(f"{path}[{index}]", "object", item)
+    return tuple(value)
+
+
+def _refs(value: Any, name: str, *, required: bool = True, tokens: bool = True) -> tuple[str, ...]:
+    # Retain the existing, unambiguous comma-separated shorthand and tuple API.
+    if value is None:
+        values = []
     elif isinstance(value, str):
         values = [part.strip() for part in value.split(",") if part.strip()]
     elif isinstance(value, Sequence) and not isinstance(value, (bytes, bytearray)):
-        values = [str(part).strip() for part in value if str(part).strip()]
+        values = []
+        for index, part in enumerate(value):
+            if not isinstance(part, str) or not part.strip():
+                _invalid(f"{name}[{index}]", "non-empty reference string", part,
+                         problem="empty_reference" if part is None or part == "" else "wrong_type_or_blank")
+            values.append(part.strip())
     else:
-        raise DomainContractError(f"{name} must be a reference array")
+        _invalid(name, "reference string array or comma-separated string", value)
     if required and not values:
-        raise DomainContractError(f"{name} must not be empty")
+        _invalid(name, "at least one reference", value, problem="missing_or_empty")
     if len(values) != len(set(values)):
-        raise DomainContractError(f"{name} contains duplicate references")
-    if any(not REFERENCE_TOKEN_RE.fullmatch(item) for item in values):
-        raise DomainContractError(f"{name} contains an invalid reference token")
+        _invalid(name, "unique references", value, problem="duplicate_reference")
+    if tokens:
+        for index, item in enumerate(values):
+            if not REFERENCE_TOKEN_RE.fullmatch(item):
+                _invalid(f"{name}[{index}]", "reference token", item, problem="invalid_reference")
     return tuple(values)
+
+
+def _member_rows(raw: Mapping[str, Any], field: str, code: str) -> tuple[Mapping[str, Any], ...]:
+    path = f"inputs.design.domains.{code}.{field}"
+    rows = _object_rows(raw.get(field), path, tuples=True)
+    for index, item in enumerate(rows):
+        row_path = f"{path}[{index}]"
+        # Optional IDs keep the existing deterministic default; no new required fields.
+        if item.get("id") is not None and not isinstance(item["id"], str):
+            _invalid(row_path + ".id", "string or null", item["id"])
+        required_fields = ("reference", "supports", "purpose") if field == "evidence_references" else (
+            ("references", "verification_object", "observable_result", "expected_evidence")
+            if field == "vfy_points" else ()
+        )
+        for name in required_fields:
+            if name not in item:
+                _invalid(row_path + "." + name, "required field", None, problem="missing_field")
+        if field == "evidence_references":
+            _text(item.get("reference"), row_path + ".reference")
+            _refs(item.get("supports"), row_path + ".supports", required=True, tokens=False)
+            # Natural-language purpose is not an enum or a keyword gate.
+            _text(item.get("purpose"), row_path + ".purpose")
+        elif field == "vfy_points":
+            _refs(item.get("references"), row_path + ".references", required=True, tokens=False)
+            for name in ("verification_object", "observable_result", "expected_evidence"):
+                _text(item.get(name), row_path + "." + name)
+        else:
+            # These cells were optional; validate their shape without making them mandatory.
+            for name in ("type", "content", "affected_phase", "reference"):
+                if item.get(name) is not None and not isinstance(item[name], str):
+                    _invalid(row_path + "." + name, "string or null", item[name])
+    return rows
 
 
 def normalize_domain_rows(value: Any) -> tuple[Mapping[str, Any], ...]:
     if not isinstance(value, Mapping):
-        raise DomainContractError("design.domains must be an object keyed by DOM code")
+        _invalid("inputs.design.domains", "object keyed by Domain code", value)
     extra = sorted(set(value) - set(DOMAIN_ORDER))
     if extra:
         raise DomainContractError("unregistered DSN Domain: " + ", ".join(extra))
@@ -122,7 +191,7 @@ def normalize_domain_rows(value: Any) -> tuple[Mapping[str, Any], ...]:
                 "basis_references": [],
             }
         if not isinstance(raw, Mapping):
-            raise DomainContractError(f"{definition.code} must be an object")
+            _invalid(f"inputs.design.domains.{definition.code}", "object or null", raw)
         disposition = raw.get("disposition", "pending")
         completion = raw.get(
             "completion",
@@ -133,19 +202,19 @@ def normalize_domain_rows(value: Any) -> tuple[Mapping[str, Any], ...]:
                 "pending": "not_started",
             }.get(str(disposition), "not_started"),
         )
-        if disposition not in DOMAIN_DISPOSITIONS:
-            raise DomainContractError(
-                f"{definition.code} has invalid disposition: {disposition}"
-            )
-        if completion not in DOMAIN_COMPLETIONS[disposition]:
-            raise DomainContractError(
-                f"{definition.code} completion {completion} conflicts with {disposition}"
-            )
+        if not isinstance(disposition, str) or disposition not in DOMAIN_DISPOSITIONS:
+            _invalid(f"inputs.design.domains.{definition.code}.disposition",
+                     "one of " + ", ".join(sorted(DOMAIN_DISPOSITIONS)), disposition,
+                     problem="invalid_enum")
+        if not isinstance(completion, str) or completion not in DOMAIN_COMPLETIONS[disposition]:
+            _invalid(f"inputs.design.domains.{definition.code}.completion",
+                     "one of " + ", ".join(sorted(DOMAIN_COMPLETIONS[disposition])), completion,
+                     problem="invalid_enum")
         if definition.always_required and disposition != "required":
             raise DomainContractError("DOM-510 is required whenever a DSN exists")
         basis = _refs(
             raw.get("basis_references"),
-            f"{definition.code}.basis_references",
+            f"inputs.design.domains.{definition.code}.basis_references",
             required=(
                 disposition in {"n/a", "waived"}
                 or (disposition == "required" and completion == "complete")
@@ -161,9 +230,9 @@ def normalize_domain_rows(value: Any) -> tuple[Mapping[str, Any], ...]:
             "reason": str(raw.get("reason") or "").strip(),
             "exception_reference": str(raw.get("exception_reference") or "").strip(),
             "design_result_markdown": str(raw.get("design_result_markdown") or "").strip(),
-            "constraints_impacts": tuple(raw.get("constraints_impacts") or ()),
-            "vfy_points": tuple(raw.get("vfy_points") or ()),
-            "evidence_references": tuple(raw.get("evidence_references") or ()),
+            "constraints_impacts": _member_rows(raw, "constraints_impacts", definition.code),
+            "vfy_points": _member_rows(raw, "vfy_points", definition.code),
+            "evidence_references": _member_rows(raw, "evidence_references", definition.code),
         }
         if disposition == "required":
             if completion != "not_started":

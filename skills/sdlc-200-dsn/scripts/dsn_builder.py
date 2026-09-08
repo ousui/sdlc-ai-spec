@@ -19,6 +19,7 @@ class DsnBuilder:
         design: Mapping[str, Any],
         final_confirmation: Mapping[str, Any] | None,
     ) -> BuildResult:
+        _validate_confirmation_shape(final_confirmation)
         analysis = self.analyzer.analyze(design, upstream)
         normalized = analysis.normalized
         checks = dict(analysis.checks)

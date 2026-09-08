@@ -18,10 +18,51 @@ class EnvelopeValidationError(ValueError):
 
     code = "INVALID_ENVELOPE"
 
+    def __init__(self, message: str, *, details=None):
+        super().__init__(message)
+        self.details = details
+
+    def to_dict(self):
+        error = {"code": self.code, "message": str(self)}
+        if self.details is not None:
+            error["details"] = self.details
+        return error
+
+
+def _shape_error(path: str, expected: str, value: Any):
+    actual = "null" if value is None else type(value).__name__
+    raise EnvelopeValidationError(
+        f"{path} must be {expected}; received {actual}",
+        details={"path": path, "expected": expected, "actual": actual,
+                 "problem": "wrong_type", "hint": f"Provide {expected} at {path}; do not coerce other containers."},
+    )
+
+
+def _object_array(value: Any, path: str):
+    if not isinstance(value, list):
+        _shape_error(path, "an array of objects", value)
+    for index, item in enumerate(value):
+        if not isinstance(item, Mapping):
+            _shape_error(f"{path}[{index}]", "an object", item)
+    return value
+
+
+def cli_payload_fields(value: Any) -> tuple[dict[str, Any], list[Mapping[str, Any]]]:
+    """Read common CLI fields before dict/list coercion or domain dispatch.
+
+    Preserve the existing CLI defaults for omitted/null optional fields. Runtime
+    Invocation itself remains stricter and is still validated by execute_phase.
+    """
+    payload = _require_mapping({} if value is None else value, "payload")
+    inputs = payload.get("inputs")
+    confirmations = payload.get("confirmations")
+    return (dict(_require_mapping({} if inputs is None else inputs, "inputs")),
+            list(_object_array([] if confirmations is None else confirmations, "confirmations")))
+
 
 def _require_mapping(value: Any, name: str) -> Mapping[str, Any]:
     if not isinstance(value, Mapping):
-        raise EnvelopeValidationError(f"{name} must be an object")
+        _shape_error(name, "an object", value)
     return value
 
 
@@ -62,10 +103,7 @@ def validate_invocation(value: Mapping[str, Any]) -> dict[str, Any]:
         raise EnvelopeValidationError("artifact_reference must be a string or null")
     _require_mapping(payload["inputs"], "inputs")
     confirmations = payload.get("confirmations", [])
-    if not isinstance(confirmations, list) or any(
-        not isinstance(item, Mapping) for item in confirmations
-    ):
-        raise EnvelopeValidationError("confirmations must be an array of objects")
+    _object_array(confirmations, "confirmations")
     options = payload.get("options", {})
     _require_mapping(options, "options")
     if "dry_run" in options and not isinstance(options["dry_run"], bool):

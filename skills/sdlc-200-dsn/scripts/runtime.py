@@ -8,6 +8,11 @@ from dsn_verifier import DsnVerifier
 from dsn_handler_final import DsnHandler, INTERFACE_PATH
 
 
+from packages.sdlc_runtime.envelopes import (
+    EnvelopeValidationError, cli_payload_fields, error_result,
+)
+
+
 def _meta_result(command: SkillCommandWithInputs, display: str) -> dict[str, Any]:
     return {
         "contract": "sdlc-ai-spec/skill-command-result/v1",
@@ -40,7 +45,7 @@ def _build_invocation(
         operation = "check" if command.artifact_reference else "create"
     if operation not in {"create", "revise", "check"}:
         raise DsnRuntimeError(f"unsupported runtime operation: {operation}")
-    inputs = dict(payload.get("inputs") or {})
+    inputs, confirmations = cli_payload_fields(payload)
     if command.input_references:
         scope = [
             item
@@ -60,7 +65,7 @@ def _build_invocation(
         "project_root": str(project_root),
         "artifact_reference": command.artifact_reference,
         "inputs": inputs,
-        "confirmations": list(payload.get("confirmations") or []),
+        "confirmations": confirmations,
         "options": {
             "dry_run": command.dry_run,
             "write_policy": command.write_policy,
@@ -88,15 +93,22 @@ def run_cli(
     if command.command == "examples":
         return _meta_result(command, render_examples(spec)), command.output
     root = _resolve_project(command)
-    invocation = _build_invocation(command, payload or {}, root)
-    result = execute_phase(DsnHandler(root), invocation)
+    try:
+        invocation = _build_invocation(command, payload, root)
+        result = execute_phase(DsnHandler(root), invocation)
+    except EnvelopeValidationError as exc:
+        operation = "check" if command.command == "auto" and command.artifact_reference else (
+            "create" if command.command == "auto" else command.command)
+        return error_result(operation=operation, status="failed", code=exc.code, message=str(exc),
+                            next_action_code="CORRECT_INPUT_SHAPE", next_action_message="依据随包契约整理输入后重试",
+                            requires_user=False, details=exc.details), command.output
     if command.output == "debug":
         result = {
             **result,
             "resolved": command.to_dict(),
             "effects": (
                 []
-                if invocation["operation"] == "check" or command.dry_run
+                if invocation["operation"] == "check" or command.dry_run or result.get("artifact") is None
                 else [{"type": "write", "target": ".sdlc/store.sqlite3"}]
             ),
         }

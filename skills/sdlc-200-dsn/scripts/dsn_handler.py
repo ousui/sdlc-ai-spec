@@ -3,6 +3,7 @@
 from dsn_common import *
 from dsn_builder import DsnBuilder
 from dsn_verifier import DsnVerifier
+from packages.sdlc_artifact_store.catalog import ArtifactCatalog
 
 
 class DsnHandler:
@@ -139,18 +140,75 @@ class DsnHandler:
     def _error(self, invocation, exc: Exception, *, code: str | None = None):
         error_code = code or getattr(exc, "code", "DSN_RUNTIME_ERROR")
         status = "blocked" if isinstance(exc, ConflictError) else "failed"
+        error = {"code": error_code, "message": str(exc)}
+        if getattr(exc, "details", None) is not None:
+            error["details"] = exc.details
         return self._result(
             invocation,
             ok=False,
             status=status,
-            errors=({"code": error_code, "message": str(exc)},),
+            errors=(error,),
             next_action={
                 "code": "RESOLVE_DSN_INPUT",
                 "message": "修正 DSN 输入或 Store 状态后重试",
-                "requires_user": True,
+                "requires_user": getattr(exc, "details", None) is None,
                 "command": None,
             },
         )
+
+    def _failed_write(self, invocation, exc, store, artifact_id, revision, *, owned):
+        """Recover only this invocation's reservation and report observed state.
+
+        This is an exception boundary for writes, not an input-error catch-all.
+        Unknown programming defects keep their exception type and INTERNAL code.
+        A pre-existing open revision is never abandoned by a failed revise.
+        """
+        expected = isinstance(exc, (ArtifactStoreError, ControlInputError,
+                                    CanonicalFormatError, DsnRuntimeError))
+        result = self._error(invocation, exc, code=None if expected else "DSN_INTERNAL_ERROR")
+        cleanup = {"owned_revision": owned, "attempted": False, "state": "unknown",
+                   "materialized": None, "confirmed_abandoned": False}
+        details = dict(result["errors"][0].get("details") or {})
+        details.update({"exception_type": type(exc).__name__,
+                        "allocation": {"artifact_id": artifact_id, "revision": revision},
+                        "cleanup": cleanup})
+        result["errors"][0]["details"] = details
+        result["next_action"] = {
+            "code": "INSPECT_DSN_FAILURE", "message": "按返回的准确标识和清理状态检查失败；不要复用 abandoned Revision",
+            "requires_user": not expected, "command": None,
+        }
+        if revision is not None:
+            def read_control():
+                catalog = ArtifactCatalog(ArtifactStore.open_read_only(self.project_root))
+                return next((row for row in catalog.list_revisions(artifact_id)
+                             if row.revision == revision), None)
+
+            try:
+                current = read_control()
+                if current is not None and current.state == "open" and owned and not isinstance(exc, ConflictError):
+                    cleanup["attempted"] = True
+                    store.abandon_revision(artifact_id, revision,
+                                           reason=f"DSN {invocation['operation']} failed: {str(exc)[:400]}")
+            except Exception as cleanup_error:
+                # Cleanup must not hide the original exception, including unknown
+                # cleanup defects. Report them separately and still attempt readback.
+                result["errors"].append({"code": "DSN_CLEANUP_FAILED", "message": str(cleanup_error),
+                                         "details": {"exception_type": type(cleanup_error).__name__}})
+            try:
+                current = read_control()
+                if current is not None:
+                    cleanup.update(state=current.state, materialized=current.materialized,
+                                   confirmed_abandoned=current.state == "abandoned")
+                if cleanup["attempted"] and not cleanup["confirmed_abandoned"]:
+                    result["errors"].append({"code": "DSN_CLEANUP_NOT_CONFIRMED",
+                                             "message": "Readback did not confirm abandonment; preserve the reported state"})
+            except Exception as read_error:
+                result["errors"].append({"code": "DSN_CLEANUP_STATE_UNKNOWN", "message": str(read_error),
+                                         "details": {"exception_type": type(read_error).__name__}})
+        result["artifact"] = {"id": artifact_id, "type": "DSN", "revision": revision,
+                              "revision_state": cleanup["state"], "artifact_status": None,
+                              "reference": f"{artifact_id}@{revision}" if revision is not None else None}
+        return result
 
     def _write(
         self,
@@ -274,6 +332,8 @@ class DsnHandler:
                         "command": None,
                     },
                 )
+            self.builder.analyzer.analyze(design, upstream)
+            _validate_confirmation_shape(invocation["inputs"].get("final_confirmation"))
             if invocation["options"].get("dry_run"):
                 preview = self.builder.build(
                     artifact_id="DSN-20990101000000-01",
@@ -300,23 +360,13 @@ class DsnHandler:
                 self.project_root, clock=self.clock
             )
             allocation = store.allocate_artifact("DSN", now=self.clock())
-            control = store.allocate_revision(allocation.artifact_id, now=self.clock())
+            control = None
             try:
+                control = store.allocate_revision(allocation.artifact_id, now=self.clock())
                 return self._write(invocation, store, control, upstream)
             except Exception as exc:
-                try:
-                    current = store.read_revision(
-                        control.artifact_id, control.revision
-                    ).control
-                    if current.state == "open" and not current.materialized:
-                        store.abandon_revision(
-                            control.artifact_id,
-                            control.revision,
-                            reason="DSN build failed: " + str(exc)[:400],
-                        )
-                except ArtifactStoreError:
-                    pass
-                raise
+                return self._failed_write(invocation, exc, store, allocation.artifact_id,
+                                          control.revision if control else None, owned=True)
         except (
             ArtifactStoreError,
             ControlInputError,
@@ -401,33 +451,15 @@ class DsnHandler:
             store = ArtifactStore.open_read_write(
                 self.project_root, clock=self.clock
             )
-            allocated_new = False
-            if existing.control.state == "open":
-                control = existing.control
-            else:
-                control = store.allocate_revision(
-                    artifact_id,
-                    base_revision=revision_number,
-                    now=self.clock(),
-                )
-                allocated_new = True
+            allocated_new = existing.control.state != "open"
+            control = None
             try:
+                control = (store.allocate_revision(artifact_id, base_revision=revision_number, now=self.clock())
+                           if allocated_new else existing.control)
                 return self._write(invocation, store, control, upstream)
             except Exception as exc:
-                if allocated_new:
-                    try:
-                        current = store.read_revision(
-                            control.artifact_id, control.revision
-                        ).control
-                        if current.state == "open":
-                            store.abandon_revision(
-                                control.artifact_id,
-                                control.revision,
-                                reason="DSN revise failed: " + str(exc)[:400],
-                            )
-                    except ArtifactStoreError:
-                        pass
-                raise
+                return self._failed_write(invocation, exc, store, artifact_id,
+                                          control.revision if control else None, owned=allocated_new)
         except (
             ArtifactStoreError,
             ControlInputError,

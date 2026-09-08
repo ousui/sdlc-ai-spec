@@ -9,6 +9,7 @@ class DsnAnalyzer:
         design: Mapping[str, Any],
         upstream: UpstreamScope,
     ) -> DsnAnalysis:
+        _validate_nested_input(design)
         normalized = deepcopy(dict(design))
         checks: dict[str, CheckOutcome] = {}
         open_items: list[dict[str, str]] = []
@@ -31,10 +32,10 @@ class DsnAnalyzer:
         normalized["summary"] = str(summary).strip()
 
         change_type = design.get("change_type")
-        baseline_refs = _refs(design.get("baseline_references"), "baseline_references")
+        baseline_refs = _refs(design.get("baseline_references"), "inputs.design.baseline_references")
         target_summary = design.get("target_state_summary")
         impact_summary = design.get("impact_summary")
-        changes = _rows(design.get("changes"), "changes")
+        changes = _rows(design.get("changes"), "inputs.design.changes")
         if change_type not in CHANGE_TYPES:
             checks["DSN-G-002"] = CheckOutcome("fail", "Change Type 无效")
         elif change_type in {"incremental", "reuse"} and not baseline_refs:
@@ -77,7 +78,7 @@ class DsnAnalyzer:
             }
         )
 
-        decisions = _rows(design.get("decisions"), "decisions")
+        decisions = _rows(design.get("decisions"), "inputs.design.decisions")
         if not decisions and not str(design.get("decision_none_reason") or "").strip():
             open_items.append(
                 self._open(
@@ -113,7 +114,7 @@ class DsnAnalyzer:
                 design.get("composite_subdomains")
             )
         except DomainContractError as exc:
-            raise DsnRuntimeError(str(exc)) from exc
+            raise DsnRuntimeError(str(exc), details=exc.details) from exc
 
         for row in domain_rows:
             if row["disposition"] == "pending":
@@ -168,7 +169,7 @@ class DsnAnalyzer:
             else "16 个 Domain 均已完成适用性判断",
         )
 
-        exceptions = _rows(design.get("exceptions"), "exceptions")
+        exceptions = _rows(design.get("exceptions"), "inputs.design.exceptions")
         active_exceptions: list[str] = []
         exception_invalid = False
         for index, item in enumerate(exceptions, start=1):
@@ -192,7 +193,7 @@ class DsnAnalyzer:
                 active_exceptions.append(exception_id)
         normalized["exceptions"] = exceptions
 
-        traceability = _rows(design.get("traceability"), "traceability")
+        traceability = _rows(design.get("traceability"), "inputs.design.traceability")
         covered_req: set[str] = set()
         covered_ac: set[str] = set()
         trace_invalid = False
@@ -222,7 +223,7 @@ class DsnAnalyzer:
         )
         normalized["traceability"] = traceability
 
-        conflicts = _rows(design.get("cross_domain_conflicts"), "cross_domain_conflicts")
+        conflicts = _rows(design.get("cross_domain_conflicts"), "inputs.design.cross_domain_conflicts")
         unresolved_conflicts = [
             item for item in conflicts if item.get("state", "open") != "resolved"
         ]
@@ -278,7 +279,7 @@ class DsnAnalyzer:
             )
         normalized["lifecycle_applicability"] = applicability
 
-        evidence = _rows(design.get("evidence"), "evidence")
+        evidence = _rows(design.get("evidence"), "inputs.design.evidence")
         invalid_evidence = any(
             not isinstance(item.get("reference"), str)
             or not item.get("reference", "").strip()
@@ -289,7 +290,7 @@ class DsnAnalyzer:
         normalized["supporting_members"] = _rows(
             design.get("supporting_members"), "supporting_members"
         )
-        normalized["open_items"] = _rows(design.get("open_items"), "open_items")
+        normalized["open_items"] = _rows(design.get("open_items"), "inputs.design.open_items")
         for item in normalized["open_items"]:
             if item.get("state", "open") == "open":
                 open_items.append(

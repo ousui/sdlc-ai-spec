@@ -22,6 +22,11 @@ INTERFACE_PATH = Path(__file__).resolve().parents[1] / "references/interface.jso
 EXTENSIONS = {"binding": ("--binding", "-b"), "owner": ("--owner",)}
 
 
+from packages.sdlc_runtime.envelopes import (
+    EnvelopeValidationError, cli_payload_fields, error_result,
+)
+
+
 def parse_command(arguments):
     spec = load_skill_interface(INTERFACE_PATH)
     command, values = parse_skill_command_with_extensions(arguments, spec, EXTENSIONS)
@@ -53,7 +58,13 @@ def run_cli(arguments, payload=None):
     require(isinstance(payload, dict), "IMP_READINESS_FAILED", "stdin payload must be an object")
     root = Path(command.project_root or Path.cwd()).expanduser().resolve()
     require(root.is_dir(), "IMP_READINESS_FAILED", "Project Root must be an existing directory")
-    inputs = dict(payload.get("inputs") or {})
+    try:
+        inputs, confirmations = cli_payload_fields(payload)
+    except EnvelopeValidationError as exc:
+        return error_result(operation="create" if command.command == "auto" else command.command,
+                            status="failed", code=exc.code, message=str(exc),
+                            next_action_code="CORRECT_INPUT_SHAPE", next_action_message="依据随包契约整理输入后重试",
+                            requires_user=False, details=exc.details), command.output
     inputs.update(values)
     if command.input_references:
         inputs["input_references"] = list(command.input_references)
@@ -63,7 +74,7 @@ def run_cli(arguments, payload=None):
         "contract": "sdlc-ai-spec/runtime-invocation/v1",
         "operation": "create" if command.command == "auto" else command.command,
         "project_root": str(root), "artifact_reference": command.artifact_reference,
-        "inputs": inputs, "confirmations": list(payload.get("confirmations") or []),
+        "inputs": inputs, "confirmations": confirmations,
         "options": {"dry_run": command.dry_run, "write_policy": command.write_policy},
     }
     handler = ImpHandler(root)

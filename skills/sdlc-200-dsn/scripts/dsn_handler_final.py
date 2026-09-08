@@ -1,11 +1,8 @@
-"""Reviewed DSN handler with upstream applicability and cleanup guards."""
+"""DSN upstream applicability guard; owned-write recovery lives in the base handler."""
 
 from __future__ import annotations
 
-from typing import Any, Mapping
-
 from packages.sdlc_artifact_store import ArtifactStore, ArtifactStoreError
-from packages.sdlc_artifact_store.catalog import ArtifactCatalog
 
 from dsn_common import (
     APPLICABILITY_HEADERS,
@@ -21,55 +18,6 @@ from dsn_handler import DsnHandler as BaseDsnHandler, INTERFACE_PATH
 
 class DsnHandler(BaseDsnHandler):
     """Add deterministic pre-allocation and failure-cleanup behavior."""
-
-    def _revision_snapshot(self) -> dict[str, tuple[int, ...]]:
-        try:
-            store = ArtifactStore.open_read_only(self.project_root)
-            catalog = ArtifactCatalog(store)
-        except ArtifactStoreError:
-            return {}
-        return {
-            item.artifact_id: tuple(
-                record.revision
-                for record in catalog.list_revisions(item.artifact_id)
-            )
-            for item in catalog.list_artifacts("DSN")
-        }
-
-    def _abandon_new_open_revisions(
-        self,
-        before: Mapping[str, tuple[int, ...]],
-        result: Mapping[str, Any],
-        operation: str,
-    ) -> None:
-        if result.get("ok") or result.get("artifact") is not None:
-            return
-        try:
-            read_store = ArtifactStore.open_read_only(self.project_root)
-            catalog = ArtifactCatalog(read_store)
-            candidates: list[tuple[str, int]] = []
-            for item in catalog.list_artifacts("DSN"):
-                known = set(before.get(item.artifact_id, ()))
-                for record in catalog.list_revisions(item.artifact_id):
-                    if record.revision not in known and record.state == "open":
-                        candidates.append((item.artifact_id, record.revision))
-            if not candidates:
-                return
-            errors = result.get("errors") or []
-            reason = (
-                errors[0].get("message", "unknown deterministic build failure")
-                if errors
-                else "unknown deterministic build failure"
-            )
-            write_store = ArtifactStore.open_read_write(self.project_root)
-            for artifact_id, revision in candidates:
-                write_store.abandon_revision(
-                    artifact_id,
-                    revision,
-                    reason=f"DSN {operation} failed: {reason[:400]}",
-                )
-        except ArtifactStoreError:
-            return
 
     def _upstream_applicability_result(self, invocation):
         inputs = invocation.get("inputs") or {}
@@ -154,16 +102,7 @@ class DsnHandler(BaseDsnHandler):
         applicability_result = self._upstream_applicability_result(invocation)
         if applicability_result is not None:
             return applicability_result
-        before = self._revision_snapshot()
-        result = super().create(invocation)
-        self._abandon_new_open_revisions(before, result, "create")
-        return result
-
-    def revise(self, invocation):
-        before = self._revision_snapshot()
-        result = super().revise(invocation)
-        self._abandon_new_open_revisions(before, result, "revise")
-        return result
+        return super().create(invocation)
 
 
 __all__ = ("DsnHandler", "INTERFACE_PATH")

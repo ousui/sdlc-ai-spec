@@ -28,8 +28,11 @@
 | INPUT-12 | 文档/枚举投影漂移；安装包删除 docs/tests 后使用 | 漂移由测试检出；正式入口及随包示例无需开发文档或测试代码 |
 | INPUT-13 | malformed JSON 类型、选项及确认；未授权请求 | 有界结构化错误，不崩溃；无类型转换授权、无 Store/Claim/远端效果 |
 | INPUT-14 | prepare_confirmation、Supporting Member、只读/CAS/历史 frozen | 保留已有有效回归，不因去重或新输入整理而绕过；原版本合法请求及已有记录可直接继续使用 |
+| INPUT-15 | frozen DSN 的 DOM-510 含 `VFO-*` VFY Objectives；完整/缺失 VFO Plan 配对 | PLN 将 `VFO-*` 纳入 authoritative obligations；完整 Plan 不误触 `PLN-G-002/006`；少任一 VFO 仍触发精确覆盖失败；`VFM/VPC/VEC` 不升级为独立 Plan obligation；旧 frozen DSN 无迁移/重写 |
 
 REQ 的 INPUT-09/13 必须经过正式 runtime_final 入口及无 docs/tests 的安装副本；create/revise、dry-run/非 dry-run 四路径在 Store 快照和 cleanup 前拒绝非法结构。基础 Handler 单测不能替代正式入口，保留上一轮 strict 暴露的反例。
+
+INPUT-15 来自 Maintainer 提供的真实只读现场：冻结 DSN 已存在 CHG 与九个 VFO，旧 PLN `resolve_inputs` 只提取 CHG；将九个真实 VFO 纳入候选后，正式 dry-run 同时触发 `PLN-G-002` 与 `PLN-G-006` 且项目/Store 无变化。长期回归使用脱离业务内容的结构等价 Fixture，不把项目路径、业务正文或内部引用复制进公开测试。
 
 大 Case 展开为具名测试；保留原测试身份，新增子用例有明确断言。允许重构纯重复断言，但默认不删除既有有效测试。修改旧 Expected 必须说明原断言为何混淆输入错误与领域检查，且保留错误拒绝和零效果断言。
 
@@ -45,10 +48,10 @@ REQ 的 INPUT-09/13 必须经过正式 runtime_final 入口及无 docs/tests 的
 
 ## 5. 验证顺序
 
-开发期间运行受影响测试及配对正例。按本轮当前版本 bugfix 的明确边界，在最终结果产生前选定复用现有 validate 工作流的 Ubuntu/macOS full 矩阵；不新增工作流或叠加 full＋strict＋e2e。完整报告准确标 full，不冒称 strict VFY 执行或原生 Client 认证。代码或测试夹具实际修正后，新的准确 Subject 执行其自身回归，旧失败保留；不无修改重跑刷绿。现有安全断言保留，测试 mock 隔离问题可作最小测试修正，不扩展产品 Runtime 功能。
+开发期间运行受影响测试及配对正例。按本轮当前版本 bugfix 的明确边界，在最终结果产生前选定复用现有 validate 工作流的 Ubuntu/macOS full 矩阵；不新增永久验证工作流或叠加 full＋strict＋e2e。完整报告准确标 full，不冒称 strict VFY 执行或原生 Client 认证。代码或测试夹具实际修正后，新的准确 Subject 执行其自身回归，旧失败保留；不无修改重跑刷绿。现有安全断言保留，测试 mock/集成 Fixture 若保留了与 Runtime 相同的过时分类假设，可作最小测试修正，不放宽产品 Gate。
 
 记录 Implementation SHA、Test SHA、源码 tree、Runtime 路径/摘要、解释器、命令、退出码、准确测试 ID、结果及未执行项。工作流触发 SHA 与被测 SHA 不相等时分别登记。发布/运输成功不代表测试通过。
 
 ## 6. 完成条件
 
-已知输入反例和配对正例符合 Expected；同类随包输入缺口得到修正并有漂移保护；错误不虚构项目失败；dry-run/拒绝无副作用；安全与旧合法输入回归保持。保存准确源码及原始日志并更新 Handoff 和 PR。环境阻塞、无关既有失败和未执行项不得写入 PASS；不再将模型实验或 approval-bot 本地工作树不可访问列为本次必须补齐的验收项目。
+已知输入反例和配对正例符合 Expected；同类随包输入缺口得到修正并有漂移保护；DSN→PLN 的合法 VFY Objective 不再被静默遗漏；错误不虚构项目失败；dry-run/拒绝无副作用；安全与旧合法输入回归保持。保存准确源码及原始日志并更新 Handoff 和 PR。环境阻塞、无关既有失败和未执行项不得写入 PASS；不再将模型实验或 approval-bot 本地工作树不可访问列为本次必须补齐的验收项目。

@@ -60,5 +60,7 @@ class CtxPreconfirmationTests(unittest.TestCase):
         request['options']['prepare_confirmation']='true'
         result=self.fixture.invoke(request)
         self.assertFalse(result['ok'])
-        self.assertEqual(result['gate']['result'],'fail')
+        self.assertEqual(result['gate'], {'result': 'pending', 'failed_checks': []})
         self.assertTrue(any(e['code']=='INVALID_PREPARE_CONFIRMATION' for e in result['errors']))
+        self.assertIsNone(result['artifact'])
+        self.assertFalse((self.fixture.project_root / '.sdlc').exists())

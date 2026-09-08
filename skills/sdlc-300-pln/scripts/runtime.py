@@ -75,13 +75,15 @@ def render_summary(result):
 
 def main(argv=None):
     try:
+        arguments = list(sys.argv[1:] if argv is None else argv)
+        command = parse_skill_command_with_inputs(arguments, load_skill_interface(INTERFACE_PATH))
         payload={}
-        if not sys.stdin.isatty():
+        if command.command not in {"help", "version", "commands", "examples"} and not sys.stdin.isatty():
             raw=sys.stdin.read().strip()
             if raw:
                 payload=json.loads(raw)
                 if not isinstance(payload,Mapping): raise PlnError("stdin payload must be a JSON object")
-        result,output=run_cli(list(sys.argv[1:] if argv is None else argv),payload)
+        result,output=run_cli(arguments,payload)
         print(render_summary(result) if output=="summary" else json.dumps(result,ensure_ascii=False,sort_keys=True))
         return 0 if result.get("ok") else 2
     except (OSError,json.JSONDecodeError,SkillArgumentError,PlnError) as exc:

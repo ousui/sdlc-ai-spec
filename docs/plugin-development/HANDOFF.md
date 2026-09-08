@@ -1,14 +1,20 @@
 # 当前工程交接
 
-## 当前工作包：Skill 输入契约可靠性设计
+## 当前工作包：收窄后的 Skill 输入可用性修复
 
-2026-09-08，用户要求核对 CTX 输入失败是否为跨 Skill 共性问题，并制定复现、修复、技术栈覆盖及重复门禁精简计划。当前分支 `codex/bugfix`，设计基线为 `aed8eb69d2b74ec27bdcb2fb356cb02b68602289`，本次只维护设计、评测计划和此交接；未实现、未提交、未发布。当前正式业务 Skill 执行：`None`。
+2026-09-08，Maintainer 明确要求以真实 CTX 阻碍和其他 Skill 同类问题为范围，以测试用例/Fixture/mock 为主。来源 `codex/bugfix@14c167e044d7a8eeada3c826d1c41bb55bc7b01b`；原问题 HEAD `93cef2f6cc07e5e7b6a1f4dd8670d448bf460ba8`；main 基线 `aed8eb69d2b74ec27bdcb2fb356cb02b68602289`。
 
-[设计与问题清单](components/skill-contract-reliability/DESIGN.md) 和 [复现与评测计划](components/skill-contract-reliability/EVAL-PLAN.md) 均为 draft。已复现 CTX 错误全量映射、dry-run 丢失错误、时间基线未拦截，以及 DSN/PLN 元命令读取业务 stdin；三项目回归说明与代码已只读核对，不以旧 PASS 证明当前修复完成。
+工作分支 `fix/skill-input-usability-v2`，Draft PR #21。收窄计划提交 `63d09ed044c7c5f536bd595a535bdf91aa306534`。本次明确授权按序修订、实施、验证并保存远端检查点；不改 main/codex/bugfix，不自动合并或发布，不改用户工作树/安装缓存。当前正式产品 Skill 执行：`None`。
+
+原 PR #20 和 d94a4ff 是实际存在的历史工作，上轮末尾“未写入”说明不准确；本分支没有继承旧分支的 RLS 目标分配改动。两份计划已移除首次调用/模型实验、强制三项目全链、额外 Gin-Vue-Admin；test-sdlc 仅在需要工程载体时使用。
+
+实现包含 CTX 字段诊断、受限描述性归一化、错误/Gate 分离、dry-run 错误保留、基线表示及已提供 Member 字节摘要绑定；REQ 写前结构拒绝；DSN/PLN meta 不读业务 stdin；VFY/RLS 布尔/相关输入类型拒绝；随包字段说明和漂移测试。旧 frozen 不自动迁移，授权/最终确认/只读/CAS 仍保留。Source Lock 从实际字节重新生成而非手填。
+
+原问题提交上的七个核心测试方法已重放，保存 21 个失败子断言和合法配对；这不是新版本结论。开发期 CTX/REQ 既有44项回归通过；最终统一结果必须另绑准确实现 SHA。原始日志放在检出树外，PR 评论保存恢复索引。
 
 ## 唯一下一工作包
 
-W1（approval）：审阅并明确接受或调整上述设计的输入契约、错误/Gate 分离、兼容范围、有限文档实验及去重原则。此决定前不进入 implement/evaluate，不恢复全宿主原生认证门禁，也不自动修改三项目或安装缓存。
+在本分支准确、干净的实现提交上执行统一回归并回读原始报告/源码，更新 EVAL-RESULTS 与本交接。源码/测试 SHA 与运输事件 SHA 分开；未执行项和无关既有失败单列，不将其写成 PASS。不重新规划、扩展模型实验或修改无关 RLS 行为。
 
 ## 以下为此前维护交接记录
 

@@ -40,7 +40,7 @@
     {
       "contract_id": "sdlc-ai-spec/runtime/skill-execution/v1",
       "contract_version": "1",
-      "sha256": "2caa2f6d1bc9ad796f09fbec5b1e0d1a032ae73fa604888919f5ddeda0430e92"
+      "sha256": "02a437ac477ea899f8f6a79f6c120f334d1350a88a053c2566ad0475d0b6fb80"
     },
     {
       "contract_id": "sdlc-ai-spec/runtime/skill-inputs/v1",
@@ -65,7 +65,7 @@
     {
       "contract_id": "sdlc-ai-spec/runtime/vfy/v1",
       "contract_version": "1",
-      "sha256": "41206a3424e2cd3193a6eecfb474b21cffa2c260196de18d55901a656a42833a"
+      "sha256": "cd79849203a1f10937c6a80576b926382339ee21ee7fd8a4bcfa2a9c5699ee1f"
     },
     {
       "contract_id": "sdlc-ai-spec/schema/status-result/v1",

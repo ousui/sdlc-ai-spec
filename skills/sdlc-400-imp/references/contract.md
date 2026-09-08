@@ -139,3 +139,11 @@ check 不运行执行器，不初始化、不 acquire、不修复、不 freeze�
 
 本 Contract 不包含 Lifecycle Query、独立 Source Lock 门禁、Runtime Independence、
 Fixed Eval、真实宿主适配或真实项目验收结论；这些由后续工作包独立验证。
+
+## Method Block 嵌套字段
+
+七类 `blocks` 的准确 consideration、ID 前缀、必填键及表行键见 [输入字段速查](input-reference.md)。调用者在 Method 的 `steps[].blocks[]` 内提供；并非在共享 Envelope 顶层新增字段。
+
+例如 Calculation Rules Block：`{"id":"CAL-001","consideration":"Calculation Rules","output":"total","expression":"unit_price * quantity","inputs_and_units":"unit_price: currency; quantity: integer","precision_and_rounding":"按已批准币种规则","boundary_and_invalid_values":"拒绝负数量"}`。这是结构示例，计算与舍入依据必须来自当前已批准 DSN。
+
+Decision Rules 的 rules 行还要求合法优先级与唯一 DEFAULT；State Transitions 的 transitions 行和 Data Contract 的 mappings 行不能用一段描述替代表格数组。已有 Step 顺序、稳定 ID、Consideration 顺序和 Claim/Scope/CAS 规则保持；结构错误在 Claim 和产品修改前停止，不要求每个 Step 都使用全部七类。

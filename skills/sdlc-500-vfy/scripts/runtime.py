@@ -116,6 +116,15 @@ def run_cli(arguments: list[str], payload: dict[str, Any] | None = None):
     from vfy_handler import VfyHandler
 
     body = {} if payload is None else load_json_object(payload)
+    for field in ("persist", "run_automated", "allow_commands", "finalize"):
+        require(field not in body or isinstance(body[field], bool),
+                "VFY_CONTRACT_INVALID", f"{field} must be a JSON boolean, not a truthy value")
+    if body.get("method_ids") is not None:
+        require(isinstance(body["method_ids"], list) and all(isinstance(item, str) and item for item in body["method_ids"]),
+                "VFY_CONTRACT_INVALID", "method_ids must be an array of non-empty strings")
+    for field in ("manual_observations", "failure_returns", "early_stop_basis", "confirmation", "candidate", "replacement", "state"):
+        require(body.get(field) is None or isinstance(body[field], dict),
+                "VFY_CONTRACT_INVALID", f"{field} must be an object")
     project_root = Path(command.project_root or body.get("project_root") or Path.cwd())
     project_root = project_root.expanduser().resolve()
     require(project_root.is_dir(), "VFY_SCOPE_REQUIRED", "Project root must be an existing directory")

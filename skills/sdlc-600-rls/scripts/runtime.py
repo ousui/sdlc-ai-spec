@@ -19,6 +19,7 @@ EXTENSIONS = {
     "release_reference": ("--release-reference",),
 }
 META_COMMANDS = ("help", "version", "commands", "examples")
+INPUT_BOOLEAN_FIELDS = ("force_fail", "pipeline_only", "retry", "write_confirmed")
 
 
 def _shared_parser():
@@ -138,6 +139,10 @@ def run_cli(arguments, payload=None):
 
     payload = {} if payload is None else payload
     require(isinstance(payload, dict), "INVALID_ENVELOPE", "business input must be an object")
+    for field in INPUT_BOOLEAN_FIELDS:
+        require(field not in payload or isinstance(payload[field], bool),
+                "INVALID_ENVELOPE", "operation option must be a JSON boolean",
+                field=field, expected_type="boolean")
     assert_no_secret(payload)
     require("artifact" not in payload and "vfy" not in payload,
             "RLS_REFERENCE_NOT_EXACT", "Artifact and VFY authority must be read by exact Store reference")
@@ -275,6 +280,12 @@ def main(argv=None) -> int:
         from rls_common import sanitize
         error = sanitize({"code": getattr(exc, "code", "RLS_RUNTIME_FAILED"),
                           "message": "RLS request failed; inspect exact local state and recovery records"})
+        # Only compiler-owned field/type tokens are exported. Other domain and
+        # unknown exception text stays hidden to preserve the secret boundary.
+        details = getattr(exc, "details", {})
+        if (error["code"] == "INVALID_ENVELOPE" and isinstance(details, dict)
+                and details.get("field") in INPUT_BOOLEAN_FIELDS and details.get("expected_type") == "boolean"):
+            error["details"] = {"field": details["field"], "expected_type": "boolean"}
         print(json.dumps({"ok": False, "errors": [error]}, ensure_ascii=False, sort_keys=True))
         return 2
 

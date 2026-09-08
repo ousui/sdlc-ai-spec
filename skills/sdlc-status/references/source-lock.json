@@ -224,7 +224,7 @@
     {
       "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/envelopes.py/v1",
       "contract_version": "1",
-      "sha256": "af139740631977a14351884da18871bccd4d5ebe3a010dbd612f8feb5ec6dcf0"
+      "sha256": "16b9489b750726f774f981c3e5d2a2e133ba43c39f56242746a6bb5ba6ef6980"
     },
     {
       "contract_id": "sdlc-ai-spec/status/source/packages/sdlc_runtime/local_paths.py/v1",

@@ -1,5 +1,58 @@
 # 当前工程交接
 
+## 当前工作包：DSN 嵌套输入契约与定向失败恢复
+
+2026-09-08。用户已在 `main@c8c8b35ff9938513f270f263a7b63a06801344de` 执行
+`git merge --squash codex/bugfix`；本工作包变更当前处于待验证、待提交的暂存状态。
+来源工作包基线为 `codex/bugfix@1d79cb99dd065699bf6816ad4cb61178094bc981`，
+交付头为 `codex/bugfix@798b56e`。当前正式业务 Skill 执行：`None`；仅一次性测试 Store。
+
+本次授权覆盖处理 squash 冲突和验证；尚未创建 squash commit，也没有 push、release、
+安装配置修改或现场 ArtifactStore 写入。无法读取原 local Codex thread 的完整现场，
+下面是来源工作包的准确独立复现，不是现场状态认定。
+
+### 修复与范围
+
+- 原始 `evidence_references=["..."]` 在真实 CLI create/dry-run 复现 AttributeError；基线 create 读回为新建 open、未 materialize 的 Revision，dry-run 零写入。已处理 constraints_impacts/vfy_points、supports 及 DSN 同源引用/Domain 列表/枚举类型；create 在分配前校验，revise 保留写前候选预检。
+- DSN/PLN/IMP 复用共享 CLI 容器校验，错误定位字段/索引；保留合法缺省/null、扩展字段和自然语言，不凭字符串编造 evidence。随包 `input-example.json` 由安装独立性测试实际读取，示例是未完成设计，不伪装可冻结。
+- DSN 失败恢复只处理本次分配的 Revision，读回确认 abandoned/open/frozen/unknown，报告清理异常；不按全库差集清理，不 abandon 原有 open/frozen 或 CAS 冲突状态。未知实现异常保持 INTERNAL 分类。没有 Store Schema、SQL、迁移、版本、命令或业务阶段重构。
+- 共享契约/代码改动对应 7 个 Source Lock 的摘要按既有机制更新；完整性校验未删除或放宽，CTX/REQ 业务规则未修改。
+
+### 准确被测源码与结果
+
+实现及测试 Subject：`03eb2b76a9319291cf40941ce956af6552dbcac0`，执行前后干净。后续本文件的交接提交不改变实现/测试，不冒充重新运行的 Subject。
+
+定向 **229/229** 唯一测试：共享 Runtime/CTX/REQ 99；DSN/PLN 83；输入契约/安装独立性/IMP CLI 47。新增 16 个测试方法通过；子案例不膨胀成独立 Case 数。0 failure/error/skip/expectedFailure/unexpectedSuccess。实际 CTX→REQ→DSN Fixture、正式 CLI dry-run/create/revise/check、成功读回、无分配/无文件写入、清理失败、原记录保护及重试均有测试。
+
+统一入口实际执行：
+
+```text
+python3 -B tools/validate.py --profile full --source-sha 03eb2b76a9319291cf40941ce956af6552dbcac0 --json-out /mnt/data/sdlc-evidence/full.json
+```
+
+结果 **FAIL / 尚未完成全仓验收**：7 个静态步骤通过，6 个 GitHub 测试模块因缺少 mcp SDK 导入失败，完整行为套件尚未执行。未删除测试、降低 Expected 或跳过依赖。strict 未执行（无 OS 沙箱），e2e 未执行（另无固定项目缓存）；未安装依赖。新测试直接进入现有 unittest 发现规则，不另建生产测试入口。
+
+所有原始尝试、失败与最终证据位于检出树外 `/mnt/data/sdlc-evidence/`。开发中有未同步 Source Lock 引起的 CTX 失败、Fixture 使用错误及执行时限中断，原日志保留，均不计入最终 PASS；最终 229 绑定上述干净 SHA。测试 Store/安装副本使用临时目录；归属不明确的通用临时目录不做批量删除。
+
+### 历史与未验证范围
+
+原三项目归档 Runtime `eff4ac209fe4cc1d0fefcd7e4478cb5b9f786af4`，测试源码 `849783ddbc9b2ffd5300e3b1582049a390a2e2a8`。已核对原 ZIP 和 1073 个文件摘要；8 次 DSN 请求使用合法对象数组，未注入本次非法结构。四个相关 DSN 文件与本次基线相同。该归档的项目是 Flask Admin、SpringGear JDK21、Go fansite，不把另一个 Gin-Vue-Admin Fixture 混作同一历史。既有合法全链与 strict PASS 的价值和适用 Subject 保留。
+
+没有模型理解实验、原生 Client 认证、现场失败前后 Store 证据或全阶段嵌套输入穷举。RLS 的条件授权对象消费等仅静态线索，尚未用有效上游到达并复现，不扩大为已确认缺陷或修改。不能保证未来不再出现输入问题。
+
+## 唯一下一工作包
+
+Maintainer 审阅已解决冲突的暂存补丁和本次验证结果，决定是否创建 squash commit。
+提交后应对准确提交 SHA 补跑合适的统一 Profile；只有已具备沙箱/固定缓存才选
+strict/e2e。当前不宣称已提交或可发布，不自动 push，不重做 CTX/REQ 或现场需求。
+
+<details>
+<summary>此前工作包原始交接快照（历史事实，不是当前状态或下一动作）</summary>
+
+以下保留基线中的原文；其中“当前”“下一步”“未合并”等均以原记录时点为准，不构成本轮状态或授权。本轮基线已经包含 PR #21 的合并。历史评测正文及 ARCHIVE 索引未修改。
+
+# 当前工程交接
+
 ## 当前工作包：当前版本 Skill 输入可用性 bugfix
 
 2026-09-08，按 Maintainer 指令仅修当前版本缺陷；不迭代版本、不改变 Schema/Store/命令，不增加迁移或版本选择。三平台 Manifest 保持 0.9.0。原问题 HEAD `93cef2f6cc07e5e7b6a1f4dd8670d448bf460ba8`；分支起点 `codex/bugfix@14c167e044d7a8eeada3c826d1c41bb55bc7b01b`，其父提交为指定 main 基线 `aed8eb69d2b74ec27bdcb2fb356cb02b68602289`。
@@ -77,3 +130,5 @@ Skill 样式和有效测试覆盖保持不变；不重启旧阶段 Goal、原生
 `sdlc-github-foundation/v1` 已由 Maintainer 于 2026-09-07 接受，当前仅等待 PR #14 的显式 Ready/Review/Merge 决定；
 该历史状态不构成当前契约修复的实施或发布授权。历史 Goal/Repair/Revalidation/Portability 报告已按全局 ARCHIVE 索引恢复，
 当前树不再承载多轮过程副本。
+
+</details>

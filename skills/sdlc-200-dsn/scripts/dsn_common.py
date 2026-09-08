@@ -75,6 +75,10 @@ from domain_catalog import (  # noqa: E402
     DOMAIN_CATALOG,
     DOMAIN_ORDER,
     DomainContractError,
+    _invalid as _domain_invalid,
+    _object_rows as _domain_object_rows,
+    _refs as _domain_refs,
+    _text as _domain_text,
     aggregate_composite_disposition,
     normalize_composite_rows,
     normalize_domain_rows,
@@ -254,6 +258,10 @@ SPEC_CONTRACT_IDS = {
 class DsnRuntimeError(ValueError):
     code = "DSN_RUNTIME_ERROR"
 
+    def __init__(self, message: str, *, details=None):
+        super().__init__(message)
+        self.details = details
+
 
 @dataclass(frozen=True)
 class CheckOutcome:
@@ -343,27 +351,77 @@ def _text(value: Any, name: str, *, allow_na: bool = False) -> str:
 
 
 def _rows(value: Any, name: str) -> list[Mapping[str, Any]]:
-    if value is None:
-        return []
-    if not isinstance(value, list) or any(not isinstance(item, Mapping) for item in value):
-        raise DsnRuntimeError(f"{name} must be an array of objects")
-    return [dict(item) for item in value]
+    try:
+        return [dict(item) for item in _domain_object_rows(value, name)]
+    except DomainContractError as exc:
+        raise DsnRuntimeError(str(exc), details=exc.details) from exc
 
 
 def _refs(value: Any, name: str, *, required: bool = False) -> tuple[str, ...]:
-    if value is None:
-        values: list[str] = []
-    elif isinstance(value, str):
-        values = [item.strip() for item in value.split(",") if item.strip()]
-    elif isinstance(value, Sequence) and not isinstance(value, (bytes, bytearray)):
-        values = [str(item).strip() for item in value if str(item).strip()]
-    else:
-        raise DsnRuntimeError(f"{name} must be a reference array")
-    if required and not values:
-        raise DsnRuntimeError(f"{name} must not be empty")
-    if len(values) != len(set(values)):
-        raise DsnRuntimeError(f"{name} contains duplicate references")
-    return tuple(values)
+    try:
+        return _domain_refs(value, name, required=required, tokens=False)
+    except DomainContractError as exc:
+        raise DsnRuntimeError(str(exc), details=exc.details) from exc
+
+
+def _validate_nested_input(design: Mapping[str, Any]) -> None:
+    """Validate structures consumed by analyzer/renderer, not business completeness.
+
+    No schema registry, inference of evidence, mutation of candidate digests, or
+    natural-language keyword policy. Domain rules remain owned by domain_catalog.
+    """
+    try:
+        for name in ("change_type",):
+            value = design.get(name)
+            if value is not None and not isinstance(value, str):
+                _domain_invalid(f"inputs.design.{name}", "string or null", value)
+        reference_fields = {
+            "changes": ("baseline_references",),
+            "decisions": ("requirement_references",),
+            "traceability": ("source_references", "design_references", "decision_references", "vfy_references"),
+            "evidence": ("supports_references",),
+        }
+        for collection in ("changes", "decisions", "traceability", "evidence",
+                           "exceptions", "lifecycle_applicability"):
+            path = f"inputs.design.{collection}"
+            for index, row in enumerate(_domain_object_rows(design.get(collection), path)):
+                row_path = f"{path}[{index}]"
+                for name in reference_fields.get(collection, ()):
+                    _domain_refs(row.get(name), row_path + "." + name,
+                                 required=collection == "traceability" and name == "source_references",
+                                 tokens=False)
+                enum_field = {"changes": "change", "exceptions": "state",
+                              "lifecycle_applicability": "disposition"}.get(collection)
+                if enum_field and row.get(enum_field) is not None and not isinstance(row[enum_field], str):
+                    _domain_invalid(row_path + "." + enum_field, "string or null", row[enum_field])
+                if collection in {"changes", "decisions"}:
+                    domains = row.get("affected_domains", [])
+                    if not isinstance(domains, (list, tuple)):
+                        _domain_invalid(row_path + ".affected_domains", "array of Domain code strings", domains)
+                    for offset, code in enumerate(domains):
+                        if not isinstance(code, str):
+                            _domain_invalid(f"{row_path}.affected_domains[{offset}]", "Domain code string", code)
+    except DomainContractError as exc:
+        raise DsnRuntimeError(str(exc), details=exc.details) from exc
+
+
+def _validate_confirmation_shape(confirmation: Any) -> None:
+    if confirmation is None:
+        return
+    path = "inputs.final_confirmation"
+    try:
+        if not isinstance(confirmation, Mapping):
+            _domain_invalid(path, "object or null", confirmation)
+        mode = confirmation.get("mode")
+        if not isinstance(mode, str) or mode not in {"human", "delegated"}:
+            _domain_invalid(path + ".mode", "human or delegated", mode, problem="invalid_enum")
+        # A stale/incomplete confirmation still remains pending under the existing
+        # authority policy; only wrongly typed supplied cells are structural errors.
+        for name in ("subject_digest", "confirmer", "role", "authority_reference", "confirmed_at"):
+            if confirmation.get(name) is not None and not isinstance(confirmation[name], str):
+                _domain_invalid(path + "." + name, "string or null", confirmation[name])
+    except DomainContractError as exc:
+        raise DsnRuntimeError(str(exc), details=exc.details) from exc
 
 
 def _exact_base(reference: str, phase: str | None = None) -> tuple[str, int]:

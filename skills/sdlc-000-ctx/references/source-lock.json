@@ -34,7 +34,7 @@
     {
       "contract_id": "sdlc-ai-spec/runtime/phase/v1",
       "contract_version": "1",
-      "sha256": "0ef203f6de99f055cbf2e9c06f927ea827be31ad3b700d2c2760e4cc42c76eb3"
+      "sha256": "81220af4af148ee43d7a6bce657b5f13636e2b4946e8dbf17db463657d9b07a4"
     },
     {
       "contract_id": "sdlc-ai-spec/runtime/skill-execution/v1",

@@ -1,0 +1,64 @@
+{
+  "inputs": {
+    "design": {
+      "title": "README 变更的设计输入示例",
+      "summary": "表达一个尚未确认完成的局部设计，不伪造完整流程通过。",
+      "boundary": "仅修改已授权仓库的 README 文本",
+      "profile": "full",
+      "change_type": "incremental",
+      "baseline_references": ["${REQ_REFERENCE}#R-001"],
+      "target_state_summary": "README 具有可核对的局部变更",
+      "impact_summary": "没有新服务、接口或运行效果",
+      "changes": [{
+        "id": "CHG-001",
+        "object_or_boundary": "README.md",
+        "change": "modify",
+        "baseline_references": ["${REQ_REFERENCE}#R-001"],
+        "baseline_state": "以准确 REQ 所描述的基线为准",
+        "target_state": "README 说明完成局部更新",
+        "affected_domains": ["DOM-210"]
+      }],
+      "traceability": [{
+        "source_references": ["${REQ_REFERENCE}#R-001", "${REQ_REFERENCE}#AC-001"],
+        "design_references": ["CHG-001"],
+        "decision_references": [],
+        "vfy_references": ["VFP-210-001"]
+      }],
+      "decisions": [],
+      "decision_none_reason": "本例暂不涉及新的设计决策",
+      "domains": {
+        "DOM-210": {
+          "disposition": "required",
+          "completion": "in_progress",
+          "responsible_role": "Design Authority",
+          "basis_references": ["${REQ_REFERENCE}#R-001"],
+          "reason": "还需完成其余适用性判断和验证策略",
+          "design_result_markdown": "## 设计结果 Design Result\n\n复用当前结构，仅调整 README；不引入运行时依赖。",
+          "constraints_impacts": [{
+            "content": "只允许本次已授权的 README 变更",
+            "reference": "${REQ_REFERENCE}#R-001"
+          }],
+          "vfy_points": [{
+            "id": "VFP-210-001",
+            "references": ["${REQ_REFERENCE}#AC-001"],
+            "verification_object": "README.md",
+            "observable_result": "变更后的文本与已确认需求一致",
+            "expected_evidence": "变更 diff 与准确源码摘要"
+          }],
+          "evidence_references": [{
+            "reference": "${REQ_REFERENCE}",
+            "supports": ["CHG-001"],
+            "purpose": "以已有 REQ 为边界依据；Verify the stated scope without inventing facts."
+          }]
+        }
+      },
+      "simplicity_rationale": "局部文字更新，无需扩大实现范围",
+      "lifecycle_applicability": [
+        {"phase": "PLN", "disposition": "pending", "basis": "Pending — OPI-001"},
+        {"phase": "IMP", "disposition": "pending", "basis": "Pending — OPI-001"},
+        {"phase": "VFY", "disposition": "required", "basis": "保留真实验证义务"},
+        {"phase": "RLS", "disposition": "pending", "basis": "Pending — OPI-001"}
+      ]
+    }
+  }
+}

@@ -28,6 +28,11 @@ from pln_runtime import PlnError, PlnHandler
 INTERFACE_PATH = Path(__file__).resolve().parents[1] / "references/interface.json"
 
 
+from packages.sdlc_runtime.envelopes import (
+    EnvelopeValidationError, cli_payload_fields, error_result,
+)
+
+
 def _meta(command, display):
     return {"contract":"sdlc-ai-spec/skill-command-result/v1","ok":True,"state":"meta","command":command.command,"display":display,"resolved":command.to_dict(),"effects":[]}
 
@@ -44,7 +49,12 @@ def run_cli(arguments: Sequence[str], payload: Mapping[str, Any] | None = None):
     if not root.is_dir(): raise PlnError(f"project_root is not an existing directory: {root}")
     operation = command.command
     if operation == "auto": operation = "check" if command.artifact_reference else "create"
-    inputs = dict((payload or {}).get("inputs") or {})
+    try:
+        inputs, confirmations = cli_payload_fields(payload)
+    except EnvelopeValidationError as exc:
+        return error_result(operation=operation, status="failed", code=exc.code, message=str(exc),
+                            next_action_code="CORRECT_INPUT_SHAPE", next_action_message="依据随包契约整理输入后重试",
+                            requires_user=False, details=exc.details), command.output
     if command.input_references:
         scope=[]; controls=[]
         for item in command.input_references:
@@ -54,7 +64,7 @@ def run_cli(arguments: Sequence[str], payload: Mapping[str, Any] | None = None):
     invocation={
         "contract":"sdlc-ai-spec/runtime-invocation/v1","operation":operation,
         "project_root":str(root),"artifact_reference":command.artifact_reference,
-        "inputs":inputs,"confirmations":list((payload or {}).get("confirmations") or []),
+        "inputs":inputs,"confirmations":confirmations,
         "options":{"dry_run":command.dry_run,"write_policy":command.write_policy},
     }
     result=execute_phase(PlnHandler(root),invocation)

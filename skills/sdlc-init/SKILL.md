@@ -1,14 +1,14 @@
 ---
-name: sdlc-100-req
-description: 把原始需求、范围、来源和验收转为结构化变更；用于新需求或已有需求的明确修订。
+name: sdlc-init
+description: 初始化、诊断或复制本地SDLC工作区；已有库保留数据，独立副本重新绑定身份与权限。
 disable-model-invocation: true
 ---
 
-# SDLC 100 · 需求（REQ）
+# SDLC 初始化（INIT）
 
 ## 适用范围
 
-把原始需求、范围、来源和验收转为结构化变更；用于新需求或已有需求的明确修订。
+初始化、诊断或复制本地SDLC工作区；已有库保留数据，独立副本重新绑定身份与权限。
 裸调用按当前明确请求与准确Runtime状态工作；整体需求已获授权时，由当前Agent衔接已授权阶段。
 help/version/commands可通过CLI帮助、版本与本Skill命令表读取，不创建业务事实。
 
@@ -25,13 +25,14 @@ help/version/commands可通过CLI帮助、版本与本Skill命令表读取，不
 
 | 子命令 | 职责 | 可能写入 |
 |---|---|---|
-| `change.create` | 保存原始请求并建立需求 | 是，须满足本阶段授权 |
-| `change.get` | 读取当前需求内容 | 否 |
-| `change.revise` | 建立前序内容修订草稿 | 是，须满足本阶段授权 |
-| `phase.prepare` | 读取准确内容和本阶段Schema | 否 |
-| `phase.submit` | 按generation提交结构化批次 | 是，须满足本阶段授权 |
-| `asset.add` | 关联真实原始附件 | 是，须满足本阶段授权 |
-| `phase.complete` | 校验并完成当前阶段 | 是，须满足本阶段授权 |
+| `workspace.discover` | 列出Git登记的可用来源 | 否 |
+| `workspace.init` | 幂等建立本地工作区 | 是，须满足本阶段授权 |
+| `workspace.inspect` | 只读检查库和资源绑定 | 否 |
+| `workspace.clone` | 复制到明确独立产品目录 | 是，须满足本阶段授权 |
+| `workspace.bind` | 绑定本机资源路径 | 是，须满足本阶段授权 |
+| `workspace.rebind` | 重绑定手工复制或移动的工作区 | 是，须满足本阶段授权 |
+| `workspace.export` | 导出一个需求的完整离线归档 | 是，须满足本阶段授权 |
+| `workspace.collect` | 逻辑交回一个需求并保留冲突 | 是，须满足本阶段授权 |
 
 ## 参数
 
@@ -51,19 +52,19 @@ help/version/commands可通过CLI帮助、版本与本Skill命令表读取，不
 
 ## 执行流程
 
-1. 先保留原始用户提示词和验收意图，再检查准确CTX和已有change。多个候选不能按最新时间猜选。
+1. 确认产品目录、现存.sdlc及Python/SQLite环境；先workspace.inspect，缺Store才进入初始化路径。
 
-2. 新需求change.create固定slug、目标、范围、original_text和当前用户授权；local交付target为.sdlc/exports/<name>。保存change_id/run_id/source_id。
+2. 已有Git worktree时workspace.discover只读列出登记来源；用户已授权默认复制且来源唯一时workspace.clone，否则明确选择复制来源或新建。
 
-3. phase.prepare后使用client_key批量创建requirements/criteria，分别建立来源与覆盖关系；必要附件asset.add使用产品root内相对路径并保留名称/顺序。
+3. 新建使用workspace.init；手工复制导致root漂移时说明来源并workspace.rebind。复制保留历史，外部resource需workspace.bind，来源授权不激活。
 
-4. 已有需求修订先change.revise REQ，再根据当前输入更新。验收应可观察且覆盖需求，不先编造候选代码或后补阶段答案。
+4. 回读workspace.inspect并保存project/workspace绑定。init完成不产生业务需求，不把初始化或环境准备当作IMP/VFY结果。
 
-5. phase.complete带准确generation，通过后保存下一草稿revision_id。缺必需业务决定时只问最小问题，不请用户修UUID、JSON或SQL。
+5. 移交用workspace.export选择change_id；workspace.collect只导入事实与证据，不合并源码。冲突保留原包和双方head，交由已授权的内容修订处理。
 
 ## 输出与完成条件
 
-原始请求、必要需求/验收和关系已提交，目标与权限明确；总授权下继续DSN。
+已有有效workspace、可用资源与明确下一入口。全链已授权时由当前Agent继续读取CTX。
 默认用简短中文说明实际写入、验证、交付或阻塞。返回JSON时保持原字段，不混入进度叙述。
 失败保留原回执与diagnostic_path；先识别责任层，再在已授权范围内修复/复验。
 

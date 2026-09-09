@@ -1,5 +1,5 @@
 policy:
   allow_implicit_invocation: false
 interface:
-  display_name: "SDLC 300 · 交付计划（PLN）"
-  short_description: "把完整 REQ/DSN 范围转为稳定 Work Item、依赖与生命周期绑定；不执行实施、验证或发布。"
+  display_name: "SDLC 300 · 计划（PLN）"
+  short_description: "把设计拆为可执行任务、验证和交付安排；明确前驱、条件时点及资源权限，避免循环等待。"

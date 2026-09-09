@@ -1,0 +1,46 @@
+{
+  "api_version": "2",
+  "skill": "sdlc-init",
+  "commands": [
+    {
+      "name": "workspace.discover",
+      "description": "列出Git登记的可用来源",
+      "writes": false
+    },
+    {
+      "name": "workspace.init",
+      "description": "幂等建立本地工作区",
+      "writes": true
+    },
+    {
+      "name": "workspace.inspect",
+      "description": "只读检查库和资源绑定",
+      "writes": false
+    },
+    {
+      "name": "workspace.clone",
+      "description": "复制到明确独立产品目录",
+      "writes": true
+    },
+    {
+      "name": "workspace.bind",
+      "description": "绑定本机资源路径",
+      "writes": true
+    },
+    {
+      "name": "workspace.rebind",
+      "description": "重绑定手工复制或移动的工作区",
+      "writes": true
+    },
+    {
+      "name": "workspace.export",
+      "description": "导出一个需求的完整离线归档",
+      "writes": true
+    },
+    {
+      "name": "workspace.collect",
+      "description": "逻辑交回一个需求并保留冲突",
+      "writes": true
+    }
+  ]
+}

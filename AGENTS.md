@@ -1,162 +1,41 @@
 # Repository Agent Instructions
 
-## 1. 目标
+## 目标与来源
 
-本仓库把稳定的 SDLC 领域规范转化为可独立运行、可验证、可分发的
-Cursor、Claude Code 和 Codex Plugin / Skills。
+本仓库实现可独立安装的SDLC v2 Plugin：Python标准库、SQLite结构化事实及九个Skill入口。
+当前规范在docs/spec，公开协议在packages/sdlc/protocol.py与domain.py，机器投影为contracts/v2.json。
+批准设计和唯一工作进度在docs/work-items/sdlc-v2；历史版本以Git保存，不作为运行时依赖。
+安装后的Skill只读取skills/_shared及随包私有资源，通过scripts/sdlc.py调用共享Runtime。
+不得读取开发docs/AGENTS/Handoff、直接SQL或重建私有Store。
 
-本文件约束开发行为，不是领域 Contract，也不是安装后的运行时组件。
+## 工作区、授权与阶段
 
-## 2. 来源分层
+使用用户指定的仓库、分支与工作树，每次写入前核对root、branch、HEAD和status。
+保留未知staged/unstaged/untracked数据；范围不明确时先辨别归属。
+Git作者用当前有效配置；commit/push/远端写入按当前工作包授权，不自动merge/tag/release。
+本次v2工作包已明确授权持续本地实现、验证、修复与commit，默认不push，详见V2-WORK-PACKAGE.md。
+一般开发工作仍按明确授权的design/implement/evaluate/review/finalize范围执行。
+业务Skill允许用户总授权下由当前Agent连续完成六阶段，单阶段授权则在对应完成条件停止。
+不得用旧开发阶段隔离规则阻断已授权的业务闭环；不得借auto扩充权限或伪造human身份。
 
-| Concern | Source of Truth |
-|---|---|
-| 领域语义与兼容目标 | 当前稳定的 `docs/v1.x/**` |
-| Plugin 工程规则 | `docs/plugin-development/DEVELOPMENT.md` |
-| Skill 阶段流程 | `docs/plugin-development/SKILL-DEVELOPMENT-WORKFLOW.md` |
-| 当前状态与唯一下一工作包 | `docs/plugin-development/HANDOFF.md` |
-| 单个 Skill 的设计与评测 | 对应 Work Item |
-| 安装后共享运行合约 | `skills/_shared/**` |
-| 确定性共享能力 | `packages/**` 与运行时 `scripts/**` |
+## 运行模型
 
-`docs/v1.x/**` 是设计、构建、审查和追溯来源。正式 Skill 运行时不得重新读取、
-解释或编译这些文档。安装后的执行 Contract 必须随 Plugin 打包在 `skills/**`、
-`packages/**`、`scripts/**` 或平台组件中。
+来源/覆盖、任务前驱、条件时点和资源冲突分别建模。Run先于正式IMP输出建立。
+草稿generation并发保护、已提交快照不可变、同键同请求幂等，unknown先回查。
+任务完成不等于Check通过；addressed不等于resolved；准备包不等于交付完成。
+真实验证来自实际工具/断言，Agent审阅独立标注，结果按当前输入/环境/定义/时效判断适用性。
+.sdlc默认不入VCS；附件为assets/ab/cd/完整SHA256。原始日志、补丁和资产必须归档。
+工作区复制使用Backup API，逻辑交回不覆盖DB或产品代码，来源权限与执行记录不成为本机能力。
 
-## 3. 仓库与 Git
+## 共享与工程
 
-- 使用用户当前明确指定的仓库、分支和工作树，不在规范中绑定固定远端名称。
-- 每次写入前确认 Git 根目录、当前分支、HEAD 和 `git status --short`。
-- 保留未知的 staged、unstaged 和 untracked 内容；工作树不干净且范围不明确时停止。
-- 不自动 push、merge、rebase、tag、release 或修改远端资源。
-- Commit、push 和其他外部写入只在当前工作包明确授权时执行。
-- 不依赖固定作者身份；使用当前仓库或当前用户明确指定的 Git 身份。
+packages/sdlc为唯一Runtime，scripts/sdlc.py为唯一业务CLI，tools为构建/验证工具。
+skills/_shared没有SKILL.md；业务私有资源不跨读。Skill保持七节结构及与真实CLI一致的命令/参数表。
+开发测试位于tests/v2，执行证据存仓库外；不伪造原生客户端认证、产品链或相同版本通过证明。
+不自动安装依赖或修改宿主设置，不写入真实凭证。当前macOS命令收集器的限制须明确说明。
 
-## 4. 阶段隔离
+## 完成检查
 
-每个正式 Skill 按以下阶段推进：
-
-```text
-design → approval → implement → evaluate → adapt → review → finalize
-```
-
-一次会话只处理一个阶段。不得自动进入下一阶段。
-
-- `design`：只维护 Design、Eval Plan 和 Handoff，不创建正式 `SKILL.md`。
-- `approval`：只记录 Maintainer 明确决定。
-- `implement`：只实现已批准的最小 Runtime。
-- `evaluate`：执行固定案例并保存证据。
-- `adapt`：一次只处理一个 Client / Surface。
-- `review`：fresh context，默认只报告问题。
-- `finalize`：只在明确最终接受后收口，不自动发布。
-
-## 5. Skill 命名与语言
-
-正式 Phase Skill 使用：
-
-```text
-sdlc-<三位阶段编号>-<英文缩写>
-```
-
-例如：
-
-```text
-sdlc-000-ctx
-sdlc-100-req
-sdlc-200-dsn
-sdlc-300-pln
-sdlc-400-imp
-sdlc-500-vfy
-sdlc-600-rls
-```
-
-非 Phase Utility / Support Skill 使用稳定 `sdlc-<name>`，当前包括 `sdlc-status` 与 `sdlc-github`；
-它们不占用 Phase 编号、不判断 Phase Gate，外部写入仍需独立授权。
-
-规则：
-
-- 目录名和 Front Matter `name` 必须一致并使用英文 lowercase kebab-case。
-- Front Matter `description` 和 Skill 正文默认使用中文。
-- 文件名、字段、ID、Reference、枚举、命令和代码符号保持规范定义的英文形式。
-
-## 6. Runtime Independence
-
-正式 Skill 的最小部署边界是整个 Plugin，不是孤立的 Skill 目录。
-
-运行时必须满足：
-
-- 不读取 `docs/v1.x/**` 或 `docs/plugin-development/**`；
-- 不依赖开发仓库中的 `AGENTS.md`、`CLAUDE.md` 或 Handoff；
-- 可以使用 `skills/_shared/**` 的共享运行合约；
-- 可以使用 `packages/**` 和运行时 `scripts/**` 的共享确定性能力；
-- 不依赖兄弟业务 Skill；
-- 删除 `docs/**` 后，受支持行为仍可执行；
-- 不联网、不自动安装依赖、不静默降级；唯一联网例外是显式 `sdlc-github` 操作经其固定官方 MCP Transport，且不授权其他 Phase / Utility Skill。
-
-设计期 Source 与运行时 Contract 使用单向关系：
-
-```text
-docs/v1.x → Design / Build / Review → bundled runtime
-```
-
-不得在运行时反向修改或重新解释设计期 Source。
-
-## 7. 共享与私有资源
-
-- 多个业务 Skill 共同遵守的运行合约放在 `skills/_shared/**`。
-- `skills/_shared/**` 不得包含 `SKILL.md`，不能成为可调用 Skill。
-- 单个 Skill 私有的运行规则、模板和脚本放在自己的目录。
-- 开发期 Eval / Oracle / Fixture 统一放在 `tests/evals/**`、`tests/skill_*/**` 或 `tests/skills/**`；执行结果写入仓库外；仅保留紧凑交接及可恢复历史索引。
-- Skill 内 `evals/` 是按需的开发资源，不是必需空目录；安装包不得依赖这些 Eval 才能运行。
-- 只有共享的确定性能力放在 `packages/**` 或根级运行时 `scripts/**`。
-- 构建期工具放在 `tools/**`；构建期工具可以读取 `docs/**`，运行时代码不可以。
-- 业务 Skill 不得跨目录读取其他业务 Skill 的私有资源。
-
-## 8. ArtifactStore 边界
-
-当前共享持久化能力位于：
-
-```text
-packages/sdlc_artifact_store/
-scripts/sdlc_artifact_store.py
-```
-
-所有 Artifact Skill 必须：
-
-- 通过共享 API / Runtime Adapter 使用 Store；
-- 不直接执行 SQL；
-- 不创建私有 Schema 或 Store；
-- 不复制 ArtifactStore；
-- 将领域 Builder / Validator 与 Store 持久化分离；
-- `check` 使用严格只读入口；
-- `create / revise` 仅在明确写入授权下使用读写入口。
-
-## 9. 安全与授权
-
-默认禁止：
-
-- 未授权外部写入；
-- 自动安装依赖；
-- 修改用户级或系统级配置；
-- 破坏性 Git 操作；
-- 写入 Secret、Token、Cookie 或真实凭证；
-- 自动调用其他 Skill / Plugin；
-- 把失败、未知或部分完成描述为成功。
-
-正式 Skill 必须采用 Exclusive Skill Execution Contract，并通过 Eval 验证。
-该契约限制模型行为，不代表不可绕过的硬隔离。
-
-## 10. 完成检查
-
-每个工作包结束前必须：
-
-1. 执行阶段规定的测试；
-2. 执行 `git diff --check`；
-3. 检查 Diff 仅包含允许路径；
-4. 更新 Handoff，只登记一个下一工作包；
-5. 明确已验证、未验证和已知限制；
-6. 达到停止条件后结束。
-
-## 维护与统一格式
-
-正式 Skill 遵守 `docs/plugin-development/SKILL-STYLE.md` 的七节结构、命令/参数表和精简约束，运行 `tools/validate_skill_style.py`。测试统一见 `docs/TESTING.md`，长期日志和历史 Goal 不进入当前源码树。原生 Client 独立认证按 Maintainer 于 2026-09-06 的决定暂停作为门禁，用户手动反馈不伪造正式证书。
+运行适用测试及python3 -B tools/validate_skill_style.py，完成git diff --check和改动范围检查。
+更新唯一PROGRESS与相应紧凑证据索引，区分已验证、未验证和真实边界。
+完整任务授权持续推进，遇到真正不能自主解决的范围/环境/权限问题才停止。

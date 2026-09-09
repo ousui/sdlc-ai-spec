@@ -1,9 +1,10 @@
-# Client 使用反馈与兼容范围
+# 当前兼容与证据边界
 
-当前正式库存为九个 Skill：七个 Phase、`sdlc-status` 和 `sdlc-github`。历史八 Skill × 五载体的原生认证台账已退出门禁；不重复跑整套留痕任务，也不把手动反馈伪造成自动认证。`sdlc-github` 已有真实 Hosted MCP 定向验证与可选宿主反馈，仍按具体版本/证据表述。
+三个平台清单引用同一份skills与Python/SQLite Runtime，无MCP或宿主专用业务副本。
+目录和配置文件存在不是原生发现/调用认证。当前Codex任务将显式读安装版SKILL.md并走公共CLI，
+其真实产品链证据按实验室记录；其他原生客户端认证没有被本次本地fixture证明。
 
-三个平台共用 `skills/`，各自的薄 Manifest 和显式调用策略保留。安装行为、模型输出和宿主权限仍可能随版本变化；实际问题以具体 Skill、版本、输入和错误报告处理。Python Runtime/安装副本测试证明相应程序边界，不证明全部宿主行为。
-
-旧 40 单元台账及原生日志已经移入历史索引，见 [归档](../maintenance/ARCHIVE.md)。它们不再阻塞日常 quick/full/e2e。正式宣称覆盖某一 Client 仍须依据实际结果，不写无证据的 VERIFIED。
-
-工作仓库 `ousui/sdlc-ai-spec` 与 Manifest 分发地址 `goedgecloud/sdlc-ai-spec` 的差异保留为 Maintainer 的发布决定；本次不变更地址、不发布 Marketplace。
+内容/持久化使用Python3.11+和SQLite3.37+；当前实际工具收集为macOS Seatbelt。
+需posix_spawn或其他宿主的工具必须独立适配/预检，不能静默关闭沙箱。
+本机已实际检查Python3.11、JDK21 FORK launcher、Go1.23及Node24。
+Git/deploy交付adapter、Rust运行对照、MySQL和Spec Kit实测不在当前完成声明中。

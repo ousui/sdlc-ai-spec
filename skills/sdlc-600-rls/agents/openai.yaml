@@ -1,5 +1,5 @@
 policy:
   allow_implicit_invocation: false
 interface:
-  display_name: "SDLC 600 · 发版（RLS）"
-  short_description: "从准确 frozen VFY 建立发版合约，经独立效果授权执行本地 Sandbox，并完成目标侧确认；不接入生产发布。"
+  display_name: "SDLC 600 · 交付（RLS）"
+  short_description: "将已验证产品交付到预先约定的本地包并独立回读，保留完整归档；不默认发布或部署。"

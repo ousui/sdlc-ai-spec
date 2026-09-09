@@ -1,6 +1,6 @@
 ---
 name: sdlc-200-dsn
-description: 创建、修订和检查设计 DSN Artifact Set；自动分析 REQ、项目基线和 16 个设计领域，仅在真实设计决策时请求用户选择。
+description: 根据需求和现有代码形成适用领域设计与真实验证方法；用于方案设计或VFY返回的设计修订。
 disable-model-invocation: true
 ---
 
@@ -8,84 +8,65 @@ disable-model-invocation: true
 
 ## 适用范围
 
-从完整 REQ Scope 构造 DSN Artifact Set，承接全部设计义务；16 个 Domain 是私有契约，不是独立 Skill。 内部 Evidence ID、Digest、Manifest 与 Invocation 由 Skill 整理，用户无需手填内部 JSON。
-
-```text
-/sdlc-200-dsn
-/sdlc-200-dsn create -i REQ-20260901090000-01@1
-/sdlc-200-dsn create --input=REQ-20260901090000-01@1 --input=REQ-20260901090000-02@1
-```
+根据需求和现有代码形成适用领域设计与真实验证方法；用于方案设计或VFY返回的设计修订。
+裸调用按当前明确请求与准确Runtime状态工作；整体需求已获授权时，由当前Agent衔接已授权阶段。
+help/version/commands可通过CLI帮助、版本与本Skill命令表读取，不创建业务事实。
 
 ## 约定与边界
 
-从显式调用到结束保持 Exclusive Skill Execution，不调用兄弟 Skill，不传递授权。只使用本 Skill 与共享 Runtime/ArtifactStore；不直接 SQL、不复制 Store Schema、不使用文件或数据库 fallback，不读取开发期文档、测试或 Handoff。
-
-事实区分 observed / referenced / confirmed；缺口进入 Open Items，不猜测。Authority 使用准确数字 Revision，不使用 branch/tag/PR/latest/current 或标题相似度。`decision_policy=user` 默认由用户决定多解业务问题；model/experiment 需明确授权，实验还需范围、指标、成本和停止条件。
-
-`write_policy` 不替代业务批准、Exception、Final Confirmation 或独立效果授权。check/inspect 不修复、不初始化、不创建旁车。Git、远端、安装、项目外写入不属于本 Skill 的默认许可；真实 Secret 不进入 Artifact、日志或输出。
-
-标准 auto 写入只限当前项目的 ArtifactStore；本阶段不自动执行后续阶段。
+首次使用本插件先读[共享执行约定](../_shared/runtime.md)，后续仅在需要时回查。
+不读取开发docs、测试、Handoff或兄弟私有资源，不执行SQL，不手工修改.sdlc数据库。
+保留当前用户的范围和总授权；缺少必要决定或环境时报告具体缺口，不伪造human、pass或交付成功。
+本Skill只处理本阶段。单阶段授权完成即停止；连续授权由当前Agent读取下一入口后继续。
 
 ## 子命令
 
-以 [interface.json](references/interface.json) 为命令 Authority；元命令 help/version/commands/examples 不扫描项目、不读取业务 stdin、不打开 Store。
+[interface.json](references/interface.json)列出本入口使用的真实公开命令；字段以phase.prepare或--contract为准。
 
 | 子命令 | 职责 | 可能写入 |
 |---|---|---|
-| `auto` | 根据唯一工作区、REQ Scope、已有 DSN 和请求意图自动选择 create、revise 或 check。 | 是，须满足本阶段授权 |
-| `create` | 基于一个或多个准确 frozen REQ 创建 DSN Artifact Set。 | 是，须满足本阶段授权 |
-| `revise` | 修订准确 DSN Revision；open 原地修订，frozen 创建新 Revision。 | 是，须满足本阶段授权 |
-| `check` | 严格只读检查准确 DSN Revision 和完整 Member closure。 | 否 |
-| `help` | 显示用途、重复输入参数、默认行为和写入边界。 | 否 |
-| `version` | 显示 Skill Version 与 Interface Contract。 | 否 |
-| `commands` | 列出本 Skill 支持的命令。 | 否 |
-| `examples` | 显示常用调用示例。 | 否 |
+| `phase.prepare` | 读取准确内容和本阶段Schema | 否 |
+| `change.revise` | 建立前序内容修订草稿 | 是，须满足本阶段授权 |
+| `phase.submit` | 按generation提交结构化批次 | 是，须满足本阶段授权 |
+| `asset.add` | 关联真实原始附件 | 是，须满足本阶段授权 |
+| `phase.complete` | 校验并完成当前阶段 | 是，须满足本阶段授权 |
 
 ## 参数
 
-先按共享 Parser 归一化公共参数，再由本 Skill 注册扩展。公共参数描述不意味着旧 JSON Runtime 可直接接受所有 CLI 开关：CTX/REQ 先构造标准 Invocation，再通过 stdin 调用其正式入口；其他阶段使用本 Skill 的 CLI。
+下列是唯一公共CLI的参数；业务ID和payload由Agent使用Runtime回执组织，用户无需手填内部JSON。
 
 | 参数 | 短参数 | 语义／默认值 |
 |---|---|---|
-| `--command` | `-c` | `auto`；也可直接写子命令，兼容 `--operation/-o` |
-| `--project-root` | `-p` | 宿主提供的唯一当前工作区；多个项目时选择，不猜测 |
-| `--reference` | `-r` | 准确 `TYPE-ID@数字Revision`；修改/检查时按命令要求提供 |
-| `--decision-policy` | `-d` | `user`（默认）/ `model` / `experiment`；后两者需要明确授权 |
-| `--write-policy` | `-w` | `auto`（默认）/ `confirm` / `deny`；仅约束本阶段允许的标准写入 |
-| `--dry-run` | `-n` | 默认 `false`；不生成权威完成结论，不替代 check |
-| `--output` | `-f` | `summary`（默认）/ `json` / `debug` |
-| `--input` | `-i` | 可重复；完整准确 REQ Scope 及允许的 Control Input |
+| `--root` | `-r` | 明确的产品目录；默认`.`，不能误用插件目录 |
+| `--request` | `-i` | UTF-8请求文件或默认`-`从stdin读取 |
+| `--contract` | — | 输出当前机器契约，业务只读 |
+| `--version` | `-V` | 输出Runtime/API/Schema版本，不打开Store |
+| `--help` | `-h` | 输出CLI用法，不执行阶段 |
 
-`--` 后为请求正文，不是新增开关。help 支持 `-h`，version 支持 `-V`；其他兼容别名以共享 parser 为准。多个工作区、Revision 或操作均不猜选。
+```text
+<python> -B <plugin-root>/scripts/sdlc.py --root <product-root> --request -
+```
 
 ## 执行流程
 
-1. 解析唯一 Project Root、准确 DSN Reference 和重复 `--input/-i`；
-2. 无显式输入时，通过 Lifecycle Query 发现唯一可用 REQ；多个候选由用户选择；
-3. 只读解析 frozen CTX、REQ、VFY Return 或 RLS Issue Authority；
-4. 读取完成设计所需的最小项目基线，将可证明事实登记为 observed / referenced；
-5. 仅在设计边界、共享或拆分、关键方案、风险接受、Waiver、法律适用性或 Final Confirmation 无唯一答案时请求用户决定；
-6. 按 `references/200-dsn-spec.md` 和 16 个 bundled Domain Contract 构造父 DSN Artifact Set；
-7. 通过 `scripts/runtime.py` 执行确定性 Builder、Domain Validator、Manifest 闭包、ArtifactStore 和 Gate；
-8. 输出简明设计摘要、Domain 状态、阻塞项和唯一下一动作。
+1. phase.prepare读准确需求、Context、附件和现有实现。按需读取共享design-domains.md，选择实际相关领域。
 
-一个 DSN Revision 包含：
+2. 保存design的decision/rationale/alternatives/detail，并用requirements关系表示覆盖；不补固定空域或只写笼统技术标签。
 
-- primary Canonical Markdown；
-- 每个 `required` Domain 的 `DOM-*` Member；
-- Supporting Members；
-- 完整 Manifest-Member closure。
+3. 为验收定义command Check、明确argv及断言，criteria逐项关联；input_paths覆盖实际输入依赖，不能直接复制Task写范围。
 
-16 个 Domain 是本 Skill 的私有 Contract，不是可单独调用的 Skill。`DOM-510` 在 DSN 存在时固定为 `required`。
+4. 另定义required convergence Check，executor=agent、method=inspection或analysis，覆盖整个需求。定义required release_readback Check，command argv=["@runtime","delivery.readback"]且input_paths留空。
+
+5. 真实缺少业务方案时形成最小决定；已具备授权的实现细节由Agent判断。phase.complete成功后保存PLN新草稿。
 
 ## 输出与完成条件
 
-`summary` 默认只呈现事实、准确 Artifact、Gate、已执行写入、阻塞和下一动作。`json` 只返回正式 Runtime 的结构化结果，不添加进度文本、不改写字段或说明；调试信息不混入 JSON。`debug` 展示有界诊断，先脱敏。
-
-输出 DSN 摘要、Domain 状态、Gate、阻塞和唯一下一动作。REQ 缺失、冲突或不可实现时返回 REQ，不在设计中静默改变需求。DOM-510 固定 required；required Domain 必须具有 Member 和完整 Manifest closure。
+适用设计与需求覆盖、验收方法、收敛和交付回读Check齐备；总授权下继续PLN。
+默认用简短中文说明实际写入、验证、交付或阻塞。返回JSON时保持原字段，不混入进度叙述。
+失败保留原回执与diagnostic_path；先识别责任层，再在已授权范围内修复/复验。
 
 ## 资源索引
 
-- 先读 [运行契约](references/contract.md) 和 [命令定义](references/interface.json)。
-- 执行入口：[runtime](scripts/runtime.py)；共用参数：`scripts/sdlc_skill_interface.py` 与 [共享接口](../_shared/contracts/skill-interface.md)。
-- [独占执行约定](../_shared/contracts/skill-execution.md)；仅在处理相应业务对象时按契约读取 bundled references/assets，不整包加载。
+- [共享执行约定](../_shared/runtime.md)：绑定、权限、证据与恢复，首次使用时读取。
+- [本入口命令](references/interface.json)：真实命令与写入属性。
+- [适用设计领域](../_shared/design-domains.md)：选择领域时按需读取。

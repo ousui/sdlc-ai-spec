@@ -1,41 +1,19 @@
-# 测试与全流程验证
+# SDLC v2验证
 
-## 选择一个入口，不堆叠重复套件
-
-| Profile | 用途 | 实际执行 |
-|---|---|---|
-| quick | 每次小修改后的结构检查 | 八 Skill 接口/格式/锁、完整 test collection、IMP/VFY/RLS/Status 注册表可解析性；**不宣称行为 PASS** |
-| full | 合入前普通回归 | quick + 所有有效测试一次；按真实成功 ID 验证 Case 覆盖；VFY 缺 OS 沙箱时仅证明拒绝行为 |
-| strict | 可用 OS 沙箱的正式回归 | 同一全仓测试集合一次；VFY 主案例启用真实执行并验证命令 Evidence，不另跑一遍 80 Case |
-| e2e | 本次整理完成后的最终验收 | strict + 安装独立性与两个固定本地项目的 CTX→REQ→DSN→PLN→IMP→VFY→RLS；仅 Sandbox Target |
-
-源码必须是干净 exact SHA，输出目录必须在检出树之外：
-
-```bash
-SHA=$(git rev-parse HEAD)
-python3 -B tools/validate.py --profile quick --source-sha "$SHA" --json-out /tmp/sdlc-quick.json
-# 日常需要时选择 full，不必同时再跑各个 private/fixed 子集：
-python3 -B tools/validate.py --profile full --source-sha "$SHA" --json-out /tmp/sdlc-full.json
-# 最终在具备现成 OS 沙箱的宿主上选择 e2e，不再先重复 full/strict：
-python3 -B tools/validate.py --profile e2e --source-sha "$SHA" \
-  --project-cache /absolute/path/to/local-project-cache \
-  --json-out /tmp/sdlc-e2e.json
+```text
+<python3.11> -B tools/validate.py --profile full --evidence-dir /tmp/sdlc-v2-evidence
+<python3.11> -B tools/validate_skill_style.py
 ```
 
-项目缓存包含 `springgear/` 和 `gin-vue-admin/` 两个现有 Git 仓库，分别能解析固定 SHA `e855096ff19dcdb303dc4250ba19c30acd743ac7`、`a6882210a80bb27e3aa5dff0b4c21aa4afe8988a`。入口先验证可用性；不自动联网下载或安装依赖。测试只在一次性 clone 中工作，核对源/refs/权限/清理，不改用户项目，不生产发布。
+quick检查公共机器契约、九个Skill的格式/命令/写入属性和唯一v2源码边界。
+full同时运行tests/v2全部测试，包括真实工具收集、交付回读、工作区逻辑移交和独立安装副本CLI。
+实际子命令目前要求macOS Seatbelt；不能在不支持的宿主把blocked改成pass或删除这些反例。
+日志、退出码、源码HEAD与dirty状态存指定仓库外目录，失败保持原始记录。
 
-## 保留的质量底线
+contracts/golden-vectors.json固定语言无关的输入/错误样例；Python验证这些向量不等于Rust实现对照。
+安装包由tools/build_plugin.py创建，仅包含Runtime、契约、Skill及用户用法，不含docs/tests/开发工具。
+安装独立性测试实际走副本CLI到本地交付与归档；它是确定性fixture，不是真实产品Agent场景。
 
-授权、只读、准确引用、Secret 脱敏、Evidence 篡改、CAS/Claim、崩溃恢复、Scope 漂移等回归均保留。IMP 82、VFY 80、RLS 87、Status 14 的正式 Case ID 与 Expected 不缩水。完整测试收集拒绝重复 ID、缺引用和未执行结果；skip/expectedFailure/unexpectedSuccess 不计入 PASS。
-
-VFY 的独立正式 runner 与 coverage 工具仍可用于专项诊断，默认执行必须有 OS 沙箱。结构检查使用明确的 STRUCTURE_ONLY，不能当作 80/80 PASS。普通 full 与 strict 的差别是执行能力和 Evidence，不是删掉失败案例。
-
-## 已退役的冗余
-
-VFY 八个分类包装器重复调用同一批 80 个 harness，保留一个完整主表；旧 RLS provisional 87 Case/仿真 CLI 被真实 Store 87 Case 和现有边界测试替代。REQ helper 从 TestCase 分离，避免继承和别名导入重复收集。原生认证台账测试按本轮授权退役，长期库存/样式检查保留。
-
-旧 `run_rls_delivery_validation.py` / `run_vfy_delivery_validation.py` 是固定历史 Subject 的过程脚本，现明确报错并指向新入口，不伪装成功。`run_post_integration_validation.py` 是兼容薄入口，不递归重复验证。
-
-## 日志管理
-
-一次最终 e2e 只保存一份实际命令/时间/退出码/脱敏日志/准确 source 状态及外部项目 Evidence。失败尝试保留在该运行目录中，不改写原始结果；成功后打包放到仓库外的交付系统或提供给审查会话。源码库仅保留当前测试定义、必要 Fixture、紧凑 Handoff 与归档索引，不再每次提交几百份历史日志。没有记录的手动 Client 反馈不伪造自动认证，也不阻塞本轮 Runtime 验收。
+真实Agent前向评测必须实际读取安装入口并按阶段工作。三项目九场景证据单独存实验室，
+先需求再实现，不预制候选答案后补记录。最终按同一H_final与安装摘要重跑相应验证。
+客户端原生发现/调用、外部集成及发布认证只能根据实际证据登记。

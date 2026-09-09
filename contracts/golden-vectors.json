@@ -1,0 +1,182 @@
+{
+  "format": "sdlc-protocol-golden-2",
+  "scope": "Envelope and payload boundary only; not Rust execution or product acceptance",
+  "cases": [
+    {
+      "name": "minimal-init",
+      "request": {
+        "api_version": "2",
+        "command": "workspace.init",
+        "payload": {
+          "name": "项目"
+        }
+      },
+      "expected": {
+        "valid": true
+      }
+    },
+    {
+      "name": "read-without-store-binding",
+      "request": {
+        "api_version": "2",
+        "command": "status"
+      },
+      "expected": {
+        "valid": true
+      }
+    },
+    {
+      "name": "unsupported-api",
+      "request": {
+        "api_version": "1",
+        "command": "workspace.init",
+        "payload": {
+          "name": "项目"
+        }
+      },
+      "expected": {
+        "valid": false,
+        "code": "API_VERSION",
+        "path": "/api_version"
+      }
+    },
+    {
+      "name": "unknown-command",
+      "request": {
+        "api_version": "2",
+        "command": "artifact.freeze",
+        "payload": {
+          "name": "项目"
+        }
+      },
+      "expected": {
+        "valid": false,
+        "code": "UNKNOWN_COMMAND",
+        "path": "/command"
+      }
+    },
+    {
+      "name": "numeric-api",
+      "request": {
+        "api_version": 2,
+        "command": "workspace.init",
+        "payload": {
+          "name": "项目"
+        }
+      },
+      "expected": {
+        "valid": false,
+        "code": "INVALID_TYPE",
+        "path": "/api_version"
+      }
+    },
+    {
+      "name": "unexpected-envelope",
+      "request": {
+        "api_version": "2",
+        "command": "workspace.init",
+        "payload": {
+          "name": "项目"
+        },
+        "extra": true
+      },
+      "expected": {
+        "valid": false,
+        "code": "UNKNOWN_FIELD",
+        "path": "/extra"
+      }
+    },
+    {
+      "name": "missing-name",
+      "request": {
+        "api_version": "2",
+        "command": "workspace.init",
+        "payload": {}
+      },
+      "expected": {
+        "valid": false,
+        "code": "MISSING_FIELD",
+        "path": "/payload/name"
+      }
+    },
+    {
+      "name": "blank-name",
+      "request": {
+        "api_version": "2",
+        "command": "workspace.init",
+        "payload": {
+          "name": " "
+        }
+      },
+      "expected": {
+        "valid": false,
+        "code": "INVALID_TYPE",
+        "path": "/payload/name"
+      }
+    },
+    {
+      "name": "boolean-generation",
+      "request": {
+        "api_version": "2",
+        "command": "workspace.init",
+        "payload": {
+          "name": "项目"
+        },
+        "expected_generation": true
+      },
+      "expected": {
+        "valid": false,
+        "code": "INVALID_TYPE",
+        "path": "/expected_generation"
+      }
+    },
+    {
+      "name": "malformed-uuid",
+      "request": {
+        "api_version": "2",
+        "command": "workspace.init",
+        "payload": {
+          "name": "项目"
+        },
+        "change_id": "not-a-uuid"
+      },
+      "expected": {
+        "valid": false,
+        "code": "INVALID_ID",
+        "path": "/change_id"
+      }
+    },
+    {
+      "name": "invalid-operation-key",
+      "request": {
+        "api_version": "2",
+        "command": "workspace.init",
+        "payload": {
+          "name": "项目"
+        },
+        "operation_id": "spaces not allowed"
+      },
+      "expected": {
+        "valid": false,
+        "code": "INVALID_OPERATION_ID",
+        "path": "/operation_id"
+      }
+    },
+    {
+      "name": "unknown-payload",
+      "request": {
+        "api_version": "2",
+        "command": "workspace.init",
+        "payload": {
+          "name": "项目",
+          "overwrite": true
+        }
+      },
+      "expected": {
+        "valid": false,
+        "code": "UNKNOWN_FIELD",
+        "path": "/payload/overwrite"
+      }
+    }
+  ]
+}

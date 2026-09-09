@@ -4,13 +4,12 @@ on:
     branches: [impl/sdlc-v2-structured-runtime]
   pull_request:
     branches: [main]
-    paths: ['packages/sdlc/**', 'tests/v2/**', '.github/workflows/v2-checkpoint.yml']
 permissions:
   contents: read
 jobs:
-  checkpoint:
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
+  runtime-and-package:
+    runs-on: macos-14
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -18,24 +17,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Record accurate source
-        run: |
-          mkdir -p evidence
-          git rev-parse HEAD > evidence/source-sha.txt
-          git status --porcelain=v1 > evidence/status-before.txt
-          git archive HEAD -o evidence/source.tar
-      - name: Run v2 tests when present
-        shell: bash
-        run: |
-          set -o pipefail
-          if test -d tests/v2; then
-            python -m unittest discover -s tests/v2 -p 'test_*.py' -v 2>&1 | tee evidence/tests.log
-          else
-            printf '%s\n' 'NOT_RUN: v2 implementation not present; checkpoint only.' > evidence/tests.log
-          fi
+      - name: Validate the single v2 runtime and installed copy
+        run: python -B tools/validate.py --profile full --evidence-dir "$RUNNER_TEMP/sdlc-v2-evidence"
+      - name: Build the local plugin artifact
+        run: python -B tools/build_plugin.py --output "$RUNNER_TEMP/sdlc-v2-plugin"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: v2-checkpoint-${{ github.sha }}
-          path: evidence/
+          path: |
+            ${{ runner.temp }}/sdlc-v2-evidence/
+            ${{ runner.temp }}/sdlc-v2-plugin.zip
           retention-days: 14

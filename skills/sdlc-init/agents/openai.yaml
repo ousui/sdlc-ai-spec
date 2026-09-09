@@ -1,0 +1,5 @@
+policy:
+  allow_implicit_invocation: false
+interface:
+  display_name: "SDLC 初始化（INIT）"
+  short_description: "初始化、诊断或复制本地SDLC工作区；已有库保留数据，独立副本重新绑定身份与权限。"

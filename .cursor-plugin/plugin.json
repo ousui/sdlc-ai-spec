@@ -1,18 +1,17 @@
 {
   "name": "sdlc-ai-spec",
-  "version": "0.9.0",
-  "description": "为软件研发与变更交付提供本地优先的 SDLC 规范、共享运行合约与执行基础。",
+  "version": "2.0.0-dev",
+  "description": "Python与本地SQLite驱动的结构化SDLC，支持真实实现验证与本地交付闭环。",
   "author": {
     "name": "Blade"
   },
-  "homepage": "https://github.com/goedgecloud/sdlc-ai-spec",
-  "repository": "git@github.com:goedgecloud/sdlc-ai-spec.git",
+  "homepage": "https://github.com/ousui/sdlc-ai-spec",
+  "repository": "git@github.com:ousui/sdlc-ai-spec.git",
   "keywords": [
-    "codex",
     "sdlc",
-    "software-delivery",
-    "artifact"
+    "local-first",
+    "sqlite",
+    "structured-workflow"
   ],
-  "skills": "./skills/",
-  "mcpServers": "./config/github/cursor.mcp.json"
+  "skills": "./skills/"
 }

@@ -1,17 +1,21 @@
 """One CLI entry; stdout contains exactly one JSON response."""
 import argparse
 import sys
-from .common import API, MAX_REQUEST_BYTES, Fault, canonical, loads
+from .common import API, SCHEMA, VERSION, MAX_REQUEST_BYTES, Fault, canonical, loads
 from .protocol import contract
 from .runtime import Runtime, failure
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description='SDLC v2 public JSON runtime')
-    parser.add_argument('--root', default='.')
-    parser.add_argument('--request', default='-', help='UTF-8 JSON file or - for stdin')
+    parser.add_argument('--root', '-r', default='.')
+    parser.add_argument('--request', '-i', default='-', help='UTF-8 JSON file or - for stdin')
     parser.add_argument('--contract', action='store_true')
+    parser.add_argument('--version', '-V', action='store_true')
     args = parser.parse_args(argv)
+    if args.version:
+        print(canonical({'runtime_version': VERSION, 'api_version': API, 'schema_version': SCHEMA}).decode())
+        return 0
     if args.contract:
         print(canonical(contract()).decode())
         return 0

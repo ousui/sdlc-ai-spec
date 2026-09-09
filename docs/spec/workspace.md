@@ -1,6 +1,6 @@
 # 本地工作现场
 
-.sdlc默认通过内部.gitignore全部忽略。config只保存物理绑定与选择，业务关系在Store。
-分支不作为需求身份；initial_base_commit保留原始基线，不作为HEAD必须相等的门禁。
-同库支持多project，每个project使用匹配workspace。切分支后仍需明确change_id。
-复制、交回与准确代码影响判断属于后续P3/P4必做项，尚未由P2证明。
+.sdlc默认通过内部.gitignore忽略。config保存物理绑定，结构化业务事实在SQLite。
+分支不是需求身份；initial_base_commit是来源信息，不作为HEAD相等门禁。
+同库多project使用匹配workspace，调用明确选择change_id。
+复制、绑定与逻辑交回的当前规则见[工作区移交](workspaces.md)。

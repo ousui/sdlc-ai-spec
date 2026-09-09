@@ -58,7 +58,7 @@ PAYLOADS.update({
 })
 EFFECT_COMMANDS = {'task.write', 'check.run', 'operation.reconcile', 'delivery.execute'}
 
-READ_COMMANDS = {'workspace.inspect', 'change.get', 'phase.prepare', 'run.get', 'status', 'task.next', 'check.evaluate', 'finding.list', 'delivery.get'}
+READ_COMMANDS = {'workspace.discover', 'workspace.inspect', 'change.get', 'phase.prepare', 'run.get', 'status', 'task.next', 'check.evaluate', 'finding.list', 'delivery.get'}
 CONTEXT_ENTRY = {'kind': 'str', 'name': 'str', 'content': 'str', 'origin': 'str?', 'settings': 'object?'}
 AUTHORIZATION = {'action': 'str', 'target': 'str', 'issued_by': 'str', 'basis_text': 'str'}
 FILE_CHANGE = {'path': 'str', 'content': 'text?', 'action': 'str?', 'resource': 'str?'}
@@ -153,7 +153,7 @@ def contract():
 
 
 def phase_commands(phase):
-    common = {'phase.prepare', 'phase.complete', 'change.revise', 'run.get', 'status', 'render', 'run.configure'}
+    common = {'phase.prepare', 'phase.complete', 'change.revise', 'run.get', 'status', 'render', 'run.configure', 'run.start', 'authorization.grant'}
     content = {'phase.submit', 'asset.add'}
     execution = {'run.acquire', 'run.resume', 'run.cancel', 'task.next', 'task.start', 'task.finish', 'task.write',
                  'check.run', 'check.reuse', 'check.record_review', 'check.evaluate', 'finding.list', 'finding.address',

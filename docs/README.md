@@ -1,5 +1,5 @@
-# sdlc-ai-spec
+# SDLC v2文档
 
-Software Development Life Cycle - AI - Specification。
-
-当前稳定版本：[v1.1](v1.1/README.md)。[v1.0](v1.0/README.md) 保留为不可变的历史 Snapshot。
+当前领域规范在[spec](spec/README.md)，工程规范在[plugin-development](plugin-development/DEVELOPMENT.md)。
+唯一工作进度为[PROGRESS](work-items/sdlc-v2/PROGRESS.md)。批准设计及各检查点证据索引保留在同一工作项。
+安装后的Runtime不读取这些开发文档，不从Markdown表格编译运行规则。

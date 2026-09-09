@@ -1,83 +1,81 @@
 ---
 name: sdlc-500-vfy
-description: 显式调用时，从准确上游 Artifact 编译完整交付范围和不可变实施结果，执行或复核验证方法，形成产品结论、返工记录与可信 VFY Gate。
+description: 执行真实验收和完整范围审阅，记录缺口并修复复验至收敛；用于实现验收及回归判断。
 disable-model-invocation: true
 ---
 
-# SDLC 500 · 验证与确认（VFY）
+# SDLC 500 · 验证（VFY）
 
 ## 适用范围
 
-从完整 Current IMP Result Set 编译验证范围，执行或复核方法，分别形成产品结论、返工与可信 Artifact Gate。 内部 Evidence ID、Digest、Manifest 与 Invocation 由 Skill 整理，用户无需手填内部 JSON。
-
-```text
-/sdlc-500-vfy
-/sdlc-500-vfy create -i PLN-20260904100000-01@1 -i IMP-20260904110000-01@1/RESULT-RES-001
-/sdlc-500-vfy run -r VFY-20260904120000-01@1 -m VFM-001 -m VFM-002
-```
+执行真实验收和完整范围审阅，记录缺口并修复复验至收敛；用于实现验收及回归判断。
+裸调用按当前明确请求与准确Runtime状态工作；整体需求已获授权时，由当前Agent衔接已授权阶段。
+help/version/commands可通过CLI帮助、版本与本Skill命令表读取，不创建业务事实。
 
 ## 约定与边界
 
-从显式调用到结束保持 Exclusive Skill Execution，不调用兄弟 Skill，不传递授权。只使用本 Skill 与共享 Runtime/ArtifactStore；不直接 SQL、不复制 Store Schema、不使用文件或数据库 fallback，不读取开发期文档、测试或 Handoff。
-
-事实区分 observed / referenced / confirmed；缺口进入 Open Items，不猜测。Authority 使用准确数字 Revision，不使用 branch/tag/PR/latest/current 或标题相似度。`decision_policy=user` 默认由用户决定多解业务问题；model/experiment 需明确授权，实验还需范围、指标、成本和停止条件。
-
-`write_policy` 不替代业务批准、Exception、Final Confirmation 或独立效果授权。check/inspect 不修复、不初始化、不创建旁车。Git、远端、安装、项目外写入不属于本 Skill 的默认许可；真实 Secret 不进入 Artifact、日志或输出。
-
-标准 auto 写入只限当前项目的 ArtifactStore；本阶段不自动执行后续阶段。
+首次使用本插件先读[共享执行约定](../_shared/runtime.md)，后续仅在需要时回查。
+不读取开发docs、测试、Handoff或兄弟私有资源，不执行SQL，不手工修改.sdlc数据库。
+保留当前用户的范围和总授权；缺少必要决定或环境时报告具体缺口，不伪造human、pass或交付成功。
+本Skill只处理本阶段。单阶段授权完成即停止；连续授权由当前Agent读取下一入口后继续。
 
 ## 子命令
 
-以 [interface.json](references/interface.json) 为命令 Authority；元命令 help/version/commands/examples 不扫描项目、不读取业务 stdin、不打开 Store。
+[interface.json](references/interface.json)列出本入口使用的真实公开命令；字段以phase.prepare或--contract为准。
 
 | 子命令 | 职责 | 可能写入 |
 |---|---|---|
-| `auto` | 根据准确 Scope、当前 Subject Set 和已有 VFY 状态选择 create、run、revise 或 check。 | 是，须满足本阶段授权 |
-| `create` | 从 repeatable exact input 编译 VFY Contract，并执行当前安全可执行 Method。 | 是，须满足本阶段授权 |
-| `run` | 执行或记录当前 open Revision 中选定的 pending Method。 | 是，须满足本阶段授权 |
-| `revise` | 基于新的权威 Subject 或 Control Input 创建新 Revision；无变化返回 NO_CHANGE。 | 是，须满足本阶段授权 |
-| `check` | 从准确持久化 Reference 绝对只读复核 Scope、Subject、Evidence、Return 与 Gate。 | 否 |
-| `help` | 显示用途、参数和副作用边界。 | 否 |
-| `version` | 显示 Skill 与接口版本。 | 否 |
-| `commands` | 列出全部命令及是否写入。 | 否 |
-| `examples` | 显示准确 Reference 与 Method 选择示例。 | 否 |
+| `phase.prepare` | 读取准确内容和本阶段Schema | 否 |
+| `task.next` | 查询当前可执行任务 | 否 |
+| `task.start` | 开始已计划任务 | 是，须满足本阶段授权 |
+| `task.finish` | 记录任务实际完成事实 | 是，须满足本阶段授权 |
+| `check.run` | 运行实际命令验证 | 是，须满足本阶段授权 |
+| `check.reuse` | 显式复用适用证据 | 是，须满足本阶段授权 |
+| `check.record_review` | 记录实际Agent审阅 | 是，须满足本阶段授权 |
+| `check.evaluate` | 只读判断当前收敛 | 否 |
+| `finding.list` | 读取当前缺口 | 否 |
+| `finding.address` | 标记已采取修复 | 是，须满足本阶段授权 |
+| `finding.resolve` | 用适用新结果关闭缺口 | 是，须满足本阶段授权 |
+| `phase.complete` | 校验并完成当前阶段 | 是，须满足本阶段授权 |
+| `run.configure` | 有依据地调整执行预算 | 是，须满足本阶段授权 |
 
 ## 参数
 
-先按共享 Parser 归一化公共参数，再由本 Skill 注册扩展。公共参数描述不意味着旧 JSON Runtime 可直接接受所有 CLI 开关：CTX/REQ 先构造标准 Invocation，再通过 stdin 调用其正式入口；其他阶段使用本 Skill 的 CLI。
+下列是唯一公共CLI的参数；业务ID和payload由Agent使用Runtime回执组织，用户无需手填内部JSON。
 
 | 参数 | 短参数 | 语义／默认值 |
 |---|---|---|
-| `--command` | `-c` | `auto`；也可直接写子命令，兼容 `--operation/-o` |
-| `--project-root` | `-p` | 宿主提供的唯一当前工作区；多个项目时选择，不猜测 |
-| `--reference` | `-r` | 准确 `TYPE-ID@数字Revision`；修改/检查时按命令要求提供 |
-| `--decision-policy` | `-d` | `user`（默认）/ `model` / `experiment`；后两者需要明确授权 |
-| `--write-policy` | `-w` | `auto`（默认）/ `confirm` / `deny`；仅约束本阶段允许的标准写入 |
-| `--dry-run` | `-n` | 默认 `false`；不生成权威完成结论，不替代 check |
-| `--output` | `-f` | `summary`（默认）/ `json` / `debug` |
-| `--input` | `-i` | 可重复；准确 Scope、IMP Result 和 Control/Exception 引用 |
-| `--method` | `-m` | 可重复；run 选择的准确 `VFM-NNN` |
+| `--root` | `-r` | 明确的产品目录；默认`.`，不能误用插件目录 |
+| `--request` | `-i` | UTF-8请求文件或默认`-`从stdin读取 |
+| `--contract` | — | 输出当前机器契约，业务只读 |
+| `--version` | `-V` | 输出Runtime/API/Schema版本，不打开Store |
+| `--help` | `-h` | 输出CLI用法，不执行阶段 |
 
-`--` 后为请求正文，不是新增开关。help 支持 `-h`，version 支持 `-V`；其他兼容别名以共享 parser 为准。多个工作区、Revision 或操作均不猜选。
+```text
+<python> -B <plugin-root>/scripts/sdlc.py --root <product-root> --request -
+```
 
 ## 执行流程
 
-1. 先归一化命令；create/revise 从重复 `--input/-i` 读取准确 REQ/DSN/PLN/IMP Result、VFY Return、RLS Issue 或 Exception Reference。
-2. 通过 ArtifactStore、Lifecycle Query、Current completed Claim 和 Frozen Authority 编译完整 Candidate。stdin 只表达 Method、执行环境和人工提示，不能覆盖权威 Scope、Subject、Target、Control 或 Exception。
-3. 每个 Subject 绑定 Current completed Claim、冻结 IMP Revision、Binding Lineage、Attempt、Result Digest 和连续有效依赖链；必须覆盖完整 Current terminal IMP Result Set。Target 来自全部权威 VFO；只有合法 fallback 才使用 AC 和 Goal。
-4. Method Type 为 `inspection/analysis/demonstration/test`；`automated/manual/hybrid` 是独立的 Execution Mode。自动命令仅使用冻结的正向 deterministic policy，在 OS 隔离副本中执行；无 Shell、inline arbitrary code、网络、安装或 Git 写入。能力不足不算测试通过。
-5. Manual/Hybrid 等待与 Method Contract 身份一致的真实评价者，绑定场景、预期、范围、RFC 3339 时间和不可变 Evidence Reference。
-6. 分别计算 Method Result、Target Conclusion、`CON-VER`、`CON-VAL`、Product Result、Artifact Status、Artifact Gate 与 RLS readiness，不以一个字段替代另一个。
-7. `check` 只读准确持久化 Revision，重验 Primary、VFY-STATE、Manifest、Current Subject 与 Lifecycle Projection；Store 和项目字节必须不变。
+1. 读取当前实现、需求/验收/设计和证据适用性，执行计划所需VFY任务。对必要command Check实际check.run。
+
+2. 已有结果只在内容/代码/环境/定义/时效都适用时check.reuse；保留原观察时间，不把历史版本结果当当前新执行。
+
+3. 当前Agent真正检查完整需求范围与实际代码，用convergence agent Check记录审阅及缺口。声明self_review，不冒充独立或human审查。
+
+4. phase.complete VFY未收敛时，按实际finding返回阶段；已有总授权下当前Agent重新读取该阶段Skill，修内容或代码并重跑受影响检查。
+
+5. finding.address仅记录已采取修复；finding.resolve必须引用适用的新通过结果。再次完成所有必要Check与收敛审阅，check.evaluate为真才继续。
+
+6. 格式/修复/无进展预算触发时保留错误并诊断。正常业务红绿如实计数，不通过降低Expected、删依赖或手工pass消除阻塞。
 
 ## 输出与完成条件
 
-`summary` 默认只呈现事实、准确 Artifact、Gate、已执行写入、阻塞和下一动作。`json` 只返回正式 Runtime 的结构化结果，不添加进度文本、不改写字段或说明；调试信息不混入 JSON。`debug` 展示有界诊断，先脱敏。
-
-准确记录产品 fail 的 Artifact 可以 Gate pass；有效 Exception 才能产生 ready_with_exception/pass_with_exception。early-stop、pending 或 unresolved Return/Control 永不进入 RLS。缺失能力、输入或人工观察时明确停止，不伪造 PASS。
+必要结果适用且通过、无未解决blocking finding、所有前置任务完成；总授权下继续RLS。
+默认用简短中文说明实际写入、验证、交付或阻塞。返回JSON时保持原字段，不混入进度叙述。
+失败保留原回执与diagnostic_path；先识别责任层，再在已授权范围内修复/复验。
 
 ## 资源索引
 
-- 先读 [运行契约](references/contract.md) 和 [命令定义](references/interface.json)。
-- 执行入口：[runtime](scripts/runtime.py)；共用参数：`scripts/sdlc_skill_interface.py` 与 [共享接口](../_shared/contracts/skill-interface.md)。
-- [独占执行约定](../_shared/contracts/skill-execution.md)；仅在处理相应业务对象时按契约读取 bundled references/assets，不整包加载。
+- [共享执行约定](../_shared/runtime.md)：绑定、权限、证据与恢复，首次使用时读取。
+- [本入口命令](references/interface.json)：真实命令与写入属性。

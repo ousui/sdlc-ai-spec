@@ -1,0 +1,64 @@
+name: scope-text-apply
+on:
+  push:
+    branches: [fix/v2-review-github-sharing]
+    paths: [.github/workflows/scope-text-apply.yml]
+permissions:
+  contents: read
+jobs:
+  apply:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 0
+      - name: Apply exactly the locally tested scope fix
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/fix/v2-review-github-sharing
+          test "$(git ls-remote origin "$GITHUB_REF" | cut -f1)" = "$GITHUB_SHA"
+          git merge-base --is-ancestor ef7d159d6c67dd6e1acd4a9918b5acba109ee0ec HEAD
+          python - <<'PY'
+          import hashlib
+          from pathlib import Path
+          raw = Path('.github/scope-text.patch').read_bytes()
+          assert hashlib.sha256(raw).hexdigest() == 'eb52d98b4f380d181f4be29e78391c83cc79ef5db9fe7440ae6ca0df2973eabf'
+          PY
+          git apply --check --index .github/scope-text.patch
+          git apply --index .github/scope-text.patch
+          cp .github/scope-text-src/revision_text.py packages/sdlc/revision_text.py
+          cp .github/scope-text-src/test_revision_text.py tests/v2/test_revision_text.py
+          cp .github/scope-text-src/SCOPE-TEXT-FIX.md docs/work-items/sdlc-v2/SCOPE-TEXT-FIX.md
+          python -B tools/build_v2_contract.py
+          python - <<'PY'
+          import json, subprocess
+          from pathlib import Path
+          expected = json.loads(Path('.github/scope-text-files.json').read_text())
+          for path, value in expected.items():
+              actual = subprocess.check_output(['git', 'hash-object', path], text=True).strip()
+              assert actual == value, (path, actual, value)
+          print('All 17 repaired source files match the tested bytes')
+          PY
+          python -B tools/validate_skill_style.py
+          git add packages/sdlc/revision_text.py tests/v2/test_revision_text.py docs/work-items/sdlc-v2/SCOPE-TEXT-FIX.md contracts/v2.json
+          git rm -r .github/scope-text-src .github/scope-text-files.json .github/scope-text.patch
+          git diff --cached --check
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'fix(req): atomically revise intent text and apply clarified scope'
+          test "$(git ls-remote origin "$GITHUB_REF" | cut -f1)" = "$GITHUB_SHA"
+          git push origin HEAD:refs/heads/fix/v2-review-github-sharing
+          mkdir -p "$RUNNER_TEMP/scope-source"
+          git rev-parse HEAD > "$RUNNER_TEMP/scope-source/source.sha"
+          git bundle create "$RUNNER_TEMP/scope-source/source.bundle" HEAD
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: scope-source-${{ github.run_id }}
+          path: ${{ runner.temp }}/scope-source/
+          retention-days: 14

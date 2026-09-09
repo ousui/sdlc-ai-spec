@@ -1,0 +1,19 @@
+{
+  "USAGE.md": "e9c450f11a2092d94263c76a9e77ca797f986f8e",
+  "contracts/v2.json": "fbd11989e73141496feb739955ee4962519f7e81",
+  "docs/spec/100-req.md": "b2b8d41e884ebe155025a37b15c7d6913c7a99c9",
+  "docs/work-items/sdlc-v2/PROGRESS.md": "7f9cce1e2862d9b146ecf2d82dd0b2956d86ea58",
+  "docs/work-items/sdlc-v2/SCOPE-TEXT-FIX.md": "fea83199eb5815ca7fb29aad7c40d2b59a630bf4",
+  "packages/sdlc/clarification.py": "8af4e75f64ac741767e1b69fbcb09841cbe24ed7",
+  "packages/sdlc/content.py": "d2572212b4d53c960cd7fca0fe3f3e4957f1c459",
+  "packages/sdlc/domain.py": "deb1d75bd3947f2b2baab1a4ee3de8551d81e41a",
+  "packages/sdlc/engine.py": "9a0d8dd99d5c79a1b39c35ca91351a738bd01a97",
+  "packages/sdlc/protocol.py": "1492991e9c1c594de3907663a84563dbfc190b8a",
+  "packages/sdlc/revision_text.py": "9a62f164653453bfc1b11d67f0114bc6d489f925",
+  "packages/sdlc/verification.py": "cbebc9622da32910627dc614d8de55b0cdebd28b",
+  "skills/_shared/runtime.md": "a681a9fc5d2f90ee58769ecc810174c3f5c9609f",
+  "skills/sdlc-100-req/SKILL.md": "90f5ba02b2032bcbd109cd7ced8fc842011de26f",
+  "tests/v2/test_clarification.py": "ed74e7a4abef40df0bd7ded82c9510be435db6fc",
+  "tests/v2/test_revision_text.py": "2fa61566bd8459ed85c152227bb3a443ab091925",
+  "tools/validate_portable.py": "f383c4eb5a38037023e2fd118774854d57bf478c"
+}

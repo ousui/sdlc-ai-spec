@@ -2,7 +2,7 @@
 
 ## 当前事实
 
-- 当前工作包：Q1 三项目第一复杂需求；持续执行至 FINAL，不再逐阶段审批。
+- 当前工作包：Q2 三项目第二复杂需求；持续执行至 FINAL，不再逐阶段审批。
 - 实现接管 HEAD：`d39601d0272c77ccece51a9751a5e865c55ea603`；实验室接管 HEAD：`d1eb4a2d6f3951cabf85eb6be11a98f80adf9349`。指定分支，两工作区初始干净。
 - 批准/实验室父基线的本地对象和祖先、Git作者/remote已核实；接管时没有fetch/clone/push；Q0仅为缺失的SpringGear精确对象做一次最小fetch，没有push。
 - 批准设计32文件已复制；摘要见APPROVED-DESIGN-SHA256.json。移交包40文件校验通过。
@@ -21,16 +21,16 @@
 | P3 | 已完成 | 70项实际回归、工具链预检、独立评审修补；P3-RESULTS.md |
 | P4 | 已完成 | 115项回归；P4-D-RESULTS.md与P4-E-RESULTS.md；独立安装版前向小案例完成 |
 | Q0 | 已完成并本地提交 | 原13/10/24项实际通过与本地RLS；完整Spring归档恢复；实验室8b745601；Q0-RUNTIME-REPAIRS.md |
-| 核心补充 | 已验证，随本记录提交 | 135项测试通过；澄清、资产崩溃、中断日志、交付范围及独立复验见CORE-ACCEPTANCE-SUPPLEMENT.md |
-| Q1 | 实际执行中 | Admin原13+新增15、fansite原24+新增10及47项JS检查通过，独立复验及最终包/归档字节核对完成；Spring25项通过，验证脚本失败暴露正常退修阻塞，正在修补 |
-| Q2 | 未开始 | 三项目第二复杂需求 |
+| 核心补充 | 已完成b4d4bc4 | 135项测试通过；澄清、资产崩溃、中断日志、交付范围及独立复验见CORE-ACCEPTANCE-SUPPLEMENT.md |
+| Q1 | 已完成并本地提交 | 三项目真实闭环、独立复验及全归档核对；实验室b406546；Q1-RESULTS.md。后续内核149项通过 |
+| Q2 | 当前工作包 | clean q2-entry/7d71793，从准确Q1终态开始审计幂等、并行上下文、并发编辑 |
 | FINAL | 未开始 | H_final/安装摘要/九场景回归/46项映射 |
 
 ## 唯一下一动作
 
-142项退修回归通过并提交f31bef3，clean q1-convergence包已让Spring从原VFY失败正常退IMP，现实际修复/复验及交付收口中。
-同期Run当前状态恢复修补已通过149项完整回归，见Q1-RUN-STATUS.md；独立130次旧包CLI反例不冒充修补后通过。
-上批139项全套通过，交付覆盖修补见Q1-RELEASE-COVERAGE.md；当前新增反例见Q1-CONVERGENCE-REPAIR.md。
+在clean q2-entry包上启动三项目第二复杂需求并实际完成专项工作区/合入/中断验证。原输入来源和验收须先锁定，IMP才形成新代码。
+Q1三项目已于实验室b406546统一提交；7d71793内核149项完整回归和独立8项状态组合通过。
+Q1原始覆盖、退修、状态反例及修补分别见Q1-RELEASE-COVERAGE.md、Q1-CONVERGENCE-REPAIR.md、Q1-RUN-STATUS.md。
 q1-entry基于b4d4bc4，q1-dsn基于586d133；旧证据保留原包边界，不能改写成新版本执行。
-三个项目全部关闭后先本地提交再进入Q2；共同契约补充要求FINAL在H_final重做全部九条真实链。
+Q2三个项目全部关闭后先本地提交再进入FINAL；共同契约补充要求FINAL在H_final重做全部九条真实链。
 保留首次8754d65三产品链和f5f0c0a管理修补、dirty独立复验的准确版本，不拼成同版本结果。

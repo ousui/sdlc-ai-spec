@@ -19,7 +19,7 @@
 | P1 | 已完成 | 领域修复715d737，公共事务/幂等随P2完成；P1-AUDIT.md |
 | P2 | 已完成 | 43项测试、契约投影、独立CLI内容链；P2-RESULTS.md |
 | P3 | 已完成 | 70项实际回归、工具链预检、独立评审修补；P3-RESULTS.md |
-| P4 | 未开始 | 交付/附件/复制交回、正式Skill/安装及旧链清理 |
+| P4 | D完成，E进行中 | 109项Runtime回归；P4-D-RESULTS.md；正式Skill/安装及旧链清理待完成 |
 | Q0 | 未开始 | 三项目基础真实Skill链 |
 | Q1 | 未开始 | 三项目第一复杂需求 |
 | Q2 | 未开始 | 三项目第二复杂需求 |
@@ -27,6 +27,6 @@
 
 ## 唯一下一动作
 
-实现P4：固定本地目标的RLS交付与独立回读，工作区clone/export/collect和冲突保留，
-完成INIT/CTX/六阶段/status安装版Skill与独立打包，再删除旧链和旧测试。
+完成P4-E：INIT/CTX/六阶段/status安装版Skill、独立打包与文档移除验证，清理旧链和旧测试。
+随后继续Q0真实产品链，不以Runtime fixture替代。
 SpringGear原始Git缓存路径仍待用户补充，核心实施继续。

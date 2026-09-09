@@ -81,9 +81,9 @@ def applicable(con, change, revision, check, subject):
 
 
 def authorize(con, project, change, run, action, target):
-    actor = one(con, 'SELECT actor_id FROM runs WHERE project_id=? AND change_id=? AND run_id=?', (project, change, run))['actor_id']
-    row = con.execute('SELECT 1 FROM authorizations WHERE project_id=? AND change_id=? AND actor_id=? AND action=? AND target=? AND revoked_at IS NULL AND (expires_at IS NULL OR expires_at>?)',
-                      (project, change, actor, action, target, now())).fetchone()
+    actor = one(con, 'SELECT actor_id,workspace_id FROM runs WHERE project_id=? AND change_id=? AND run_id=?', (project, change, run))
+    row = con.execute("SELECT 1 FROM authorizations WHERE origin_kind='local' AND project_id=? AND change_id=? AND workspace_id=? AND actor_id=? AND action=? AND target=? AND revoked_at IS NULL AND (expires_at IS NULL OR expires_at>?)",
+                      (project, change, actor['workspace_id'], actor['actor_id'], action, target, now())).fetchone()
     require(row, 'AUTHORIZATION_REQUIRED', 'Action requires the recorded actor/action/target authorization',
             '/payload', status='blocked', details={'action': action, 'target': target})
 
@@ -160,7 +160,7 @@ def evaluate(store, con, project, change, revision, overrides=None):
     pending = [r['task_id'] for r in con.execute("SELECT * FROM tasks WHERE revision_id=? AND target_phase<>'RLS'", (revision,))
                if not task_completed(con, change, revision, r['task_id'])]
     findings = [dict(r) for r in con.execute("SELECT * FROM findings WHERE project_id=? AND change_id=? AND severity='blocking' AND status IN ('open','addressed')", (project, change))]
-    unknown = [r[0] for r in con.execute("SELECT o.operation_id FROM operations o JOIN runs r USING(run_id) WHERE r.change_id=? AND o.status='unknown'", (change,))]
+    unknown = [r[0] for r in con.execute("SELECT o.operation_id FROM operations o JOIN runs r USING(run_id) WHERE r.change_id=? AND r.workspace_id=? AND r.origin_kind='local' AND o.origin_kind='local' AND o.status='unknown'", (change, store.config()['workspace_id']))]
     return {'converged': not (missing or failed or pending or findings or unknown), 'checks': checks,
             'missing_checks': missing, 'failed_checks': failed, 'pending_tasks': pending, 'blocking_findings': findings,
             'unknown_operations': unknown}

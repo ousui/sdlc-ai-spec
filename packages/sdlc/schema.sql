@@ -119,6 +119,7 @@ CREATE TABLE assets (
  UNIQUE(project_id,asset_id),UNIQUE(project_id,sha256),FOREIGN KEY(project_id) REFERENCES projects(project_id)
 ) STRICT;
 CREATE TABLE runs (
+ origin_kind TEXT NOT NULL DEFAULT 'local' CHECK(origin_kind IN ('local','imported')),
  run_id TEXT PRIMARY KEY NOT NULL,project_id TEXT NOT NULL,change_id TEXT,workspace_id TEXT NOT NULL,input_revision_id TEXT,
  status TEXT NOT NULL CHECK(status IN ('created','running','blocked','completed','failed','interrupted','cancelled')),
  actor_id TEXT NOT NULL,runtime_version TEXT NOT NULL,contract_version TEXT NOT NULL,skill_version TEXT NOT NULL,
@@ -171,9 +172,12 @@ CREATE TABLE deliveries (
  delivery_id TEXT PRIMARY KEY NOT NULL,project_id TEXT NOT NULL,change_id TEXT NOT NULL,revision_id TEXT NOT NULL,step_id TEXT NOT NULL,snapshot_id TEXT NOT NULL,vfy_result_id TEXT NOT NULL,
  mode TEXT NOT NULL CHECK(mode IN ('local','git','deployment')),target TEXT NOT NULL,effect_key TEXT NOT NULL,
  status TEXT NOT NULL CHECK(status IN ('prepared','succeeded','failed','unknown','cancelled')),readback_result_id TEXT,summary TEXT NOT NULL,
+ bundle_asset_id TEXT NOT NULL,readback_check_id TEXT NOT NULL,environment_json TEXT NOT NULL DEFAULT '{}',
  UNIQUE(project_id,delivery_id),UNIQUE(project_id,effect_key),FOREIGN KEY(project_id,change_id,revision_id) REFERENCES revisions(project_id,change_id,revision_id),
  FOREIGN KEY(project_id,step_id) REFERENCES steps(project_id,step_id),FOREIGN KEY(project_id,snapshot_id) REFERENCES code_snapshots(project_id,snapshot_id),
  FOREIGN KEY(project_id,vfy_result_id) REFERENCES check_results(project_id,result_id),FOREIGN KEY(project_id,readback_result_id) REFERENCES check_results(project_id,result_id)
+ ,FOREIGN KEY(project_id,bundle_asset_id) REFERENCES assets(project_id,asset_id),
+ FOREIGN KEY(revision_id,readback_check_id) REFERENCES checks(revision_id,check_id)
 ) STRICT;
 CREATE TABLE asset_links (
  project_id TEXT NOT NULL,link_id TEXT PRIMARY KEY NOT NULL,asset_id TEXT NOT NULL,revision_id TEXT,source_id TEXT,design_id TEXT,result_id TEXT,delivery_id TEXT,
@@ -185,15 +189,17 @@ CREATE TABLE asset_links (
  CHECK((source_id IS NULL AND design_id IS NULL) OR revision_id IS NOT NULL)
 ) STRICT;
 CREATE TABLE authorizations (
- authorization_id TEXT PRIMARY KEY NOT NULL,project_id TEXT NOT NULL,change_id TEXT NOT NULL,actor_id TEXT NOT NULL,
+ origin_kind TEXT NOT NULL DEFAULT 'local' CHECK(origin_kind IN ('local','imported')),
+ authorization_id TEXT PRIMARY KEY NOT NULL,project_id TEXT NOT NULL,change_id TEXT NOT NULL,workspace_id TEXT NOT NULL,actor_id TEXT NOT NULL,
  action TEXT NOT NULL CHECK(action IN ('edit_local','run_check','package_local','git_commit','git_push','create_pr','merge','deploy')),
  target TEXT NOT NULL,issued_by TEXT NOT NULL,basis_text TEXT NOT NULL,issued_at TEXT NOT NULL,expires_at TEXT,revoked_at TEXT,
- FOREIGN KEY(project_id,change_id) REFERENCES changes(project_id,change_id)
+ FOREIGN KEY(project_id,change_id) REFERENCES changes(project_id,change_id),FOREIGN KEY(project_id,workspace_id) REFERENCES workspaces(project_id,workspace_id)
 ) STRICT;
 CREATE TABLE operations (
+ origin_kind TEXT NOT NULL DEFAULT 'local' CHECK(origin_kind IN ('local','imported')),
  operation_id TEXT PRIMARY KEY NOT NULL,project_id TEXT NOT NULL,run_id TEXT,command TEXT NOT NULL,request_digest TEXT NOT NULL,
  status TEXT NOT NULL CHECK(status IN ('succeeded','rejected','unknown')),response_json TEXT NOT NULL,created_at TEXT NOT NULL,
- intent_json TEXT,result_digest TEXT,
+ intent_json TEXT,result_digest TEXT,config_applied_at TEXT,
  FOREIGN KEY(project_id) REFERENCES projects(project_id),FOREIGN KEY(project_id,run_id) REFERENCES runs(project_id,run_id)
 ) STRICT;
 CREATE TABLE imports (
@@ -280,7 +286,7 @@ CREATE TRIGGER adopted_revision_committed BEFORE UPDATE OF active_revision_id ON
 WHEN NEW.active_revision_id IS NOT NULL AND (SELECT state FROM revisions WHERE revision_id=NEW.active_revision_id)<>'committed'
 BEGIN SELECT RAISE(ABORT,'only committed revisions may be adopted'); END;
 
-CREATE UNIQUE INDEX one_workspace_executor ON runs(workspace_id) WHERE lease_id IS NOT NULL;
+CREATE UNIQUE INDEX one_workspace_executor ON runs(workspace_id) WHERE lease_id IS NOT NULL AND origin_kind='local';
 CREATE TRIGGER check_result_no_update BEFORE UPDATE ON check_results BEGIN SELECT RAISE(ABORT,'raw check results are immutable'); END;
 CREATE TRIGGER check_result_no_delete BEFORE DELETE ON check_results BEGIN SELECT RAISE(ABORT,'raw check results are immutable'); END;
 CREATE TRIGGER code_snapshot_no_update BEFORE UPDATE ON code_snapshots BEGIN SELECT RAISE(ABORT,'code snapshots are immutable'); END;

@@ -75,12 +75,12 @@ def context_commit(con, project, payload):
         insert(con, 'context_entries', {'context_id': value, 'entry_id': inherited.get((entry['kind'], entry['name']), uid()), 'kind': entry['kind'],
                'name': entry['name'], 'content': entry['content'], 'origin': entry.get('origin'),
                'settings_json': canonical(entry['settings']).decode()})
-    hashed = digest({'summary': payload['summary'], 'entries': sorted(entries, key=canonical)})
+    hashed = context_digest(con, value)
     con.execute("UPDATE contexts SET state='committed',digest=? WHERE context_id=?", (hashed, value))
     return {'context_id': value, 'digest': hashed, 'next_actions': [{'action': 'change.create', 'phase': 'REQ'}]}
 
 
-def create_change(con, project, payload, base_commit):
+def create_change(con, project, payload, base_commit, workspace):
     context = one(con, "SELECT * FROM contexts WHERE project_id=? AND context_id=? AND state='committed'", (project, payload['context_id']), code='CONTEXT_SCOPE')
     require(payload['delivery_mode'] in {'local', 'git', 'deployment'}, 'INVALID_ENUM', 'Expected local/git/deployment', '/payload/delivery_mode')
     require(not con.execute('SELECT 1 FROM changes WHERE project_id=? AND slug=?', (project, payload['slug'])).fetchone(),
@@ -96,13 +96,7 @@ def create_change(con, project, payload, base_commit):
     source = uid()
     insert(con, 'sources', {'revision_id': rev, 'source_id': source, 'kind': 'text', 'original_text': payload['original_text'], 'ordinal': 0})
     actor = payload.get('actor_id', 'current-agent')
-    for i, auth in enumerate(payload['authorizations']):
-        p = f'/payload/authorizations/{i}'
-        fields(auth, AUTHORIZATION, p)
-        require(auth['action'] in {'edit_local', 'run_check', 'package_local'}, 'AUTHORIZATION_SCOPE',
-                'First version accepts explicit local authorizations only', p+'/action', status='blocked')
-        insert(con, 'authorizations', {'authorization_id': uid(), 'project_id': project, 'change_id': value, 'actor_id': actor,
-               **auth, 'issued_at': now()})
+    grant(con, project, value, workspace, actor, payload['authorizations'])
     return {'change_id': value, 'revision_id': rev, 'generation': 0, 'source_id': source,
             'actor_id': actor, 'review_mode': review_mode, 'next_actions': [{'action': 'phase.prepare', 'phase': 'REQ'}]}
 
@@ -136,7 +130,7 @@ def phase_complete(store, con, project, change, payload, generation):
 def prepare(store, con, project, change, phase=None, *, execution_phase=None):
     ch = change_row(con, project, change)
     row = revision_row(con, project, change)
-    latest = con.execute("SELECT current_phase FROM runs WHERE change_id=? AND current_phase IS NOT NULL AND status<>'cancelled' ORDER BY started_at DESC LIMIT 1", (change,)).fetchone()
+    latest = con.execute("SELECT current_phase FROM runs WHERE change_id=? AND workspace_id=? AND origin_kind='local' AND current_phase IS NOT NULL AND status<>'cancelled' ORDER BY rowid DESC LIMIT 1", (change, store.config()['workspace_id'])).fetchone()
     inferred = row['created_phase'] if row['state'] == 'draft' else execution_phase or (latest[0] if latest else 'IMP')
     selected = phase or inferred
     require(selected in PHASES, 'INVALID_ENUM', 'Expected lifecycle phase', '/payload/phase')
@@ -148,3 +142,20 @@ def prepare(store, con, project, change, phase=None, *, execution_phase=None):
             'commands': phase_commands(selected),
             'attachments': [dict(r) for r in con.execute('SELECT l.*,a.sha256,a.media_type FROM asset_links l JOIN assets a USING(asset_id) WHERE l.revision_id=? ORDER BY l.ordinal,l.link_id', (row['revision_id'],))],
             'authorizations': [dict(r) for r in con.execute('SELECT * FROM authorizations WHERE project_id=? AND change_id=?', (project, change))]}
+
+
+def grant(con, project, change, workspace, actor, authorizations):
+    for i, auth in enumerate(authorizations):
+        p = f'/payload/authorizations/{i}'
+        fields(auth, AUTHORIZATION, p)
+        require(auth['action'] in {'edit_local', 'run_check', 'package_local'}, 'AUTHORIZATION_SCOPE',
+                'First version accepts explicit local authorizations only', p+'/action', status='blocked')
+        insert(con, 'authorizations', {'authorization_id': uid(), 'project_id': project, 'change_id': change, 'workspace_id': workspace, 'actor_id': actor,
+               **auth, 'issued_at': now()})
+    return {'authorization_count': len(authorizations), 'workspace_id': workspace, 'actor_id': actor}
+
+
+def context_digest(con, context):
+    row = one(con, 'SELECT summary,parent_id FROM contexts WHERE context_id=?', (context,))
+    entries = [dict(r) for r in con.execute('SELECT entry_id,kind,name,content,origin,settings_json FROM context_entries WHERE context_id=?', (context,))]
+    return digest({**dict(row), 'entries': sorted(entries, key=canonical)})

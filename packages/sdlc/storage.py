@@ -97,7 +97,7 @@ class Store:
             project, workspace, instance = uid(), uid(), uid()
             config = {'format_version': 2, 'store_id': uid(), 'instance_id': instance,
                       'database': 'store.sqlite3', 'project_id': project, 'workspace_id': workspace,
-                      'active_change_id': None, 'resources': {'main': '.'}}
+                      'active_change_id': None, 'resources': {'main': '.'}, 'root_path': str(self.root)}
             self.home.mkdir(exist_ok=True)
             temporary = self.home / ('.init-' + uid() + '.sqlite3')
             schema = Path(__file__).with_name('schema.sql').read_text()

@@ -9,6 +9,14 @@ ENVELOPE = {'api_version': 'str', 'command': 'str', 'operation_id': 'str?',
 PAYLOADS = {
     'workspace.init': {'name': 'str'},
     'workspace.inspect': {},
+    'workspace.discover': {},
+    'workspace.clone': {'target': 'str'},
+    'workspace.export': {'change_id': 'id'},
+    'workspace.collect': {'path': 'str'},
+    'workspace.bind': {'resources': 'object', 'reason': 'str'},
+    'workspace.rebind': {'resources': 'object?', 'reason': 'str'},
+    'authorization.grant': {'authorizations': 'array'},
+    'change.resolve': {'source_revision_id': 'id', 'phase': 'str', 'reason': 'str'},
     'project.create': {'name': 'str'},
     'context.commit': {'summary': 'str', 'parent_id': 'id?', 'entries': 'array'},
     'change.create': {'slug': 'str', 'context_id': 'id', 'title': 'str', 'summary': 'str',
@@ -44,10 +52,13 @@ PAYLOADS.update({
     'finding.address': {'finding_id': 'id', 'lease_id': 'id'},
     'finding.resolve': {'finding_id': 'id', 'result_id': 'id', 'lease_id': 'id', 'environment': 'object?'},
     'operation.reconcile': {'operation_id': 'str'},
+    'delivery.prepare': {'revision_id': 'id', 'lease_id': 'id', 'usage': 'str', 'effect_key': 'str?', 'environment': 'object?'},
+    'delivery.execute': {'delivery_id': 'id', 'lease_id': 'id'},
+    'delivery.get': {'delivery_id': 'id'},
 })
-EFFECT_COMMANDS = {'task.write', 'check.run', 'operation.reconcile'}
+EFFECT_COMMANDS = {'task.write', 'check.run', 'operation.reconcile', 'delivery.execute'}
 
-READ_COMMANDS = {'workspace.inspect', 'change.get', 'phase.prepare', 'run.get', 'status', 'task.next', 'check.evaluate', 'finding.list'}
+READ_COMMANDS = {'workspace.inspect', 'change.get', 'phase.prepare', 'run.get', 'status', 'task.next', 'check.evaluate', 'finding.list', 'delivery.get'}
 CONTEXT_ENTRY = {'kind': 'str', 'name': 'str', 'content': 'str', 'origin': 'str?', 'settings': 'object?'}
 AUTHORIZATION = {'action': 'str', 'target': 'str', 'issued_by': 'str', 'basis_text': 'str'}
 FILE_CHANGE = {'path': 'str', 'content': 'text?', 'action': 'str?', 'resource': 'str?'}
@@ -133,6 +144,7 @@ def contract():
     authorization['properties']['action']['enum'] = ['edit_local', 'run_check', 'package_local']
     result['commands']['context.commit']['payload']['properties']['entries']['items'] = entries
     result['commands']['change.create']['payload']['properties']['authorizations']['items'] = authorization
+    result['commands']['authorization.grant']['payload']['properties']['authorizations']['items'] = authorization
     result['commands']['task.write']['payload']['properties']['files']['items'] = schema(FILE_CHANGE)
     result['commands']['check.record_review']['payload']['properties']['findings']['items'] = schema(REVIEW_FINDING)
     result['commands']['phase.submit']['payload']['properties']['operations'] = {
@@ -147,4 +159,6 @@ def phase_commands(phase):
                  'check.run', 'check.reuse', 'check.record_review', 'check.evaluate', 'finding.list', 'finding.address',
                  'finding.resolve', 'operation.reconcile'}
     names = common | (content if phase in STAGE_TABLES else execution)
+    if phase == 'RLS':
+        names |= {'delivery.prepare', 'delivery.execute', 'delivery.get', 'workspace.export'}
     return {key: value for key, value in contract()['commands'].items() if key in names}

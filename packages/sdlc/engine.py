@@ -38,7 +38,7 @@ def budget_available(row):
 def acquire(con, project, change, run):
     row = run_row(con, project, change, run)
     budget_available(row)
-    other = con.execute('SELECT run_id FROM runs WHERE workspace_id=? AND lease_id IS NOT NULL AND run_id<>?', (row['workspace_id'], run)).fetchone()
+    other = con.execute("SELECT run_id FROM runs WHERE workspace_id=? AND origin_kind='local' AND lease_id IS NOT NULL AND run_id<>?", (row['workspace_id'], run)).fetchone()
     require(other is None, 'WORKSPACE_BUSY', 'Another Run owns product execution', status='blocked', details={'run_id': other[0]} if other else None)
     value = row['lease_id'] or uid()
     con.execute('UPDATE runs SET lease_id=? WHERE run_id=?', (value, run))
@@ -159,6 +159,7 @@ def prepare_check(store, con, project, change, run, p, work):
     verification.authorize(con, project, change, run, 'run_check', 'main')
     check = dict(one(con, 'SELECT * FROM checks WHERE revision_id=? AND check_id=?', (p['revision_id'], p['check_id']), code='CHECK_SCOPE'))
     require(check['executor'] == 'command', 'CHECK_EXECUTOR', 'Command execution requires a command Check', '/payload/check_id')
+    require(loads(check['argv_json']) != ['@runtime', 'delivery.readback'], 'CHECK_ADAPTER', 'Use delivery.execute for native package readback', status='blocked')
     current = phase(con, project, change, run)
     require(current in {'IMP', 'VFY', 'RLS'}, 'PHASE_ORDER', 'Checks require an execution phase', status='blocked')
     writable = []
@@ -257,6 +258,9 @@ def complete_phase(store, con, project, change, run, p):
     lease(con, project, change, run, p.get('lease_id'))
     current = phase(con, project, change, run)
     require(current == p['phase'], 'PHASE_ORDER', 'Complete the current execution phase', '/payload/phase', status='blocked')
+    if current == 'RLS':
+        from .delivery import close
+        return close(store, con, project, change, run, p)
     if current == 'IMP':
         pending = [r[0] for r in con.execute("SELECT task_id FROM tasks WHERE revision_id=? AND target_phase='IMP'", (revision,))
                    if not verification.task_completed(con, change, revision, r[0])]
@@ -265,7 +269,7 @@ def complete_phase(store, con, project, change, run, p):
         step = new_step(con, project, change, run, revision, 'IMP', 'phase.complete:IMP')
         con.execute("UPDATE steps SET status='completed',outcome='not_applicable',finished_at=? WHERE step_id=?", (now(), step))
         return {'phase': 'IMP', 'next_actions': [{'action': 'phase.prepare', 'phase': 'VFY'}]}
-    require(current == 'VFY', 'NOT_IMPLEMENTED', 'RLS is completed by verified delivery', status='blocked')
+    require(current == 'VFY', 'PHASE_ORDER', 'Expected verification phase', status='blocked')
     evaluation = verification.evaluate(store, con, project, change, revision, p.get('environment'))
     # Missing executions or still-running tasks do not consume a repair round.
     require(not evaluation['missing_checks'] and not evaluation['pending_tasks'], 'VERIFICATION_PENDING',

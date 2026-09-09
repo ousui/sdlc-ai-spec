@@ -7,7 +7,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from . import content, engine, execution, verification
+from . import content, delivery, engine, execution, transfer, verification
 from .common import API, VERSION, Fault, atomic_write, canonical, digest, file_lock, loads, now, redact, require, safe_path, uid
 from .protocol import EFFECT_COMMANDS, READ_COMMANDS, contract, validate_payload, validate_request
 from .storage import Store, insert, one
@@ -47,6 +47,9 @@ class Runtime:
             validate_request(request)
             request = dict(request)
             command = request['command']
+            if command == 'workspace.discover':
+                validate_payload(request)
+                return success({'candidates': transfer.discover(self.root)})
             if command in READ_COMMANDS:
                 validate_payload(request)
                 self.store = Store(self.root)
@@ -66,10 +69,20 @@ class Runtime:
                 with self.store.read() as con:
                     project, workspace = self.binding(con, config, request)
                     replay = con.execute('SELECT * FROM operations WHERE operation_id=?', (op_id,)).fetchone()
-                    if replay:
-                        require(replay['project_id'] == project and replay['request_digest'] == request_hash,
-                                'OPERATION_CONFLICT', 'The same operation_id was used for a different request', '/operation_id', status='conflict')
-                        return loads(replay['response_json'])
+                    replay_run = con.execute('SELECT * FROM runs WHERE run_id=?', (replay['run_id'],)).fetchone() if replay else None
+                if replay:
+                    require(replay['origin_kind'] == 'local', 'OPERATION_IMPORTED', 'Imported operation receipts are history; use a new local operation identity', status='blocked')
+                    require(replay['project_id'] == project and replay['request_digest'] == request_hash,
+                            'OPERATION_CONFLICT', 'The same operation_id was used for a different request', '/operation_id', status='conflict')
+                    response = loads(replay['response_json'])
+                    rebound_here = command == 'workspace.rebind' and response.get('data', {}).get('config', {}).get('store_id') == config['store_id']
+                    require(replay_run and replay_run['origin_kind'] == 'local' and (replay_run['workspace_id'] == workspace or rebound_here),
+                            'OPERATION_WORKSPACE', 'Copied operation history cannot execute in this workspace', status='blocked')
+                    transfer.apply_config(self.store, command, response)
+                    return response
+                with self.store.read() as con:
+                    pending_config = con.execute("SELECT o.operation_id FROM operations o JOIN runs r USING(run_id) WHERE r.workspace_id=? AND r.origin_kind='local' AND o.origin_kind='local' AND o.command IN ('workspace.bind','workspace.rebind') AND o.status='succeeded' AND o.config_applied_at IS NULL", (workspace,)).fetchall()
+                    require(not pending_config, 'CONFIG_TRANSITION_PENDING', 'Replay the committed configuration operation before further mutations', status='blocked', details=[r[0] for r in pending_config])
                 # This independent transaction precedes payload validation and formal phase outputs.
                 run_id = self.open_run(project, workspace, request)
                 trace = safe_path(self.store.home, f'runs/{run_id}/{op_id}')
@@ -106,6 +119,7 @@ class Runtime:
                             self.record_operation(con, project, run_id, request, request_hash, response)
                         con.execute('UPDATE runs SET status=?,error_code=?,error_message=? WHERE run_id=?',
                                     ('interrupted' if response['status'] == 'unknown' else 'blocked' if fault.status in {'blocked', 'conflict'} else 'failed', fault.code, response['errors'][0]['message'], run_id))
+                transfer.apply_config(self.store, command, response)
                 # Rendering/trace failures cannot undo or retry a committed operation.
                 try:
                     self.write_trace(trace/'response.json', response)
@@ -134,7 +148,10 @@ class Runtime:
         project = request.get('project_id', config['project_id'])
         workspace = request.get('workspace_id', config['workspace_id'])
         row = one(con, 'SELECT * FROM workspaces WHERE project_id=? AND workspace_id=?', (project, workspace), code='WORKSPACE_SCOPE')
-        require(row['instance_id'] == config['instance_id'], 'WORKSPACE_INSTANCE', 'Rebind the copied workspace before writing', '/workspace_id', status='blocked')
+        if request['command'] not in READ_COMMANDS and request['command'] != 'workspace.rebind':
+            require(config.get('root_path') == str(self.root), 'WORKSPACE_MOVED',
+                    'Workspace path changed; explicitly rebind the copied or moved directory', status='blocked')
+        require(request['command'] == 'workspace.rebind' or row['instance_id'] == config['instance_id'], 'WORKSPACE_INSTANCE', 'Rebind the copied workspace before writing', '/workspace_id', status='blocked')
         return project, workspace
 
     def open_run(self, project, workspace, request):
@@ -142,6 +159,7 @@ class Runtime:
         with self.store.transaction() as con:
             if supplied:
                 row = one(con, 'SELECT * FROM runs WHERE project_id=? AND workspace_id=? AND run_id=?', (project, workspace, supplied), code='RUN_SCOPE')
+                require(row['origin_kind'] == 'local', 'RUN_IMPORTED', 'Imported Runs are history; start a new local Run', status='blocked')
                 require(row['change_id'] == request.get('change_id'), 'RUN_SCOPE', 'Run belongs to a different change', '/run_id')
                 require(row['status'] not in {'completed', 'cancelled'}, 'RUN_CLOSED', 'Start a new run for further work', '/run_id', status='blocked')
                 return supplied
@@ -161,7 +179,7 @@ class Runtime:
             if review_mode not in {'auto', 'assisted'}:
                 review_mode = 'auto'
             value = uid()
-            prior = con.execute('SELECT * FROM runs WHERE project_id=? AND change_id=? AND current_phase IS NOT NULL ORDER BY started_at DESC LIMIT 1', (project, change)).fetchone() if change else None
+            prior = con.execute("SELECT * FROM runs WHERE project_id=? AND change_id=? AND workspace_id=? AND origin_kind='local' AND current_phase IS NOT NULL ORDER BY rowid DESC LIMIT 1", (project, change, workspace)).fetchone() if change else None
             continuation = {key: prior[key] for key in ('current_phase', 'repair_round', 'no_progress_rounds', 'last_progress_digest',
                             'max_repair_rounds', 'no_progress_limit', 'max_format_attempts', 'format_attempts')} if prior else {}
             insert(con, 'runs', {'run_id': value, 'project_id': project, 'change_id': change,
@@ -193,6 +211,9 @@ class Runtime:
             if change:
                 result['selected'] = content.prepare(self.store, con, project, change)
             return result
+        if command == 'delivery.get':
+            content.change_row(con, project, change)
+            return {'delivery': dict(delivery.row(con, project, change, payload['delivery_id']))}
         if command in {'task.next', 'check.evaluate', 'finding.list'}:
             content.change_row(con, project, change)
             require(request.get('run_id'), 'RUN_REQUIRED', 'Use a bound Run', '/run_id')
@@ -216,6 +237,19 @@ class Runtime:
             self.step(con, project, None, run, 'INIT', 'workspace.init')
             con.execute("UPDATE runs SET status='completed',finished_at=? WHERE run_id=?", (now(), run))
             return data
+        if command in {'workspace.bind', 'workspace.collect', 'workspace.rebind'} and self.store.config().get('root_path') == str(self.root):
+            pending = con.execute("SELECT o.operation_id FROM operations o JOIN runs r USING(run_id) WHERE r.workspace_id=? AND r.origin_kind='local' AND o.origin_kind='local' AND o.status='unknown'", (workspace,)).fetchall()
+            require(not pending, 'UNRESOLVED_EFFECT', 'Reconcile pending effects before changing workspace bindings or adopting imported inputs', status='blocked')
+            busy = con.execute("SELECT run_id FROM runs WHERE workspace_id=? AND origin_kind='local' AND lease_id IS NOT NULL", (workspace,)).fetchone()
+            require(not busy, 'WORKSPACE_BUSY', 'Finish or cancel the local execution lease before changing workspace bindings or collecting', status='blocked')
+        if command == 'workspace.clone':
+            return transfer.clone(self.store, con, payload, request['operation_id'])
+        if command == 'workspace.export':
+            return transfer.export(self.store, con, project, payload['change_id'])
+        if command == 'workspace.collect':
+            return transfer.collect(self.store, con, project, payload)
+        if command in {'workspace.bind', 'workspace.rebind'}:
+            return transfer.bindings(self.store, con, project, payload, rebind=command == 'workspace.rebind')
         if command == 'project.create':
             new_project, new_workspace = uid(), uid()
             insert(con, 'projects', {'project_id': new_project, 'name': payload['name'], 'created_at': now()})
@@ -231,13 +265,29 @@ class Runtime:
             return data
         if command == 'change.create':
             require(change is None, 'CHANGE_SCOPE', 'Creation allocates the change identity', '/change_id')
-            data = content.create_change(con, project, payload, head_commit(self.root))
+            data = content.create_change(con, project, payload, head_commit(self.root), workspace)
             con.execute('UPDATE runs SET change_id=?,input_revision_id=?,actor_id=?,review_mode=? WHERE run_id=?',
                         (data['change_id'], data['revision_id'], data['actor_id'], data['review_mode'], run))
             return data
         ch = content.change_row(con, project, change)
-        pending = [r[0] for r in con.execute("SELECT o.operation_id FROM operations o JOIN runs r USING(run_id) WHERE r.change_id=? AND o.status='unknown'", (change,))]
+        pending = [r[0] for r in con.execute("SELECT o.operation_id FROM operations o JOIN runs r USING(run_id) WHERE r.change_id=? AND r.workspace_id=? AND r.origin_kind='local' AND o.origin_kind='local' AND o.status='unknown'", (change, workspace))]
         require(not pending, 'UNRESOLVED_EFFECT', 'Reconcile unknown operations before further mutations', status='blocked', details=pending)
+        if command == 'authorization.grant':
+            state = engine.run_row(con, project, change, run)
+            return content.grant(con, project, change, workspace, state['actor_id'], payload['authorizations'])
+        if command == 'change.resolve':
+            require(not con.execute("SELECT 1 FROM steps s JOIN runs r USING(run_id) WHERE s.change_id=? AND r.workspace_id=? AND r.origin_kind='local' AND s.status='running'", (change, workspace)).fetchone(),
+                    'ATTEMPT_RUNNING', 'Finish active local work before merging content snapshots', status='blocked')
+            require(payload['phase'] in {'REQ', 'DSN', 'PLN'}, 'PHASE_OWNERSHIP', 'Resolve into a content phase')
+            parent = content.revision_row(con, project, change)
+            require(parent['state'] == 'committed', 'DRAFT_PENDING', 'Checkpoint the target draft before resolving', status='blocked')
+            source = one(con, "SELECT * FROM revisions WHERE project_id=? AND change_id=? AND revision_id=? AND state='committed'",
+                         (project, change, payload['source_revision_id']), code='REVISION_SCOPE')
+            require(source['revision_id'] != parent['revision_id'], 'MERGE_SOURCE', 'Select a different source revision')
+            rev = content.child_revision(con, parent, payload['phase'])
+            con.execute('UPDATE revisions SET merged_from_id=? WHERE revision_id=?', (source['revision_id'], rev))
+            con.execute('UPDATE runs SET current_phase=? WHERE run_id=?', (payload['phase'], run))
+            return {'revision_id': rev, 'parent_id': parent['revision_id'], 'merged_from_id': source['revision_id'], 'generation': 0}
         if command == 'run.configure':
             state = engine.run_row(con, project, change, run)
             allowed = ('max_repair_rounds', 'no_progress_limit', 'max_format_attempts')
@@ -250,7 +300,7 @@ class Runtime:
         if command == 'run.acquire':
             return engine.acquire(con, project, change, run)
         if command in {'run.resume', 'run.cancel'}:
-            pending = con.execute("SELECT operation_id FROM operations WHERE run_id=? AND status='unknown'", (run,)).fetchall()
+            pending = con.execute("SELECT operation_id FROM operations WHERE run_id=? AND origin_kind='local' AND status='unknown'", (run,)).fetchall()
             require(not pending, 'UNRESOLVED_EFFECT', 'Reconcile unknown operations before resuming/cancelling', status='blocked', details=[r[0] for r in pending])
             con.execute("UPDATE steps SET status='interrupted',outcome='unknown',finished_at=? WHERE run_id=? AND status='running'", (now(), run))
             con.execute('UPDATE runs SET lease_id=NULL,status=?,finished_at=? WHERE run_id=?', ('cancelled' if command == 'run.cancel' else 'running', now() if command == 'run.cancel' else None, run))
@@ -265,6 +315,8 @@ class Runtime:
             return engine.record_review(self.store, con, project, change, run, payload)
         if command == 'check.reuse':
             return engine.reuse_check(self.store, con, project, change, run, payload)
+        if command == 'delivery.prepare':
+            return delivery.prepare(self.store, con, project, change, run, payload)
         if command in {'finding.address', 'finding.resolve'}:
             return engine.finding_action(self.store, con, project, change, run, command, payload)
         if command == 'phase.submit':
@@ -282,7 +334,7 @@ class Runtime:
                       payload['revision_id'], data['committed_revision_id'])
             return data
         if command == 'change.revise':
-            require(not con.execute("SELECT 1 FROM steps WHERE change_id=? AND status='running'", (change,)).fetchone(),
+            require(not con.execute("SELECT 1 FROM steps s JOIN runs r USING(run_id) WHERE s.change_id=? AND r.workspace_id=? AND r.origin_kind='local' AND s.status='running'", (change, workspace)).fetchone(),
                     'ATTEMPT_RUNNING', 'Finish or explicitly interrupt active work before revising its inputs', status='blocked')
             require(payload['phase'] in {'REQ', 'DSN', 'PLN'}, 'PHASE_OWNERSHIP', 'Revise REQ/DSN/PLN', '/payload/phase')
             parent = content.revision_row(con, project, change)
@@ -338,10 +390,12 @@ class Runtime:
             return response
         with self.store.transaction() as con:
             validate_payload(request)
-            unknown = con.execute("SELECT operation_id FROM operations WHERE run_id=? AND status='unknown'", (run,)).fetchall()
+            unknown = con.execute("SELECT operation_id FROM operations WHERE run_id=? AND origin_kind='local' AND status='unknown'", (run,)).fetchall()
             require(not unknown, 'UNRESOLVED_EFFECT', 'Reconcile an earlier uncertain effect first', status='blocked', details=[r[0] for r in unknown])
             if command == 'task.write':
                 intent = engine.prepare_write(self.store, con, project, change, run, payload, work)
+            elif command == 'delivery.execute':
+                intent = delivery.prepare_effect(self.store, con, project, change, run, payload, work)
             else:
                 intent = engine.prepare_check(self.store, con, project, change, run, payload, work)
             pending = failure(Fault('EFFECT_UNKNOWN', 'Effect intent recorded; reconcile before retrying', status='unknown'), request['operation_id'], run)
@@ -351,6 +405,8 @@ class Runtime:
         # External tools and product writes never run inside a SQLite transaction.
         if command == 'task.write':
             evidence = engine.apply_write(self.store, project, intent)
+        elif command == 'delivery.execute':
+            evidence = delivery.execute(self.store, project, intent, work)
         else:
             evidence = execution.run_command(intent['argv'], self.root, work, intent['writable'],
                         env=intent['environment'], timeout=intent['timeout_seconds'])
@@ -360,7 +416,7 @@ class Runtime:
         with self.store.transaction() as con:
             con.execute('UPDATE operations SET result_digest=? WHERE operation_id=?', (digest(evidence), request['operation_id']))
         with self.store.transaction() as con:
-            data = evidence if command == 'task.write' else engine.finish_check(self.store, con, project, change, run, intent, evidence)
+            data = evidence if command == 'task.write' else (delivery.finish if command == 'delivery.execute' else engine.finish_check)(self.store, con, project, change, run, intent, evidence)
             response = success(data, request['operation_id'], run)
             if data.get('outcome') == 'blocked':
                 response = failure(Fault(data.get('error_code') or 'CHECK_BLOCKED', 'Check could not execute', status='blocked'), request['operation_id'], run)
@@ -373,6 +429,7 @@ class Runtime:
         with self.store.read() as con:
             engine.run_row(con, project, change, run)
             operation = one(con, 'SELECT * FROM operations WHERE project_id=? AND run_id=? AND operation_id=?', (project, run, original), code='OPERATION_SCOPE')
+            require(operation['origin_kind'] == 'local', 'OPERATION_IMPORTED', 'Imported effects cannot be reconciled in this workspace', status='blocked')
             if operation['status'] != 'unknown':
                 return {'original_receipt': loads(operation['response_json']), 'already_reconciled': True}
         work = safe_path(self.store.home, f'runs/{run}/{original}/work')
@@ -401,9 +458,14 @@ class Runtime:
                     pass
                 else:
                     raise Fault('TOOL_STILL_RUNNING', 'Original tool process still exists; do not duplicate it', status='blocked')
-            evidence = {'status': 'unknown', 'summary': 'Interrupted before a durable result; retained logs are not PASS', 'exit_code': None}
+            if intent['kind'] == 'delivery.execute':
+                path = delivery.destination(self.store, intent['target'], intent['sha256'])
+                evidence = delivery.execute(self.store, project, intent, work/'recheck'/uid(), write=not path.exists())
+            else:
+                evidence = {'status': 'unknown', 'summary': 'Interrupted before a durable result; retained logs are not PASS', 'exit_code': None}
         with self.store.transaction() as con:
-            data = engine.finish_check(self.store, con, project, change, run, intent, evidence)
+            finish = delivery.finish if intent['kind'] == 'delivery.execute' else engine.finish_check
+            data = finish(self.store, con, project, change, run, intent, evidence)
             response = success(data, original, run)
             con.execute("UPDATE operations SET status='succeeded',response_json=? WHERE operation_id=?", (canonical(response).decode(), original))
         return {'original_receipt': response, 'reconciled': True, 'next_action': 'check.run' if data['outcome'] == 'unknown' else 'inspect'}

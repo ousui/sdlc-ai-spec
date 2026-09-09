@@ -12,7 +12,7 @@ PAYLOADS = {
     'workspace.discover': {},
     'workspace.clone': {'target': 'str'},
     'workspace.export': {'change_id': 'id'},
-    'workspace.collect': {'path': 'str'},
+    'workspace.collect': {'path': 'str', 'conflict_policy': 'str?'},
     'workspace.bind': {'resources': 'object', 'reason': 'str'},
     'workspace.rebind': {'resources': 'object?', 'reason': 'str'},
     'authorization.grant': {'authorizations': 'array'},
@@ -79,6 +79,10 @@ def validate_request(request):
 
 def validate_payload(request):
     fields(request.get('payload', {}), PAYLOADS[request['command']], '/payload')
+    if request['command'] == 'workspace.collect':
+        require(request.get('payload', {}).get('conflict_policy', 'reject') in
+                {'reject', 'preserve_revision_versions'}, 'INVALID_ENUM',
+                'Use reject or preserve_revision_versions', '/payload/conflict_policy')
 
 
 def scalar_schema(spec, nullable=False):
@@ -141,6 +145,8 @@ def contract():
         return {'type': 'object', 'additionalProperties': False,
                 'required': [k for k, v in definitions.items() if not v.endswith('?')],
                 'properties': {k: scalar_schema(v) for k, v in definitions.items()}}
+    result['commands']['workspace.collect']['payload']['properties']['conflict_policy']['enum'] = [
+        'reject', 'preserve_revision_versions']
     entries = schema(CONTEXT_ENTRY)
     entries['properties']['kind']['enum'] = ['fact', 'rule', 'resource', 'command']
     entries['properties']['settings'] = {'oneOf': [schema({}), schema({'resource': 'str'}),

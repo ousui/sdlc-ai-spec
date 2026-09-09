@@ -23,12 +23,12 @@
 | Q0 | 已完成并本地提交 | 原13/10/24项实际通过与本地RLS；完整Spring归档恢复；实验室8b745601；Q0-RUNTIME-REPAIRS.md |
 | 核心补充 | 已完成b4d4bc4 | 135项测试通过；澄清、资产崩溃、中断日志、交付范围及独立复验见CORE-ACCEPTANCE-SUPPLEMENT.md |
 | Q1 | 已完成并本地提交 | 三项目真实闭环、独立复验及全归档核对；实验室b406546；Q1-RESULTS.md。后续内核149项通过 |
-| Q2 | 当前工作包 | 三项目实际实现及独立复验推进中；Header脱敏专项修补153项通过，见Q2-HEADER-REDACTION.md |
+| Q2 | 当前工作包 | 三项目业务/RLS已完成；Header脱敏153项通过；草稿分叉collect修补与实际恢复收口中，见Q2-COLLECT-VERSIONS.md |
 | FINAL | 未开始 | H_final/安装摘要/九场景回归/46项映射 |
 
 ## 唯一下一动作
 
-完成三项目第二复杂需求的本地RLS与专项工作区/合入/中断验证；用Header修补后的clean包复验fansite中断日志，旧证据保留原版本。原输入已先锁定，IMP才形成代码。
+完成collect修补的完整验证与独立审查，以clean安装包恢复Admin原row_conflict归档并实际resolve，再统一提交Q2三项目。fansite Header修补包实际中断/复制恢复已通过且两版本证据归档；原输入已先锁定，IMP才形成代码。
 Q1三项目已于实验室b406546统一提交；7d71793内核149项完整回归和独立8项状态组合通过。
 Q1原始覆盖、退修、状态反例及修补分别见Q1-RELEASE-COVERAGE.md、Q1-CONVERGENCE-REPAIR.md、Q1-RUN-STATUS.md。
 q1-entry基于b4d4bc4，q1-dsn基于586d133；旧证据保留原包边界，不能改写成新版本执行。

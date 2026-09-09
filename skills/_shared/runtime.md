@@ -82,6 +82,14 @@ unknown先operation.reconcile，不能重新发同一副作用或改绑资源来
 数据库打不开查看返回diagnostic_path，保留原库。视图失败不重做已提交业务效果。
 asset.inspect只读列出未登记文件、缺失资产和非法路径；不删除孤立文件，也不宣称已校验全部内容摘要。
 
+workspace.collect默认拒绝同ID异内容。已授权保留独立内容版本时，可显式传
+`conflict_policy: preserve_revision_versions`；仅导入冲突的已冻结revision及其后代别名，
+其他对象同键冲突仍拒绝。原包/回执不变，返回原与导入head、ID/digest映射和rows_imported。
+row_conflict表示事务未导入，不能直接resolve；原失败可用新operation_id和显式策略重试。
+rows_imported为true仍可能存在内容分歧；目标草稿先正常完成PLN checkpoint，之后用
+imported_source_head调用change.resolve。目标版本和历史结果保留，不合并源码或激活来源授权。
+后续workspace.export同时携带版本映射和原始ZIP；嵌套原包是来源证据，不是新的执行证明。
+
 ## 完成与交付
 
 RLS目标在REQ固定。local包必须真实写出、独立回读且当前输入/时效仍适用，才能完成RLS。

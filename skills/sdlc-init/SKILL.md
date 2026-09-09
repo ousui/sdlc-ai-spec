@@ -61,7 +61,7 @@ help/version/commands可通过CLI帮助、版本与本Skill命令表读取，不
 
 4. 回读workspace.inspect并保存project/workspace绑定。init完成不产生业务需求，不把初始化或环境准备当作IMP/VFY结果。
 
-5. 移交用workspace.export选择change_id；workspace.collect只导入事实与证据，不合并源码。冲突保留原包和双方head，交由已授权的内容修订处理。
+5. 移交用workspace.export选择change_id；workspace.collect只导入事实与证据，不合并源码。同ID内容分叉可按共享约定显式preserve_revision_versions，回读rows_imported与imported_source_head；保留目标草稿并正常checkpoint后才resolve。
 
 ## 输出与完成条件
 

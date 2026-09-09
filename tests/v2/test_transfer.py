@@ -249,6 +249,133 @@ class TransferTests(unittest.TestCase):
         self.s.complete('PLN')
         self.s.ok('change.resolve', {'source_revision_id': source_head, 'phase': 'PLN', 'reason': 'Resolve after preserving target draft'})
 
+    def fork_mutable_revision(self):
+        self.start_original()
+        shared = self.s.ok('change.revise', {'phase': 'PLN', 'reason': 'Fork a mutable content version'})['revision_id']
+        self.s.ok('run.cancel', {'reason': 'Keep shared historical Run unchanged across copies'})
+        copied, _ = self.clone()
+        self.start_original()
+        return copied, shared
+
+    def test_explicit_revision_preservation_recovers_original_failed_bundle_and_resolves(self):
+        copied, shared = self.fork_mutable_revision()
+        copied.submit('PLN', [{'op': 'update_task', 'id': self.fixture.task, 'title': 'Source frozen fork'}])
+        copied.complete('PLN')
+        source_head = self.revise(copied, 'Source descendant retains its original evidence')
+        self.s.ok('change.revise', {'phase': 'PLN', 'reason': 'Keep independent target draft'},
+                  expected_generation=self.s.ok('phase.prepare')['generation'])
+        self.s.submit('PLN', [{'op': 'update_task', 'id': self.fixture.task, 'title': 'Target work'}])
+        before = self.s.ok('phase.prepare')['content']
+        other = Session(self.root)
+        other.context = self.s.context
+        other.new_change('unrelated-control')
+        control = other.ok('change.get')['content']
+        archive = self.archive(self.copy)
+        raw, manifest, source_files, _ = transfer.unpack(Path(archive['path']))
+        source_rows = json.loads(source_files['database.json'])
+        request = {'path': archive['path']}
+        original = self.public.send('workspace.collect', request, operation_id='default-conflict')
+        self.assertEqual('row_conflict', original['data']['relation'])
+        self.assertFalse(original['data']['rows_imported'])
+        self.assertEqual([], original['data']['next_actions'])
+        result = self.public.ok('workspace.collect', {**request, 'conflict_policy': 'preserve_revision_versions'},
+                                operation_id='preserve-frozen-versions')
+        self.assertTrue(result['rows_imported'], result)
+        self.assertEqual('target_draft_pending', result['relation'])
+        aliases = result['revision_id_aliases']
+        self.assertEqual({shared, source_head}, set(aliases))
+        self.assertEqual(source_head, result['source_head'])
+        self.assertEqual(aliases[source_head], result['imported_source_head'])
+        self.assertEqual(original['data']['error'], result['prior_conflict']['error'])
+        self.assertEqual(raw, Path(result['archive']).read_bytes())
+        self.assertEqual(before, self.s.ok('phase.prepare')['content'])
+        self.assertEqual(control, other.ok('change.get')['content'])
+        with Store(self.root).read() as con:
+            for key, version in result['revision_versions'].items():
+                self.assertEqual(version['imported_digest'], Store(self.root).content_digest(con, aliases[key]))
+            root_version = result['revision_versions'][shared]
+            self.assertEqual(root_version['source_digest'], root_version['imported_digest'])
+            child_version = result['revision_versions'][source_head]
+            self.assertNotEqual(child_version['source_digest'], child_version['imported_digest'])
+            self.assertEqual(aliases[shared], con.execute('SELECT parent_id FROM revisions WHERE revision_id=?', (aliases[source_head],)).fetchone()[0])
+            for row in source_rows['operations']:
+                imported = con.execute('SELECT response_json,request_digest FROM operations WHERE operation_id=?', (row['operation_id'],)).fetchone()
+                self.assertEqual((row['response_json'], row['request_digest']), tuple(imported))
+            self.assertEqual('imported', con.execute('SELECT origin_kind FROM runs WHERE run_id=?', (copied.bindings['run_id'],)).fetchone()[0])
+            count = con.execute('SELECT count(*) FROM revisions').fetchone()[0]
+            self.assertFalse(con.execute('PRAGMA foreign_key_check').fetchall())
+        repeat = self.public.ok('workspace.collect', {**request, 'conflict_policy': 'preserve_revision_versions'})
+        self.assertTrue(repeat['idempotent'])
+        self.assertEqual(aliases, repeat['revision_id_aliases'])
+        self.assertEqual(original, self.public.send('workspace.collect', request, operation_id='default-conflict'))
+        with Store(self.root).read() as con:
+            self.assertEqual(count, con.execute('SELECT count(*) FROM revisions').fetchone()[0])
+        target_head = self.s.complete('PLN')['revision_id']
+        resolved = self.s.ok('change.resolve', {'source_revision_id': aliases[source_head], 'phase': 'PLN', 'reason': 'Explicitly integrate preserved source fork'})
+        self.assertEqual((target_head, aliases[source_head]), (resolved['parent_id'], resolved['merged_from_id']))
+        self.s.complete('PLN')
+        exported = self.archive(self.root)
+        _, exported_manifest, exported_files, _ = transfer.unpack(Path(exported['path']))
+        transfer.validate_archive(Store(self.root), exported_manifest, exported_files)
+        base = 'imports/'+archive['bundle_digest']
+        self.assertEqual(raw, exported_files[base+'.zip'])
+        self.assertEqual(aliases, json.loads(exported_files[base+'.json'])['summary']['revision_id_aliases'])
+        for name, data in source_files.items():
+            if name.startswith('runs/') and name in exported_files:
+                self.assertEqual(data, exported_files[name])
+
+    def test_revision_policy_preserves_both_committed_heads_without_overwrite(self):
+        copied, shared = self.fork_mutable_revision()
+        for session, title in ((copied, 'Source choice'), (self.s, 'Target choice')):
+            session.submit('PLN', [{'op': 'update_task', 'id': self.fixture.task, 'title': title}])
+            session.complete('PLN')
+        before = self.s.ok('phase.prepare')['content']
+        result = self.public.ok('workspace.collect', {'path': self.archive(self.copy)['path'], 'conflict_policy': 'preserve_revision_versions'})
+        self.assertTrue(result['rows_imported'], result)
+        self.assertEqual(('conflict', 'diverged'), (result['status'], result['relation']))
+        self.assertEqual(before, self.s.ok('phase.prepare')['content'])
+        self.assertNotEqual(shared, result['imported_source_head'])
+
+    def test_revision_policy_cannot_rename_conflicting_project_or_execution_rows(self):
+        copied, shared = self.fork_mutable_revision()
+        copied.complete('PLN')
+        self.s.ok('change.revise', {'phase': 'PLN', 'reason': 'Abandon target variant'},
+                  expected_generation=self.s.ok('phase.prepare')['generation'])
+        archive = self.archive(self.copy)
+        _, manifest, original_files, _ = transfer.unpack(Path(archive['path']))
+        before = self.s.ok('phase.prepare')['content']
+        for table, column in [('projects', 'name'), ('runs', 'error_message')]:
+            with self.subTest(table=table):
+                files = dict(original_files)
+                rows = json.loads(files['database.json'])
+                with Store(self.root).read() as con:
+                    keys = {r[0] for r in con.execute('SELECT '+('project_id' if table == 'projects' else 'run_id')+' FROM '+table)}
+                key = 'project_id' if table == 'projects' else 'run_id'
+                row = next(r for r in rows[table] if r[key] in keys)
+                row[column] = 'Unrelated identity conflict must not be renamed'
+                files['database.json'] = canonical(rows)+b'\n'
+                raw, _ = transfer.pack(files, {k: v for k, v in manifest.items() if k != 'files'})
+                path = Path(self.temp.name)/(table+'-conflict.zip')
+                path.write_bytes(raw)
+                result = self.public.ok('workspace.collect', {'path': str(path), 'conflict_policy': 'preserve_revision_versions'})
+                self.assertEqual('row_conflict', result['relation'], result)
+                self.assertFalse(result['rows_imported'])
+                self.assertIsNone(result['imported_source_head'])
+                self.assertEqual(before, self.s.ok('phase.prepare')['content'])
+                with Store(self.root).read() as con:
+                    for alias in result.get('revision_id_aliases', {}).values():
+                        self.assertIsNone(con.execute('SELECT 1 FROM revisions WHERE revision_id=?', (alias,)).fetchone())
+
+    def test_revision_policy_rejects_mutable_source_and_unknown_policy(self):
+        copied, shared = self.fork_mutable_revision()
+        copied.submit('PLN', [{'op': 'update_task', 'id': self.fixture.task, 'title': 'Unfinished source'}])
+        path = self.archive(self.copy)['path']
+        invalid = self.public.send('workspace.collect', {'path': path, 'conflict_policy': 'overwrite'})
+        self.assertEqual(('INVALID_ENUM', '/payload/conflict_policy'), (invalid['errors'][0]['code'], invalid['errors'][0]['path']))
+        result = self.public.ok('workspace.collect', {'path': path, 'conflict_policy': 'preserve_revision_versions'})
+        self.assertEqual('IMPORT_DRAFT_CONFLICT', result['error']['code'])
+        self.assertFalse(result['rows_imported'])
+
     def test_older_source_only_adds_history(self):
         self.clone()
         archive = self.archive(self.copy)

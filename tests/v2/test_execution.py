@@ -36,6 +36,18 @@ class CollectorTests(unittest.TestCase):
         self.assertEqual(('fail', 1), (bad['status'], bad['exit_code']))
         self.assertIn('actual failed assertion', bad['stderr'])
 
+    def test_shell_metacharacters_in_directory_and_argv_remain_literal(self):
+        self.product = self.product/'space ; $(touch unexpected)'
+        self.product.mkdir()
+        self.work = self.product/'.sdlc/runs/example/work'
+        argument = 'value ; $(touch unexpected) `touch extra`'
+        result = run_command([sys.executable, '-c', 'import sys; from pathlib import Path; assert sys.argv[1] == '+repr(argument)+'; assert not Path("unexpected").exists(); print(sys.argv[1])', argument],
+                             self.product, self.work, [(self.product, '.')])
+        self.assertEqual(('pass', 0), (result['status'], result['exit_code']))
+        self.assertIn(argument, result['stdout'])
+        self.assertFalse((self.product/'unexpected').exists())
+        self.assertFalse((self.product/'extra').exists())
+
     def test_command_cannot_write_outside_scope_or_forge_evidence(self):
         outside = self.root/'outside.txt'
         script = 'from pathlib import Path; Path('+repr(str(outside))+').write_text("outside")'
@@ -445,6 +457,30 @@ class ExecutionFlowTests(unittest.TestCase):
             self.assertEqual(expected, result['status'])
         state = self.s.ok('run.get')['run']
         self.assertEqual((3, 2), (state['repair_round'], state['no_progress_rounds']))
+
+    def test_default_five_round_budget_keeps_each_actual_failure(self):
+        results = []
+        for attempt in range(1, 6):
+            step = self.start()
+            self.s.ok('task.write', {'revision_id': self.rev, 'task_id': self.task, 'step_id': step, 'lease_id': self.lease,
+                'files': [{'path': 'product.py', 'content': f'def count(values):\n    return {attempt}\n'},
+                          {'path': 'test_product.py', 'content': 'from product import count\nassert count([]) == 0\n'}]})
+            self.finish(step)
+            self.s.ok('phase.complete', {'phase': 'IMP', 'revision_id': self.rev, 'lease_id': self.lease})
+            failed = self.s.ok('check.run', {'revision_id': self.rev, 'check_id': self.dsn['test'], 'lease_id': self.lease})
+            self.assertEqual(('fail', 1), (failed['outcome'], failed['exit_code']))
+            results.append(failed['result_id'])
+            self.s.ok('check.record_review', {'revision_id': self.rev, 'check_id': self.dsn['review'], 'lease_id': self.lease,
+                'status': 'pass', 'observations': 'Fixture code changed; the real empty-list assertion still fails.'})
+            stopped = self.s.send('phase.complete', {'phase': 'VFY', 'revision_id': self.rev, 'lease_id': self.lease})
+            self.assertEqual('blocked' if attempt == 5 else 'needs_work', stopped['status'])
+        state = self.s.ok('run.get')['run']
+        self.assertEqual((5, 5, 0), (state['max_repair_rounds'], state['repair_round'], state['no_progress_rounds']))
+        self.assertEqual('REPAIR_BUDGET', self.s.send('run.acquire')['errors'][0]['code'])
+        with Store(self.root).read() as con:
+            retained = con.execute('SELECT result_id,status FROM check_results WHERE check_id=?', (self.dsn['test'],)).fetchall()
+            self.assertEqual(set(results), {r['result_id'] for r in retained})
+            self.assertEqual({'fail'}, {r['status'] for r in retained})
 
     def test_scope_and_forged_command_review_rejected(self):
         step = self.start()

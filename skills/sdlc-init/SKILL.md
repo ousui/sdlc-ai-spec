@@ -33,6 +33,7 @@ help/version/commands可通过CLI帮助、版本与本Skill命令表读取，不
 | `workspace.rebind` | 重绑定手工复制或移动的工作区 | 是，须满足本阶段授权 |
 | `workspace.export` | 导出一个需求的完整离线归档 | 是，须满足本阶段授权 |
 | `workspace.collect` | 逻辑交回一个需求并保留冲突 | 是，须满足本阶段授权 |
+| `asset.inspect` | 只读识别缺失和未登记资产 | 否 |
 
 ## 参数
 

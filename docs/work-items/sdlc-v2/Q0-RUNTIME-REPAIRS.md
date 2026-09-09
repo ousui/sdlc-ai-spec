@@ -34,5 +34,5 @@ Check验收集合，前置条件producer未参与遍历。现与task fingerprint
 三个测试编写错误的原日志保留于Q0-repairs-full-first与transfer-second/third。
 修正测试后24项transfer和119项全套通过，未通过改Runtime绕过接口校验。
 
-首次产品证据分别在q0-admin、q0-fansite、q0-springgear。Q0完整关闭还需新包实际Spring归档；
-V2-005需求澄清入口的独立验收缺口将作为下一逻辑修补，不冒称当前已覆盖46项。
+首次产品证据分别在q0-admin、q0-fansite、q0-springgear。后续新包实际Spring完整归档已完成；
+V2-005及独立验收发现的补充见CORE-ACCEPTANCE-SUPPLEMENT.md，保留本次122项证据版本。

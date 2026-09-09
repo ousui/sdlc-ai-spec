@@ -32,6 +32,7 @@ help/version/commands可通过CLI帮助、版本与本Skill命令表读取，不
 | `finding.list` | 读取当前缺口 | 否 |
 | `delivery.get` | 读取交付记录 | 否 |
 | `render` | 生成可再生阅读视图 | 是，须满足本阶段授权 |
+| `asset.inspect` | 只读识别缺失和未登记资产 | 否 |
 
 ## 参数
 

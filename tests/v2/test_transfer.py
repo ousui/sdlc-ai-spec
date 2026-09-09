@@ -1,5 +1,7 @@
 """Independent workspaces and logical imports through public requests."""
 import json
+import html
+import re
 import shutil
 import tempfile
 import unittest
@@ -109,6 +111,22 @@ class TransferTests(unittest.TestCase):
             self.assertEqual(revision, con.execute('SELECT active_revision_id FROM changes WHERE change_id=?', (self.change,)).fetchone()[0])
             self.assertTrue(con.execute('SELECT 1 FROM revisions WHERE revision_id=?', (untouched['revision_id'],)).fetchone())
             self.assertFalse(con.execute('PRAGMA foreign_key_check').fetchall())
+
+    def test_offline_archive_is_readable_without_original_workspace(self):
+        archive = self.archive(self.root)
+        portable = Path(self.temp.name)/'portable.zip'
+        shutil.copyfile(archive['path'], portable)
+        self.root.rename(Path(self.temp.name)/'unavailable-original')
+        self.assertFalse(self.root.exists())
+        _, manifest, files, hashed = transfer.unpack(portable)
+        self.assertEqual(archive['bundle_digest'], hashed)
+        rows = json.loads(files['database.json'])
+        self.assertEqual([self.change], [r['change_id'] for r in rows['changes']])
+        self.assertTrue(rows['runs'])
+        self.assertTrue(any(name.endswith('/request.json') for name in files))
+        links = re.findall(r'href="([^"]+)"', files['index.html'].decode())
+        self.assertTrue(links)
+        self.assertTrue(all(html.unescape(link) in files for link in links))
 
     def test_archive_budget_rejection_preserves_evidence_and_later_exports_complete_bytes(self):
         self.public.context = self.s.context

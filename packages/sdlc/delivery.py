@@ -78,7 +78,8 @@ def prepare(store, con, project, change, run, p):
         require(con.execute("SELECT 1 FROM steps WHERE run_id=? AND task_id=? AND step_key=? AND status='running'",
                             (run, check['task_id'], 'task:'+check['task_id'])).fetchone(), 'TASK_NOT_RUNNING', 'Start the delivery task', status='blocked')
         verification.ensure_conditions(store, con, project, change, run, p['revision_id'], task, 'execute', p.get('environment'))
-    require(not loads(check['input_paths_json']), 'READBACK_INPUT_SCOPE', 'Native package readback uses the complete main input set', status='blocked')
+    # The immutable native Check defines the delivered source set. Its default
+    # is main, while an explicit project scope must not collect sibling code.
     observed = verification.current_subject(store, con, p['revision_id'], check, p.get('environment'))
     snapshot_id = execution.snapshot(store, con, project, run, observed)
     asset, hashed, manifest = package(store, con, project, change, p['revision_id'], snapshot_id, evaluation, p['usage'])

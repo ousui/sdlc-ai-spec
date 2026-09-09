@@ -72,6 +72,31 @@ class DeliveryTests(unittest.TestCase):
         self.assertEqual('DELIVERY_PENDING', result['errors'][0]['code'])
         self.assertFalse(self.target.exists())
 
+    def scope_to_selected_product(self):
+        paths = [{'resource': 'main', 'path': name, 'access': 'read'} for name in ['product.py', 'test_product.py']]
+        self.replan([{'op': 'update_check', 'id': key, 'input_paths': paths}
+                     for key in [self.fixture.dsn['test'], self.fixture.dsn['review'], self.readback]])
+
+    def test_declared_delivery_scope_excludes_sibling_product_and_its_later_changes(self):
+        other = self.root/'sibling.py'
+        other.write_text('This belongs to another project')
+        self.scope_to_selected_product()
+        prepared = self.prepare()
+        other.write_text('The other project changed after preparation')
+        self.assertEqual('succeeded', self.execute(prepared)['data']['status'])
+        with zipfile.ZipFile(self.target) as archive:
+            names = {name for name in archive.namelist() if name.startswith('code/')}
+            self.assertEqual({'code/main/product.py', 'code/main/test_product.py'}, names)
+        self.assertTrue(self.complete()['ok'])
+
+    def test_declared_delivery_scope_still_rejects_changed_selected_code(self):
+        self.scope_to_selected_product()
+        prepared = self.prepare()
+        (self.root/'product.py').write_text('def count(values): return 7')
+        result = self.execute(prepared)
+        self.assertEqual('DELIVERY_SUBJECT_CHANGED', result['errors'][0]['code'])
+        self.assertFalse(self.target.exists())
+
     def test_existing_target_is_preserved(self):
         self.target.parent.mkdir(parents=True)
         self.target.write_bytes(b'unrelated local package')

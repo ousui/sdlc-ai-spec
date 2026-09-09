@@ -36,6 +36,11 @@
       "name": "render",
       "description": "生成可再生阅读视图",
       "writes": true
+    },
+    {
+      "name": "asset.inspect",
+      "description": "只读识别缺失和未登记资产",
+      "writes": false
     }
   ]
 }

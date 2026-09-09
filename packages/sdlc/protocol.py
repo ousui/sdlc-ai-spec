@@ -30,10 +30,13 @@ PAYLOADS = {
     'phase.complete': {'phase': 'str', 'revision_id': 'id', 'lease_id': 'id?', 'environment': 'object?'},
     'run.start': {'actor_id': 'str', 'review_mode': 'str?'},
     'run.get': {},
+    'run.request_input': {'revision_id': 'id', 'question': 'str', 'conflict': 'str', 'field_path': 'str?'},
+    'run.answer_input': {'question_step_id': 'id', 'answer': 'str', 'basis_text': 'str'},
     'status': {},
     'render': {},
     'asset.add': {'path': 'str', 'owner_type': 'str', 'owner_id': 'id', 'purpose': 'str',
                   'original_name': 'str?', 'media_type': 'str?', 'ordinal': 'nonnegative?'},
+    'asset.inspect': {},
 }
 PAYLOADS.update({
     'run.acquire': {},
@@ -58,7 +61,7 @@ PAYLOADS.update({
 })
 EFFECT_COMMANDS = {'task.write', 'check.run', 'operation.reconcile', 'delivery.execute'}
 
-READ_COMMANDS = {'workspace.discover', 'workspace.inspect', 'change.get', 'phase.prepare', 'run.get', 'status', 'task.next', 'check.evaluate', 'finding.list', 'delivery.get'}
+READ_COMMANDS = {'workspace.discover', 'workspace.inspect', 'change.get', 'phase.prepare', 'run.get', 'status', 'task.next', 'check.evaluate', 'finding.list', 'delivery.get', 'asset.inspect'}
 CONTEXT_ENTRY = {'kind': 'str', 'name': 'str', 'content': 'str', 'origin': 'str?', 'settings': 'object?'}
 AUTHORIZATION = {'action': 'str', 'target': 'str', 'issued_by': 'str', 'basis_text': 'str'}
 FILE_CHANGE = {'path': 'str', 'content': 'text?', 'action': 'str?', 'resource': 'str?'}
@@ -160,7 +163,7 @@ def contract():
 
 
 def phase_commands(phase):
-    common = {'phase.prepare', 'phase.complete', 'change.revise', 'run.get', 'status', 'render', 'run.configure', 'run.start', 'authorization.grant'}
+    common = {'phase.prepare', 'phase.complete', 'change.revise', 'run.get', 'run.request_input', 'run.answer_input', 'status', 'render', 'run.configure', 'run.start', 'authorization.grant'}
     content = {'phase.submit', 'asset.add'}
     execution = {'run.acquire', 'run.resume', 'run.cancel', 'task.next', 'task.start', 'task.finish', 'task.write',
                  'check.run', 'check.reuse', 'check.record_review', 'check.evaluate', 'finding.list', 'finding.address',

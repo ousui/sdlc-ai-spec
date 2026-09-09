@@ -21,6 +21,16 @@
       "name": "phase.complete",
       "description": "校验并完成当前阶段",
       "writes": true
+    },
+    {
+      "name": "run.request_input",
+      "description": "保存冲突并等待用户澄清",
+      "writes": true
+    },
+    {
+      "name": "run.answer_input",
+      "description": "保存实际回答并恢复当前需求",
+      "writes": true
     }
   ]
 }

@@ -38,6 +38,8 @@ help/version/commands可通过CLI帮助、版本与本Skill命令表读取，不
 | `finding.resolve` | 用适用新结果关闭缺口 | 是，须满足本阶段授权 |
 | `phase.complete` | 校验并完成当前阶段 | 是，须满足本阶段授权 |
 | `run.configure` | 有依据地调整执行预算 | 是，须满足本阶段授权 |
+| `run.request_input` | 保存冲突并等待用户澄清 | 是，须满足本阶段授权 |
+| `run.answer_input` | 保存实际回答并恢复当前需求 | 是，须满足本阶段授权 |
 
 ## 参数
 

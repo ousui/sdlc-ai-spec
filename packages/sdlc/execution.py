@@ -178,6 +178,9 @@ def run_command(argv, cwd, work, writable, *, env=None, timeout=60, output_limit
     clock = time.monotonic()
     buffers = {'stdout': bytearray(), 'stderr': bytearray()}
     totals = {'stdout': 0, 'stderr': 0}
+    persisted = {'stdout': 0, 'stderr': 0}
+    for name in buffers:
+        atomic_write(work/(name+'.log'), b'')
     problem = None
     killed = False
     try:
@@ -208,6 +211,14 @@ def run_command(argv, cwd, work, writable, *, env=None, timeout=60, output_limit
                 totals[name] += len(raw)
                 room = max(0, output_limit-len(buffers[name]))
                 buffers[name].extend(raw[:room])
+                # Persist received complete lines during execution. A hard-killed
+                # collector must not lose already flushed tool diagnostics. The
+                # unfinished line stays buffered until EOF to avoid exposing a
+                # partially received secret; these logs never establish PASS.
+                complete = buffers[name].rfind(b'\n')+1
+                if complete > persisted[name]:
+                    atomic_write(work/(name+'.log'), redact(buffers[name][:complete].decode('utf-8', errors='replace')).encode())
+                    persisted[name] = complete
                 if len(raw) > room:
                     problem = 'OUTPUT_LIMIT'
         exit_code = process.wait()

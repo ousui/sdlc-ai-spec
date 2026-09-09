@@ -41,6 +41,11 @@
       "name": "workspace.collect",
       "description": "逻辑交回一个需求并保留冲突",
       "writes": true
+    },
+    {
+      "name": "asset.inspect",
+      "description": "只读识别缺失和未登记资产",
+      "writes": false
     }
   ]
 }

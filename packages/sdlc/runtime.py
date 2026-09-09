@@ -7,7 +7,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 
-from . import content, delivery, engine, execution, transfer, verification
+from . import clarification, content, delivery, engine, execution, transfer, verification
 from .common import API, VERSION, Fault, atomic_write, canonical, digest, file_lock, loads, now, redact, require, safe_path, uid
 from .protocol import EFFECT_COMMANDS, READ_COMMANDS, contract, validate_payload, validate_request
 from .storage import Store, insert, one
@@ -16,6 +16,7 @@ from .storage import Store, insert, one
 def failure(exc, operation_id=None, run_id=None):
     error = exc.record()
     error['message'] = redact(error['message'])
+    error['path'] = redact(error['path'])
     if 'details' in error:
         error['details'] = redact(error['details'])
     return {'api_version': API, 'ok': False, 'status': exc.status, 'operation_id': operation_id,
@@ -118,7 +119,7 @@ class Runtime:
                         else:
                             self.record_operation(con, project, run_id, request, request_hash, response)
                         con.execute('UPDATE runs SET status=?,error_code=?,error_message=? WHERE run_id=?',
-                                    ('interrupted' if response['status'] == 'unknown' else 'blocked' if fault.status in {'blocked', 'conflict'} else 'failed', fault.code, response['errors'][0]['message'], run_id))
+                                    ('interrupted' if response['status'] == 'unknown' else 'blocked' if fault.status in {'blocked', 'conflict', 'needs_input'} else 'failed', fault.code, response['errors'][0]['message'], run_id))
                 transfer.apply_config(self.store, command, response)
                 # Rendering/trace failures cannot undo or retry a committed operation.
                 try:
@@ -198,18 +199,22 @@ class Runtime:
         if command == 'workspace.inspect':
             return {'config': self.store.config(), 'schema_version': con.execute('SELECT max(version) FROM schema_migrations').fetchone()[0],
                     'projects': [dict(r) for r in con.execute('SELECT * FROM projects')], 'contract': contract()}
+        if command == 'asset.inspect':
+            return self.store.inspect_assets(con, project)
         if command == 'run.get':
             require(request.get('run_id'), 'RUN_REQUIRED', 'Specify run_id', '/run_id')
             run = dict(one(con, 'SELECT * FROM runs WHERE project_id=? AND run_id=?', (project, request['run_id']), code='RUN_SCOPE'))
             require(not request.get('change_id') or run['change_id'] == request['change_id'], 'RUN_SCOPE', 'Run belongs to a different change', '/change_id')
             require(run['workspace_id'] == request.get('workspace_id', self.store.config()['workspace_id']), 'RUN_SCOPE', 'Run belongs to a different workspace', '/workspace_id')
             return {'run': run,
+                    'pending_inputs': clarification.pending(con, project, run['workspace_id'], run['change_id']),
                     'steps': [dict(r) for r in con.execute('SELECT * FROM steps WHERE project_id=? AND run_id=? ORDER BY started_at', (project, request['run_id']))]}
         if command == 'status':
             result = {'changes': [dict(r) for r in con.execute('SELECT * FROM changes WHERE project_id=? ORDER BY slug', (project,))],
                       'runs': [dict(r) for r in con.execute('SELECT * FROM runs WHERE project_id=? ORDER BY started_at', (project,))]}
             if change:
                 result['selected'] = content.prepare(self.store, con, project, change)
+                result['pending_inputs'] = clarification.pending(con, project, request.get('workspace_id', self.store.config()['workspace_id']), change)
             return result
         if command == 'delivery.get':
             content.change_row(con, project, change)
@@ -226,12 +231,14 @@ class Runtime:
             return {'findings': [dict(r) for r in con.execute('SELECT * FROM findings WHERE project_id=? AND change_id=?', (project, change))]}
         if command in {'change.get', 'phase.prepare'}:
             current = engine.phase(con, project, change, request['run_id']) if request.get('run_id') else None
-            return content.prepare(self.store, con, project, change, payload.get('phase'), execution_phase=current)
+            return {**content.prepare(self.store, con, project, change, payload.get('phase'), execution_phase=current),
+                    'pending_inputs': clarification.pending(con, project, request.get('workspace_id', self.store.config()['workspace_id']), change)}
         raise Fault('UNKNOWN_COMMAND', 'Command is not implemented', '/command')
 
     def write_command(self, con, project, workspace, run, request):
         command, payload, change = request['command'], request.get('payload', {}), request.get('change_id')
         generation = request.get('expected_generation')
+        clarification.ensure_answered(con, project, workspace, change, command)
         if command == 'workspace.init':
             data = {'config': self.store.config(), 'next_actions': [{'action': 'context.commit', 'phase': 'CTX'}]}
             self.step(con, project, None, run, 'INIT', 'workspace.init')
@@ -297,6 +304,10 @@ class Runtime:
             return {**values, 'reason': redact(payload['reason']), 'actor_id': state['actor_id']}
         if command == 'run.start':
             return {'change_id': change, 'revision_id': ch['active_revision_id']}
+        if command == 'run.request_input':
+            return clarification.request(con, project, workspace, change, run, request['operation_id'], payload)
+        if command == 'run.answer_input':
+            return clarification.answer(con, project, workspace, change, run, payload)
         if command == 'run.acquire':
             return engine.acquire(con, project, change, run)
         if command in {'run.resume', 'run.cancel'}:
@@ -373,7 +384,8 @@ class Runtime:
 
     def data_response(self, data, operation_id, run_id):
         if data.get('control_status'):
-            response = failure(Fault(data['error_code'], 'Verification requires the returned next action', status=data['control_status']), operation_id, run_id)
+            response = failure(Fault(data['error_code'], data.get('error_message', 'Verification requires the returned next action'),
+                                     data.get('error_path', ''), status=data['control_status']), operation_id, run_id)
             response.update(data=data, next_actions=data['next_actions'])
             return response
         return success(data, operation_id, run_id)
@@ -390,6 +402,7 @@ class Runtime:
             return response
         with self.store.transaction() as con:
             validate_payload(request)
+            clarification.ensure_answered(con, project, engine.run_row(con, project, change, run)['workspace_id'], change, command)
             unknown = con.execute("SELECT operation_id FROM operations WHERE run_id=? AND origin_kind='local' AND status='unknown'", (run,)).fetchall()
             require(not unknown, 'UNRESOLVED_EFFECT', 'Reconcile an earlier uncertain effect first', status='blocked', details=[r[0] for r in unknown])
             if command == 'task.write':

@@ -318,6 +318,25 @@ class RuntimeTests(unittest.TestCase):
         current = s.ok('phase.prepare')
         self.assertEqual(9, len(current['content']['criteria']))
         self.assertEqual(9, len(current['content']['check_criteria']))
+        designs = [r['design_id'] for r in current['content']['designs']]
+        def planned_task(i):
+            return {'op': 'create_task', 'target_phase': 'IMP', 'kind': 'implement',
+                'title': 'Obligation '+str(i), 'description': 'Bounded disposition of this criterion',
+                'completion_text': 'Implementation attempt recorded',
+                'scope_paths': [{'resource': 'main', 'path': 'case'+str(i)+'.py', 'access': 'write'}],
+                'criteria': [{'id': ids['ac'+str(i)]}], 'designs': [{'id': designs[i % 3]}]}
+        s.submit('PLN', [planned_task(i) for i in range(8)])
+        current = s.ok('phase.prepare')
+        denied = s.send('phase.complete', {'phase': 'PLN', 'revision_id': current['content']['revision']['revision_id']}, expected_generation=current['generation'])
+        self.assertEqual('PHASE_INCOMPLETE', denied['errors'][0]['code'])
+        self.assertTrue(any(r.get('id') == ids['ac8'] for r in denied['errors'][0]['details']))
+        s.submit('PLN', [planned_task(8)])
+        s.complete('PLN')
+        adopted = s.ok('change.get')['content']
+        expected = {ids['ac'+str(i)] for i in range(9)}
+        self.assertEqual(expected, {r['criterion_id'] for r in adopted['task_criteria']})
+        self.assertEqual(expected, {r['criterion_id'] for r in adopted['check_criteria']})
+        self.assertEqual(9, len(adopted['tasks']))
 
 
 if __name__ == '__main__':

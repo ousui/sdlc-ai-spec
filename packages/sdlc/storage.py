@@ -150,6 +150,35 @@ class Store:
         require(len(raw) == row['size_bytes'] and sha(raw) == h, 'ASSET_CORRUPT', 'Asset integrity mismatch', status='runtime_error')
         return raw
 
+    def inspect_assets(self, con, project):
+        """Read-only bounded inventory; never deletes bytes or follows symlinks."""
+        registered = {r[0] for r in con.execute('SELECT sha256 FROM assets')}
+        selected = {r['sha256']: r['asset_id'] for r in con.execute('SELECT asset_id,sha256 FROM assets WHERE project_id=?', (project,))}
+        base = safe_path(self.home, 'assets')
+        seen, orphaned, invalid, count = set(), [], [], 0
+        for folder, directories, files in os.walk(base, followlinks=False):
+            parent = Path(folder)
+            count += len(directories)+len(files)
+            require(count <= 50000, 'ASSET_INVENTORY_LIMIT', 'Asset inventory exceeds 50000 entries; no files changed', status='blocked')
+            for name in list(directories):
+                path = parent/name
+                if path.is_symlink() or len(path.relative_to(base).parts) > 2:
+                    invalid.append(path.relative_to(base).as_posix())
+                    directories.remove(name)
+            for name in files:
+                path = parent/name
+                relative = path.relative_to(base).as_posix()
+                if path.is_symlink() or not path.is_file() or len(name) != 64 or any(c not in '0123456789abcdef' for c in name) or relative != f'{name[:2]}/{name[2:4]}/{name}':
+                    invalid.append(relative)
+                    continue
+                seen.add(name)
+                if name not in registered:
+                    orphaned.append({'path': 'assets/'+relative, 'sha256_name': name, 'size_bytes': path.stat().st_size})
+        return {'project_asset_count': len(selected), 'unregistered_files': sorted(orphaned, key=lambda r: r['path']),
+                'missing_assets': [{'asset_id': selected[h], 'sha256': h} for h in sorted(set(selected)-seen)],
+                'invalid_paths': sorted(invalid), 'integrity_verified': False,
+                'scope': 'Workspace inventory; unregistered means absent from every project asset registry. No cleanup or byte-integrity claim.'}
+
     def content(self, con, revision):
         result = {'revision': dict(one(con, 'SELECT * FROM revisions WHERE revision_id=?', (revision,)))}
         for table in CONTENT_TABLES:

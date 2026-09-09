@@ -161,7 +161,7 @@ def redact(value):
         return {k: '[REDACTED]' if _SECRET_NAME.search(k) else redact(v) for k, v in value.items()}
     if isinstance(value, list): return [redact(v) for v in value]
     if isinstance(value, str):
-        value = re.sub(r'-----BEGIN (?:[A-Z ]*PRIVATE KEY)-----.*?-----END (?:[A-Z ]*PRIVATE KEY)-----',
+        value = re.sub(r'-----BEGIN (?:[A-Z ]*PRIVATE KEY)-----.*?(?:-----END (?:[A-Z ]*PRIVATE KEY)-----|$)',
                        '[REDACTED PRIVATE KEY]', value, flags=re.S)
         value = re.sub(r'\b(?:ghp_|github_pat_|sk-proj-)[A-Za-z0-9_-]+', '[REDACTED]', value)
         value = _SECRET_TEXT.sub(r'\1[REDACTED]', value)

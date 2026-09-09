@@ -55,12 +55,13 @@ def ident(value, path='') -> str:
 
 
 def canonical(value) -> bytes:
-    def check(v):
+    def check(v, depth=0):
+        require(depth <= 64, 'JSON_DEPTH', 'JSON nesting exceeds 64 levels')
         if isinstance(v, dict):
             require(all(isinstance(k, str) for k in v), 'INVALID_JSON', 'Object keys must be strings')
-            for x in v.values(): check(x)
+            for x in v.values(): check(x, depth+1)
         elif isinstance(v, list) or isinstance(v, tuple):
-            for x in v: check(x)
+            for x in v: check(x, depth+1)
         elif type(v) is int:
             require(-(2**63) <= v < 2**63, 'INVALID_JSON', 'Integer exceeds signed 64-bit range')
         elif type(v) is float:
@@ -91,7 +92,7 @@ def loads(raw):
         value = json.loads(raw, object_pairs_hook=pairs)
         canonical(value)
         return value
-    except (UnicodeError, ValueError) as exc:
+    except (UnicodeError, ValueError, RecursionError) as exc:
         raise Fault('INVALID_JSON', str(exc)) from exc
 
 

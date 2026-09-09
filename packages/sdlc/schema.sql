@@ -29,7 +29,7 @@ CREATE TABLE changes (
 CREATE TABLE revisions (
  revision_id TEXT PRIMARY KEY NOT NULL,project_id TEXT NOT NULL,change_id TEXT NOT NULL,context_id TEXT NOT NULL,parent_id TEXT,merged_from_id TEXT,
  created_phase TEXT NOT NULL CHECK(created_phase IN ('REQ','DSN','PLN','IMP','VFY','RLS')),
- state TEXT NOT NULL CHECK(state IN ('draft','committed')),generation INTEGER NOT NULL DEFAULT 0 CHECK(generation>=0),
+ state TEXT NOT NULL CHECK(state IN ('draft','committed','abandoned')),generation INTEGER NOT NULL DEFAULT 0 CHECK(generation>=0),
  title TEXT NOT NULL,summary TEXT NOT NULL,goal TEXT NOT NULL,in_scope TEXT NOT NULL,out_of_scope TEXT NOT NULL,digest TEXT,created_at TEXT NOT NULL,
  UNIQUE(change_id,revision_id),UNIQUE(project_id,revision_id),UNIQUE(project_id,change_id,revision_id),
  FOREIGN KEY(project_id,change_id) REFERENCES changes(project_id,change_id),FOREIGN KEY(project_id,context_id) REFERENCES contexts(project_id,context_id),
@@ -201,67 +201,67 @@ CREATE INDEX results_by_subject ON check_results(revision_id,check_id,snapshot_i
 CREATE INDEX findings_open ON findings(change_id,status,severity);
 CREATE INDEX steps_by_task ON steps(change_id,task_id,status);
 
-CREATE TRIGGER lock_sources_insert BEFORE INSERT ON sources WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_sources_update BEFORE UPDATE ON sources WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_sources_delete BEFORE DELETE ON sources WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_sources_insert BEFORE INSERT ON sources WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_sources_update BEFORE UPDATE ON sources WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_sources_delete BEFORE DELETE ON sources WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
 CREATE TRIGGER lock_sources_move BEFORE UPDATE ON sources WHEN NEW.revision_id<>OLD.revision_id BEGIN SELECT RAISE(ABORT,'revision identity cannot change'); END;
-CREATE TRIGGER lock_requirements_insert BEFORE INSERT ON requirements WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_requirements_update BEFORE UPDATE ON requirements WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_requirements_delete BEFORE DELETE ON requirements WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_requirements_insert BEFORE INSERT ON requirements WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_requirements_update BEFORE UPDATE ON requirements WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_requirements_delete BEFORE DELETE ON requirements WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
 CREATE TRIGGER lock_requirements_move BEFORE UPDATE ON requirements WHEN NEW.revision_id<>OLD.revision_id BEGIN SELECT RAISE(ABORT,'revision identity cannot change'); END;
-CREATE TRIGGER lock_criteria_insert BEFORE INSERT ON criteria WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_criteria_update BEFORE UPDATE ON criteria WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_criteria_delete BEFORE DELETE ON criteria WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_criteria_insert BEFORE INSERT ON criteria WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_criteria_update BEFORE UPDATE ON criteria WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_criteria_delete BEFORE DELETE ON criteria WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
 CREATE TRIGGER lock_criteria_move BEFORE UPDATE ON criteria WHEN NEW.revision_id<>OLD.revision_id BEGIN SELECT RAISE(ABORT,'revision identity cannot change'); END;
-CREATE TRIGGER lock_requirement_sources_insert BEFORE INSERT ON requirement_sources WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_requirement_sources_update BEFORE UPDATE ON requirement_sources WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_requirement_sources_delete BEFORE DELETE ON requirement_sources WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_requirement_sources_insert BEFORE INSERT ON requirement_sources WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_requirement_sources_update BEFORE UPDATE ON requirement_sources WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_requirement_sources_delete BEFORE DELETE ON requirement_sources WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
 CREATE TRIGGER lock_requirement_sources_move BEFORE UPDATE ON requirement_sources WHEN NEW.revision_id<>OLD.revision_id BEGIN SELECT RAISE(ABORT,'revision identity cannot change'); END;
-CREATE TRIGGER lock_criterion_requirements_insert BEFORE INSERT ON criterion_requirements WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_criterion_requirements_update BEFORE UPDATE ON criterion_requirements WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_criterion_requirements_delete BEFORE DELETE ON criterion_requirements WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_criterion_requirements_insert BEFORE INSERT ON criterion_requirements WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_criterion_requirements_update BEFORE UPDATE ON criterion_requirements WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_criterion_requirements_delete BEFORE DELETE ON criterion_requirements WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
 CREATE TRIGGER lock_criterion_requirements_move BEFORE UPDATE ON criterion_requirements WHEN NEW.revision_id<>OLD.revision_id BEGIN SELECT RAISE(ABORT,'revision identity cannot change'); END;
-CREATE TRIGGER lock_designs_insert BEFORE INSERT ON designs WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_designs_update BEFORE UPDATE ON designs WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_designs_delete BEFORE DELETE ON designs WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_designs_insert BEFORE INSERT ON designs WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_designs_update BEFORE UPDATE ON designs WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_designs_delete BEFORE DELETE ON designs WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
 CREATE TRIGGER lock_designs_move BEFORE UPDATE ON designs WHEN NEW.revision_id<>OLD.revision_id BEGIN SELECT RAISE(ABORT,'revision identity cannot change'); END;
-CREATE TRIGGER lock_design_requirements_insert BEFORE INSERT ON design_requirements WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_design_requirements_update BEFORE UPDATE ON design_requirements WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_design_requirements_delete BEFORE DELETE ON design_requirements WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_design_requirements_insert BEFORE INSERT ON design_requirements WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_design_requirements_update BEFORE UPDATE ON design_requirements WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_design_requirements_delete BEFORE DELETE ON design_requirements WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
 CREATE TRIGGER lock_design_requirements_move BEFORE UPDATE ON design_requirements WHEN NEW.revision_id<>OLD.revision_id BEGIN SELECT RAISE(ABORT,'revision identity cannot change'); END;
-CREATE TRIGGER lock_tasks_insert BEFORE INSERT ON tasks WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_tasks_update BEFORE UPDATE ON tasks WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_tasks_delete BEFORE DELETE ON tasks WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_tasks_insert BEFORE INSERT ON tasks WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_tasks_update BEFORE UPDATE ON tasks WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_tasks_delete BEFORE DELETE ON tasks WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
 CREATE TRIGGER lock_tasks_move BEFORE UPDATE ON tasks WHEN NEW.revision_id<>OLD.revision_id BEGIN SELECT RAISE(ABORT,'revision identity cannot change'); END;
-CREATE TRIGGER lock_task_designs_insert BEFORE INSERT ON task_designs WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_task_designs_update BEFORE UPDATE ON task_designs WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_task_designs_delete BEFORE DELETE ON task_designs WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_task_designs_insert BEFORE INSERT ON task_designs WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_task_designs_update BEFORE UPDATE ON task_designs WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_task_designs_delete BEFORE DELETE ON task_designs WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
 CREATE TRIGGER lock_task_designs_move BEFORE UPDATE ON task_designs WHEN NEW.revision_id<>OLD.revision_id BEGIN SELECT RAISE(ABORT,'revision identity cannot change'); END;
-CREATE TRIGGER lock_task_criteria_insert BEFORE INSERT ON task_criteria WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_task_criteria_update BEFORE UPDATE ON task_criteria WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_task_criteria_delete BEFORE DELETE ON task_criteria WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_task_criteria_insert BEFORE INSERT ON task_criteria WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_task_criteria_update BEFORE UPDATE ON task_criteria WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_task_criteria_delete BEFORE DELETE ON task_criteria WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
 CREATE TRIGGER lock_task_criteria_move BEFORE UPDATE ON task_criteria WHEN NEW.revision_id<>OLD.revision_id BEGIN SELECT RAISE(ABORT,'revision identity cannot change'); END;
-CREATE TRIGGER lock_task_dependencies_insert BEFORE INSERT ON task_dependencies WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_task_dependencies_update BEFORE UPDATE ON task_dependencies WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_task_dependencies_delete BEFORE DELETE ON task_dependencies WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_task_dependencies_insert BEFORE INSERT ON task_dependencies WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_task_dependencies_update BEFORE UPDATE ON task_dependencies WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_task_dependencies_delete BEFORE DELETE ON task_dependencies WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
 CREATE TRIGGER lock_task_dependencies_move BEFORE UPDATE ON task_dependencies WHEN NEW.revision_id<>OLD.revision_id BEGIN SELECT RAISE(ABORT,'revision identity cannot change'); END;
-CREATE TRIGGER lock_checks_insert BEFORE INSERT ON checks WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_checks_update BEFORE UPDATE ON checks WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_checks_delete BEFORE DELETE ON checks WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_checks_insert BEFORE INSERT ON checks WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_checks_update BEFORE UPDATE ON checks WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_checks_delete BEFORE DELETE ON checks WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
 CREATE TRIGGER lock_checks_move BEFORE UPDATE ON checks WHEN NEW.revision_id<>OLD.revision_id BEGIN SELECT RAISE(ABORT,'revision identity cannot change'); END;
-CREATE TRIGGER lock_check_criteria_insert BEFORE INSERT ON check_criteria WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_check_criteria_update BEFORE UPDATE ON check_criteria WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_check_criteria_delete BEFORE DELETE ON check_criteria WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_check_criteria_insert BEFORE INSERT ON check_criteria WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_check_criteria_update BEFORE UPDATE ON check_criteria WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_check_criteria_delete BEFORE DELETE ON check_criteria WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
 CREATE TRIGGER lock_check_criteria_move BEFORE UPDATE ON check_criteria WHEN NEW.revision_id<>OLD.revision_id BEGIN SELECT RAISE(ABORT,'revision identity cannot change'); END;
-CREATE TRIGGER lock_preconditions_insert BEFORE INSERT ON preconditions WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_preconditions_update BEFORE UPDATE ON preconditions WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_preconditions_delete BEFORE DELETE ON preconditions WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_preconditions_insert BEFORE INSERT ON preconditions WHEN (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_preconditions_update BEFORE UPDATE ON preconditions WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_preconditions_delete BEFORE DELETE ON preconditions WHEN (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
 CREATE TRIGGER lock_preconditions_move BEFORE UPDATE ON preconditions WHEN NEW.revision_id<>OLD.revision_id BEGIN SELECT RAISE(ABORT,'revision identity cannot change'); END;
-CREATE TRIGGER lock_revision_update BEFORE UPDATE ON revisions WHEN OLD.state='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_revision_delete BEFORE DELETE ON revisions WHEN OLD.state='committed' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
-CREATE TRIGGER lock_asset_links_insert BEFORE INSERT ON asset_links WHEN NEW.revision_id IS NOT NULL AND (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed attachment link is immutable'); END;
-CREATE TRIGGER lock_asset_links_update BEFORE UPDATE ON asset_links WHEN OLD.revision_id IS NOT NULL AND (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed attachment link is immutable'); END;
-CREATE TRIGGER lock_asset_links_delete BEFORE DELETE ON asset_links WHEN OLD.revision_id IS NOT NULL AND (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)='committed' BEGIN SELECT RAISE(ABORT,'committed attachment link is immutable'); END;
+CREATE TRIGGER lock_revision_update BEFORE UPDATE ON revisions WHEN OLD.state<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_revision_delete BEFORE DELETE ON revisions WHEN OLD.state<>'draft' BEGIN SELECT RAISE(ABORT,'committed revision is immutable'); END;
+CREATE TRIGGER lock_asset_links_insert BEFORE INSERT ON asset_links WHEN NEW.revision_id IS NOT NULL AND (SELECT state FROM revisions WHERE revision_id=NEW.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed attachment link is immutable'); END;
+CREATE TRIGGER lock_asset_links_update BEFORE UPDATE ON asset_links WHEN OLD.revision_id IS NOT NULL AND (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed attachment link is immutable'); END;
+CREATE TRIGGER lock_asset_links_delete BEFORE DELETE ON asset_links WHEN OLD.revision_id IS NOT NULL AND (SELECT state FROM revisions WHERE revision_id=OLD.revision_id)<>'draft' BEGIN SELECT RAISE(ABORT,'committed attachment link is immutable'); END;
 CREATE TRIGGER lock_asset_links_move BEFORE UPDATE ON asset_links WHEN NEW.revision_id IS NOT OLD.revision_id BEGIN SELECT RAISE(ABORT,'attachment revision identity cannot change'); END;
 CREATE TRIGGER lock_ctx_entry_insert BEFORE INSERT ON context_entries WHEN (SELECT state FROM contexts WHERE context_id=NEW.context_id)='committed' BEGIN SELECT RAISE(ABORT,'committed context is immutable'); END;
 CREATE TRIGGER lock_ctx_entry_update BEFORE UPDATE ON context_entries WHEN (SELECT state FROM contexts WHERE context_id=OLD.context_id)='committed' BEGIN SELECT RAISE(ABORT,'committed context is immutable'); END;
@@ -269,3 +269,7 @@ CREATE TRIGGER lock_ctx_entry_delete BEFORE DELETE ON context_entries WHEN (SELE
 CREATE TRIGGER lock_ctx_entry_move BEFORE UPDATE ON context_entries WHEN NEW.context_id<>OLD.context_id BEGIN SELECT RAISE(ABORT,'context identity cannot change'); END;
 CREATE TRIGGER lock_ctx_update BEFORE UPDATE ON contexts WHEN OLD.state='committed' BEGIN SELECT RAISE(ABORT,'committed context is immutable'); END;
 CREATE TRIGGER lock_ctx_delete BEFORE DELETE ON contexts WHEN OLD.state='committed' BEGIN SELECT RAISE(ABORT,'committed context is immutable'); END;
+
+CREATE TRIGGER adopted_revision_committed BEFORE UPDATE OF active_revision_id ON changes
+WHEN NEW.active_revision_id IS NOT NULL AND (SELECT state FROM revisions WHERE revision_id=NEW.active_revision_id)<>'committed'
+BEGIN SELECT RAISE(ABORT,'only committed revisions may be adopted'); END;

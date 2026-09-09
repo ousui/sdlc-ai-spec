@@ -28,8 +28,13 @@ class Store:
     def config(self):
         require(self.config_path.is_file() and self.db_path.is_file(), 'STORE_NOT_FOUND', 'Run sdlc-init first', status='blocked')
         config = loads(self.config_path.read_bytes())
+        require(isinstance(config, dict), 'STORE_CONFIG', 'Store config must be an object', status='blocked')
         require(config.get('format_version') == 2 and config.get('database') == 'store.sqlite3',
                 'STORE_VERSION', 'Expected a v2 local store; existing data is not changed', status='blocked')
+        require(all(isinstance(config.get(k), str) and config[k] for k in ('store_id', 'instance_id', 'project_id', 'workspace_id')),
+                'STORE_CONFIG', 'Store identity fields are missing or invalid', status='blocked')
+        require(isinstance(config.get('resources'), dict) and all(isinstance(k, str) and isinstance(v, str) and v for k, v in config['resources'].items()),
+                'STORE_CONFIG', 'Resource bindings must be a string map', status='blocked')
         return config
 
     def connect(self, *, readonly=False):
@@ -43,9 +48,15 @@ class Store:
         try:
             version = con.execute('SELECT max(version) FROM schema_migrations').fetchone()[0]
             require(version == SCHEMA, 'STORE_VERSION', 'Unsupported store schema', status='blocked')
+            actual = con.execute('SELECT migration_digest FROM schema_migrations WHERE version=?', (version,)).fetchone()[0]
+            expected = sha(Path(__file__).with_name('schema.sql').read_bytes())
+            require(actual == expected, 'STORE_VERSION', 'Development schema differs; preserve the existing store and use a fresh v2 workspace', status='blocked')
         except sqlite3.DatabaseError as exc:
             con.close()
             raise Fault('STORE_CORRUPT', 'Store schema cannot be read; original file preserved', status='runtime_error') from exc
+        except BaseException:
+            con.close()
+            raise
         return con
 
     @contextmanager

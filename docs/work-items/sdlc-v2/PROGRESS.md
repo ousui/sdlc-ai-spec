@@ -1,62 +1,45 @@
-# 2026-09-09 Web 审查专项修复（接续）
-
-专项分支 `fix/v2-review-github-sharing`，起点31c6627；旧PR22关闭未合并，PR23接续。原FINAL记录在下方保留，不能改标为当前修复通过。
-
-本次已实现检查阶段分派、文件执行位/指纹/交付、共有Run观察合并、草稿附件解除、产品包/完整历史分离、阶段Markdown/HTML、独立的github共享回执与用户指南。
-本地Linux实际验证：7项专项公共CLI回归通过；10项GitHub模拟协议通过；69项可移植机制通过（包含前两组，不能相加）；31项既有逻辑交回/来源回归修正后通过。
-当前待验证：准确提交上的macOS完整回归、68MiB原始附件同需求真实RLS、真实Issue发布回读；原三项目原始现场在用户本地，此处未声称重跑九条Agent链。Podman脚本为可移植Linux测试，不代表macOS/Windows原生命令收集。
-
----
-
 # SDLC v2 唯一进度
 
-## 后续Web审阅移交
+## 当前工作包：Web审查专项修复
 
-用户已授权推送原分支，两个PR已待审阅。首次远端CI暴露Framework Python启动器与既定posix_spawn隔离规则不兼容，追加仅workflow修正，效果以PR最新同提交CI实际回读为准；不改冻结Runtime/Skill/测试，见[WEB-REVIEW.md](WEB-REVIEW.md)。原本地收口状态与证据保持原时间边界。
+用户2026-09-09授权修复上一轮审查问题、恢复Issue共享、验证并交付用户指南。实施分支 `fix/v2-review-github-sharing`，专项起点 `31c6627c34e31068e35f739fe6457346b5bd7f8c`。
 
-## 当前事实
-
-- 当前工作包：FINAL已完成批准本地范围；九个产品场景、159项测试、43项适用验收已证，3项明确延期。最终收口见FINAL-RESULTS.md和实验室CLOSEOUT.json。
-- 实现接管 HEAD：`d39601d0272c77ccece51a9751a5e865c55ea603`；实验室接管 HEAD：`d1eb4a2d6f3951cabf85eb6be11a98f80adf9349`。指定分支，两工作区初始干净。
-- 批准/实验室父基线的本地对象和祖先、Git作者/remote已核实；接管时没有fetch/clone/push；Q0仅为缺失的SpringGear精确对象做一次最小fetch，没有push。
-- 批准设计32文件已复制；摘要见APPROVED-DESIGN-SHA256.json。移交包40文件校验通过。
-- Python3.11.15 / SQLite3.53.1；JDK21.0.11；Go1.23.12（本机已有1.23补丁版，区别于历史1.23.2）；Node24.16.0；Maven已有。不用默认JDK25/26计入JDK21验证。
-- 原v2五项存储测试用Python3.11实跑，exit0。尚不证明Runtime/六Skill/产品闭环。
-- Admin/fansite原始基线已找到；SpringGear原始Git对象e855096已按授权最小fetch到实验室忽略目录的隔离bare缓存；旧迁移结果未作为R0候选。
-- 本地路径及证据存实验室忽略目录`.local-runs/sdlc-v2/LOCAL-STATE.json`、`P0-store-tests.log`。
+GitHub读写预检已通过：#22评论5601077221写入并读回。旧实施PR #22关闭但未合并、未删分支；PR #23接续。main仍为旧基线，PR23整体diff包含既有v2；本专项比较31c6627→当前HEAD。原实验室PR #20保留历史场景，新专项实验室PR #22只追加Issue集成。
 
 ## 检查点
 
-| 包 | 状态 | 证据或剩余工作 |
+| 内容 | 状态 | 验证 |
 |---|---|---|
-| P0 | 已完成 | 仓库/工具/设计摘要/5项测试；三个隔离产品环境已在Q0实际验证 |
-| P1 | 已完成 | 领域修复715d737，公共事务/幂等随P2完成；P1-AUDIT.md |
-| P2 | 已完成 | 43项测试、契约投影、独立CLI内容链；P2-RESULTS.md |
-| P3 | 已完成 | 70项实际回归、工具链预检、独立评审修补；P3-RESULTS.md |
-| P4 | 已完成 | 115项回归；P4-D-RESULTS.md与P4-E-RESULTS.md；独立安装版前向小案例完成 |
-| Q0 | 已完成并本地提交 | 原13/10/24项实际通过与本地RLS；完整Spring归档恢复；实验室8b745601；Q0-RUNTIME-REPAIRS.md |
-| 核心补充 | 已完成b4d4bc4 | 135项测试通过；澄清、资产崩溃、中断日志、交付范围及独立复验见CORE-ACCEPTANCE-SUPPLEMENT.md |
-| Q1 | 已完成并本地提交 | 三项目真实闭环、独立复验及全归档核对；实验室b406546；Q1-RESULTS.md。后续内核149项通过 |
-| Q2 | 已完成并本地提交 | 实验室f41d048，三项目真实RLS/独立复验/专项；内核159项及原Admin恢复通过，见Q2-RESULTS.md |
-| FINAL | 已完成并本地提交 | H_final 495177a完整159通过；7组/346公共请求重放；九场景及022补验完成，43适用项已证/3延期；实验室最终dde73bc，FINAL-RESULTS.md |
+| VFY/RLS检查时点 | 完成 | RLS所属条件延后，RLS完成仍检查；错误convergence阶段生产端拒绝 |
+| 产品执行位 | 完成 | 写入保留mode，指纹纳入mode，ZIP保存并独立回读；实际wrapper可执行 |
+| 共有Run交回 | 完成 | 保留目标状态/来源观察，稳定身份冲突仍拒绝，不继承来源权限 |
+| 大包/附件恢复 | 完成 | 产品交付与历史归档分离；同需求68MiB输入真实RLS通过；draft unlink保留原字节 |
+| 人工阅读 | 完成 | 六阶段Markdown与HTML，不再以JSON作为主要正文 |
+| sdlc-github | 完成 | 已有Issue的preview/publish/status/reconcile，独立回执、去重与unknown回查 |
+| macOS原生回归 | 已通过 | 精确修复SHA f8b4765，178/178，94.776秒，10 Skill/契约/安装包检查通过 |
+| Ubuntu便携机制 | 已通过 | 同SHA独立portable套件通过；本地Linux100/100，106.045秒另记，不能相加 |
+| 真实GitHub发布 | 已通过 | 12次安装版公共CLI；实际评论5601819414、重复发送同ID、reconcile与导出通过 |
+| 用户指南 | 完成 | 根级USAGE.md；完整授权提示、阶段产物、恢复/归档、Issue分享、Podman和试用流程 |
+| 用户本机验证 | 待用户试用 | Podman VM/客户端原生加载/自然语言路由、实际新需求、中低推理配置未代测 |
 
-## 收口事实与下一动作
+正式代码修复提交 `f8b4765e46fd440d8e95d0c065b5ccc7b115b0af`，证据 [Run34351040098](https://github.com/ousui/sdlc-ai-spec/actions/runs/34351040098)。测试工具提交的触发SHA与实际被测SHA分别记录，未混用。
 
-本次批准任务已完成，没有剩余本地实施或必要验收。默认不push，等待用户另行决定是否同步；不自动merge、tag或release。最终提交后HEAD、状态与完整待同步列表见实验室忽略目录`.local-runs/sdlc-v2/CLOSEOUT.json`。
+真实Issue集成 [Run34351132793](https://github.com/ousui/test-sdlc/actions/runs/34351132793)，实验室源码 `bf0ce1c2b55a69f797bf6d047cba1df527406b96`，Runtime同为f8b4765。测试Issue21现已关闭，原评论保留；此评论是Runtime经gh创建，不是连接器代写正文。实现仓库Issues关闭，未修改其设置。
 
-- 执行H_final：`495177acf777251d378652e2a50e47a1b5c4c41a`；53文件final-v1包摘要`a3ecb85d9286fe61b80f98882da4e4f6b91ca33aa25616401d0b043967f9a310`，ZIP摘要`2ff7ab13010ea7bf8a8831e4149e6bc1127f07ef8216032195d16c5281b968cc`。冻结后只提交进度/验收文档，不改标原执行版本。
-- 同H完整159项实际通过，51.055秒。另7组公共CLI确定性重放覆盖8个验收ID、346请求，独立计数。当前客户端为显式读取安装Skill与公开CLI；九条实际链有当场代码形成、真实VFY及RLS来源。
-- Admin R0/R1/R2：16/32/59通过，独立19/35/60次方法有重叠；原13断言保留。R2原main交回失败保留，新的同change内容pair公开恢复成功。REQ在clone前完成，实施新Run继承后完成DSN–RLS。
-- SpringGear R0/R1/R2：10/25/43 JUnit，38/41/41类major65；原四模块/JDK21。R1/R2另有3/5项独立边界。无关基线合入可继续，公共组件变化拒旧PASS后真实复验；原断言字节保留。
-- fansite R0/R1/R2：原24保留、后续34/45 Go及约定JS/UI通过。R2测试helper大小写缺口真实红绿修复；原大附件导致RLS ASSET_LIMIT，原failed Run/原始写入/完整归档不变。新验证Change对相同27源码完整复验并实际交付，按一个业务场景联合计入，不声称原Run成功或从零重做。实际中断/unknown/复制恢复专项另列。
-- V2-022补验：新验证需求真实59项PASS及completed RLS之后new_change交回，6旧需求/21原Run/配置/22业务源码不变，135展开证据字节相同；来源能力不激活、双幂等成立。自拟nested-ZIP额外格式未满足且非正式criterion/批准022条件，保留原文和独立判定。
-- 独立46映射最终43适用项已证；040其他客户端原生认证、045Rust、046SpecKit延期，MySQL为明确非范围。根已复核映射30份源码/测试摘要及五组独立目录147份证据；不把这些读回计作新测试。
-- 实验室R0/R1/R2来源分别提交于ef4213b、ee4652e、dde73bc4525522ed8298396b2f129bb884db64b5，共490份实际交付源码；V22仅新增验证说明。完整原日志/请求/资产/ZIP保留忽略目录，不入Git。
-- 客户端记录Codex Desktop0.153.4/openai、配置gpt-6-astra/xhigh，非服务端effective model认证。子任务委派正文在磁盘加密，单次总授权以用户目标及根会话为准。Skill先前全文复用和截断读取边界见FINAL-RESULTS.md。
-- 人工SQL/Store/Authority/协议绕过0；原产品红绿、输入错误、读取器纠正及有界恢复协调全部保留。不能写九原Run首次零错误。macOS Seatbelt本地收集已证，远端部署/其他原生客户端未认证。
-- quick及单独Skill风格检查通过；最终diff/范围检查和源码逐字节核验通过。Spring3份历史空白文件仅用命令级检查例外，保留原字节；没有宿主配置修改。/tmp用于隔离测试与提交消息。
+临时源码运输分片、自写入apply/source workflow已在 `d61bf27b09e8ba5fd1afa24860b0ebc8c4594bd1` 清理。普通v2-checkpoint只读checkout准确head，分别执行macOS全量/Ubuntu便携套件，并保留日志、安装包和source bundle。当前文档提交不改动已通过的Runtime/Skill内容；本次HEAD的最新CI结果在PR23登记，不改标旧结果。
 
-## 历史版本保留
+178包含原159及本次新增19项。portable与native重叠，不相加；真实GitHub12请求不是12个业务验收目标。未重跑历史9条Agent产品链，未认证Linux/Windows原生命令收集器。Podman可跑Linux机制测试，不能模拟macOS Seatbelt。
 
-Q1三项目于实验室b406546提交；7d71793内核149项及独立8项状态组合通过。Q1原始覆盖/退修/状态反例见Q1-RELEASE-COVERAGE.md、Q1-CONVERGENCE-REPAIR.md、Q1-RUN-STATUS.md。
-q1-entry基于b4d4bc4，q1-dsn基于586d133；Q2实验室f41d048。8754d65首次三产品链、f5f0c0a管理修补及dirty独立复验保持原版本。共同契约调整后FINAL实际重做全部九场景，不拼接旧版本结果。
+详细修补、原失败及证据边界见 [REVIEW-FIXES.md](REVIEW-FIXES.md)。安装/使用见 [USAGE.md](../../../USAGE.md)。本工作包未merge主干、tag或release。
+
+## 既有v2实现与历史验收
+
+原P0–P4、Q0/Q1/Q2及FINAL保留在 [FINAL-RESULTS.md](FINAL-RESULTS.md)、对应工作包报告和Git历史。原本地最终执行为 `495177acf777251d378652e2a50e47a1b5c4c41a`；159/159与9场景、43适用项/3延期均属于原版本，不能替代本次结果。
+
+原实验室最终源码 `dde73bc4525522ed8298396b2f129bb884db64b5`，三轮490份交付源码及紧凑索引在实验室PR20；大型原始日志、Store和归档仍在用户本地忽略目录。
+
+历史Admin共有Run交回失败、fansite大包失败及另建验证需求恢复继续保留。本次针对这些机制新增了直接反例修复与同需求回归，不把历史失败改写成首次成功。
+
+## 下一动作
+
+读取PR23当前HEAD CI与专项报告，使用修复后的完整安装包进行普通用户新会话试用；必要的本机验证按USAGE.md执行。只有发现具体失败再开有边界修复，不再重新设计v2或扩大到平台化。

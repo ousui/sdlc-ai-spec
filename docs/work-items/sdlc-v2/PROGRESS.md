@@ -24,11 +24,15 @@
 | 核心补充 | 已完成b4d4bc4 | 135项测试通过；澄清、资产崩溃、中断日志、交付范围及独立复验见CORE-ACCEPTANCE-SUPPLEMENT.md |
 | Q1 | 已完成并本地提交 | 三项目真实闭环、独立复验及全归档核对；实验室b406546；Q1-RESULTS.md。后续内核149项通过 |
 | Q2 | 已完成并本地提交 | 实验室f41d048，三项目真实RLS/独立复验/专项；内核159项及原Admin恢复通过，见Q2-RESULTS.md |
-| FINAL | 当前工作包 | 冻结H_final/clean安装摘要，重做九条真实链、公共回归与46项映射；结果尚未产生 |
+| FINAL | 当前工作包，3/9已核验 | H_final 495177a完整159通过；另7组公共重放通过。三项目R0真实链/RLS/归档回读完成，实验室ef4213b；R1/R2继续 |
 
 ## 唯一下一动作
 
-以本次Q2收口提交生成clean最终包，并保存实验室`.local-runs/sdlc-v2/FINAL-FROZEN.json`。在同一H_final上完成完整Runtime测试和Admin/SpringGear/fansite各R0→R1→R2真实Skill链、公共入口/业务回归，统一回读、更新46项映射及最终报告。各项目独立副本可并行，同项目三场景顺序执行；共享Runtime和进度由根单写。
+在已冻结的H_final `495177acf777251d378652e2a50e47a1b5c4c41a`和final-v1安装包上完成三项目R1→R2，逐场景独立验证、交付/归档回读，再核对46项映射和最终报告。包摘要`a3ecb85d9286fe61b80f98882da4e4f6b91ca33aa25616401d0b043967f9a310`；`.local-runs/sdlc-v2/FINAL-FROZEN.json`保留冻结时状态，`FINAL-STATE.json`登记实时执行事实。冻结之后的本次提交只更新进度文档，不能把旧测试或安装包source_head改标为文档提交。
+
+同版159项实际通过，51.055秒；额外7组确定性重放覆盖8个验收ID、346次公共CLI，不并进159也不冒称真实Agent链。46项当前18项机制、8项精确重放已证，17项待九条产品/专项最终对应，3项后续边界。
+三项目R0已经根核验全部本地RLS和完整workspace ZIP、原始回执及源码。Admin保留原13，最终16通过、独立19次含1重叠；Spring原四模块10通过、38类major65；fansite原24/原UI及4条reset检查通过。真实产品修复与Agent输入纠正分开记录；未改冻结Runtime、人工协议修补0。实验室ef4213b保存149份实际RLS源码，生成二进制留在原ZIP。
+各项目独立副本可并行，同项目场景顺序执行；共享Runtime和进度由根单写。尚未完成的R1/R2及专项不得预填通过。
 Q1三项目已于实验室b406546统一提交；7d71793内核149项完整回归和独立8项状态组合通过。
 Q1原始覆盖、退修、状态反例及修补分别见Q1-RELEASE-COVERAGE.md、Q1-CONVERGENCE-REPAIR.md、Q1-RUN-STATUS.md。
 q1-entry基于b4d4bc4，q1-dsn基于586d133；旧证据保留原包边界，不能改写成新版本执行。

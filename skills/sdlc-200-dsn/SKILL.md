@@ -57,7 +57,7 @@ help/version/commands可通过CLI帮助、版本与本Skill命令表读取，不
 
 3. 为验收定义command Check、明确argv及断言，criteria逐项关联；input_paths覆盖实际输入依赖，不能直接复制Task写范围。
 
-4. 另定义required convergence Check，executor=agent、method=inspection或analysis，覆盖整个需求。定义required release_readback Check，command argv=["@runtime","delivery.readback"]且input_paths留空。
+4. 另定义required convergence Check，executor=agent、method=inspection或analysis，覆盖整个需求。定义required release_readback Check，command argv=["@runtime","delivery.readback"]；input_paths固定交付源码范围，省略时为完整main，同root多产品须显式限定。
 
 5. 真实缺少业务方案时形成最小决定；已具备授权的实现细节由Agent判断。phase.complete成功后保存PLN新草稿。
 

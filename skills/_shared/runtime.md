@@ -59,6 +59,8 @@ Check input_paths的access只允许read；workspace.bind/rebind的resources是�
 Runtime强制GOPROXY=off、GOTOOLCHAIN=local、禁止pyc写入并补齐Java FORK选项。相同检查链的task、check、phase.complete及delivery.prepare使用同一环境映射；缓存写入还须绑定资源并列入Task写范围。
 工具必须先通过当前平台实际预检。当前命令收集器支持macOS Seatbelt；不支持的宿主或spawn机制明确blocked。
 原始工具stdout/stderr、代码字节/补丁及结果保存为证据，不能手写pass或使用占位日志。
+日志中的Authorization/Proxy-Authorization与Cookie/Set-Cookie整段Header值在落盘前遮蔽，包含认证scheme之后的值和缩进续行。
+Header样式文本的同行后半可能一并遮蔽；下一独立公共行保留。输出上限约束原始捕获字节，不是脱敏占位符展开后的字符数。
 收集器执行期间持续落盘已收到的完整脱敏行；未结束的末行到EOF才保存，硬中断时可能缺失。
 部分日志不证明命令完成或pass；unknown仍先检查原工具状态再恢复。
 

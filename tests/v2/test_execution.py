@@ -64,6 +64,11 @@ class CollectorTests(unittest.TestCase):
         data = self.command('print("password='+secret+'")')
         self.assertNotIn(secret, data['stdout'])
         self.assertNotIn(secret, (self.work/'stdout.log').read_text())
+        headers = self.command('import sys; print("Authorization: Bearer SYNTHETIC-BEARER-COLLECTOR"); print("Cookie: session=SYNTHETIC-COOKIE-COLLECTOR; other=SYNTHETIC-OTHER-COOKIE",file=sys.stderr)')
+        self.assertEqual(('pass', 0), (headers['status'], headers['exit_code']))
+        for output in (headers['stdout'], headers['stderr'], (self.work/'stdout.log').read_text(),
+                       (self.work/'stderr.log').read_text(), (self.work/'process.json').read_text()):
+            self.assertNotIn('SYNTHETIC-', output)
         limited = self.command('print("X"*20000)', output_limit=1024)
         self.assertEqual('OUTPUT_LIMIT', limited['error_code'])
         self.assertNotEqual('pass', limited['status'])

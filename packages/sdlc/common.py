@@ -154,6 +154,9 @@ def file_lock(path: Path):
 
 _SECRET_NAME = re.compile(r'(?:token|secret|password|passwd|api[_-]?key|authorization|cookie|private[_-]?key)', re.I)
 _SECRET_TEXT = re.compile(r'(?i)(\b(?:password|passwd|api[_-]?key|token|secret|authorization)\b\s*[:=]\s*)([^\s,;]+)')
+# Headers can contain a scheme, several credentials or folded continuation lines.
+# Mask the complete value before the generic single-value assignment matcher.
+_SECRET_HEADER = re.compile(r'''(?i)(\b(?:proxy-authorization|authorization|set-cookie|cookie)\b["']?[ \t]*[:=][ \t]*)[^\r\n]*(?:\r?\n[ \t]+[^\r\n]*)*''')
 
 
 def redact(value):
@@ -164,6 +167,7 @@ def redact(value):
         value = re.sub(r'-----BEGIN (?:[A-Z ]*PRIVATE KEY)-----.*?(?:-----END (?:[A-Z ]*PRIVATE KEY)-----|$)',
                        '[REDACTED PRIVATE KEY]', value, flags=re.S)
         value = re.sub(r'\b(?:ghp_|github_pat_|sk-proj-)[A-Za-z0-9_-]+', '[REDACTED]', value)
+        value = _SECRET_HEADER.sub(r'\1[REDACTED]', value)
         value = _SECRET_TEXT.sub(r'\1[REDACTED]', value)
         for key, secret in os.environ.items():
             if _SECRET_NAME.search(key) and len(secret) >= 8:

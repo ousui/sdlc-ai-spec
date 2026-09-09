@@ -26,6 +26,7 @@ class InterruptedOutputTests(unittest.TestCase):
             script = base/'collector.py'
             tool = ('import sys,time; from pathlib import Path; '
                     'print("actual flushed stdout",flush=True); '
+                    'print("Authorization: Bearer SYNTHETIC-BEARER-HARD-STOP",flush=True); '
                     'print("password=SYNTHETIC-HARD-STOP-SECRET",file=sys.stderr,flush=True); '
                     'print("-----BEGIN PRIVATE KEY-----\\nSYNTHETIC-KEY-BODY",file=sys.stderr,flush=True); '
                     'Path("ready").write_text("ready"); time.sleep(30)')
@@ -42,7 +43,8 @@ class InterruptedOutputTests(unittest.TestCase):
                         tool_pid = json.loads(process.read_bytes())['pid']
                     stdout = (work/'stdout.log').read_text() if (work/'stdout.log').exists() else ''
                     stderr = (work/'stderr.log').read_text() if (work/'stderr.log').exists() else ''
-                    if (root/'ready').exists() and 'actual flushed stdout' in stdout and '[REDACTED PRIVATE KEY]' in stderr:
+                    if ((root/'ready').exists() and 'actual flushed stdout' in stdout
+                            and 'Authorization: [REDACTED]' in stdout and '[REDACTED PRIVATE KEY]' in stderr):
                         break
                     self.assertIsNone(collector.poll(), collector.communicate() if collector.poll() is not None else '')
                     time.sleep(.02)
@@ -51,6 +53,7 @@ class InterruptedOutputTests(unittest.TestCase):
                 collector.kill()
                 self.assertEqual(-signal.SIGKILL, collector.wait(timeout=3))
                 self.assertIn('actual flushed stdout', (work/'stdout.log').read_text())
+                self.assertNotIn('SYNTHETIC-BEARER-HARD-STOP', (work/'stdout.log').read_text())
                 saved_error = (work/'stderr.log').read_text()
                 self.assertIn('password=[REDACTED]', saved_error)
                 self.assertNotIn('SYNTHETIC-HARD-STOP-SECRET', saved_error)

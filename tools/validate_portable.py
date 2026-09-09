@@ -13,7 +13,8 @@ from pathlib import Path
 ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT),str(ROOT/'tests/v2')]
 MODULES=('test_store','test_domain','test_runtime','test_golden','test_redaction',
-         'test_asset_recovery','test_github_sharing','test_review_fixes','test_transfer','test_transfer_provenance')
+         'test_asset_recovery','test_github_sharing','test_review_fixes','test_transfer','test_transfer_provenance',
+         'test_revision_text')
 
 
 def main():

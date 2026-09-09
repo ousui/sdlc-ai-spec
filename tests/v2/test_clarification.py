@@ -63,7 +63,9 @@ class ClarificationTests(unittest.TestCase):
             self.assertEqual('current-agent', answered['data']['recorded_by'])
             self.assertEqual(answered, s.send('run.answer_input', response, operation_id='answer-1'))
             self.assertEqual([], s.ok('phase.prepare', {'phase': 'REQ'})['pending_inputs'])
-            s.submit('REQ', [{'op': 'create_source', 'kind': 'text', 'original_text': response['answer']}])
+            self.assertFalse(answered['data']['content_applied'])
+            s.submit('REQ', [{'op': 'create_source', 'kind': 'text', 'original_text': response['answer']},
+                             {'op': 'update_revision_text', 'goal': response['answer']}])
             s.req()
             with Store(root).read() as con:
                 self.assertEqual('auto', con.execute('SELECT review_mode FROM runs WHERE run_id=?', (s.bindings['run_id'],)).fetchone()[0])

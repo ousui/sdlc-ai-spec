@@ -1,10 +1,11 @@
 """Content services: relational drafts, coverage and immutable adopted snapshots."""
 from .common import PHASES, canonical, digest, now, require, uid
+from . import revision_text
 from .domain import batch, fields, validate_complete
 from .storage import CONTENT_TABLES, insert, one
 from .protocol import AUTHORIZATION, CONTEXT_ENTRY, operation_schema, phase_commands
 
-REVISION_TEXT = ('title', 'summary', 'goal', 'in_scope', 'out_of_scope')
+REVISION_TEXT = revision_text.TEXT_FIELDS
 
 
 def change_row(con, project, change):
@@ -105,8 +106,14 @@ def phase_submit(con, project, change, payload, generation):
     row = revision_row(con, project, change, payload['revision_id'])
     require(payload['phase'] == row['created_phase'], 'PHASE_ORDER', 'Submit to the adopted draft phase', '/payload/phase')
     cas(con, row['revision_id'], generation)
+    pending = revision_text.pending_applications(con, row['revision_id'])
     keys = batch(con, row['revision_id'], payload['phase'], payload['operations'])
-    return {'change_id': change, 'revision_id': row['revision_id'], 'generation': generation+1, 'ids': keys}
+    written = {key for op in payload['operations'] if op['op'] == 'update_revision_text'
+               for key in REVISION_TEXT if key in op}
+    applied = [{'question_step_id': item['question_step_id'], 'field': item['field']}
+               for item in pending if item['field'] in written]
+    return {'change_id': change, 'revision_id': row['revision_id'], 'generation': generation+1, 'ids': keys,
+            'revision_text': revision_text.values(con, row['revision_id']), 'applied_inputs': applied}
 
 
 def phase_complete(store, con, project, change, payload, generation):
@@ -140,6 +147,7 @@ def prepare(store, con, project, change, phase=None, *, execution_phase=None):
     return {'change': dict(ch), 'content': store.content(con, row['revision_id']), 'context': context,
             'phase': selected, 'generation': row['generation'], 'input_schema': operation_schema(selected),
             'commands': phase_commands(selected),
+            'pending_applications': revision_text.pending_applications(con, row['revision_id']),
             'attachments': [dict(r) for r in con.execute('SELECT l.*,a.sha256,a.media_type FROM asset_links l JOIN assets a USING(asset_id) WHERE l.revision_id=? ORDER BY l.ordinal,l.link_id', (row['revision_id'],))],
             'authorizations': [dict(r) for r in con.execute('SELECT * FROM authorizations WHERE project_id=? AND change_id=?', (project, change))]}
 

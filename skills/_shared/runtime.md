@@ -35,7 +35,17 @@ REQ/DSN完成会返回下一阶段的新草稿；PLN完成返回采用的已提�
 执行身份使用current-agent或宿主实际身份，auto不是human审阅。业务分歧需要决定时只问最小必要问题。
 已识别的目标冲突用run.request_input保存当前revision_id、question、conflict及field_path；
 Runtime返回needs_input并保存待答事项，在实际回答到达前不得继续正式内容/代码写入。
-收到用户回答后用run.answer_input保存question_step_id、原回答和basis_text，再按原阶段修订。
+收到用户回答后用run.answer_input保存question_step_id、原回答和basis_text；回答已记录不等于内容已应用。
+目标/范围/摘要等顶层字段通过REQ的phase.submit/update_revision_text显式修订，与需求、验收和来源同批提交。
+该操作只接受title/summary/goal/in_scope/out_of_scope，至少一项，省略项保持，不能修改ID/状态/权限。
+phase.prepare.pending_applications列出已回答但尚未写回的明确顶层问题；成功回写相应字段后，applied_inputs保存关联，不增设人工审批。
+不需要改变现值的回答，也应明确回写经确认的值；字段语义与明细由Agent复核，Runtime不靠自然语言关键词判断。
+当前已到DSN/PLN/执行阶段时，先change.revise REQ，再修订并复核下游，原冻结内容及digest保持。
+例如一批operations可包含：
+```json
+[{"op":"update_revision_text","in_scope":"仅实现列表及页内交互","out_of_scope":"不改详情子页"}]
+```
+phase.complete遇CLARIFICATION_NOT_APPLIED，按错误中pending_applications回写；新Run、复制目录或只改别的字段不会清除该内容义务。
 回答不是权限授予或human审阅证明；不得自答、把时间经过当作确认，或用新Run绕过待答事项。
 
 change.create从原始用户请求记录local edit_local/run_check/package_local授权及准确target/basis_text，
@@ -99,6 +109,7 @@ DSN/PLN中native release_readback Check的input_paths确定交付源码范围；
 默认摘要向用户报告实际改动、验证、交付位置和剩余问题；JSON回执不掺叙述、不改字段。
 .sdlc为本地数据，不默认提交VCS；不存在可用Store时显式INIT，不覆盖旧库或静默降级。
 不同版本结果保留各自源码/插件摘要，真实Agent轨迹与确定性重放分别记录。
+修改goal/in_scope/out_of_scope使任务与检查定义失效，必须复核并重跑适用验证；只改title/summary保留业务定义，仍需更新整体convergence审阅。
 
 
 ## 可选 GitHub 共享

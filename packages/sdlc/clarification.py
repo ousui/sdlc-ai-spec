@@ -1,5 +1,5 @@
 """Explicit Agent-reported ambiguity; answers remain evidence, never authority."""
-from . import content, engine
+from . import content, engine, revision_text
 from .common import loads, now, redact, require
 from .storage import one
 
@@ -26,7 +26,7 @@ def ensure_answered(con, project, workspace, change, command):
 def request(con, project, workspace, change, run, operation, payload):
     revision = content.revision_row(con, project, change)
     require(revision['revision_id'] == payload['revision_id'], 'REVISION_SCOPE', 'Report ambiguity against the current revision', '/payload/revision_id')
-    field_path = payload.get('field_path', '/revision/goal')
+    field_path = payload.get('field_path', '/')
     require(field_path.startswith('/'), 'INVALID_PATH', 'Use a JSON pointer for the conflicting field', '/payload/field_path')
     field_path = redact(field_path)
     unknown = con.execute("SELECT 1 FROM operations o JOIN runs r USING(run_id) WHERE r.change_id=? AND r.workspace_id=? AND r.origin_kind='local' AND o.origin_kind='local' AND o.status='unknown'", (change, workspace)).fetchone()
@@ -44,8 +44,14 @@ def request(con, project, workspace, change, run, operation, payload):
 def answer(con, project, workspace, change, run, payload):
     question = one(con, "SELECT s.* FROM steps s JOIN runs r USING(run_id) WHERE s.step_id=? AND s.project_id=? AND s.change_id=? AND r.workspace_id=? AND r.origin_kind='local' AND s.step_key LIKE 'input:%'", (payload['question_step_id'], project, change, workspace), code='INPUT_SCOPE')
     require(question['status'] == 'blocked', 'INPUT_CLOSED', 'This question already has an answer', '/payload/question_step_id', status='conflict')
+    asked = loads(one(con, 'SELECT response_json FROM operations WHERE operation_id=? AND run_id=?',
+                      (question['step_key'][6:], question['run_id']))['response_json'])['data']
+    field = revision_text.target_field(asked['field_path'])
     con.execute("UPDATE steps SET status='completed',outcome='not_applicable',finished_at=? WHERE step_id=?", (now(), question['step_id']))
     return {'question_step_id': question['step_id'], 'question_run_id': question['run_id'],
             'answer': redact(payload['answer']), 'basis_text': redact(payload['basis_text']),
             'recorded_by': engine.run_row(con, project, change, run)['actor_id'], 'grants_authority': False,
-            'next_actions': [{'action': 'phase.prepare', 'phase': question['phase']}]}
+            'field_path': asked['field_path'], 'content_applied': False,
+            'next_actions': [{'action': 'phase.prepare', 'phase': question['phase']}] + (
+                [{'action': 'phase.submit', 'phase': 'REQ', 'operation': 'update_revision_text',
+                  'field': field, 'revision_policy': 'Use current REQ draft or change.revise REQ first'}] if field else [])}

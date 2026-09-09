@@ -53,3 +53,9 @@ GitHub读写预检已通过：#22评论5601077221写入并读回。旧实施PR #
 证据索引：tools/validate_skill_style.py校验十入口目录/标识/标题/简介/调用策略与跨客户端插件来源；tools/validate.py quick检查公共契约；tests/v2/test_packaging.py验证独立安装包；git diff --check检查空白错误。缓存按57个打包源文件逐字节核对。原生客户端实际调用和刷新后的界面未认证。
 
 本轮结果：quick与十入口样式校验通过；安装包测试4/5通过，真实交付链在命令检查步骤失败（受限执行为blocked，宿主权限重跑为fail），未认定为安装链路通过，未改动Runtime掩盖失败。日志与quick报告保留于`/tmp/sdlc-skill-format-20260909/`。
+
+## 2026-09-09 REQ 顶层文本修订专项
+
+起点ef7d159，保留插件来源和十入口展示更新。补齐REQ-only update_revision_text、澄清应用回执和完成检查、目标/范围指纹；规范、Skill与用户指引同步。
+范围/实现/本地重处理说明见[SCOPE-TEXT-FIX](SCOPE-TEXT-FIX.md)。新增17条回归；原机理和完整安装副本CLI均验证，最终准确提交的测试结果以本专项PR回读为准。
+下一动作：完成当前修复的同版本CI与安装包校验，用户更新实际插件后在原需求内修订，不重建需求或原地修改旧digest。

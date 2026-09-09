@@ -1,5 +1,6 @@
 """One applicability/convergence service for planning status and actual execution."""
 from datetime import datetime, timedelta, timezone
+from . import revision_text
 from .common import PHASES, canonical, digest, loads, now, redact, require, uid
 from .domain import task_ancestors, task_fingerprint, validate_complete
 from .execution import environment, observe
@@ -40,7 +41,9 @@ def check_fingerprint(con, revision, check_id):
             (revision, check_id))], key=canonical)
     owner = task_fingerprint(con, revision, check['task_id']) if check['task_id'] else None
     context = one(con, 'SELECT c.digest FROM contexts c JOIN revisions r USING(context_id) WHERE r.revision_id=?', (revision,))['digest']
-    return digest({'check': check, 'scope': scope, 'owner': owner, 'context': context})
+    names = revision_text.TEXT_FIELDS if check['purpose'] == 'convergence' else revision_text.SCOPE_FIELDS
+    return digest({'check': check, 'scope': scope, 'owner': owner, 'context': context,
+                   'intent': revision_text.values(con, revision, names)})
 
 
 def task_completed(con, change, revision, task):

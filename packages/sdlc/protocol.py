@@ -1,5 +1,6 @@
 """Versioned input definitions shared by producers, validation and prepare."""
 import re
+from . import revision_text
 from .common import API, PHASES, require
 from .domain import ENUMS, FIELDS, NULLABLE, RELATIONS, STAGE_TABLES, fields
 
@@ -119,6 +120,11 @@ def scalar_schema(spec, nullable=False):
 
 def operation_schema(phase):
     choices = []
+    if phase == 'REQ':
+        choices.append({'type': 'object', 'additionalProperties': False, 'required': ['op'],
+                        'properties': {'op': {'const': 'update_revision_text'},
+                                       **{key: scalar_schema('str') for key in revision_text.TEXT_FIELDS}},
+                        'anyOf': [{'required': [key]} for key in revision_text.TEXT_FIELDS]})
     for kind, (table, definitions) in FIELDS.items():
         if table not in STAGE_TABLES.get(phase, set()):
             continue

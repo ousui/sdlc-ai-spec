@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 from pathlib import PurePosixPath
+from . import revision_text
 from .common import PHASES, Fault, canonical, digest, ident, loads, require, uid
 from .storage import CONTENT_TABLES, ENTITY_IDS, insert, one
 
@@ -126,10 +127,19 @@ def batch(con, revision, phase, operations):
     rev = one(con, 'SELECT * FROM revisions WHERE revision_id=?', (revision,))
     require(rev['state'] == 'draft', 'IMMUTABLE_REVISION', 'Create a child revision before editing', '/payload/revision_id')
     keys, allocated, origins = {}, {}, {}
+    text_update = None
     for i, op in enumerate(operations):
         p = f'/payload/operations/{i}'
         require(isinstance(op, dict) and isinstance(op.get('op'), str), 'INVALID_OPERATION', 'Expected named operation', p)
         verb, _, kind = op['op'].partition('_')
+        if op['op'] == 'update_revision_text':
+            require(phase == rev['created_phase'] == 'REQ', 'PHASE_OWNERSHIP',
+                    'Intent text is editable only in the current REQ draft', p+'/op')
+            fields(op, revision_text.UPDATE_OPERATION, p)
+            require(len(op) > 1, 'EMPTY_UPDATE', 'Supply at least one intent text field', p)
+            require(text_update is None, 'DUPLICATE_UPDATE', 'Use one intent text update per batch', p)
+            text_update = {key: op[key] for key in revision_text.TEXT_FIELDS if key in op}
+            continue
         if verb in {'create', 'update'} and kind in FIELDS:
             table, definitions = FIELDS[kind]
             fields(op, {'op': 'str', **({'client_key': 'str?'} if verb == 'create' else {'id': 'id'}), **definitions},
@@ -171,6 +181,8 @@ def batch(con, revision, phase, operations):
     for i, op in enumerate(operations):
         p = f'/payload/operations/{i}'
         verb, _, kind = op['op'].partition('_')
+        if op['op'] == 'update_revision_text':
+            continue
         if op['op'] in RELATIONS:
             table, columns = RELATIONS[op['op']]
             row = {'revision_id': revision}
@@ -226,6 +238,9 @@ def batch(con, revision, phase, operations):
     order = {table: i for i, table in enumerate(CONTENT_TABLES)}
     con.execute('SAVEPOINT domain_batch')
     try:
+        if text_update:
+            con.execute('UPDATE revisions SET '+','.join(key+'=?' for key in text_update)+' WHERE revision_id=?',
+                        (*text_update.values(), revision))
         for table, row, p in sorted(rows, key=lambda item: order[item[0]]):
             if table == 'preconditions':
                 continue
@@ -345,6 +360,7 @@ def native_readback(check):
 
 
 def validate_complete(con, revision, phase):
+    revision_text.ensure_applied(con, revision)
     problems=[]
     def missing(table,idcol,relation,condition=''):
         rows=con.execute(f'SELECT a.{idcol} FROM {table} a WHERE a.revision_id=? AND NOT EXISTS (SELECT 1 FROM {relation} r WHERE r.revision_id=a.revision_id AND r.{idcol}=a.{idcol} {condition})',(revision,))
@@ -412,4 +428,4 @@ def task_fingerprint(con, revision, task_id, seen=None):
                 row.pop('ordinal', None)
                 content[table].append(row)
         content[table].sort(key=canonical)
-    return digest(content)
+    return digest({'content': content, 'intent': revision_text.values(con, revision, revision_text.SCOPE_FIELDS)})

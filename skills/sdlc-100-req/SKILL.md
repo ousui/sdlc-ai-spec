@@ -61,7 +61,9 @@ help/version/commands可通过CLI帮助、版本与本Skill命令表读取，不
 
 3. phase.prepare后使用client_key批量创建requirements/criteria，分别建立来源与覆盖关系；必要附件asset.add使用产品root内相对路径并保留名称/顺序。
 
-4. 已有需求修订先change.revise REQ，再根据当前输入更新。验收应可观察且覆盖需求，不先编造候选代码或后补阶段答案。
+4. 已有需求修订先change.revise REQ，再根据当前输入更新。phase.submit的update_revision_text只在REQ草稿修改title/summary/goal/in_scope/out_of_scope；省略字段不变，与Requirement、Criterion及来源可同批原子提交。
+   run.answer_input只保存原回答，不自动改内容。检查phase.prepare.pending_applications，按实际回答回写对应顶层字段并同步需求/验收；Runtime在同批回执applied_inputs关联已应用的回答。已提交版本不原地修改。
+   回读目标、范围、范围外和明细是否一致，保留原始来源；引用历史“等待明确”不等于当前仍未决定。不擅自替换用户已确认的行为语义，不先编造候选代码或后补阶段答案。
 
 5. phase.complete带准确generation，通过后保存下一草稿revision_id。缺必需业务决定时只问最小问题，不请用户修UUID、JSON或SQL。
 

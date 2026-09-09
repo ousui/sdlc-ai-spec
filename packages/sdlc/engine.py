@@ -1,7 +1,7 @@
 """IMP/VFY application services with persistent leases and attempt identities."""
 from pathlib import Path
 from .common import Fault, atomic_write, canonical, digest, loads, now, redact, require, safe_path, sha, uid
-from . import content, execution, verification
+from . import content, execution, revision_text, verification
 from .domain import fields, task_fingerprint
 from .protocol import FILE_CHANGE, REVIEW_FINDING
 from .storage import insert, one
@@ -266,6 +266,7 @@ def complete_phase(store, con, project, change, run, p):
     lease(con, project, change, run, p.get('lease_id'))
     current = phase(con, project, change, run)
     require(current == p['phase'], 'PHASE_ORDER', 'Complete the current execution phase', '/payload/phase', status='blocked')
+    revision_text.ensure_applied(con, revision)
     if current == 'RLS':
         from .delivery import close
         return close(store, con, project, change, run, p)

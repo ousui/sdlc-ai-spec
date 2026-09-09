@@ -23,7 +23,7 @@ RELATIONS = {
     'link_task_design': ('task_designs', {'task': 'task_id', 'design': 'design_id'}),
     'link_task_criterion': ('task_criteria', {'task': 'task_id', 'criterion': 'criterion_id'}),
     'link_check_criterion': ('check_criteria', {'check': 'check_id', 'criterion': 'criterion_id'}),
-    'add_dependency': ('task_dependencies', {'task': 'task_id', 'predecessor': 'predecessor_id', 'reason': 'text'}),
+    'add_task_dependency': ('task_dependencies', {'task': 'task_id', 'predecessor': 'predecessor_id', 'reason': 'text'}),
 }
 REL_INLINE = {
     ('requirement', 'sources'): ('requirement_sources', 'requirement_id', 'source_id'),
@@ -40,135 +40,293 @@ STAGE_TABLES = {
 }
 
 
-def fields(obj, definitions, path=''):
+ENUMS = {
+    ('source', 'kind'): ('text', 'document', 'image', 'observation', 'assumption'),
+    ('requirement', 'kind'): ('behavior', 'rule', 'quality', 'constraint'),
+    ('task', 'target_phase'): ('IMP', 'VFY', 'RLS'),
+    ('task', 'kind'): ('prepare', 'implement', 'verify', 'review', 'deliver'),
+    ('check', 'purpose'): ('acceptance', 'precondition', 'convergence', 'release_readback'),
+    ('check', 'method'): ('test', 'inspection', 'analysis', 'demonstration'),
+    ('check', 'executor'): ('command', 'agent', 'human'),
+    ('precondition', 'enforce_at'): ('start', 'execute', 'complete'),
+}
+NULLABLE = {
+    'source': {'origin_uri', 'observed_at'},
+    'check': {'task', 'argv', 'timeout_seconds', 'max_age_seconds'},
+    'precondition': {'producer_task'},
+}
+REF_TABLES = {**{k: v[0] for k, v in FIELDS.items()},
+              'consumer_task': 'tasks', 'producer_task': 'tasks', 'predecessor': 'tasks'}
+
+
+def pointer(path, key):
+    return path + '/' + str(key).replace('~', '~0').replace('/', '~1')
+
+
+def value_type(value, kind, path):
+    if kind == 'str':
+        require(isinstance(value, str) and bool(value.strip()), 'INVALID_TYPE', 'Expected non-empty text', path)
+    elif kind == 'int':
+        require(type(value) is int, 'INVALID_TYPE', 'Expected integer', path)
+    elif kind in {'positive', 'nonnegative'}:
+        require(type(value) is int and value >= (1 if kind == 'positive' else 0), 'INVALID_TYPE', 'Expected bounded integer', path)
+    elif kind == 'bool':
+        require(type(value) is bool, 'INVALID_TYPE', 'Expected boolean', path)
+    elif kind == 'id':
+        ident(value, path)
+    elif kind == 'ref':
+        require(isinstance(value, dict) and len(value) == 1 and next(iter(value)) in {'id', 'client_key'},
+                'INVALID_REFERENCE', 'Use {id: UUID} or {client_key: batch key}', path)
+        key = next(iter(value))
+        value_type(value[key], 'id' if key == 'id' else 'str', pointer(path, key))
+    elif kind == 'refs':
+        require(isinstance(value, list), 'INVALID_TYPE', 'Expected reference array', path)
+        for i, ref in enumerate(value):
+            value_type(ref, 'ref', pointer(path, i))
+        require(len({canonical(ref) for ref in value}) == len(value), 'DUPLICATE_REFERENCE', 'Duplicate reference', path)
+    elif kind == 'argv':
+        require(isinstance(value, list) and value and isinstance(value[0], str) and value[0].strip(),
+                'INVALID_ARGV', 'Command is a nonempty string array', path)
+        for i, arg in enumerate(value):
+            require(isinstance(arg, str) and '\x00' not in arg, 'INVALID_ARGV', 'Expected argument string without NUL', pointer(path, i))
+    elif kind == 'paths':
+        require(isinstance(value, list) and value, 'INVALID_SCOPE', 'Expected nonempty scope array', path)
+        for i, item in enumerate(value):
+            p = pointer(path, i)
+            fields(item, {'resource': 'str', 'path': 'str', 'access': 'str'}, p)
+            name = item['path']
+            require(not PurePosixPath(name).is_absolute() and '..' not in PurePosixPath(name).parts and '\\' not in name and '\x00' not in name,
+                    'UNSAFE_PATH', 'Scope must be relative to its resource', p+'/path')
+            require(item['access'] in {'read', 'write'}, 'INVALID_SCOPE', 'Use read or write', p+'/access')
+    elif kind in {'object', 'array'}:
+        require(isinstance(value, dict if kind == 'object' else list), 'INVALID_TYPE', 'Expected '+kind, path)
+    else:
+        raise RuntimeError('Unknown schema descriptor: '+kind)
+
+
+def fields(obj, definitions, path='', *, partial=False, nullable=()):
     require(isinstance(obj, dict), 'INVALID_TYPE', 'Expected object', path)
-    extras = set(obj) - set(definitions)
-    require(not extras, 'UNKNOWN_FIELD', 'Unknown field(s): ' + ', '.join(sorted(extras)), path)
+    extras = sorted(set(obj) - set(definitions))
+    require(not extras, 'UNKNOWN_FIELD', 'Unknown field(s): '+', '.join(extras), pointer(path, extras[0]) if extras else path)
     for key, spec in definitions.items():
-        optional = spec.endswith('?'); kind = spec.rstrip('?'); value = obj.get(key)
+        p = pointer(path, key)
         if key not in obj:
-            require(optional, 'MISSING_FIELD', f'{key} is required', path+'/'+key); continue
-        if value is None and optional: continue
-        p = path+'/'+key
-        if kind == 'str': require(isinstance(value, str) and bool(value.strip()), 'INVALID_TYPE', 'Expected non-empty text', p)
-        elif kind == 'int': require(type(value) is int, 'INVALID_TYPE', 'Expected integer', p)
-        elif kind in {'positive', 'nonnegative'}:
-            require(type(value) is int and value >= (1 if kind == 'positive' else 0), 'INVALID_TYPE', 'Expected bounded integer', p)
-        elif kind == 'bool': require(type(value) is bool, 'INVALID_TYPE', 'Expected boolean', p)
-        elif kind == 'id': ident(value, p)
-        elif kind == 'ref':
-            require(isinstance(value, dict) and len(value) == 1 and next(iter(value)) in {'id', 'client_key'}, 'INVALID_REFERENCE', 'Use {id: UUID} or {client_key: batch key}', p)
-            v = next(iter(value.values()))
-            require(isinstance(v, str) and bool(v), 'INVALID_REFERENCE', 'Reference value must be text', p)
-            if 'id' in value: ident(v, p)
-        elif kind == 'refs':
-            require(isinstance(value, list), 'INVALID_TYPE', 'Expected reference array', p)
-            for i, ref in enumerate(value): fields({'ref': ref}, {'ref': 'ref'}, f'{p}/{i}')
-        elif kind == 'argv':
-            require(isinstance(value, list) and value and all(isinstance(x, str) and '\x00' not in x for x in value), 'INVALID_ARGV', 'Command is a nonempty string array', p)
-        elif kind == 'paths':
-            require(isinstance(value, list), 'INVALID_SCOPE', 'Expected scope array', p)
-            for i, item in enumerate(value):
-                fields(item, {'resource': 'str', 'path': 'str', 'access': 'str'}, f'{p}/{i}')
-                name = item['path']
-                require(not PurePosixPath(name).is_absolute() and '..' not in PurePosixPath(name).parts and '\\' not in name and '\x00' not in name,
-                        'UNSAFE_PATH', 'Scope must be relative to its resource', f'{p}/{i}/path')
-                require(item['access'] in {'read','write'}, 'INVALID_SCOPE', 'Use read or write', f'{p}/{i}/access')
-        elif kind == 'object': require(isinstance(value, dict), 'INVALID_TYPE', 'Expected object', p)
-        elif kind == 'array': require(isinstance(value, list), 'INVALID_TYPE', 'Expected array', p)
-        else: raise RuntimeError('Unknown schema descriptor: '+kind)
+            require(partial or spec.endswith('?'), 'MISSING_FIELD', key+' is required', p)
+        elif obj[key] is not None or key not in nullable:
+            value_type(obj[key], spec.rstrip('?'), p)
 
 
 def batch(con, revision, phase, operations):
-    require(phase in STAGE_TABLES, 'PHASE_OWNERSHIP', 'Execution phases record results; revise the owning content phase')
-    require(isinstance(operations, list), 'INVALID_TYPE', 'operations must be an array', '/payload/operations')
-    require(len(operations) <= 1000, 'BATCH_LIMIT', 'Batch exceeds 1000 operations')
-    keys, allocated = {}, {}
+    """Validate/resolve a complete batch before applying its atomic savepoint."""
+    require(phase in STAGE_TABLES, 'PHASE_OWNERSHIP', 'Revise the owning content phase', '/payload/phase')
+    require(isinstance(operations, list), 'INVALID_TYPE', 'Expected operation array', '/payload/operations')
+    require(len(operations) <= 1000, 'BATCH_LIMIT', 'Batch exceeds 1000 operations', '/payload/operations')
+    rev = one(con, 'SELECT * FROM revisions WHERE revision_id=?', (revision,))
+    require(rev['state'] == 'draft', 'IMMUTABLE_REVISION', 'Create a child revision before editing', '/payload/revision_id')
+    keys, allocated, origins = {}, {}, {}
     for i, op in enumerate(operations):
         p = f'/payload/operations/{i}'
         require(isinstance(op, dict) and isinstance(op.get('op'), str), 'INVALID_OPERATION', 'Expected named operation', p)
         verb, _, kind = op['op'].partition('_')
-        if verb in {'create','update'} and kind in FIELDS:
+        if verb in {'create', 'update'} and kind in FIELDS:
             table, definitions = FIELDS[kind]
-            required_defs = definitions if verb == 'create' else {k: v.rstrip('?')+'?' for k,v in definitions.items()}
-            fields(op, {'op':'str', 'client_key':'str?' if verb=='create' else 'str?', **({'id':'id'} if verb=='update' else {}), **required_defs}, p)
-            require(table in STAGE_TABLES[phase], 'PHASE_OWNERSHIP', f'{table} belongs to a different content phase', p)
+            fields(op, {'op': 'str', **({'client_key': 'str?'} if verb == 'create' else {'id': 'id'}), **definitions},
+                   p, partial=verb == 'update', nullable=NULLABLE.get(kind, ()))
+            if verb == 'update':
+                require('id' in op, 'MISSING_FIELD', 'id is required', p+'/id')
+            for (entity, field), values in ENUMS.items():
+                if entity == kind and field in op:
+                    require(op[field] in values, 'INVALID_ENUM', 'Expected one of '+', '.join(values), p+'/'+field)
+            if 'ordinal' in op:
+                require(op['ordinal'] >= 0, 'INVALID_TYPE', 'Ordinal must be nonnegative', p+'/ordinal')
             if verb == 'create':
-                value = uid(); allocated[i] = value
+                allocated[i] = uid()
                 if 'client_key' in op:
                     require(op['client_key'] not in keys, 'DUPLICATE_CLIENT_KEY', 'Batch keys must be unique', p+'/client_key')
-                    keys[op['client_key']] = value
+                    keys[op['client_key']] = (allocated[i], table)
+            origins[(table, allocated[i] if verb == 'create' else op['id'])] = p
         elif op['op'] in RELATIONS:
             table, columns = RELATIONS[op['op']]
-            fields(op, {'op':'str', **{k:'str' if v=='text' else 'ref' for k,v in columns.items()}}, p)
-            require(table in STAGE_TABLES[phase], 'PHASE_OWNERSHIP', f'{table} belongs to a different phase', p)
+            fields(op, {'op': 'str', **{k: 'str' if v == 'text' else 'ref' for k, v in columns.items()}}, p)
         else:
             raise Fault('UNKNOWN_OPERATION', 'Unsupported domain operation: '+op['op'], p+'/op')
+        require(table in STAGE_TABLES[phase], 'PHASE_OWNERSHIP', table+' belongs to another phase', p)
 
-    def ref(obj):
-        if obj is None: return None
-        if 'id' in obj: return obj['id']
-        require(obj['client_key'] in keys, 'UNKNOWN_CLIENT_KEY', 'Reference names an absent batch key')
-        return keys[obj['client_key']]
+    def ref(obj, table, path):
+        if obj is None:
+            return None
+        if 'client_key' in obj:
+            require(obj['client_key'] in keys, 'UNKNOWN_CLIENT_KEY', 'No such key in this batch', path+'/client_key')
+            value, actual = keys[obj['client_key']]
+            require(actual == table, 'REFERENCE_TYPE', 'Reference must identify '+table, path)
+            return value
+        value = obj['id']
+        require(con.execute(f'SELECT 1 FROM {table} WHERE revision_id=? AND {ENTITY_IDS[table]}=?', (revision, value)).fetchone(),
+                'REFERENCE_SCOPE', 'Reference is absent from the exact revision or has a different entity type', path+'/id')
+        return value
 
-    pending = []
+    rows, relations, updates, clears = [], [], [], []
     for i, op in enumerate(operations):
+        p = f'/payload/operations/{i}'
         verb, _, kind = op['op'].partition('_')
         if op['op'] in RELATIONS:
             table, columns = RELATIONS[op['op']]
             row = {'revision_id': revision}
-            for key, column in columns.items(): row['reason' if column=='text' else column] = op[key] if column=='text' else ref(op[key])
-            pending.append((table,row)); continue
-        table, definitions = FIELDS[kind]; idcol = ENTITY_IDS[table]
+            for key, column in columns.items():
+                row['reason' if column == 'text' else column] = op[key] if column == 'text' else ref(op[key], REF_TABLES[key], p+'/'+key)
+            relations.append((table, row, p))
+            if table == 'task_dependencies':
+                require(row['task_id'] != row['predecessor_id'], 'TASK_SELF_DEPENDENCY', 'A task cannot depend on itself', p+'/predecessor')
+                origins[(table, row['task_id'], row['predecessor_id'])] = p
+            continue
+        table, definitions = FIELDS[kind]
+        idcol = ENTITY_IDS[table]
         value = allocated[i] if verb == 'create' else op['id']
-        row = {'revision_id':revision, idcol:value}
+        row = {'revision_id': revision, idcol: value}
+        if verb == 'update':
+            require(con.execute(f'SELECT 1 FROM {table} WHERE revision_id=? AND {idcol}=?', (revision, value)).fetchone(),
+                    'REFERENCE_SCOPE', 'Updated object is absent from this exact revision', p+'/id')
         for key in definitions:
-            if key not in op: continue
-            v=op[key]
-            if (kind,key) in REL_INLINE:
-                rel,left,right=REL_INLINE[kind,key]
-                if verb == 'update': con.execute(f'DELETE FROM {rel} WHERE revision_id=? AND {left}=?',(revision,value))
-                for obj in v or []: pending.append((rel,{'revision_id':revision,left:value,right:ref(obj)}))
-            elif key in {'task','consumer_task','producer_task','check'}: row[key+'_id']=ref(v)
-            elif key in {'argv','scope_paths'}: row[key+'_json']=canonical(v).decode() if v is not None else None
-            elif key=='required': row[key]=int(v)
-            else: row[key]=v
+            if key not in op:
+                continue
+            v = op[key]
+            if (kind, key) in REL_INLINE:
+                rel, left, right = REL_INLINE[kind, key]
+                if verb == 'update':
+                    clears.append((rel, left, value))
+                target_table = next(t for t, col in ENTITY_IDS.items() if col == right)
+                for j, obj in enumerate(v):
+                    relations.append((rel, {'revision_id': revision, left: value, right: ref(obj, target_table, f'{p}/{key}/{j}')}, p+'/'+key))
+            elif key in {'task', 'consumer_task', 'producer_task', 'check'}:
+                row[key+'_id'] = ref(v, REF_TABLES[key], p+'/'+key)
+            elif key in {'argv', 'scope_paths'}:
+                row[key+'_json'] = canonical(v).decode() if v is not None else None
+            elif key == 'required':
+                row[key] = int(v)
+            else:
+                row[key] = v
         if verb == 'create':
-            if 'ordinal' in definitions: row.setdefault('ordinal',con.execute(f'SELECT count(*) FROM {table} WHERE revision_id=?',(revision,)).fetchone()[0])
-            if kind=='check':
-                row.setdefault('task_id',None); row.setdefault('argv_json',None)
-                row.setdefault('timeout_seconds',60);row.setdefault('max_age_seconds',None)
-            if kind in {'check','precondition'}: pending.insert(0,(table,row))
-            else: insert(con,table,row)
+            if 'ordinal' in definitions:
+                row.setdefault('ordinal', con.execute(f'SELECT count(*) FROM {table} WHERE revision_id=?', (revision,)).fetchone()[0] + i)
+            if kind == 'check':
+                row.setdefault('task_id', None)
+                row.setdefault('argv_json', None)
+                row.setdefault('timeout_seconds', 60)
+                row.setdefault('max_age_seconds', None)
+            if kind == 'precondition':
+                row.setdefault('producer_task_id', None)
+            rows.append((table, row, p))
         else:
-            one(con,f'SELECT * FROM {table} WHERE revision_id=? AND {idcol}=?',(revision,value))
-            changes={k:v for k,v in row.items() if k not in {'revision_id',idcol}}
-            if changes: con.execute(f'UPDATE {table} SET '+','.join(f'{k}=?' for k in changes)+f' WHERE revision_id=? AND {idcol}=?',(*changes.values(),revision,value))
-    order={t:i for i,t in enumerate(CONTENT_TABLES)}
-    for table,row in sorted(pending,key=lambda item:order[item[0]]): insert(con,table,row)
-    validate_graph(con,revision)
-    return keys
+            updates.append((table, row, p))
+
+    order = {table: i for i, table in enumerate(CONTENT_TABLES)}
+    con.execute('SAVEPOINT domain_batch')
+    try:
+        for table, row, p in sorted(rows, key=lambda item: order[item[0]]):
+            if table == 'preconditions':
+                continue
+            if table == 'checks':
+                validate_check(row, p)
+            insert(con, table, row)
+        for table, row, p in updates:
+            idcol = ENTITY_IDS[table]
+            if table == 'checks':
+                old = dict(one(con, 'SELECT * FROM checks WHERE revision_id=? AND check_id=?', (revision, row[idcol])))
+                validate_check({**old, **row}, p)
+            if table == 'preconditions':
+                old = dict(one(con, 'SELECT * FROM preconditions WHERE revision_id=? AND condition_id=?', (revision, row[idcol])))
+                validate_precondition(con, {**old, **row}, p)
+            changes = {k: v for k, v in row.items() if k not in {'revision_id', idcol}}
+            if changes:
+                con.execute(f'UPDATE {table} SET '+','.join(k+'=?' for k in changes)+f' WHERE revision_id=? AND {idcol}=?',
+                            (*changes.values(), revision, row[idcol]))
+        for table, row, p in rows:
+            if table == 'preconditions':
+                validate_precondition(con, row, p)
+                insert(con, table, row)
+        for table, left, value in clears:
+            con.execute(f'DELETE FROM {table} WHERE revision_id=? AND {left}=?', (revision, value))
+        for table, row, p in relations:
+            columns = tuple(row)
+            duplicate = con.execute(f'SELECT 1 FROM {table} WHERE '+' AND '.join(k+'=?' for k in columns), tuple(row.values())).fetchone()
+            if not duplicate:
+                insert(con, table, row)
+        validate_graph(con, revision, origins)
+    except BaseException:
+        con.execute('ROLLBACK TO domain_batch')
+        con.execute('RELEASE domain_batch')
+        raise
+    con.execute('RELEASE domain_batch')
+    return {key: value for key, (value, table) in keys.items()}
 
 
-def validate_graph(con, revision):
-    tasks={r['task_id']:dict(r) for r in con.execute('SELECT * FROM tasks WHERE revision_id=?',(revision,))}
-    graph={k:[] for k in tasks}
-    def edge(consumer, producer, source):
-        require(consumer!=producer,'TASK_SELF_DEPENDENCY','A task cannot wait on its own future output',source)
+def validate_check(row, path):
+    command = row['executor'] == 'command'
+    require(command == (row.get('argv_json') is not None), 'CHECK_EXECUTOR',
+            'Only command checks require argv', path+'/argv')
+    require(row['method'] != 'test' or command, 'CHECK_EXECUTOR',
+            'Test requires actual command execution; use inspection/analysis for an Agent review', path+'/executor')
+
+
+def validate_precondition(con, row, path):
+    check = one(con, 'SELECT * FROM checks WHERE revision_id=? AND check_id=?',
+                (row['revision_id'], row['check_id']))
+    producer = row.get('producer_task_id') or check['task_id']
+    require(not row.get('producer_task_id') or row['producer_task_id'] == check['task_id'],
+            'CHECK_PRODUCER', 'Producer must own the check execution', path+'/producer_task')
+    require(producer != row['consumer_task_id'] or row['enforce_at'] == 'complete',
+            'TASK_SELF_DEPENDENCY', 'A task cannot wait on its own future output', path+'/enforce_at')
+
+
+def dependency_graph(con, revision, origins=None):
+    """Event DAG: start -> execute -> complete. Checks are produced during execute."""
+    origins = origins or {}
+    tasks = {r['task_id']: dict(r) for r in con.execute('SELECT * FROM tasks WHERE revision_id=?', (revision,))}
+    graph = {(t, event): [] for t in tasks for event in ('start', 'execute', 'complete')}
+    for t in tasks:
+        graph[t, 'execute'].append((t, 'start'))
+        graph[t, 'complete'].append((t, 'execute'))
+
+    def edge(consumer, moment, producer, produced_at, path):
         require(PHASES.index(tasks[producer]['target_phase']) <= PHASES.index(tasks[consumer]['target_phase']),
-                'DEPENDENCY_PHASE_ORDER','A task cannot depend on a later lifecycle phase',source)
-        graph[consumer].append(producer)
-    for r in con.execute('SELECT * FROM task_dependencies WHERE revision_id=?',(revision,)):
-        edge(r['task_id'],r['predecessor_id'],'/task_dependencies')
-    for r in con.execute('SELECT * FROM preconditions WHERE revision_id=?',(revision,)):
-        if r['producer_task_id'] and r['enforce_at']!='complete': edge(r['consumer_task_id'],r['producer_task_id'],'/preconditions')
-    done=set()
-    def visit(node,stack):
-        require(node not in stack,'DEPENDENCY_CYCLE','Execution dependency cycle',details={'cycle':[*stack,node]})
-        if node in done:return
-        for parent in graph[node]:visit(parent,(*stack,node))
+                'DEPENDENCY_PHASE_ORDER', 'A task cannot depend on a later lifecycle phase', path)
+        if consumer == producer:
+            require(moment == 'complete' and produced_at == 'execute', 'TASK_SELF_DEPENDENCY',
+                    'A task cannot wait on its own future output', path)
+        graph[consumer, moment].append((producer, produced_at))
+
+    for row in con.execute('SELECT * FROM task_dependencies WHERE revision_id=?', (revision,)):
+        p = origins.get(('task_dependencies', row['task_id'], row['predecessor_id']), '/task_dependencies')
+        edge(row['task_id'], 'start', row['predecessor_id'], 'complete', p)
+    for row in con.execute('SELECT p.*,c.task_id AS check_task FROM preconditions p JOIN checks c USING(revision_id,check_id) WHERE p.revision_id=?', (revision,)):
+        p = origins.get(('preconditions', row['condition_id']), '/preconditions/'+row['condition_id'])
+        producer = row['producer_task_id'] or row['check_task']
+        require(not row['producer_task_id'] or row['producer_task_id'] == row['check_task'],
+                'CHECK_PRODUCER', 'Producer must own the check execution', p+'/producer_task')
+        if producer:
+            edge(row['consumer_task_id'], row['enforce_at'], producer, 'execute', p+'/enforce_at')
+    return graph
+
+
+def validate_graph(con, revision, origins=None):
+    graph = dependency_graph(con, revision, origins)
+    # Kahn traversal avoids recursion limits for large, legal plans.
+    remaining = {node: set(parents) for node, parents in graph.items()}
+    ready = [node for node, parents in remaining.items() if not parents]
+    dependants = {node: [] for node in graph}
+    for node, parents in remaining.items():
+        for parent in parents:
+            dependants[parent].append(node)
+    done = set()
+    while ready:
+        node = ready.pop()
         done.add(node)
-    for task in tasks:visit(task,())
+        for child in dependants[node]:
+            remaining[child].discard(node)
+            if not remaining[child]:
+                ready.append(child)
+    require(len(done) == len(graph), 'DEPENDENCY_CYCLE', 'Execution dependency cycle', '/payload/operations',
+            details={'events': [list(node) for node in graph if node not in done]})
 
 
 def validate_complete(con, revision, phase):
@@ -194,26 +352,39 @@ def validate_complete(con, revision, phase):
 
 
 def task_fingerprint(con, revision, task_id, seen=None):
-    seen=set() if seen is None else seen
-    require(task_id not in seen,'DEPENDENCY_CYCLE','Task closure contains a cycle')
-    seen={*seen,task_id}
-    task=dict(one(con,'SELECT * FROM tasks WHERE revision_id=? AND task_id=?',(revision,task_id)))
-    task.pop('revision_id'); task.pop('ordinal')
-    content={'task':task,'designs':[],'criteria':[],'requirements':[],'predecessors':[],'preconditions':[]}
-    reqs=set()
-    for r in con.execute('SELECT d.* FROM designs d JOIN task_designs x USING(revision_id,design_id) WHERE x.revision_id=? AND x.task_id=?',(revision,task_id)):
-        row=dict(r);row.pop('revision_id');row.pop('ordinal');content['designs'].append(row)
-        reqs.update(x[0] for x in con.execute('SELECT requirement_id FROM design_requirements WHERE revision_id=? AND design_id=?',(revision,row['design_id'])))
-    for r in con.execute('SELECT c.* FROM criteria c JOIN task_criteria x USING(revision_id,criterion_id) WHERE x.revision_id=? AND x.task_id=?',(revision,task_id)):
-        row=dict(r);row.pop('revision_id');row.pop('ordinal');content['criteria'].append(row)
-        reqs.update(x[0] for x in con.execute('SELECT requirement_id FROM criterion_requirements WHERE revision_id=? AND criterion_id=?',(revision,row['criterion_id'])))
-    for rid in sorted(reqs):
-        row=dict(one(con,'SELECT * FROM requirements WHERE revision_id=? AND requirement_id=?',(revision,rid)))
-        row.pop('revision_id');row.pop('ordinal');content['requirements'].append(row)
-    for r in con.execute('SELECT predecessor_id FROM task_dependencies WHERE revision_id=? AND task_id=?',(revision,task_id)):
-        content['predecessors'].append((r[0],task_fingerprint(con,revision,r[0],seen)))
-    for r in con.execute('SELECT p.*, c.description,c.expected_result,c.argv_json,c.executor,c.max_age_seconds FROM preconditions p JOIN checks c USING(revision_id,check_id) WHERE p.revision_id=? AND p.consumer_task_id=?',(revision,task_id)):
-        row=dict(r);row.pop('revision_id');content['preconditions'].append(row)
-    for k,v in content.items():
-        if isinstance(v,list):v.sort(key=canonical)
+    """Fingerprint the relation closure as a set, including legal completion checks."""
+    selected, pending = set(), [task_id]
+    while pending:
+        task = pending.pop()
+        if task in selected:
+            continue
+        selected.add(task)
+        pending.extend(r[0] for r in con.execute('SELECT predecessor_id FROM task_dependencies WHERE revision_id=? AND task_id=?', (revision, task)))
+        pending.extend(r[0] for r in con.execute('SELECT coalesce(p.producer_task_id,c.task_id) FROM preconditions p JOIN checks c USING(revision_id,check_id) WHERE p.revision_id=? AND p.consumer_task_id=?', (revision, task)) if r[0])
+    content = {table: [] for table in CONTENT_TABLES}
+    ids = {'tasks': selected, 'designs': set(), 'criteria': set(), 'requirements': set(), 'sources': set(), 'checks': set()}
+    for task in selected:
+        ids['designs'].update(r[0] for r in con.execute('SELECT design_id FROM task_designs WHERE revision_id=? AND task_id=?', (revision, task)))
+        ids['criteria'].update(r[0] for r in con.execute('SELECT criterion_id FROM task_criteria WHERE revision_id=? AND task_id=?', (revision, task)))
+        ids['checks'].update(r[0] for r in con.execute('SELECT check_id FROM checks WHERE revision_id=? AND task_id=? UNION SELECT check_id FROM preconditions WHERE revision_id=? AND consumer_task_id=?', (revision, task, revision, task)))
+    for table, relation, idcol in (('designs', 'design_requirements', 'design_id'), ('criteria', 'criterion_requirements', 'criterion_id')):
+        for value in ids[table]:
+            ids['requirements'].update(r[0] for r in con.execute(f'SELECT requirement_id FROM {relation} WHERE revision_id=? AND {idcol}=?', (revision, value)))
+    for value in ids['requirements']:
+        ids['sources'].update(r[0] for r in con.execute('SELECT source_id FROM requirement_sources WHERE revision_id=? AND requirement_id=?', (revision, value)))
+    for table in CONTENT_TABLES:
+        for record in con.execute(f'SELECT * FROM {table} WHERE revision_id=?', (revision,)):
+            row = dict(record)
+            # Include only relations whose endpoints belong to this closure.
+            refs = [(key, value) for key, value in row.items() if key.endswith('_id') and key not in {'revision_id', 'condition_id'} and value]
+            def selected_ref(key, value):
+                if key in {'consumer_task_id', 'producer_task_id', 'predecessor_id'}:
+                    return value in selected
+                target = next((t for t, col in ENTITY_IDS.items() if col == key), None)
+                return target in ids and value in ids[target]
+            if refs and all(selected_ref(key, value) for key, value in refs):
+                row.pop('revision_id')
+                row.pop('ordinal', None)
+                content[table].append(row)
+        content[table].sort(key=canonical)
     return digest(content)

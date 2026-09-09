@@ -63,8 +63,13 @@ class Store:
     @contextmanager
     def read(self):
         con = self.connect(readonly=True)
-        try: yield con
-        finally: con.close()
+        try:
+            # All queries in one input package observe the same SQLite snapshot.
+            con.execute('BEGIN')
+            yield con
+        finally:
+            con.rollback()
+            con.close()
 
     def initialize(self, name):
         with file_lock(self.home / '.init.lock'):

@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 from pathlib import PurePosixPath
-from .common import PHASES, Fault, canonical, digest, ident, require, uid
+from .common import PHASES, Fault, canonical, digest, ident, loads, require, uid
 from .storage import CONTENT_TABLES, ENTITY_IDS, insert, one
 
 # A descriptor is both the input validator and the source for machine schemas.
@@ -333,6 +333,11 @@ def validate_graph(con, revision, origins=None):
             details={'events': [list(node) for node in graph if node not in done]})
 
 
+def native_readback(check):
+    return (check['purpose'] == 'release_readback' and check['executor'] == 'command'
+            and loads(check['argv_json']) == ['@runtime', 'delivery.readback'])
+
+
 def validate_complete(con, revision, phase):
     problems=[]
     def missing(table,idcol,relation,condition=''):
@@ -345,7 +350,11 @@ def validate_complete(con, revision, phase):
     missing('criteria','criterion_id','criterion_requirements')
     if PHASES.index(phase)>=1:
         missing('requirements','requirement_id','design_requirements')
-        missing('criteria','criterion_id','check_criteria',"AND EXISTS (SELECT 1 FROM checks k WHERE k.revision_id=r.revision_id AND k.check_id=r.check_id AND k.required=1 AND k.purpose='acceptance')")
+        covered = {row['criterion_id'] for row in con.execute(
+            'SELECT k.*,r.criterion_id FROM checks k JOIN check_criteria r USING(revision_id,check_id) WHERE k.revision_id=? AND k.required=1', (revision,))
+            if row['purpose'] == 'acceptance' or native_readback(row)}
+        problems.extend({'code': 'COVERAGE_MISSING', 'table': 'criteria', 'id': row[0], 'relationship': 'check_criteria'}
+                        for row in con.execute('SELECT criterion_id FROM criteria WHERE revision_id=?', (revision,)) if row[0] not in covered)
         if not con.execute("SELECT 1 FROM checks WHERE revision_id=? AND purpose='convergence' AND required=1",(revision,)).fetchone():problems.append({'code':'CONVERGENCE_CHECK_REQUIRED','table':'checks'})
     if PHASES.index(phase)>=2:
         missing('designs','design_id','task_designs')

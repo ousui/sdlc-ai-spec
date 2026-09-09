@@ -9,9 +9,7 @@ from pathlib import Path
 from . import content, engine, execution, verification
 from .common import atomic_write, canonical, digest, loads, now, redact, require, safe_path, sha, uid
 from .storage import insert, one
-
-READBACK_ARGV = ['@runtime', 'delivery.readback']
-
+from .domain import native_readback
 
 def row(con, project, change, delivery_id):
     return one(con, 'SELECT * FROM deliveries WHERE project_id=? AND change_id=? AND delivery_id=?',
@@ -70,7 +68,7 @@ def prepare(store, con, project, change, run, p):
     evaluation = verification.evaluate(store, con, project, change, p['revision_id'], p.get('environment'))
     require(evaluation['converged'], 'NOT_CONVERGED', 'Current VFY inputs or results no longer converge', status='blocked', details=evaluation)
     readbacks = list(con.execute("SELECT * FROM checks WHERE revision_id=? AND required=1 AND purpose='release_readback'", (p['revision_id'],)))
-    require(len(readbacks) == 1 and readbacks[0]['executor'] == 'command' and loads(readbacks[0]['argv_json']) == READBACK_ARGV,
+    require(len(readbacks) == 1 and native_readback(readbacks[0]),
             'READBACK_CHECK_REQUIRED', 'Plan one required command Check with purpose release_readback and argv [@runtime, delivery.readback]', status='blocked')
     check = readbacks[0]
     if check['task_id']:

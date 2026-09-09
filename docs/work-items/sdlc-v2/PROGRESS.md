@@ -22,14 +22,14 @@
 | P4 | 已完成 | 115项回归；P4-D-RESULTS.md与P4-E-RESULTS.md；独立安装版前向小案例完成 |
 | Q0 | 已完成并本地提交 | 原13/10/24项实际通过与本地RLS；完整Spring归档恢复；实验室8b745601；Q0-RUNTIME-REPAIRS.md |
 | 核心补充 | 已验证，随本记录提交 | 135项测试通过；澄清、资产崩溃、中断日志、交付范围及独立复验见CORE-ACCEPTANCE-SUPPLEMENT.md |
-| Q1 | 未开始 | 三项目第一复杂需求 |
+| Q1 | 实际执行中 | Admin原13+新增15通过、2项finding修复并RLS/归档完成待独立字节核对；fansite在VFY；Spring的交付覆盖阻塞已修补，待新包恢复 |
 | Q2 | 未开始 | 三项目第二复杂需求 |
 | FINAL | 未开始 | H_final/安装摘要/九场景回归/46项映射 |
 
 ## 唯一下一动作
 
-Q1已从clean b4d4bc4冻结q1-entry开始INIT/CTX/REQ；独立复核发现DSN残留“input_paths留空”旧文案，
-仅修正为当前公开契约的明确范围规则，并冻结q1-dsn供DSN及后续入口使用，Runtime代码不变。
-三个项目分别由实际Agent从R0交付执行第一复杂需求六Skill链，保留两包准确边界。
+冻结本批交付覆盖修补包，恢复Spring保留的DSN需求，并完成三项目Q1验证/交付与完整归档核对。
+139项全套通过，修补和原始失败见Q1-RELEASE-COVERAGE.md。
+q1-entry基于b4d4bc4，q1-dsn基于586d133；旧证据保留原包边界，不能改写成新版本执行。
 三个项目全部关闭后先本地提交再进入Q2；共同契约补充要求FINAL在H_final重做全部九条真实链。
 保留首次8754d65三产品链和f5f0c0a管理修补、dirty独立复验的准确版本，不拼成同版本结果。

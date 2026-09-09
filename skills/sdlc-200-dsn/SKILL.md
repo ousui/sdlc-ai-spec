@@ -55,7 +55,7 @@ help/version/commands可通过CLI帮助、版本与本Skill命令表读取，不
 
 2. 保存design的decision/rationale/alternatives/detail，并用requirements关系表示覆盖；不补固定空域或只写笼统技术标签。
 
-3. 为验收定义command Check、明确argv及断言，criteria逐项关联；input_paths覆盖实际输入依赖，不能直接复制Task写范围。
+3. 为业务验收定义required acceptance Check，明确argv及断言并关联criteria；交付验收可关联required原生release_readback，须等RLS实际回读才成立。input_paths覆盖真实输入，不能复制Task写范围；交付后完整归档另留实际导出和字节校验证据。
 
 4. 另定义required convergence Check，executor=agent、method=inspection或analysis，覆盖整个需求。定义required release_readback Check，command argv=["@runtime","delivery.readback"]；input_paths固定交付源码范围，省略时为完整main，同root多产品须显式限定。
 

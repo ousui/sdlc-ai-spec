@@ -1,0 +1,27 @@
+name: review-source
+on:
+  push:
+    branches: [fix/v2-review-github-sharing]
+permissions:
+  contents: read
+jobs:
+  source:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Snapshot source and provenance
+        run: |
+          mkdir -p "$RUNNER_TEMP/review-source"
+          git rev-parse HEAD > "$RUNNER_TEMP/review-source/source.sha"
+          git archive HEAD -o "$RUNNER_TEMP/review-source/source.tar"
+          git bundle create "$RUNNER_TEMP/review-source/source.bundle" HEAD
+          printf '%s\n' 'SOURCE_TRANSPORT_ONLY; not a test result.' > "$RUNNER_TEMP/review-source/README.txt"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: review-source-${{ github.sha }}
+          path: ${{ runner.temp }}/review-source/
+          retention-days: 14

@@ -21,7 +21,9 @@ from .storage import CONTENT_TABLES, Store, insert, one
 TABLES = ('projects', 'contexts', 'context_entries', 'workspaces', 'changes', 'revisions',
           *CONTENT_TABLES, 'assets', 'runs', 'code_snapshots', 'steps', 'check_results',
           'findings', 'deliveries', 'asset_links', 'authorizations', 'operations')
-MAX_ARCHIVE = 256*1024*1024
+# Dependency evidence such as Maven JARs is already compressed. Keep both
+# admission limits bounded without assuming a two-to-one compression ratio.
+MAX_ARCHIVE = 512*1024*1024
 MAX_EXPANDED = 512*1024*1024
 MAX_ROWS = 50000
 OWNED = {

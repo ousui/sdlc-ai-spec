@@ -7,6 +7,25 @@ from pathlib import Path
 from packages.sdlc.common import Fault, now, uid
 from packages.sdlc.domain import batch, fields, task_fingerprint, validate_complete
 from packages.sdlc.storage import Store, insert
+from packages.sdlc.protocol import contract, operation_schema
+
+
+class PublicScopeSchemaTests(unittest.TestCase):
+    def test_resource_map_schema_requires_main_in_complete_replacement(self):
+        commands = contract()['commands']
+        for name in ('workspace.bind', 'workspace.rebind'):
+            resources = commands[name]['payload']['properties']['resources']
+            self.assertEqual(['main'], resources['required'])
+            self.assertEqual({'const': '.'}, resources['properties']['main'])
+            self.assertEqual({'type': 'string', 'minLength': 1}, resources['additionalProperties'])
+
+    def test_check_read_dependencies_and_task_write_permissions_have_distinct_schema(self):
+        operations = {r['properties']['op']['const']: r for r in operation_schema('PLN')['items']['oneOf']}
+        for verb in ('create', 'update'):
+            read_access = operations[verb+'_check']['properties']['input_paths']['items']['properties']['access']['enum']
+            task_access = operations[verb+'_task']['properties']['scope_paths']['items']['properties']['access']['enum']
+            self.assertEqual(['read'], read_access)
+            self.assertEqual(['read', 'write'], task_access)
 
 
 def ref(key):

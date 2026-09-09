@@ -289,12 +289,17 @@ def complete_phase(store, con, project, change, run, p):
     rounds = state['repair_round']+1
     exhausted = rounds >= state['max_repair_rounds'] or stagnant >= state['no_progress_limit']
     earliest = min((f['return_phase'] for f in evaluation['blocking_findings']), key=lambda x: ['REQ','DSN','PLN','IMP','VFY','RLS'].index(x), default='IMP')
+    repair_ids = verification.repair_tasks(con, revision, earliest, evaluation['blocking_findings'], evaluation['failed_checks'])
+    for task in repair_ids:
+        marker = new_step(con, project, change, run, revision, earliest, 'repair:'+task,
+                          task=task, definition=task_fingerprint(con, revision, task), status='blocked')
+        con.execute("UPDATE steps SET outcome='not_applicable',finished_at=? WHERE step_id=?", (now(), marker))
     con.execute('UPDATE runs SET current_phase=?,repair_round=?,no_progress_rounds=?,last_progress_digest=?,status=? WHERE run_id=?',
                 (earliest, rounds, stagnant, fingerprint, 'blocked' if exhausted else 'running', run))
     return {**evaluation, 'control_status': 'blocked' if exhausted else 'needs_work',
             'error_code': 'REPAIR_BUDGET' if exhausted else 'GAPS_REMAIN', 'repair_round': rounds,
             'next_actions': [{'action': 'inspect' if exhausted else 'repair', 'phase': earliest,
-                              'task_ids': sorted({f['task_id'] for f in evaluation['blocking_findings'] if f['task_id']})}]}
+                              'task_ids': repair_ids}]}
 
 
 def finding_action(store, con, project, change, run, command, p):

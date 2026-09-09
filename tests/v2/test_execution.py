@@ -193,6 +193,56 @@ class ExecutionFlowTests(unittest.TestCase):
             self.assertEqual(['fail', 'pass'], [r[0] for r in rows])
             self.assertEqual([], con.execute('PRAGMA foreign_key_check').fetchall())
 
+    def test_vfy_owned_failure_returns_runnable_imp_work_and_preserves_unrelated_history(self):
+        ids = self.replan([
+            {'op': 'create_task', 'client_key': 'other', 'target_phase': 'IMP', 'kind': 'implement',
+             'title': 'Keep independent note', 'description': 'Separate completed work', 'completion_text': 'Note saved',
+             'scope_paths': [{'resource': 'main', 'path': 'note.txt', 'access': 'write'}],
+             'designs': [{'id': self.dsn['design']}], 'criteria': [{'id': self.req['ac']}]},
+            {'op': 'create_task', 'client_key': 'verify', 'target_phase': 'VFY', 'kind': 'verify',
+             'title': 'Verify count', 'description': 'Actual assertions', 'completion_text': 'Test attempt recorded',
+             'scope_paths': [{'resource': 'main', 'path': '.', 'access': 'read'}],
+             'designs': [{'id': self.dsn['design']}], 'criteria': [{'id': self.req['ac']}]},
+            {'op': 'add_task_dependency', 'task': {'client_key': 'verify'}, 'predecessor': {'id': self.task}, 'reason': 'Verify this implementation'},
+            {'op': 'update_check', 'id': self.dsn['test'], 'task': {'client_key': 'verify'}},
+            {'op': 'update_check', 'id': self.dsn['review'], 'task': {'client_key': 'verify'}},
+        ])
+        original = self.start()
+        self.write(original, False)
+        self.finish(original)
+        other = self.s.ok('task.start', {'revision_id': self.rev, 'task_id': ids['other'], 'lease_id': self.lease})['step_id']
+        self.s.ok('task.write', {'revision_id': self.rev, 'task_id': ids['other'], 'step_id': other,
+                  'lease_id': self.lease, 'files': [{'path': 'note.txt', 'content': 'independent bytes'}]})
+        self.s.ok('task.finish', {'revision_id': self.rev, 'task_id': ids['other'], 'step_id': other,
+                  'lease_id': self.lease, 'summary': 'Independent note saved'})
+        self.s.ok('phase.complete', {'phase': 'IMP', 'revision_id': self.rev, 'lease_id': self.lease})
+        verifier = self.s.ok('task.start', {'revision_id': self.rev, 'task_id': ids['verify'], 'lease_id': self.lease})['step_id']
+        red = self.check()['data']
+        self.s.ok('check.record_review', {'revision_id': self.rev, 'check_id': self.dsn['review'], 'lease_id': self.lease,
+                  'status': 'pass', 'observations': 'Fixture inspection; actual failing assertion remains authoritative'})
+        self.s.ok('task.finish', {'revision_id': self.rev, 'task_id': ids['verify'], 'step_id': verifier,
+                  'lease_id': self.lease, 'summary': 'Recorded actual failed assertion'})
+        returned = self.s.send('phase.complete', {'phase': 'VFY', 'revision_id': self.rev, 'lease_id': self.lease})
+        self.assertEqual([self.task], returned['next_actions'][0]['task_ids'])
+        next_tasks = self.s.ok('task.next', {'revision_id': self.rev})['tasks']
+        self.assertEqual([(self.task, True)], [(r['task']['task_id'], r['runnable']) for r in next_tasks])
+        skipped = self.s.send('phase.complete', {'phase': 'IMP', 'revision_id': self.rev, 'lease_id': self.lease})
+        self.assertEqual('TASKS_PENDING', skipped['errors'][0]['code'])
+        with Store(self.root).read() as con:
+            self.assertEqual(['completed', 'completed'], [con.execute('SELECT status FROM steps WHERE step_id=?', (key,)).fetchone()[0] for key in (original, other)])
+        repair = self.start()
+        self.write(repair, True)
+        self.finish(repair)
+        self.assertEqual('independent bytes', (self.root/'note.txt').read_text())
+        self.s.ok('phase.complete', {'phase': 'IMP', 'revision_id': self.rev, 'lease_id': self.lease})
+        green = self.check()['data']
+        self.assertEqual('pass', green['outcome'])
+        self.s.ok('finding.address', {'finding_id': red['finding_id'], 'lease_id': self.lease})
+        self.s.ok('finding.resolve', {'finding_id': red['finding_id'], 'result_id': green['result_id'], 'lease_id': self.lease})
+        self.s.ok('check.record_review', {'revision_id': self.rev, 'check_id': self.dsn['review'], 'lease_id': self.lease,
+                  'status': 'pass', 'observations': 'Current behavior and independent note both retained'})
+        self.assertTrue(self.s.ok('phase.complete', {'phase': 'VFY', 'revision_id': self.rev, 'lease_id': self.lease})['converged'])
+
     def test_resume_rotates_lease_and_keeps_interrupted_attempt(self):
         step = self.start()
         resumed = self.s.ok('run.resume', {'reason': 'Synthetic interrupted authoring session'})
@@ -387,7 +437,9 @@ class ExecutionFlowTests(unittest.TestCase):
         self.finish(step)
         self.s.ok('check.record_review', {'revision_id': self.rev, 'check_id': self.dsn['review'], 'lease_id': self.lease,
                                         'status': 'pass', 'observations': 'Stable synthetic review'})
-        for expected in ['needs_work', 'needs_work', 'blocked']:
+        for round_number, expected in enumerate(['needs_work', 'needs_work', 'blocked']):
+            if round_number:
+                self.finish(self.start())  # Explicit attempted repair with no changed bytes.
             self.s.ok('phase.complete', {'phase': 'IMP', 'revision_id': self.rev, 'lease_id': self.lease})
             result = self.s.send('phase.complete', {'phase': 'VFY', 'revision_id': self.rev, 'lease_id': self.lease})
             self.assertEqual(expected, result['status'])

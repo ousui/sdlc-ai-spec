@@ -1,7 +1,7 @@
 """One applicability/convergence service for planning status and actual execution."""
 from datetime import datetime, timedelta, timezone
 from .common import PHASES, canonical, digest, loads, now, redact, require, uid
-from .domain import task_fingerprint, validate_complete
+from .domain import task_ancestors, task_fingerprint, validate_complete
 from .execution import environment, observe
 from .storage import CONTENT_TABLES, insert, one
 
@@ -47,8 +47,41 @@ def task_completed(con, change, revision, task):
     definition = task_fingerprint(con, revision, task)
     row = con.execute("SELECT * FROM steps WHERE change_id=? AND task_id=? AND step_key=? ORDER BY started_at DESC,attempt DESC LIMIT 1",
                       (change, task, 'task:'+task)).fetchone()
-    # Completion is a historical work fact. Only checks claim PASS on the current code.
-    return bool(row and row['status'] == 'completed' and row['definition_digest'] == definition)
+    repair = con.execute("SELECT started_at FROM steps WHERE change_id=? AND task_id=? AND step_key=? ORDER BY started_at DESC LIMIT 1",
+                         (change, task, 'repair:'+task)).fetchone()
+    # Preserve old completion as history, but a newly requested repair needs a
+    # subsequent task attempt. Only checks claim PASS on the current code.
+    return bool(row and row['status'] == 'completed' and row['definition_digest'] == definition
+                and (not repair or row['started_at'] > repair['started_at']))
+
+
+def repair_tasks(con, revision, target_phase, findings, failed_checks):
+    """Locate related upstream work in the requested phase, not its verifier."""
+    tasks = {r['task_id']: r['target_phase'] for r in con.execute('SELECT task_id,target_phase FROM tasks WHERE revision_id=?', (revision,))}
+    candidates = {key for key, phase in tasks.items() if phase == target_phase}
+    if not candidates:
+        return []  # Content repairs use change.revise, not execution task IDs.
+    criteria = {}
+    for row in con.execute('SELECT task_id,criterion_id FROM task_criteria WHERE revision_id=?', (revision,)):
+        criteria.setdefault(row['task_id'], set()).add(row['criterion_id'])
+    origins = []
+    for finding in findings:
+        if finding['return_phase'] == target_phase:
+            covered = {finding['criterion_id']} if finding['criterion_id'] else {
+                r[0] for r in con.execute('SELECT x.criterion_id FROM check_results r JOIN check_criteria x USING(revision_id,check_id) WHERE r.result_id=?', (finding['result_id'],))}
+            origins.append((finding['task_id'], covered))
+    if not origins:
+        for result in failed_checks:
+            owner = one(con, 'SELECT task_id FROM checks WHERE revision_id=? AND check_id=?', (revision, result['check_id']))['task_id']
+            covered = {r[0] for r in con.execute('SELECT criterion_id FROM check_criteria WHERE revision_id=? AND check_id=?', (revision, result['check_id']))}
+            origins.append((owner, covered))
+    selected = set()
+    for owner, covered in origins:
+        upstream = task_ancestors(con, revision, owner) if owner in tasks else set()
+        pool = (upstream & candidates) or candidates
+        relevant = {task for task in pool if criteria.get(task, set()) & covered}
+        selected.update(relevant or pool)
+    return sorted(selected or candidates)
 
 
 def check_scope(con, revision, check):

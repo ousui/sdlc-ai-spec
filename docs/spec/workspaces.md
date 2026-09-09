@@ -11,7 +11,8 @@ workspace.bind只绑定明确存在的资源目录，main为`.`。配置操作�
 
 workspace.export的payload.change_id选择一个需求，返回ZIP路径、逻辑bundle_digest和文件摘要。
 包含单project/change、所有版本及CTX、原始Run/结果/日志、附件/意图引用资产和离线index.html。
-归档有文件数、行数、压缩和展开大小上限；超限明确拒绝，不静默省略原始证据。
+归档最多50000行与50000个文件，压缩及展开各512 MiB；单个原始诊断最多8 MiB。
+超限明确拒绝，不静默省略原始证据。依赖JAR等已压缩资产不假定还能压缩一半。
 
 workspace.collect的payload.path选择归档。先在隔离临时数据库校验严格Schema、嵌套结构、
 引用闭包和摘要，再以目标事务新增关系；不替换DB或产品代码。

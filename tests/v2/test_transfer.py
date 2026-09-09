@@ -110,6 +110,27 @@ class TransferTests(unittest.TestCase):
             self.assertTrue(con.execute('SELECT 1 FROM revisions WHERE revision_id=?', (untouched['revision_id'],)).fetchone())
             self.assertFalse(con.execute('PRAGMA foreign_key_check').fetchall())
 
+    def test_archive_budget_rejection_preserves_evidence_and_later_exports_complete_bytes(self):
+        self.public.context = self.s.context
+        created = self.public.new_change('archive-budget')
+        self.change = created['change_id']
+        evidence = self.root/'binary-evidence.bin'
+        # Deterministic compressed input, representative of dependency archives.
+        import random
+        evidence.write_bytes(random.Random(17).randbytes(16384))
+        self.public.ok('asset.add', {'path': evidence.name, 'owner_type': 'source',
+                       'owner_id': created['source_id'], 'purpose': 'original dependency evidence'},
+                       expected_generation=0)
+        config_before = Store(self.root).config()
+        with patch.object(transfer, 'MAX_ARCHIVE', 8192):
+            refused = self.public.send('workspace.export', {'change_id': self.change})
+        self.assertEqual('ARCHIVE_LIMIT', refused['errors'][0]['code'])
+        self.assertFalse(list((self.root/'.sdlc/exports/workspace').glob('*.zip')))
+        self.assertEqual(config_before, Store(self.root).config())
+        archive = self.archive(self.root)
+        _, _, files, _ = transfer.unpack(Path(archive['path']))
+        self.assertIn(evidence.read_bytes(), files.values())
+
     def test_divergence_retains_both_heads_and_explicit_merge_parentage(self):
         copied, _ = self.clone()
         source_head = self.revise(copied, 'Independent source decision')

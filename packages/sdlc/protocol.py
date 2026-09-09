@@ -110,6 +110,8 @@ def operation_schema(phase):
             continue
         for verb in ('create', 'update'):
             props = {k: scalar_schema(v, k in NULLABLE.get(kind, ())) for k, v in definitions.items()}
+            if kind == 'check':
+                props['input_paths']['items']['properties']['access']['enum'] = ['read']
             for (entity, field), values in ENUMS.items():
                 if entity == kind:
                     props[field]['enum'] = list(values)
@@ -149,6 +151,11 @@ def contract():
     result['commands']['check.record_review']['payload']['properties']['findings']['items'] = schema(REVIEW_FINDING)
     result['commands']['phase.submit']['payload']['properties']['operations'] = {
         'description': 'Use the operations schema returned by phase.prepare for the selected phase.', 'type': 'array'}
+    for command in ('workspace.bind', 'workspace.rebind'):
+        result['commands'][command]['payload']['properties']['resources'] = {
+            'type': 'object', 'required': ['main'], 'properties': {'main': {'const': '.'}},
+            'additionalProperties': {'type': 'string', 'minLength': 1},
+            'description': 'Complete replacement resource map, including main bound to .; names must be identifiers.'}
     return result
 
 

@@ -355,8 +355,8 @@ def validate_complete(con, revision, phase):
     require(not problems,'PHASE_INCOMPLETE','Complete the listed coverage/content before advancing',status='blocked',details=problems)
 
 
-def task_fingerprint(con, revision, task_id, seen=None):
-    """Fingerprint the relation closure as a set, including legal completion checks."""
+def task_ancestors(con, revision, task_id):
+    """Execution predecessor closure, including operation-condition producers."""
     selected, pending = set(), [task_id]
     while pending:
         task = pending.pop()
@@ -365,6 +365,12 @@ def task_fingerprint(con, revision, task_id, seen=None):
         selected.add(task)
         pending.extend(r[0] for r in con.execute('SELECT predecessor_id FROM task_dependencies WHERE revision_id=? AND task_id=?', (revision, task)))
         pending.extend(r[0] for r in con.execute('SELECT coalesce(p.producer_task_id,c.task_id) FROM preconditions p JOIN checks c USING(revision_id,check_id) WHERE p.revision_id=? AND p.consumer_task_id=?', (revision, task)) if r[0])
+    return selected
+
+
+def task_fingerprint(con, revision, task_id, seen=None):
+    """Fingerprint the relation closure as a set, including legal completion checks."""
+    selected = task_ancestors(con, revision, task_id)
     content = {table: [] for table in CONTENT_TABLES}
     ids = {'tasks': selected, 'designs': set(), 'criteria': set(), 'requirements': set(), 'sources': set(), 'checks': set()}
     for task in selected:

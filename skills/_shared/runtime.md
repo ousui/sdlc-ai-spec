@@ -49,6 +49,7 @@ Run先于正式IMP输出建立。run.acquire取得工作区执行lease，后续�
 
 check.run的argv是数组，资源/输入范围明确，输出有界且脱敏。input_paths为空默认完整main；
 Task写范围不是Check读取范围。实际构建/环境依赖也参与摘要；HEAD改变本身不否定结果。
+Check input_paths的access只允许read；workspace.bind/rebind的resources是完整替换映射，须保留`"main":"."`及仍需使用的资源。
 公开命令Schema列有environment时，通过payload.environment传非秘密变量，直接使用真实工具argv，不用env前缀掩盖解释器身份。
 现有白名单为PATH、JAVA_HOME、GOPROXY、GOTOOLCHAIN、GOCACHE、GOPATH、GOFLAGS、PYTHONDONTWRITEBYTECODE、PYTHONPATH、LANG、LC_ALL、MAVEN_OPTS和JAVA_TOOL_OPTIONS。
 Runtime强制GOPROXY=off、GOTOOLCHAIN=local、禁止pyc写入并补齐Java FORK选项。相同检查链的task、check、phase.complete及delivery.prepare使用同一环境映射；缓存写入还须绑定资源并列入Task写范围。
@@ -57,6 +58,7 @@ Runtime强制GOPROXY=off、GOTOOLCHAIN=local、禁止pyc写入并补齐Java FORK
 
 VFY发现合理业务缺口时，记录finding并按返回phase修订内容或修复代码；重新执行受影响检查、
 finding.address后使用适用新result做finding.resolve。addressed不等于resolved。
+退回执行阶段后用task.next取得待修复任务；修复是新任务尝试，旧完成记录继续保留为历史。
 执行完整范围的convergence审阅，检查未实现、部分实现、矛盾和越界功能；未解决blocking缺口不能关闭。
 默认格式重试3、修复5、无进展2；触发预算后先诊断，增加预算须有实际依据并用run.configure记录。
 不通过删除合法依赖、放宽验收、虚构授权或手工SQL清除阻塞。

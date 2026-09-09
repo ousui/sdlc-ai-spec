@@ -28,7 +28,7 @@ def table(text, heading):
 
 def validate(root=ROOT):
     actual = {p.parent.name for p in (root/'skills').glob('*/SKILL.md')}
-    require(actual == set(SKILLS), 'Expected exactly the nine v2 Skill entrypoints')
+    require(actual == set(SKILLS), 'Expected exactly the registered v2 Skill entrypoints')
     results = []
     for name in SKILLS:
         base = root/'skills'/name

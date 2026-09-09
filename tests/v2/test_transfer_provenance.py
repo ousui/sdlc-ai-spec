@@ -25,7 +25,9 @@ class IndependentProjectionTests(unittest.TestCase):
         return f.archive(f.copy)
 
     def preserve(self, archive):
-        return self.f.public.ok('workspace.collect', {'path':archive['path'], 'conflict_policy':'preserve_revision_versions'})
+        response = self.f.public.send('workspace.collect', {'path':archive['path'], 'conflict_policy':'preserve_revision_versions'})
+        self.assertTrue(response.get('data', {}).get('rows_imported'), response)
+        return response['data']
 
     def test_same_logical_bundle_reencoding_cannot_overwrite_original_failed_archive(self):
         archive = self.fork_bundle()

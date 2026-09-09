@@ -98,6 +98,16 @@ def closure(con, project, change):
         if table == 'operations':
             for asset in intent_assets(row):
                 queue.append(('assets', dict(one(con, 'SELECT * FROM assets WHERE project_id=? AND asset_id=?', (row['project_id'], asset), code='ARCHIVE_ASSET_SCOPE'))))
+        if table == 'changes':
+            for operation in con.execute("SELECT * FROM operations WHERE project_id=? AND command='github.publish'", (project,)):
+                if operation['intent_json'] and loads(operation['intent_json']).get('change_id') == row['change_id']:
+                    queue.append(('operations', dict(operation)))
+        if table == 'operations' and row['command'] == 'github.publish':
+            intent = loads(row['intent_json'])
+            require(intent.get('project_id') == project and intent.get('change_id') == change,
+                    'ARCHIVE_SCOPE', 'Publication receipt belongs to another scope')
+            queue.append(('revisions', dict(one(con, 'SELECT * FROM revisions WHERE project_id=? AND change_id=? AND revision_id=?',
+                         (project, change, intent.get('revision_id')), code='ARCHIVE_CLOSURE'))))
         if table == 'contexts':
             for operation in con.execute("SELECT * FROM operations WHERE project_id=? AND command='context.commit'", (project,)):
                 response = loads(operation['response_json'])
@@ -146,7 +156,7 @@ def export(store, con, project, change):
     for receipt in con.execute('SELECT * FROM imports ORDER BY bundle_digest'):
         summary = loads(receipt['summary'])
         if (summary.get('change_id') != change or not summary.get('rows_imported')
-                or not (summary.get('revision_id_aliases') or summary.get('inherited_revision_provenance'))):
+                or not (summary.get('revision_id_aliases') or summary.get('inherited_revision_provenance') or summary.get('preserved_observations'))):
             continue
         name = 'imports/'+receipt['bundle_digest']
         original = safe_path(store.home, name+'.zip').read_bytes()
@@ -207,7 +217,26 @@ def unpack(path):
     return raw, manifest, files, digest(manifest)
 
 
-def load_rows(con, rows, *, importing=False):
+# These fields evolve under their originating Run/workspace. Import never
+# overwrites an existing observation or grants execution/authorization rights.
+MUTABLE_OBSERVATIONS = {
+    'runs': {'input_revision_id','status','current_phase','lease_id','error_code','error_message','finished_at',
+             'repair_round','no_progress_rounds','last_progress_digest','max_repair_rounds','no_progress_limit',
+             'format_attempts','max_format_attempts'},
+    'operations': {'status','response_json','result_digest','config_applied_at'},
+    'steps': {'status','outcome','output_revision_id','snapshot_id','finished_at'},
+    'deliveries': {'status','readback_result_id','summary'},
+}
+
+
+def shared_observation(old, incoming, table):
+    if table not in MUTABLE_OBSERVATIONS:
+        return False
+    stable = set(incoming) - MUTABLE_OBSERVATIONS[table] - {'origin_kind'}
+    return all(old[key] == incoming[key] for key in stable)
+
+
+def load_rows(con, rows, *, importing=False, observations=None):
     """Insert complete closure in a deferred-FK transaction without disabling locks."""
     meta = metadata(con)
     require(isinstance(rows, dict) and set(rows) == set(TABLES), 'ARCHIVE_SCHEMA', 'Unexpected logical table set')
@@ -252,6 +281,10 @@ def load_rows(con, rows, *, importing=False):
                 if table == 'changes':
                     stable = [k for k in row if k not in {'state', 'active_revision_id'}]
                     require(all(old[k] == row[k] for k in stable), 'IMPORT_ROW_CONFLICT', 'Change identity has different stable attributes', status='conflict')
+                elif importing and shared_observation(old, row, table):
+                    if observations is not None and dict(old) != row:
+                        observations.append({'table': table, 'identity': {k: row[k] for k in keys},
+                                             'target_digest': digest(dict(old)), 'source_digest': digest(row)})
                 else:
                     comparable = dict(row)
                     if importing and table in {'runs', 'authorizations', 'operations'}:
@@ -440,6 +473,17 @@ def revision_aliases(store, con, rows, source_store, bundle):
     return aliases, versions
 
 
+def collect_result(value):
+    if value.get('status') == 'conflict':
+        value = {**value, 'control_status': 'conflict', 'error_code': 'IMPORT_CONFLICT',
+                 'error_message': 'Import preserved source evidence; resolve the reported conflict before adopting it.'}
+        value.setdefault('next_actions', [])
+        if not value['next_actions']:
+            value['next_actions'] = [{'action': 'inspect_import', 'import_id': value['import_id'],
+                                      'relation': value.get('relation'), 'error': value.get('error')}]
+    return value
+
+
 def collect(store, con, project, p):
     path = Path(p['path']).expanduser().resolve()
     raw, manifest, files, hashed = unpack(path)
@@ -448,7 +492,7 @@ def collect(store, con, project, p):
     preserve = p.get('conflict_policy', 'reject') == 'preserve_revision_versions'
     previous = loads(prior['summary']) if prior else None
     if prior and not (preserve and previous.get('relation') == 'row_conflict'):
-        return {**dict(prior), **previous, 'idempotent': True}
+        return collect_result({**dict(prior), **previous, 'idempotent': True})
     rows = validate_archive(store, manifest, files)
     change = rows['changes'][0]
     target = con.execute('SELECT * FROM changes WHERE change_id=?', (change['change_id'],)).fetchone()
@@ -475,7 +519,7 @@ def collect(store, con, project, p):
         summary['imported_source_head'] = change['active_revision_id']
         aliases = asset_aliases(con, rows)
         summary['asset_id_aliases'] = aliases
-        inserted = load_rows(con, rows, importing=True)
+        inserted = load_rows(con, rows, importing=True, observations=summary.setdefault('preserved_observations', []))
         for revision in inserted:
             if revision['state'] != 'draft':
                 require(store.content_digest(con, revision['revision_id']) == revision['digest'], 'ARCHIVE_CONTENT_DIGEST', 'Imported snapshot changed its content identity')
@@ -528,10 +572,10 @@ def collect(store, con, project, p):
     else:
         insert(con, 'imports', {'import_id': value, 'source_store_id': manifest['source_store_id'], 'bundle_digest': hashed,
                'status': outcome, 'summary': canonical(summary).decode(), 'created_at': now()})
-    return {'import_id': value, 'status': outcome, 'bundle_digest': hashed, **summary,
+    return collect_result({'import_id': value, 'status': outcome, 'bundle_digest': hashed, **summary,
             'next_actions': ([{'action': 'change.resolve', 'source_revision_id': summary['imported_source_head'],
                               'precondition': 'Complete the target content checkpoint first'}]
-                             if outcome == 'conflict' and summary['rows_imported'] else [])}
+                             if outcome == 'conflict' and summary['rows_imported'] else [])})
 
 
 def clone(store, con, p, operation):

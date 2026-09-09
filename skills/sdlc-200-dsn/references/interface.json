@@ -41,6 +41,11 @@
       "name": "run.answer_input",
       "description": "保存实际回答并恢复当前需求",
       "writes": true
+    },
+    {
+      "name": "asset.unlink",
+      "description": "解除当前草稿附件链接并保留历史字节",
+      "writes": true
     }
   ]
 }

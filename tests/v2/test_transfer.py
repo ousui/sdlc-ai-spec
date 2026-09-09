@@ -57,7 +57,9 @@ class TransferTests(unittest.TestCase):
         return Session(root).ok('workspace.export', {'change_id': change or self.change})
 
     def collect(self, archive):
-        return self.public.ok('workspace.collect', {'path': archive['path']})
+        response = self.public.send('workspace.collect', {'path': archive['path']})
+        self.assertEqual(response['ok'], response.get('data', {}).get('status') == 'imported', response)
+        return response['data']
 
     def test_backup_clone_preserves_history_and_isolates_authorizations(self):
         copied, result = self.clone()
@@ -277,9 +279,12 @@ class TransferTests(unittest.TestCase):
         original = self.public.send('workspace.collect', request, operation_id='default-conflict')
         self.assertEqual('row_conflict', original['data']['relation'])
         self.assertFalse(original['data']['rows_imported'])
-        self.assertEqual([], original['data']['next_actions'])
-        result = self.public.ok('workspace.collect', {**request, 'conflict_policy': 'preserve_revision_versions'},
+        self.assertFalse(original['ok'])
+        self.assertEqual('inspect_import', original['next_actions'][0]['action'])
+        response = self.public.send('workspace.collect', {**request, 'conflict_policy': 'preserve_revision_versions'},
                                 operation_id='preserve-frozen-versions')
+        self.assertEqual('conflict', response['status'])
+        result = response['data']
         self.assertTrue(result['rows_imported'], result)
         self.assertEqual('target_draft_pending', result['relation'])
         aliases = result['revision_id_aliases']
@@ -304,7 +309,7 @@ class TransferTests(unittest.TestCase):
             self.assertEqual('imported', con.execute('SELECT origin_kind FROM runs WHERE run_id=?', (copied.bindings['run_id'],)).fetchone()[0])
             count = con.execute('SELECT count(*) FROM revisions').fetchone()[0]
             self.assertFalse(con.execute('PRAGMA foreign_key_check').fetchall())
-        repeat = self.public.ok('workspace.collect', {**request, 'conflict_policy': 'preserve_revision_versions'})
+        repeat = self.public.send('workspace.collect', {**request, 'conflict_policy': 'preserve_revision_versions'})['data']
         self.assertTrue(repeat['idempotent'])
         self.assertEqual(aliases, repeat['revision_id_aliases'])
         self.assertEqual(original, self.public.send('workspace.collect', request, operation_id='default-conflict'))
@@ -330,7 +335,9 @@ class TransferTests(unittest.TestCase):
             session.submit('PLN', [{'op': 'update_task', 'id': self.fixture.task, 'title': title}])
             session.complete('PLN')
         before = self.s.ok('phase.prepare')['content']
-        result = self.public.ok('workspace.collect', {'path': self.archive(self.copy)['path'], 'conflict_policy': 'preserve_revision_versions'})
+        response = self.public.send('workspace.collect', {'path': self.archive(self.copy)['path'], 'conflict_policy': 'preserve_revision_versions'})
+        self.assertEqual(('conflict', False), (response['status'], response['ok']))
+        result = response['data']
         self.assertTrue(result['rows_imported'], result)
         self.assertEqual(('conflict', 'diverged'), (result['status'], result['relation']))
         self.assertEqual(before, self.s.ok('phase.prepare')['content'])
@@ -344,7 +351,7 @@ class TransferTests(unittest.TestCase):
         archive = self.archive(self.copy)
         _, manifest, original_files, _ = transfer.unpack(Path(archive['path']))
         before = self.s.ok('phase.prepare')['content']
-        for table, column in [('projects', 'name'), ('runs', 'error_message')]:
+        for table, column in [('projects', 'name'), ('runs', 'actor_id')]:  # Error text is mutable progress, not identity.
             with self.subTest(table=table):
                 files = dict(original_files)
                 rows = json.loads(files['database.json'])
@@ -357,7 +364,9 @@ class TransferTests(unittest.TestCase):
                 raw, _ = transfer.pack(files, {k: v for k, v in manifest.items() if k != 'files'})
                 path = Path(self.temp.name)/(table+'-conflict.zip')
                 path.write_bytes(raw)
-                result = self.public.ok('workspace.collect', {'path': str(path), 'conflict_policy': 'preserve_revision_versions'})
+                response = self.public.send('workspace.collect', {'path': str(path), 'conflict_policy': 'preserve_revision_versions'})
+                self.assertEqual(('conflict', False), (response['status'], response['ok']))
+                result = response['data']
                 self.assertEqual('row_conflict', result['relation'], result)
                 self.assertFalse(result['rows_imported'])
                 self.assertIsNone(result['imported_source_head'])
@@ -372,7 +381,9 @@ class TransferTests(unittest.TestCase):
         path = self.archive(self.copy)['path']
         invalid = self.public.send('workspace.collect', {'path': path, 'conflict_policy': 'overwrite'})
         self.assertEqual(('INVALID_ENUM', '/payload/conflict_policy'), (invalid['errors'][0]['code'], invalid['errors'][0]['path']))
-        result = self.public.ok('workspace.collect', {'path': path, 'conflict_policy': 'preserve_revision_versions'})
+        response = self.public.send('workspace.collect', {'path': path, 'conflict_policy': 'preserve_revision_versions'})
+        self.assertFalse(response['ok'])
+        result = response['data']
         self.assertEqual('IMPORT_DRAFT_CONFLICT', result['error']['code'])
         self.assertFalse(result['rows_imported'])
 

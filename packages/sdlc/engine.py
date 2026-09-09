@@ -128,8 +128,14 @@ def prepare_write(store, con, project, change, run, p, work):
         raw = file.get('content', '').encode()
         asset = store.put_asset(con, project, raw) if action == 'write' else None
         old = sha(target.read_bytes()) if target.is_file() else None
+        before_mode = (target.stat().st_mode & 0o777) if target.is_file() else None
+        after_mode = before_mode if before_mode is not None else 0o644
+        if 'executable' in file:
+            require(action == 'write', 'INVALID_FILE_MODE', 'executable applies to writes', at+'/executable')
+            after_mode = (after_mode | 0o111) if file['executable'] else (after_mode & ~0o111)
         files.append({'path': file['path'], 'resource': resource, 'action': action, 'asset_id': asset,
-                      'before_sha256': old, 'after_sha256': sha(raw) if action == 'write' else None})
+                      'before_sha256': old, 'after_sha256': sha(raw) if action == 'write' else None,
+                      'before_mode': before_mode, 'after_mode': after_mode if action == 'write' else None})
     intent = {'kind': 'task.write', 'revision_id': p['revision_id'], 'step_id': p['step_id'], 'files': files}
     atomic_write(work/'intent.json', canonical(intent)+b'\n')
     return intent
@@ -141,16 +147,18 @@ def apply_write(store, project, intent):
         for file in intent['files']:
             target = safe_path(store.resource(file['resource']), file['path'])
             actual = sha(target.read_bytes()) if target.is_file() else None
-            require(actual in {file['before_sha256'], file['after_sha256']}, 'WRITE_CONFLICT',
+            mode = (target.stat().st_mode & 0o777) if target.is_file() else None
+            require((actual, mode) in {(file['before_sha256'], file['before_mode']),
+                                       (file['after_sha256'], file['after_mode'])}, 'WRITE_CONFLICT',
                     'Target changed outside this recorded operation; inspect before resuming', file['path'], status='conflict')
             raw = store.asset_bytes(con, file['asset_id'], project) if file['asset_id'] else None
-            prepared.append((target, raw))
-    for target, raw in prepared:
+            prepared.append((target, raw, file['after_mode']))
+    for target, raw, mode in prepared:
         if raw is None:
             target.unlink(missing_ok=True)
         else:
-            atomic_write(target, raw)
-    return {'written_files': [{'path': f['path'], 'sha256': f['after_sha256']} for f in intent['files']]}
+            atomic_write(target, raw, mode=mode)
+    return {'written_files': [{'path': f['path'], 'sha256': f['after_sha256'], 'mode': f['after_mode']} for f in intent['files']]}
 
 
 def prepare_check(store, con, project, change, run, p, work):

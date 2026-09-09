@@ -103,7 +103,7 @@ def observe(root, patterns=None, env=None, argv=None):
                 continue
             safe_path(root, relative)
             require(path.is_file() and path.stat().st_size <= 64*1024*1024, 'SUBJECT_LIMIT', 'Subject file exceeds 64 MiB', relative, status='blocked')
-            files.append({'path': relative, 'sha256': sha(path.read_bytes()), 'size': path.stat().st_size})
+            files.append({'path': relative, 'sha256': sha(path.read_bytes()), 'size': path.stat().st_size, 'mode': path.stat().st_mode & 0o777})
             require(len(files) <= 20000, 'SUBJECT_LIMIT', 'Subject exceeds 20000 files', status='blocked')
     env_identity = environment_identity(env or environment(), argv)
     files.sort(key=lambda row: row['path'])
@@ -125,7 +125,8 @@ def snapshot(store, con, project, run, observed, *, resource='main'):
     root = store.resource(resource)
     for record in observed['files']:
         raw = safe_path(store.resource(record.get('resource', resource)), record['path']).read_bytes()
-        require(sha(raw) == record['sha256'], 'SUBJECT_CHANGED', 'File changed while capturing snapshot', record['path'], status='conflict')
+        path = safe_path(store.resource(record.get('resource', resource)), record['path'])
+        require(sha(raw) == record['sha256'] and (path.stat().st_mode & 0o777) == record['mode'], 'SUBJECT_CHANGED', 'File changed while capturing snapshot', record['path'], status='conflict')
         asset = store.put_asset(con, project, raw)
         archived.append({**record, 'asset_id': asset})
     patch_asset = store.put_asset(con, project, observed['patch'], 'text/x-diff') if observed['patch'] else None

@@ -13,7 +13,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SKILLS = ('sdlc-init', 'sdlc-000-ctx', 'sdlc-100-req', 'sdlc-200-dsn', 'sdlc-300-pln',
-          'sdlc-400-imp', 'sdlc-500-vfy', 'sdlc-600-rls', 'sdlc-status')
+          'sdlc-400-imp', 'sdlc-500-vfy', 'sdlc-600-rls', 'sdlc-status', 'sdlc-github')
 
 
 def canonical(value):

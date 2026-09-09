@@ -48,6 +48,10 @@ class Runtime:
             validate_request(request)
             request = dict(request)
             command = request['command']
+            if command.startswith('github.'):
+                validate_payload(request)
+                from .github_sharing import invoke
+                return invoke(self.root, request)
             if command == 'workspace.discover':
                 validate_payload(request)
                 return success({'candidates': transfer.discover(self.root)})
@@ -419,6 +423,15 @@ class Runtime:
                    'revision_id': row['revision_id'], col: payload['owner_id'], 'original_name': payload.get('original_name', path.name),
                    'purpose': payload['purpose'], 'ordinal': payload.get('ordinal', 0)})
             return {'asset_id': asset, 'link_id': value, 'generation': generation+1}
+        if command == 'asset.unlink':
+            row = content.revision_row(con, project, change)
+            require(row['state'] == 'draft', 'IMMUTABLE_REVISION', 'Revise content before changing attachment links')
+            content.cas(con, row['revision_id'], generation)
+            one(con, 'SELECT * FROM asset_links WHERE project_id=? AND revision_id=? AND link_id=?',
+                (project, row['revision_id'], payload['link_id']), code='ASSET_LINK_SCOPE')
+            con.execute('DELETE FROM asset_links WHERE project_id=? AND revision_id=? AND link_id=?',
+                        (project, row['revision_id'], payload['link_id']))
+            return {'link_id': payload['link_id'], 'generation': generation+1, 'history_preserved': True, 'reason': payload['reason']}
         if command == 'render':
             # Called separately from the business transaction by the CLI after its receipt.
             if not request.get('run_id'):

@@ -112,12 +112,15 @@ def safe_path(root: Path, relative: str, *, allow_dot=False) -> Path:
     return target
 
 
-def atomic_write(path: Path, raw: bytes):
+def atomic_write(path: Path, raw: bytes, *, mode: int | None = None):
     path.parent.mkdir(parents=True, exist_ok=True)
     fd, temporary = tempfile.mkstemp(prefix='.sdlc-write-', dir=path.parent)
     try:
         with os.fdopen(fd, 'wb') as f:
-            f.write(raw); f.flush(); os.fsync(f.fileno())
+            f.write(raw); f.flush()
+            if mode is not None:
+                os.fchmod(f.fileno(), mode & 0o777)
+            os.fsync(f.fileno())
         os.replace(temporary, path)
         if os.name != 'nt':
             fd = os.open(path.parent, os.O_RDONLY)

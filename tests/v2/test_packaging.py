@@ -34,7 +34,7 @@ class PackagingTests(unittest.TestCase):
         return subprocess.run([sys.executable, '-I', '-B', str(self.cli), *args], input=input,
                               capture_output=True, text=True, cwd=self.root)
 
-    def test_package_uses_only_nine_skills_and_no_development_runtime_dependencies(self):
+    def test_package_uses_only_registered_skills_and_no_development_runtime_dependencies(self):
         manifest = verify(self.package)
         self.assertEqual(list(SKILLS), manifest['skills'])
         self.assertFalse(any((self.package/name).exists() for name in ('docs','tests','tools','AGENTS.md','config')))

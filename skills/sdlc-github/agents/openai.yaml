@@ -1,0 +1,5 @@
+interface:
+  display_name: "SDLC GitHub · 产物共享"
+  short_description: "将已提交阶段产物安全发送到指定Issue并保存可回查的幂等回执"
+policy:
+  allow_implicit_invocation: false

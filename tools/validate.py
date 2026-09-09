@@ -29,7 +29,7 @@ def main():
             raise ValueError('Generated contract differs; run tools/build_v2_contract.py')
         report['checks'].append({'name':'machine-contract','success':True})
         report['checks'].append({'name':'skill-interface-style',**skill_style()})
-        for old in ('packages/sdlc_artifact_store','packages/sdlc_runtime','skills/sdlc-github','docs/v1.0','docs/v1.1'):
+        for old in ('packages/sdlc_artifact_store','packages/sdlc_runtime','docs/v1.0','docs/v1.1'):
             if (ROOT/old).exists():
                 raise ValueError('Obsolete runtime source remains: '+old)
         report['checks'].append({'name':'single-v2-runtime','success':True})

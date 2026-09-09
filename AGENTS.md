@@ -2,7 +2,7 @@
 
 ## 目标与来源
 
-本仓库实现可独立安装的SDLC v2 Plugin：Python标准库、SQLite结构化事实及九个Skill入口。
+本仓库实现可独立安装的SDLC v2 Plugin：Python标准库、SQLite结构化事实及十个Skill入口。
 当前规范在docs/spec，公开协议在packages/sdlc/protocol.py与domain.py，机器投影为contracts/v2.json。
 批准设计和唯一工作进度在docs/work-items/sdlc-v2；历史版本以Git保存，不作为运行时依赖。
 安装后的Skill只读取skills/_shared及随包私有资源，通过scripts/sdlc.py调用共享Runtime。

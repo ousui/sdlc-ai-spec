@@ -37,6 +37,7 @@ PAYLOADS = {
     'asset.add': {'path': 'str', 'owner_type': 'str', 'owner_id': 'id', 'purpose': 'str',
                   'original_name': 'str?', 'media_type': 'str?', 'ordinal': 'nonnegative?'},
     'asset.inspect': {},
+    'asset.unlink': {'link_id': 'id', 'reason': 'str'},
 }
 PAYLOADS.update({
     'run.acquire': {},
@@ -59,12 +60,18 @@ PAYLOADS.update({
     'delivery.execute': {'delivery_id': 'id', 'lease_id': 'id'},
     'delivery.get': {'delivery_id': 'id'},
 })
+PAYLOADS.update({
+    'github.preview': {'issue_url':'str?', 'revision_id':'id?', 'phase':'str?'},
+    'github.publish': {'issue_url':'str?', 'revision_id':'id?', 'phase':'str?', 'preview_digest':'str', 'confirmed':'bool'},
+    'github.status': {},
+    'github.reconcile': {'publication_id':'str'},
+})
 EFFECT_COMMANDS = {'task.write', 'check.run', 'operation.reconcile', 'delivery.execute'}
 
-READ_COMMANDS = {'workspace.discover', 'workspace.inspect', 'change.get', 'phase.prepare', 'run.get', 'status', 'task.next', 'check.evaluate', 'finding.list', 'delivery.get', 'asset.inspect'}
+READ_COMMANDS = {'workspace.discover', 'workspace.inspect', 'change.get', 'phase.prepare', 'run.get', 'status', 'task.next', 'check.evaluate', 'finding.list', 'delivery.get', 'asset.inspect', 'github.preview', 'github.status'}
 CONTEXT_ENTRY = {'kind': 'str', 'name': 'str', 'content': 'str', 'origin': 'str?', 'settings': 'object?'}
 AUTHORIZATION = {'action': 'str', 'target': 'str', 'issued_by': 'str', 'basis_text': 'str'}
-FILE_CHANGE = {'path': 'str', 'content': 'text?', 'action': 'str?', 'resource': 'str?'}
+FILE_CHANGE = {'path': 'str', 'content': 'text?', 'action': 'str?', 'resource': 'str?', 'executable': 'bool?'}
 REVIEW_FINDING = {'description': 'str', 'kind': 'str', 'severity': 'str', 'return_phase': 'str', 'criterion_id': 'id?', 'issue_key': 'str?'}
 
 
@@ -170,7 +177,7 @@ def contract():
 
 def phase_commands(phase):
     common = {'phase.prepare', 'phase.complete', 'change.revise', 'run.get', 'run.request_input', 'run.answer_input', 'status', 'render', 'run.configure', 'run.start', 'authorization.grant'}
-    content = {'phase.submit', 'asset.add'}
+    content = {'phase.submit', 'asset.add', 'asset.unlink'}
     execution = {'run.acquire', 'run.resume', 'run.cancel', 'task.next', 'task.start', 'task.finish', 'task.write',
                  'check.run', 'check.reuse', 'check.record_review', 'check.evaluate', 'finding.list', 'finding.address',
                  'finding.resolve', 'operation.reconcile'}

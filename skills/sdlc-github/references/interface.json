@@ -1,0 +1,26 @@
+{
+  "api_version": "2",
+  "skill": "sdlc-github",
+  "commands": [
+    {
+      "name": "github.preview",
+      "description": "生成准确阶段的脱敏Markdown与发布摘要",
+      "writes": false
+    },
+    {
+      "name": "github.publish",
+      "description": "向明确Issue发送一次快照并核对实际回读",
+      "writes": true
+    },
+    {
+      "name": "github.status",
+      "description": "读取本地发布回执和已使用的Issue目标",
+      "writes": false
+    },
+    {
+      "name": "github.reconcile",
+      "description": "回查不确定发布并更新回执，不重复发送",
+      "writes": true
+    }
+  ]
+}

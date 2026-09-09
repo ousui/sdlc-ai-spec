@@ -2,7 +2,7 @@
 
 正式入口为sdlc-init、sdlc-000-ctx、REQ/DSN/PLN/IMP/VFY/RLS及sdlc-status。
 命名、中文描述、七节结构与显式调用策略遵守docs/plugin-development/SKILL-STYLE.md。
-本次九入口依据已批准v2设计与用户连续实施授权，不重走旧v1逐阶段确认流程。
+本次十入口依据已批准v2设计与用户连续实施授权，不重走旧v1逐阶段确认流程。
 
 Skill是当前Agent的操作入口，不复制Runtime或SQL。共享约定放_shared，私有interface只描述本阶段真实命令。
 本次没有source-lock/Markdown Authority/Gate确认文件；Schema及语义由同一公共协议和Runtime验证。

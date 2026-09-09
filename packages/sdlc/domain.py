@@ -309,6 +309,12 @@ def dependency_graph(con, revision, origins=None):
                 'CHECK_PRODUCER', 'Producer must own the check execution', p+'/producer_task')
         if producer:
             edge(row['consumer_task_id'], row['enforce_at'], producer, 'execute', p+'/enforce_at')
+    for check in con.execute('SELECT c.*,t.target_phase FROM checks c LEFT JOIN tasks t USING(revision_id,task_id) WHERE c.revision_id=?', (revision,)):
+        at = '/checks/'+check['check_id']
+        require(not (check['purpose'] == 'convergence' and check['target_phase'] == 'RLS'),
+                'CHECK_PHASE_CYCLE', 'Convergence must be available before RLS starts', at)
+        require(not (native_readback(check) and check['target_phase'] not in {None, 'RLS'}),
+                'CHECK_PHASE_CYCLE', 'Native delivery readback is produced in RLS', at)
     return graph
 
 

@@ -84,7 +84,7 @@ asset.inspect只读列出未登记文件、缺失资产和非法路径；不删�
 
 workspace.collect默认拒绝同ID异内容。已授权保留独立内容版本时，可显式传
 `conflict_policy: preserve_revision_versions`；仅导入冲突的已冻结revision及其后代别名，
-其他对象同键冲突仍拒绝。原包/回执不变，返回原与导入head、ID/digest映射和rows_imported。
+共有Run/Step/operation的正常可变状态以目标现状为准，来源观察及原ZIP保留；身份和冻结内容仍严格校验。原包/回执不变，返回原与导入head、ID/digest映射和rows_imported。
 row_conflict表示事务未导入，不能直接resolve；原失败可用新operation_id和显式策略重试。
 rows_imported为true仍可能存在内容分歧；目标草稿先正常完成PLN checkpoint，之后用
 imported_source_head调用change.resolve。目标版本和历史结果保留，不合并源码或激活来源授权。
@@ -99,3 +99,20 @@ DSN/PLN中native release_readback Check的input_paths确定交付源码范围；
 默认摘要向用户报告实际改动、验证、交付位置和剩余问题；JSON回执不掺叙述、不改字段。
 .sdlc为本地数据，不默认提交VCS；不存在可用Store时显式INIT，不覆盖旧库或静默降级。
 不同版本结果保留各自源码/插件摘要，真实Agent轨迹与确定性重放分别记录。
+
+
+## 可选 GitHub 共享
+
+用户显式调用sdlc-github时，读取其入口并使用github.preview/publish/status/reconcile。
+仅该支持入口可通过已认证gh api连接GitHub；不继承业务沙箱的网络权限，也不改变六阶段Gate。
+先固定Issue、已提交revision与Markdown摘要，取得本次明确发布意图后发送；unknown只回查不重放。
+发布回执保存在同库operations（run_id为空），归档时随所属change带走，导入后只作历史。
+
+## 修复后的文件、条件与附件语义
+
+产品task.write保留已有执行位，新文件默认0644；显式executable只用于需要执行的脚本。
+mode随代码快照/指纹与本地包绑定，改执行位后旧PASS不再适用。
+VFY只检查截至VFY的必需条件；RLS条件在相应任务及最终RLS检查，不提前形成VFY/RLS循环。
+产品包包含指定源码、准确内容与当前适用验证证据；原始输入附件在attachments.json索引，完整字节在workspace.export。
+需要改动附件集合时，change.revise产生新草稿，从phase.prepare取得link_id和generation，再asset.unlink；历史版本与资产字节保留。
+产品包仍受64MiB压缩/256MiB展开限额，完整工作区归档受512MiB限额。提前检查大小；不另建需求掩盖原失败。

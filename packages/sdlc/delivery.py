@@ -28,15 +28,23 @@ def destination(store, target, hashed):
 
 def package(store, con, project, change, revision, snapshot_id, evaluation, usage):
     snap = one(con, 'SELECT * FROM code_snapshots WHERE snapshot_id=?', (snapshot_id,))
-    files = {}
+    files, modes = {}, {}
     for file in loads(snap['untracked_json']):
         resource = file.get('resource', 'main')
-        files['code/'+resource+'/'+file['path']] = store.asset_bytes(con, file['asset_id'], project)
+        name = 'code/'+resource+'/'+file['path']
+        files[name] = store.asset_bytes(con, file['asset_id'], project)
+        modes[name] = file['mode']
     files['content.json'] = canonical(store.content(con, revision))+b'\n'
     files['verification.json'] = canonical(evaluation)+b'\n'
     files['USAGE.md'] = (redact(usage)+'\n').encode()
-    assets = {r[0] for r in con.execute('SELECT asset_id FROM asset_links WHERE revision_id=?', (revision,))}
-    assets.update(r[0] for r in con.execute('SELECT evidence_asset_id FROM check_results WHERE change_id=?', (change,)))
+    # Original inputs remain in the complete workspace archive. A deployable
+    # package includes only evidence selected by this exact evaluation, not
+    # every ancestor ZIP or historic check result.
+    assets = {one(con, 'SELECT evidence_asset_id FROM check_results WHERE result_id=?',
+                  (item['result_id'],))[0] for item in evaluation['checks'] if item['result_id']}
+    attachments = [dict(row) for row in con.execute(
+        'SELECT l.original_name,l.purpose,a.sha256,a.size_bytes FROM asset_links l JOIN assets a USING(asset_id) WHERE l.revision_id=? ORDER BY l.ordinal,l.link_id', (revision,))]
+    files['attachments.json'] = canonical({'storage': 'complete workspace archive', 'attachments': attachments})+b'\n'
     for asset in assets:
         raw = store.asset_bytes(con, asset, project)
         hashed = sha(raw)
@@ -45,16 +53,23 @@ def package(store, con, project, change, revision, snapshot_id, evaluation, usag
     manifest = {'format': 'sdlc-local-delivery-2', 'project_id': project, 'change_id': change,
                 'revision_id': revision, 'snapshot_id': snapshot_id, 'runtime_digest': runtime_digest(),
                 'head_commit': snap['head_commit'], 'subject_digest': snap['digest'],
-                'files': {name: sha(raw) for name, raw in sorted(files.items())}}
+                'files': {name: sha(raw) for name, raw in sorted(files.items())},
+                'modes': {name: modes.get(name, 0o644) for name in sorted(files)}}
+    require(sum(map(len, files.values())) <= 256*1024*1024, 'DELIVERY_SIZE_LIMIT',
+            'Product delivery exceeds 256 MiB expanded; narrow the delivery input scope. Complete history is exported separately.', status='blocked')
     files['manifest.json'] = canonical(manifest)+b'\n'
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', compression=zipfile.ZIP_DEFLATED) as archive:
         for name, raw in sorted(files.items()):
             info = zipfile.ZipInfo(name, (1980, 1, 1, 0, 0, 0))
             info.compress_type = zipfile.ZIP_DEFLATED
-            info.external_attr = 0o100644 << 16
+            info.create_system = 3
+            info.external_attr = (0o100000 | modes.get(name, 0o644)) << 16
             archive.writestr(info, raw)
     raw = buffer.getvalue()
+    require(len(raw) <= 64*1024*1024, 'DELIVERY_SIZE_LIMIT',
+            'Product package exceeds 64 MiB; revise the same change delivery input scope, then verify and retry. History is exported separately.',
+            status='blocked', details={'package_bytes': len(raw), 'files': len(files)})
     return store.put_asset(con, project, raw, 'application/zip'), sha(raw), manifest
 
 
@@ -182,7 +197,7 @@ def close(store, con, project, change, run, p):
     pending = [r[0] for r in con.execute("SELECT task_id FROM tasks WHERE revision_id=? AND target_phase='RLS'", (p['revision_id'],))
                if not verification.task_completed(con, change, p['revision_id'], r[0])]
     require(not pending, 'TASKS_PENDING', 'Complete the delivery tasks', status='blocked', details=pending)
-    require(verification.evaluate(store, con, project, change, p['revision_id'], loads(item['environment_json']), workspace=engine.run_row(con, project, change, run)['workspace_id'])['converged'],
+    require(verification.evaluate(store, con, project, change, p['revision_id'], loads(item['environment_json']), workspace=engine.run_row(con, project, change, run)['workspace_id'], through_phase='RLS')['converged'],
             'NOT_CONVERGED', 'Current product evidence changed before closure', status='blocked')
     expected = one(con, 'SELECT sha256 FROM assets WHERE asset_id=?', (item['bundle_asset_id'],))[0]
     path = destination(store, item['target'], expected)

@@ -25,8 +25,13 @@ def verify(path, expected):
         assert manifest['format'] == 'sdlc-local-delivery-2', 'Unknown package format'
         declared = manifest['files']
         assert set(declared) == set(names)-{'manifest.json'}, 'Package file closure differs'
+        modes = manifest['modes']
+        assert set(modes) == set(declared), 'Package mode closure differs'
         for name, hashed in declared.items():
             assert hashlib.sha256(archive.read(name)).hexdigest() == hashed, 'Package file differs: '+name
+            assert type(modes[name]) is int and 0 <= modes[name] <= 0o777, 'Invalid package mode'
+            actual_mode = archive.getinfo(name).external_attr >> 16
+            assert actual_mode == (0o100000 | modes[name]), 'Package mode differs: '+name
     return {'package_sha256': expected, 'verified_files': len(declared), 'change_id': manifest['change_id'],
             'revision_id': manifest['revision_id'], 'snapshot_id': manifest['snapshot_id'], 'status': 'pass'}
 

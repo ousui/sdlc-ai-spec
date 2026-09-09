@@ -45,7 +45,6 @@ def answer(con, project, workspace, change, run, payload):
     question = one(con, "SELECT s.* FROM steps s JOIN runs r USING(run_id) WHERE s.step_id=? AND s.project_id=? AND s.change_id=? AND r.workspace_id=? AND r.origin_kind='local' AND s.step_key LIKE 'input:%'", (payload['question_step_id'], project, change, workspace), code='INPUT_SCOPE')
     require(question['status'] == 'blocked', 'INPUT_CLOSED', 'This question already has an answer', '/payload/question_step_id', status='conflict')
     con.execute("UPDATE steps SET status='completed',outcome='not_applicable',finished_at=? WHERE step_id=?", (now(), question['step_id']))
-    con.execute("UPDATE runs SET status='running',error_code=NULL,error_message=NULL WHERE run_id IN (?,?) AND status NOT IN ('cancelled','completed')", (run, question['run_id']))
     return {'question_step_id': question['step_id'], 'question_run_id': question['run_id'],
             'answer': redact(payload['answer']), 'basis_text': redact(payload['basis_text']),
             'recorded_by': engine.run_row(con, project, change, run)['actor_id'], 'grants_authority': False,

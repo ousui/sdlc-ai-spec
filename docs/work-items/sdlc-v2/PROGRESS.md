@@ -28,7 +28,8 @@
 
 ## 唯一下一动作
 
-142项完整回归通过；冻结诊断作用域与VFY退修修补包，恢复Spring保留的VFY失败，实际修复验证脚本、复验并完成交付/归档。
+142项退修回归通过并提交f31bef3，clean q1-convergence包已让Spring从原VFY失败正常退IMP，现实际修复/复验及交付收口中。
+同期Run当前状态恢复修补已通过149项完整回归，见Q1-RUN-STATUS.md；独立130次旧包CLI反例不冒充修补后通过。
 上批139项全套通过，交付覆盖修补见Q1-RELEASE-COVERAGE.md；当前新增反例见Q1-CONVERGENCE-REPAIR.md。
 q1-entry基于b4d4bc4，q1-dsn基于586d133；旧证据保留原包边界，不能改写成新版本执行。
 三个项目全部关闭后先本地提交再进入Q2；共同契约补充要求FINAL在H_final重做全部九条真实链。

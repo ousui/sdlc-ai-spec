@@ -193,6 +193,50 @@ class Runtime:
         insert(con, 'operations', {'operation_id': request['operation_id'], 'project_id': project, 'run_id': run,
                'command': request['command'], 'request_digest': hashed, 'status': 'succeeded' if response['ok'] else 'rejected',
                'response_json': canonical(response).decode(), 'created_at': now()})
+        self.refresh_progress(con, project, run, request['command'], response)
+
+    def refresh_progress(self, con, project, run, command, response):
+        # Only confirmed domain progress or explicit recovery refreshes the
+        # current projection. Reads, exports, rendering and old replays do not.
+        if command not in {'change.create', 'change.revise', 'change.resolve', 'phase.submit', 'phase.complete',
+                           'task.start', 'task.write', 'task.finish', 'check.run', 'check.record_review', 'check.reuse',
+                           'finding.address', 'finding.resolve', 'delivery.prepare', 'delivery.execute',
+                           'run.resume', 'run.answer_input', 'operation.reconcile'}:
+            return
+        data = response.get('data', {})
+        if not response['ok']:
+            if command == 'phase.complete' and data.get('control_status') in {'needs_work', 'blocked'}:
+                error = response['errors'][0] if data['control_status'] == 'blocked' else {}
+                con.execute('UPDATE runs SET error_code=?,error_message=? WHERE run_id=?',
+                            (error.get('code'), error.get('message'), run))
+            return
+        if command == 'operation.reconcile' and data.get('already_reconciled'):
+            return  # Looking up a historic receipt is not new recovery.
+        targets = {run}
+        if command == 'run.answer_input':
+            targets.add(data['question_run_id'])
+        for target in targets:
+            state = one(con, 'SELECT * FROM runs WHERE project_id=? AND run_id=?', (project, target))
+            if state['status'] in {'completed', 'cancelled'}:
+                if target == run and command == 'phase.complete' and state['status'] == 'completed':
+                    con.execute('UPDATE runs SET error_code=NULL,error_message=NULL WHERE run_id=?', (target,))
+                continue
+            questions = clarification.pending(con, project, state['workspace_id'], state['change_id'])
+            unknown = con.execute("SELECT 1 FROM operations o JOIN runs r USING(run_id) WHERE r.change_id=? AND r.workspace_id=? AND r.origin_kind='local' AND o.origin_kind='local' AND o.status='unknown'", (state['change_id'], state['workspace_id'])).fetchone()
+            outcome = data.get('original_receipt', {}).get('data', {}).get('outcome') if command == 'operation.reconcile' else data.get('outcome')
+            if questions:
+                status, code, message = 'blocked', 'CLARIFICATION_REQUIRED', questions[0]['question']
+            elif unknown:
+                status, code, message = 'interrupted', 'UNRESOLVED_EFFECT', 'Reconcile remaining unknown operations before continuing'
+            elif state['repair_round'] >= state['max_repair_rounds'] or state['no_progress_rounds'] >= state['no_progress_limit']:
+                status, code, message = 'blocked', 'REPAIR_BUDGET', 'Inspect the recorded gap and explicitly configure a higher budget before continuing'
+            elif state['format_attempts'] >= state['max_format_attempts']:
+                status, code, message = 'blocked', 'FORMAT_BUDGET', 'Inspect the failed field and configure a higher format budget before retrying'
+            elif outcome in {'unknown', 'blocked'}:
+                status, code, message = 'interrupted' if outcome == 'unknown' else 'blocked', 'CHECK_INDETERMINATE', 'The collected check is indeterminate; inspect its evidence and execute a new check'
+            else:
+                status, code, message = 'running', None, None
+            con.execute('UPDATE runs SET status=?,error_code=?,error_message=? WHERE run_id=?', (status, code, message, target))
 
     def read_command(self, con, project, request, *, workspace):
         command, payload, change = request['command'], request.get('payload', {}), request.get('change_id')
@@ -436,6 +480,7 @@ class Runtime:
                 response['data'] = data
                 con.execute("UPDATE runs SET status='blocked',error_code=?,error_message=? WHERE run_id=?", (response['errors'][0]['code'], response['errors'][0]['message'], run))
             con.execute('UPDATE operations SET status=?,response_json=? WHERE operation_id=?', ('succeeded' if response['ok'] else 'rejected', canonical(response).decode(), request['operation_id']))
+            self.refresh_progress(con, project, run, command, response)
         return response
 
     def reconcile_effect(self, project, change, run, original):

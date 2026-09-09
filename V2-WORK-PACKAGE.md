@@ -26,9 +26,12 @@
 - Read retained test-sdlc project requirements before selecting scenarios.
 - Do not mark the user's core acceptance met until actual Skill-guided REQ -> DSN -> PLN -> IMP -> VFY -> RLS on those projects has run and evidence is retained.
 
-## Current progress
+## 2026-09-09 本地执行覆盖
 
-- Design package is accessible locally; main baseline and root engineering instructions read.
-- Implementation branch created.
-- The execution container cannot resolve github.com; GitHub connector reads/writes work. Networked execution/download alternatives are being checked.
-- No v2 runtime code or product verification has yet passed. No existing code/tests have been deleted.
+当前用户通过 goal-objective.md 批准连续实施、三项目三轮真实 Skill 验证、修复与本地 commit。
+本工作包覆盖旧单会话单阶段、禁止连续调用和 v1 兼容限制；不修改宿主安全限制。
+只修改可丢弃产品副本。独立评审或互不干扰产品副本可以并行，共享 Schema/契约/进度单写。
+本地优先，默认不 push，不 merge/tag/release，不改产品上游；上述旧 pushes 授权以此收紧。
+已批准设计复制至 docs/work-items/sdlc-v2/approved-design，顶部待批准为历史措辞。
+唯一进度和下一动作见 docs/work-items/sdlc-v2/PROGRESS.md；旧 Handoff 不再指定本包动作。
+当前客户端将显式读取安装版 Skill 并走公开 CLI；不冒称原生发现认证或独立 AI 审查。

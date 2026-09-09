@@ -1,0 +1,35 @@
+digraph G {
+ graph [rankdir=TB, bgcolor="transparent", pad="0.22", nodesep="0.35", ranksep="0.6", splines=polyline];
+ node [shape=box, style="rounded,filled", fillcolor="#F1F5F9", color="#94A3B8", fontname="Noto Sans CJK SC", fontsize=12, margin="0.17,0.12"];
+ edge [color="#64748B", fontname="Noto Sans CJK SC", fontsize=10, arrowsize=0.65];
+
+init [label="INIT / CTX
+初始化与项目背景"];
+req [label="REQ
+意图 + 需求 + 验收",fillcolor="#DCEEEA"];
+dsn [label="DSN
+方案 + 验证方法"];
+pln [label="PLN
+任务 + 真实依赖"];
+imp [label="IMP
+实施 + 局部自检",fillcolor="#DCEEEA"];
+vfy [label="VFY
+实测 + 缺口审阅"];
+con [shape=diamond,label="收敛？
+证据/覆盖/对象一致",fillcolor="#FEF3C7"];
+rls [label="RLS
+约定交付 + 目标回读",fillcolor="#DCEEEA"];
+done [label="完成 / 归档 / 可选交回"];
+fix [label="记录 Finding
+补充/修订相关任务"];
+blocked [label="真实阻塞 / 预算耗尽
+保留现场 + 恢复入口",fillcolor="#FEE2E2"];
+init -> req -> dsn -> pln -> imp -> vfy -> con;
+con -> rls [label="是"];rls -> done;
+con -> fix [label="否"];fix -> imp [label="实现缺口",constraint=false];
+fix -> dsn [label="设计缺口",style=dashed,constraint=false];
+fix -> req [label="需求需矫正",style=dashed,constraint=false];
+fix -> blocked [label="无法继续"];
+blocked -> imp [label="恢复",style=dashed,constraint=false];
+
+}

@@ -1,0 +1,21 @@
+{
+  "scope": "delivered document validation; Chromium rendered HTML via set_content; no application Runtime tested",
+  "checks": {
+    "desktop_no_page_horizontal_overflow": true,
+    "all_58_disclosures_expand": true,
+    "all_58_disclosures_collapse": true,
+    "diagram_zoom_opens": true,
+    "mobile_no_page_horizontal_overflow": true,
+    "no_duplicate_ids": true,
+    "no_missing_internal_links": true,
+    "all_six_svgs_embedded": true,
+    "no_external_script_or_image_load": true,
+    "no_page_javascript_errors": true
+  },
+  "errors": [],
+  "model_checks": {
+    "passed": 28,
+    "total": 28
+  },
+  "planned_acceptance_cases": 46
+}

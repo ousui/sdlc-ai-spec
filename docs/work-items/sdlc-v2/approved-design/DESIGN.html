@@ -1,0 +1,4308 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>SDLC v2 · 详细设计</title><style>
+:root{--ink:#182c3d;--muted:#596978;--line:#d8e0e7;--accent:#17695d;--paper:#fff;--wash:#f2f5f7;--blue:#203f60}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--wash);color:var(--ink);font:16px/1.8 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Noto Sans CJK SC",sans-serif}
+.cover{background:#173347;color:white;padding:42px max(30px,calc((100vw - 1320px)/2));border-bottom:5px solid #52988b}.eyebrow{font-size:12px;letter-spacing:2px;color:#a9c7d5}.cover h1{font-size:34px;line-height:1.4;margin:8px 0 14px}.cover p{max-width:1040px;color:#dfebf2;margin:0 0 14px}.badges{display:flex;gap:10px;flex-wrap:wrap}.badges span{font-size:13px;background:#25485f;border:1px solid #41637a;padding:4px 12px;border-radius:5px}
+.layout{display:grid;grid-template-columns:255px minmax(0,1fr);max-width:1400px;margin:25px auto;gap:26px;padding:0 24px}.sidebar{position:sticky;top:20px;align-self:start;max-height:calc(100vh - 40px);overflow:auto;font-size:13px;padding:16px;background:white;border:1px solid var(--line);border-radius:8px}.sidebar h2{font-size:15px;margin:0 0 8px}.sidebar a{display:block;text-decoration:none;color:var(--muted);padding:6px 4px;border-bottom:1px solid #eef2f4;line-height:1.55}.sidebar a:hover{color:var(--accent);background:#f0f7f5}main{min-width:0}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px;align-items:center}.toolbar small{color:var(--muted);flex:1}button{font:inherit;cursor:pointer;border:1px solid #b6c7d1;background:white;color:var(--blue);padding:5px 13px;border-radius:5px;font-size:13px}button:hover{background:#e9f2f4}
+.chapter{background:white;border:1px solid var(--line);border-radius:9px;margin:16px 0;box-shadow:0 2px 7px #20304006;overflow:hidden}.chapter>summary{padding:19px 24px;list-style:none;cursor:pointer;position:relative}.chapter>summary::after{content:'展开 +';font-size:12px;color:var(--accent);position:absolute;right:22px;top:26px}.chapter[open]>summary::after{content:'收起 −'}.chapter>summary:hover{background:#fbfdfd}.chapter h2{font-size:22px;line-height:1.5;margin:0 65px 10px 0;scroll-margin-top:20px}.chapter-brief{background:#edf6f3!important;margin:0!important;font-size:14px;color:#23473e}.chapter-content{padding:0 24px 24px;border-top:1px solid #edf1f3;overflow:hidden}.chapter-content>h3{font-size:18px;margin-top:25px;color:#244764}p{margin:13px 0}a{color:#17695d;text-underline-offset:3px}a[href^="#source-"]{font-size:12px;margin-left:5px;padding:1px 4px;background:#edf5f2;border-radius:3px;white-space:nowrap;text-decoration:none}blockquote{border-left:3px solid #66a392;background:#f4f8f7;margin:15px 0;padding:9px 13px}blockquote p{margin:0}.table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:5px;margin:16px 0}table{width:100%;border-collapse:collapse;font-size:13px;line-height:1.65;min-width:580px}th{text-align:left;background:#eaf0f5;color:#233e55;vertical-align:top}td,th{padding:10px 12px;border-bottom:1px solid #dfe6eb;vertical-align:top}tbody tr:nth-child(even){background:#fafcfd}tbody tr:last-child td{border-bottom:0}code{font:0.87em/1.7 ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",monospace;background:#edf1f4;padding:2px 4px;border-radius:3px;overflow-wrap:anywhere}pre{font-size:13px;line-height:1.7;background:#f3f6f8;border:1px solid #dbe4ea;border-radius:6px;padding:16px;overflow-x:auto;white-space:pre;max-width:100%}pre code{background:none;padding:0;overflow-wrap:normal}.diagram-card{margin:22px 0;border:1px solid #d4dee5;border-radius:7px;overflow:hidden}.diagram-card figcaption{background:#edf3f6;padding:9px 13px;font-size:13px;font-weight:600;display:flex;align-items:center;justify-content:space-between;gap:10px}.diagram-wrap{padding:16px;overflow:auto;background:#fff}.diagram-svg{display:block;max-width:100%;height:auto;margin:auto}.diagram-svg text{font-family:"Noto Sans CJK SC","PingFang SC",sans-serif}.subsection{border:1px solid #dce5e9;border-radius:6px;margin:18px 0}.subsection>summary{cursor:pointer;padding:13px 16px;list-style:none;background:#f8fbfc}.subsection h3,.subsection h4{font-size:17px;margin:0 0 5px}.subsection blockquote{font-size:14px;margin:0}.subsection-content{padding:0 16px 16px}.subsection>summary::before{content:'＋';color:var(--accent);float:right}.subsection[open]>summary::before{content:'−'}
+#zoom-dialog{max-width:96vw;width:1500px;height:92vh;border:1px solid #aabbc7;border-radius:8px;padding:0}#zoom-dialog::backdrop{background:#142333a8}.modal-head{display:flex;justify-content:space-between;padding:12px 20px;background:#eaf1f4;position:sticky;top:0;z-index:2}.modal-body{overflow:auto;padding:24px;height:calc(92vh - 65px)}.modal-body svg{min-width:1000px;max-width:none;width:auto;height:auto;display:block;margin:auto}.footer{max-width:1060px;padding:25px;color:var(--muted);font-size:13px;margin:auto;border-top:1px solid var(--line)}
+@media(max-width:950px){.layout{display:block;padding:0 14px}.sidebar{position:static;max-height:210px;margin-bottom:18px}.cover{padding:28px 22px}.cover h1{font-size:27px}.chapter-content{padding:0 15px 18px}.chapter>summary{padding:16px}.chapter h2{font-size:19px}.chapter>summary::after{right:15px;top:23px}body{font-size:15px}}
+@media print{body{background:white;font-size:10pt}.cover{background:white;color:#172c40;padding:10px 0;border-bottom:2px solid #333}.cover p{color:#333}.badges span{background:white;color:#333;border:1px solid #ccc}.layout{display:block;margin:0;padding:0}.sidebar,.toolbar,.zoom,.chapter>summary::after{display:none}.chapter{break-inside:auto;box-shadow:none;border:0;border-top:1px solid #999}.chapter-content{overflow:visible;padding:0}.chapter>summary{padding:12px 0}.chapter h2{font-size:16pt}.table-scroll{overflow:visible}table{min-width:0;font-size:9pt}pre{white-space:pre-wrap}.diagram-svg{min-width:0!important;max-width:100%!important}.diagram-wrap{overflow:visible}.subsection{break-inside:auto}.footer{padding:8px 0}}
+</style></head><body>
+<header class="cover"><div class="eyebrow">SDLC-AI-SPEC / STRUCTURED EXECUTION CORE</div><h1>SDLC v2：结构化自动执行内核</h1><p>开发者描述需求，AI 按六阶段连续执行；系统保存关系、检查结果与恢复现场。<br>本地优先 · Python / SQLite · 默认自动审阅 · 设计草案</p><div class="badges"><span>每章速读＋折叠详情</span><span>6 张架构 / ER / 流程图</span><span>32 张表及完整字段</span><span>46 条待实施验收用例</span><span>SQL 模型校验 28 / 28</span></div></header>
+<div class="layout"><aside class="sidebar"><h2>阅读导航</h2><a href="#chapter-00">00｜先决定：直接用 Spec Kit，还是继续自研？</a><a href="#chapter-01">01｜目标、成功标准与复杂度边界</a><a href="#chapter-02">02｜总体架构与责任边界</a><a href="#chapter-03">03｜自动推进、收敛与停止规则</a><a href="#chapter-04">04｜逐阶段详细设计</a><a href="#chapter-05">05｜数据库模型和关联字段</a><a href="#chapter-06">06｜版本、状态、并发与代码基线变化</a><a href="#chapter-07">07｜命令接口、输入包与可执行性判定</a><a href="#chapter-08">08｜本地文件、附件、日志和阅读视图</a><a href="#chapter-09">09｜直接切分支、worktree复制和交回</a><a href="#chapter-10">10｜对 docs v1.1 的影响与替换方案</a><a href="#chapter-11">11｜Python首版与Rust后续迁移</a><a href="#chapter-12">12｜测试重建与验收矩阵</a><a href="#chapter-13">13｜实施交接与完成边界</a><a href="#chapter-14">A｜数据库字段字典</a><a href="#chapter-15">B｜新验收用例集</a><a href="#chapter-16">C｜本次SQL模型验证结果</a><a href="#chapter-17">D｜来源与判断边界</a></aside><main><div class="toolbar"><button id="summaries">只看章节摘要</button><button id="expand-all">展开全部设计</button><button id="print-btn">打印</button><small>单文件离线可读；数据库表与阶段详情可分别展开。</small></div>
+<p><strong>详细设计草案 · 2026-09-09 · 待设计确认</strong><br/>
+审查基线：<code>ousui/sdlc-ai-spec@f25ed518f662c0ac7306c94f845297f5642c44b2</code>。<br/>
+交付边界：设计、数据模型、接口示例及模型验证；尚未修改仓库、替换规范、删除旧测试或实现新 Runtime。</p>
+<details class="chapter" open=""><summary><h2 id="chapter-00">00｜先决定：直接用 Spec Kit，还是继续自研？</h2><blockquote class="chapter-brief">
+<p><strong>本章速读：只为“描述需求后让 AI 完成实现”，直接使用 Spec Kit 是合理且成本更低的选择。自研仅承担一个差异：把六阶段变成可查询、可校验、可移交的领域数据系统。自动循环、跨 Agent、日志和恢复本身都不是独有优势。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<h3>0.1 对产品价值的重新判断</h3>
+<p>当前 Spec Kit 已有规格、计划、任务、实现、converge 和既有项目接入；Workflow 还支持循环、状态、日志及恢复。<a href="#source-S01">S01</a><a href="#source-S02">S02</a><a href="#source-S03">S03</a> 因此，本项目不能再以“Spec Kit 不支持老项目”“没有执行机制”“不能连续执行”论证自研必要性。</p>
+<p>你的最初目标，以本会话中你反复确认的表述为准：<strong>让开发者更容易、稳定地使用 AI，而不是先学会管理一套复杂规范。</strong> 补充历史检索没有找回最早会话全文；附件《Agent 插件开发指南》是当时的工程约束交接材料，不被当作用户原始动机的独立证明。<a href="#source-U01">U01</a></p>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>对比项</th>
+<th>直接采用 Spec Kit</th>
+<th>本设计预期的不同体验</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>一个想法到实现</td>
+<td>已有完整流程</td>
+<td>沿用成熟方法，不重新发明</td>
+</tr>
+<tr>
+<td>implement/converge 循环</td>
+<td>已有</td>
+<td>在结果数据库中显式记录缺口、覆盖、复验和收敛</td>
+</tr>
+<tr>
+<td>使用多个 Agent</td>
+<td>已有接入</td>
+<td>同一套领域命令、字段和错误语义；切换宿主不重建关系</td>
+</tr>
+<tr>
+<td>进度与恢复</td>
+<td>已有 Workflow 状态与日志</td>
+<td>查询到验收条件/工作项/真实执行证据，而不只是执行到哪条命令</td>
+</tr>
+<tr>
+<td>本地数据持久化</td>
+<td>默认产物文件＋运行记录</td>
+<td>SQLite 保存业务对象；阅读文件可重建</td>
+</tr>
+<tr>
+<td>worktree 工作回收</td>
+<td>根据现有工具组织</td>
+<td>按需求身份与内容快照做小范围导入，复制不覆盖主库</td>
+</tr>
+<tr>
+<td>平台化</td>
+<td>可扩展</td>
+<td>本地模式先验证领域模型，将来沿用接口接中心库</td>
+</tr>
+<tr>
+<td>实际质量和耗时</td>
+<td>需要实测</td>
+<td>也是待验证假设，不保证因换数据库而提高</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>建议选型：Spec Kit 方法资产＋独立的薄领域内核；正式入口仍是当前六个 Skill。</strong> 第一版本复用澄清、设计、任务拆解与缺口检查的方法，不同时建设完整 Preset、Extension、MCP、Web 服务四套入口。稳定的 CLI JSON 接口提供后续适配点。</p>
+<p>第一轮试用允许以原生 Spec Kit 作为对照。若自研在“流程故障次数、换会话恢复、验收证据完整度、人工操作量”上没有实质收益，应保留可复用 Skill，停止扩大 Runtime。这个判断与本次设计交付并不冲突。</p>
+<h3>0.2 三个明确的首版取舍</h3>
+<p><strong>本地 Python、SQLite、固定六阶段。</strong> 数据表支持多个项目和需求，但首版部署是本地插件；跨工作副本采用显式复制/交回。</p>
+<p><strong>默认自动审阅模式。</strong> 人可以随时修正，但没有逐阶段人工签字前置。授权范围、缺失关键事实、真实环境不可用等情况才产生具体阻塞。</p>
+<p><strong>关系化数据权威。</strong> 程序读取字段与外键；自然语言放在明确字段；模板只负责展示。保留 Spec Kit 的使用逻辑，不保留现有 Canonical Markdown 解析链。</p>
+<h3>0.3 上游参考与本项目政策分开</h3>
+<p>Anthropic playbook强调把阶段变成有反馈的循环，并把控制落在执行过程；文中仍保留人的业务责任和关键确认，并以版本化产物串联流程。本设计的“默认无需逐阶段人工review、过程数据不入VCS”是你明确选择的运行政策，不被表述成该文章的原样要求。<a href="#source-S09">S09</a></p>
+<p>实际复用Spec Kit模板时，记录上游版本、原文件和本地修改，按其许可保留相应版权说明。可使用Preset机制适配既有用户，但首版正式交付先保持一个原生插件入口和一套Runtime。<a href="#source-S04">S04</a><a href="#source-S22">S22</a></p>
+</div></details><details class="chapter" open=""><summary><h2 id="chapter-01">01｜目标、成功标准与复杂度边界</h2><blockquote class="chapter-brief">
+<p><strong>本章速读：用户只需要说清目标并依次调用 Skill，或一次授权六阶段连续执行。系统替用户管理引用、版本、证据和恢复。首版是一个小型本地软件系统，不是通用工作流平台。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<h3>1.1 默认用户旅程</h3>
+<pre><code class="language-text">项目首次：sdlc-init → sdlc-000-ctx
+每个需求：REQ → DSN → PLN → IMP → VFY → RLS
+                                   ↑     │
+                                   └─────┘ 发现实现缺口后自动复验
+</code></pre>
+<p>阶段命名沿用 <code>IMP</code>。用户本轮的 <code>iml</code> 按已确认的 Implementation 阶段理解。</p>
+<p>用户可以逐个调用 <code>sdlc-100-req</code>、<code>sdlc-200-dsn</code>、<code>sdlc-300-pln</code>、<code>sdlc-400-imp</code>、<code>sdlc-500-vfy</code>、<code>sdlc-600-rls</code>，也可以发送一个总提示词，由当前 Agent 在当前宿主中依次执行。Runtime 保存 next action，但不自行购买模型、创建后台 Agent 或要求额外 API Key。</p>
+<p><strong>默认总提示词契约示例：</strong></p>
+<pre><code class="language-text">在当前项目完成这个已澄清需求：&lt;目标、验收、范围&gt;。
+依次执行 REQ → DSN → PLN → IMP → VFY → RLS。
+使用 auto 模式；自动完成阶段分析和检查，并修复本范围内缺口，直到验证收敛。
+授权当前工作区的产品编辑、必要本地检查及本地交付包生成。
+按既有项目规则选择实现方式；保留全部过程记录于 .sdlc。
+最终交付目标：本地可用结果及交付报告。
+</code></pre>
+<p>这表示没有额外人工 review 也可跑完本地链路；目标明确为远端 PR、主干合并或部署时，授权和能力应在开始时一并给定。RLS 对约定目标负责，不能将尚未完成的部署悄悄改名为本地归档。</p>
+<h3>1.2 成功的可观察定义</h3>
+<p>完整运行应同时满足：原始意图可追溯；每条需求有验收；设计与任务覆盖可查询；实际代码对象明确；必要检查有证据；缺口已复验关闭；约定目标交付有回读。机器只保证记录与规则的一致性，不保证模型的业务判断绝对正确。</p>
+<p>首版默认顺序执行同一工作区的写操作。不同 worktree 可以各自运行。只有运行数据证明需要更强并发时才增加调度能力。</p>
+<h3>1.3 本轮设计范围</h3>
+<p>实现范围为：初始化与 CTX、六阶段领域操作、自动反馈循环、32 张本地关系表、诊断和附件、阅读视图、本地复制/交回、规范替换、新测试集和三宿主入口验证。</p>
+<p>后续能力只保留接口说明：Rust 重写、MySQL 服务、团队身份认证、远端文件存储。数据库的 project_id 与稳定 ID 为后续演进保留必要空间。</p>
+</div></details><details class="chapter"><summary><h2 id="chapter-02">02｜总体架构与责任边界</h2><blockquote class="chapter-brief">
+<p><strong>本章速读：Skill 负责“怎么思考和做事”，Runtime 负责“如何合法地保存和推进”，数据库保存业务事实，宿主工具实际修改代码和执行命令。只有一套领域规则。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<figure class="diagram-card"><figcaption>总体架构<button class="zoom" type="button">放大查看</button></figcaption><div class="diagram-wrap"><svg aria-label="总体架构" class="diagram-svg" height="533pt" role="img" viewbox="0.00 0.00 564.18 532.68" width="564pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g class="graph" id="architecture-graph0" transform="scale(1 1) rotate(0) translate(15.84 516.84)">
+<title>G</title>
+<!-- user -->
+<g class="node" id="architecture-node1">
+<title>user</title>
+<path d="M303,-501C303,-501 184,-501 184,-501 178,-501 172,-495 172,-489 172,-489 172,-477 172,-477 172,-471 178,-465 184,-465 184,-465 303,-465 303,-465 309,-465 315,-471 315,-477 315,-477 315,-489 315,-489 315,-495 309,-501 303,-501" fill="#dbeafe" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="243.5" y="-479.9">开发人员 / 当前 Agent</text>
+</g>
+<!-- skill -->
+<g class="node" id="architecture-node2">
+<title>skill</title>
+<path d="M328,-420C328,-420 159,-420 159,-420 153,-420 147,-414 147,-408 147,-408 147,-388 147,-388 147,-382 153,-376 159,-376 159,-376 328,-376 328,-376 334,-376 340,-382 340,-388 340,-388 340,-408 340,-408 340,-414 334,-420 328,-420" fill="#f1f5f9" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="243.5" y="-401.4">Skill：目标 · 方法 · 输出要求</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="243.5" y="-388.4">INIT / CTX / 六阶段 / status</text>
+</g>
+<!-- user&#45;&gt;skill -->
+<g class="edge" id="architecture-edge1">
+<title>user-&gt;skill</title>
+<path d="M243.5,-464.8C243.5,-453.82 243.5,-439.34 243.5,-426.76" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="245.78,-426.5 243.5,-420 241.23,-426.5 245.78,-426.5" stroke="#64748b"></polygon>
+</g>
+<!-- api -->
+<g class="node" id="architecture-node3">
+<title>api</title>
+<path d="M317.5,-331C317.5,-331 169.5,-331 169.5,-331 163.5,-331 157.5,-325 157.5,-319 157.5,-319 157.5,-299 157.5,-299 157.5,-293 163.5,-287 169.5,-287 169.5,-287 317.5,-287 317.5,-287 323.5,-287 329.5,-293 329.5,-299 329.5,-299 329.5,-319 329.5,-319 329.5,-325 323.5,-331 317.5,-331" fill="#dceeea" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="243.5" y="-312.4">稳定命令接口</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="243.5" y="-299.4">JSON request → response</text>
+</g>
+<!-- skill&#45;&gt;api -->
+<g class="edge" id="architecture-edge2">
+<title>skill-&gt;api</title>
+<path d="M243.5,-375.94C243.5,-364.48 243.5,-350.17 243.5,-337.8" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="245.78,-337.67 243.5,-331.17 241.23,-337.67 245.78,-337.67" stroke="#64748b"></polygon>
+</g>
+<!-- svc -->
+<g class="node" id="architecture-node4">
+<title>svc</title>
+<path d="M350.5,-232C350.5,-232 136.5,-232 136.5,-232 130.5,-232 124.5,-226 124.5,-220 124.5,-220 124.5,-200 124.5,-200 124.5,-194 130.5,-188 136.5,-188 136.5,-188 350.5,-188 350.5,-188 356.5,-188 362.5,-194 362.5,-200 362.5,-200 362.5,-220 362.5,-220 362.5,-226 356.5,-232 350.5,-232" fill="#dceeea" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="243.5" y="-213.4">Python Runtime</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="243.5" y="-200.4">领域规则 · 事务 · 幂等 · next action</text>
+</g>
+<!-- api&#45;&gt;svc -->
+<g class="edge" id="architecture-edge3">
+<title>api-&gt;svc</title>
+<path d="M243.5,-286.95C243.5,-272.84 243.5,-254.11 243.5,-238.78" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="245.78,-238.51 243.5,-232.01 241.23,-238.51 245.78,-238.51" stroke="#64748b"></polygon>
+</g>
+<!-- db -->
+<g class="node" id="architecture-node5">
+<title>db</title>
+<path d="M133,-133C133,-133 12,-133 12,-133 6,-133 0,-127 0,-121 0,-121 0,-101 0,-101 0,-95 6,-89 12,-89 12,-89 133,-89 133,-89 139,-89 145,-95 145,-101 145,-101 145,-121 145,-121 145,-127 139,-133 133,-133" fill="#f1f5f9" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="72.5" y="-114.4">SQLite</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="72.5" y="-101.4">关系化内容 + 执行事实</text>
+</g>
+<!-- svc&#45;&gt;db -->
+<g class="edge" id="architecture-edge4">
+<title>svc-&gt;db</title>
+<path d="M206.4,-187.95C179.62,-172.76 143.4,-152.22 115.38,-136.32" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="116.31,-134.23 109.53,-133.01 114.06,-138.19 116.31,-134.23" stroke="#64748b"></polygon>
+</g>
+<!-- assets -->
+<g class="node" id="architecture-node6">
+<title>assets</title>
+<path d="M304.5,-133C304.5,-133 182.5,-133 182.5,-133 176.5,-133 170.5,-127 170.5,-121 170.5,-121 170.5,-101 170.5,-101 170.5,-95 176.5,-89 182.5,-89 182.5,-89 304.5,-89 304.5,-89 310.5,-89 316.5,-95 316.5,-101 316.5,-101 316.5,-121 316.5,-121 316.5,-127 310.5,-133 304.5,-133" fill="#f1f5f9" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="243.5" y="-114.4">.sdlc/assets 与 runs</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="243.5" y="-101.4">附件 + 原始日志 + 补丁</text>
+</g>
+<!-- svc&#45;&gt;assets -->
+<g class="edge" id="architecture-edge5">
+<title>svc-&gt;assets</title>
+<path d="M243.5,-187.95C243.5,-173.84 243.5,-155.11 243.5,-139.78" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="245.78,-139.51 243.5,-133.01 241.23,-139.51 245.78,-139.51" stroke="#64748b"></polygon>
+</g>
+<!-- tools -->
+<g class="node" id="architecture-node7">
+<title>tools</title>
+<path d="M507.5,-133C507.5,-133 353.5,-133 353.5,-133 347.5,-133 341.5,-127 341.5,-121 341.5,-121 341.5,-101 341.5,-101 341.5,-95 347.5,-89 353.5,-89 353.5,-89 507.5,-89 507.5,-89 513.5,-89 519.5,-95 519.5,-101 519.5,-101 519.5,-121 519.5,-121 519.5,-127 513.5,-133 507.5,-133" fill="#f1f5f9" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="430.5" y="-114.4">受控宿主工具</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="430.5" y="-101.4">编辑代码 / 命令 / 交付适配器</text>
+</g>
+<!-- svc&#45;&gt;tools -->
+<g class="edge" id="architecture-edge6">
+<title>svc-&gt;tools</title>
+<path d="M282.45,-187.97C310.53,-172.81 343.5,-155 343.5,-155 343.5,-155 361.94,-145.88 381.84,-136.05" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="382.95,-138.04 387.76,-133.12 380.93,-133.96 382.95,-138.04" stroke="#64748b"></polygon>
+</g>
+<!-- view -->
+<g class="node" id="architecture-node8">
+<title>view</title>
+<path d="M231,-44C231,-44 84,-44 84,-44 78,-44 72,-38 72,-32 72,-32 72,-12 72,-12 72,-6 78,0 84,0 84,0 231,0 231,0 237,0 243,-6 243,-12 243,-12 243,-32 243,-32 243,-38 237,-44 231,-44" fill="#dbeafe" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="157.5" y="-25.4">Markdown / HTML / JSON</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="157.5" y="-12.4">按需求阅读 · 按运行排错</text>
+</g>
+<!-- db&#45;&gt;view -->
+<g class="edge" id="architecture-edge8">
+<title>db-&gt;view</title>
+<path d="M93.08,-88.94C104.79,-76.95 119.56,-61.84 132,-49.1" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="133.9,-50.41 136.82,-44.17 130.65,-47.23 133.9,-50.41" stroke="#64748b"></polygon>
+</g>
+<!-- assets&#45;&gt;view -->
+<g class="edge" id="architecture-edge9">
+<title>assets-&gt;view</title>
+<path d="M222.68,-88.94C210.83,-76.95 195.89,-61.84 183.3,-49.1" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="184.61,-47.19 178.42,-44.17 181.38,-50.39 184.61,-47.19" stroke="#64748b"></polygon>
+</g>
+<!-- tools&#45;&gt;svc -->
+<g class="edge" id="architecture-edge7">
+<title>tools-&gt;svc</title>
+<path d="M397.39,-133.03C373.53,-148.19 345.5,-166 345.5,-166 345.5,-166 323.32,-175.35 299.64,-185.33" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="298.71,-183.26 293.6,-187.88 300.48,-187.45 298.71,-183.26" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="381.5" y="-158">实测结果</text>
+</g>
+<!-- view&#45;&gt;user -->
+<g class="edge" id="architecture-edge10">
+<title>view-&gt;user</title>
+<path d="M243.06,-38.06C353.74,-57.54 532.5,-89 532.5,-89 532.5,-89 532.5,-133 532.5,-133 532.5,-133 352.5,-420 352.5,-420 352.5,-420 311.14,-443.52 279.38,-461.59" fill="none" stroke="#64748b" stroke-dasharray="5,2"></path>
+<polygon fill="#64748b" points="278.1,-459.7 273.57,-464.89 280.35,-463.66 278.1,-459.7" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="480.5" y="-257">阅览 / 纠偏</text>
+</g>
+</g>
+</svg></div></figure>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>层</th>
+<th>首版组成</th>
+<th>输入／输出</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>宿主适配</td>
+<td>Codex、Cursor、Claude Code 的打包入口</td>
+<td>使用当前 Agent 和宿主工具</td>
+</tr>
+<tr>
+<td>Skill</td>
+<td>INIT、CTX、六阶段、status；共享连续执行说明</td>
+<td>本阶段目标、输入包、领域命令、next action</td>
+</tr>
+<tr>
+<td>应用服务</td>
+<td>命令分发、事务、幂等、执行记录、导入导出</td>
+<td>版本化 JSON 请求/响应</td>
+</tr>
+<tr>
+<td>领域模块</td>
+<td>requirements / design / planning / execution / verification / delivery</td>
+<td>共享实体、校验器、状态规则</td>
+</tr>
+<tr>
+<td>基础设施</td>
+<td>SQLite、附件文件、Git 观察、受控命令收集、模板渲染</td>
+<td>数据、日志、代码快照、阅读结果</td>
+</tr>
+</tbody>
+</table></div>
+<p>代码写入、命令执行和远端操作都发生在当前宿主的实际能力边界内。Runtime 提供执行包装器收集 stdout、stderr、退出码及准确对象；模型文本“执行成功”不能替代包装器结果。</p>
+<h3>2.1 固定步骤，不引入流程 DSL</h3>
+<p>每个阶段在打包代码中维护少量固定步骤。Runtime 返回下一步骤和字段要求，Skill 指导模型执行。第一版本没有用户自定义图执行引擎、复杂规则表达式或后台调度器。</p>
+<h3>2.2 四种结论必须分开</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>结论</th>
+<th>产生者</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>数据校验通过</td>
+<td>Runtime</td>
+<td>字段、引用、范围、覆盖、必要记录合法</td>
+</tr>
+<tr>
+<td>AI 审阅通过</td>
+<td>当前 Agent 或真实独立 Reviewer</td>
+<td>对业务/实现提出的审阅结论，有所检查范围和依据</td>
+</tr>
+<tr>
+<td>检查执行通过</td>
+<td>执行收集器＋结果判定</td>
+<td>指定命令/方法对准确对象得到通过结果</td>
+</tr>
+<tr>
+<td>人工授权/矫正</td>
+<td>真实用户或已配置政策</td>
+<td>允许哪些动作，或改变哪些业务决定</td>
+</tr>
+</tbody>
+</table></div>
+<p>auto 模式记录 <code>review_mode=auto</code> 及实际 actor。没有独立执行者时按自审记录，不伪造 independent reviewer，更不生成虚假的人工签名。</p>
+<h3>2.3 Python 工程落点</h3>
+<pre><code class="language-text">packages/sdlc/
+  domain/        # 纯领域对象、校验、状态与覆盖规则
+  services/      # 用例编排、事务、幂等与恢复
+  storage/       # SQLite SQL、事务、附件管理
+  adapters/      # Git、命令收集、宿主调用桥接
+  rendering/     # Markdown / HTML 模板
+  cli.py         # 唯一 CLI JSON 入口
+contracts/       # JSON Schema、枚举与行为规范
+skills/          # INIT / CTX / 六阶段 / status
+</code></pre>
+<p>模块数量由职责决定；领域代码不依赖宿主私有路径，宿主适配不包含第二份业务校验器。</p>
+</div></details><details class="chapter"><summary><h2 id="chapter-03">03｜自动推进、收敛与停止规则</h2><blockquote class="chapter-brief">
+<p><strong>本章速读：阶段提交自动校验后可以立即进入下一阶段；VFY 把缺口变成任务并复验。只有真实未满足条件阻塞具体动作，而不是因为没有人工点击“确认”。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<figure class="diagram-card"><figcaption>生命周期与反馈<button class="zoom" type="button">放大查看</button></figcaption><div class="diagram-wrap"><svg aria-label="生命周期与反馈" class="diagram-svg" height="872pt" role="img" viewbox="0.00 0.00 390.68 871.68" width="391pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g class="graph" id="lifecycle-graph0" transform="scale(1 1) rotate(0) translate(15.84 855.84)">
+<title>G</title>
+<!-- init -->
+<g class="node" id="lifecycle-node1">
+<title>init</title>
+<path d="M178.5,-840C178.5,-840 81.5,-840 81.5,-840 75.5,-840 69.5,-834 69.5,-828 69.5,-828 69.5,-808 69.5,-808 69.5,-802 75.5,-796 81.5,-796 81.5,-796 178.5,-796 178.5,-796 184.5,-796 190.5,-802 190.5,-808 190.5,-808 190.5,-828 190.5,-828 190.5,-834 184.5,-840 178.5,-840" fill="#f1f5f9" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="130" y="-821.4">INIT / CTX</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="130" y="-808.4">初始化与项目背景</text>
+</g>
+<!-- req -->
+<g class="node" id="lifecycle-node2">
+<title>req</title>
+<path d="M179,-751C179,-751 81,-751 81,-751 75,-751 69,-745 69,-739 69,-739 69,-719 69,-719 69,-713 75,-707 81,-707 81,-707 179,-707 179,-707 185,-707 191,-713 191,-719 191,-719 191,-739 191,-739 191,-745 185,-751 179,-751" fill="#dceeea" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="130" y="-732.4">REQ</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="130" y="-719.4">意图 + 需求 + 验收</text>
+</g>
+<!-- init&#45;&gt;req -->
+<g class="edge" id="lifecycle-edge1">
+<title>init-&gt;req</title>
+<path d="M130,-795.94C130,-784.48 130,-770.17 130,-757.8" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="132.28,-757.67 130,-751.17 127.73,-757.67 132.28,-757.67" stroke="#64748b"></polygon>
+</g>
+<!-- dsn -->
+<g class="node" id="lifecycle-node3">
+<title>dsn</title>
+<path d="M172.5,-662C172.5,-662 87.5,-662 87.5,-662 81.5,-662 75.5,-656 75.5,-650 75.5,-650 75.5,-630 75.5,-630 75.5,-624 81.5,-618 87.5,-618 87.5,-618 172.5,-618 172.5,-618 178.5,-618 184.5,-624 184.5,-630 184.5,-630 184.5,-650 184.5,-650 184.5,-656 178.5,-662 172.5,-662" fill="#f1f5f9" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="130" y="-643.4">DSN</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="130" y="-630.4">方案 + 验证方法</text>
+</g>
+<!-- req&#45;&gt;dsn -->
+<g class="edge" id="lifecycle-edge2">
+<title>req-&gt;dsn</title>
+<path d="M130,-706.94C130,-695.48 130,-681.17 130,-668.8" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="132.28,-668.67 130,-662.17 127.73,-668.67 132.28,-668.67" stroke="#64748b"></polygon>
+</g>
+<!-- pln -->
+<g class="node" id="lifecycle-node4">
+<title>pln</title>
+<path d="M172.5,-573C172.5,-573 87.5,-573 87.5,-573 81.5,-573 75.5,-567 75.5,-561 75.5,-561 75.5,-541 75.5,-541 75.5,-535 81.5,-529 87.5,-529 87.5,-529 172.5,-529 172.5,-529 178.5,-529 184.5,-535 184.5,-541 184.5,-541 184.5,-561 184.5,-561 184.5,-567 178.5,-573 172.5,-573" fill="#f1f5f9" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="130" y="-554.4">PLN</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="130" y="-541.4">任务 + 真实依赖</text>
+</g>
+<!-- dsn&#45;&gt;pln -->
+<g class="edge" id="lifecycle-edge3">
+<title>dsn-&gt;pln</title>
+<path d="M130,-617.94C130,-606.48 130,-592.17 130,-579.8" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="132.28,-579.67 130,-573.17 127.73,-579.67 132.28,-579.67" stroke="#64748b"></polygon>
+</g>
+<!-- imp -->
+<g class="node" id="lifecycle-node5">
+<title>imp</title>
+<path d="M172.5,-484C172.5,-484 87.5,-484 87.5,-484 81.5,-484 75.5,-478 75.5,-472 75.5,-472 75.5,-452 75.5,-452 75.5,-446 81.5,-440 87.5,-440 87.5,-440 172.5,-440 172.5,-440 178.5,-440 184.5,-446 184.5,-452 184.5,-452 184.5,-472 184.5,-472 184.5,-478 178.5,-484 172.5,-484" fill="#dceeea" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="130" y="-465.4">IMP</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="130" y="-452.4">实施 + 局部自检</text>
+</g>
+<!-- pln&#45;&gt;imp -->
+<g class="edge" id="lifecycle-edge4">
+<title>pln-&gt;imp</title>
+<path d="M130,-528.94C130,-517.48 130,-503.17 130,-490.8" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="132.28,-490.67 130,-484.17 127.73,-490.67 132.28,-490.67" stroke="#64748b"></polygon>
+</g>
+<!-- vfy -->
+<g class="node" id="lifecycle-node6">
+<title>vfy</title>
+<path d="M172.5,-385C172.5,-385 87.5,-385 87.5,-385 81.5,-385 75.5,-379 75.5,-373 75.5,-373 75.5,-353 75.5,-353 75.5,-347 81.5,-341 87.5,-341 87.5,-341 172.5,-341 172.5,-341 178.5,-341 184.5,-347 184.5,-353 184.5,-353 184.5,-373 184.5,-373 184.5,-379 178.5,-385 172.5,-385" fill="#f1f5f9" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="130" y="-366.4">VFY</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="130" y="-353.4">实测 + 缺口审阅</text>
+</g>
+<!-- imp&#45;&gt;vfy -->
+<g class="edge" id="lifecycle-edge5">
+<title>imp-&gt;vfy</title>
+<path d="M130,-439.95C130,-425.84 130,-407.11 130,-391.78" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="132.28,-391.51 130,-385.01 127.73,-391.51 132.28,-391.51" stroke="#64748b"></polygon>
+</g>
+<!-- con -->
+<g class="node" id="lifecycle-node7">
+<title>con</title>
+<path d="M118.63,-282.15C118.63,-282.15 11.37,-245.85 11.37,-245.85 5.68,-243.92 5.68,-240.08 11.37,-238.15 11.37,-238.15 118.63,-201.85 118.63,-201.85 124.32,-199.92 135.68,-199.92 141.37,-201.85 141.37,-201.85 248.63,-238.15 248.63,-238.15 254.32,-240.08 254.32,-243.92 248.63,-245.85 248.63,-245.85 141.37,-282.15 141.37,-282.15 135.68,-284.08 124.32,-284.08 118.63,-282.15" fill="#fef3c7" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="130" y="-245.4">收敛？</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="130" y="-232.4">证据/覆盖/对象一致</text>
+</g>
+<!-- vfy&#45;&gt;con -->
+<g class="edge" id="lifecycle-edge6">
+<title>vfy-&gt;con</title>
+<path d="M130,-341C130,-327.69 130,-309.87 130,-293.08" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="132.28,-292.96 130,-286.46 127.73,-292.96 132.28,-292.96" stroke="#64748b"></polygon>
+</g>
+<!-- rls -->
+<g class="node" id="lifecycle-node8">
+<title>rls</title>
+<path d="M152.5,-143C152.5,-143 43.5,-143 43.5,-143 37.5,-143 31.5,-137 31.5,-131 31.5,-131 31.5,-111 31.5,-111 31.5,-105 37.5,-99 43.5,-99 43.5,-99 152.5,-99 152.5,-99 158.5,-99 164.5,-105 164.5,-111 164.5,-111 164.5,-131 164.5,-131 164.5,-137 158.5,-143 152.5,-143" fill="#dceeea" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="98" y="-124.4">RLS</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="98" y="-111.4">约定交付 + 目标回读</text>
+</g>
+<!-- con&#45;&gt;rls -->
+<g class="edge" id="lifecycle-edge7">
+<title>con-&gt;rls</title>
+<path d="M119.34,-201.37C114.76,-184.34 109.52,-164.84 105.38,-149.44" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="107.56,-148.79 103.67,-143.1 103.17,-149.97 107.56,-148.79" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="118" y="-168">是</text>
+</g>
+<!-- fix -->
+<g class="node" id="lifecycle-node10">
+<title>fix</title>
+<path d="M304.5,-143C304.5,-143 203.5,-143 203.5,-143 197.5,-143 191.5,-137 191.5,-131 191.5,-131 191.5,-111 191.5,-111 191.5,-105 197.5,-99 203.5,-99 203.5,-99 304.5,-99 304.5,-99 310.5,-99 316.5,-105 316.5,-111 316.5,-111 316.5,-131 316.5,-131 316.5,-137 310.5,-143 304.5,-143" fill="#f1f5f9" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="254" y="-124.4">记录 Finding</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="254" y="-111.4">补充/修订相关任务</text>
+</g>
+<!-- con&#45;&gt;fix -->
+<g class="edge" id="lifecycle-edge9">
+<title>con-&gt;fix</title>
+<path d="M144.16,-202.55C151.11,-183.7 158,-165 158,-165 158,-165 178.7,-155.73 200.88,-145.79" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="201.84,-147.86 206.84,-143.12 199.98,-143.7 201.84,-147.86" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="163" y="-168">否</text>
+</g>
+<!-- done -->
+<g class="node" id="lifecycle-node9">
+<title>done</title>
+<path d="M153,-40C153,-40 35,-40 35,-40 29,-40 23,-34 23,-28 23,-28 23,-16 23,-16 23,-10 29,-4 35,-4 35,-4 153,-4 153,-4 159,-4 165,-10 165,-16 165,-16 165,-28 165,-28 165,-34 159,-40 153,-40" fill="#f1f5f9" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="94" y="-18.9">完成 / 归档 / 可选交回</text>
+</g>
+<!-- rls&#45;&gt;done -->
+<g class="edge" id="lifecycle-edge8">
+<title>rls-&gt;done</title>
+<path d="M97.13,-98.95C96.5,-83.55 95.63,-62.63 94.98,-46.65" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="97.25,-46.53 94.71,-40.13 92.7,-46.72 97.25,-46.53" stroke="#64748b"></polygon>
+</g>
+<!-- fix&#45;&gt;req -->
+<g class="edge" id="lifecycle-edge12">
+<title>fix-&gt;req</title>
+<path d="M290.57,-143.25C309.21,-154.08 328,-165 328,-165 328,-165 359,-198 359,-198 359,-198 359,-286 359,-286 359,-286 322,-418 322,-418 322,-418 197,-662 197,-662 197,-662 175.03,-683.64 156.26,-702.13" fill="none" stroke="#64748b" stroke-dasharray="5,2"></path>
+<polygon fill="#64748b" points="154.6,-700.57 151.57,-706.75 157.8,-703.81 154.6,-700.57" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="334.5" y="-459.5">需求需矫正</text>
+</g>
+<!-- fix&#45;&gt;dsn -->
+<g class="edge" id="lifecycle-edge11">
+<title>fix-&gt;dsn</title>
+<path d="M277.96,-143.17C303.4,-165.66 340,-198 340,-198 340,-198 340,-286 340,-286 340,-286 260,-440 260,-440 260,-440 197,-573 197,-573 197,-573 175.03,-594.64 156.26,-613.13" fill="none" stroke="#64748b" stroke-dasharray="5,2"></path>
+<polygon fill="#64748b" points="154.6,-611.57 151.57,-617.75 157.8,-614.81 154.6,-611.57" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="296" y="-410">设计缺口</text>
+</g>
+<!-- fix&#45;&gt;imp -->
+<g class="edge" id="lifecycle-edge10">
+<title>fix-&gt;imp</title>
+<path d="M229.29,-143.25C216.7,-154.08 204,-165 204,-165 204,-165 204,-176 204,-176 204,-176 273,-198 273,-198 273,-198 273,-286 273,-286 273,-286 204,-308 204,-308 204,-308 197,-385 197,-385 197,-385 172.56,-412.72 153.21,-434.68" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="151.26,-433.45 148.66,-439.83 154.67,-436.46 151.26,-433.45" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="224" y="-311">实现缺口</text>
+</g>
+<!-- blocked -->
+<g class="node" id="lifecycle-node11">
+<title>blocked</title>
+<path d="M311.5,-44C311.5,-44 202.5,-44 202.5,-44 196.5,-44 190.5,-38 190.5,-32 190.5,-32 190.5,-12 190.5,-12 190.5,-6 196.5,0 202.5,0 202.5,0 311.5,0 311.5,0 317.5,0 323.5,-6 323.5,-12 323.5,-12 323.5,-32 323.5,-32 323.5,-38 317.5,-44 311.5,-44" fill="#fee2e2" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="257" y="-25.4">真实阻塞 / 预算耗尽</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="257" y="-12.4">保留现场 + 恢复入口</text>
+</g>
+<!-- fix&#45;&gt;blocked -->
+<g class="edge" id="lifecycle-edge13">
+<title>fix-&gt;blocked</title>
+<path d="M254.65,-98.95C255.09,-84.84 255.67,-66.11 256.14,-50.78" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="258.42,-50.57 256.35,-44.01 253.88,-50.43 258.42,-50.57" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="275" y="-69">无法继续</text>
+</g>
+<!-- blocked&#45;&gt;imp -->
+<g class="edge" id="lifecycle-edge14">
+<title>blocked-&gt;imp</title>
+<path d="M278.74,-44.25C289.83,-55.08 301,-66 301,-66 301,-66 329,-99 329,-99 329,-99 329,-143 329,-143 329,-143 292,-286 292,-286 292,-286 218,-385 218,-385 218,-385 192,-418 192,-418 192,-418 179.73,-426.51 166.11,-435.96" fill="none" stroke="#64748b" stroke-dasharray="5,2"></path>
+<polygon fill="#64748b" points="164.68,-434.18 160.64,-439.75 167.27,-437.92 164.68,-434.18" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="324" y="-239.5">恢复</text>
+</g>
+</g>
+</svg></div></figure>
+<h3>3.1 阶段完成规则</h3>
+<p><code>phase.complete</code> 执行：检查当前草稿 → 检查本阶段覆盖与必要产物 → 计算逻辑摘要 → 提交关系快照 → 记录 step 结果 → 推进当前指针 → 返回 next action。一次数据库事务完成需要一致的状态变化。</p>
+<p>人工审阅是 <code>assisted</code> 模式的可选暂停点；auto 使用同样的数据和检查规则，只是不等待审阅按钮。不能把缺少实际验收证据转成 auto approval。</p>
+<h3>3.2 三类循环</h3>
+<p><strong>格式循环：</strong> 缺字段、引用不存在等在本次提交处返回字段路径，AI 修改同一草稿。</p>
+<p><strong>实施循环：</strong> VFY 发现 missing/partial/contradicts，创建或复用 finding，补充相关任务，回到 IMP，再复验。</p>
+<p><strong>语义循环：</strong> 设计缺口回 DSN；任务遗漏回 PLN；需求矛盾回 REQ。只更新受影响对象；范围和验收标准的实质改变需要来源用户的新指令或预先批准的政策，不能为了收敛降低验收。</p>
+<h3>3.3 Converged 的定义</h3>
+<pre><code class="language-text">本次范围的必要验收均有适用检查
+AND 必要检查已执行且结果满足要求
+AND 结果绑定当前采用的内容/代码/环境
+AND blocking finding 均经复验关闭
+AND 没有待执行的必要任务
+AND 没有阻塞性未知或冲突
+</code></pre>
+<p>自然语言 Converged 只是模型建议；最终结论由 Runtime 根据保存的结果和结构关系计算。Inspection/Analysis 本来就可能是 AI 判断，应当标出证据性质，不将其伪装为真实端到端测试。</p>
+<p><strong>默认循环预算：</strong> 内容格式修复每次提交最多 3 次；完整 IMP↔VFY 修复最多 5 轮；相同指纹的阻塞连续 2 轮没有新增代码/证据时暂停。以上是首版可配置产品参数，不是模型能力定律。用户可预先提高预算；暂停保留当前结果，并说明继续所需的具体条件。</p>
+<h3>3.4 启动与完成分离</h3>
+<p>测试任务已运行完成但结论 fail：步骤 <code>completed</code>，结果 <code>fail</code>。环境尚不可用：相关执行 <code>blocked</code>；其他不依赖该环境的任务继续。</p>
+<p>每个任务只有真实执行前驱进入 <code>task_dependencies</code>。来源、覆盖、原型、规则不是默认阻塞边。准备任务可以先生成环境和检查；其消费者再使用对应观察结果。</p>
+</div></details><details class="chapter"><summary><h2 id="chapter-04">04｜逐阶段详细设计</h2><blockquote class="chapter-brief">
+<p><strong>本章速读：六个 Skill 保留，但用户不再传递长引用、Gate 摘要和 Authority 文件。每阶段接收一个结构化输入包，完成少量固定步骤，程序保存并衔接。以下每节均可单独阅读。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<details class="subsection"><summary><h3>4.1 INIT：建立工作现场</h3><blockquote>
+<p><strong>阶段速读：初始化是幂等环境操作，不产生业务需求；重复运行检查版本和目录。worktree 中发现可复制来源时，默认建议复制，用户也可新建。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<p>输入为当前工作区、可选来源和初始化授权。<code>workspace.init</code> 建立 <code>.sdlc/config.json</code>、数据库、目录和本地忽略文件；记录项目/工作区身份。数据库不存在或损坏时，初始化/错误日志首先落在 <code>runs/&lt;run-id&gt;/</code>，能够记录失败而无需先成功连接数据库。</p>
+<p>同版本重复执行返回当前身份；新 Schema 版本先备份再迁移。新架构首库从 schema 1 开始，旧 v1.1 运行库不迁移；检测到旧库时返回明确的版本信息，新架构应在新目录初始化，保留旧文件由用户自行处理。context/change 为空是正常初始化结果。INIT/CTX 运行没有 change_id，不伪造一个“初始化需求”。</p>
+<p>完成证据：结构版本、资源可读性、数据库自检、目录写入/读回结果及下一步 CTX 指引。</p>
+</div></details><details class="subsection"><summary><h3>4.2 CTX：采集项目事实和可复用约束</h3><blockquote>
+<p><strong>阶段速读：CTX 是项目知识快照，可以继承并按需刷新；机器路径和临时环境状态不等于项目长期事实。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<p>固定步骤为：定位项目边界 → 采集必要工程入口 → 区分事实/规则/资源/命令 → 保存 CTX。读取 README、工程配置、构建脚本、现有架构说明；以当前需求需要的深度采集。</p>
+<p>写入 <code>contexts</code> 和 <code>context_entries</code>。资源键稳定，实际本地目录在 config.json 映射；技术栈概要可文本保存；命令用 argv 数组和环境变量名称，凭证值不入库。事实来源记录 observed_at/origin，规则来自明确用户或团队政策。</p>
+<p>完成检查：唯一项目边界；必要代码资源已定位；项目入口和约束能被读取；未知项明确。语言、框架或测试环境尚未指定时，只有依赖它的阶段/任务需要等待。</p>
+<p>CTX 更新产生新快照。需求执行继续使用自己已采用的 CTX；当相关代码/规则发生变化时，检查影响并显式采用新 CTX，不因有更新就推倒全部需求。</p>
+</div></details><details class="subsection"><summary><h3>4.3 REQ：保存用户意图和验收</h3><blockquote>
+<p><strong>阶段速读：REQ 把“要做什么”保存成来源、需求、验收及关系。默认程序生成身份，模型填内容；不再有自由文本 Dependencies 大杂烩。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<p>输入：用户已澄清的目标、附件、当前 CTX、交付目标和授权。原始文本完整进入 sources，图片/原始文件导入 assets 并按顺序关联。</p>
+<p>固定步骤：保留输入 → 提炼原子需求和范围 → 形成验收 → 澄清必要歧义 → 一致性检查并提交。</p>
+<p>写入：<code>changes</code>、<code>revisions</code>、<code>sources</code>、<code>requirements</code>、<code>criteria</code>、两张来源/覆盖关系表。每个 requirement 必须至少有一个 source 和一个 criterion；同一 criterion 可以覆盖多个 requirement。背景事实和假设分别有类型。</p>
+<p>低风险、可逆且不改变目标的实现默认选择可以由 AI 记录后继续；验收对象、付费操作、生产数据等决定性信息不足时返回明确需要输入的位置。</p>
+<p>输出：REQ 阅读视图、需求快照、覆盖图及 next=DSN。此处的“提交”表示可被下游使用的数据完成，不冒称人工批准。</p>
+</div></details><details class="subsection"><summary><h3>4.4 DSN：决定怎样实现</h3><blockquote>
+<p><strong>阶段速读：设计围绕需求实际影响的领域展开。保留方案和理由，原来的庞大固定表格变为内部领域检查清单，适用内容才形成详细设计。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<p>固定步骤：读取需求与现有代码 → 判断相关领域 → 形成设计与候选取舍 → 定义验证方法 → 一致性分析并提交。</p>
+<p>写入 <code>designs</code>、<code>design_requirements</code>、初步 <code>checks</code>、<code>check_criteria</code>、设计附件关联。<code>designs.detail</code> 保存设计文字，接口/数据/交互/部署等按适用领域分条。流程控制需要的关系由字段和外键保存，不能仅写进 detail。</p>
+<p>项目已有 16 个设计域的知识内容作为可复用清单整理；不要求每个简单需求填写 16 份空设计。触及鉴权、数据修改、外部接口时，对相应安全/数据/接口清单运行确定性适用检查。设计域具体目录在规范替换工作包逐项裁定，不凭标题假设已覆盖原有全部子项。<a href="#source-S13">S13</a></p>
+<p>完成检查：每条需求有设计处置；关键接口/数据变化有说明；必要验收有可执行或可审查方法；设计没有悄悄改目标。只有重新布置代码、无独立方案选择的小需求，可以是一条简短设计，但阶段仍有真实记录。</p>
+</div></details><details class="subsection"><summary><h3>4.5 PLN：生成可执行工作项</h3><blockquote>
+<p><strong>阶段速读：计划保存任务与真实顺序，不保存虚构前置证据。环境准备、实现、验证和交付分别成为适用任务。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<p>固定步骤：拆分最小工作项 → 映射设计和验收 → 建立执行依赖/前置检查 → 检查覆盖和循环 → 提交。</p>
+<p>写入 <code>tasks</code>、<code>task_designs</code>、<code>task_criteria</code>、<code>task_dependencies</code>、<code>preconditions</code>。任务有目标 phase、kind、路径范围、完成条件。scope_paths_json 是经过 Schema 校验的资源/相对路径数组，不是让程序解析的自然语言清单。</p>
+<p>前置记录只有：消费者任务、检查定义、可选生产者任务、生效时点。已有 <code>check_results</code> 由程序查询；模型不能填写“已满足”替代实测。</p>
+<p>示例：WI-prepare 负责准备隔离库；WI-test 执行六接口验证；环境检查 <code>CHK-env</code> 属于准备/执行观察。WI-test 在 execute 时要求 CHK-env 合格，WI-prepare 不要求自己尚未产生的结果。</p>
+<p>完成检查：需求/设计/验收覆盖完整；任务 ID 无重复；依赖是 DAG；IMP 任务不依赖未来 RLS 任务；消费者不会阻塞自己的准备动作；所有必要检查有责任任务或阶段步骤。</p>
+</div></details><details class="subsection"><summary><h3>4.6 IMP：执行计划并保存实际结果</h3><blockquote>
+<p><strong>阶段速读：先用同一个 Runtime 做前置检查，再编辑代码；失败也有 Run。工作认领和任务状态在同一数据库中，不再建立独立 Claim Store。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<p>固定步骤：固定本次输入和代码对象 → 领取本工作区写入执行权 → 完成可执行任务 → 跑必要局部检查 → 保存结果。</p>
+<p>写入 <code>runs</code>、<code>steps</code>、<code>code_snapshots</code>、<code>check_results</code> 和必要 assets。产品代码留在正常代码目录；修改补丁、未跟踪文件与测试输出按本次运行归档。长期保存的是可恢复的结果，而不是隐藏思考过程。</p>
+<p>默认同一工作区只允许一个活跃产品写入执行者。Runtime 以工作区运行令牌和实际工具调用文件锁防止重复写入；进程中断后恢复前确认旧工具执行已结束，旧令牌不能在新恢复尝试中继续写入。</p>
+<p>外部工具执行期间不持有数据库写事务；开始意图和结束结果分别短事务保存。程序捕获真实退出码和输出，失败可回到本任务。发现设计错误时回到 DSN 局部更新；范围外想法进入建议，不扩大本轮工作。</p>
+<p>IMP 完成只说明实施工作已按计划处理并进入 VFY，不等于业务已全部验证。<a href="#source-S15">S15</a></p>
+</div></details><details class="subsection"><summary><h3>4.7 VFY：验收、评审与收敛</h3><blockquote>
+<p><strong>阶段速读：VFY 的职责不是给实现补一句“通过”，而是对当前准确对象形成验收覆盖和缺口闭环；有缺口就生成修复工作再验。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<p>固定步骤：枚举全部验收与设计义务 → 执行/复核方法 → 做范围内缺口审阅 → 写 findings → 判定收敛或返回。</p>
+<p>保留 Test、Inspection、Analysis、Demonstration 四类方法，明确 executor=command/agent/human。<a href="#source-S16">S16</a> 确认需要实际数据库或浏览器行为的验收，不能用阅读源码替代。</p>
+<p>结果包含准确 revision、code snapshot、环境摘要、原始证据资产、观察时间和必要失效时间。复用结果只能在检查定义、对象和环境符合规则时生成 <code>reused_from_id</code>，保留原观察时间，不延长环境有效期。</p>
+<p>findings 使用有限类型 missing/partial/contradicts/unrequested/environment，严重度仅 blocking/advisory。重复指纹复用同一问题；addressed 表示已修，不等于 resolved。新的有效复验结果才能关闭。</p>
+<p>Runtime 计算当前收敛谓词。未收敛则返回目标 phase、受影响对象、应做任务和错误依据；已收敛返回 RLS。整个循环不要求人工审阅，但真实验收、目标授权与宿主权限仍适用。</p>
+</div></details><details class="subsection"><summary><h3>4.8 RLS：完成约定交付并归档</h3><blockquote>
+<p><strong>阶段速读：RLS 对一开始约定的交付目标负责。本地需求可交付本地包；部署需求则必须完成部署与回读。归档是交付后的数据操作，不代替发布。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<p>固定步骤：确认交付对象/目标/权限 → 登记 effect_key 与执行意图 → 执行交付 → 回读目标 → 汇总结论 → 可选交回主库。</p>
+<p>写入 <code>deliveries</code>、RLS steps、回读 check_results。local 模式生成准确代码结果或补丁、使用说明、验证报告和本地完整归档；git/deployment 模式由受支持适配器执行准确远端目标操作。</p>
+<p>首版最小纵向实现以 local 模式验收；已有 GitHub 工具能力经过同一命令/结果契约接入后，可实现 git 模式。部署仍需要已配置的目标适配器和权限；缺失能力时明确返回 blocked，不声称完成所有部署平台。</p>
+<p>网络中断或进程崩溃后，目标是否已改变不明时记 unknown，先以 effect_key / 远端对象回查，再决定重试。不能依靠重跑命令假设 exactly-once。</p>
+<p>与旧规范一样保留“发什么、到哪里、结果怎样、目标确认”四个问题。<a href="#source-S17">S17</a> 把旧规则的发版专属意义扩展成可明确区分的 delivery_mode，是本次 v2 的显式规范修改。</p>
+</div></details></div></details><details class="chapter"><summary><h2 id="chapter-05">05｜数据库模型和关联字段</h2><blockquote class="chapter-brief">
+<p><strong>本章速读：32 张表中很多只是多对多关系。采用“一个需求的关系化内容快照＋独立执行事实”，避免每个字段都建立事件系统。表定义和字段字典在本文附录完整展开。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<figure class="diagram-card"><figcaption>项目与工作区 ER<button class="zoom" type="button">放大查看</button></figcaption><div class="diagram-wrap"><svg aria-label="项目与工作区 ER" class="diagram-svg" height="496pt" role="img" viewbox="0.00 0.00 456.68 495.68" width="457pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g class="graph" id="scope-er-graph0" transform="scale(1 1) rotate(0) translate(15.84 479.84)">
+<title>G</title>
+<!-- p -->
+<g class="node" id="scope-er-node1">
+<title>p</title>
+<path d="M244.5,-464C244.5,-464 174.5,-464 174.5,-464 168.5,-464 162.5,-458 162.5,-452 162.5,-452 162.5,-416 162.5,-416 162.5,-410 168.5,-404 174.5,-404 174.5,-404 244.5,-404 244.5,-404 250.5,-404 256.5,-410 256.5,-416 256.5,-416 256.5,-452 256.5,-452 256.5,-458 250.5,-464 244.5,-464" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="163.5,-434 163.5,-463 255.5,-463 255.5,-434 163.5,-434" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="185" y="-446.4">projects</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="171.5" y="-416.4">PK project_id</text>
+<polygon fill="none" points="162.5,-404 162.5,-464 256.5,-464 256.5,-404 162.5,-404" stroke="#94a3b8"></polygon>
+</g>
+<!-- ctx -->
+<g class="node" id="scope-er-node2">
+<title>ctx</title>
+<path d="M115,-334.5C115,-334.5 42,-334.5 42,-334.5 36,-334.5 30,-328.5 30,-322.5 30,-322.5 30,-228.5 30,-228.5 30,-222.5 36,-216.5 42,-216.5 42,-216.5 115,-216.5 115,-216.5 121,-216.5 127,-222.5 127,-228.5 127,-228.5 127,-322.5 127,-322.5 127,-328.5 121,-334.5 115,-334.5" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="31.5,-304.5 31.5,-333.5 126.5,-333.5 126.5,-304.5 31.5,-304.5" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="54" y="-316.9">contexts</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="39.5" y="-286.9">PK context_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="39.5" y="-257.9">FK project_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="39.5" y="-228.9">parent_id</text>
+<polygon fill="none" points="30,-216.5 30,-334.5 127,-334.5 127,-216.5 30,-216.5" stroke="#94a3b8"></polygon>
+</g>
+<!-- p&#45;&gt;ctx -->
+<g class="edge" id="scope-er-edge1">
+<title>p-&gt;ctx</title>
+<path d="M185.17,-403.93C170.03,-385.85 149.97,-361.88 131.33,-339.61" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="133.04,-338.11 127.13,-334.59 129.55,-341.04 133.04,-338.11" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="174" y="-374">1 : N</text>
+</g>
+<!-- ws -->
+<g class="node" id="scope-er-node4">
+<title>ws</title>
+<path d="M255,-334.5C255,-334.5 164,-334.5 164,-334.5 158,-334.5 152,-328.5 152,-322.5 152,-322.5 152,-228.5 152,-228.5 152,-222.5 158,-216.5 164,-216.5 164,-216.5 255,-216.5 255,-216.5 261,-216.5 267,-222.5 267,-228.5 267,-228.5 267,-322.5 267,-322.5 267,-328.5 261,-334.5 255,-334.5" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="153.5,-304.5 153.5,-333.5 266.5,-333.5 266.5,-304.5 153.5,-304.5" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="175" y="-316.9">workspaces</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="161.5" y="-286.9">PK workspace_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="161.5" y="-257.9">FK project_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="161.5" y="-228.9">instance_id</text>
+<polygon fill="none" points="152,-216.5 152,-334.5 267,-334.5 267,-216.5 152,-216.5" stroke="#94a3b8"></polygon>
+</g>
+<!-- p&#45;&gt;ws -->
+<g class="edge" id="scope-er-edge3">
+<title>p-&gt;ws</title>
+<path d="M209.5,-403.93C209.5,-386.31 209.5,-363.09 209.5,-341.3" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="211.78,-341.09 209.5,-334.59 207.23,-341.09 211.78,-341.09" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="220" y="-374">1 : N</text>
+</g>
+<!-- ch -->
+<g class="node" id="scope-er-node5">
+<title>ch</title>
+<path d="M413,-349C413,-349 304,-349 304,-349 298,-349 292,-343 292,-337 292,-337 292,-214 292,-214 292,-208 298,-202 304,-202 304,-202 413,-202 413,-202 419,-202 425,-208 425,-214 425,-214 425,-337 425,-337 425,-343 419,-349 413,-349" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#dceeea" points="293.5,-318.5 293.5,-347.5 424.5,-347.5 424.5,-318.5 293.5,-318.5" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="335" y="-330.9">changes</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="301.5" y="-300.9">PK change_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="301.5" y="-271.9">FK project_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="301.5" y="-242.9">active_revision_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="301.5" y="-213.9">initial_base_commit</text>
+<polygon fill="none" points="292,-202 292,-349 425,-349 425,-202 292,-202" stroke="#94a3b8"></polygon>
+</g>
+<!-- p&#45;&gt;ch -->
+<g class="edge" id="scope-er-edge4">
+<title>p-&gt;ch</title>
+<path d="M237.18,-403.93C251.45,-388.94 269.59,-369.89 287.45,-351.12" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="289.15,-352.64 291.99,-346.36 285.86,-349.5 289.15,-352.64" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="276" y="-374">1 : N</text>
+</g>
+<!-- ent -->
+<g class="node" id="scope-er-node3">
+<title>ent</title>
+<path d="M145,-118C145,-118 12,-118 12,-118 6,-118 0,-112 0,-106 0,-106 0,-41 0,-41 0,-35 6,-29 12,-29 12,-29 145,-29 145,-29 151,-29 157,-35 157,-41 157,-41 157,-106 157,-106 157,-112 151,-118 145,-118" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="1.5,-87.5 1.5,-116.5 156.5,-116.5 156.5,-87.5 1.5,-87.5" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="33" y="-99.9">context_entries</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="9.5" y="-69.9">PK context_id + entry_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="9.5" y="-40.9">kind / name / content</text>
+<polygon fill="none" points="0,-29 0,-118 157,-118 157,-29 0,-29" stroke="#94a3b8"></polygon>
+</g>
+<!-- ctx&#45;&gt;ent -->
+<g class="edge" id="scope-er-edge2">
+<title>ctx-&gt;ent</title>
+<path d="M78.5,-216.38C78.5,-187.34 78.5,-152.55 78.5,-124.68" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="80.78,-124.62 78.5,-118.12 76.23,-124.62 80.78,-124.62" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="89" y="-172">1 : N</text>
+</g>
+<!-- rev -->
+<g class="node" id="scope-er-node6">
+<title>rev</title>
+<path d="M357.5,-147C357.5,-147 203.5,-147 203.5,-147 197.5,-147 191.5,-141 191.5,-135 191.5,-135 191.5,-12 191.5,-12 191.5,-6 197.5,0 203.5,0 203.5,0 357.5,0 357.5,0 363.5,0 369.5,-6 369.5,-12 369.5,-12 369.5,-135 369.5,-135 369.5,-141 363.5,-147 357.5,-147" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#dceeea" points="192.5,-116.5 192.5,-145.5 368.5,-145.5 368.5,-116.5 192.5,-116.5" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="253.5" y="-128.9">revisions</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="200.5" y="-98.9">PK revision_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="200.5" y="-69.9">FK change_id / context_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="200.5" y="-40.9">parent_id / merged_from_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="200.5" y="-11.9">state / generation / digest</text>
+<polygon fill="none" points="191.5,0 191.5,-147 369.5,-147 369.5,0 191.5,0" stroke="#94a3b8"></polygon>
+</g>
+<!-- ctx&#45;&gt;rev -->
+<g class="edge" id="scope-er-edge6">
+<title>ctx-&gt;rev</title>
+<path d="M127.16,-216.67C134.4,-208.06 139.5,-202 139.5,-202 139.5,-202 165.37,-178.61 194.95,-151.86" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="196.82,-153.24 200.11,-147.19 193.77,-149.86 196.82,-153.24" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="203.5" y="-172">采用准确CTX</text>
+</g>
+<!-- ch&#45;&gt;rev -->
+<g class="edge" id="scope-er-edge5">
+<title>ch-&gt;rev</title>
+<path d="M314.72,-201.92C307.07,-189.23 301.5,-180 301.5,-180 301.5,-180 299.29,-168.88 296.3,-153.85" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="298.47,-153.13 294.97,-147.2 294.01,-154.02 298.47,-153.13" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="312" y="-172">1 : N</text>
+</g>
+<!-- ch&#45;&gt;rev -->
+<g class="edge" id="scope-er-edge7">
+<title>ch-&gt;rev</title>
+<path d="M335.07,-201.8C329.18,-183.53 324.5,-169 324.5,-169 324.5,-169 321.5,-162.55 317.06,-153.02" fill="none" stroke="#64748b" stroke-dasharray="5,2"></path>
+<polygon fill="#64748b" points="319.1,-152.01 314.29,-147.08 314.98,-153.94 319.1,-152.01" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="352" y="-172">active指针</text>
+</g>
+</g>
+</svg></div></figure>
+<figure class="diagram-card"><figcaption>内容模型 ER<button class="zoom" type="button">放大查看</button></figcaption><div class="diagram-wrap"><svg aria-label="内容模型 ER" class="diagram-svg" height="340pt" role="img" style="min-width:1200px;max-width:none;width:100%;height:auto" viewbox="0.00 0.00 1484.68 339.68" width="1485pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g class="graph" id="content-er-graph0" transform="scale(1 1) rotate(0) translate(15.84 323.84)">
+<title>G</title>
+<!-- rev -->
+<g class="node" id="content-er-node1">
+<title>rev</title>
+<path d="M128,-261C128,-261 37,-261 37,-261 31,-261 25,-255 25,-249 25,-249 25,-155 25,-155 25,-149 31,-143 37,-143 37,-143 128,-143 128,-143 134,-143 140,-149 140,-155 140,-155 140,-249 140,-249 140,-255 134,-261 128,-261" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#dceeea" points="26.5,-231 26.5,-260 139.5,-260 139.5,-231 26.5,-231" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="56" y="-243.4">revisions</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="34.5" y="-213.4">PK revision_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="34.5" y="-184.4">FK change_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="34.5" y="-155.4">快照提交后不可变</text>
+<polygon fill="none" points="25,-143 25,-261 140,-261 140,-143 25,-143" stroke="#94a3b8"></polygon>
+</g>
+<!-- src -->
+<g class="node" id="content-er-node2">
+<title>src</title>
+<path d="M153,-93.5C153,-93.5 12,-93.5 12,-93.5 6,-93.5 0,-87.5 0,-81.5 0,-81.5 0,-16.5 0,-16.5 0,-10.5 6,-4.5 12,-4.5 12,-4.5 153,-4.5 153,-4.5 159,-4.5 165,-10.5 165,-16.5 165,-16.5 165,-81.5 165,-81.5 165,-87.5 159,-93.5 153,-93.5" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="1.5,-63 1.5,-92 164.5,-92 164.5,-63 1.5,-63" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="60" y="-75.4">sources</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="9.5" y="-45.4">PK revision_id + source_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="9.5" y="-16.4">original_text / kind</text>
+<polygon fill="none" points="0,-4.5 0,-93.5 165,-93.5 165,-4.5 0,-4.5" stroke="#94a3b8"></polygon>
+</g>
+<!-- rev&#45;&gt;src -->
+<g class="edge" id="content-er-edge1">
+<title>rev-&gt;src</title>
+<path d="M82.5,-142.76C82.5,-128.74 82.5,-113.89 82.5,-100.25" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="84.78,-100.17 82.5,-93.67 80.23,-100.17 84.78,-100.17" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="74" y="-115.75">1:N</text>
+</g>
+<!-- req -->
+<g class="node" id="content-er-node3">
+<title>req</title>
+<path d="M492,-142.5C492,-142.5 318,-142.5 318,-142.5 312,-142.5 306,-136.5 306,-130.5 306,-130.5 306,-65.5 306,-65.5 306,-59.5 312,-53.5 318,-53.5 318,-53.5 492,-53.5 492,-53.5 498,-53.5 504,-59.5 504,-65.5 504,-65.5 504,-130.5 504,-130.5 504,-136.5 498,-142.5 492,-142.5" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="307,-112 307,-141 503,-141 503,-112 307,-112" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="365" y="-124.4">requirements</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="315" y="-94.4">PK revision_id + requirement_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="315" y="-65.4">kind / statement</text>
+<polygon fill="none" points="306,-53.5 306,-142.5 504,-142.5 504,-53.5 306,-53.5" stroke="#94a3b8"></polygon>
+</g>
+<!-- rev&#45;&gt;req -->
+<g class="edge" id="content-er-edge2">
+<title>rev-&gt;req</title>
+<path d="M140.06,-183.65C184.1,-169.36 246.44,-149.13 299.47,-131.92" fill="none" stroke="#64748b" stroke-dasharray="1,5"></path>
+<polygon fill="#64748b" points="300.41,-134 305.9,-129.83 299.01,-129.68 300.41,-134" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="235.5" y="-171">1:N</text>
+</g>
+<!-- dsn -->
+<g class="node" id="content-er-node5">
+<title>dsn</title>
+<path d="M824,-261C824,-261 667,-261 667,-261 661,-261 655,-255 655,-249 655,-249 655,-155 655,-155 655,-149 661,-143 667,-143 667,-143 824,-143 824,-143 830,-143 836,-149 836,-155 836,-155 836,-249 836,-249 836,-255 830,-261 824,-261" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="656.5,-231 656.5,-260 835.5,-260 835.5,-231 656.5,-231" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="723" y="-243.4">designs</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="664.5" y="-213.4">PK revision_id + design_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="664.5" y="-184.4">domain / decision / rationale</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="664.5" y="-155.4">alternatives / detail</text>
+<polygon fill="none" points="655,-143 655,-261 836,-261 836,-143 655,-143" stroke="#94a3b8"></polygon>
+</g>
+<!-- rev&#45;&gt;dsn -->
+<g class="edge" id="content-er-edge3">
+<title>rev-&gt;dsn</title>
+<path d="M140.14,-202C253.33,-202 508.58,-202 648.43,-202" fill="none" stroke="#64748b" stroke-dasharray="1,5"></path>
+<polygon fill="#64748b" points="648.5,-204.28 655,-202 648.5,-199.73 648.5,-204.28" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="405" y="-205">1:N</text>
+</g>
+<!-- src&#45;&gt;req -->
+<g class="edge" id="content-er-edge4">
+<title>src-&gt;req</title>
+<path d="M165.2,-61.49C205.95,-67.72 255.71,-75.33 299.23,-81.98" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="299.11,-84.27 305.88,-83 299.8,-79.77 299.11,-84.27" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="235.5" y="-94">requirement_sources</text>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="235.5" y="-83">M:N</text>
+</g>
+<!-- ac -->
+<g class="node" id="content-er-node4">
+<title>ac</title>
+<path d="M821,-117.5C821,-117.5 670,-117.5 670,-117.5 664,-117.5 658,-111.5 658,-105.5 658,-105.5 658,-40.5 658,-40.5 658,-34.5 664,-28.5 670,-28.5 670,-28.5 821,-28.5 821,-28.5 827,-28.5 833,-34.5 833,-40.5 833,-40.5 833,-105.5 833,-105.5 833,-111.5 827,-117.5 821,-117.5" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="659.5,-87 659.5,-116 832.5,-116 832.5,-87 659.5,-87" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="724.5" y="-99.4">criteria</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="667.5" y="-69.4">PK revision_id + criterion_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="667.5" y="-40.4">condition / expected_result</text>
+<polygon fill="none" points="658,-28.5 658,-117.5 833,-117.5 833,-28.5 658,-28.5" stroke="#94a3b8"></polygon>
+</g>
+<!-- req&#45;&gt;ac -->
+<g class="edge" id="content-er-edge5">
+<title>req-&gt;ac</title>
+<path d="M504.36,-90.74C550.69,-87.31 605.66,-83.25 651.32,-79.88" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="651.67,-82.14 657.98,-79.39 651.33,-77.6 651.67,-82.14" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="579.5" y="-103">criterion_requirements</text>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="579.5" y="-92">M:N</text>
+</g>
+<!-- req&#45;&gt;dsn -->
+<g class="edge" id="content-er-edge6">
+<title>req-&gt;dsn</title>
+<path d="M504.25,-125.27C565.59,-142.29 633,-161 633,-161 633,-161 639.13,-163.26 648.52,-166.71" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="647.88,-168.89 654.76,-169 649.45,-164.62 647.88,-168.89" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="579.5" y="-175">design_requirements</text>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="579.5" y="-164">M:N</text>
+</g>
+<!-- task -->
+<g class="node" id="content-er-node6">
+<title>task</title>
+<path d="M1111.5,-261C1111.5,-261 963.5,-261 963.5,-261 957.5,-261 951.5,-255 951.5,-249 951.5,-249 951.5,-155 951.5,-155 951.5,-149 957.5,-143 963.5,-143 963.5,-143 1111.5,-143 1111.5,-143 1117.5,-143 1123.5,-149 1123.5,-155 1123.5,-155 1123.5,-249 1123.5,-249 1123.5,-255 1117.5,-261 1111.5,-261" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="952.5,-231 952.5,-260 1122.5,-260 1122.5,-231 952.5,-231" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="1022" y="-243.4">tasks</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="960.5" y="-213.4">PK revision_id + task_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="960.5" y="-184.4">target_phase / kind / scope</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="960.5" y="-155.4">description / completion</text>
+<polygon fill="none" points="951.5,-143 951.5,-261 1123.5,-261 1123.5,-143 951.5,-143" stroke="#94a3b8"></polygon>
+</g>
+<!-- ac&#45;&gt;task -->
+<g class="edge" id="content-er-edge8">
+<title>ac-&gt;task</title>
+<path d="M833.12,-111.53C868.46,-127.25 909.35,-145.44 945.17,-161.37" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="944.46,-163.55 951.33,-164.11 946.31,-159.39 944.46,-163.55" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="891.5" y="-163">task_criteria</text>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="891.5" y="-152">M:N</text>
+</g>
+<!-- ck -->
+<g class="node" id="content-er-node7">
+<title>ck</title>
+<path d="M1116,-118C1116,-118 959,-118 959,-118 953,-118 947,-112 947,-106 947,-106 947,-12 947,-12 947,-6 953,0 959,0 959,0 1116,0 1116,0 1122,0 1128,-6 1128,-12 1128,-12 1128,-106 1128,-106 1128,-112 1122,-118 1116,-118" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="948.5,-88 948.5,-117 1127.5,-117 1127.5,-88 948.5,-88" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="1018" y="-100.4">checks</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="956.5" y="-70.4">PK revision_id + check_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="956.5" y="-41.4">purpose / method / executor</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="956.5" y="-12.4">expected_result / argv</text>
+<polygon fill="none" points="947,0 947,-118 1128,-118 1128,0 947,0" stroke="#94a3b8"></polygon>
+</g>
+<!-- ac&#45;&gt;ck -->
+<g class="edge" id="content-er-edge9">
+<title>ac-&gt;ck</title>
+<path d="M833.12,-68.82C866.76,-67.19 905.43,-65.33 939.96,-63.66" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="940.43,-65.92 946.81,-63.33 940.21,-61.37 940.43,-65.92" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="891.5" y="-82">check_criteria</text>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="891.5" y="-71">M:N</text>
+</g>
+<!-- dsn&#45;&gt;task -->
+<g class="edge" id="content-er-edge7">
+<title>dsn-&gt;task</title>
+<path d="M836.27,-202C870.58,-202 909.74,-202 944.27,-202" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="944.62,-204.28 951.12,-202 944.62,-199.73 944.62,-204.28" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="891.5" y="-216">task_designs</text>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="891.5" y="-205">M:N</text>
+</g>
+<!-- task&#45;&gt;task -->
+<g class="edge" id="content-er-edge12">
+<title>task-&gt;task</title>
+<path d="M1010.61,-261.26C1012.71,-275.47 1021.67,-286 1037.5,-286 1050.85,-286 1059.32,-278.5 1062.9,-267.63" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="1065.13,-268.11 1064.39,-261.26 1060.7,-267.07 1065.13,-268.11" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="1037.5" y="-300">task_dependencies</text>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="1037.5" y="-289">启动前驱 (DAG)</text>
+</g>
+<!-- pre -->
+<g class="node" id="content-er-node8">
+<title>pre</title>
+<path d="M1441,-189C1441,-189 1251,-189 1251,-189 1245,-189 1239,-183 1239,-177 1239,-177 1239,-83 1239,-83 1239,-77 1245,-71 1251,-71 1251,-71 1441,-71 1441,-71 1447,-71 1453,-77 1453,-83 1453,-83 1453,-177 1453,-177 1453,-183 1447,-189 1441,-189" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="1240,-159 1240,-188 1452,-188 1452,-159 1240,-159" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="1305" y="-171.4">preconditions</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="1248" y="-141.4">PK revision_id + condition_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="1248" y="-112.4">FK consumer_task / producer_task</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="1248" y="-83.4">FK check_id / enforce_at</text>
+<polygon fill="none" points="1239,-71 1239,-189 1453,-189 1453,-71 1239,-71" stroke="#94a3b8"></polygon>
+</g>
+<!-- task&#45;&gt;pre -->
+<g class="edge" id="content-er-edge10">
+<title>task-&gt;pre</title>
+<path d="M1123.88,-181.94C1157.39,-174.07 1196.34,-164.92 1232.12,-156.52" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="1232.96,-158.66 1238.77,-154.96 1231.92,-154.23 1232.96,-158.66" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="1183.5" y="-177">消费者 / 生产者</text>
+</g>
+<!-- ck&#45;&gt;pre -->
+<g class="edge" id="content-er-edge11">
+<title>ck-&gt;pre</title>
+<path d="M1128.39,-79.82C1160.98,-87.37 1198.22,-96 1232.51,-103.94" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="1232.03,-106.17 1238.88,-105.42 1233.06,-101.73 1232.03,-106.17" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="1183.5" y="-102">证明条件</text>
+</g>
+</g>
+</svg></div></figure>
+<figure class="diagram-card"><figcaption>执行模型 ER<button class="zoom" type="button">放大查看</button></figcaption><div class="diagram-wrap"><svg aria-label="执行模型 ER" class="diagram-svg" height="727pt" role="img" viewbox="0.00 0.00 888.18 726.68" width="888pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g class="graph" id="execution-er-graph0" transform="scale(1 1) rotate(0) translate(15.84 710.84)">
+<title>G</title>
+<!-- run -->
+<g class="node" id="execution-er-node1">
+<title>run</title>
+<path d="M664,-695C664,-695 489,-695 489,-695 483,-695 477,-689 477,-683 477,-683 477,-589 477,-589 477,-583 483,-577 489,-577 489,-577 664,-577 664,-577 670,-577 676,-583 676,-589 676,-589 676,-683 676,-683 676,-689 670,-695 664,-695" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#dceeea" points="478.5,-665 478.5,-694 675.5,-694 675.5,-665 478.5,-665" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="563.5" y="-677.4">runs</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="486.5" y="-647.4">PK run_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="486.5" y="-618.4">FK project / change / workspace</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="486.5" y="-589.4">status / actor / versions</text>
+<polygon fill="none" points="477,-577 477,-695 676,-695 676,-577 477,-577" stroke="#94a3b8"></polygon>
+</g>
+<!-- step -->
+<g class="node" id="execution-er-node2">
+<title>step</title>
+<path d="M649.5,-522C649.5,-522 503.5,-522 503.5,-522 497.5,-522 491.5,-516 491.5,-510 491.5,-510 491.5,-416 491.5,-416 491.5,-410 497.5,-404 503.5,-404 503.5,-404 649.5,-404 649.5,-404 655.5,-404 661.5,-410 661.5,-416 661.5,-416 661.5,-510 661.5,-510 661.5,-516 655.5,-522 649.5,-522" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="492.5,-492 492.5,-521 660.5,-521 660.5,-492 492.5,-492" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="561" y="-504.4">steps</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="500.5" y="-474.4">PK step_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="500.5" y="-445.4">FK run / revision / task</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="500.5" y="-416.4">phase / attempt / outcome</text>
+<polygon fill="none" points="491.5,-404 491.5,-522 661.5,-522 661.5,-404 491.5,-404" stroke="#94a3b8"></polygon>
+</g>
+<!-- run&#45;&gt;step -->
+<g class="edge" id="execution-er-edge1">
+<title>run-&gt;step</title>
+<path d="M576.5,-576.63C576.5,-561.22 576.5,-544.5 576.5,-528.78" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="578.78,-528.61 576.5,-522.11 574.23,-528.61 578.78,-528.61" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="584.5" y="-547">1:N</text>
+</g>
+<!-- snap -->
+<g class="node" id="execution-er-node3">
+<title>snap</title>
+<path d="M197,-522C197,-522 12,-522 12,-522 6,-522 0,-516 0,-510 0,-510 0,-416 0,-416 0,-410 6,-404 12,-404 12,-404 197,-404 197,-404 203,-404 209,-410 209,-416 209,-416 209,-510 209,-510 209,-516 203,-522 197,-522" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="1.5,-492 1.5,-521 208.5,-521 208.5,-492 1.5,-492" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="57.5" y="-504.4">code_snapshots</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="9.5" y="-474.4">PK snapshot_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="9.5" y="-445.4">FK run_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="9.5" y="-416.4">HEAD / tree / patch / environment</text>
+<polygon fill="none" points="0,-404 0,-522 209,-522 209,-404 0,-404" stroke="#94a3b8"></polygon>
+</g>
+<!-- run&#45;&gt;snap -->
+<g class="edge" id="execution-er-edge2">
+<title>run-&gt;snap</title>
+<path d="M476.67,-603.22C371.67,-569.8 221.5,-522 221.5,-522 221.5,-522 219.2,-520.86 215.26,-518.9" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="216.25,-516.86 209.42,-516.01 214.23,-520.94 216.25,-516.86" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="325.5" y="-547">1:N</text>
+</g>
+<!-- op -->
+<g class="node" id="execution-er-node8">
+<title>op</title>
+<path d="M844.5,-522C844.5,-522 698.5,-522 698.5,-522 692.5,-522 686.5,-516 686.5,-510 686.5,-510 686.5,-416 686.5,-416 686.5,-410 692.5,-404 698.5,-404 698.5,-404 844.5,-404 844.5,-404 850.5,-404 856.5,-410 856.5,-416 856.5,-416 856.5,-510 856.5,-510 856.5,-516 850.5,-522 844.5,-522" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="687.5,-492 687.5,-521 855.5,-521 855.5,-492 687.5,-492" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="739.5" y="-504.4">operations</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="695.5" y="-474.4">PK operation_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="695.5" y="-445.4">command / request_digest</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="695.5" y="-416.4">response_json / status</text>
+<polygon fill="none" points="686.5,-404 686.5,-522 856.5,-522 856.5,-404 686.5,-404" stroke="#94a3b8"></polygon>
+</g>
+<!-- run&#45;&gt;op -->
+<g class="edge" id="execution-er-edge3">
+<title>run-&gt;op</title>
+<path d="M642.79,-576.87C661.16,-560.76 681.18,-543.21 699.84,-526.84" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="701.67,-528.26 705.06,-522.26 698.67,-524.84 701.67,-528.26" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="688.5" y="-547">1:N</text>
+</g>
+<!-- res -->
+<g class="node" id="execution-er-node4">
+<title>res</title>
+<path d="M441.5,-349C441.5,-349 249.5,-349 249.5,-349 243.5,-349 237.5,-343 237.5,-337 237.5,-337 237.5,-214 237.5,-214 237.5,-208 243.5,-202 249.5,-202 249.5,-202 441.5,-202 441.5,-202 447.5,-202 453.5,-208 453.5,-214 453.5,-214 453.5,-337 453.5,-337 453.5,-343 447.5,-349 441.5,-349" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#dceeea" points="238.5,-318.5 238.5,-347.5 452.5,-347.5 452.5,-318.5 238.5,-318.5" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="304.5" y="-330.9">check_results</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="246.5" y="-300.9">PK result_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="246.5" y="-271.9">FK revision + check_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="246.5" y="-242.9">FK step / snapshot / asset</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="246.5" y="-213.9">status / observed_at / reused_from</text>
+<polygon fill="none" points="237.5,-202 237.5,-349 453.5,-349 453.5,-202 237.5,-202" stroke="#94a3b8"></polygon>
+</g>
+<!-- step&#45;&gt;res -->
+<g class="edge" id="execution-er-edge4">
+<title>step-&gt;res</title>
+<path d="M504.04,-403.82C484.16,-387.85 462.29,-370.29 441.32,-353.44" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="442.5,-351.48 436.01,-349.18 439.65,-355.02 442.5,-351.48" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="483.5" y="-374">1:N</text>
+</g>
+<!-- snap&#45;&gt;res -->
+<g class="edge" id="execution-er-edge5">
+<title>snap-&gt;res</title>
+<path d="M180.09,-403.82C200.92,-387.78 223.84,-370.14 245.81,-353.23" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="247.31,-354.95 251.08,-349.18 244.54,-351.34 247.31,-354.95" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="238.5" y="-374">准确对象</text>
+</g>
+<!-- del -->
+<g class="node" id="execution-er-node6">
+<title>del</title>
+<path d="M217.5,-132.5C217.5,-132.5 37.5,-132.5 37.5,-132.5 31.5,-132.5 25.5,-126.5 25.5,-120.5 25.5,-120.5 25.5,-26.5 25.5,-26.5 25.5,-20.5 31.5,-14.5 37.5,-14.5 37.5,-14.5 217.5,-14.5 217.5,-14.5 223.5,-14.5 229.5,-20.5 229.5,-26.5 229.5,-26.5 229.5,-120.5 229.5,-120.5 229.5,-126.5 223.5,-132.5 217.5,-132.5" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="26.5,-102.5 26.5,-131.5 228.5,-131.5 228.5,-102.5 26.5,-102.5" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="98.5" y="-114.9">deliveries</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="34.5" y="-84.9">PK delivery_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="34.5" y="-55.9">FK change / snapshot / vfy_result</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="34.5" y="-26.9">effect_key / target / status</text>
+<polygon fill="none" points="25.5,-14.5 25.5,-132.5 229.5,-132.5 229.5,-14.5 25.5,-14.5" stroke="#94a3b8"></polygon>
+</g>
+<!-- snap&#45;&gt;del -->
+<g class="edge" id="execution-er-edge9">
+<title>snap-&gt;del</title>
+<path d="M107.94,-403.99C112.16,-332.97 119.28,-213.07 123.66,-139.16" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="125.94,-139.22 124.05,-132.59 121.4,-138.95 125.94,-139.22" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="150" y="-273">交付同一对象</text>
+</g>
+<!-- find -->
+<g class="node" id="execution-er-node5">
+<title>find</title>
+<path d="M415.5,-147C415.5,-147 275.5,-147 275.5,-147 269.5,-147 263.5,-141 263.5,-135 263.5,-135 263.5,-12 263.5,-12 263.5,-6 269.5,0 275.5,0 275.5,0 415.5,0 415.5,0 421.5,0 427.5,-6 427.5,-12 427.5,-12 427.5,-135 427.5,-135 427.5,-141 421.5,-147 415.5,-147" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="264.5,-116.5 264.5,-145.5 426.5,-145.5 426.5,-116.5 264.5,-116.5" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="321" y="-128.9">findings</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="272.5" y="-98.9">PK finding_id</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="272.5" y="-69.9">FK change / result / target</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="272.5" y="-40.9">return_phase / status</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="272.5" y="-11.9">resolution_result_id</text>
+<polygon fill="none" points="263.5,0 263.5,-147 427.5,-147 427.5,0 263.5,0" stroke="#94a3b8"></polygon>
+</g>
+<!-- res&#45;&gt;find -->
+<g class="edge" id="execution-er-edge6">
+<title>res-&gt;find</title>
+<path d="M345.5,-201.73C345.5,-186.19 345.5,-169.7 345.5,-153.93" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="347.78,-153.72 345.5,-147.22 343.23,-153.72 347.78,-153.72" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="379" y="-172">发现 / 关闭依据</text>
+</g>
+<!-- res&#45;&gt;del -->
+<g class="edge" id="execution-er-edge7">
+<title>res-&gt;del</title>
+<path d="M266.18,-201.73C243.2,-180.65 218.32,-157.82 196.07,-137.4" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="197.39,-135.53 191.06,-132.81 194.31,-138.88 197.39,-135.53" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="268.5" y="-172">VFY / 回读依据</text>
+</g>
+<!-- ast -->
+<g class="node" id="execution-er-node7">
+<title>ast</title>
+<path d="M454.5,-507.5C454.5,-507.5 246.5,-507.5 246.5,-507.5 240.5,-507.5 234.5,-501.5 234.5,-495.5 234.5,-495.5 234.5,-430.5 234.5,-430.5 234.5,-424.5 240.5,-418.5 246.5,-418.5 246.5,-418.5 454.5,-418.5 454.5,-418.5 460.5,-418.5 466.5,-424.5 466.5,-430.5 466.5,-430.5 466.5,-495.5 466.5,-495.5 466.5,-501.5 460.5,-507.5 454.5,-507.5" fill="#f1f5f9" stroke="transparent"></path>
+<polygon fill="#e2e8f0" points="235.5,-477 235.5,-506 465.5,-506 465.5,-477 235.5,-477" stroke="transparent"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="12.00" font-weight="bold" text-anchor="start" x="292.5" y="-489.4">assets + asset_links</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="243.5" y="-459.4">asset_id / project_id / sha256</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="start" x="243.5" y="-430.4">明确关联source/design/result/delivery</text>
+<polygon fill="none" points="234.5,-418.5 234.5,-507.5 466.5,-507.5 466.5,-418.5 234.5,-418.5" stroke="#94a3b8"></polygon>
+</g>
+<!-- ast&#45;&gt;res -->
+<g class="edge" id="execution-er-edge8">
+<title>ast-&gt;res</title>
+<path d="M349.32,-418.04C348.81,-399.4 348.21,-377.08 347.64,-355.74" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="349.91,-355.59 347.46,-349.15 345.36,-355.71 349.91,-355.59" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="368.5" y="-374">原始证据</text>
+</g>
+</g>
+</svg></div></figure>
+<h3>5.1 三组数据</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>组</th>
+<th>表</th>
+<th>版本策略</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>项目与内容</td>
+<td>projects、contexts、context_entries、workspaces、changes、revisions；sources/requirements/criteria/designs/tasks/checks 及关系表</td>
+<td>草稿可更新，提交快照不可变</td>
+</tr>
+<tr>
+<td>执行事实</td>
+<td>runs、steps、code_snapshots、check_results、findings、deliveries</td>
+<td>运行状态可推进，原始检查结果保留；复验新增记录</td>
+</tr>
+<tr>
+<td>基础设施</td>
+<td>assets、asset_links、authorizations、operations、imports、schema_migrations</td>
+<td>各自明确身份、归属、幂等与保留规则</td>
+</tr>
+</tbody>
+</table></div>
+<h3>5.2 为什么使用需求级快照</h3>
+<p>每个提交快照包含本需求当时的关系化内容。新阶段或前序修订基于它建立子快照，复制必要行并保留条目 UUID。全套属性仍在各自表中；不是把整份需求重新塞成 JSON/Markdown Blob。</p>
+<p>首版按小团队需求量，复制这些文本与关系行比维护一套逐字段双时态/事件溯源更简单。附件只关联，不重复复制文件。后续用数据量证明需要优化后再做存储层优化，领域接口不变化。</p>
+<p>整份快照提交不会让所有任务语义变更。Runtime 对任务及其引用闭包计算 fingerprint；没有语义变化的已完成工作可以复用其依据。新的最终 VFY 仍绑定真实最终代码对象。</p>
+<h3>5.3 关键身份和外键</h3>
+<p><strong>所有主身份采用 UUID v4。</strong> 时间是属性，不是身份来源。<code>R-001</code>、<code>WI-001</code> 是阅读别名，由本次视图生成/保持映射；不能作为跨库唯一键。序号碰撞不会造成合并覆盖。</p>
+<p><code>revision_id + requirement_id</code> 确定某次快照中的准确需求行；<code>revision_id + task_id</code> 确定准确任务定义。关系表的复合外键同时约束两端属于同一快照。</p>
+<p><code>project_id + change_id</code> 约束工作包归属；Run、检查结果、交付都显式关联项目和需求。跨项目误引用在外键或统一服务校验处拒绝。跨需求组合交付首版通过工作包内明确汇总范围实现，不自动将“同项目最新产物”拼起来。</p>
+<p>业务读取必须携带 change_id 和具体快照或由 Runtime 固定一次 current；不能靠目录、最近更新时间或文本相似度选择输入。</p>
+<h3>5.4 SQL 约束与领域约束的边界</h3>
+<p>SQL 模型实现主键、复合外键、基础枚举、必要互斥关系、不可变内容触发器和常用索引。Runtime 另外实现：完整来源/覆盖、DAG、阶段方向、审批范围、Check/Subject/Step 一致性、Schema 内 JSON 的类型、路径安全、数据摘要及全部必要条件。</p>
+<p>附件的 <code>schema-model.sql</code> 是可创建并验证的结构草案；测试通过只说明所测 SQL 不变量成立，不代表所有上述 Runtime 行为已实现。</p>
+<h3>5.5 典型查询</h3>
+<pre><code class="language-sql">-- 当前采用快照中，还没有任何验证方法覆盖的验收条件。
+SELECT c.criterion_id, c.expected_result
+FROM changes ch
+JOIN criteria c ON c.revision_id = ch.active_revision_id
+WHERE ch.project_id = :project_id AND ch.change_id = :change_id
+  AND NOT EXISTS (
+    SELECT 1 FROM check_criteria cc
+    WHERE cc.revision_id = c.revision_id
+      AND cc.criterion_id = c.criterion_id
+  );
+</code></pre>
+<pre><code class="language-sql">-- 查询本需求未解决的阻塞问题，不从运行日志里猜当前状态。
+SELECT finding_id, return_phase, description
+FROM findings
+WHERE project_id = :project_id AND change_id = :change_id
+  AND severity = 'blocking' AND status IN ('open', 'addressed');
+</code></pre>
+<p>第一条只说明“有无方法覆盖”，不说明“执行是否通过”。通过性由结果快照、环境和当前采用版本共同判断。</p>
+</div></details><details class="chapter"><summary><h2 id="chapter-06">06｜版本、状态、并发与代码基线变化</h2><blockquote class="chapter-brief">
+<p><strong>本章速读：需求最初的 Git 基线保留作历史，不锁死后续工作。允许合入 main 的新内容；每次执行和验收绑定实际代码快照，并只让相关结果重新接受检查。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<h3>6.1 内容状态与执行状态</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>对象</th>
+<th>状态</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>内容快照</td>
+<td>draft → committed；修改 committed 时建立子快照</td>
+</tr>
+<tr>
+<td>Run</td>
+<td>created → running → completed / blocked / failed / interrupted / cancelled</td>
+</tr>
+<tr>
+<td>Step</td>
+<td>running → completed / blocked / failed / interrupted / cancelled；另有 outcome</td>
+</tr>
+<tr>
+<td>Finding</td>
+<td>open → addressed → resolved；有复核依据的误报可 rejected</td>
+</tr>
+<tr>
+<td>Delivery</td>
+<td>prepared → succeeded / failed / unknown / cancelled</td>
+</tr>
+</tbody>
+</table></div>
+<p>恢复使用相同 run_id 与新 step attempt，保存旧尝试结果。正式历史检查结果和证据追加保存；不把 fail 改写为 pass。自动通过和人工审阅结论保持不同来源。</p>
+<h3>6.2 数据幂等</h3>
+<p>写命令携带 operation_id。相同 ID＋相同规范化请求返回同一回执；相同 ID＋不同请求返回冲突。草稿更新携带 expected_generation，SQL UPDATE 同时约束当前 generation，受影响行为 0 即返回可读冲突。</p>
+<p>多个 write command 可以批量提交同一阶段内容，但关系闭包的每个批次必须原子合法。新草稿逐步补全允许不满足阶段完成条件；只有 <code>phase.complete</code> 才强制完整覆盖。</p>
+<h3>6.3 Git 基线与需求基线分开</h3>
+<p><code>changes.initial_base_commit</code> 保留需求创建基线。<code>code_snapshots</code> 记录每次实际 HEAD、tree、纳入范围的补丁与未跟踪文件、环境摘要。</p>
+<p>合入 main 的新提交后：检测真实差异 → 判断是否触及本需求引用的资源/路径或公共构建条件 → 保留未受影响内容 → 重新执行受影响验证。共享依赖、构建系统或无法确定影响时，扩大验证集合；不因 HEAD 不等于 initial_base_commit 就拒绝全部阶段。</p>
+<p>即使合并只修改别处，最终交付前的必要集成/回读检查仍对最终实际对象运行。代码与方法已变化的旧 PASS 不能冒充新对象验证。</p>
+<h3>6.4 快照指纹与 Rust 一致性</h3>
+<p>协议采用 UTF-8 JSON；规范化规则明确：对象键排序、集合按稳定 ID 排序、有序列表保序、固定换行和 UTC 时间格式；摘要输入不包含运行耗时、展示别名或机器绝对路径。禁止 NaN/Infinity；受摘要控制的精确小数用字符串表达；测试固定 Unicode/空值/整数边界。</p>
+<p>附件摘要对原始字节计算，不做文本规范化。代码对象摘要包含纳入验证的文件集合和环境绑定。协议黄金向量检验 Python/Rust 对同一逻辑输入产生相同标识和错误结果。</p>
+</div></details><details class="chapter"><summary><h2 id="chapter-07">07｜命令接口、输入包与可执行性判定</h2><blockquote class="chapter-brief">
+<p><strong>本章速读：一个 JSON 接口是全部宿主的共同按钮。Skill 得到准确输入、字段结构和下一步；执行与预检查调用同一套规则，减少不同阶段各自解释。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<h3>7.1 首版命令族</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>命令族</th>
+<th>代表操作</th>
+<th>主要效果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>workspace</td>
+<td>init / inspect / clone / collect</td>
+<td>建立、识别和交回工作现场</td>
+</tr>
+<tr>
+<td>context</td>
+<td>collect / update / commit</td>
+<td>管理项目知识</td>
+</tr>
+<tr>
+<td>change</td>
+<td>create / get / select / revise</td>
+<td>管理一个需求身份和内容快照</td>
+</tr>
+<tr>
+<td>phase</td>
+<td>prepare / submit / complete</td>
+<td>取得输入包、保存对象、完成阶段</td>
+</tr>
+<tr>
+<td>task</td>
+<td>next / start / finish</td>
+<td>按可执行集合工作</td>
+</tr>
+<tr>
+<td>check</td>
+<td>run / record_review / evaluate</td>
+<td>收集命令结果和真实审阅结果</td>
+</tr>
+<tr>
+<td>finding</td>
+<td>list / address / resolve</td>
+<td>缺口修复和复验闭环</td>
+</tr>
+<tr>
+<td>delivery</td>
+<td>prepare / execute / reconcile</td>
+<td>可恢复交付效果</td>
+</tr>
+<tr>
+<td>status / render / export</td>
+<td>查询、生成视图、完整导出</td>
+<td>人和模型的读取入口</td>
+</tr>
+</tbody>
+</table></div>
+<p>这不是要求实现数十个独立进程；一个 CLI 分发器处理 versioned command。</p>
+<h3>7.2 通用请求/响应</h3>
+<pre><code class="language-json">{
+  "api_version": "2",
+  "operation_id": "&lt;uuid&gt;",
+  "command": "phase.submit",
+  "workspace_id": "&lt;uuid&gt;",
+  "change_id": "&lt;uuid&gt;",
+  "run_id": "&lt;uuid&gt;",
+  "expected_generation": 3,
+  "payload": {"phase": "PLN", "revision_id": "&lt;uuid&gt;", "operations": []}
+}
+</code></pre>
+<pre><code class="language-json">{
+  "api_version": "2",
+  "ok": false,
+  "status": "invalid_input",
+  "errors": [{
+    "code": "TASK_SELF_DEPENDENCY",
+    "path": "/payload/operations/0/predecessor_id",
+    "message": "任务不能依赖自身启动",
+    "object_id": "&lt;uuid&gt;"
+  }],
+  "next_actions": [{"action": "correct_input", "phase": "PLN"}],
+  "run_id": "&lt;uuid&gt;"
+}
+</code></pre>
+<p>只有一份 JSON 输出写 stdout，诊断进 stderr。CLI 退出码：0=命令完成，2=输入/数据冲突，3=业务阻塞/授权不足，4=Runtime 故障；测试命令原退出码存结果，不与 CLI 控制状态混淆。</p>
+<h3>7.3 prepare 输入包</h3>
+<p>包含当前项目/需求身份、准确内容快照、相关上下文、所需关系数据、附件映射、本阶段输入 Schema、已知阻塞和授权动作。机器生成引用和范围，不让模型再次从整篇 Markdown 抽取。</p>
+<h3>7.4 同一可执行性服务</h3>
+<p><code>evaluate_action(action, target, revision, code_state, authorization)</code> 返回 runnable/blocked/needs_input 及结构化条件。status、prepare 和实际 execute 都调用它。执行前仍需重新读取当前短时环境和 generation，以处理预检后发生的变化。</p>
+<p>一份冻结文档不能证明实时环境；环境条件引用 checks 定义，结果来自实际检查及其有效期。事实/来源不自动进入条件服务。</p>
+<h3>7.5 同一批次的新对象身份</h3>
+<p>创建命令使用临时 <code>client_key</code> 表达本批次内关系，例如 <code>prep</code>、<code>test</code>；Runtime在同一事务中分配UUID、解析本批次引用、校验并返回稳定ID映射。更新已有对象用已取得的UUID。临时键不持久化为权威Reference，批次失败整体回滚，不制造公开Revision Reservation。</p>
+<p>实际执行接口的结果来源是受控命令收集器；<code>check.record_review</code>只接受审阅结果类型，不能写入source_kind=command的PASS。</p>
+</div></details><details class="chapter"><summary><h2 id="chapter-08">08｜本地文件、附件、日志和阅读视图</h2><blockquote class="chapter-brief">
+<p><strong>本章速读：采用你指定的 assets/ab/cd/&lt;摘要&gt;。数据库保存业务数据和诊断摘要，附件与原始执行日志保存在 .sdlc；需求视图和每次 Run 报告分别组织。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<pre><code class="language-text">.sdlc/
+  .gitignore                      # 默认 *，整个运行目录不入 VCS
+  config.json                     # 当前存储、项目/工作区及资源位置绑定
+  store.sqlite3
+  assets/ab/cd/&lt;完整SHA-256&gt;       # 实际附件字节
+  changes/&lt;change-id&gt;/             # 从数据库重建的当前/基线阅读视图
+  runs/&lt;run-id&gt;/                   # 不可假设可重建的原始执行现场
+    index.html
+    request.json
+    bindings.json
+    events.jsonl
+    stdout.log
+    stderr.log
+    work/
+  exports/&lt;export-id&gt;/
+</code></pre>
+<h3>8.1 config.json 的唯一职责</h3>
+<p>保存 format_version、store_id、instance_id、数据库相对位置、project_id、workspace_id、默认 change、稳定资源键到本地相对/绝对位置的映射。主干名称不是固定字段；复制来源是本次 workspace 操作参数和历史记录。</p>
+<p>业务进度、项目规则、审批、需求和设计在数据库。执行开始后将默认选择解析为准确身份，正在运行的任务不受另一个窗口切换默认需求影响。</p>
+<h3>8.2 assets：稳定寻址而不是目录扫描</h3>
+<p>数据库记录 asset_id、项目归属、完整摘要、媒体类型、大小和关联对象。按摘要前 2＋2 位生成路径，目录按需创建，查询先走 SQL 索引再直接打开文件。</p>
+<p>两级目录是初始组织方案，不声称已做性能压测。去重是附加收益，内容校验和稳定寻址同样重要。小文件在数据库中未必更慢，但这里选择文件附件是为了统一大文件管理及可读导出，不以未测量的性能结论论证。<a href="#source-S06">S06</a></p>
+<p>附件写入：在同文件系统临时位置写完整字节 → fsync → 原子移动到最终位置 → 校验 → 短事务写资产和关系。并发相同摘要幂等采用；失败最多留下无引用孤立文件，不能留下指向半文件的已提交引用。</p>
+<p>资产回收显式运行引用扫描并有保留窗口；归档本需求时所有必要附件一起交回，不因为 RLS 完成就删除输入或失败证据。</p>
+<h3>8.3 日志不是业务状态的唯一来源</h3>
+<p>数据库可以直接查询“哪个需求的哪次运行因何阻塞”。堆栈、stdout/stderr、输入和输出详情在 runs。测试 fail、发布 unknown、阻塞等都是正常持久化状态；非法领域写入回滚之后，诊断仍另行记录。</p>
+<p><code>runs/index</code> 至少展示：输入与版本、开始/结束、阶段步骤、实际工具调用、错误码与字段路径、关联代码对象、恢复入口、保留草稿。日志在写入前脱敏；对执行时间、输出字节数和临时文件大小设置可配置限额，截断必须有标记和剩余材料位置，不能只留下 PASS 摘要。</p>
+<p>机器拥有 runtime 启动之前的错误仅能写 bootstrap 日志；工具若绕过 Runtime 包装器，其执行记录不自动可信，交付报告必须标记缺口。目标是所有正式 Skill 操作均经过该入口，而不是承诺捕获用户设备上所有事件。</p>
+<h3>8.4 视图的两个维度</h3>
+<p><code>changes/&lt;id&gt;/</code> 展示需求/设计/计划/验证/交付的当前内容；<code>runs/&lt;id&gt;/index.html</code> 展示这一次的过程。提交的基线视图绑定 revision_id 和模板版本。图片嵌入或使用可移植相对路径。</p>
+<p>本设计的 HTML 是离线单文件阅读入口；正式产品可以同样输出离线 HTML。原始日志、附件和必要代码补丁不是可随意丢弃的派生视图。</p>
+</div></details><details class="chapter"><summary><h2 id="chapter-09">09｜直接切分支、worktree复制和交回</h2><blockquote class="chapter-brief">
+<p><strong>本章速读：不规定开发者怎样用 Git。一个不入库的 .sdlc 可以在直接切分支时继续使用；独立 worktree 可以从既有库复制。交回合并的是需求数据，不是二进制覆盖数据库，也不是自动 merge 产品代码。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<figure class="diagram-card"><figcaption>本地复制与交回<button class="zoom" type="button">放大查看</button></figcaption><div class="diagram-wrap"><svg aria-label="本地复制与交回" class="diagram-svg" height="731pt" role="img" viewbox="0.00 0.00 386.68 730.68" width="387pt" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g class="graph" id="workspace-transfer-graph0" transform="scale(1 1) rotate(0) translate(15.84 714.84)">
+<title>G</title>
+<!-- base -->
+<g class="node" id="workspace-transfer-node1">
+<title>base</title>
+<path d="M249.5,-699C249.5,-699 134.5,-699 134.5,-699 128.5,-699 122.5,-693 122.5,-687 122.5,-687 122.5,-667 122.5,-667 122.5,-661 128.5,-655 134.5,-655 134.5,-655 249.5,-655 249.5,-655 255.5,-655 261.5,-661 261.5,-667 261.5,-667 261.5,-687 261.5,-687 261.5,-693 255.5,-699 249.5,-699" fill="#dceeea" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="192" y="-680.4">既有本地 .sdlc</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="192" y="-667.4">项目 / CTX / 历史需求</text>
+</g>
+<!-- choice -->
+<g class="node" id="workspace-transfer-node2">
+<title>choice</title>
+<path d="M181.07,-605.04C181.07,-605.04 105.93,-570.96 105.93,-570.96 100.46,-568.48 100.46,-563.52 105.93,-561.04 105.93,-561.04 181.07,-526.96 181.07,-526.96 186.54,-524.48 197.46,-524.48 202.93,-526.96 202.93,-526.96 278.07,-561.04 278.07,-561.04 283.54,-563.52 283.54,-568.48 278.07,-570.96 278.07,-570.96 202.93,-605.04 202.93,-605.04 197.46,-607.52 186.54,-607.52 181.07,-605.04" fill="#fef3c7" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="192" y="-569.4">新工作区无库</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="192" y="-556.4">复制 / 新建</text>
+</g>
+<!-- base&#45;&gt;choice -->
+<g class="edge" id="workspace-transfer-edge1">
+<title>base-&gt;choice</title>
+<path d="M192,-654.98C192,-644.03 192,-630.13 192,-616.64" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="194.28,-616.56 192,-610.06 189.73,-616.56 194.28,-616.56" stroke="#64748b"></polygon>
+</g>
+<!-- clone -->
+<g class="node" id="workspace-transfer-node3">
+<title>clone</title>
+<path d="M265,-467C265,-467 119,-467 119,-467 113,-467 107,-461 107,-455 107,-455 107,-435 107,-435 107,-429 113,-423 119,-423 119,-423 265,-423 265,-423 271,-423 277,-429 277,-435 277,-435 277,-455 277,-455 277,-461 271,-467 265,-467" fill="#f1f5f9" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="192" y="-448.4">一致快照 + 必要附件</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="192" y="-435.4">新的 workspace / instance</text>
+</g>
+<!-- choice&#45;&gt;clone -->
+<g class="edge" id="workspace-transfer-edge2">
+<title>choice-&gt;clone</title>
+<path d="M192,-521.7C192,-505.71 192,-488.03 192,-473.78" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="194.28,-473.58 192,-467.08 189.73,-473.58 194.28,-473.58" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="212" y="-492">默认复制</text>
+</g>
+<!-- run -->
+<g class="node" id="workspace-transfer-node4">
+<title>run</title>
+<path d="M254.5,-378C254.5,-378 129.5,-378 129.5,-378 123.5,-378 117.5,-372 117.5,-366 117.5,-366 117.5,-346 117.5,-346 117.5,-340 123.5,-334 129.5,-334 129.5,-334 254.5,-334 254.5,-334 260.5,-334 266.5,-340 266.5,-346 266.5,-346 266.5,-366 266.5,-366 266.5,-372 260.5,-378 254.5,-378" fill="#f1f5f9" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="192" y="-359.4">需求A：REQ→…→RLS</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="192" y="-346.4">允许合入新的代码基线</text>
+</g>
+<!-- clone&#45;&gt;run -->
+<g class="edge" id="workspace-transfer-edge3">
+<title>clone-&gt;run</title>
+<path d="M192,-422.94C192,-411.48 192,-397.17 192,-384.8" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="194.28,-384.67 192,-378.17 189.73,-384.67 194.28,-384.67" stroke="#64748b"></polygon>
+</g>
+<!-- pack -->
+<g class="node" id="workspace-transfer-node5">
+<title>pack</title>
+<path d="M246.5,-289C246.5,-289 137.5,-289 137.5,-289 131.5,-289 125.5,-283 125.5,-277 125.5,-277 125.5,-257 125.5,-257 125.5,-251 131.5,-245 137.5,-245 137.5,-245 246.5,-245 246.5,-245 252.5,-245 258.5,-251 258.5,-257 258.5,-257 258.5,-277 258.5,-277 258.5,-283 252.5,-289 246.5,-289" fill="#f1f5f9" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="192" y="-270.4">需求数据 + 引用闭包</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="192" y="-257.4">运行日志 + 附件归档</text>
+</g>
+<!-- run&#45;&gt;pack -->
+<g class="edge" id="workspace-transfer-edge4">
+<title>run-&gt;pack</title>
+<path d="M192,-333.94C192,-322.48 192,-308.17 192,-295.8" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="194.28,-295.67 192,-289.17 189.73,-295.67 194.28,-295.67" stroke="#64748b"></polygon>
+</g>
+<!-- merge -->
+<g class="node" id="workspace-transfer-node6">
+<title>merge</title>
+<path d="M180.49,-196.6C180.49,-196.6 54.51,-159.4 54.51,-159.4 48.75,-157.7 48.75,-154.3 54.51,-152.6 54.51,-152.6 180.49,-115.4 180.49,-115.4 186.25,-113.7 197.75,-113.7 203.51,-115.4 203.51,-115.4 329.49,-152.6 329.49,-152.6 335.25,-154.3 335.25,-157.7 329.49,-159.4 329.49,-159.4 203.51,-196.6 203.51,-196.6 197.75,-198.3 186.25,-198.3 180.49,-196.6" fill="#fef3c7" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="192" y="-159.4">与目标库比较身份/摘要</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="192" y="-146.4">检查head祖先关系</text>
+</g>
+<!-- pack&#45;&gt;merge -->
+<g class="edge" id="workspace-transfer-edge5">
+<title>pack-&gt;merge</title>
+<path d="M192,-244.98C192,-234.03 192,-220.13 192,-206.64" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="194.28,-206.56 192,-200.06 189.73,-206.56 194.28,-206.56" stroke="#64748b"></polygon>
+</g>
+<!-- append -->
+<g class="node" id="workspace-transfer-node7">
+<title>append</title>
+<path d="M166,-50.5C166,-50.5 12,-50.5 12,-50.5 6,-50.5 0,-44.5 0,-38.5 0,-38.5 0,-18.5 0,-18.5 0,-12.5 6,-6.5 12,-6.5 12,-6.5 166,-6.5 166,-6.5 172,-6.5 178,-12.5 178,-18.5 178,-18.5 178,-38.5 178,-38.5 178,-44.5 172,-50.5 166,-50.5" fill="#dceeea" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="89" y="-31.9">独立需求新增 / 快进 / 补历史</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="89" y="-18.9">事务导入 + 幂等回执</text>
+</g>
+<!-- merge&#45;&gt;append -->
+<g class="edge" id="workspace-transfer-edge6">
+<title>merge-&gt;append</title>
+<path d="M163.58,-120.37C146.82,-99.95 125.94,-74.51 110.54,-55.75" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="112.23,-54.22 106.35,-50.64 108.72,-57.11 112.23,-54.22" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="153" y="-82">无分歧</text>
+</g>
+<!-- conflict -->
+<g class="node" id="workspace-transfer-node8">
+<title>conflict</title>
+<path d="M336.5,-57C336.5,-57 215.5,-57 215.5,-57 209.5,-57 203.5,-51 203.5,-45 203.5,-45 203.5,-12 203.5,-12 203.5,-6 209.5,0 215.5,0 215.5,0 336.5,0 336.5,0 342.5,0 348.5,-6 348.5,-12 348.5,-12 348.5,-45 348.5,-45 348.5,-51 342.5,-57 336.5,-57" fill="#f1f5f9" stroke="#94a3b8"></path>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="276" y="-38.4">分歧：保留双方历史</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="276" y="-25.4">目标active不动</text>
+<text font-family="Noto Sans CJK SC" font-size="12.00" text-anchor="middle" x="276" y="-12.4">明确矫正后产生新快照</text>
+</g>
+<!-- merge&#45;&gt;conflict -->
+<g class="edge" id="workspace-transfer-edge7">
+<title>merge-&gt;conflict</title>
+<path d="M216.07,-119.04C227.92,-101.34 242.11,-80.14 253.71,-62.81" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="255.81,-63.76 257.53,-57.09 252.03,-61.23 255.81,-63.76" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="257" y="-82">有分歧</text>
+</g>
+<!-- append&#45;&gt;base -->
+<g class="edge" id="workspace-transfer-edge8">
+<title>append-&gt;base</title>
+<path d="M167.09,-50.55C180.91,-54.28 191,-57 191,-57 191,-57 278,-79 278,-79 278,-79 353,-112 353,-112 353,-112 353,-200 353,-200 353,-200 301,-610 301,-610 301,-610 263.5,-632.71 232.49,-651.48" fill="none" stroke="#64748b"></path>
+<polygon fill="#64748b" points="231.17,-649.62 226.79,-654.94 233.53,-653.52 231.17,-649.62" stroke="#64748b"></polygon>
+<text font-family="Noto Sans CJK SC" font-size="10.00" text-anchor="middle" x="345" y="-353.5">交回</text>
+</g>
+</g>
+</svg></div></figure>
+<h3>9.1 直接切换分支</h3>
+<p>工作区身份不变；同一库保留多个需求。每次 Skill 调用解析当前 worktree、HEAD 和已选择需求。如果当前分支/路径与该需求近期执行对象不同，先展示差异并根据用户意图绑定；多个候选需求不按“最新”猜测。切分支不是重新 INIT 的理由。</p>
+<h3>9.2 worktree 中首次运行</h3>
+<p>当前目录已有有效 <code>.sdlc</code> 时直接使用。不存在时，通过 Git 实际登记的工作树位置查找用户可用来源；只读检查，不递归扫描任意目录。<a href="#source-S07">S07</a></p>
+<p>发现唯一来源时提示“复制/新建，默认复制”；用户已在总任务中授权默认复制时直接执行并记录选择。来源多个时需要明确一个。复制用 SQLite Backup API 获取一致副本，同时带上所需附件；工作区/实例身份重新生成，历史项目/需求/上下文身份保留。<a href="#source-S05">S05</a></p>
+<p>复制后旧 Run 保留历史记录但不视为本机 active executor；来源库授权不被激活。新 Run 使用当前用户授权和路径绑定。工作区默认过滤到本次需求，其他历史记录仍可查询。目录也可由用户手工复制，首次打开时检测 instance 与路径变化并重新绑定。</p>
+<h3>9.3 交回主库的最小算法</h3>
+<p><code>workspace.collect --source &lt;worktree&gt; --target &lt;explicit-root&gt; --change &lt;id&gt;</code>：</p>
+<ol>
+<li>从来源取得包含本需求内容、CTX、运行与结果、必要附件/日志的完整归档；生成内容清单和摘要。</li>
+<li>在目标暂存区校验文件、版本、归属与引用闭包；检查来源和目标 project_id。</li>
+<li>独立 change_id 直接新增；相同 UUID 且数据摘要相同视为已存在。</li>
+<li>同一 change：目标 head 是来源 head 祖先时可前进；来源是目标祖先时只补历史；真正分歧时保留两条内容版本，并报告冲突，目标 active head 不自动变化。</li>
+<li>Runtime 事务插入关系数据和 imported 回执；文件先完整安装，再提交引用；提交完成才更新相应当前指针。</li>
+<li>源库继续保留。已导入 bundle_digest 重复交回不重复产生对象。</li>
+</ol>
+<p>人工或 AI 合并分歧时创建新快照：parent_id=目标 head，merged_from_id=来源 head，按正常校验采用。这是显式解决冲突，不构建通用分布式数据库同步。</p>
+<h3>9.4 为什么不直接覆盖数据库</h3>
+<p>复制后的库可能分别增加需求或修改共享 CTX。覆盖将丢失目标数据；SQLite 文件级替换也无法表达业务冲突。此处的小型逻辑导入是支持你工作方式所需的最小能力。</p>
+<p>shared CTX 采用同样的身份/摘要原则：可自动补充历史，但当前项目使用哪一版必须可解释；导入某个需求引用的旧 CTX，不会强制全库改用它。</p>
+<h3>9.5 归档与保留</h3>
+<p>RLS 完成后生成本地归档，change 标记 completed/archived；进入主库后可仅在常用视图隐藏。必要日志和附件随归档保留。删除是单独的明确保留策略，不依赖“理论没用”判断。全部 <code>.sdlc</code> 在首版默认不入 VCS；本轮不实现团队 VCS 同步模式。</p>
+</div></details><details class="chapter"><summary><h2 id="chapter-10">10｜对 docs v1.1 的影响与替换方案</h2><blockquote class="chapter-brief">
+<p><strong>本章速读：需要升级领域规范，不只是改实现。建议新规范标识为 2.0-draft，当前有效文档统一放 docs/spec/；旧目录及冲突代码在实施分支一次性移除，历史只由 Git 保存。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<h3>10.1 为什么是 2.0</h3>
+<p>当前 core 明确把 Markdown/YAML primary blob 作为产物格式，Store 围绕完整 Payload、frozen Revision 和准确引用操作；CTX、阶段与 Claim 也被这些规则绑定。<a href="#source-S10">S10</a><a href="#source-S11">S11</a><a href="#source-S12">S12</a> 本设计改为需求工作包、关系化快照、自动阶段提交、独立运行记录和按动作判断，属于语义不兼容变化。</p>
+<p>采用 <code>spec_version: 2.0-draft</code>、<code>api_version: 2</code>、新数据库 <code>schema_version: 1</code>。三者职责不同，不能因为数字不同认为存在问题。发布版本由实现成熟度另定，本次不发布。</p>
+<h3>10.2 文档目录</h3>
+<pre><code class="language-text">docs/spec/
+  README.md
+  core.md
+  storage.md
+  workspace.md
+  runtime.md
+  000-ctx.md
+  100-req.md
+  200-dsn.md
+  300-pln.md
+  400-imp.md
+  500-vfy.md
+  600-rls.md
+  design-domains/                  # 经整理后的适用领域清单
+</code></pre>
+<p>文档目录不再随小版本复制。Git 保存过去版本。合同字段/枚举维护在 contracts，docs 说明规则与语义；CI 检查文档字段和实际契约一致。Runtime 包记录其构建/规则版本，不在每次业务运行重新读取 docs 或校验 docs SHA256SUMS。</p>
+<h3>10.3 保留、重写、移除</h3>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>当前部分</th>
+<th>处置</th>
+<th>v2替代</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>REQ→DSN→PLN→IMP→VFY→RLS 职责划分</td>
+<td>保留并精简</td>
+<td>六阶段固定步骤和输入输出</td>
+</tr>
+<tr>
+<td>来源追踪、验收覆盖、设计决策理由</td>
+<td>保留</td>
+<td>类型表＋关系表＋共享校验</td>
+</tr>
+<tr>
+<td>IMP通过不等于VFY通过，VFY不等于已发版</td>
+<td>保留</td>
+<td>独立执行/结果/交付状态</td>
+</tr>
+<tr>
+<td>原始证据、准确产品对象、发布回读</td>
+<td>保留</td>
+<td>check_results、code_snapshots、deliveries</td>
+</tr>
+<tr>
+<td>Canonical Markdown/YAML及章节表头解析权威</td>
+<td>移除</td>
+<td>关系模型与版本化命令</td>
+</tr>
+<tr>
+<td>每阶段手工构造Authority、Gate摘要和确认文件</td>
+<td>重写</td>
+<td>自动完成规则＋真实来源的授权/审阅记录</td>
+</tr>
+<tr>
+<td>独立Claim Provider及双重Revision Reservation</td>
+<td>移除</td>
+<td>单库运行身份、工作区执行令牌和任务尝试</td>
+</tr>
+<tr>
+<td>多种Phase Disposition产生的绕行路径</td>
+<td>简化</td>
+<td>六阶段都有处理记录；无实际工作写not_applicable结论</td>
+</tr>
+<tr>
+<td>固定16域/复合域空表要求</td>
+<td>重写</td>
+<td>适用域清单＋实际需要的设计对象</td>
+</tr>
+<tr>
+<td>Spec哈希锁和过期v1目录</td>
+<td>移除</td>
+<td>单一当前规范＋Git历史＋构建/接口版本</td>
+</tr>
+<tr>
+<td>旧运行时兼容分支、恢复特判、旧回归目录</td>
+<td>移除</td>
+<td>新单一模型和新场景回归</td>
+</tr>
+<tr>
+<td>AGENTS中“一次会话一个阶段”</td>
+<td>区分用途并重写</td>
+<td>插件研发授权边界；业务Runtime允许用户授权连续六阶段</td>
+</tr>
+</tbody>
+</table></div>
+<p>不是删除所有谨慎原则：授权、准确证据、并发覆盖保护、只读查询和范围控制仍为代码不变量。已发布前不兼容的旧库可以留作离线人工参考，新运行器没有旧库读取或迁移兼容模式。</p>
+<h3>10.4 推荐实施顺序</h3>
+<p>在独立重构分支上先建立新 contracts、schema 与最小链路，再切换唯一入口；同一工作包将旧规范、旧运行链、旧测试、安装包引用和文档索引全部删除/更新。最终源码中只保留一套当前系统。</p>
+<p>旧测试可以全部重建；旧缺陷对应的<strong>业务反例</strong>进入新用例，旧测试结构和对旧实现的内部断言不继承。新测试跑通后再宣称完成替换，不将“旧测试删除后没有失败”当作质量证明。</p>
+</div></details><details class="chapter"><summary><h2 id="chapter-11">11｜Python首版与Rust后续迁移</h2><blockquote class="chapter-brief">
+<p><strong>本章速读：先把Python实现写清楚并测量。将来Rust替换的是Runtime实现，Skill、数据语义、JSON接口和测试向量保持同一份定义；不为尚未出现的性能问题做预优化。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<h3>11.1 首版技术决策</h3>
+<p>Python 3.11+、标准库 sqlite3、明确的 SQLite 3.37+ 能力检查；Schema 模型使用 STRICT 表。<a href="#source-S08">S08</a> JSON 校验与模板依赖随插件打包并固定版本，正常运行不临时联网安装。</p>
+<p>所有连接显式启用 foreign_keys，写入短事务、busy_timeout；跨外部命令不持有事务。初始化、迁移、复制和交回有单独互斥。日志、输出和资产大小设限；实际性能先记录领域操作延迟、数据库大小和I/O量。</p>
+<p>SQLite之外的未来数据库通过 storage 模块接入同一服务用例。第一版本不需要提供多种可选择的存储后端。</p>
+<h3>11.2 可移植边界</h3>
+<p>可迁移内容包括：命令/响应Schema、错误码、枚举、表字段与关系语义、状态转换表、摘要规则、导出格式、Golden Case、行为测试和工具输出协议。</p>
+<p>不把 Python pickle、对象repr、异常类名、字典偶然顺序、Python路径对象或动态脚本eval写入业务协议。工具命令用 argv 数组和显式工作目录，控制输入不拼进 shell 字符串。</p>
+<h3>11.3 Rust替换的验收</h3>
+<p>对同一固定输入运行两种实现，比较规范化响应、逻辑表数据、引用集合、摘要、错误分类、读写副作用和外部效果回执。时间、随机ID由测试注入固定值。比较逻辑数据，不比较SQLite二进制文件字节。</p>
+<p>切换后只有一个权威写入Runtime；测试可并行对照，正式工作库不由两种实现同时写。迁移时SQLite Schema可以保持或正常升级，Python到Rust不等于重新设计领域模型。</p>
+</div></details><details class="chapter"><summary><h2 id="chapter-12">12｜测试重建与验收矩阵</h2><blockquote class="chapter-brief">
+<p><strong>本章速读：新测试从用户行为和系统不变量重新建立。首要验证“能跑通、错在哪里可看见、可以接续”，再验证约束与跨宿主一致性。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<h3>12.1 三层测试</h3>
+<p><strong>领域确定性测试：</strong> 结构、引用、覆盖、DAG、状态、权限、幂等、导入、崩溃边界。无真实模型，速度快，结果确定。</p>
+<p><strong>契约端到端测试：</strong> 使用记录好的Agent输入和假工具输出，走完整CLI→Service→SQLite→文件→视图；正反例同一正式入口。</p>
+<p><strong>真实项目/Agent测试：</strong> Java与Go老项目增量、纯验证需求、新项目、小型前端/接口需求；固定目标、使用等价验收和记录，检验实际业务质量。多个模型允许不同实现，按同一验收比较。</p>
+<h3>12.2 必须覆盖的用户场景</h3>
+<p>两条现有失败需求作为历史反例：六接口环境准备、Admin原型/桥接。新增直接切分支、worktree复制交回、期间合入main、同一库多项目、无人工review完整本地交付、真实VFY失败自动修复等场景。</p>
+<p>用例明细见文末《验收用例》；每条包含准备、动作、预期状态与可检查证据。发布/部署类用沙箱效果适配器验证权限和回读，真实环境测试另标记。</p>
+<h3>12.3 交付判定</h3>
+<p>确定性用例和契约用例必须通过；真实项目按准确版本保存结果；模型评审与实测明确区分。性能数值在试用测量后设置目标，不在未测量时承诺提升倍数。</p>
+<p>衡量团队价值：新人首次完成需求的人工指导次数、非业务流程阻塞数、断点恢复成功率、验收证据完整率、人工操作量。原生Spec Kit按等价项目目标对照，保留其已有优势，不人为限制它制造差异。</p>
+</div></details><details class="chapter"><summary><h2 id="chapter-13">13｜实施交接与完成边界</h2><blockquote class="chapter-brief">
+<p><strong>本章速读：先完成一条可用纵向链，再替换其余内容；每包都有可演示结果。整体设计确认不等于现在已经实现，旧库和旧测试本轮没有被改动。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>工作包</th>
+<th>内容</th>
+<th>完成证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A：规范与内核</td>
+<td>当前规范/机器契约、INIT/CTX、Schema、命令与诊断入口</td>
+<td>新库、失败可见、字段/引用负例</td>
+</tr>
+<tr>
+<td>B：规格到计划</td>
+<td>REQ/DSN/PLN、结构化视图、前置与覆盖</td>
+<td>两条失败需求新模型完整保存，无自阻塞</td>
+</tr>
+<tr>
+<td>C：执行与收敛</td>
+<td>IMP/VFY、真实工具收集、finding和循环</td>
+<td>无人工review的自动修复与复验</td>
+</tr>
+<tr>
+<td>D：交付与移交</td>
+<td>RLS本地目标、附件、复制交回、基线变化</td>
+<td>worktree交回、故障恢复、完整归档</td>
+</tr>
+<tr>
+<td>E：替换与适配</td>
+<td>删除旧运行链/测试/索引，三宿主入口验证</td>
+<td>单一正式入口、准确版本端到端报告</td>
+</tr>
+</tbody>
+</table></div>
+<p>每包都维护同一契约和新测试，不建立长期并行的v1/v2业务链。最终实现前重新确认仓库HEAD和用户改动，避免把本设计审查基线误当将来写入时的最新基线。</p>
+<h3>本次交付的真实性声明</h3>
+<p>已交付：详细设计、32表字段/关系、ER/流程图、可执行Schema草案、契约样例、规范改动清单、验收矩阵、SQL模型验证脚本及结果。</p>
+<p>未交付：生产Runtime、新插件版本、业务实现、真实自动六阶段验证、Python/Rust对照结果、MySQL平台。Schema模型验证只是设计检查，不属于这些产品能力的通过证据。</p>
+</div></details><details class="chapter"><summary><h2 id="chapter-14">A｜数据库字段字典</h2><blockquote class="chapter-brief">
+<p><strong>附录速读：这里是物理模型说明。先看外键和表用途，再看字段；只有运行所依赖的数据才受程序化约束，自然语言也有明确所属字段。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<p>共 32 张表，14 张属于关系化内容快照的内容/关系表。SQL 使用 STRICT 与显式外键。除明确允许 NULL 的字段外，由 NOT NULL、主键及业务完成检查共同约束。TEXT 中的 JSON 仅用于有固定 Schema 的值对象/命令参数/序列化回执，不承载整个阶段的权威业务关系。</p>
+<p><strong>主键图例：</strong> PK=主键；FK=外键；UUID均由Runtime生成。下列字段类型与约束源于随包 <code>schema-model.sql</code>；SQL模型未代替业务服务。</p>
+<h3>A.1 字段与关联</h3>
+<blockquote>
+<p><strong>本节速读：每张表下面列出字段、SQL约束和业务语义；最后的外键条目同时说明具体关联字段。</strong></p>
+</blockquote>
+<details class="subsection"><summary><h4>01 · <code>schema_migrations</code></h4><blockquote>
+<p><strong>用途：数据库结构版本。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>version</code></td>
+<td><code>INTEGER PRIMARY KEY</code></td>
+<td>新库从 1 开始</td>
+</tr>
+<tr>
+<td><code>migration_digest</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>迁移脚本摘要，不是 docs 文件锁</td>
+</tr>
+<tr>
+<td><code>applied_at</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>应用时间</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<p>由主键及字段约束定义。</p>
+</div></details><details class="subsection"><summary><h4>02 · <code>projects</code></h4><blockquote>
+<p><strong>用途：逻辑项目身份。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>project_id</code></td>
+<td><code>TEXT PRIMARY KEY</code></td>
+<td>UUID v4；移动目录或改名不变</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>展示名称</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>UTC RFC3339，固定毫秒精度</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<p>由主键及字段约束定义。</p>
+</div></details><details class="subsection"><summary><h4>03 · <code>contexts</code></h4><blockquote>
+<p><strong>用途：项目上下文快照。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>context_id</code></td>
+<td><code>TEXT PRIMARY KEY</code></td>
+<td>CTX 快照 UUID</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>所属项目 UUID；隔离所有业务查询与写入</td>
+</tr>
+<tr>
+<td><code>parent_id</code></td>
+<td><code>TEXT</code></td>
+<td>上一 CTX 快照</td>
+</tr>
+<tr>
+<td><code>summary</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>项目定位与概要</td>
+</tr>
+<tr>
+<td><code>state</code></td>
+<td><code>TEXT NOT NULL CHECK(state IN ('draft','committed'))</code></td>
+<td>工作态或已提交快照</td>
+</tr>
+<tr>
+<td><code>digest</code></td>
+<td><code>TEXT</code></td>
+<td>已提交内容摘要</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>UTC RFC3339，固定毫秒精度</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">UNIQUE(project_id,context_id),
+FOREIGN KEY(project_id) REFERENCES projects(project_id),
+FOREIGN KEY(project_id,parent_id) REFERENCES contexts(project_id,context_id)
+</code></pre>
+</div></details><details class="subsection"><summary><h4>04 · <code>context_entries</code></h4><blockquote>
+<p><strong>用途：上下文事实、规则、资源与命令。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>context_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>CTX 快照</td>
+</tr>
+<tr>
+<td><code>entry_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>跨 CTX 快照稳定的条目 UUID</td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td><code>TEXT NOT NULL CHECK(kind IN ('fact','rule','resource','command'))</code></td>
+<td>类型</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>名称或资源键</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>文本事实或规则正文</td>
+</tr>
+<tr>
+<td><code>origin</code></td>
+<td><code>TEXT</code></td>
+<td>事实来源；不是执行依赖</td>
+</tr>
+<tr>
+<td><code>settings_json</code></td>
+<td><code>TEXT NOT NULL DEFAULT '{}'</code></td>
+<td>受类型 Schema 约束的资源/命令配置；命令为 argv 数组，秘密仅存引用</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">PRIMARY KEY(context_id,entry_id),
+UNIQUE(context_id,kind,name),
+FOREIGN KEY(context_id) REFERENCES contexts(context_id)
+</code></pre>
+<p>规则文本是模型指导；强制检查必须对应内置 validator 或 checks，不声称自然语言自动可执行。</p>
+</div></details><details class="subsection"><summary><h4>05 · <code>workspaces</code></h4><blockquote>
+<p><strong>用途：本地工作区绑定。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>workspace_id</code></td>
+<td><code>TEXT PRIMARY KEY</code></td>
+<td>克隆 .sdlc 后重新生成</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>所属项目 UUID；隔离所有业务查询与写入</td>
+</tr>
+<tr>
+<td><code>label</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>工作区展示名</td>
+</tr>
+<tr>
+<td><code>instance_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>本地实例 UUID，不随数据导入继承</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>UTC RFC3339，固定毫秒精度</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">UNIQUE(project_id,workspace_id),
+FOREIGN KEY(project_id) REFERENCES projects(project_id)
+</code></pre>
+<p>绝对目录只在本地 config.json；Git 分支不是需求身份。</p>
+</div></details><details class="subsection"><summary><h4>06 · <code>changes</code></h4><blockquote>
+<p><strong>用途：需求/变更工作包。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>change_id</code></td>
+<td><code>TEXT PRIMARY KEY</code></td>
+<td>稳定 UUID，所有阶段共用</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>所属项目 UUID；隔离所有业务查询与写入</td>
+</tr>
+<tr>
+<td><code>slug</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>用户可读短名，项目内唯一</td>
+</tr>
+<tr>
+<td><code>state</code></td>
+<td><code>TEXT NOT NULL CHECK(state IN ('active','completed','archived'))</code></td>
+<td>工作包生命周期状态</td>
+</tr>
+<tr>
+<td><code>active_revision_id</code></td>
+<td><code>TEXT</code></td>
+<td>当前采用的内容快照</td>
+</tr>
+<tr>
+<td><code>initial_base_commit</code></td>
+<td><code>TEXT</code></td>
+<td>建立需求时的 Git 基线，保留历史</td>
+</tr>
+<tr>
+<td><code>delivery_mode</code></td>
+<td><code>TEXT NOT NULL CHECK(delivery_mode IN ('local','git','deployment'))</code></td>
+<td>约定交付方式</td>
+</tr>
+<tr>
+<td><code>delivery_target</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>准确交付目标</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>UTC RFC3339，固定毫秒精度</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">UNIQUE(project_id,change_id),
+UNIQUE(project_id,slug),
+FOREIGN KEY(project_id) REFERENCES projects(project_id),
+FOREIGN KEY(change_id,active_revision_id) REFERENCES revisions(change_id,revision_id)
+</code></pre>
+<p>active 指针只用于选择；执行时解析并固定 revision_id。</p>
+</div></details><details class="subsection"><summary><h4>07 · <code>revisions</code></h4><blockquote>
+<p><strong>用途：整个需求内容的关系化快照。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT PRIMARY KEY</code></td>
+<td>快照 UUID；多副本不会因整数编号碰撞</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>所属项目 UUID；隔离所有业务查询与写入</td>
+</tr>
+<tr>
+<td><code>change_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>所属需求</td>
+</tr>
+<tr>
+<td><code>context_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>采用的准确 CTX</td>
+</tr>
+<tr>
+<td><code>parent_id</code></td>
+<td><code>TEXT</code></td>
+<td>主父快照</td>
+</tr>
+<tr>
+<td><code>merged_from_id</code></td>
+<td><code>TEXT</code></td>
+<td>人工/AI解决分歧时记录另一来源，正常为空</td>
+</tr>
+<tr>
+<td><code>created_phase</code></td>
+<td><code>TEXT NOT NULL CHECK(created_phase IN ('REQ','DSN','PLN','IMP','VFY','RLS'))</code></td>
+<td>创建快照的阶段</td>
+</tr>
+<tr>
+<td><code>state</code></td>
+<td><code>TEXT NOT NULL CHECK(state IN ('draft','committed'))</code></td>
+<td>草稿可改；提交后不可改</td>
+</tr>
+<tr>
+<td><code>generation</code></td>
+<td><code>INTEGER NOT NULL DEFAULT 0 CHECK(generation&gt;=0)</code></td>
+<td>乐观并发令牌</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>需求标题</td>
+</tr>
+<tr>
+<td><code>summary</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>摘要</td>
+</tr>
+<tr>
+<td><code>goal</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>目标与成功定义</td>
+</tr>
+<tr>
+<td><code>in_scope</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>包含范围</td>
+</tr>
+<tr>
+<td><code>out_of_scope</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>范围外内容</td>
+</tr>
+<tr>
+<td><code>digest</code></td>
+<td><code>TEXT</code></td>
+<td>提交时计算的逻辑数据摘要</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>UTC RFC3339，固定毫秒精度</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">UNIQUE(change_id,revision_id),
+UNIQUE(project_id,revision_id),
+UNIQUE(project_id,change_id,revision_id),
+FOREIGN KEY(project_id,change_id) REFERENCES changes(project_id,change_id),
+FOREIGN KEY(project_id,context_id) REFERENCES contexts(project_id,context_id),
+FOREIGN KEY(change_id,parent_id) REFERENCES revisions(change_id,revision_id),
+FOREIGN KEY(change_id,merged_from_id) REFERENCES revisions(change_id,revision_id)
+</code></pre>
+<p>整份关系数据复制成子快照，条目 UUID 保持稳定；首版不实现逐字段事件溯源。</p>
+</div></details><details class="subsection"><summary><h4>08 · <code>sources</code></h4><blockquote>
+<p><strong>用途：原始输入与观察记录。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>准确内容快照 UUID；不是 Markdown 版本号</td>
+</tr>
+<tr>
+<td><code>source_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>来源稳定 UUID</td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td><code>TEXT NOT NULL CHECK(kind IN ('text','document','image','observation','assumption'))</code></td>
+<td>来源类型</td>
+</tr>
+<tr>
+<td><code>original_text</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>原文或观察说明</td>
+</tr>
+<tr>
+<td><code>origin_uri</code></td>
+<td><code>TEXT</code></td>
+<td>原始位置，不作为必要唯一副本</td>
+</tr>
+<tr>
+<td><code>observed_at</code></td>
+<td><code>TEXT</code></td>
+<td>采集时间</td>
+</tr>
+<tr>
+<td><code>ordinal</code></td>
+<td><code>INTEGER NOT NULL CHECK(ordinal&gt;=0)</code></td>
+<td>输入展示顺序</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,source_id)
+</code></pre>
+</div></details><details class="subsection"><summary><h4>09 · <code>requirements</code></h4><blockquote>
+<p><strong>用途：原子需求项。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>准确内容快照 UUID；不是 Markdown 版本号</td>
+</tr>
+<tr>
+<td><code>requirement_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>稳定 UUID</td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td><code>TEXT NOT NULL CHECK(kind IN ('behavior','rule','quality','constraint'))</code></td>
+<td>沿用有效领域分类</td>
+</tr>
+<tr>
+<td><code>statement</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>需求描述</td>
+</tr>
+<tr>
+<td><code>ordinal</code></td>
+<td><code>INTEGER NOT NULL</code></td>
+<td>展示顺序</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,requirement_id)
+</code></pre>
+</div></details><details class="subsection"><summary><h4>10 · <code>criteria</code></h4><blockquote>
+<p><strong>用途：验收条件。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>准确内容快照 UUID；不是 Markdown 版本号</td>
+</tr>
+<tr>
+<td><code>criterion_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>稳定 UUID</td>
+</tr>
+<tr>
+<td><code>condition_text</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>条件</td>
+</tr>
+<tr>
+<td><code>expected_result</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>可观察预期</td>
+</tr>
+<tr>
+<td><code>ordinal</code></td>
+<td><code>INTEGER NOT NULL</code></td>
+<td>展示顺序</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,criterion_id)
+</code></pre>
+</div></details><details class="subsection"><summary><h4>11 · <code>requirement_sources</code></h4><blockquote>
+<p><strong>用途：需求来源关系。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>准确内容快照 UUID；不是 Markdown 版本号</td>
+</tr>
+<tr>
+<td><code>requirement_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>需求</td>
+</tr>
+<tr>
+<td><code>source_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>真实来源</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,requirement_id,source_id),
+FOREIGN KEY(revision_id,requirement_id) REFERENCES requirements(revision_id,requirement_id),
+FOREIGN KEY(revision_id,source_id) REFERENCES sources(revision_id,source_id)
+</code></pre>
+</div></details><details class="subsection"><summary><h4>12 · <code>criterion_requirements</code></h4><blockquote>
+<p><strong>用途：验收覆盖需求。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>准确内容快照 UUID；不是 Markdown 版本号</td>
+</tr>
+<tr>
+<td><code>criterion_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>验收条件</td>
+</tr>
+<tr>
+<td><code>requirement_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>需求</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,criterion_id,requirement_id),
+FOREIGN KEY(revision_id,criterion_id) REFERENCES criteria(revision_id,criterion_id),
+FOREIGN KEY(revision_id,requirement_id) REFERENCES requirements(revision_id,requirement_id)
+</code></pre>
+</div></details><details class="subsection"><summary><h4>13 · <code>designs</code></h4><blockquote>
+<p><strong>用途：设计决策与领域设计。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>准确内容快照 UUID；不是 Markdown 版本号</td>
+</tr>
+<tr>
+<td><code>design_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>稳定 UUID</td>
+</tr>
+<tr>
+<td><code>domain</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>受设计域目录约束</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>设计问题或领域名称</td>
+</tr>
+<tr>
+<td><code>decision</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>采用方案</td>
+</tr>
+<tr>
+<td><code>rationale</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>选择依据</td>
+</tr>
+<tr>
+<td><code>alternatives</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>候选方案及取舍，简单需求可简写</td>
+</tr>
+<tr>
+<td><code>detail</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>详细设计文本</td>
+</tr>
+<tr>
+<td><code>ordinal</code></td>
+<td><code>INTEGER NOT NULL</code></td>
+<td>阅读顺序</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,design_id)
+</code></pre>
+</div></details><details class="subsection"><summary><h4>14 · <code>design_requirements</code></h4><blockquote>
+<p><strong>用途：设计对应需求。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>准确内容快照 UUID；不是 Markdown 版本号</td>
+</tr>
+<tr>
+<td><code>design_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>设计</td>
+</tr>
+<tr>
+<td><code>requirement_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>需求</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,design_id,requirement_id),
+FOREIGN KEY(revision_id,design_id) REFERENCES designs(revision_id,design_id),
+FOREIGN KEY(revision_id,requirement_id) REFERENCES requirements(revision_id,requirement_id)
+</code></pre>
+</div></details><details class="subsection"><summary><h4>15 · <code>tasks</code></h4><blockquote>
+<p><strong>用途：工作项定义。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>准确内容快照 UUID；不是 Markdown 版本号</td>
+</tr>
+<tr>
+<td><code>task_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>稳定 UUID</td>
+</tr>
+<tr>
+<td><code>target_phase</code></td>
+<td><code>TEXT NOT NULL CHECK(target_phase IN ('IMP','VFY','RLS'))</code></td>
+<td>任务目标阶段</td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td><code>TEXT NOT NULL CHECK(kind IN ('prepare','implement','verify','review','deliver'))</code></td>
+<td>工作性质</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>任务名称</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>处理范围</td>
+</tr>
+<tr>
+<td><code>completion_text</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>完成条件</td>
+</tr>
+<tr>
+<td><code>scope_paths_json</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>Schema校验的资源/相对路径数组</td>
+</tr>
+<tr>
+<td><code>ordinal</code></td>
+<td><code>INTEGER NOT NULL</code></td>
+<td>默认执行顺序</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,task_id)
+</code></pre>
+<p>实时状态由 steps 与结果推导，不改写已提交计划。</p>
+</div></details><details class="subsection"><summary><h4>16 · <code>task_designs</code></h4><blockquote>
+<p><strong>用途：任务实现设计。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>准确内容快照 UUID；不是 Markdown 版本号</td>
+</tr>
+<tr>
+<td><code>task_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>任务</td>
+</tr>
+<tr>
+<td><code>design_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>设计</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,task_id,design_id),
+FOREIGN KEY(revision_id,task_id) REFERENCES tasks(revision_id,task_id),
+FOREIGN KEY(revision_id,design_id) REFERENCES designs(revision_id,design_id)
+</code></pre>
+</div></details><details class="subsection"><summary><h4>17 · <code>task_criteria</code></h4><blockquote>
+<p><strong>用途：任务承接验收义务。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>准确内容快照 UUID；不是 Markdown 版本号</td>
+</tr>
+<tr>
+<td><code>task_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>任务</td>
+</tr>
+<tr>
+<td><code>criterion_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>验收条件</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,task_id,criterion_id),
+FOREIGN KEY(revision_id,task_id) REFERENCES tasks(revision_id,task_id),
+FOREIGN KEY(revision_id,criterion_id) REFERENCES criteria(revision_id,criterion_id)
+</code></pre>
+</div></details><details class="subsection"><summary><h4>18 · <code>task_dependencies</code></h4><blockquote>
+<p><strong>用途：真正的任务启动依赖。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>准确内容快照 UUID；不是 Markdown 版本号</td>
+</tr>
+<tr>
+<td><code>task_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>消费者</td>
+</tr>
+<tr>
+<td><code>predecessor_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>前驱</td>
+</tr>
+<tr>
+<td><code>reason</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>依赖理由</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,task_id,predecessor_id),
+CHECK(task_id&lt;&gt;predecessor_id),
+FOREIGN KEY(revision_id,task_id) REFERENCES tasks(revision_id,task_id),
+FOREIGN KEY(revision_id,predecessor_id) REFERENCES tasks(revision_id,task_id)
+</code></pre>
+<p>Runtime检查整个DAG与阶段方向。来源关系不进入本表。</p>
+</div></details><details class="subsection"><summary><h4>19 · <code>checks</code></h4><blockquote>
+<p><strong>用途：验证方法/前置探测定义。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>准确内容快照 UUID；不是 Markdown 版本号</td>
+</tr>
+<tr>
+<td><code>check_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>稳定 UUID</td>
+</tr>
+<tr>
+<td><code>task_id</code></td>
+<td><code>TEXT</code></td>
+<td>执行此方法的任务，可空</td>
+</tr>
+<tr>
+<td><code>purpose</code></td>
+<td><code>TEXT NOT NULL CHECK(purpose IN ('acceptance','precondition','convergence','release_readback'))</code></td>
+<td>检查用途</td>
+</tr>
+<tr>
+<td><code>method</code></td>
+<td><code>TEXT NOT NULL CHECK(method IN ('test','inspection','analysis','demonstration'))</code></td>
+<td>VFY方法</td>
+</tr>
+<tr>
+<td><code>executor</code></td>
+<td><code>TEXT NOT NULL CHECK(executor IN ('command','agent','human'))</code></td>
+<td>真实执行类型</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>要检查什么</td>
+</tr>
+<tr>
+<td><code>expected_result</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>判定规则</td>
+</tr>
+<tr>
+<td><code>argv_json</code></td>
+<td><code>TEXT</code></td>
+<td>命令参数数组；command时必填</td>
+</tr>
+<tr>
+<td><code>required</code></td>
+<td><code>INTEGER NOT NULL CHECK(required IN (0,1))</code></td>
+<td>是否为本次交付必须</td>
+</tr>
+<tr>
+<td><code>timeout_seconds</code></td>
+<td><code>INTEGER CHECK(timeout_seconds&gt;0)</code></td>
+<td>执行超时</td>
+</tr>
+<tr>
+<td><code>max_age_seconds</code></td>
+<td><code>INTEGER CHECK(max_age_seconds&gt;=0)</code></td>
+<td>可变环境观察的有效期</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,check_id),
+FOREIGN KEY(revision_id,task_id) REFERENCES tasks(revision_id,task_id),
+CHECK((executor='command' AND argv_json IS NOT NULL) OR (executor&lt;&gt;'command' AND argv_json IS NULL))
+</code></pre>
+</div></details><details class="subsection"><summary><h4>20 · <code>check_criteria</code></h4><blockquote>
+<p><strong>用途：验证方法覆盖验收。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>准确内容快照 UUID；不是 Markdown 版本号</td>
+</tr>
+<tr>
+<td><code>check_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>检查方法</td>
+</tr>
+<tr>
+<td><code>criterion_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>验收条件</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,check_id,criterion_id),
+FOREIGN KEY(revision_id,check_id) REFERENCES checks(revision_id,check_id),
+FOREIGN KEY(revision_id,criterion_id) REFERENCES criteria(revision_id,criterion_id)
+</code></pre>
+</div></details><details class="subsection"><summary><h4>21 · <code>preconditions</code></h4><blockquote>
+<p><strong>用途：在具体任务动作上检查的条件。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>准确内容快照 UUID；不是 Markdown 版本号</td>
+</tr>
+<tr>
+<td><code>condition_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>稳定 UUID</td>
+</tr>
+<tr>
+<td><code>consumer_task_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>条件生效的任务</td>
+</tr>
+<tr>
+<td><code>check_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>证明此条件的检查定义</td>
+</tr>
+<tr>
+<td><code>producer_task_id</code></td>
+<td><code>TEXT</code></td>
+<td>负责准备条件的任务，允许尚未完成</td>
+</tr>
+<tr>
+<td><code>enforce_at</code></td>
+<td><code>TEXT NOT NULL CHECK(enforce_at IN ('start','execute','complete'))</code></td>
+<td>生效时点</td>
+</tr>
+<tr>
+<td><code>reason</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>必要性</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,condition_id),
+FOREIGN KEY(revision_id,consumer_task_id) REFERENCES tasks(revision_id,task_id),
+FOREIGN KEY(revision_id,producer_task_id) REFERENCES tasks(revision_id,task_id),
+FOREIGN KEY(revision_id,check_id) REFERENCES checks(revision_id,check_id),
+CHECK(producer_task_id IS NULL OR producer_task_id&lt;&gt;consumer_task_id OR enforce_at='complete')
+</code></pre>
+<p>这里只表达检查型条件；权限由 authorizations 检查，不塞进 Required State 字符串。</p>
+</div></details><details class="subsection"><summary><h4>22 · <code>assets</code></h4><blockquote>
+<p><strong>用途：受管理文件对象。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>asset_id</code></td>
+<td><code>TEXT PRIMARY KEY</code></td>
+<td>资产 UUID</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>所属项目 UUID；隔离所有业务查询与写入</td>
+</tr>
+<tr>
+<td><code>sha256</code></td>
+<td><code>TEXT NOT NULL CHECK(length(sha256)=64)</code></td>
+<td>内容摘要，小写十六进制由Runtime校验</td>
+</tr>
+<tr>
+<td><code>size_bytes</code></td>
+<td><code>INTEGER NOT NULL CHECK(size_bytes&gt;=0)</code></td>
+<td>字节数</td>
+</tr>
+<tr>
+<td><code>media_type</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>媒体类型</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>UTC RFC3339，固定毫秒精度</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">UNIQUE(project_id,asset_id),
+UNIQUE(project_id,sha256),
+FOREIGN KEY(project_id) REFERENCES projects(project_id)
+</code></pre>
+<p>物理位置由摘要确定 assets/ab/cd/&lt;完整摘要&gt;。</p>
+</div></details><details class="subsection"><summary><h4>23 · <code>runs</code></h4><blockquote>
+<p><strong>用途：一次Skill链或阶段运行。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>run_id</code></td>
+<td><code>TEXT PRIMARY KEY</code></td>
+<td>入口即分配</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>所属项目 UUID；隔离所有业务查询与写入</td>
+</tr>
+<tr>
+<td><code>change_id</code></td>
+<td><code>TEXT</code></td>
+<td>输入无效尚未定位需求时可空</td>
+</tr>
+<tr>
+<td><code>workspace_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>工作区</td>
+</tr>
+<tr>
+<td><code>input_revision_id</code></td>
+<td><code>TEXT</code></td>
+<td>入口采用快照，REQ首次可空</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td><code>TEXT NOT NULL CHECK(status IN ('created','running','blocked','completed','failed','interrupted','cancelled'))</code></td>
+<td>运行状态</td>
+</tr>
+<tr>
+<td><code>actor_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>实际执行身份</td>
+</tr>
+<tr>
+<td><code>runtime_version</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>运行器构建身份</td>
+</tr>
+<tr>
+<td><code>contract_version</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>命令/领域合约版本</td>
+</tr>
+<tr>
+<td><code>skill_version</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>Skill 内容版本</td>
+</tr>
+<tr>
+<td><code>review_mode</code></td>
+<td><code>TEXT NOT NULL CHECK(review_mode IN ('auto','assisted'))</code></td>
+<td>自动或人工矫正模式</td>
+</tr>
+<tr>
+<td><code>error_code</code></td>
+<td><code>TEXT</code></td>
+<td>错误摘要</td>
+</tr>
+<tr>
+<td><code>error_message</code></td>
+<td><code>TEXT</code></td>
+<td>简要诊断</td>
+</tr>
+<tr>
+<td><code>started_at</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>起始时间</td>
+</tr>
+<tr>
+<td><code>finished_at</code></td>
+<td><code>TEXT</code></td>
+<td>终止时间</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">UNIQUE(project_id,run_id),
+UNIQUE(change_id,run_id),
+FOREIGN KEY(project_id,workspace_id) REFERENCES workspaces(project_id,workspace_id),
+FOREIGN KEY(project_id,change_id) REFERENCES changes(project_id,change_id),
+FOREIGN KEY(change_id,input_revision_id) REFERENCES revisions(change_id,revision_id)
+</code></pre>
+</div></details><details class="subsection"><summary><h4>24 · <code>code_snapshots</code></h4><blockquote>
+<p><strong>用途：真实代码及环境观察。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>snapshot_id</code></td>
+<td><code>TEXT PRIMARY KEY</code></td>
+<td>UUID</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>所属项目 UUID；隔离所有业务查询与写入</td>
+</tr>
+<tr>
+<td><code>run_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>捕获它的运行</td>
+</tr>
+<tr>
+<td><code>resource_key</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>已登记代码资源</td>
+</tr>
+<tr>
+<td><code>head_commit</code></td>
+<td><code>TEXT</code></td>
+<td>实际HEAD，不要求等于需求初始基线</td>
+</tr>
+<tr>
+<td><code>tree_id</code></td>
+<td><code>TEXT</code></td>
+<td>Git tree</td>
+</tr>
+<tr>
+<td><code>patch_asset_id</code></td>
+<td><code>TEXT</code></td>
+<td>已跟踪文件差异快照</td>
+</tr>
+<tr>
+<td><code>untracked_json</code></td>
+<td><code>TEXT NOT NULL DEFAULT '[]'</code></td>
+<td>纳入范围的未跟踪文件相对路径与asset_id数组</td>
+</tr>
+<tr>
+<td><code>environment_digest</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>脱敏环境/工具/依赖绑定摘要</td>
+</tr>
+<tr>
+<td><code>digest</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>完整执行对象指纹</td>
+</tr>
+<tr>
+<td><code>captured_at</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>捕获时间</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">UNIQUE(project_id,snapshot_id),
+FOREIGN KEY(project_id,run_id) REFERENCES runs(project_id,run_id),
+FOREIGN KEY(project_id,patch_asset_id) REFERENCES assets(project_id,asset_id)
+</code></pre>
+</div></details><details class="subsection"><summary><h4>25 · <code>steps</code></h4><blockquote>
+<p><strong>用途：阶段、步骤和任务的执行尝试。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>step_id</code></td>
+<td><code>TEXT PRIMARY KEY</code></td>
+<td>UUID</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>所属项目 UUID；隔离所有业务查询与写入</td>
+</tr>
+<tr>
+<td><code>change_id</code></td>
+<td><code>TEXT</code></td>
+<td>需求阶段必填；INIT/CTX为空</td>
+</tr>
+<tr>
+<td><code>run_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>所属运行</td>
+</tr>
+<tr>
+<td><code>phase</code></td>
+<td><code>TEXT NOT NULL CHECK(phase IN ('INIT','CTX','REQ','DSN','PLN','IMP','VFY','RLS'))</code></td>
+<td>INIT/CTX不伪造需求；正式六阶段绑定change</td>
+</tr>
+<tr>
+<td><code>step_key</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>固定步骤键或task:<uuid></uuid></td>
+</tr>
+<tr>
+<td><code>attempt</code></td>
+<td><code>INTEGER NOT NULL CHECK(attempt&gt;0)</code></td>
+<td>本运行该步骤的第几次尝试</td>
+</tr>
+<tr>
+<td><code>input_revision_id</code></td>
+<td><code>TEXT</code></td>
+<td>准确输入</td>
+</tr>
+<tr>
+<td><code>output_revision_id</code></td>
+<td><code>TEXT</code></td>
+<td>本步骤新提交内容快照</td>
+</tr>
+<tr>
+<td><code>task_id</code></td>
+<td><code>TEXT</code></td>
+<td>关联工作项</td>
+</tr>
+<tr>
+<td><code>snapshot_id</code></td>
+<td><code>TEXT</code></td>
+<td>代码对象快照</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td><code>TEXT NOT NULL CHECK(status IN ('running','completed','blocked','failed','interrupted','cancelled'))</code></td>
+<td>执行状态</td>
+</tr>
+<tr>
+<td><code>outcome</code></td>
+<td><code>TEXT CHECK(outcome IN ('pass','fail','not_applicable','unknown'))</code></td>
+<td>完成不等于通过</td>
+</tr>
+<tr>
+<td><code>started_at</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>开始</td>
+</tr>
+<tr>
+<td><code>finished_at</code></td>
+<td><code>TEXT</code></td>
+<td>结束</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">UNIQUE(run_id,step_key,attempt),
+UNIQUE(project_id,step_id),
+FOREIGN KEY(project_id,run_id) REFERENCES runs(project_id,run_id),
+CHECK((phase IN ('INIT','CTX') AND change_id IS NULL) OR (phase NOT IN ('INIT','CTX') AND change_id IS NOT NULL)),
+FOREIGN KEY(project_id,change_id) REFERENCES changes(project_id,change_id),
+FOREIGN KEY(change_id,run_id) REFERENCES runs(change_id,run_id),
+FOREIGN KEY(change_id,input_revision_id) REFERENCES revisions(change_id,revision_id),
+FOREIGN KEY(change_id,output_revision_id) REFERENCES revisions(change_id,revision_id),
+FOREIGN KEY(input_revision_id,task_id) REFERENCES tasks(revision_id,task_id),
+FOREIGN KEY(project_id,snapshot_id) REFERENCES code_snapshots(project_id,snapshot_id)
+</code></pre>
+</div></details><details class="subsection"><summary><h4>26 · <code>check_results</code></h4><blockquote>
+<p><strong>用途：验证/观察结果与原始证据。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>result_id</code></td>
+<td><code>TEXT PRIMARY KEY</code></td>
+<td>UUID</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>所属项目 UUID；隔离所有业务查询与写入</td>
+</tr>
+<tr>
+<td><code>change_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>工作包</td>
+</tr>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>采用的检查定义快照</td>
+</tr>
+<tr>
+<td><code>check_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>具体检查</td>
+</tr>
+<tr>
+<td><code>step_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>执行步骤</td>
+</tr>
+<tr>
+<td><code>snapshot_id</code></td>
+<td><code>TEXT</code></td>
+<td>被验证代码快照；纯规格检查可空</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td><code>TEXT NOT NULL CHECK(status IN ('pass','fail','blocked','unknown'))</code></td>
+<td>实际结果</td>
+</tr>
+<tr>
+<td><code>evidence_asset_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>原始输出或完整评审记录</td>
+</tr>
+<tr>
+<td><code>source_kind</code></td>
+<td><code>TEXT NOT NULL CHECK(source_kind IN ('command','agent','human','reused'))</code></td>
+<td>结果来源</td>
+</tr>
+<tr>
+<td><code>reused_from_id</code></td>
+<td><code>TEXT</code></td>
+<td>可复用结果来源；保留原观察时间</td>
+</tr>
+<tr>
+<td><code>observed_at</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>观察时间</td>
+</tr>
+<tr>
+<td><code>expires_at</code></td>
+<td><code>TEXT</code></td>
+<td>环境结果失效时间</td>
+</tr>
+<tr>
+<td><code>summary</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>结论摘要</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">UNIQUE(project_id,result_id),
+FOREIGN KEY(project_id,change_id,revision_id) REFERENCES revisions(project_id,change_id,revision_id),
+FOREIGN KEY(revision_id,check_id) REFERENCES checks(revision_id,check_id),
+FOREIGN KEY(project_id,step_id) REFERENCES steps(project_id,step_id),
+FOREIGN KEY(project_id,snapshot_id) REFERENCES code_snapshots(project_id,snapshot_id),
+FOREIGN KEY(project_id,evidence_asset_id) REFERENCES assets(project_id,asset_id),
+FOREIGN KEY(project_id,reused_from_id) REFERENCES check_results(project_id,result_id)
+</code></pre>
+<p>Runtime进一步确保步骤、对象、Check定义、观察环境一致；命令结果只能由执行收集器写入。</p>
+</div></details><details class="subsection"><summary><h4>27 · <code>findings</code></h4><blockquote>
+<p><strong>用途：缺口及返工跟踪。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>finding_id</code></td>
+<td><code>TEXT PRIMARY KEY</code></td>
+<td>UUID</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>所属项目 UUID；隔离所有业务查询与写入</td>
+</tr>
+<tr>
+<td><code>change_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>工作包</td>
+</tr>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>发现时准确内容快照</td>
+</tr>
+<tr>
+<td><code>result_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>发现证据</td>
+</tr>
+<tr>
+<td><code>criterion_id</code></td>
+<td><code>TEXT</code></td>
+<td>相关验收</td>
+</tr>
+<tr>
+<td><code>design_id</code></td>
+<td><code>TEXT</code></td>
+<td>相关设计</td>
+</tr>
+<tr>
+<td><code>task_id</code></td>
+<td><code>TEXT</code></td>
+<td>相关任务</td>
+</tr>
+<tr>
+<td><code>return_phase</code></td>
+<td><code>TEXT NOT NULL CHECK(return_phase IN ('REQ','DSN','PLN','IMP','VFY','RLS'))</code></td>
+<td>最早需要修改的阶段</td>
+</tr>
+<tr>
+<td><code>kind</code></td>
+<td><code>TEXT NOT NULL CHECK(kind IN ('missing','partial','contradicts','unrequested','environment'))</code></td>
+<td>缺口类型</td>
+</tr>
+<tr>
+<td><code>severity</code></td>
+<td><code>TEXT NOT NULL CHECK(severity IN ('blocking','advisory'))</code></td>
+<td>是否阻止收口</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td><code>TEXT NOT NULL CHECK(status IN ('open','addressed','resolved','rejected'))</code></td>
+<td>只有复验解决才resolved</td>
+</tr>
+<tr>
+<td><code>fingerprint</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>规范化来源+问题类型+对象指纹</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>实际问题</td>
+</tr>
+<tr>
+<td><code>resolution_result_id</code></td>
+<td><code>TEXT</code></td>
+<td>关闭依据</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">UNIQUE(change_id,fingerprint),
+FOREIGN KEY(project_id,change_id,revision_id) REFERENCES revisions(project_id,change_id,revision_id),
+FOREIGN KEY(project_id,result_id) REFERENCES check_results(project_id,result_id),
+FOREIGN KEY(revision_id,criterion_id) REFERENCES criteria(revision_id,criterion_id),
+FOREIGN KEY(revision_id,design_id) REFERENCES designs(revision_id,design_id),
+FOREIGN KEY(revision_id,task_id) REFERENCES tasks(revision_id,task_id),
+FOREIGN KEY(project_id,resolution_result_id) REFERENCES check_results(project_id,result_id),
+CHECK(status NOT IN ('resolved','rejected') OR resolution_result_id IS NOT NULL)
+</code></pre>
+</div></details><details class="subsection"><summary><h4>28 · <code>deliveries</code></h4><blockquote>
+<p><strong>用途：交付意图、效果与回读。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>delivery_id</code></td>
+<td><code>TEXT PRIMARY KEY</code></td>
+<td>UUID</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>所属项目 UUID；隔离所有业务查询与写入</td>
+</tr>
+<tr>
+<td><code>change_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>工作包</td>
+</tr>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>交付采用内容快照</td>
+</tr>
+<tr>
+<td><code>step_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>RLS执行</td>
+</tr>
+<tr>
+<td><code>snapshot_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>准确产品结果</td>
+</tr>
+<tr>
+<td><code>vfy_result_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>收敛与验收结论</td>
+</tr>
+<tr>
+<td><code>mode</code></td>
+<td><code>TEXT NOT NULL CHECK(mode IN ('local','git','deployment'))</code></td>
+<td>交付方式</td>
+</tr>
+<tr>
+<td><code>target</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>约定目标</td>
+</tr>
+<tr>
+<td><code>effect_key</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>外部/本地效果幂等键</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td><code>TEXT NOT NULL CHECK(status IN ('prepared','succeeded','failed','unknown','cancelled'))</code></td>
+<td>实际效果状态</td>
+</tr>
+<tr>
+<td><code>readback_result_id</code></td>
+<td><code>TEXT</code></td>
+<td>目标确认</td>
+</tr>
+<tr>
+<td><code>summary</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>交付说明</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">UNIQUE(project_id,delivery_id),
+UNIQUE(project_id,effect_key),
+FOREIGN KEY(project_id,change_id,revision_id) REFERENCES revisions(project_id,change_id,revision_id),
+FOREIGN KEY(project_id,step_id) REFERENCES steps(project_id,step_id),
+FOREIGN KEY(project_id,snapshot_id) REFERENCES code_snapshots(project_id,snapshot_id),
+FOREIGN KEY(project_id,vfy_result_id) REFERENCES check_results(project_id,result_id),
+FOREIGN KEY(project_id,readback_result_id) REFERENCES check_results(project_id,result_id)
+</code></pre>
+</div></details><details class="subsection"><summary><h4>29 · <code>asset_links</code></h4><blockquote>
+<p><strong>用途：附件属于哪个内容或结果。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>project_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>所属项目 UUID；隔离所有业务查询与写入</td>
+</tr>
+<tr>
+<td><code>link_id</code></td>
+<td><code>TEXT PRIMARY KEY</code></td>
+<td>关联UUID</td>
+</tr>
+<tr>
+<td><code>asset_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>文件对象</td>
+</tr>
+<tr>
+<td><code>revision_id</code></td>
+<td><code>TEXT</code></td>
+<td>内容快照</td>
+</tr>
+<tr>
+<td><code>source_id</code></td>
+<td><code>TEXT</code></td>
+<td>关联原始输入</td>
+</tr>
+<tr>
+<td><code>design_id</code></td>
+<td><code>TEXT</code></td>
+<td>关联设计</td>
+</tr>
+<tr>
+<td><code>result_id</code></td>
+<td><code>TEXT</code></td>
+<td>关联检查结果</td>
+</tr>
+<tr>
+<td><code>delivery_id</code></td>
+<td><code>TEXT</code></td>
+<td>关联交付</td>
+</tr>
+<tr>
+<td><code>original_name</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>阅读时显示的原始文件名</td>
+</tr>
+<tr>
+<td><code>purpose</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>用途</td>
+</tr>
+<tr>
+<td><code>ordinal</code></td>
+<td><code>INTEGER NOT NULL DEFAULT 0</code></td>
+<td>顺序</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY(project_id,asset_id) REFERENCES assets(project_id,asset_id),
+FOREIGN KEY(project_id,revision_id) REFERENCES revisions(project_id,revision_id),
+FOREIGN KEY(revision_id,source_id) REFERENCES sources(revision_id,source_id),
+FOREIGN KEY(revision_id,design_id) REFERENCES designs(revision_id,design_id),
+FOREIGN KEY(project_id,result_id) REFERENCES check_results(project_id,result_id),
+FOREIGN KEY(project_id,delivery_id) REFERENCES deliveries(project_id,delivery_id),
+CHECK((source_id IS NOT NULL)+(design_id IS NOT NULL)+(result_id IS NOT NULL)+(delivery_id IS NOT NULL)=1),
+CHECK((source_id IS NULL AND design_id IS NULL) OR revision_id IS NOT NULL)
+</code></pre>
+<p>四类显式可空FK+互斥检查，避免owner_type+owner_id悬空多态引用；提交内容附件同样不可改。</p>
+</div></details><details class="subsection"><summary><h4>30 · <code>authorizations</code></h4><blockquote>
+<p><strong>用途：一次请求授予的操作范围。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>authorization_id</code></td>
+<td><code>TEXT PRIMARY KEY</code></td>
+<td>UUID</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>所属项目 UUID；隔离所有业务查询与写入</td>
+</tr>
+<tr>
+<td><code>change_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>需求范围</td>
+</tr>
+<tr>
+<td><code>actor_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>获准执行主体</td>
+</tr>
+<tr>
+<td><code>action</code></td>
+<td><code>TEXT NOT NULL CHECK(action IN ('edit_local','run_check','package_local','git_commit','git_push','create_pr','merge','deploy'))</code></td>
+<td>准确能力</td>
+</tr>
+<tr>
+<td><code>target</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>资源/目录/远端目标</td>
+</tr>
+<tr>
+<td><code>issued_by</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>真实授权来源，不能冒称人工评审</td>
+</tr>
+<tr>
+<td><code>basis_text</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>本次授权原文或固定组织政策</td>
+</tr>
+<tr>
+<td><code>issued_at</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>时间</td>
+</tr>
+<tr>
+<td><code>expires_at</code></td>
+<td><code>TEXT</code></td>
+<td>到期</td>
+</tr>
+<tr>
+<td><code>revoked_at</code></td>
+<td><code>TEXT</code></td>
+<td>撤销</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY(project_id,change_id) REFERENCES changes(project_id,change_id)
+</code></pre>
+<p>本地可信操作者下的工作流权限记录，不声称抵抗任意文件写权限。导入不会激活来源库授权。</p>
+</div></details><details class="subsection"><summary><h4>31 · <code>operations</code></h4><blockquote>
+<p><strong>用途：命令幂等回执与精简审计。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>operation_id</code></td>
+<td><code>TEXT PRIMARY KEY</code></td>
+<td>请求UUID/幂等键</td>
+</tr>
+<tr>
+<td><code>project_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>所属项目 UUID；隔离所有业务查询与写入</td>
+</tr>
+<tr>
+<td><code>run_id</code></td>
+<td><code>TEXT</code></td>
+<td>关联运行</td>
+</tr>
+<tr>
+<td><code>command</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>稳定领域命令</td>
+</tr>
+<tr>
+<td><code>request_digest</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>规范化请求摘要</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td><code>TEXT NOT NULL CHECK(status IN ('succeeded','rejected','unknown'))</code></td>
+<td>本次请求结果</td>
+</tr>
+<tr>
+<td><code>response_json</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>版本化响应序列化</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>UTC RFC3339，固定毫秒精度</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<pre><code class="language-sql">FOREIGN KEY(project_id) REFERENCES projects(project_id),
+FOREIGN KEY(project_id,run_id) REFERENCES runs(project_id,run_id)
+</code></pre>
+<p>成功业务写入与回执同事务；失败回执在回滚之后单独记录。</p>
+</div></details><details class="subsection"><summary><h4>32 · <code>imports</code></h4><blockquote>
+<p><strong>用途：本地副本交回记录。</strong></p>
+</blockquote></summary><div class="subsection-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>字段</th>
+<th>SQL 类型／约束</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>import_id</code></td>
+<td><code>TEXT PRIMARY KEY</code></td>
+<td>UUID</td>
+</tr>
+<tr>
+<td><code>source_store_id</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>来源库实例</td>
+</tr>
+<tr>
+<td><code>bundle_digest</code></td>
+<td><code>TEXT NOT NULL UNIQUE</code></td>
+<td>逻辑归档内容摘要</td>
+</tr>
+<tr>
+<td><code>status</code></td>
+<td><code>TEXT NOT NULL CHECK(status IN ('imported','conflict','rejected'))</code></td>
+<td>交回结果</td>
+</tr>
+<tr>
+<td><code>summary</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>新增、重合、分歧说明</td>
+</tr>
+<tr>
+<td><code>created_at</code></td>
+<td><code>TEXT NOT NULL</code></td>
+<td>UTC RFC3339，固定毫秒精度</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>表级约束／关联：</strong></p>
+<p>由主键及字段约束定义。</p>
+<p>已完成导入重复执行幂等；以需求快照为合并边界。</p>
+</div></details><h3>A.2 服务层统一校验</h3>
+<blockquote>
+<p><strong>本节速读：外键只能证明对象存在。是否语义匹配、条件是否满足、检查是否过期，由下面这些有限且共享的规则决定。</strong></p>
+</blockquote>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>规则ID</th>
+<th>服务规则</th>
+<th>执行时点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>D-01</td>
+<td>校验UUID、UTC时间、媒体类型、摘要文本和JSON值对象；禁止未知控制字段</td>
+<td>每次命令输入</td>
+</tr>
+<tr>
+<td>D-02</td>
+<td>需求存在来源和验收；设计/任务/方法覆盖当前必要范围</td>
+<td>对应phase.complete</td>
+</tr>
+<tr>
+<td>D-03</td>
+<td>任务依赖DAG、阶段方向正确，生产者不会等待自己的未来结果</td>
+<td>PLN提交和完成</td>
+</tr>
+<tr>
+<td>D-04</td>
+<td>phase、step、task、check、revision、change、project一致</td>
+<td>所有操作和结果采集</td>
+</tr>
+<tr>
+<td>D-05</td>
+<td>命令check结果由收集器生成；AI审阅有独立来源类型</td>
+<td>结果写入</td>
+</tr>
+<tr>
+<td>D-06</td>
+<td>检查对象指纹、环境和时间有效；旧PASS不覆盖新代码</td>
+<td>执行、复用和RLS前</td>
+</tr>
+<tr>
+<td>D-07</td>
+<td>已提交快照内容及其附件关联不可变；新建子快照继承稳定item ID</td>
+<td>内容更新</td>
+</tr>
+<tr>
+<td>D-08</td>
+<td>提交草稿前计算规范化内容摘要；active指针只采用已提交快照</td>
+<td>phase.complete</td>
+</tr>
+<tr>
+<td>D-09</td>
+<td>运行幂等、generation与工作区执行令牌均有效</td>
+<td>所有写入/效果操作</td>
+</tr>
+<tr>
+<td>D-10</td>
+<td>授权匹配当前actor、change、target与动作；导入不激活来源授权</td>
+<td>产生副作用前</td>
+</tr>
+<tr>
+<td>D-11</td>
+<td>附件路径为受控存储键；原始字节、摘要、长度和闭包匹配</td>
+<td>导入、导出、首次引用</td>
+</tr>
+<tr>
+<td>D-12</td>
+<td>交回保持项目/需求身份，快进或显式分歧，重复包幂等</td>
+<td>workspace.collect</td>
+</tr>
+<tr>
+<td>D-13</td>
+<td>收敛需完整覆盖、必要结果合格、blocking finding复验关闭</td>
+<td>VFY收口</td>
+</tr>
+<tr>
+<td>D-14</td>
+<td>delivery的VFY结果与实际交付snapshot一致；unknown先reconcile</td>
+<td>RLS执行与恢复</td>
+</tr>
+</tbody>
+</table></div>
+<p>SQL模型验证只覆盖这些规则中的数据库可表达子集。部署首版时外部写入口统一经过服务校验；拥有任意本地文件写权限者仍可绕过进程，数据库不是强身份安全沙箱。</p>
+</div></details><details class="chapter"><summary><h2 id="chapter-15">B｜新验收用例集</h2><blockquote class="chapter-brief">
+<p><strong>附录速读：以下46条是新系统应实现的验收设计，当前均未运行。另有28条SQL模型检查已经执行，其范围独立列于model-validation.json。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<p>测试分为确定性领域/契约、沙箱工具和真实Agent/项目三种。代码、环境、模型与Runtime版本必须登记；旧PASS不能替代新HEAD结果。成功路径与负例都走正式入口。</p>
+<h3>自动主线与纠偏</h3>
+<blockquote>
+<p><strong>本节速读：先证明不用人工逐阶段确认也能完成约定的本地交付，再验证反馈不改变原始验收。</strong></p>
+</blockquote>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>准备</th>
+<th>动作</th>
+<th>预期</th>
+<th>验证证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V2-001</td>
+<td>已初始化且需求清晰，授权本地编辑/检查/打包</td>
+<td>一次指令依次运行六阶段</td>
+<td>每阶段有有效输出，VFY收敛，RLS本地交付完成</td>
+<td>DB六阶段steps；实际代码/检查证据；交付回读</td>
+</tr>
+<tr>
+<td>V2-002</td>
+<td>同一需求以逐Skill方式运行</td>
+<td>分别调用六个入口</td>
+<td>采用同一change_id和已提交输入；与一键路径语义相同</td>
+<td>每次绑定和最终覆盖查询</td>
+</tr>
+<tr>
+<td>V2-003</td>
+<td>IMP缺少一项已定义功能</td>
+<td>VFY发现缺口后继续</td>
+<td>finding→补任务→IMP→复验关闭；不要求人工确认文件</td>
+<td>finding状态链和复验result_id</td>
+</tr>
+<tr>
+<td>V2-004</td>
+<td>实现违反明确设计</td>
+<td>VFY提出contradicts</td>
+<td>回DSN或IMP最早受影响处，不重建无关范围</td>
+<td>变更前后对象fingerprint与步骤记录</td>
+</tr>
+<tr>
+<td>V2-005</td>
+<td>需求目标互相冲突</td>
+<td>自动运行到REQ澄清</td>
+<td>needs_input指出具体冲突；已有原始资料保留</td>
+<td>原始输入、错误路径与恢复入口</td>
+</tr>
+<tr>
+<td>V2-006</td>
+<td>简单无歧义需求没有人工review</td>
+<td>完成阶段</td>
+<td>review_mode=auto；不出现伪造人工或独立审阅签名</td>
+<td>run actor与审阅证据类型</td>
+</tr>
+<tr>
+<td>V2-007</td>
+<td>已声明必要测试一直失败</td>
+<td>达到5轮或2轮无进展</td>
+<td>停为blocked/failed并保留现场，不说Converged</td>
+<td>预算、finding、每次尝试输出</td>
+</tr>
+<tr>
+<td>V2-008</td>
+<td>仅需验证现有系统的需求</td>
+<td>执行所有六阶段</td>
+<td>DSN/PLN记录方法与验证计划，IMP可无产品变更但有真实处置；RLS按约定本地报告交付</td>
+<td>无伪造代码变更；验证结论与交付mode</td>
+</tr>
+</tbody>
+</table></div>
+<h3>依赖、覆盖与历史反例</h3>
+<blockquote>
+<p><strong>本节速读：将当前两条失败需求转为领域反例，而不是保留旧解析器的特殊输入格式。</strong></p>
+</blockquote>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>准备</th>
+<th>动作</th>
+<th>预期</th>
+<th>验证证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V2-009</td>
+<td>用户把required_state写成复合自然语言</td>
+<td>提交控制字段</td>
+<td>在生产端拒绝未知字段/类型；不保存为合法依赖</td>
+<td>命令错误路径；数据库没有坏关系</td>
+</tr>
+<tr>
+<td>V2-010</td>
+<td>需求引用原型SRC/EVD背景材料</td>
+<td>建立来源与设计依据</td>
+<td>来源可读取但不生成启动阻塞边</td>
+<td>sources/asset_links与task_dependencies对照</td>
+</tr>
+<tr>
+<td>V2-011</td>
+<td>准备任务负责隔离数据库</td>
+<td>准备→六接口验证</td>
+<td>准备可启动；真库执行只在实际环境probe通过后开始</td>
+<td>生产者/消费者与check_results</td>
+</tr>
+<tr>
+<td>V2-012</td>
+<td>同一任务把未来输出设为自己的启动前置</td>
+<td>提交PLN</td>
+<td>被拒绝并定位condition；完成时自检允许</td>
+<td>提交拒绝/允许的对照</td>
+</tr>
+<tr>
+<td>V2-013</td>
+<td>九个验收目标跨多个设计项</td>
+<td>生成计划和检查</td>
+<td>九项全部可查询且有任务/方法覆盖，不依赖正文成员遍历</td>
+<td>SQL集合比较与完整证据矩阵</td>
+</tr>
+<tr>
+<td>V2-014</td>
+<td>A依赖B，B依赖C，C依赖A</td>
+<td>提交计划</td>
+<td>DAG检查失败并给出环，不只检查直接自依赖</td>
+<td>结构错误及无部分提交</td>
+</tr>
+<tr>
+<td>V2-015</td>
+<td>IMP任务依赖未来RLS结果</td>
+<td>完成PLN</td>
+<td>指出不合法阶段依赖；不等到IMP才失败</td>
+<td>PLN拒绝证据</td>
+</tr>
+<tr>
+<td>V2-016</td>
+<td>准备任务结束但probe失败</td>
+<td>执行消费者测试任务</td>
+<td>仍blocked；不能以task completed代替环境pass</td>
+<td>任务状态与具体条件结果</td>
+</tr>
+</tbody>
+</table></div>
+<h3>工作区、复制与基线变化</h3>
+<blockquote>
+<p><strong>本节速读：同样支持直接切分支与独立worktree，并检验交回不会覆盖目标库。</strong></p>
+</blockquote>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>准备</th>
+<th>动作</th>
+<th>预期</th>
+<th>验证证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V2-017</td>
+<td>同一工作区有需求A/B，.sdlc不入库</td>
+<td>切换分支后选择B</td>
+<td>使用B；A历史仍在；不按最新时间误选</td>
+<td>绑定回执及各需求状态</td>
+</tr>
+<tr>
+<td>V2-018</td>
+<td>新worktree无.sdlc，唯一来源有效</td>
+<td>init默认复制</td>
+<td>获得一致数据与附件，新workspace/instance，旧身份保留</td>
+<td>复制manifest及UUID对照</td>
+</tr>
+<tr>
+<td>V2-019</td>
+<td>新worktree有两个可能来源</td>
+<td>未指定source初始化</td>
+<td>给出可选来源并等待决定，不猜其中一个</td>
+<td>候选列表且无错写</td>
+</tr>
+<tr>
+<td>V2-020</td>
+<td>需求基线之后合入main无关文件</td>
+<td>继续实施</td>
+<td>不因HEAD变化拒绝；保留无关设计，最终对象准确</td>
+<td>代码snapshot、影响分析、最终VFY</td>
+</tr>
+<tr>
+<td>V2-021</td>
+<td>main合入修改公共库/构建配置</td>
+<td>继续验证</td>
+<td>重新运行受影响方法；不能直接复用旧PASS</td>
+<td>新旧check/result/snapshot关联</td>
+</tr>
+<tr>
+<td>V2-022</td>
+<td>worktree完成独立需求，主库有其他新需求</td>
+<td>collect交回</td>
+<td>新增本需求并保留目标其他数据</td>
+<td>导入前后对象集合与归档</td>
+</tr>
+<tr>
+<td>V2-023</td>
+<td>同一change的两份库分别修改不同方案</td>
+<td>collect交回</td>
+<td>保留两个head历史，明确conflict，目标active不变</td>
+<td>冲突记录及双侧快照</td>
+</tr>
+<tr>
+<td>V2-024</td>
+<td>同一归档已经导入成功</td>
+<td>再次collect</td>
+<td>幂等，记录数量和业务身份不重复</td>
+<td>bundle_digest回执及SQL计数</td>
+</tr>
+</tbody>
+</table></div>
+<h3>数据、日志与崩溃</h3>
+<blockquote>
+<p><strong>本节速读：重点检查正式工件创建前的失败、数据库与文件之间的一致性，以及现场可移交。</strong></p>
+</blockquote>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>准备</th>
+<th>动作</th>
+<th>预期</th>
+<th>验证证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V2-025</td>
+<td>IMP前置引用非法</td>
+<td>Skill入口失败</td>
+<td>即使没有IMP输出也有run、字段错误、输入绑定和恢复指引</td>
+<td>runs目录和DB摘要</td>
+</tr>
+<tr>
+<td>V2-026</td>
+<td>数据库不存在/损坏</td>
+<td>INIT或打开Store失败</td>
+<td>bootstrap日志可读；不假装新建成功或覆盖旧库</td>
+<td>原库字节、错误日志</td>
+</tr>
+<tr>
+<td>V2-027</td>
+<td>命令输出超限或含secret</td>
+<td>执行检查</td>
+<td>按预算记录截断信息并脱敏；日志不泄露秘密</td>
+<td>日志审查、limit事件、结果真实性</td>
+</tr>
+<tr>
+<td>V2-028</td>
+<td>资产写完、DB未提交时崩溃</td>
+<td>恢复/重试导入</td>
+<td>无已提交悬空引用；孤立资产可识别，重试可完成</td>
+<td>文件清单与DB闭包</td>
+</tr>
+<tr>
+<td>V2-029</td>
+<td>已提交内容和设计截图</td>
+<td>修改原行或附件关联</td>
+<td>拒绝；以子快照表达修改，旧结果可读</td>
+<td>SQL负例与新版本链</td>
+</tr>
+<tr>
+<td>V2-030</td>
+<td>一批新对象最后一条关系非法</td>
+<td>提交批次</td>
+<td>整批回滚；错误回执/日志独立保留</td>
+<td>前后数据集合、回执</td>
+</tr>
+<tr>
+<td>V2-031</td>
+<td>运行中进程被终止</td>
+<td>重新进入同一需求</td>
+<td>旧attempt保留，确认旧工具结束后新attempt接续</td>
+<td>令牌、实际进程/工具状态和steps</td>
+</tr>
+<tr>
+<td>V2-032</td>
+<td>只拿到导出的.sdlc，原路径不存在</td>
+<td>离线阅读/诊断</td>
+<td>看到当前进度、失败、必要附件和代码基线；缺失外部环境明确列出</td>
+<td>离线HTML、导出闭包验证</td>
+</tr>
+</tbody>
+</table></div>
+<h3>接口、权限与效果</h3>
+<blockquote>
+<p><strong>本节速读：多宿主走同一契约，自动模式只在已授权范围内执行，未知副作用先回查。</strong></p>
+</blockquote>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>准备</th>
+<th>动作</th>
+<th>预期</th>
+<th>验证证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V2-033</td>
+<td>同一operation_id与相同请求</td>
+<td>重复写入</td>
+<td>返回原结果，身份和内容不重复</td>
+<td>operations与业务表对照</td>
+</tr>
+<tr>
+<td>V2-034</td>
+<td>同一operation_id改了payload</td>
+<td>提交</td>
+<td>conflict；不把新内容当旧请求成功</td>
+<td>请求摘要与错误码</td>
+</tr>
+<tr>
+<td>V2-035</td>
+<td>两个写者读取相同generation</td>
+<td>先后更新</td>
+<td>第一成功；第二冲突，不能覆盖</td>
+<td>generation与最终内容</td>
+</tr>
+<tr>
+<td>V2-036</td>
+<td>AI声称测试pass但没有实际输出</td>
+<td>record_review或伪造command结果</td>
+<td>只能记录AI审阅；必要Test仍未满足</td>
+<td>source_kind与check结果查询</td>
+</tr>
+<tr>
+<td>V2-037</td>
+<td>auto运行只授权本地</td>
+<td>请求push/merge/deploy</td>
+<td>在对应动作要求准确授权；其他本地流程可保留</td>
+<td>authorizations匹配与无远端效果</td>
+</tr>
+<tr>
+<td>V2-038</td>
+<td>部署命令响应丢失，目标可能已改变</td>
+<td>重试RLS</td>
+<td>unknown→reconcile先回查；不盲目重复部署</td>
+<td>effect_key与适配器沙箱调用序列</td>
+</tr>
+<tr>
+<td>V2-039</td>
+<td>目录或命令参数含shell控制字符/越界路径</td>
+<td>执行工具</td>
+<td>参数按argv传递并检查资源范围；不拼接自由字符串shell</td>
+<td>负例调用记录与无额外文件</td>
+</tr>
+<tr>
+<td>V2-040</td>
+<td>用Codex/Cursor/Claude入口发等价请求</td>
+<td>跑同一确定性fixture</td>
+<td>字段、错误码、数据变化和结果一致</td>
+<td>三宿主机器结果比较</td>
+</tr>
+</tbody>
+</table></div>
+<h3>通用场景与演进</h3>
+<blockquote>
+<p><strong>本节速读：真实项目质量另行验证；Schema模型测试不冒充这些尚未运行的场景。</strong></p>
+</blockquote>
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>准备</th>
+<th>动作</th>
+<th>预期</th>
+<th>验证证据</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>V2-041</td>
+<td>Go老项目真实六接口验证需求</td>
+<td>全链路本地执行</td>
+<td>正常/异常、鉴权、读回、状态、删除、分页统计均有实际证据</td>
+<td>真实数据库测试及覆盖报告</td>
+</tr>
+<tr>
+<td>V2-042</td>
+<td>Admin原型/Demo/桥接需求</td>
+<td>全链路执行</td>
+<td>原型/源码作为依据，桥接作为工作；适用前端/后端验证完成</td>
+<td>截图、接口、鉴权与回读证据</td>
+</tr>
+<tr>
+<td>V2-043</td>
+<td>Java既有系统增量功能</td>
+<td>全链路执行</td>
+<td>复用既有工程与测试边界，不要求倒推整个旧系统规格</td>
+<td>准确版本构建/回归报告</td>
+</tr>
+<tr>
+<td>V2-044</td>
+<td>新项目、同库两个项目</td>
+<td>初始化并分别执行</td>
+<td>隔离项目引用与操作，各自完成本地链路</td>
+<td>跨项目负例与各项目产物</td>
+</tr>
+<tr>
+<td>V2-045</td>
+<td>同一组golden输入，Python与未来Rust</td>
+<td>对照规范化响应/表数据</td>
+<td>语义、摘要、错误及副作用一致；不比较SQLite原始字节</td>
+<td>跨实现黄金向量报告</td>
+</tr>
+<tr>
+<td>V2-046</td>
+<td>等价需求与Agent预算，原生Spec Kit与本方案</td>
+<td>试用对照</td>
+<td>记录真实人工操作/流程故障/恢复/覆盖，不预设本方案赢</td>
+<td>原始运行数据和比较报告</td>
+</tr>
+</tbody>
+</table></div>
+</div></details><details class="chapter"><summary><h2 id="chapter-16">C｜本次SQL模型验证结果</h2><blockquote class="chapter-brief">
+<p><strong>附录速读：已在临时内存数据库运行28项SQL模型检查并全部通过；这不是完整Runtime、真实项目、Agent闭环或跨语言迁移测试。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<div class="table-scroll"><table>
+<thead>
+<tr>
+<th>ID</th>
+<th>模型检查</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>M01</td>
+<td>32 tables created</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M02</td>
+<td>foreign keys enabled</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M03</td>
+<td>empty foreign-key violation report</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M04</td>
+<td>strict integer rejects text</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M05</td>
+<td>dangling source is rejected</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M06</td>
+<td>cross-revision relationship is rejected</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M07</td>
+<td>duplicate item key is rejected</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M08</td>
+<td>invalid requirement enum is rejected</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M09</td>
+<td>self task dependency is rejected</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M10</td>
+<td>producer cannot require its own future output at start</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M11</td>
+<td>producer may check its output at completion</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M12</td>
+<td>foreign-project CTX binding is rejected</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M13</td>
+<td>draft content remains editable</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M14</td>
+<td>one draft per change</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M15</td>
+<td>committed requirement cannot update</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M16</td>
+<td>committed requirement cannot delete</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M17</td>
+<td>committed snapshot cannot receive new content</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M18</td>
+<td>committed revision header cannot change</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M19</td>
+<td>item revision identity cannot move</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M20</td>
+<td>committed context entry cannot change</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M21</td>
+<td>cross-project asset linkage is rejected</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M22</td>
+<td>ambiguous two-owner asset is rejected</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M23</td>
+<td>committed content attachment links cannot change</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M24</td>
+<td>duplicate command receipt key rejected by SQL</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M25</td>
+<td>invalid batch can roll back earlier rows atomically</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M26</td>
+<td>INIT needs no fabricated change</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M27</td>
+<td>business phase requires a change</td>
+<td>PASS</td>
+</tr>
+<tr>
+<td>M28</td>
+<td>integrity check passes</td>
+<td>PASS</td>
+</tr>
+</tbody>
+</table></div>
+<p>SQLite版本：<code>3.46.1</code>。模型检查源代码及逐条结果已随包提供。JSON接口示例另做了结构校验；业务自依赖反例结构上合法，仍需领域校验器拒绝。</p>
+</div></details><details class="chapter"><summary><h2 id="chapter-17">D｜来源与判断边界</h2><blockquote class="chapter-brief">
+<p><strong>附录速读：来源支持“当前工具/规范是什么”；新表结构、默认auto、目录布局和实施取舍均为本次设计建议，并非上游标准的现成规定。</strong></p>
+</blockquote></summary><div class="chapter-content">
+
+<p>查阅日期：2026-09-09（Asia/Singapore）。sdlc-ai-spec main 已通过GitHub连接器核实为 <code>f25ed518f662c0ac7306c94f845297f5642c44b2</code>；Spec Kit main 已核实为 <code>3a19a6ba900e34a9f5e02848fb8737d1c364a04b</code>。网页是该日期读取的公开说明，可能继续更新。</p>
+<p>当前规范审查为本次关切的关键章节加前轮同SHA已读资料，不声称已经逐条重新审查全部设计域子规范。新设计域清单将在实施A中按实际保留条目补齐。</p>
+<p><a id="source-S01"></a></p>
+<p><strong>S01 · <a href="https://github.github.io/spec-kit/" rel="noopener noreferrer" target="_blank">Spec Kit 官方首页</a></strong><br/>
+默认SDD与多Agent接入；未作性能/质量保证。</p>
+<p><a id="source-S02"></a></p>
+<p><strong>S02 · <a href="https://github.github.io/spec-kit/guides/existing-projects.html" rel="noopener noreferrer" target="_blank">Spec Kit：Existing Projects</a></strong><br/>
+既有项目边界明确的变更；implement/converge循环。</p>
+<p><a id="source-S03"></a></p>
+<p><strong>S03 · <a href="https://github.github.io/spec-kit/reference/workflows.html" rel="noopener noreferrer" target="_blank">Spec Kit：Workflows</a></strong><br/>
+状态、日志、循环、resume以及流程可扩展性。</p>
+<p><a id="source-S04"></a></p>
+<p><strong>S04 · <a href="https://github.github.io/spec-kit/reference/presets.html" rel="noopener noreferrer" target="_blank">Spec Kit：Presets</a></strong><br/>
+命令和模板覆盖机制，不据此声称已有SQL存储插件。</p>
+<p><a id="source-S05"></a></p>
+<p><strong>S05 · <a href="https://www.sqlite.org/backup.html" rel="noopener noreferrer" target="_blank">SQLite Backup API</a></strong><br/>
+一致数据库副本；整体附件闭包仍需本设计导出实现。</p>
+<p><a id="source-S06"></a></p>
+<p><strong>S06 · <a href="https://www.sqlite.org/fasterthanfs.html" rel="noopener noreferrer" target="_blank">SQLite：Faster Than Filesystem</a></strong><br/>
+历史小Blob基准，反对未测量就宣称Blob慢。</p>
+<p><a id="source-S07"></a></p>
+<p><strong>S07 · <a href="https://git-scm.com/docs/git-worktree" rel="noopener noreferrer" target="_blank">Git worktree 官方说明</a></strong><br/>
+登记工作区发现；本设计未把main/worktree定为强制工作方式。</p>
+<p><a id="source-S08"></a></p>
+<p><strong>S08 · <a href="https://www.sqlite.org/stricttables.html" rel="noopener noreferrer" target="_blank">SQLite STRICT Tables</a></strong><br/>
+3.37起STRICT类型能力及约束。</p>
+<p><a id="source-S09"></a></p>
+<p><strong>S09 · <a href="https://claude.com/blog/the-ai-native-sdlc-playbook" rel="noopener noreferrer" target="_blank">Anthropic：The AI-Native SDLC playbook</a></strong><br/>
+阶段循环、控制执行与人的决策责任；本文auto/不入VCS是用户选择。</p>
+<p><a id="source-S10"></a></p>
+<p><strong>S10 · <a href="https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/core-spec.md" rel="noopener noreferrer" target="_blank">当前 core-spec</a></strong><br/>
+审查开头240行重点：阶段、格式、Identity、Claim和引用。</p>
+<p><a id="source-S11"></a></p>
+<p><strong>S11 · <a href="https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/artifact-store-spec.md" rel="noopener noreferrer" target="_blank">当前 artifact-store-spec</a></strong><br/>
+审查开头160行重点：Canonical Payload和存储操作。</p>
+<p><a id="source-S12"></a></p>
+<p><strong>S12 · <a href="https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/000-ctx-spec.md" rel="noopener noreferrer" target="_blank">当前 CTX spec</a></strong><br/>
+审查开头115行：边界、身份、版本和存储。</p>
+<p><a id="source-S13"></a></p>
+<p><strong>S13 · <a href="https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/200-dsn-spec.md" rel="noopener noreferrer" target="_blank">当前 DSN spec</a></strong><br/>
+审查开头125行：设计边界、16域总纲、成员和追踪。</p>
+<p><a id="source-S14"></a></p>
+<p><strong>S14 · <a href="https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/300-pln-spec.md" rel="noopener noreferrer" target="_blank">当前 PLN spec</a></strong><br/>
+审查开头105行：计划与工作项、适用性和输入。</p>
+<p><a id="source-S15"></a></p>
+<p><strong>S15 · <a href="https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/400-imp-spec.md" rel="noopener noreferrer" target="_blank">当前 IMP spec</a></strong><br/>
+审查开头95行：Binding、Claim、结果和边界。</p>
+<p><a id="source-S16"></a></p>
+<p><strong>S16 · <a href="https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/500-vfy-spec.md" rel="noopener noreferrer" target="_blank">当前 VFY spec</a></strong><br/>
+审查开头100行：Verification/Validation、方法与回流。</p>
+<p><a id="source-S17"></a></p>
+<p><strong>S17 · <a href="https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/600-rls-spec.md" rel="noopener noreferrer" target="_blank">当前 RLS spec</a></strong><br/>
+审查开头90行：发版、目标回读、适用性和结果绑定。</p>
+<p><a id="source-S18"></a></p>
+<p><strong>S18 · <a href="https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/100-req-spec.md" rel="noopener noreferrer" target="_blank">当前 REQ spec</a></strong><br/>
+前轮已读取的同一固定SHA：来源、需求、验收与依赖。</p>
+<p><a id="source-S19"></a></p>
+<p><strong>S19 · <a href="https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/architecture/artifact-store-and-projection.md" rel="noopener noreferrer" target="_blank">当前存储架构决策</a></strong><br/>
+前轮同一固定SHA：Blob权威和首版不完全关系化。</p>
+<p><a id="source-S20"></a></p>
+<p><strong>S20 · <a href="https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/AGENTS.md" rel="noopener noreferrer" target="_blank">当前 AGENTS</a></strong><br/>
+前轮同一固定SHA：工程规则与独立Skill执行限制。</p>
+<p><a id="source-S21"></a></p>
+<p><strong>S21 · <a href="https://github.com/github/spec-kit/blob/3a19a6ba900e34a9f5e02848fb8737d1c364a04b/templates/commands/converge.md" rel="noopener noreferrer" target="_blank">Spec Kit converge命令模板</a></strong><br/>
+参考闭环思路；实际新接口由本设计定义。</p>
+<p><a id="source-S22"></a></p>
+<p><strong>S22 · <a href="https://github.com/github/spec-kit/blob/3a19a6ba900e34a9f5e02848fb8737d1c364a04b/LICENSE" rel="noopener noreferrer" target="_blank">Spec Kit LICENSE</a></strong><br/>
+复用实际资产时保留版权许可；本包没有复制其实现。</p>
+<p><a id="source-S23"></a></p>
+<p><strong>S23 · <a href="https://www.sqlite.org/omitted.html" rel="noopener noreferrer" target="_blank">SQLite omitted features</a></strong><br/>
+本地文件权限与服务端授权的区别。</p>
+<p><a id="source-S24"></a></p>
+<p><strong>S24 · <a href="https://docs.python.org/3/library/sqlite3.html" rel="noopener noreferrer" target="_blank">Python sqlite3 官方文档</a></strong><br/>
+连接、事务与backup接口参考。</p>
+<p><a id="source-U01"></a></p>
+<p><strong>U01 · 用户当前会话与附件</strong><br/>
+用户对初衷、默认auto、Python、本地SQLite、不入VCS、薄worktree能力、assets路径、可移除旧实现/测试的明确指令，是本次设计的产品需求。<code>Agent 插件开发指南.txt</code> 只作为历史工程约束参考；两份真实需求的失败消息用于新回归案例。未对这些项目重新执行IMP/VFY或访问其外部环境。</p>
+<p><strong>已做与未做的验证</strong><br/>
+本地执行了随包SQL模型测试；结果见model-validation.json。没有执行生产Runtime、真实Skill链、Spec Kit对照试用或Rust迁移。</p>
+</div></details></main></div>
+<dialog id="zoom-dialog"><div class="modal-head"><strong class="modal-title">设计图</strong><button>关闭</button></div><div class="modal-body"></div></dialog><footer class="footer">设计审查基线 f25ed518f662c0ac7306c94f845297f5642c44b2 · 2026-09-09。SQL 结构检查不等于新 Runtime 或真实项目回归已通过。</footer><script>
+function toggleAll(value){document.querySelectorAll('details').forEach(d=>d.open=value)}
+document.getElementById('expand-all').onclick=()=>toggleAll(true);
+document.getElementById('summaries').onclick=()=>toggleAll(false);
+document.getElementById('print-btn').onclick=()=>{toggleAll(true);window.print()};
+function revealTarget(hash){let el=document.getElementById(hash.slice(1));if(!el)return;for(let p=el.parentElement;p;p=p.parentElement)if(p.tagName==='DETAILS')p.open=true;el.scrollIntoView({block:'start'});}
+document.querySelectorAll('a[href^="#"]').forEach(a=>a.addEventListener('click',e=>{const h=a.getAttribute('href');setTimeout(()=>revealTarget(h),0)}));
+const dialog=document.getElementById('zoom-dialog');
+document.querySelectorAll('.zoom').forEach(b=>b.onclick=()=>{const fig=b.closest('figure');const svg=fig.querySelector('svg').cloneNode(true);svg.removeAttribute('style');dialog.querySelector('.modal-body').replaceChildren(svg);dialog.querySelector('.modal-title').textContent=fig.querySelector('figcaption').childNodes[0].textContent;dialog.showModal()});
+dialog.querySelector('button').onclick=()=>dialog.close();
+window.addEventListener('beforeprint',()=>toggleAll(true));
+if(location.hash)revealTarget(location.hash);
+</script></body></html>

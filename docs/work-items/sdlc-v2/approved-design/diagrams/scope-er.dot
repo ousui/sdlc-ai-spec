@@ -1,0 +1,12 @@
+digraph G {
+ graph [rankdir=TB, bgcolor="transparent", pad="0.22", nodesep="0.35", ranksep="0.6", splines=polyline];
+ node [shape=box, style="rounded,filled", fillcolor="#F1F5F9", color="#94A3B8", fontname="Noto Sans CJK SC", fontsize=12, margin="0.17,0.12"];
+ edge [color="#64748B", fontname="Noto Sans CJK SC", fontsize=10, arrowsize=0.65];
+p [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>projects</B></TD></TR><TR><TD ALIGN="LEFT">PK project_id</TD></TR></TABLE>>];
+ctx [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>contexts</B></TD></TR><TR><TD ALIGN="LEFT">PK context_id</TD></TR><TR><TD ALIGN="LEFT">FK project_id</TD></TR><TR><TD ALIGN="LEFT">parent_id</TD></TR></TABLE>>];
+ent [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>context_entries</B></TD></TR><TR><TD ALIGN="LEFT">PK context_id + entry_id</TD></TR><TR><TD ALIGN="LEFT">kind / name / content</TD></TR></TABLE>>];
+ws [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>workspaces</B></TD></TR><TR><TD ALIGN="LEFT">PK workspace_id</TD></TR><TR><TD ALIGN="LEFT">FK project_id</TD></TR><TR><TD ALIGN="LEFT">instance_id</TD></TR></TABLE>>];
+ch [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#DCEEEA"><B>changes</B></TD></TR><TR><TD ALIGN="LEFT">PK change_id</TD></TR><TR><TD ALIGN="LEFT">FK project_id</TD></TR><TR><TD ALIGN="LEFT">active_revision_id</TD></TR><TR><TD ALIGN="LEFT">initial_base_commit</TD></TR></TABLE>>];
+rev [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#DCEEEA"><B>revisions</B></TD></TR><TR><TD ALIGN="LEFT">PK revision_id</TD></TR><TR><TD ALIGN="LEFT">FK change_id / context_id</TD></TR><TR><TD ALIGN="LEFT">parent_id / merged_from_id</TD></TR><TR><TD ALIGN="LEFT">state / generation / digest</TD></TR></TABLE>>];
+p -> ctx [label="1 : N"]; ctx -> ent [label="1 : N"]; p -> ws [label="1 : N"]; p -> ch [label="1 : N"]; ch -> rev [label="1 : N"];ctx -> rev [label="采用准确CTX"];ch -> rev [label="active指针",style=dashed,constraint=false];{rank=same;ctx;ws;ch;}
+}

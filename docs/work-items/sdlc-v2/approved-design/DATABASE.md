@@ -1,0 +1,814 @@
+# 数据库字段字典
+
+> **附录速读：这里是物理模型说明。先看外键和表用途，再看字段；只有运行所依赖的数据才受程序化约束，自然语言也有明确所属字段。**
+
+共 32 张表，14 张属于关系化内容快照的内容/关系表。SQL 使用 STRICT 与显式外键。除明确允许 NULL 的字段外，由 NOT NULL、主键及业务完成检查共同约束。TEXT 中的 JSON 仅用于有固定 Schema 的值对象/命令参数/序列化回执，不承载整个阶段的权威业务关系。
+
+**主键图例：** PK=主键；FK=外键；UUID均由Runtime生成。下列字段类型与约束源于随包 `schema-model.sql`；SQL模型未代替业务服务。
+
+## 字段与关联
+
+> **本节速读：每张表下面列出字段、SQL约束和业务语义；最后的外键条目同时说明具体关联字段。**
+
+### 01 · `schema_migrations`
+
+> **用途：数据库结构版本。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `version` | `INTEGER PRIMARY KEY` | 新库从 1 开始 |
+| `migration_digest` | `TEXT NOT NULL` | 迁移脚本摘要，不是 docs 文件锁 |
+| `applied_at` | `TEXT NOT NULL` | 应用时间 |
+
+**表级约束／关联：**
+
+由主键及字段约束定义。
+
+### 02 · `projects`
+
+> **用途：逻辑项目身份。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `project_id` | `TEXT PRIMARY KEY` | UUID v4；移动目录或改名不变 |
+| `name` | `TEXT NOT NULL` | 展示名称 |
+| `created_at` | `TEXT NOT NULL` | UTC RFC3339，固定毫秒精度 |
+
+**表级约束／关联：**
+
+由主键及字段约束定义。
+
+### 03 · `contexts`
+
+> **用途：项目上下文快照。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `context_id` | `TEXT PRIMARY KEY` | CTX 快照 UUID |
+| `project_id` | `TEXT NOT NULL` | 所属项目 UUID；隔离所有业务查询与写入 |
+| `parent_id` | `TEXT` | 上一 CTX 快照 |
+| `summary` | `TEXT NOT NULL` | 项目定位与概要 |
+| `state` | `TEXT NOT NULL CHECK(state IN ('draft','committed'))` | 工作态或已提交快照 |
+| `digest` | `TEXT` | 已提交内容摘要 |
+| `created_at` | `TEXT NOT NULL` | UTC RFC3339，固定毫秒精度 |
+
+**表级约束／关联：**
+
+```sql
+UNIQUE(project_id,context_id),
+FOREIGN KEY(project_id) REFERENCES projects(project_id),
+FOREIGN KEY(project_id,parent_id) REFERENCES contexts(project_id,context_id)
+```
+
+### 04 · `context_entries`
+
+> **用途：上下文事实、规则、资源与命令。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `context_id` | `TEXT NOT NULL` | CTX 快照 |
+| `entry_id` | `TEXT NOT NULL` | 跨 CTX 快照稳定的条目 UUID |
+| `kind` | `TEXT NOT NULL CHECK(kind IN ('fact','rule','resource','command'))` | 类型 |
+| `name` | `TEXT NOT NULL` | 名称或资源键 |
+| `content` | `TEXT NOT NULL` | 文本事实或规则正文 |
+| `origin` | `TEXT` | 事实来源；不是执行依赖 |
+| `settings_json` | `TEXT NOT NULL DEFAULT '{}'` | 受类型 Schema 约束的资源/命令配置；命令为 argv 数组，秘密仅存引用 |
+
+**表级约束／关联：**
+
+```sql
+PRIMARY KEY(context_id,entry_id),
+UNIQUE(context_id,kind,name),
+FOREIGN KEY(context_id) REFERENCES contexts(context_id)
+```
+
+规则文本是模型指导；强制检查必须对应内置 validator 或 checks，不声称自然语言自动可执行。
+
+### 05 · `workspaces`
+
+> **用途：本地工作区绑定。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `workspace_id` | `TEXT PRIMARY KEY` | 克隆 .sdlc 后重新生成 |
+| `project_id` | `TEXT NOT NULL` | 所属项目 UUID；隔离所有业务查询与写入 |
+| `label` | `TEXT NOT NULL` | 工作区展示名 |
+| `instance_id` | `TEXT NOT NULL` | 本地实例 UUID，不随数据导入继承 |
+| `created_at` | `TEXT NOT NULL` | UTC RFC3339，固定毫秒精度 |
+
+**表级约束／关联：**
+
+```sql
+UNIQUE(project_id,workspace_id),
+FOREIGN KEY(project_id) REFERENCES projects(project_id)
+```
+
+绝对目录只在本地 config.json；Git 分支不是需求身份。
+
+### 06 · `changes`
+
+> **用途：需求/变更工作包。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `change_id` | `TEXT PRIMARY KEY` | 稳定 UUID，所有阶段共用 |
+| `project_id` | `TEXT NOT NULL` | 所属项目 UUID；隔离所有业务查询与写入 |
+| `slug` | `TEXT NOT NULL` | 用户可读短名，项目内唯一 |
+| `state` | `TEXT NOT NULL CHECK(state IN ('active','completed','archived'))` | 工作包生命周期状态 |
+| `active_revision_id` | `TEXT` | 当前采用的内容快照 |
+| `initial_base_commit` | `TEXT` | 建立需求时的 Git 基线，保留历史 |
+| `delivery_mode` | `TEXT NOT NULL CHECK(delivery_mode IN ('local','git','deployment'))` | 约定交付方式 |
+| `delivery_target` | `TEXT NOT NULL` | 准确交付目标 |
+| `created_at` | `TEXT NOT NULL` | UTC RFC3339，固定毫秒精度 |
+
+**表级约束／关联：**
+
+```sql
+UNIQUE(project_id,change_id),
+UNIQUE(project_id,slug),
+FOREIGN KEY(project_id) REFERENCES projects(project_id),
+FOREIGN KEY(change_id,active_revision_id) REFERENCES revisions(change_id,revision_id)
+```
+
+active 指针只用于选择；执行时解析并固定 revision_id。
+
+### 07 · `revisions`
+
+> **用途：整个需求内容的关系化快照。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `revision_id` | `TEXT PRIMARY KEY` | 快照 UUID；多副本不会因整数编号碰撞 |
+| `project_id` | `TEXT NOT NULL` | 所属项目 UUID；隔离所有业务查询与写入 |
+| `change_id` | `TEXT NOT NULL` | 所属需求 |
+| `context_id` | `TEXT NOT NULL` | 采用的准确 CTX |
+| `parent_id` | `TEXT` | 主父快照 |
+| `merged_from_id` | `TEXT` | 人工/AI解决分歧时记录另一来源，正常为空 |
+| `created_phase` | `TEXT NOT NULL CHECK(created_phase IN ('REQ','DSN','PLN','IMP','VFY','RLS'))` | 创建快照的阶段 |
+| `state` | `TEXT NOT NULL CHECK(state IN ('draft','committed'))` | 草稿可改；提交后不可改 |
+| `generation` | `INTEGER NOT NULL DEFAULT 0 CHECK(generation>=0)` | 乐观并发令牌 |
+| `title` | `TEXT NOT NULL` | 需求标题 |
+| `summary` | `TEXT NOT NULL` | 摘要 |
+| `goal` | `TEXT NOT NULL` | 目标与成功定义 |
+| `in_scope` | `TEXT NOT NULL` | 包含范围 |
+| `out_of_scope` | `TEXT NOT NULL` | 范围外内容 |
+| `digest` | `TEXT` | 提交时计算的逻辑数据摘要 |
+| `created_at` | `TEXT NOT NULL` | UTC RFC3339，固定毫秒精度 |
+
+**表级约束／关联：**
+
+```sql
+UNIQUE(change_id,revision_id),
+UNIQUE(project_id,revision_id),
+UNIQUE(project_id,change_id,revision_id),
+FOREIGN KEY(project_id,change_id) REFERENCES changes(project_id,change_id),
+FOREIGN KEY(project_id,context_id) REFERENCES contexts(project_id,context_id),
+FOREIGN KEY(change_id,parent_id) REFERENCES revisions(change_id,revision_id),
+FOREIGN KEY(change_id,merged_from_id) REFERENCES revisions(change_id,revision_id)
+```
+
+整份关系数据复制成子快照，条目 UUID 保持稳定；首版不实现逐字段事件溯源。
+
+### 08 · `sources`
+
+> **用途：原始输入与观察记录。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `revision_id` | `TEXT NOT NULL` | 准确内容快照 UUID；不是 Markdown 版本号 |
+| `source_id` | `TEXT NOT NULL` | 来源稳定 UUID |
+| `kind` | `TEXT NOT NULL CHECK(kind IN ('text','document','image','observation','assumption'))` | 来源类型 |
+| `original_text` | `TEXT NOT NULL` | 原文或观察说明 |
+| `origin_uri` | `TEXT` | 原始位置，不作为必要唯一副本 |
+| `observed_at` | `TEXT` | 采集时间 |
+| `ordinal` | `INTEGER NOT NULL CHECK(ordinal>=0)` | 输入展示顺序 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,source_id)
+```
+
+### 09 · `requirements`
+
+> **用途：原子需求项。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `revision_id` | `TEXT NOT NULL` | 准确内容快照 UUID；不是 Markdown 版本号 |
+| `requirement_id` | `TEXT NOT NULL` | 稳定 UUID |
+| `kind` | `TEXT NOT NULL CHECK(kind IN ('behavior','rule','quality','constraint'))` | 沿用有效领域分类 |
+| `statement` | `TEXT NOT NULL` | 需求描述 |
+| `ordinal` | `INTEGER NOT NULL` | 展示顺序 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,requirement_id)
+```
+
+### 10 · `criteria`
+
+> **用途：验收条件。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `revision_id` | `TEXT NOT NULL` | 准确内容快照 UUID；不是 Markdown 版本号 |
+| `criterion_id` | `TEXT NOT NULL` | 稳定 UUID |
+| `condition_text` | `TEXT NOT NULL` | 条件 |
+| `expected_result` | `TEXT NOT NULL` | 可观察预期 |
+| `ordinal` | `INTEGER NOT NULL` | 展示顺序 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,criterion_id)
+```
+
+### 11 · `requirement_sources`
+
+> **用途：需求来源关系。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `revision_id` | `TEXT NOT NULL` | 准确内容快照 UUID；不是 Markdown 版本号 |
+| `requirement_id` | `TEXT NOT NULL` | 需求 |
+| `source_id` | `TEXT NOT NULL` | 真实来源 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,requirement_id,source_id),
+FOREIGN KEY(revision_id,requirement_id) REFERENCES requirements(revision_id,requirement_id),
+FOREIGN KEY(revision_id,source_id) REFERENCES sources(revision_id,source_id)
+```
+
+### 12 · `criterion_requirements`
+
+> **用途：验收覆盖需求。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `revision_id` | `TEXT NOT NULL` | 准确内容快照 UUID；不是 Markdown 版本号 |
+| `criterion_id` | `TEXT NOT NULL` | 验收条件 |
+| `requirement_id` | `TEXT NOT NULL` | 需求 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,criterion_id,requirement_id),
+FOREIGN KEY(revision_id,criterion_id) REFERENCES criteria(revision_id,criterion_id),
+FOREIGN KEY(revision_id,requirement_id) REFERENCES requirements(revision_id,requirement_id)
+```
+
+### 13 · `designs`
+
+> **用途：设计决策与领域设计。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `revision_id` | `TEXT NOT NULL` | 准确内容快照 UUID；不是 Markdown 版本号 |
+| `design_id` | `TEXT NOT NULL` | 稳定 UUID |
+| `domain` | `TEXT NOT NULL` | 受设计域目录约束 |
+| `title` | `TEXT NOT NULL` | 设计问题或领域名称 |
+| `decision` | `TEXT NOT NULL` | 采用方案 |
+| `rationale` | `TEXT NOT NULL` | 选择依据 |
+| `alternatives` | `TEXT NOT NULL` | 候选方案及取舍，简单需求可简写 |
+| `detail` | `TEXT NOT NULL` | 详细设计文本 |
+| `ordinal` | `INTEGER NOT NULL` | 阅读顺序 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,design_id)
+```
+
+### 14 · `design_requirements`
+
+> **用途：设计对应需求。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `revision_id` | `TEXT NOT NULL` | 准确内容快照 UUID；不是 Markdown 版本号 |
+| `design_id` | `TEXT NOT NULL` | 设计 |
+| `requirement_id` | `TEXT NOT NULL` | 需求 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,design_id,requirement_id),
+FOREIGN KEY(revision_id,design_id) REFERENCES designs(revision_id,design_id),
+FOREIGN KEY(revision_id,requirement_id) REFERENCES requirements(revision_id,requirement_id)
+```
+
+### 15 · `tasks`
+
+> **用途：工作项定义。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `revision_id` | `TEXT NOT NULL` | 准确内容快照 UUID；不是 Markdown 版本号 |
+| `task_id` | `TEXT NOT NULL` | 稳定 UUID |
+| `target_phase` | `TEXT NOT NULL CHECK(target_phase IN ('IMP','VFY','RLS'))` | 任务目标阶段 |
+| `kind` | `TEXT NOT NULL CHECK(kind IN ('prepare','implement','verify','review','deliver'))` | 工作性质 |
+| `title` | `TEXT NOT NULL` | 任务名称 |
+| `description` | `TEXT NOT NULL` | 处理范围 |
+| `completion_text` | `TEXT NOT NULL` | 完成条件 |
+| `scope_paths_json` | `TEXT NOT NULL` | Schema校验的资源/相对路径数组 |
+| `ordinal` | `INTEGER NOT NULL` | 默认执行顺序 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,task_id)
+```
+
+实时状态由 steps 与结果推导，不改写已提交计划。
+
+### 16 · `task_designs`
+
+> **用途：任务实现设计。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `revision_id` | `TEXT NOT NULL` | 准确内容快照 UUID；不是 Markdown 版本号 |
+| `task_id` | `TEXT NOT NULL` | 任务 |
+| `design_id` | `TEXT NOT NULL` | 设计 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,task_id,design_id),
+FOREIGN KEY(revision_id,task_id) REFERENCES tasks(revision_id,task_id),
+FOREIGN KEY(revision_id,design_id) REFERENCES designs(revision_id,design_id)
+```
+
+### 17 · `task_criteria`
+
+> **用途：任务承接验收义务。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `revision_id` | `TEXT NOT NULL` | 准确内容快照 UUID；不是 Markdown 版本号 |
+| `task_id` | `TEXT NOT NULL` | 任务 |
+| `criterion_id` | `TEXT NOT NULL` | 验收条件 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,task_id,criterion_id),
+FOREIGN KEY(revision_id,task_id) REFERENCES tasks(revision_id,task_id),
+FOREIGN KEY(revision_id,criterion_id) REFERENCES criteria(revision_id,criterion_id)
+```
+
+### 18 · `task_dependencies`
+
+> **用途：真正的任务启动依赖。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `revision_id` | `TEXT NOT NULL` | 准确内容快照 UUID；不是 Markdown 版本号 |
+| `task_id` | `TEXT NOT NULL` | 消费者 |
+| `predecessor_id` | `TEXT NOT NULL` | 前驱 |
+| `reason` | `TEXT NOT NULL` | 依赖理由 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,task_id,predecessor_id),
+CHECK(task_id<>predecessor_id),
+FOREIGN KEY(revision_id,task_id) REFERENCES tasks(revision_id,task_id),
+FOREIGN KEY(revision_id,predecessor_id) REFERENCES tasks(revision_id,task_id)
+```
+
+Runtime检查整个DAG与阶段方向。来源关系不进入本表。
+
+### 19 · `checks`
+
+> **用途：验证方法/前置探测定义。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `revision_id` | `TEXT NOT NULL` | 准确内容快照 UUID；不是 Markdown 版本号 |
+| `check_id` | `TEXT NOT NULL` | 稳定 UUID |
+| `task_id` | `TEXT` | 执行此方法的任务，可空 |
+| `purpose` | `TEXT NOT NULL CHECK(purpose IN ('acceptance','precondition','convergence','release_readback'))` | 检查用途 |
+| `method` | `TEXT NOT NULL CHECK(method IN ('test','inspection','analysis','demonstration'))` | VFY方法 |
+| `executor` | `TEXT NOT NULL CHECK(executor IN ('command','agent','human'))` | 真实执行类型 |
+| `description` | `TEXT NOT NULL` | 要检查什么 |
+| `expected_result` | `TEXT NOT NULL` | 判定规则 |
+| `argv_json` | `TEXT` | 命令参数数组；command时必填 |
+| `required` | `INTEGER NOT NULL CHECK(required IN (0,1))` | 是否为本次交付必须 |
+| `timeout_seconds` | `INTEGER CHECK(timeout_seconds>0)` | 执行超时 |
+| `max_age_seconds` | `INTEGER CHECK(max_age_seconds>=0)` | 可变环境观察的有效期 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,check_id),
+FOREIGN KEY(revision_id,task_id) REFERENCES tasks(revision_id,task_id),
+CHECK((executor='command' AND argv_json IS NOT NULL) OR (executor<>'command' AND argv_json IS NULL))
+```
+
+### 20 · `check_criteria`
+
+> **用途：验证方法覆盖验收。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `revision_id` | `TEXT NOT NULL` | 准确内容快照 UUID；不是 Markdown 版本号 |
+| `check_id` | `TEXT NOT NULL` | 检查方法 |
+| `criterion_id` | `TEXT NOT NULL` | 验收条件 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,check_id,criterion_id),
+FOREIGN KEY(revision_id,check_id) REFERENCES checks(revision_id,check_id),
+FOREIGN KEY(revision_id,criterion_id) REFERENCES criteria(revision_id,criterion_id)
+```
+
+### 21 · `preconditions`
+
+> **用途：在具体任务动作上检查的条件。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `revision_id` | `TEXT NOT NULL` | 准确内容快照 UUID；不是 Markdown 版本号 |
+| `condition_id` | `TEXT NOT NULL` | 稳定 UUID |
+| `consumer_task_id` | `TEXT NOT NULL` | 条件生效的任务 |
+| `check_id` | `TEXT NOT NULL` | 证明此条件的检查定义 |
+| `producer_task_id` | `TEXT` | 负责准备条件的任务，允许尚未完成 |
+| `enforce_at` | `TEXT NOT NULL CHECK(enforce_at IN ('start','execute','complete'))` | 生效时点 |
+| `reason` | `TEXT NOT NULL` | 必要性 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY (revision_id) REFERENCES revisions(revision_id),
+PRIMARY KEY(revision_id,condition_id),
+FOREIGN KEY(revision_id,consumer_task_id) REFERENCES tasks(revision_id,task_id),
+FOREIGN KEY(revision_id,producer_task_id) REFERENCES tasks(revision_id,task_id),
+FOREIGN KEY(revision_id,check_id) REFERENCES checks(revision_id,check_id),
+CHECK(producer_task_id IS NULL OR producer_task_id<>consumer_task_id OR enforce_at='complete')
+```
+
+这里只表达检查型条件；权限由 authorizations 检查，不塞进 Required State 字符串。
+
+### 22 · `assets`
+
+> **用途：受管理文件对象。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `asset_id` | `TEXT PRIMARY KEY` | 资产 UUID |
+| `project_id` | `TEXT NOT NULL` | 所属项目 UUID；隔离所有业务查询与写入 |
+| `sha256` | `TEXT NOT NULL CHECK(length(sha256)=64)` | 内容摘要，小写十六进制由Runtime校验 |
+| `size_bytes` | `INTEGER NOT NULL CHECK(size_bytes>=0)` | 字节数 |
+| `media_type` | `TEXT NOT NULL` | 媒体类型 |
+| `created_at` | `TEXT NOT NULL` | UTC RFC3339，固定毫秒精度 |
+
+**表级约束／关联：**
+
+```sql
+UNIQUE(project_id,asset_id),
+UNIQUE(project_id,sha256),
+FOREIGN KEY(project_id) REFERENCES projects(project_id)
+```
+
+物理位置由摘要确定 assets/ab/cd/<完整摘要>。
+
+### 23 · `runs`
+
+> **用途：一次Skill链或阶段运行。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `run_id` | `TEXT PRIMARY KEY` | 入口即分配 |
+| `project_id` | `TEXT NOT NULL` | 所属项目 UUID；隔离所有业务查询与写入 |
+| `change_id` | `TEXT` | 输入无效尚未定位需求时可空 |
+| `workspace_id` | `TEXT NOT NULL` | 工作区 |
+| `input_revision_id` | `TEXT` | 入口采用快照，REQ首次可空 |
+| `status` | `TEXT NOT NULL CHECK(status IN ('created','running','blocked','completed','failed','interrupted','cancelled'))` | 运行状态 |
+| `actor_id` | `TEXT NOT NULL` | 实际执行身份 |
+| `runtime_version` | `TEXT NOT NULL` | 运行器构建身份 |
+| `contract_version` | `TEXT NOT NULL` | 命令/领域合约版本 |
+| `skill_version` | `TEXT NOT NULL` | Skill 内容版本 |
+| `review_mode` | `TEXT NOT NULL CHECK(review_mode IN ('auto','assisted'))` | 自动或人工矫正模式 |
+| `error_code` | `TEXT` | 错误摘要 |
+| `error_message` | `TEXT` | 简要诊断 |
+| `started_at` | `TEXT NOT NULL` | 起始时间 |
+| `finished_at` | `TEXT` | 终止时间 |
+
+**表级约束／关联：**
+
+```sql
+UNIQUE(project_id,run_id),
+UNIQUE(change_id,run_id),
+FOREIGN KEY(project_id,workspace_id) REFERENCES workspaces(project_id,workspace_id),
+FOREIGN KEY(project_id,change_id) REFERENCES changes(project_id,change_id),
+FOREIGN KEY(change_id,input_revision_id) REFERENCES revisions(change_id,revision_id)
+```
+
+### 24 · `code_snapshots`
+
+> **用途：真实代码及环境观察。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `snapshot_id` | `TEXT PRIMARY KEY` | UUID |
+| `project_id` | `TEXT NOT NULL` | 所属项目 UUID；隔离所有业务查询与写入 |
+| `run_id` | `TEXT NOT NULL` | 捕获它的运行 |
+| `resource_key` | `TEXT NOT NULL` | 已登记代码资源 |
+| `head_commit` | `TEXT` | 实际HEAD，不要求等于需求初始基线 |
+| `tree_id` | `TEXT` | Git tree |
+| `patch_asset_id` | `TEXT` | 已跟踪文件差异快照 |
+| `untracked_json` | `TEXT NOT NULL DEFAULT '[]'` | 纳入范围的未跟踪文件相对路径与asset_id数组 |
+| `environment_digest` | `TEXT NOT NULL` | 脱敏环境/工具/依赖绑定摘要 |
+| `digest` | `TEXT NOT NULL` | 完整执行对象指纹 |
+| `captured_at` | `TEXT NOT NULL` | 捕获时间 |
+
+**表级约束／关联：**
+
+```sql
+UNIQUE(project_id,snapshot_id),
+FOREIGN KEY(project_id,run_id) REFERENCES runs(project_id,run_id),
+FOREIGN KEY(project_id,patch_asset_id) REFERENCES assets(project_id,asset_id)
+```
+
+### 25 · `steps`
+
+> **用途：阶段、步骤和任务的执行尝试。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `step_id` | `TEXT PRIMARY KEY` | UUID |
+| `project_id` | `TEXT NOT NULL` | 所属项目 UUID；隔离所有业务查询与写入 |
+| `change_id` | `TEXT` | 需求阶段必填；INIT/CTX为空 |
+| `run_id` | `TEXT NOT NULL` | 所属运行 |
+| `phase` | `TEXT NOT NULL CHECK(phase IN ('INIT','CTX','REQ','DSN','PLN','IMP','VFY','RLS'))` | INIT/CTX不伪造需求；正式六阶段绑定change |
+| `step_key` | `TEXT NOT NULL` | 固定步骤键或task:<UUID> |
+| `attempt` | `INTEGER NOT NULL CHECK(attempt>0)` | 本运行该步骤的第几次尝试 |
+| `input_revision_id` | `TEXT` | 准确输入 |
+| `output_revision_id` | `TEXT` | 本步骤新提交内容快照 |
+| `task_id` | `TEXT` | 关联工作项 |
+| `snapshot_id` | `TEXT` | 代码对象快照 |
+| `status` | `TEXT NOT NULL CHECK(status IN ('running','completed','blocked','failed','interrupted','cancelled'))` | 执行状态 |
+| `outcome` | `TEXT CHECK(outcome IN ('pass','fail','not_applicable','unknown'))` | 完成不等于通过 |
+| `started_at` | `TEXT NOT NULL` | 开始 |
+| `finished_at` | `TEXT` | 结束 |
+
+**表级约束／关联：**
+
+```sql
+UNIQUE(run_id,step_key,attempt),
+UNIQUE(project_id,step_id),
+FOREIGN KEY(project_id,run_id) REFERENCES runs(project_id,run_id),
+CHECK((phase IN ('INIT','CTX') AND change_id IS NULL) OR (phase NOT IN ('INIT','CTX') AND change_id IS NOT NULL)),
+FOREIGN KEY(project_id,change_id) REFERENCES changes(project_id,change_id),
+FOREIGN KEY(change_id,run_id) REFERENCES runs(change_id,run_id),
+FOREIGN KEY(change_id,input_revision_id) REFERENCES revisions(change_id,revision_id),
+FOREIGN KEY(change_id,output_revision_id) REFERENCES revisions(change_id,revision_id),
+FOREIGN KEY(input_revision_id,task_id) REFERENCES tasks(revision_id,task_id),
+FOREIGN KEY(project_id,snapshot_id) REFERENCES code_snapshots(project_id,snapshot_id)
+```
+
+### 26 · `check_results`
+
+> **用途：验证/观察结果与原始证据。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `result_id` | `TEXT PRIMARY KEY` | UUID |
+| `project_id` | `TEXT NOT NULL` | 所属项目 UUID；隔离所有业务查询与写入 |
+| `change_id` | `TEXT NOT NULL` | 工作包 |
+| `revision_id` | `TEXT NOT NULL` | 采用的检查定义快照 |
+| `check_id` | `TEXT NOT NULL` | 具体检查 |
+| `step_id` | `TEXT NOT NULL` | 执行步骤 |
+| `snapshot_id` | `TEXT` | 被验证代码快照；纯规格检查可空 |
+| `status` | `TEXT NOT NULL CHECK(status IN ('pass','fail','blocked','unknown'))` | 实际结果 |
+| `evidence_asset_id` | `TEXT NOT NULL` | 原始输出或完整评审记录 |
+| `source_kind` | `TEXT NOT NULL CHECK(source_kind IN ('command','agent','human','reused'))` | 结果来源 |
+| `reused_from_id` | `TEXT` | 可复用结果来源；保留原观察时间 |
+| `observed_at` | `TEXT NOT NULL` | 观察时间 |
+| `expires_at` | `TEXT` | 环境结果失效时间 |
+| `summary` | `TEXT NOT NULL` | 结论摘要 |
+
+**表级约束／关联：**
+
+```sql
+UNIQUE(project_id,result_id),
+FOREIGN KEY(project_id,change_id,revision_id) REFERENCES revisions(project_id,change_id,revision_id),
+FOREIGN KEY(revision_id,check_id) REFERENCES checks(revision_id,check_id),
+FOREIGN KEY(project_id,step_id) REFERENCES steps(project_id,step_id),
+FOREIGN KEY(project_id,snapshot_id) REFERENCES code_snapshots(project_id,snapshot_id),
+FOREIGN KEY(project_id,evidence_asset_id) REFERENCES assets(project_id,asset_id),
+FOREIGN KEY(project_id,reused_from_id) REFERENCES check_results(project_id,result_id)
+```
+
+Runtime进一步确保步骤、对象、Check定义、观察环境一致；命令结果只能由执行收集器写入。
+
+### 27 · `findings`
+
+> **用途：缺口及返工跟踪。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `finding_id` | `TEXT PRIMARY KEY` | UUID |
+| `project_id` | `TEXT NOT NULL` | 所属项目 UUID；隔离所有业务查询与写入 |
+| `change_id` | `TEXT NOT NULL` | 工作包 |
+| `revision_id` | `TEXT NOT NULL` | 发现时准确内容快照 |
+| `result_id` | `TEXT NOT NULL` | 发现证据 |
+| `criterion_id` | `TEXT` | 相关验收 |
+| `design_id` | `TEXT` | 相关设计 |
+| `task_id` | `TEXT` | 相关任务 |
+| `return_phase` | `TEXT NOT NULL CHECK(return_phase IN ('REQ','DSN','PLN','IMP','VFY','RLS'))` | 最早需要修改的阶段 |
+| `kind` | `TEXT NOT NULL CHECK(kind IN ('missing','partial','contradicts','unrequested','environment'))` | 缺口类型 |
+| `severity` | `TEXT NOT NULL CHECK(severity IN ('blocking','advisory'))` | 是否阻止收口 |
+| `status` | `TEXT NOT NULL CHECK(status IN ('open','addressed','resolved','rejected'))` | 只有复验解决才resolved |
+| `fingerprint` | `TEXT NOT NULL` | 规范化来源+问题类型+对象指纹 |
+| `description` | `TEXT NOT NULL` | 实际问题 |
+| `resolution_result_id` | `TEXT` | 关闭依据 |
+
+**表级约束／关联：**
+
+```sql
+UNIQUE(change_id,fingerprint),
+FOREIGN KEY(project_id,change_id,revision_id) REFERENCES revisions(project_id,change_id,revision_id),
+FOREIGN KEY(project_id,result_id) REFERENCES check_results(project_id,result_id),
+FOREIGN KEY(revision_id,criterion_id) REFERENCES criteria(revision_id,criterion_id),
+FOREIGN KEY(revision_id,design_id) REFERENCES designs(revision_id,design_id),
+FOREIGN KEY(revision_id,task_id) REFERENCES tasks(revision_id,task_id),
+FOREIGN KEY(project_id,resolution_result_id) REFERENCES check_results(project_id,result_id),
+CHECK(status NOT IN ('resolved','rejected') OR resolution_result_id IS NOT NULL)
+```
+
+### 28 · `deliveries`
+
+> **用途：交付意图、效果与回读。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `delivery_id` | `TEXT PRIMARY KEY` | UUID |
+| `project_id` | `TEXT NOT NULL` | 所属项目 UUID；隔离所有业务查询与写入 |
+| `change_id` | `TEXT NOT NULL` | 工作包 |
+| `revision_id` | `TEXT NOT NULL` | 交付采用内容快照 |
+| `step_id` | `TEXT NOT NULL` | RLS执行 |
+| `snapshot_id` | `TEXT NOT NULL` | 准确产品结果 |
+| `vfy_result_id` | `TEXT NOT NULL` | 收敛与验收结论 |
+| `mode` | `TEXT NOT NULL CHECK(mode IN ('local','git','deployment'))` | 交付方式 |
+| `target` | `TEXT NOT NULL` | 约定目标 |
+| `effect_key` | `TEXT NOT NULL` | 外部/本地效果幂等键 |
+| `status` | `TEXT NOT NULL CHECK(status IN ('prepared','succeeded','failed','unknown','cancelled'))` | 实际效果状态 |
+| `readback_result_id` | `TEXT` | 目标确认 |
+| `summary` | `TEXT NOT NULL` | 交付说明 |
+
+**表级约束／关联：**
+
+```sql
+UNIQUE(project_id,delivery_id),
+UNIQUE(project_id,effect_key),
+FOREIGN KEY(project_id,change_id,revision_id) REFERENCES revisions(project_id,change_id,revision_id),
+FOREIGN KEY(project_id,step_id) REFERENCES steps(project_id,step_id),
+FOREIGN KEY(project_id,snapshot_id) REFERENCES code_snapshots(project_id,snapshot_id),
+FOREIGN KEY(project_id,vfy_result_id) REFERENCES check_results(project_id,result_id),
+FOREIGN KEY(project_id,readback_result_id) REFERENCES check_results(project_id,result_id)
+```
+
+### 29 · `asset_links`
+
+> **用途：附件属于哪个内容或结果。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `project_id` | `TEXT NOT NULL` | 所属项目 UUID；隔离所有业务查询与写入 |
+| `link_id` | `TEXT PRIMARY KEY` | 关联UUID |
+| `asset_id` | `TEXT NOT NULL` | 文件对象 |
+| `revision_id` | `TEXT` | 内容快照 |
+| `source_id` | `TEXT` | 关联原始输入 |
+| `design_id` | `TEXT` | 关联设计 |
+| `result_id` | `TEXT` | 关联检查结果 |
+| `delivery_id` | `TEXT` | 关联交付 |
+| `original_name` | `TEXT NOT NULL` | 阅读时显示的原始文件名 |
+| `purpose` | `TEXT NOT NULL` | 用途 |
+| `ordinal` | `INTEGER NOT NULL DEFAULT 0` | 顺序 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY(project_id,asset_id) REFERENCES assets(project_id,asset_id),
+FOREIGN KEY(project_id,revision_id) REFERENCES revisions(project_id,revision_id),
+FOREIGN KEY(revision_id,source_id) REFERENCES sources(revision_id,source_id),
+FOREIGN KEY(revision_id,design_id) REFERENCES designs(revision_id,design_id),
+FOREIGN KEY(project_id,result_id) REFERENCES check_results(project_id,result_id),
+FOREIGN KEY(project_id,delivery_id) REFERENCES deliveries(project_id,delivery_id),
+CHECK((source_id IS NOT NULL)+(design_id IS NOT NULL)+(result_id IS NOT NULL)+(delivery_id IS NOT NULL)=1),
+CHECK((source_id IS NULL AND design_id IS NULL) OR revision_id IS NOT NULL)
+```
+
+四类显式可空FK+互斥检查，避免owner_type+owner_id悬空多态引用；提交内容附件同样不可改。
+
+### 30 · `authorizations`
+
+> **用途：一次请求授予的操作范围。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `authorization_id` | `TEXT PRIMARY KEY` | UUID |
+| `project_id` | `TEXT NOT NULL` | 所属项目 UUID；隔离所有业务查询与写入 |
+| `change_id` | `TEXT NOT NULL` | 需求范围 |
+| `actor_id` | `TEXT NOT NULL` | 获准执行主体 |
+| `action` | `TEXT NOT NULL CHECK(action IN ('edit_local','run_check','package_local','git_commit','git_push','create_pr','merge','deploy'))` | 准确能力 |
+| `target` | `TEXT NOT NULL` | 资源/目录/远端目标 |
+| `issued_by` | `TEXT NOT NULL` | 真实授权来源，不能冒称人工评审 |
+| `basis_text` | `TEXT NOT NULL` | 本次授权原文或固定组织政策 |
+| `issued_at` | `TEXT NOT NULL` | 时间 |
+| `expires_at` | `TEXT` | 到期 |
+| `revoked_at` | `TEXT` | 撤销 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY(project_id,change_id) REFERENCES changes(project_id,change_id)
+```
+
+本地可信操作者下的工作流权限记录，不声称抵抗任意文件写权限。导入不会激活来源库授权。
+
+### 31 · `operations`
+
+> **用途：命令幂等回执与精简审计。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `operation_id` | `TEXT PRIMARY KEY` | 请求UUID/幂等键 |
+| `project_id` | `TEXT NOT NULL` | 所属项目 UUID；隔离所有业务查询与写入 |
+| `run_id` | `TEXT` | 关联运行 |
+| `command` | `TEXT NOT NULL` | 稳定领域命令 |
+| `request_digest` | `TEXT NOT NULL` | 规范化请求摘要 |
+| `status` | `TEXT NOT NULL CHECK(status IN ('succeeded','rejected','unknown'))` | 本次请求结果 |
+| `response_json` | `TEXT NOT NULL` | 版本化响应序列化 |
+| `created_at` | `TEXT NOT NULL` | UTC RFC3339，固定毫秒精度 |
+
+**表级约束／关联：**
+
+```sql
+FOREIGN KEY(project_id) REFERENCES projects(project_id),
+FOREIGN KEY(project_id,run_id) REFERENCES runs(project_id,run_id)
+```
+
+成功业务写入与回执同事务；失败回执在回滚之后单独记录。
+
+### 32 · `imports`
+
+> **用途：本地副本交回记录。**
+
+| 字段 | SQL 类型／约束 | 含义 |
+|---|---|---|
+| `import_id` | `TEXT PRIMARY KEY` | UUID |
+| `source_store_id` | `TEXT NOT NULL` | 来源库实例 |
+| `bundle_digest` | `TEXT NOT NULL UNIQUE` | 逻辑归档内容摘要 |
+| `status` | `TEXT NOT NULL CHECK(status IN ('imported','conflict','rejected'))` | 交回结果 |
+| `summary` | `TEXT NOT NULL` | 新增、重合、分歧说明 |
+| `created_at` | `TEXT NOT NULL` | UTC RFC3339，固定毫秒精度 |
+
+**表级约束／关联：**
+
+由主键及字段约束定义。
+
+已完成导入重复执行幂等；以需求快照为合并边界。
+
+## 服务层必须补充的统一校验
+
+> **本节速读：外键只能证明对象存在。是否语义匹配、条件是否满足、检查是否过期，由下面这些有限且共享的规则决定。**
+
+| 规则ID | 服务规则 | 执行时点 |
+|---|---|---|
+| D-01 | 校验UUID、UTC时间、媒体类型、摘要文本和JSON值对象；禁止未知控制字段 | 每次命令输入 |
+| D-02 | 需求存在来源和验收；设计/任务/方法覆盖当前必要范围 | 对应phase.complete |
+| D-03 | 任务依赖DAG、阶段方向正确，生产者不会等待自己的未来结果 | PLN提交和完成 |
+| D-04 | phase、step、task、check、revision、change、project一致 | 所有操作和结果采集 |
+| D-05 | 命令check结果由收集器生成；AI审阅有独立来源类型 | 结果写入 |
+| D-06 | 检查对象指纹、环境和时间有效；旧PASS不覆盖新代码 | 执行、复用和RLS前 |
+| D-07 | 已提交快照内容及其附件关联不可变；新建子快照继承稳定item ID | 内容更新 |
+| D-08 | 提交草稿前计算规范化内容摘要；active指针只采用已提交快照 | phase.complete |
+| D-09 | 运行幂等、generation与工作区执行令牌均有效 | 所有写入/效果操作 |
+| D-10 | 授权匹配当前actor、change、target与动作；导入不激活来源授权 | 产生副作用前 |
+| D-11 | 附件路径为受控存储键；原始字节、摘要、长度和闭包匹配 | 导入、导出、首次引用 |
+| D-12 | 交回保持项目/需求身份，快进或显式分歧，重复包幂等 | workspace.collect |
+| D-13 | 收敛需完整覆盖、必要结果合格、blocking finding复验关闭 | VFY收口 |
+| D-14 | delivery的VFY结果与实际交付snapshot一致；unknown先reconcile | RLS执行与恢复 |
+
+SQL模型验证只覆盖这些规则中的数据库可表达子集。部署首版时外部写入口统一经过服务校验；拥有任意本地文件写权限者仍可绕过进程，数据库不是强身份安全沙箱。

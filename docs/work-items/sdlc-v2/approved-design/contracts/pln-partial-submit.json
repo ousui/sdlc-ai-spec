@@ -1,0 +1,81 @@
+{
+  "api_version": "2",
+  "operation_id": "00000000-0000-4000-8000-000000000001",
+  "command": "phase.submit",
+  "workspace_id": "00000000-0000-4000-8000-000000000002",
+  "change_id": "00000000-0000-4000-8000-000000000003",
+  "run_id": "00000000-0000-4000-8000-000000000004",
+  "expected_generation": 3,
+  "payload": {
+    "phase": "PLN",
+    "revision_id": "00000000-0000-4000-8000-000000000005",
+    "operations": [
+      {
+        "op": "create_task",
+        "client_key": "prepare",
+        "target_phase": "IMP",
+        "kind": "prepare",
+        "title": "准备隔离测试环境",
+        "description": "建立本需求测试资产",
+        "completion_text": "生成环境探测结果，失败则记录阻塞",
+        "scope_paths": [
+          {
+            "resource": "main",
+            "path": "tests/**",
+            "access": "write"
+          }
+        ]
+      },
+      {
+        "op": "create_task",
+        "client_key": "test",
+        "target_phase": "VFY",
+        "kind": "verify",
+        "title": "执行真实数据层验证",
+        "description": "按已定义验收执行六接口测试",
+        "completion_text": "每项必要验收都有准确结果",
+        "scope_paths": [
+          {
+            "resource": "main",
+            "path": "tests/**",
+            "access": "read"
+          }
+        ]
+      },
+      {
+        "op": "create_check",
+        "client_key": "environment",
+        "task": {
+          "client_key": "prepare"
+        },
+        "purpose": "precondition",
+        "method": "test",
+        "executor": "command",
+        "description": "探测隔离数据库与清理能力",
+        "expected_result": "已登记探测程序退出0且结果符合隔离要求",
+        "argv": [
+          "python",
+          "tests/probe_database.py"
+        ],
+        "required": true,
+        "timeout_seconds": 60,
+        "max_age_seconds": 300
+      },
+      {
+        "op": "create_precondition",
+        "client_key": "database-available",
+        "consumer_task": {
+          "client_key": "test"
+        },
+        "producer_task": {
+          "client_key": "prepare"
+        },
+        "check": {
+          "client_key": "environment"
+        },
+        "enforce_at": "execute",
+        "reason": "实际数据库测试需要可复核的隔离环境"
+      }
+    ]
+  }
+}

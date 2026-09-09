@@ -1,0 +1,28 @@
+digraph G {
+ graph [rankdir=TB, bgcolor="transparent", pad="0.22", nodesep="0.35", ranksep="0.6", splines=polyline];
+ node [shape=box, style="rounded,filled", fillcolor="#F1F5F9", color="#94A3B8", fontname="Noto Sans CJK SC", fontsize=12, margin="0.17,0.12"];
+ edge [color="#64748B", fontname="Noto Sans CJK SC", fontsize=10, arrowsize=0.65];
+
+user [label="开发人员 / 当前 Agent", fillcolor="#DBEAFE"];
+skill [label="Skill：目标 · 方法 · 输出要求
+INIT / CTX / 六阶段 / status"];
+api [label="稳定命令接口
+JSON request → response", fillcolor="#DCEEEA"];
+svc [label="Python Runtime
+领域规则 · 事务 · 幂等 · next action", fillcolor="#DCEEEA"];
+db [label="SQLite
+关系化内容 + 执行事实"];
+assets [label=".sdlc/assets 与 runs
+附件 + 原始日志 + 补丁"];
+tools [label="受控宿主工具
+编辑代码 / 命令 / 交付适配器"];
+view [label="Markdown / HTML / JSON
+按需求阅读 · 按运行排错", fillcolor="#DBEAFE"];
+user -> skill -> api -> svc;
+svc -> db; svc -> assets; svc -> tools;
+tools -> svc [label="实测结果",constraint=false];
+db -> view; assets -> view;
+view -> user [label="阅览 / 纠偏",style=dashed,constraint=false];
+{rank=same;db;assets;tools;}
+
+}

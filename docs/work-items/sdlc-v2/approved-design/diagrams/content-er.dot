@@ -1,0 +1,33 @@
+digraph G {
+ graph [rankdir=TB, bgcolor="transparent", pad="0.22", nodesep="0.35", ranksep="0.6", splines=polyline];
+ node [shape=box, style="rounded,filled", fillcolor="#F1F5F9", color="#94A3B8", fontname="Noto Sans CJK SC", fontsize=12, margin="0.17,0.12"];
+ edge [color="#64748B", fontname="Noto Sans CJK SC", fontsize=10, arrowsize=0.65];
+graph [rankdir=LR];
+rev [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#DCEEEA"><B>revisions</B></TD></TR><TR><TD ALIGN="LEFT">PK revision_id</TD></TR><TR><TD ALIGN="LEFT">FK change_id</TD></TR><TR><TD ALIGN="LEFT">快照提交后不可变</TD></TR></TABLE>>];
+src [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>sources</B></TD></TR><TR><TD ALIGN="LEFT">PK revision_id + source_id</TD></TR><TR><TD ALIGN="LEFT">original_text / kind</TD></TR></TABLE>>];
+req [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>requirements</B></TD></TR><TR><TD ALIGN="LEFT">PK revision_id + requirement_id</TD></TR><TR><TD ALIGN="LEFT">kind / statement</TD></TR></TABLE>>];
+ac [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>criteria</B></TD></TR><TR><TD ALIGN="LEFT">PK revision_id + criterion_id</TD></TR><TR><TD ALIGN="LEFT">condition / expected_result</TD></TR></TABLE>>];
+dsn [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>designs</B></TD></TR><TR><TD ALIGN="LEFT">PK revision_id + design_id</TD></TR><TR><TD ALIGN="LEFT">domain / decision / rationale</TD></TR><TR><TD ALIGN="LEFT">alternatives / detail</TD></TR></TABLE>>];
+task [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>tasks</B></TD></TR><TR><TD ALIGN="LEFT">PK revision_id + task_id</TD></TR><TR><TD ALIGN="LEFT">target_phase / kind / scope</TD></TR><TR><TD ALIGN="LEFT">description / completion</TD></TR></TABLE>>];
+ck [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>checks</B></TD></TR><TR><TD ALIGN="LEFT">PK revision_id + check_id</TD></TR><TR><TD ALIGN="LEFT">purpose / method / executor</TD></TR><TR><TD ALIGN="LEFT">expected_result / argv</TD></TR></TABLE>>];
+pre [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>preconditions</B></TD></TR><TR><TD ALIGN="LEFT">PK revision_id + condition_id</TD></TR><TR><TD ALIGN="LEFT">FK consumer_task / producer_task</TD></TR><TR><TD ALIGN="LEFT">FK check_id / enforce_at</TD></TR></TABLE>>];
+rev -> src [label="1:N"]; rev -> req [style=dotted,label="1:N"]; rev -> dsn [style=dotted,label="1:N"];
+src -> req [label="requirement_sources
+M:N"];
+req -> ac [label="criterion_requirements
+M:N"];
+req -> dsn [label="design_requirements
+M:N"];
+dsn -> task [label="task_designs
+M:N"];
+ac -> task [label="task_criteria
+M:N"];
+ac -> ck [label="check_criteria
+M:N"];
+task -> pre [label="消费者 / 生产者"];
+ck -> pre [label="证明条件"];
+task -> task [label="task_dependencies
+启动前驱 (DAG)"];
+{rank=same;src;rev;}{rank=same;dsn;ac;}{rank=same;task;ck;}
+
+}

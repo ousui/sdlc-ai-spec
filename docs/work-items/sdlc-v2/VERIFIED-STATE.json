@@ -1,0 +1,85 @@
+{
+  "verified_at_utc": "2026-09-09T01:02:57.949067+00:00",
+  "purpose": "local-first implementation handoff, not implementation completion",
+  "sdlc": {
+    "repository": "ousui/sdlc-ai-spec",
+    "approved_base_sha": "f25ed518f662c0ac7306c94f845297f5642c44b2",
+    "branch": "impl/sdlc-v2-structured-runtime",
+    "verified_head_sha": "d39601d0272c77ccece51a9751a5e865c55ea603",
+    "pr_number": 22,
+    "pr_url": "https://github.com/ousui/sdlc-ai-spec/pull/22",
+    "pr_state": "open draft",
+    "commit_count_since_base": 3,
+    "changed_paths": [
+      ".github/workflows/v2-checkpoint.yml",
+      "V2-WORK-PACKAGE.md",
+      "docs/v2-checkpoints/A.md",
+      "packages/sdlc/__init__.py",
+      "packages/sdlc/common.py",
+      "packages/sdlc/domain.py",
+      "packages/sdlc/schema.sql",
+      "packages/sdlc/storage.py",
+      "tests/v2/test_store.py"
+    ],
+    "checkpoint_tests_present": 5,
+    "workflow_read": {
+      "validate": {
+        "run_id": 34266526973,
+        "conclusion": "success"
+      },
+      "v2-checkpoint": {
+        "run_id": 34266527012,
+        "conclusion": "success"
+      }
+    },
+    "workflow_limit": "Queried PR-triggered runs; not a new local run and not six-Skill project closure. A PR job may use a merge ref; local execution must record actual checkout SHA."
+  },
+  "lab": {
+    "repository": "ousui/test-sdlc",
+    "branch": "verify/sdlc-v2-structured-runtime",
+    "verified_head_sha": "d1eb4a2d6f3951cabf85eb6be11a98f80adf9349",
+    "pr_number": 20,
+    "pr_url": "https://github.com/ousui/test-sdlc/pull/20",
+    "pr_state": "open draft",
+    "pr_base_branch": "verify/integration-three-project-20260907",
+    "pr_base_sha": "072d1f44c47e23ef114f6ab6e3595dfd4dd3d9cf",
+    "commit_count_since_base": 5,
+    "changed_file_count": 2,
+    "retained_scenario_sha": "849783ddbc9b2ffd5300e3b1582049a390a2e2a8",
+    "historical_final_run_id": 34138961512,
+    "historical_runtime_sha": "a166d0a06dccf929ee00809985ec1e6cd2dc04f5",
+    "springgear_upstream_sha": "e855096ff19dcdb303dc4250ba19c30acd743ac7",
+    "v2_closure": "not verified",
+    "environment_workflow": "Historical dependency preparation only; local client should use its existing environment, not depend on Actions."
+  },
+  "approved_design": {
+    "archive": "sdlc-v2-detailed-design.zip",
+    "sha256": "3864b3c31f71be0bf518a17f16209ce358f775970280629b8e2134e36b5bd3d9",
+    "copied_files": 32,
+    "approval": "User explicitly approved design and authorized implementation. Draft/awaiting-approval prose inside the original design is historical."
+  },
+  "local_paths": {
+    "sdlc_repo": null,
+    "test_repo": null,
+    "admin_source": null,
+    "springgear_source": null,
+    "fansite_source": null,
+    "evidence_root": null
+  },
+  "capability_check": {
+    "github_connector_read": "verified working",
+    "github_connector_write": "not exposed in this session; full 48-tool discovery contains no write actions",
+    "container_dns": "github.com and api.github.com resolution failed with EAI_AGAIN",
+    "gh_cli": "not installed in this execution container"
+  },
+  "correction": "The prior final message claiming no branches/PRs/commits were created was incorrect. The two PRs and the commits above are verified. No full v2 runtime or real-project closure has been demonstrated.",
+  "unverified_drafts": "Earlier conversation contained uncommitted tree objects and claims of local modules/30 tests. They are not reachable from the verified branch and no such complete local draft was found in current mounted files; do not assume them available or validated.",
+  "github_policy": "Local work first. Use cached objects and local commits. Fetch only when a necessary object is missing; no polling/push per checkpoint. Final remote sync optional and non-blocking.",
+  "evidence_sources": [
+    "https://github.com/ousui/sdlc-ai-spec/pull/22",
+    "https://github.com/ousui/test-sdlc/pull/20",
+    "https://github.com/ousui/sdlc-ai-spec/blob/d39601d0272c77ccece51a9751a5e865c55ea603/tests/v2/test_store.py",
+    "https://github.com/ousui/sdlc-ai-spec/actions/runs/34266527012",
+    "https://github.com/ousui/test-sdlc/actions/runs/34138961512"
+  ]
+}

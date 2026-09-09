@@ -1,0 +1,8 @@
+{
+  "scope": "example request structural validation only",
+  "valid_example_schema_valid": true,
+  "bad_self_dependency_schema_valid": true,
+  "bad_self_dependency_requires_domain_rejection": true,
+  "domain_rejection_executed": false,
+  "note": "Schema validates shape; the domain validator must reject task self-dependency. SQL direct-self case is separately tested."
+}

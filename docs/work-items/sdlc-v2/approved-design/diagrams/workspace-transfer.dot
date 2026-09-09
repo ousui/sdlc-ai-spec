@@ -1,0 +1,27 @@
+digraph G {
+ graph [rankdir=TB, bgcolor="transparent", pad="0.22", nodesep="0.35", ranksep="0.6", splines=polyline];
+ node [shape=box, style="rounded,filled", fillcolor="#F1F5F9", color="#94A3B8", fontname="Noto Sans CJK SC", fontsize=12, margin="0.17,0.12"];
+ edge [color="#64748B", fontname="Noto Sans CJK SC", fontsize=10, arrowsize=0.65];
+
+base [label="既有本地 .sdlc
+项目 / CTX / 历史需求",fillcolor="#DCEEEA"];
+choice [shape=diamond,label="新工作区无库
+复制 / 新建",fillcolor="#FEF3C7"];
+clone [label="一致快照 + 必要附件
+新的 workspace / instance"];
+run [label="需求A：REQ→…→RLS
+允许合入新的代码基线"];
+pack [label="需求数据 + 引用闭包
+运行日志 + 附件归档"];
+merge [shape=diamond,label="与目标库比较身份/摘要
+检查head祖先关系",fillcolor="#FEF3C7"];
+append [label="独立需求新增 / 快进 / 补历史
+事务导入 + 幂等回执",fillcolor="#DCEEEA"];
+conflict [label="分歧：保留双方历史
+目标active不动
+明确矫正后产生新快照"];
+base -> choice;choice -> clone [label="默认复制"];clone -> run -> pack -> merge;
+merge -> append [label="无分歧"];merge -> conflict [label="有分歧"];
+append -> base [label="交回",constraint=false];
+
+}

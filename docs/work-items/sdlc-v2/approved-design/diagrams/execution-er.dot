@@ -1,0 +1,19 @@
+digraph G {
+ graph [rankdir=TB, bgcolor="transparent", pad="0.22", nodesep="0.35", ranksep="0.6", splines=polyline];
+ node [shape=box, style="rounded,filled", fillcolor="#F1F5F9", color="#94A3B8", fontname="Noto Sans CJK SC", fontsize=12, margin="0.17,0.12"];
+ edge [color="#64748B", fontname="Noto Sans CJK SC", fontsize=10, arrowsize=0.65];
+run [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#DCEEEA"><B>runs</B></TD></TR><TR><TD ALIGN="LEFT">PK run_id</TD></TR><TR><TD ALIGN="LEFT">FK project / change / workspace</TD></TR><TR><TD ALIGN="LEFT">status / actor / versions</TD></TR></TABLE>>];
+step [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>steps</B></TD></TR><TR><TD ALIGN="LEFT">PK step_id</TD></TR><TR><TD ALIGN="LEFT">FK run / revision / task</TD></TR><TR><TD ALIGN="LEFT">phase / attempt / outcome</TD></TR></TABLE>>];
+snap [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>code_snapshots</B></TD></TR><TR><TD ALIGN="LEFT">PK snapshot_id</TD></TR><TR><TD ALIGN="LEFT">FK run_id</TD></TR><TR><TD ALIGN="LEFT">HEAD / tree / patch / environment</TD></TR></TABLE>>];
+res [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#DCEEEA"><B>check_results</B></TD></TR><TR><TD ALIGN="LEFT">PK result_id</TD></TR><TR><TD ALIGN="LEFT">FK revision + check_id</TD></TR><TR><TD ALIGN="LEFT">FK step / snapshot / asset</TD></TR><TR><TD ALIGN="LEFT">status / observed_at / reused_from</TD></TR></TABLE>>];
+find [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>findings</B></TD></TR><TR><TD ALIGN="LEFT">PK finding_id</TD></TR><TR><TD ALIGN="LEFT">FK change / result / target</TD></TR><TR><TD ALIGN="LEFT">return_phase / status</TD></TR><TR><TD ALIGN="LEFT">resolution_result_id</TD></TR></TABLE>>];
+del [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>deliveries</B></TD></TR><TR><TD ALIGN="LEFT">PK delivery_id</TD></TR><TR><TD ALIGN="LEFT">FK change / snapshot / vfy_result</TD></TR><TR><TD ALIGN="LEFT">effect_key / target / status</TD></TR></TABLE>>];
+ast [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>assets + asset_links</B></TD></TR><TR><TD ALIGN="LEFT">asset_id / project_id / sha256</TD></TR><TR><TD ALIGN="LEFT">明确关联source/design/result/delivery</TD></TR></TABLE>>];
+op [shape=plain, label=<<TABLE BORDER="1" CELLBORDER="0" CELLSPACING="0" CELLPADDING="8" COLOR="#94A3B8"><TR><TD BGCOLOR="#E2E8F0"><B>operations</B></TD></TR><TR><TD ALIGN="LEFT">PK operation_id</TD></TR><TR><TD ALIGN="LEFT">command / request_digest</TD></TR><TR><TD ALIGN="LEFT">response_json / status</TD></TR></TABLE>>];
+run -> step [label="1:N"]; run -> snap [label="1:N"];run -> op [label="1:N"];
+step -> res [label="1:N"];snap -> res [label="准确对象"];
+res -> find [label="发现 / 关闭依据"];res -> del [label="VFY / 回读依据"];
+ast -> res [label="原始证据"];snap -> del [label="交付同一对象"];
+{rank=same;step;snap;op;} {rank=same;find;del;}
+
+}

@@ -1,0 +1,151 @@
+{
+  "retrieved_on": "2026-09-09",
+  "sdlc_ai_spec_commit": "f25ed518f662c0ac7306c94f845297f5642c44b2",
+  "spec_kit_commit": "3a19a6ba900e34a9f5e02848fb8737d1c364a04b",
+  "sources": [
+    {
+      "id": "S01",
+      "title": "Spec Kit 官方首页",
+      "url": "https://github.github.io/spec-kit/",
+      "scope": "默认SDD与多Agent接入；未作性能/质量保证"
+    },
+    {
+      "id": "S02",
+      "title": "Spec Kit：Existing Projects",
+      "url": "https://github.github.io/spec-kit/guides/existing-projects.html",
+      "scope": "既有项目边界明确的变更；implement/converge循环"
+    },
+    {
+      "id": "S03",
+      "title": "Spec Kit：Workflows",
+      "url": "https://github.github.io/spec-kit/reference/workflows.html",
+      "scope": "状态、日志、循环、resume以及流程可扩展性"
+    },
+    {
+      "id": "S04",
+      "title": "Spec Kit：Presets",
+      "url": "https://github.github.io/spec-kit/reference/presets.html",
+      "scope": "命令和模板覆盖机制，不据此声称已有SQL存储插件"
+    },
+    {
+      "id": "S05",
+      "title": "SQLite Backup API",
+      "url": "https://www.sqlite.org/backup.html",
+      "scope": "一致数据库副本；整体附件闭包仍需本设计导出实现"
+    },
+    {
+      "id": "S06",
+      "title": "SQLite：Faster Than Filesystem",
+      "url": "https://www.sqlite.org/fasterthanfs.html",
+      "scope": "历史小Blob基准，反对未测量就宣称Blob慢"
+    },
+    {
+      "id": "S07",
+      "title": "Git worktree 官方说明",
+      "url": "https://git-scm.com/docs/git-worktree",
+      "scope": "登记工作区发现；本设计未把main/worktree定为强制工作方式"
+    },
+    {
+      "id": "S08",
+      "title": "SQLite STRICT Tables",
+      "url": "https://www.sqlite.org/stricttables.html",
+      "scope": "3.37起STRICT类型能力及约束"
+    },
+    {
+      "id": "S09",
+      "title": "Anthropic：The AI-Native SDLC playbook",
+      "url": "https://claude.com/blog/the-ai-native-sdlc-playbook",
+      "scope": "阶段循环、控制执行与人的决策责任；本文auto/不入VCS是用户选择"
+    },
+    {
+      "id": "S10",
+      "title": "当前 core-spec",
+      "url": "https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/core-spec.md",
+      "scope": "审查开头240行重点：阶段、格式、Identity、Claim和引用"
+    },
+    {
+      "id": "S11",
+      "title": "当前 artifact-store-spec",
+      "url": "https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/artifact-store-spec.md",
+      "scope": "审查开头160行重点：Canonical Payload和存储操作"
+    },
+    {
+      "id": "S12",
+      "title": "当前 CTX spec",
+      "url": "https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/000-ctx-spec.md",
+      "scope": "审查开头115行：边界、身份、版本和存储"
+    },
+    {
+      "id": "S13",
+      "title": "当前 DSN spec",
+      "url": "https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/200-dsn-spec.md",
+      "scope": "审查开头125行：设计边界、16域总纲、成员和追踪"
+    },
+    {
+      "id": "S14",
+      "title": "当前 PLN spec",
+      "url": "https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/300-pln-spec.md",
+      "scope": "审查开头105行：计划与工作项、适用性和输入"
+    },
+    {
+      "id": "S15",
+      "title": "当前 IMP spec",
+      "url": "https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/400-imp-spec.md",
+      "scope": "审查开头95行：Binding、Claim、结果和边界"
+    },
+    {
+      "id": "S16",
+      "title": "当前 VFY spec",
+      "url": "https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/500-vfy-spec.md",
+      "scope": "审查开头100行：Verification/Validation、方法与回流"
+    },
+    {
+      "id": "S17",
+      "title": "当前 RLS spec",
+      "url": "https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/600-rls-spec.md",
+      "scope": "审查开头90行：发版、目标回读、适用性和结果绑定"
+    },
+    {
+      "id": "S18",
+      "title": "当前 REQ spec",
+      "url": "https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/v1.1/100-req-spec.md",
+      "scope": "前轮已读取的同一固定SHA：来源、需求、验收与依赖"
+    },
+    {
+      "id": "S19",
+      "title": "当前存储架构决策",
+      "url": "https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/docs/architecture/artifact-store-and-projection.md",
+      "scope": "前轮同一固定SHA：Blob权威和首版不完全关系化"
+    },
+    {
+      "id": "S20",
+      "title": "当前 AGENTS",
+      "url": "https://github.com/ousui/sdlc-ai-spec/blob/f25ed518f662c0ac7306c94f845297f5642c44b2/AGENTS.md",
+      "scope": "前轮同一固定SHA：工程规则与独立Skill执行限制"
+    },
+    {
+      "id": "S21",
+      "title": "Spec Kit converge命令模板",
+      "url": "https://github.com/github/spec-kit/blob/3a19a6ba900e34a9f5e02848fb8737d1c364a04b/templates/commands/converge.md",
+      "scope": "参考闭环思路；实际新接口由本设计定义"
+    },
+    {
+      "id": "S22",
+      "title": "Spec Kit LICENSE",
+      "url": "https://github.com/github/spec-kit/blob/3a19a6ba900e34a9f5e02848fb8737d1c364a04b/LICENSE",
+      "scope": "复用实际资产时保留版权许可；本包没有复制其实现"
+    },
+    {
+      "id": "S23",
+      "title": "SQLite omitted features",
+      "url": "https://www.sqlite.org/omitted.html",
+      "scope": "本地文件权限与服务端授权的区别"
+    },
+    {
+      "id": "S24",
+      "title": "Python sqlite3 官方文档",
+      "url": "https://docs.python.org/3/library/sqlite3.html",
+      "scope": "连接、事务与backup接口参考"
+    }
+  ]
+}

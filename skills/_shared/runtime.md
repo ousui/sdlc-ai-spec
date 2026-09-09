@@ -49,6 +49,9 @@ Run先于正式IMP输出建立。run.acquire取得工作区执行lease，后续�
 
 check.run的argv是数组，资源/输入范围明确，输出有界且脱敏。input_paths为空默认完整main；
 Task写范围不是Check读取范围。实际构建/环境依赖也参与摘要；HEAD改变本身不否定结果。
+公开命令Schema列有environment时，通过payload.environment传非秘密变量，直接使用真实工具argv，不用env前缀掩盖解释器身份。
+现有白名单为PATH、JAVA_HOME、GOPROXY、GOTOOLCHAIN、GOCACHE、GOPATH、GOFLAGS、PYTHONDONTWRITEBYTECODE、PYTHONPATH、LANG、LC_ALL、MAVEN_OPTS和JAVA_TOOL_OPTIONS。
+Runtime强制GOPROXY=off、GOTOOLCHAIN=local、禁止pyc写入并补齐Java FORK选项。相同检查链的task、check、phase.complete及delivery.prepare使用同一环境映射；缓存写入还须绑定资源并列入Task写范围。
 工具必须先通过当前平台实际预检。当前命令收集器支持macOS Seatbelt；不支持的宿主或spawn机制明确blocked。
 原始工具stdout/stderr、代码字节/补丁及结果保存为证据，不能手写pass或使用占位日志。
 

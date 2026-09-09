@@ -2,6 +2,8 @@
 
 ## 目标与来源
 
+插件唯一权威仓库为goedgecloud/sdlc-ai-spec。ousui个人仓库仅用于开发；历史PR、CI和基线链接仅为开发证据，不作为安装、发布或规范来源。
+
 本仓库实现可独立安装的SDLC v2 Plugin：Python标准库、SQLite结构化事实及十个Skill入口。
 当前规范在docs/spec，公开协议在packages/sdlc/protocol.py与domain.py，机器投影为contracts/v2.json。
 批准设计和唯一工作进度在docs/work-items/sdlc-v2；历史版本以Git保存，不作为运行时依赖。

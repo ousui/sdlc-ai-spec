@@ -1,5 +1,5 @@
 policy:
   allow_implicit_invocation: false
 interface:
-  display_name: "SDLC 400 · 实现（IMP）"
-  short_description: "按已采用计划实际编写代码和测试、收集操作证据；用于实现任务及VFY驱动的产品修复。"
+  display_name: "SDLC-400-IMP · 开发实施"
+  short_description: "按已授权的交付计划执行开发，保存实现结果与可追踪的检查记录。"

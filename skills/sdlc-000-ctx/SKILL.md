@@ -1,10 +1,10 @@
 ---
 name: sdlc-000-ctx
-description: 收集实际项目事实、规则、资源和命令，保存可追踪CTX；用于新项目接管或已知上下文刷新。
+description: 收集项目事实、规则与资源，建立可追踪的项目上下文。
 disable-model-invocation: true
 ---
 
-# SDLC 000 · 上下文（CTX）
+# SDLC-000-CTX · 项目上下文
 
 ## 适用范围
 

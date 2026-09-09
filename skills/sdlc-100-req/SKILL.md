@@ -1,10 +1,10 @@
 ---
 name: sdlc-100-req
-description: 把原始需求、范围、来源和验收转为结构化变更；用于新需求或已有需求的明确修订。
+description: 明确需求来源、业务范围与验收标准，形成可追踪的结构化需求。
 disable-model-invocation: true
 ---
 
-# SDLC 100 · 需求（REQ）
+# SDLC-100-REQ · 需求定义
 
 ## 适用范围
 

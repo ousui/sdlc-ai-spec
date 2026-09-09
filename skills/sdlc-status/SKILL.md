@@ -1,10 +1,10 @@
 ---
 name: sdlc-status
-description: 只读查看本地需求、阶段、Run、检查和交付事实；需要时显式生成阅读视图，不自动推进业务。
+description: 查看需求进度、阻塞原因与下一步动作，不自动推进阶段。
 disable-model-invocation: true
 ---
 
-# SDLC 状态（status）
+# SDLC-STATUS · 生命周期状态
 
 ## 适用范围
 

@@ -1,10 +1,10 @@
 ---
 name: sdlc-300-pln
-description: 把设计拆为可执行任务、验证和交付安排；明确前驱、条件时点及资源权限，避免循环等待。
+description: 拆分可执行的实施任务，明确依赖关系、执行顺序与交付条件。
 disable-model-invocation: true
 ---
 
-# SDLC 300 · 计划（PLN）
+# SDLC-300-PLN · 交付计划
 
 ## 适用范围
 

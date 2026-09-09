@@ -1,5 +1,5 @@
 policy:
   allow_implicit_invocation: false
 interface:
-  display_name: "SDLC 200 · 设计（DSN）"
-  short_description: "根据需求和现有代码形成适用领域设计与真实验证方法；用于方案设计或VFY返回的设计修订。"
+  display_name: "SDLC-200-DSN · 方案设计"
+  short_description: "根据已确认需求制定完整设计方案，明确验证策略与证据要求。"

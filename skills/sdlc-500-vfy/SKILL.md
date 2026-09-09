@@ -1,10 +1,10 @@
 ---
 name: sdlc-500-vfy
-description: 执行真实验收和完整范围审阅，记录缺口并修复复验至收敛；用于实现验收及回归判断。
+description: 围绕验收标准验证实施结果，记录验收结论、返工项与发布条件。
 disable-model-invocation: true
 ---
 
-# SDLC 500 · 验证（VFY）
+# SDLC-500-VFY · 验证确认
 
 ## 适用范围
 

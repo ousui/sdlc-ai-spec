@@ -38,7 +38,7 @@ def validate(root=ROOT):
         require(re.findall(r'^## (.+)$', text, re.M) == HEADINGS, name+': seven sections differ')
         require(len(text.splitlines()) <= 200, name+': entry exceeds 200 lines')
         title = re.findall(r'^# (.+)$', text, re.M)
-        require(len(title) == 1 and title[0].startswith('SDLC '), name+': title differs')
+        require(len(title) == 1 and re.fullmatch(re.escape(name.upper())+r' · [\u4e00-\u9fff]+', title[0]), name+': title differs from directory')
         interface = json.loads((base/'references/interface.json').read_text())
         require(interface['api_version'] == '2' and interface['skill'] == name, name+': interface identity differs')
         rows = table(text, '子命令')
@@ -56,7 +56,21 @@ def validate(root=ROOT):
         require('allow_implicit_invocation: false' in policy and json.dumps(title[0], ensure_ascii=False) in policy, name+': metadata differs')
         short = json.loads(re.search(r'short_description: (".*")', policy).group(1))
         require(25 <= len(short) <= 64, name+': short description outside range')
+        description = re.search(r'^description: (.+)$', text, re.M).group(1)
+        require(description == short, name+': descriptions differ across clients')
         results.append({'skill': name, 'commands': len(rows), 'lines': len(text.splitlines())})
+    metadata = [json.loads((root/folder/'plugin.json').read_text())
+                for folder in ('.codex-plugin', '.claude-plugin', '.cursor-plugin')]
+    for folder in ('.claude-plugin', '.cursor-plugin'):
+        marketplace = root/folder/'marketplace.json'
+        if marketplace.is_file():  # Marketplace catalogs are not part of installed bundles.
+            metadata.extend(json.loads(marketplace.read_text())['plugins'])
+    for entry in metadata:
+        require(entry['homepage'] == 'https://github.com/goedgecloud/sdlc-ai-spec'
+                and entry['repository'] == 'git@github.com:goedgecloud/sdlc-ai-spec.git',
+                'Plugin repository must be the canonical goedgecloud source')
+        require(entry['description'] == metadata[0]['description'], 'Plugin descriptions differ across clients')
+    require(metadata[0]['interface']['websiteURL'] == metadata[0]['homepage'], 'Codex website differs from canonical source')
     return {'success': True, 'skills': results, 'scope': 'Formatting and public-interface consistency; not native discovery or Agent behavior certification'}
 
 

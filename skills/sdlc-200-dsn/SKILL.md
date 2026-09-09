@@ -1,10 +1,10 @@
 ---
 name: sdlc-200-dsn
-description: 根据需求和现有代码形成适用领域设计与真实验证方法；用于方案设计或VFY返回的设计修订。
+description: 根据已确认需求制定完整设计方案，明确验证策略与证据要求。
 disable-model-invocation: true
 ---
 
-# SDLC 200 · 设计（DSN）
+# SDLC-200-DSN · 方案设计
 
 ## 适用范围
 

@@ -1,5 +1,5 @@
 policy:
   allow_implicit_invocation: false
 interface:
-  display_name: "SDLC 600 · 交付（RLS）"
-  short_description: "将已验证产品交付到预先约定的本地包并独立回读，保留完整归档；不默认发布或部署。"
+  display_name: "SDLC-600-RLS · 发布交付"
+  short_description: "按已授权的发布计划执行本地交付，核对目标副本并保存交付证据。"

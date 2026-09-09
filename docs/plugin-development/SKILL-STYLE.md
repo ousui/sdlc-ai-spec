@@ -1,7 +1,9 @@
 # Skill内容与格式约定 v2
 
 固定七节：适用范围、约定与边界、子命令、参数、执行流程、输出与完成条件、资源索引。
-一个SDLC标题，目录与frontmatter name一致，description使用中文并准确描述阶段能力。
+阶段入口目录为`sdlc-000-ctx`至`sdlc-600-rls`，辅助入口为`sdlc-init`、`sdlc-status`、`sdlc-github`，辅助入口不加阶段编号。
+目录、frontmatter name与interface.skill一致；标题和display_name统一为目录名的大写形式加` · 中文描述`。
+SKILL description与UI short_description完全一致，使用中文准确描述入口能力。所有客户端共用同一SKILL、共享Runtime和授权边界；格式统一不改变各入口实际能力。
 保持现有显式调用策略：disable-model-invocation:true和allow_implicit_invocation:false。
 UI short_description为25–64字符。入口按实际复杂度精简，硬上限200行，不为凑行数重复规则。
 

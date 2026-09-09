@@ -1,5 +1,5 @@
 policy:
   allow_implicit_invocation: false
 interface:
-  display_name: "SDLC 500 · 验证（VFY）"
-  short_description: "执行真实验收和完整范围审阅，记录缺口并修复复验至收敛；用于实现验收及回归判断。"
+  display_name: "SDLC-500-VFY · 验证确认"
+  short_description: "围绕验收标准验证实施结果，记录验收结论、返工项与发布条件。"

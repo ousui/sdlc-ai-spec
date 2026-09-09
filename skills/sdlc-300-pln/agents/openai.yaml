@@ -1,5 +1,5 @@
 policy:
   allow_implicit_invocation: false
 interface:
-  display_name: "SDLC 300 · 计划（PLN）"
-  short_description: "把设计拆为可执行任务、验证和交付安排；明确前驱、条件时点及资源权限，避免循环等待。"
+  display_name: "SDLC-300-PLN · 交付计划"
+  short_description: "拆分可执行的实施任务，明确依赖关系、执行顺序与交付条件。"

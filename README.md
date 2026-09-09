@@ -1,5 +1,7 @@
 # SDLC AI Spec v2
 
+插件唯一权威仓库：[goedgecloud/sdlc-ai-spec](https://github.com/goedgecloud/sdlc-ai-spec)。个人仓库仅用于开发；工作记录中的个人仓库PR、CI与历史基线链接属于开发证据，不是插件安装或发布来源。
+
 Python标准库＋本地SQLite的结构化软件交付Runtime与十个Skill入口。
 当前为2.0开发分支：九个正式Skill与安装包已有115项回归检查点；独立前向小案例已完成，三项目真实链继续验证，尚未发布。
 准确进度见[PROGRESS](docs/work-items/sdlc-v2/PROGRESS.md)。

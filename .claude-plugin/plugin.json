@@ -7,8 +7,8 @@
     "name": "Blade",
     "url": "https://github.com/blade-cdn"
   },
-  "homepage": "https://github.com/ousui/sdlc-ai-spec",
-  "repository": "git@github.com:ousui/sdlc-ai-spec.git",
+  "homepage": "https://github.com/goedgecloud/sdlc-ai-spec",
+  "repository": "git@github.com:goedgecloud/sdlc-ai-spec.git",
   "keywords": [
     "sdlc",
     "local-first",

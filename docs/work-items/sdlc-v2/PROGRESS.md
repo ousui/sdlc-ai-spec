@@ -43,3 +43,13 @@ GitHub读写预检已通过：#22评论5601077221写入并读回。旧实施PR #
 ## 下一动作
 
 读取PR23当前HEAD CI与专项报告，使用修复后的完整安装包进行普通用户新会话试用；必要的本机验证按USAGE.md执行。只有发现具体失败再开有边界修复，不再重新设计v2或扩大到平台化。
+
+## 2026-09-09 Skill展示文案与插件来源
+
+十个入口的目录、调用标识与interface.skill对应；标题和display_name为目录名大写加中文描述，SKILL简介与UI简介一致。阶段入口保留000–600；辅助入口为SDLC-INIT、SDLC-STATUS、SDLC-GITHUB，不使用编号。三个客户端共用Skill、Runtime和显式调用边界。
+
+插件唯一权威仓库为goedgecloud/sdlc-ai-spec；三个客户端插件及市场元数据均使用该地址。历史ousui个人仓库PR、CI和冻结基线仅保留为开发证据，不代表权威安装或发布来源。
+
+证据索引：tools/validate_skill_style.py校验十入口目录/标识/标题/简介/调用策略与跨客户端插件来源；tools/validate.py quick检查公共契约；tests/v2/test_packaging.py验证独立安装包；git diff --check检查空白错误。缓存按57个打包源文件逐字节核对。原生客户端实际调用和刷新后的界面未认证。
+
+本轮结果：quick与十入口样式校验通过；安装包测试4/5通过，真实交付链在命令检查步骤失败（受限执行为blocked，宿主权限重跑为fail），未认定为安装链路通过，未改动Runtime掩盖失败。日志与quick报告保留于`/tmp/sdlc-skill-format-20260909/`。

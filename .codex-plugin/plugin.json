@@ -6,8 +6,8 @@
     "name": "Blade",
     "url": "https://github.com/blade-cdn"
   },
-  "homepage": "https://github.com/ousui/sdlc-ai-spec",
-  "repository": "git@github.com:ousui/sdlc-ai-spec.git",
+  "homepage": "https://github.com/goedgecloud/sdlc-ai-spec",
+  "repository": "git@github.com:goedgecloud/sdlc-ai-spec.git",
   "keywords": [
     "sdlc",
     "local-first",
@@ -25,7 +25,7 @@
       "Read",
       "Write"
     ],
-    "websiteURL": "https://github.com/ousui/sdlc-ai-spec",
+    "websiteURL": "https://github.com/goedgecloud/sdlc-ai-spec",
     "defaultPrompt": [
       "用SDLC v2完成当前已授权本地需求，实际验证并交付到约定本地目录。",
       "查看当前需求和执行证据的准确状态。"

@@ -1,10 +1,10 @@
 ---
 name: sdlc-600-rls
-description: 将已验证产品交付到预先约定的本地包并独立回读，保留完整归档；不默认发布或部署。
+description: 按已授权的发布计划执行本地交付，核对目标副本并保存交付证据。
 disable-model-invocation: true
 ---
 
-# SDLC 600 · 交付（RLS）
+# SDLC-600-RLS · 发布交付
 
 ## 适用范围
 

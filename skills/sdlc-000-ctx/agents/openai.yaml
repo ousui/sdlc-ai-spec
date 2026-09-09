@@ -1,5 +1,5 @@
 policy:
   allow_implicit_invocation: false
 interface:
-  display_name: "SDLC 000 · 上下文（CTX）"
-  short_description: "收集实际项目事实、规则、资源和命令，保存可追踪CTX；用于新项目接管或已知上下文刷新。"
+  display_name: "SDLC-000-CTX · 项目上下文"
+  short_description: "收集项目事实、规则与资源，建立可追踪的项目上下文。"

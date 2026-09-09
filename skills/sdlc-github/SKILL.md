@@ -1,10 +1,10 @@
 ---
 name: sdlc-github
-description: 将当前需求的已提交阶段产物以Markdown快照发送至明确GitHub Issue，记录幂等回执；可选共享不阻断本地六阶段。
+description: 将已提交阶段产物分享到指定议题，保存可查询的发送回执。
 disable-model-invocation: true
 ---
 
-# SDLC GitHub · 产物共享
+# SDLC-GITHUB · 产物共享
 
 ## 适用范围
 

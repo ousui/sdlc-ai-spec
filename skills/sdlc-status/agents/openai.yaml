@@ -1,5 +1,5 @@
 policy:
   allow_implicit_invocation: false
 interface:
-  display_name: "SDLC 状态（status）"
-  short_description: "只读查看本地需求、阶段、Run、检查和交付事实；需要时显式生成阅读视图，不自动推进业务。"
+  display_name: "SDLC-STATUS · 生命周期状态"
+  short_description: "查看需求进度、阻塞原因与下一步动作，不自动推进阶段。"

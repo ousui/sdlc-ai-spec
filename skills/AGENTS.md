@@ -1,6 +1,6 @@
 # Skills Subtree Agent Instructions
 
-正式入口为sdlc-init、sdlc-000-ctx、REQ/DSN/PLN/IMP/VFY/RLS及sdlc-status。
+正式入口为sdlc-init、sdlc-000-ctx、REQ/DSN/PLN/IMP/VFY/RLS及sdlc-status、sdlc-github。
 命名、中文描述、七节结构与显式调用策略遵守docs/plugin-development/SKILL-STYLE.md。
 本次十入口依据已批准v2设计与用户连续实施授权，不重走旧v1逐阶段确认流程。
 

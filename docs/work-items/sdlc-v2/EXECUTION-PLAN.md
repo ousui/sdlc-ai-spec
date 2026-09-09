@@ -20,7 +20,7 @@
 
 | 对象 | 核实值 | 本地动作 |
 |---|---|---|
-| 规范仓库 | `ousui/sdlc-ai-spec` | 解析已有工作区和 remote，不改写多账户 SSH 配置 |
+| 规范仓库 | `goedgecloud/sdlc-ai-spec` | 解析已有工作区和 remote，不改写多账户 SSH 配置 |
 | 批准基线 | `f25ed518f662c0ac7306c94f845297f5642c44b2` | 检查对象是否存在、是否为当前实现链祖先 |
 | 实现分支 | `impl/sdlc-v2-structured-runtime` | 有同名本地分支则复核并继续；不要强制重建 |
 | 核实 HEAD | `d39601d0272c77ccece51a9751a5e865c55ea603` | 仅是本次移交锚点，不覆盖本地更新 |

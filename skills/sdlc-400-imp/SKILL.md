@@ -1,10 +1,10 @@
 ---
 name: sdlc-400-imp
-description: 按已采用计划实际编写代码和测试、收集操作证据；用于实现任务及VFY驱动的产品修复。
+description: 按已授权的交付计划执行开发，保存实现结果与可追踪的检查记录。
 disable-model-invocation: true
 ---
 
-# SDLC 400 · 实现（IMP）
+# SDLC-400-IMP · 开发实施
 
 ## 适用范围
 

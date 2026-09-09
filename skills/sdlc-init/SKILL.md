@@ -1,10 +1,10 @@
 ---
 name: sdlc-init
-description: 初始化、诊断或复制本地SDLC工作区；已有库保留数据，独立副本重新绑定身份与权限。
+description: 初始化、诊断或复制本地工作区，保留已有数据并绑定执行权限。
 disable-model-invocation: true
 ---
 
-# SDLC 初始化（INIT）
+# SDLC-INIT · 工作区初始化
 
 ## 适用范围
 

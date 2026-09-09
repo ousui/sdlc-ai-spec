@@ -1,5 +1,9 @@
 # SDLC v2 唯一进度
 
+## 后续Web审阅移交
+
+用户已授权推送原分支，两个PR已待审阅。首次远端CI暴露Framework Python启动器与既定posix_spawn隔离规则不兼容，追加仅workflow修正，效果以PR最新同提交CI实际回读为准；不改冻结Runtime/Skill/测试，见[WEB-REVIEW.md](WEB-REVIEW.md)。原本地收口状态与证据保持原时间边界。
+
 ## 当前事实
 
 - 当前工作包：FINAL已完成批准本地范围；九个产品场景、159项测试、43项适用验收已证，3项明确延期。最终收口见FINAL-RESULTS.md和实验室CLOSEOUT.json。

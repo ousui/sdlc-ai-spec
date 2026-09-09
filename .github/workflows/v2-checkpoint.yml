@@ -17,10 +17,27 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
+      - name: Select the direct Python executable for Seatbelt
+        id: python-runtime
+        run: |
+          python - <<'PY'
+          import os
+          import sys
+          from pathlib import Path
+
+          # Framework launchers use posix_spawn, which the collector deliberately
+          # denies to prevent process-group/session escapes. Run the interpreter
+          # itself; retain the same sandbox policy and all execution assertions.
+          framework = Path(sys.base_prefix) / "Resources/Python.app/Contents/MacOS/Python"
+          executable = framework if framework.is_file() else Path(sys.executable).resolve()
+          print(f"Python launcher: {sys.executable}; direct executable: {executable}")
+          with open(os.environ["GITHUB_OUTPUT"], "a") as output:
+              output.write(f"executable={executable}\n")
+          PY
       - name: Validate the single v2 runtime and installed copy
-        run: python -B tools/validate.py --profile full --evidence-dir "$RUNNER_TEMP/sdlc-v2-evidence"
+        run: '"${{ steps.python-runtime.outputs.executable }}" -B tools/validate.py --profile full --evidence-dir "$RUNNER_TEMP/sdlc-v2-evidence"'
       - name: Build the local plugin artifact
-        run: python -B tools/build_plugin.py --output "$RUNNER_TEMP/sdlc-v2-plugin"
+        run: '"${{ steps.python-runtime.outputs.executable }}" -B tools/build_plugin.py --output "$RUNNER_TEMP/sdlc-v2-plugin"'
       - uses: actions/upload-artifact@v4
         if: always()
         with:

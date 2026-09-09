@@ -27,8 +27,7 @@ jobs:
           python - <<'PY'
           import base64, gzip, hashlib, io, os
           from pathlib import Path
-          # Temporary source transport only. These tiny corrections recover the
-          # independently downloaded/compared fragments; the final SHA pins every byte.
+          # Temporary source transport, removed after a normal source commit.
           corrections = {1: [(3984, 3985, ''), (14080, 14080, '4')],
                          2: [(3799, 3800, ''), (11601, 11602, ''), (14081, 14084, 'z')]}
           expected = ['6e7766b4fcf4e052efe23f7295a0e8f6d4e776c6',
@@ -53,8 +52,13 @@ jobs:
           PY
           git apply --check --index "$RUNNER_TEMP/review.patch"
           git apply --index "$RUNNER_TEMP/review.patch"
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('tests/v2/review_support.py')
+          p.write_bytes(p.read_bytes().rstrip(b'\n') + b'\n')
+          PY
           python -B tools/build_v2_contract.py
-          git add contracts/v2.json
+          git add contracts/v2.json tests/v2/review_support.py
           git diff --cached --check
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'

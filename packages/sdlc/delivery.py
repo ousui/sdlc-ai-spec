@@ -65,7 +65,7 @@ def prepare(store, con, project, change, run, p):
     ch = content.change_row(con, project, change)
     require(ch['delivery_mode'] == 'local', 'DELIVERY_ADAPTER_UNAVAILABLE', 'Only the local delivery adapter is installed', status='blocked')
     verification.authorize(con, project, change, run, 'package_local', ch['delivery_target'])
-    evaluation = verification.evaluate(store, con, project, change, p['revision_id'], p.get('environment'))
+    evaluation = verification.evaluate(store, con, project, change, p['revision_id'], p.get('environment'), workspace=engine.run_row(con, project, change, run)['workspace_id'])
     require(evaluation['converged'], 'NOT_CONVERGED', 'Current VFY inputs or results no longer converge', status='blocked', details=evaluation)
     readbacks = list(con.execute("SELECT * FROM checks WHERE revision_id=? AND required=1 AND purpose='release_readback'", (p['revision_id'],)))
     require(len(readbacks) == 1 and native_readback(readbacks[0]),
@@ -112,7 +112,7 @@ def prepare_effect(store, con, project, change, run, p, work):
     observed = verification.current_subject(store, con, item['revision_id'], check, loads(item['environment_json']))
     require((observed['digest'], observed['environment_digest']) == (original['digest'], original['environment_digest']),
             'DELIVERY_SUBJECT_CHANGED', 'Prepared package no longer matches current product inputs', status='blocked')
-    require(verification.evaluate(store, con, project, change, item['revision_id'], loads(item['environment_json']))['converged'],
+    require(verification.evaluate(store, con, project, change, item['revision_id'], loads(item['environment_json']), workspace=engine.run_row(con, project, change, run)['workspace_id'])['converged'],
             'NOT_CONVERGED', 'Verification must remain applicable before delivery', status='blocked')
     raw = store.asset_bytes(con, item['bundle_asset_id'], project)
     step = engine.new_step(con, project, change, run, item['revision_id'], 'RLS', 'delivery.readback:'+item['delivery_id'])
@@ -182,7 +182,7 @@ def close(store, con, project, change, run, p):
     pending = [r[0] for r in con.execute("SELECT task_id FROM tasks WHERE revision_id=? AND target_phase='RLS'", (p['revision_id'],))
                if not verification.task_completed(con, change, p['revision_id'], r[0])]
     require(not pending, 'TASKS_PENDING', 'Complete the delivery tasks', status='blocked', details=pending)
-    require(verification.evaluate(store, con, project, change, p['revision_id'], loads(item['environment_json']))['converged'],
+    require(verification.evaluate(store, con, project, change, p['revision_id'], loads(item['environment_json']), workspace=engine.run_row(con, project, change, run)['workspace_id'])['converged'],
             'NOT_CONVERGED', 'Current product evidence changed before closure', status='blocked')
     expected = one(con, 'SELECT sha256 FROM assets WHERE asset_id=?', (item['bundle_asset_id'],))[0]
     path = destination(store, item['target'], expected)

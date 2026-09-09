@@ -177,7 +177,7 @@ def finding_from_result(con, project, change, revision, check, result, descripti
     return value
 
 
-def evaluate(store, con, project, change, revision, overrides=None):
+def evaluate(store, con, project, change, revision, overrides=None, *, workspace):
     validate_complete(con, revision, 'VFY')
     checks, missing, failed = [], [], []
     for check in con.execute("SELECT * FROM checks WHERE revision_id=? AND required=1 AND purpose<>'release_readback' ORDER BY check_id", (revision,)):
@@ -193,7 +193,7 @@ def evaluate(store, con, project, change, revision, overrides=None):
     pending = [r['task_id'] for r in con.execute("SELECT * FROM tasks WHERE revision_id=? AND target_phase<>'RLS'", (revision,))
                if not task_completed(con, change, revision, r['task_id'])]
     findings = [dict(r) for r in con.execute("SELECT * FROM findings WHERE project_id=? AND change_id=? AND severity='blocking' AND status IN ('open','addressed')", (project, change))]
-    unknown = [r[0] for r in con.execute("SELECT o.operation_id FROM operations o JOIN runs r USING(run_id) WHERE r.change_id=? AND r.workspace_id=? AND r.origin_kind='local' AND o.origin_kind='local' AND o.status='unknown'", (change, store.config()['workspace_id']))]
+    unknown = [r[0] for r in con.execute("SELECT o.operation_id FROM operations o JOIN runs r USING(run_id) WHERE r.change_id=? AND r.workspace_id=? AND r.origin_kind='local' AND o.origin_kind='local' AND o.status='unknown'", (change, workspace))]
     return {'converged': not (missing or failed or pending or findings or unknown), 'checks': checks,
             'missing_checks': missing, 'failed_checks': failed, 'pending_tasks': pending, 'blocking_findings': findings,
             'unknown_operations': unknown}

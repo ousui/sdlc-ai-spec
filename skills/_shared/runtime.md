@@ -65,6 +65,8 @@ Runtime强制GOPROXY=off、GOTOOLCHAIN=local、禁止pyc写入并补齐Java FORK
 VFY发现合理业务缺口时，记录finding并按返回phase修订内容或修复代码；重新执行受影响检查、
 finding.address后使用适用新result做finding.resolve。addressed不等于resolved。
 退回执行阶段后用task.next取得待修复任务；修复是新任务尝试，旧完成记录继续保留为历史。
+检查失败导致验证任务无法满足完成条件时，直接phase.complete请求退修；保留原条件和依赖。
+Runtime将当前Run未完成任务留为interrupted/unknown，修复后须重新开始验证任务并实际满足条件。
 执行完整范围的convergence审阅，检查未实现、部分实现、矛盾和越界功能；未解决blocking缺口不能关闭。
 默认格式重试3、修复5、无进展2；触发预算后先诊断，增加预算须有实际依据并用run.configure记录。
 不通过删除合法依赖、放宽验收、虚构授权或手工SQL清除阻塞。

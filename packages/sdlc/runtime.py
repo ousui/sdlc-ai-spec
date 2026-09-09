@@ -57,7 +57,7 @@ class Runtime:
                 config = self.store.config()
                 with self.store.read() as con:
                     project, workspace = self.binding(con, config, request)
-                    data = self.read_command(con, project, request)
+                    data = self.read_command(con, project, request, workspace=workspace)
                 return success(data, request.get('operation_id'), request.get('run_id'))
             op_id = request.setdefault('operation_id', uid())
             request_hash = digest(request)
@@ -194,7 +194,7 @@ class Runtime:
                'command': request['command'], 'request_digest': hashed, 'status': 'succeeded' if response['ok'] else 'rejected',
                'response_json': canonical(response).decode(), 'created_at': now()})
 
-    def read_command(self, con, project, request):
+    def read_command(self, con, project, request, *, workspace):
         command, payload, change = request['command'], request.get('payload', {}), request.get('change_id')
         if command == 'workspace.inspect':
             return {'config': self.store.config(), 'schema_version': con.execute('SELECT max(version) FROM schema_migrations').fetchone()[0],
@@ -227,7 +227,7 @@ class Runtime:
                 return engine.task_next(self.store, con, project, change, request['run_id'], payload['revision_id'], payload.get('environment'))
             if command == 'check.evaluate':
                 engine.adopted(con, project, change, payload['revision_id'])
-                return verification.evaluate(self.store, con, project, change, payload['revision_id'], payload.get('environment'))
+                return verification.evaluate(self.store, con, project, change, payload['revision_id'], payload.get('environment'), workspace=workspace)
             return {'findings': [dict(r) for r in con.execute('SELECT * FROM findings WHERE project_id=? AND change_id=?', (project, change))]}
         if command in {'change.get', 'phase.prepare'}:
             current = engine.phase(con, project, change, request['run_id']) if request.get('run_id') else None

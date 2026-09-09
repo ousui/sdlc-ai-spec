@@ -270,12 +270,15 @@ def complete_phase(store, con, project, change, run, p):
         con.execute("UPDATE steps SET status='completed',outcome='not_applicable',finished_at=? WHERE step_id=?", (now(), step))
         return {'phase': 'IMP', 'next_actions': [{'action': 'phase.prepare', 'phase': 'VFY'}]}
     require(current == 'VFY', 'PHASE_ORDER', 'Expected verification phase', status='blocked')
-    evaluation = verification.evaluate(store, con, project, change, revision, p.get('environment'))
-    # Missing executions or still-running tasks do not consume a repair round.
-    require(not evaluation['missing_checks'] and not evaluation['pending_tasks'], 'VERIFICATION_PENDING',
-            'Execute the remaining tasks and checks before convergence', status='blocked', details=evaluation)
+    evaluation = verification.evaluate(store, con, project, change, revision, p.get('environment'), workspace=run_row(con, project, change, run)['workspace_id'])
     require(not evaluation['unknown_operations'] and not any(r['status'] in {'unknown', 'blocked'} for r in evaluation['failed_checks']),
             'CHECK_INDETERMINATE', 'Reconcile unknown effects or restore the check environment before retrying verification', status='blocked', details=evaluation)
+    # A known failure may prevent its verifier from completing and its dependent
+    # review from starting. Keep those obligations, but allow the repair first.
+    # Missing work alone still cannot consume a repair round or advance VFY.
+    if not evaluation['failed_checks'] and not evaluation['blocking_findings']:
+        require(not evaluation['missing_checks'] and not evaluation['pending_tasks'], 'VERIFICATION_PENDING',
+                'Execute the remaining tasks and checks before convergence', status='blocked', details=evaluation)
     step = new_step(con, project, change, run, revision, 'VFY', 'phase.complete:VFY')
     con.execute("UPDATE steps SET status='completed',outcome=?,finished_at=? WHERE step_id=?", ('pass' if evaluation['converged'] else 'fail', now(), step))
     if evaluation['converged']:
@@ -290,6 +293,9 @@ def complete_phase(store, con, project, change, run, p):
     exhausted = rounds >= state['max_repair_rounds'] or stagnant >= state['no_progress_limit']
     earliest = min((f['return_phase'] for f in evaluation['blocking_findings']), key=lambda x: ['REQ','DSN','PLN','IMP','VFY','RLS'].index(x), default='IMP')
     repair_ids = verification.repair_tasks(con, revision, earliest, evaluation['blocking_findings'], evaluation['failed_checks'])
+    # Effect recovery was checked before entering this transition. These are
+    # unfinished authoring/verifier attempts, not successful task completions.
+    con.execute("UPDATE steps SET status='interrupted',outcome='unknown',finished_at=? WHERE run_id=? AND step_key LIKE 'task:%' AND status='running'", (now(), run))
     for task in repair_ids:
         marker = new_step(con, project, change, run, revision, earliest, 'repair:'+task,
                           task=task, definition=task_fingerprint(con, revision, task), status='blocked')

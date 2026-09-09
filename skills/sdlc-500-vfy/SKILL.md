@@ -65,7 +65,7 @@ help/version/commands可通过CLI帮助、版本与本Skill命令表读取，不
 
 3. 当前Agent真正检查完整需求范围与实际代码，用convergence agent Check记录审阅及缺口。声明self_review，不冒充独立或human审查。
 
-4. phase.complete VFY未收敛时，按实际finding返回阶段；已有总授权下当前Agent重新读取该阶段Skill，修内容或代码并重跑受影响检查。
+4. 已知失败使验证任务无法完成或依赖审阅无法开始时，也调用phase.complete VFY退修；保留原条件和依赖。按返回阶段重新读取Skill并修复，原未完成任务留为interrupted/unknown，恢复后重新开始。
 
 5. finding.address仅记录已采取修复；finding.resolve必须引用适用的新通过结果。再次完成所有必要Check与收敛审阅，check.evaluate为真才继续。
 

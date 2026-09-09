@@ -28,6 +28,7 @@ help/version/commands可通过CLI帮助、版本与本Skill命令表读取，不
 | `change.create` | 保存原始请求并建立需求 | 是，须满足本阶段授权 |
 | `change.get` | 读取当前需求内容 | 否 |
 | `change.revise` | 建立前序内容修订草稿 | 是，须满足本阶段授权 |
+| `change.resolve` | 从双方内容检查点建立显式合并草稿 | 是，须满足本阶段授权 |
 | `phase.prepare` | 读取准确内容和本阶段Schema | 否 |
 | `phase.submit` | 按generation提交结构化批次 | 是，须满足本阶段授权 |
 | `asset.add` | 关联真实原始附件 | 是，须满足本阶段授权 |

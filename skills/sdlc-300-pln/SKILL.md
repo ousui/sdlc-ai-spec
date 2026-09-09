@@ -27,6 +27,7 @@ help/version/commands可通过CLI帮助、版本与本Skill命令表读取，不
 |---|---|---|
 | `phase.prepare` | 读取准确内容和本阶段Schema | 否 |
 | `change.revise` | 建立前序内容修订草稿 | 是，须满足本阶段授权 |
+| `change.resolve` | 从双方内容检查点建立显式合并草稿 | 是，须满足本阶段授权 |
 | `phase.submit` | 按generation提交结构化批次 | 是，须满足本阶段授权 |
 | `phase.complete` | 校验并完成当前阶段 | 是，须满足本阶段授权 |
 | `run.request_input` | 保存冲突并等待用户澄清 | 是，须满足本阶段授权 |

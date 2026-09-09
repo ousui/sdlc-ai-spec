@@ -13,6 +13,11 @@
       "writes": true
     },
     {
+      "name": "change.resolve",
+      "description": "从双方内容检查点建立显式合并草稿",
+      "writes": true
+    },
+    {
       "name": "phase.submit",
       "description": "按generation提交结构化批次",
       "writes": true

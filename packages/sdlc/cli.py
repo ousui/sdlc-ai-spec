@@ -38,7 +38,7 @@ def main(argv=None):
         response = failure(fault)
         response['diagnostic_path'] = Runtime(args.root).bootstrap({'raw_request': '[unparsed]'}, response)
     print(canonical(response).decode())
-    return 0 if response['ok'] else {'invalid_input': 2, 'conflict': 2, 'blocked': 3, 'needs_input': 3}.get(response['status'], 4)
+    return 0 if response['ok'] else {'invalid_input': 2, 'conflict': 2, 'blocked': 3, 'needs_input': 3, 'needs_work': 3, 'unknown': 3}.get(response['status'], 4)
 
 
 if __name__ == '__main__':

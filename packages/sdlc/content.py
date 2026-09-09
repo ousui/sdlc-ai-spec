@@ -2,7 +2,7 @@
 from .common import PHASES, canonical, digest, now, require, uid
 from .domain import batch, fields, validate_complete
 from .storage import CONTENT_TABLES, insert, one
-from .protocol import AUTHORIZATION, CONTEXT_ENTRY, operation_schema
+from .protocol import AUTHORIZATION, CONTEXT_ENTRY, operation_schema, phase_commands
 
 REVISION_TEXT = ('title', 'summary', 'goal', 'in_scope', 'out_of_scope')
 
@@ -133,10 +133,11 @@ def phase_complete(store, con, project, change, payload, generation):
             'next_actions': [{'action': 'phase.prepare', 'phase': next_phase}]}
 
 
-def prepare(store, con, project, change, phase=None):
+def prepare(store, con, project, change, phase=None, *, execution_phase=None):
     ch = change_row(con, project, change)
     row = revision_row(con, project, change)
-    inferred = row['created_phase'] if row['state'] == 'draft' else 'IMP'
+    latest = con.execute("SELECT current_phase FROM runs WHERE change_id=? AND current_phase IS NOT NULL AND status<>'cancelled' ORDER BY started_at DESC LIMIT 1", (change,)).fetchone()
+    inferred = row['created_phase'] if row['state'] == 'draft' else execution_phase or (latest[0] if latest else 'IMP')
     selected = phase or inferred
     require(selected in PHASES, 'INVALID_ENUM', 'Expected lifecycle phase', '/payload/phase')
     require(selected == inferred, 'PHASE_ORDER', 'Prepare the current phase: '+inferred, '/payload/phase', status='blocked')
@@ -144,5 +145,6 @@ def prepare(store, con, project, change, phase=None):
     context['entries'] = [dict(r) for r in con.execute('SELECT * FROM context_entries WHERE context_id=? ORDER BY kind,name', (row['context_id'],))]
     return {'change': dict(ch), 'content': store.content(con, row['revision_id']), 'context': context,
             'phase': selected, 'generation': row['generation'], 'input_schema': operation_schema(selected),
+            'commands': phase_commands(selected),
             'attachments': [dict(r) for r in con.execute('SELECT l.*,a.sha256,a.media_type FROM asset_links l JOIN assets a USING(asset_id) WHERE l.revision_id=? ORDER BY l.ordinal,l.link_id', (row['revision_id'],))],
             'authorizations': [dict(r) for r in con.execute('SELECT * FROM authorizations WHERE project_id=? AND change_id=?', (project, change))]}

@@ -19,7 +19,7 @@ PAYLOADS = {
     'change.revise': {'phase': 'str', 'reason': 'str', 'context_id': 'id?'},
     'phase.prepare': {'phase': 'str?'},
     'phase.submit': {'phase': 'str', 'revision_id': 'id', 'operations': 'array'},
-    'phase.complete': {'phase': 'str', 'revision_id': 'id'},
+    'phase.complete': {'phase': 'str', 'revision_id': 'id', 'lease_id': 'id?', 'environment': 'object?'},
     'run.start': {'actor_id': 'str', 'review_mode': 'str?'},
     'run.get': {},
     'status': {},
@@ -27,9 +27,31 @@ PAYLOADS = {
     'asset.add': {'path': 'str', 'owner_type': 'str', 'owner_id': 'id', 'purpose': 'str',
                   'original_name': 'str?', 'media_type': 'str?', 'ordinal': 'nonnegative?'},
 }
-READ_COMMANDS = {'workspace.inspect', 'change.get', 'phase.prepare', 'run.get', 'status'}
+PAYLOADS.update({
+    'run.acquire': {},
+    'run.resume': {'reason': 'str'},
+    'run.cancel': {'reason': 'str'},
+    'run.configure': {'reason': 'str', 'max_repair_rounds': 'positive?', 'no_progress_limit': 'positive?', 'max_format_attempts': 'positive?'},
+    'task.next': {'revision_id': 'id', 'environment': 'object?'},
+    'task.start': {'revision_id': 'id', 'task_id': 'id', 'lease_id': 'id', 'environment': 'object?'},
+    'task.finish': {'revision_id': 'id', 'task_id': 'id', 'step_id': 'id', 'lease_id': 'id', 'summary': 'str', 'environment': 'object?'},
+    'task.write': {'revision_id': 'id', 'task_id': 'id', 'step_id': 'id', 'lease_id': 'id', 'files': 'array', 'environment': 'object?'},
+    'check.run': {'revision_id': 'id', 'check_id': 'id', 'lease_id': 'id', 'environment': 'object?'},
+    'check.reuse': {'revision_id': 'id', 'check_id': 'id', 'lease_id': 'id', 'environment': 'object?'},
+    'check.record_review': {'revision_id': 'id', 'check_id': 'id', 'lease_id': 'id', 'status': 'str', 'observations': 'str', 'findings': 'array?', 'environment': 'object?'},
+    'check.evaluate': {'revision_id': 'id', 'environment': 'object?'},
+    'finding.list': {},
+    'finding.address': {'finding_id': 'id', 'lease_id': 'id'},
+    'finding.resolve': {'finding_id': 'id', 'result_id': 'id', 'lease_id': 'id', 'environment': 'object?'},
+    'operation.reconcile': {'operation_id': 'str'},
+})
+EFFECT_COMMANDS = {'task.write', 'check.run', 'operation.reconcile'}
+
+READ_COMMANDS = {'workspace.inspect', 'change.get', 'phase.prepare', 'run.get', 'status', 'task.next', 'check.evaluate', 'finding.list'}
 CONTEXT_ENTRY = {'kind': 'str', 'name': 'str', 'content': 'str', 'origin': 'str?', 'settings': 'object?'}
 AUTHORIZATION = {'action': 'str', 'target': 'str', 'issued_by': 'str', 'basis_text': 'str'}
+FILE_CHANGE = {'path': 'str', 'content': 'text?', 'action': 'str?', 'resource': 'str?'}
+REVIEW_FINDING = {'description': 'str', 'kind': 'str', 'severity': 'str', 'return_phase': 'str', 'criterion_id': 'id?', 'issue_key': 'str?'}
 
 
 def validate_request(request):
@@ -48,6 +70,7 @@ def validate_payload(request):
 def scalar_schema(spec, nullable=False):
     kind = spec.rstrip('?')
     result = {
+        'text': {'type': 'string'},
         'str': {'type': 'string', 'minLength': 1},
         'id': {'type': 'string', 'format': 'uuid'},
         'int': {'type': 'integer'},
@@ -110,6 +133,18 @@ def contract():
     authorization['properties']['action']['enum'] = ['edit_local', 'run_check', 'package_local']
     result['commands']['context.commit']['payload']['properties']['entries']['items'] = entries
     result['commands']['change.create']['payload']['properties']['authorizations']['items'] = authorization
+    result['commands']['task.write']['payload']['properties']['files']['items'] = schema(FILE_CHANGE)
+    result['commands']['check.record_review']['payload']['properties']['findings']['items'] = schema(REVIEW_FINDING)
     result['commands']['phase.submit']['payload']['properties']['operations'] = {
         'description': 'Use the operations schema returned by phase.prepare for the selected phase.', 'type': 'array'}
     return result
+
+
+def phase_commands(phase):
+    common = {'phase.prepare', 'phase.complete', 'change.revise', 'run.get', 'status', 'render', 'run.configure'}
+    content = {'phase.submit', 'asset.add'}
+    execution = {'run.acquire', 'run.resume', 'run.cancel', 'task.next', 'task.start', 'task.finish', 'task.write',
+                 'check.run', 'check.reuse', 'check.record_review', 'check.evaluate', 'finding.list', 'finding.address',
+                 'finding.resolve', 'operation.reconcile'}
+    names = common | (content if phase in STAGE_TABLES else execution)
+    return {key: value for key, value in contract()['commands'].items() if key in names}

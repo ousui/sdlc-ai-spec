@@ -13,7 +13,7 @@ FIELDS = {
     'criterion': ('criteria', {'condition_text': 'str', 'expected_result': 'str', 'ordinal': 'int?', 'requirements': 'refs?'}),
     'design': ('designs', {'domain': 'str', 'title': 'str', 'decision': 'str', 'rationale': 'str', 'alternatives': 'str', 'detail': 'str', 'ordinal': 'int?', 'requirements': 'refs?'}),
     'task': ('tasks', {'target_phase': 'str', 'kind': 'str', 'title': 'str', 'description': 'str', 'completion_text': 'str', 'scope_paths': 'paths', 'ordinal': 'int?', 'designs': 'refs?', 'criteria': 'refs?'}),
-    'check': ('checks', {'task': 'ref?', 'purpose': 'str', 'method': 'str', 'executor': 'str', 'description': 'str', 'expected_result': 'str', 'argv': 'argv?', 'required': 'bool', 'timeout_seconds': 'positive?', 'max_age_seconds': 'nonnegative?', 'criteria': 'refs?'}),
+    'check': ('checks', {'task': 'ref?', 'purpose': 'str', 'method': 'str', 'executor': 'str', 'description': 'str', 'expected_result': 'str', 'argv': 'argv?', 'input_paths': 'paths?', 'required': 'bool', 'timeout_seconds': 'positive?', 'max_age_seconds': 'nonnegative?', 'criteria': 'refs?'}),
     'precondition': ('preconditions', {'consumer_task': 'ref', 'check': 'ref', 'producer_task': 'ref?', 'enforce_at': 'str', 'reason': 'str'}),
 }
 RELATIONS = {
@@ -64,7 +64,9 @@ def pointer(path, key):
 
 
 def value_type(value, kind, path):
-    if kind == 'str':
+    if kind == 'text':
+        require(isinstance(value, str), 'INVALID_TYPE', 'Expected text', path)
+    elif kind == 'str':
         require(isinstance(value, str) and bool(value.strip()), 'INVALID_TYPE', 'Expected non-empty text', path)
     elif kind == 'int':
         require(type(value) is int, 'INVALID_TYPE', 'Expected integer', path)
@@ -199,7 +201,9 @@ def batch(con, revision, phase, operations):
                     relations.append((rel, {'revision_id': revision, left: value, right: ref(obj, target_table, f'{p}/{key}/{j}')}, p+'/'+key))
             elif key in {'task', 'consumer_task', 'producer_task', 'check'}:
                 row[key+'_id'] = ref(v, REF_TABLES[key], p+'/'+key)
-            elif key in {'argv', 'scope_paths'}:
+            elif key in {'argv', 'scope_paths', 'input_paths'}:
+                if key == 'input_paths':
+                    require(all(item['access'] == 'read' for item in v), 'CHECK_INPUT_SCOPE', 'Check input paths describe read dependencies', p+'/'+key)
                 row[key+'_json'] = canonical(v).decode() if v is not None else None
             elif key == 'required':
                 row[key] = int(v)

@@ -26,7 +26,7 @@ class Session:
             result = subprocess.run([sys.executable, '-B', str(CLI), '--root', str(self.root)],
                                     input=json.dumps(request), capture_output=True, text=True)
             response = json.loads(result.stdout)
-            expected = 0 if response['ok'] else (2 if response['status'] in {'invalid_input', 'conflict'} else 3 if response['status'] in {'blocked', 'needs_input'} else 4)
+            expected = 0 if response['ok'] else (2 if response['status'] in {'invalid_input', 'conflict'} else 3 if response['status'] in {'blocked', 'needs_input', 'needs_work', 'unknown'} else 4)
             assert result.returncode == expected, result.stderr
             return response
         return Runtime(self.root).invoke(request)

@@ -90,6 +90,7 @@ CREATE TABLE task_dependencies (
  FOREIGN KEY(revision_id,task_id) REFERENCES tasks(revision_id,task_id),FOREIGN KEY(revision_id,predecessor_id) REFERENCES tasks(revision_id,task_id)
 ) STRICT;
 CREATE TABLE checks (
+ input_paths_json TEXT NOT NULL DEFAULT '[]',
  revision_id TEXT NOT NULL,check_id TEXT NOT NULL,task_id TEXT,
  purpose TEXT NOT NULL CHECK(purpose IN ('acceptance','precondition','convergence','release_readback')),
  method TEXT NOT NULL CHECK(method IN ('test','inspection','analysis','demonstration')),executor TEXT NOT NULL CHECK(executor IN ('command','agent','human')),
@@ -121,20 +122,24 @@ CREATE TABLE runs (
  run_id TEXT PRIMARY KEY NOT NULL,project_id TEXT NOT NULL,change_id TEXT,workspace_id TEXT NOT NULL,input_revision_id TEXT,
  status TEXT NOT NULL CHECK(status IN ('created','running','blocked','completed','failed','interrupted','cancelled')),
  actor_id TEXT NOT NULL,runtime_version TEXT NOT NULL,contract_version TEXT NOT NULL,skill_version TEXT NOT NULL,
- review_mode TEXT NOT NULL CHECK(review_mode IN ('auto','assisted')),error_code TEXT,error_message TEXT,started_at TEXT NOT NULL,finished_at TEXT,
+ review_mode TEXT NOT NULL CHECK(review_mode IN ('auto','assisted')),current_phase TEXT,lease_id TEXT,
+ repair_round INTEGER NOT NULL DEFAULT 0,no_progress_rounds INTEGER NOT NULL DEFAULT 0,last_progress_digest TEXT,
+ max_repair_rounds INTEGER NOT NULL DEFAULT 5,no_progress_limit INTEGER NOT NULL DEFAULT 2,
+ max_format_attempts INTEGER NOT NULL DEFAULT 3,format_attempts INTEGER NOT NULL DEFAULT 0,
+ error_code TEXT,error_message TEXT,started_at TEXT NOT NULL,finished_at TEXT,
  UNIQUE(project_id,run_id),UNIQUE(change_id,run_id),
  FOREIGN KEY(project_id,workspace_id) REFERENCES workspaces(project_id,workspace_id),FOREIGN KEY(project_id,change_id) REFERENCES changes(project_id,change_id),
  FOREIGN KEY(change_id,input_revision_id) REFERENCES revisions(change_id,revision_id)
 ) STRICT;
 CREATE TABLE code_snapshots (
  snapshot_id TEXT PRIMARY KEY NOT NULL,project_id TEXT NOT NULL,run_id TEXT NOT NULL,resource_key TEXT NOT NULL,head_commit TEXT,tree_id TEXT,patch_asset_id TEXT,
- untracked_json TEXT NOT NULL DEFAULT '[]',environment_digest TEXT NOT NULL,digest TEXT NOT NULL,captured_at TEXT NOT NULL,
+ untracked_json TEXT NOT NULL DEFAULT '[]',files_json TEXT NOT NULL DEFAULT '[]',environment_digest TEXT NOT NULL,digest TEXT NOT NULL,captured_at TEXT NOT NULL,
  UNIQUE(project_id,snapshot_id),FOREIGN KEY(project_id,run_id) REFERENCES runs(project_id,run_id),FOREIGN KEY(project_id,patch_asset_id) REFERENCES assets(project_id,asset_id)
 ) STRICT;
 CREATE TABLE steps (
  step_id TEXT PRIMARY KEY NOT NULL,project_id TEXT NOT NULL,change_id TEXT,run_id TEXT NOT NULL,
  phase TEXT NOT NULL CHECK(phase IN ('INIT','CTX','REQ','DSN','PLN','IMP','VFY','RLS')),step_key TEXT NOT NULL,attempt INTEGER NOT NULL CHECK(attempt>0),
- input_revision_id TEXT,output_revision_id TEXT,task_id TEXT,snapshot_id TEXT,
+ input_revision_id TEXT,output_revision_id TEXT,task_id TEXT,snapshot_id TEXT,definition_digest TEXT,
  status TEXT NOT NULL CHECK(status IN ('running','completed','blocked','failed','interrupted','cancelled')),
  outcome TEXT CHECK(outcome IN ('pass','fail','not_applicable','unknown')),started_at TEXT NOT NULL,finished_at TEXT,
  UNIQUE(run_id,step_key,attempt),UNIQUE(project_id,step_id),FOREIGN KEY(project_id,run_id) REFERENCES runs(project_id,run_id),
@@ -146,7 +151,7 @@ CREATE TABLE steps (
 CREATE TABLE check_results (
  result_id TEXT PRIMARY KEY NOT NULL,project_id TEXT NOT NULL,change_id TEXT NOT NULL,revision_id TEXT NOT NULL,check_id TEXT NOT NULL,step_id TEXT NOT NULL,snapshot_id TEXT,
  status TEXT NOT NULL CHECK(status IN ('pass','fail','blocked','unknown')),evidence_asset_id TEXT NOT NULL,
- source_kind TEXT NOT NULL CHECK(source_kind IN ('command','agent','human','reused')),reused_from_id TEXT,observed_at TEXT NOT NULL,expires_at TEXT,summary TEXT NOT NULL,
+ source_kind TEXT NOT NULL CHECK(source_kind IN ('command','agent','human','reused')),definition_digest TEXT NOT NULL DEFAULT '',reused_from_id TEXT,observed_at TEXT NOT NULL,expires_at TEXT,summary TEXT NOT NULL,
  UNIQUE(project_id,result_id),FOREIGN KEY(project_id,change_id,revision_id) REFERENCES revisions(project_id,change_id,revision_id),
  FOREIGN KEY(revision_id,check_id) REFERENCES checks(revision_id,check_id),FOREIGN KEY(project_id,step_id) REFERENCES steps(project_id,step_id),
  FOREIGN KEY(project_id,snapshot_id) REFERENCES code_snapshots(project_id,snapshot_id),FOREIGN KEY(project_id,evidence_asset_id) REFERENCES assets(project_id,asset_id),
@@ -188,6 +193,7 @@ CREATE TABLE authorizations (
 CREATE TABLE operations (
  operation_id TEXT PRIMARY KEY NOT NULL,project_id TEXT NOT NULL,run_id TEXT,command TEXT NOT NULL,request_digest TEXT NOT NULL,
  status TEXT NOT NULL CHECK(status IN ('succeeded','rejected','unknown')),response_json TEXT NOT NULL,created_at TEXT NOT NULL,
+ intent_json TEXT,result_digest TEXT,
  FOREIGN KEY(project_id) REFERENCES projects(project_id),FOREIGN KEY(project_id,run_id) REFERENCES runs(project_id,run_id)
 ) STRICT;
 CREATE TABLE imports (
@@ -273,3 +279,9 @@ CREATE TRIGGER lock_ctx_delete BEFORE DELETE ON contexts WHEN OLD.state='committ
 CREATE TRIGGER adopted_revision_committed BEFORE UPDATE OF active_revision_id ON changes
 WHEN NEW.active_revision_id IS NOT NULL AND (SELECT state FROM revisions WHERE revision_id=NEW.active_revision_id)<>'committed'
 BEGIN SELECT RAISE(ABORT,'only committed revisions may be adopted'); END;
+
+CREATE UNIQUE INDEX one_workspace_executor ON runs(workspace_id) WHERE lease_id IS NOT NULL;
+CREATE TRIGGER check_result_no_update BEFORE UPDATE ON check_results BEGIN SELECT RAISE(ABORT,'raw check results are immutable'); END;
+CREATE TRIGGER check_result_no_delete BEFORE DELETE ON check_results BEGIN SELECT RAISE(ABORT,'raw check results are immutable'); END;
+CREATE TRIGGER code_snapshot_no_update BEFORE UPDATE ON code_snapshots BEGIN SELECT RAISE(ABORT,'code snapshots are immutable'); END;
+CREATE TRIGGER code_snapshot_no_delete BEFORE DELETE ON code_snapshots BEGIN SELECT RAISE(ABORT,'code snapshots are immutable'); END;

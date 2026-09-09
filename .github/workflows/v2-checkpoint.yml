@@ -1,48 +1,70 @@
 name: v2-checkpoint
 on:
   push:
-    branches: [impl/sdlc-v2-structured-runtime]
+    branches: [impl/sdlc-v2-structured-runtime, fix/v2-review-github-sharing]
   pull_request:
     branches: [main]
 permissions:
   contents: read
+concurrency:
+  group: v2-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
 jobs:
-  runtime-and-package:
-    runs-on: macos-14
-    timeout-minutes: 20
+  portable:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Select the direct Python executable for Seatbelt
-        id: python-runtime
-        run: |
-          python - <<'PY'
-          import os
-          import sys
-          from pathlib import Path
-
-          # Framework launchers use posix_spawn, which the collector deliberately
-          # denies to prevent process-group/session escapes. Run the interpreter
-          # itself; retain the same sandbox policy and all execution assertions.
-          framework = Path(sys.base_prefix) / "Resources/Python.app/Contents/MacOS/Python"
-          executable = framework if framework.is_file() else Path(sys.executable).resolve()
-          print(f"Python launcher: {sys.executable}; direct executable: {executable}")
-          with open(os.environ["GITHUB_OUTPUT"], "a") as output:
-              output.write(f"executable={executable}\n")
-          PY
-      - name: Validate the single v2 runtime and installed copy
-        run: '"${{ steps.python-runtime.outputs.executable }}" -B tools/validate.py --profile full --evidence-dir "$RUNNER_TEMP/sdlc-v2-evidence"'
-      - name: Build the local plugin artifact
-        run: '"${{ steps.python-runtime.outputs.executable }}" -B tools/build_plugin.py --output "$RUNNER_TEMP/sdlc-v2-plugin"'
+      - name: Portable mechanisms, not a native Linux command collector
+        run: python -B tools/validate_portable.py --evidence-dir "$RUNNER_TEMP/portable"
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: v2-checkpoint-${{ github.sha }}
+          name: portable-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_id }}
+          path: ${{ runner.temp }}/portable/
+          retention-days: 14
+  native:
+    runs-on: macos-14
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Select actual interpreter
+        id: python-runtime
+        run: |
+          python - <<'PY'
+          import os, sys
+          from pathlib import Path
+          framework = Path(sys.base_prefix)/'Resources/Python.app/Contents/MacOS/Python'
+          executable = framework if framework.is_file() else Path(sys.executable).resolve()
+          with open(os.environ['GITHUB_OUTPUT'], 'a') as f: f.write(f'executable={executable}\n')
+          PY
+      - name: Full native regression
+        run: '"${{ steps.python-runtime.outputs.executable }}" -B tools/validate.py --profile full --evidence-dir "$RUNNER_TEMP/native"'
+      - name: Build installed plugin and retain exact source
+        run: |
+          "${{ steps.python-runtime.outputs.executable }}" -B tools/build_plugin.py --output "$RUNNER_TEMP/plugin"
+          git rev-parse HEAD > "$RUNNER_TEMP/native/source.sha"
+          git status --porcelain=v1 > "$RUNNER_TEMP/native/status-after.txt"
+          git bundle create "$RUNNER_TEMP/source.bundle" HEAD
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: native-${{ github.event.pull_request.head.sha || github.sha }}-${{ github.run_id }}
           path: |
-            ${{ runner.temp }}/sdlc-v2-evidence/
-            ${{ runner.temp }}/sdlc-v2-plugin.zip
+            ${{ runner.temp }}/native/
+            ${{ runner.temp }}/plugin.zip
+            ${{ runner.temp }}/source.bundle
           retention-days: 14

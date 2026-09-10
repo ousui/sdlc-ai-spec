@@ -61,10 +61,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if [ -f v0/MATERIALIZE_REQUEST ]; then
-            echo 'One-time source materialization is pending; this run is NOT a migration pass.'
-            exit 0
-          fi
+          test ! -e v0/MATERIALIZE_REQUEST
+          test -f v0/tools/verify.py
           "$RUNNER_TEMP/v0-upstream-env/bin/python" -B v0/tools/verify.py --upstream "$RUNNER_TEMP/v0-source/upstream" --baselines "$RUNNER_TEMP/v0-source/baselines" --evidence "$RUNNER_TEMP/v0-source/verification"
           git diff --check
           git diff --exit-code

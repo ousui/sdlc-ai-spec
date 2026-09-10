@@ -36,10 +36,16 @@ Because **INIT is not implemented**, manually seed only this disposable fixture:
 
 ```sh
 # Run inside EACH disposable helloserver copy. SDLC_PACKAGE is the installed dist path.
-test ! -e .sdlc
-mkdir -p .sdlc/memory
-printf '%s\n' '{"script":"sh","feature_numbering":"sequential"}' > .sdlc/init-options.json
-cp "$SDLC_PACKAGE/templates/constitution-template.md" .sdlc/memory/constitution.md
+(
+  set -eu
+  : "${SDLC_PACKAGE:?Set this to the complete installed plugin directory}"
+  test -f "$SDLC_PACKAGE/templates/constitution-template.md"
+  test ! -e .sdlc && test ! -L .sdlc
+  mkdir .sdlc
+  mkdir .sdlc/memory
+  printf '%s\n' '{"script":"sh","feature_numbering":"sequential"}' > .sdlc/init-options.json
+  cp "$SDLC_PACKAGE/templates/constitution-template.md" .sdlc/memory/constitution.md
+)
 ```
 
 This is an explicit test fixture, NOT a public initializer or an INIT acceptance

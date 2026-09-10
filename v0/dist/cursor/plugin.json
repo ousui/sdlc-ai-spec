@@ -1,0 +1,8 @@
+{
+  "name": "sdlc",
+  "version": "0.0.0-engineering.1",
+  "description": "Spec Kit core user-scoped source port (engineering build; no INIT skill)",
+  "repository": "https://github.com/ousui/sdlc-ai-spec",
+  "license": "MIT",
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
+}

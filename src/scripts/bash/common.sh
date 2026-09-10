@@ -79,7 +79,7 @@ get_repo_root() {
     if [[ -n "${SPECIFY_INIT_DIR:-}" ]]; then
         root=$(resolve_specify_init_dir) || return 1
     elif ! root=$(find_specify_root); then
-        echo 'ERROR: No initialized .sdlc project found; INIT is not included in this engineering build' >&2
+        echo 'ERROR: No initialized .sdlc project found; run sdlc-init in the selected project first' >&2
         return 1
     fi
     _sdlc_validate_paths "$root" || return 1

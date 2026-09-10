@@ -54,7 +54,7 @@ def port_script(name: str,text: str) -> str:
 
 
 WATCHED = (
-    'src/specify_cli/integrations/base.py', 'src/specify_cli/agents.py',
+    'pyproject.toml', 'src/specify_cli/integrations/base.py', 'src/specify_cli/agents.py',
     'src/specify_cli/integrations/codex/__init__.py',
     'src/specify_cli/integrations/claude/__init__.py',
     'src/specify_cli/integrations/cursor_agent/__init__.py',

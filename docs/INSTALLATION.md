@@ -13,7 +13,7 @@ All three repository-root marketplace catalogs point to `./dist`.
 The package has three native manifests selecting `./adapters/<host>/skills/`.
 There is deliberately no portable root `plugin.json` and no default `skills/`
 inside dist: portable fixed discovery and Claude's additive default scan would
-otherwise undermine disjoint host selection. Scripts, templates, and nine
+otherwise undermine disjoint host selection. Scripts, templates, and the ten
 workflow bodies are shared. Thin entrypoints retain native metadata and pass a
 literal host to the read-only loader. No CLI install, build or download happens
 when a member installs this package.
@@ -55,7 +55,7 @@ was tested.
 
 ## Verify what is actually installed
 
-The plugin must expose exactly nine intended skills, from this host's adapter.
+The plugin must expose exactly ten intended skills, from this host's adapter.
 Read the installed `UPSTREAM.json` and `BUILD.json`. `BUILD.json.build_id` identifies
 source-derived bytes while the product version remains fixed. Record the source
 commit, build_id, client version, model and loaded plugin directory for each test.
@@ -68,10 +68,11 @@ Do not automatically delete users' plugin caches or project `.sdlc` directories.
 
 ## Current stop point
 
-INIT is still not implemented. Use only the isolated test fixture procedure in
-[SMOKE-TEST.md](SMOKE-TEST.md) for the user's first workflow comparison. Installing
-this package does not initialize arbitrary business projects. Native client
-installation and model-driven behavior remain user verification tasks.
+Project-only INIT is included. Run the installed `sdlc-init` once per selected
+project; see [INITIALIZATION.md](INITIALIZATION.md). Existing compatible minimal
+`.sdlc` data can be completed without deleting documents. Installing this package
+does not itself initialize arbitrary business projects. Native INIT invocation
+and model-driven behavior remain user verification tasks.
 
 ## Primary references
 

@@ -24,3 +24,11 @@ history rather than copied into the current product tree.
 - Vendor watched original generator source; add detached candidate upgrade/review.
 - Add explicit installation, cache, upgrade and Codex/Cursor smoke-test procedures.
 - INIT and native/model-driven acceptance remain deferred.
+
+## Project-only initialization (same 1.0.0-beta)
+
+- Add generated sdlc-init entries for all three hosts and one shared initializer.
+- Complete fresh/partial project data without copying tools or invoking specify.
+- Preserve existing documents and feature state; reject unsupported layouts.
+- Add init-versus-installed-CLI projection tests and downstream script fixtures.
+- Replace manual smoke-test seeding with the real init entry; no version/tag bump.

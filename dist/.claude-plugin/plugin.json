@@ -1,7 +1,7 @@
 {
   "name": "sdlc",
   "version": "1.0.0-beta",
-  "description": "Spec Kit core user-scoped source port (beta; INIT not included)",
+  "description": "Spec Kit core user-scoped source port (beta; project initialization included)",
   "author": {
     "name": "Blade"
   },

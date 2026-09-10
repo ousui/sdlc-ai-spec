@@ -39,6 +39,16 @@ class UpgradeTests(unittest.TestCase):
             self.assertTrue(changes[0]['review_required'])
             self.assertEqual(new['commit'],'1'*40)
 
+    def test_package_version_is_not_inferred_from_ref(self):
+        lock=json.loads((ROOT/'upstream.lock.json').read_text())
+        with tempfile.TemporaryDirectory() as temp:
+            copy=Path(temp)/'upstream';shutil.copytree(ROOT/'src/upstream',copy)
+            (copy/'templates/commands/taskstoissues.md').write_text('excluded')
+            new,changes=candidate_lock(copy,lock,'1'*40,'1'*40)
+            self.assertEqual(new['version'], '1.0.5')
+            self.assertEqual(new['tag'], '1'*40)
+            self.assertEqual(changes, [])
+
     def test_unknown_core_command_requires_scope_review(self):
         lock=json.loads((ROOT/'upstream.lock.json').read_text())
         with tempfile.TemporaryDirectory() as temp:

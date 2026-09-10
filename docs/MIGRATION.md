@@ -68,10 +68,25 @@ source map, watched generator code and fail-closed candidate acceptance.
 
 ## Deliberately deferred
 
-INIT construction; real business project use; actual Codex/Claude/Cursor install,
+Real business project use; actual Codex/Claude/Cursor install,
 discovery and invocation; model quality; macOS execution; Windows/PowerShell;
 concurrent writes to one feature; legacy data migration; GitHub operations.
 
-INIT requires a separately authorized work package. Repository consolidation
-does not authorize its construction. See DEVELOPMENT.md and VERIFICATION.md for
-current validation commands and evidence boundaries.
+Project-only INIT was separately authorized after the native-user smoke test
+exposed the missing `.sdlc` first-use path. See INITIALIZATION.md for its exact
+project-data projection and differences from the upstream installer. The original
+nine command sources and upstream lock are unchanged. See DEVELOPMENT.md and
+VERIFICATION.md for validation commands and evidence boundaries.
+
+## Local INIT provenance
+
+The reference is the locked `src/specify_cli/commands/init.py`: its
+`ensure_constitution_from_template` creates only a missing constitution, and its
+`init_opts` persists script, numbering and upstream version defaults. We preserve
+that project-data behavior and project override precedence. Agent registries,
+CLI/integration setup, shared scripts/templates, presets, events and Git creation
+are deliberately not migrated into project initialization. Our `.sdlc/.gitignore`,
+layout marker, README and safe partial-state completion are local additions.
+
+The new helper is not called `specify init` and never invokes that executable.
+A successful local INIT is not a claim of full CLI initialization equivalence.

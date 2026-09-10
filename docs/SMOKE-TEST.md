@@ -32,27 +32,20 @@ copy. Open one in Codex and the other in Cursor. Use Go 1.19 or newer, and recor
 `go version`. For offline testing use an already installed Go toolchain rather
 than triggering a toolchain download.
 
-Because **INIT is not implemented**, manually seed only this disposable fixture:
+Initialize using the installed plugin entry, not hand-written scaffolding:
 
-```sh
-# Run inside EACH disposable helloserver copy. SDLC_PACKAGE is the installed dist path.
-(
-  set -eu
-  : "${SDLC_PACKAGE:?Set this to the complete installed plugin directory}"
-  test -f "$SDLC_PACKAGE/templates/constitution-template.md"
-  test ! -e .sdlc && test ! -L .sdlc
-  mkdir .sdlc
-  mkdir .sdlc/memory
-  printf '%s\n' '{"script":"sh","feature_numbering":"sequential"}' > .sdlc/init-options.json
-  cp "$SDLC_PACKAGE/templates/constitution-template.md" .sdlc/memory/constitution.md
-)
-```
+- Codex: `$sdlc-init` (select the disposable helloserver directory explicitly).
+- Cursor: `/sdlc-init` (or the exact name exposed by its plugin menu).
+- Claude, when tested: `/sdlc:sdlc-init`.
 
-This is an explicit test fixture, NOT a public initializer or an INIT acceptance
-result. Do not use it to overwrite old business `.sdlc` state. No feature/spec is
-pre-created: `sdlc-specify` must create it. Optional: create a new local Git repo
-in each disposable copy, exclude `.sdlc/` using local Git excludes, and commit the
-seed before starting. No push, PR or remote writes are necessary.
+Require a report of the selected project and created/preserved files. Reinvoke
+once: the second result must be `unchanged`, with no file content or mtime changes.
+No feature/spec or business changes should exist yet. If you previously used the
+manual fixture setup or already started a requirement, rerun INIT to complete
+missing compatible data; do not remove `.sdlc` or reset the existing feature.
+See [INITIALIZATION.md](INITIALIZATION.md) for the file contract and failure cases.
+Optional: create a local Git repository in a NEW disposable copy before starting;
+INIT itself does not create or change repositories or branches. No remote writes.
 
 ## Fixed requirement (paste unchanged in both hosts)
 
@@ -81,6 +74,7 @@ seed before starting. No push, PR or remote writes are necessary.
 
 | Step | Codex | Cursor |
 | --- | --- | --- |
+| Initialize project once | `$sdlc-init` | `/sdlc-init` |
 | Establish minimal project principles | `$sdlc-constitution` | `/sdlc-constitution` |
 | Paste the fixed requirement | `$sdlc-specify` | `/sdlc-specify` |
 | Clarify only meaningful gaps | `$sdlc-clarify` | `/sdlc-clarify` |

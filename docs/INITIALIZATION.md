@@ -1,0 +1,103 @@
+# Project initialization
+
+Install the plugin once through the marketplace. In each selected project, invoke
+`sdlc-init` once before the core workflow. It runs the bundled initializer, not
+`specify init`: no uv/specify-cli/application installation, network access or
+project-local copies of Skills, scripts and core templates are required.
+
+| Client | Entry |
+| --- | --- |
+| Codex | `$sdlc-init` |
+| Claude Code | `/sdlc:sdlc-init` |
+| Cursor | `/sdlc-init`, or the actual plugin-namespaced entry in its menu |
+
+Select the project root explicitly in multi-root workspaces. For a nested module
+such as `example/helloserver`, select that module, not its enclosing Git root.
+This command is not automatically launched merely by installing the plugin.
+
+## What is created
+
+```text
+<selected-project>/.sdlc/
+├── init-options.json
+├── .gitignore
+├── README.md
+├── memory/
+│   └── constitution.md
+└── specs/
+```
+
+`init-options.json` defaults to Bash (`script: sh`), sequential feature numbering,
+locked upstream version, `sdlc_layout: 1` and the plugin version `1.0.0-beta`.
+No host selection, plugin installation path or active feature is stored globally.
+The `sdlc_version` records the initializer used; repeat calls do not rewrite
+existing version data. It is not a document-freeze or runtime-version gate.
+
+`constitution.md` is copied byte-for-byte from the installed core template, or an
+existing project `templates/overrides/constitution-template.md`. It is NOT a
+ratified constitution: use `sdlc-constitution` to establish project principles.
+If you have already established principles, they are preserved verbatim.
+
+The data-local `.gitignore` contains `*`, including the ignore file itself. It
+prevents new accidental additions; already tracked data stays tracked. The script
+can inspect tracking with read-only Git commands and warns about tracked files.
+It does not edit the Git index, configuration, branches or repository excludes.
+An existing `.gitignore` is preserved, with a warning to check its existing policy.
+Non-Git projects work without `git init`; absent Git does not block initialization.
+
+No `feature.json`, specification, plan or tasks are generated. The core
+`sdlc-specify` creates and selects the first feature under `.sdlc/specs` later.
+
+## Repeated calls and manual-state completion
+
+A project normally needs one successful call, regardless of later Agent/session
+switches. Subsequent calls are safe:
+
+- `initialized`: a new `.sdlc` was prepared.
+- `completed`: missing compatible data was added to an existing partial directory.
+- `unchanged`: nothing needed writing, including no mtime updates to existing files.
+
+A manually created `.sdlc/memory`, existing `specs`, and a valid active
+`feature.json` can be retained. Only missing `init-options.json` keys are merged;
+existing values and unknown configuration keys are not silently replaced. Explicit
+numbering conflicting with existing numbering stops rather than reconfiguring.
+
+Existing `.specify`, legacy runtime/tool directories, unrecognized top-level
+`.sdlc` entries, invalid JSON, non-sh profiles, unknown layout versions, wrong
+file types, and symlinks stop for review. This is intentionally not a legacy data
+migration tool. Do not delete data or use another initializer to bypass an error.
+Local I/O failure can leave some newly created files; already-existing documents
+are never used as reset targets. Fix the I/O problem and rerun to complete it.
+Concurrent mutation of the same project is not supported as a transaction system.
+
+## Direct script contract (support and engineering use)
+
+The Skill resolves both absolute paths and calls:
+
+```sh
+python3 -I -B "$SDLC_PLUGIN_ROOT/scripts/python/init_project.py" \
+  --project "$SDLC_PROJECT_ROOT" --json
+```
+
+Requires Python 3.9+ and Bash already installed. Optional `--dry-run` reports
+planned changes without writing; optional `--feature-numbering timestamp` changes
+the default for a new project only. There is no force/reset/upgrade switch.
+`--project` is mandatory: the script never guesses from its installation path,
+ambient `SPECIFY_INIT_DIR`, or an enclosing Git repository.
+
+On success stdout is one JSON object with `status`, `dry_run`, selected paths,
+created/updated/preserved paths and warnings. On failure it exits nonzero with an
+error on stderr; a failed or dry-run call is not completed initialization.
+
+## Continuation and verification
+
+Normally INIT reports and stops. Run constitution (when not yet ratified), then
+specify. Existing core Skills still stop on missing state and never silently
+invoke another initializer. Explicit user authorization can request INIT followed
+by another phase; INIT alone does not authorize implementation.
+
+Engineering checks compare project-data defaults and constitution bytes with real
+pinned CLI initialization in three empty projects. Synthetic fixtures also test
+preservation and interoperability with existing core scripts. They do not prove
+native client discovery or model-driven execution. See [VERIFICATION.md](VERIFICATION.md)
+and the updated [smoke test](SMOKE-TEST.md).

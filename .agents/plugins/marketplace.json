@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "sdlc",
-      "description": "Spec Kit core user-scoped source port (beta; INIT not included)",
+      "description": "Spec Kit core user-scoped source port (beta; project initialization included)",
       "source": {
         "source": "local",
         "path": "./dist"

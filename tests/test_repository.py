@@ -9,7 +9,7 @@ from urllib.parse import urlsplit,unquote
 import yaml
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
-from build import marketplaces,COMMANDS,HOSTS
+from build import marketplaces,COMMANDS,HOSTS,ALL_COMMANDS
 
 class RepositoryTests(unittest.TestCase):
     def test_single_installation_boundary(self):
@@ -17,9 +17,9 @@ class RepositoryTests(unittest.TestCase):
         self.assertFalse((package/'plugin.json').exists())
         self.assertFalse((package/'skills').exists())
         for host in HOSTS:self.assertFalse((package/host).exists())
-        self.assertEqual(len(list((package/'references/workflows').glob('*.md'))),9)
+        self.assertEqual(len(list((package/'references/workflows').glob('*.md'))),len(ALL_COMMANDS))
         self.assertEqual(len(list(package.rglob('common.sh'))),1)
-        self.assertFalse(list(package.rglob('sdlc-init')))
+        self.assertEqual(len(list(package.rglob('sdlc-init'))),3)
         for legacy in ('v0','packages','skills/_shared','docs/v1.0','docs/v1.1'):
             self.assertFalse((ROOT/legacy).exists())
 
@@ -32,9 +32,9 @@ class RepositoryTests(unittest.TestCase):
             folder=(ROOT/'dist'/manifest['skills']).resolve()
             self.assertTrue(folder.is_relative_to((ROOT/'dist').resolve()))
             entries=list(folder.glob('*/SKILL.md'))
-            self.assertEqual({p.parent.name for p in entries},{'sdlc-'+n for n in COMMANDS})
+            self.assertEqual({p.parent.name for p in entries},{'sdlc-'+n for n in ALL_COMMANDS})
             all_entries.extend(entries)
-        self.assertEqual(len(set(all_entries)),27)
+        self.assertEqual(len(set(all_entries)),3*len(ALL_COMMANDS))
 
     def test_marketplaces_are_generated_and_point_to_dist(self):
         for path,expected in marketplaces().items():
@@ -54,7 +54,8 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual((ROOT/'NOTICE').read_bytes(),(ROOT/'dist/NOTICE').read_bytes())
         upstream=json.loads((ROOT/'dist/UPSTREAM.json').read_text())
         self.assertEqual(upstream['port_version'],m['version'])
-        self.assertFalse(upstream['init_implemented'])
+        self.assertTrue(upstream['init_implemented'])
+        self.assertEqual(upstream['local_commands'],['init'])
         self.assertFalse(upstream['native_host_verified'])
 
     def test_working_data_and_dev_sources_not_shipped(self):

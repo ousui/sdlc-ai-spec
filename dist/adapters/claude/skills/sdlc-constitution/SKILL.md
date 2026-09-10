@@ -1,7 +1,7 @@
 ---
 name: sdlc-constitution
 description: Create or update the project constitution from interactive or provided principle inputs.
-compatibility: Requires an initialized .sdlc project, Bash and Python 3.9+; INIT is not included in this engineering build
+compatibility: Requires an initialized .sdlc project, Bash and Python 3.9+; run sdlc-init once per project
 metadata:
   author: github-spec-kit
   source: templates/commands/constitution.md

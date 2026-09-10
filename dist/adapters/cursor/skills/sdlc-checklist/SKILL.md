@@ -1,7 +1,7 @@
 ---
 name: sdlc-checklist
 description: Generate a custom checklist for the current feature based on user requirements.
-compatibility: Requires an initialized .sdlc project, Bash and Python 3.9+; INIT is not included in this engineering build
+compatibility: Requires an initialized .sdlc project, Bash and Python 3.9+; run sdlc-init once per project
 metadata:
   author: github-spec-kit
   source: templates/commands/checklist.md

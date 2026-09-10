@@ -70,8 +70,9 @@ done
 git diff --check
 ```
 
-Use Bash with no events, presets or extensions. These CLI calls do not launch
-Codex, Claude or Cursor and do not implement `sdlc-init`. Do not pass `--force`
+Use Bash with no events, presets or extensions. These upstream CLI calls do not launch Codex, Claude or Cursor. Their project
+settings and constitution are independently compared with our local `sdlc-init`
+output; host registries and installed tool resources are intentionally excluded. Do not pass `--force`
 to reuse nonempty baseline directories: create new directories instead.
 
 ## CI and evidence
@@ -97,3 +98,16 @@ Do not edit hashes to make a check pass. Follow [UPGRADING.md](UPGRADING.md): pr
 a detached candidate, compare installed tool outputs, review changed original
 source and accept only exact verified bytes. BUILD.json identifies a reproducible
 build while the beta product version remains fixed.
+
+## Local project initializer
+
+`adapters/INIT.md` is a local workflow, not a tenth upstream command.
+`src/scripts/python/init_project.py` is its deterministic stdlib-only implementation.
+The build generates three thin entries and one shared init body, through the same
+loader as the nine upstream commands, but without the initialized-project gate.
+`COMMANDS` and the upstream lock stay at nine; `ALL_COMMANDS` adds local INIT for
+package inventory. Upgrade preparation must retain this local source and its tests.
+
+`tests/test_init.py` covers initial setup, manual-state completion, byte/mode/mtime
+idempotence, safety failures, no CLI fallback, local ignore rules, and downstream
+script compatibility. These are synthetic script tests, not Agent executions.

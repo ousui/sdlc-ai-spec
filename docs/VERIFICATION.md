@@ -17,18 +17,20 @@ renderer comparisons; 27 resolved migrated workflow comparisons; shared template
 reference projections; literal factoring, malformed binding failures, bounded
 output pages, relocation and symlink boundaries; one reproducible dist; three root
 marketplaces; existing synthetic filesystem behavior and 21 upstream-script
-differential cases; candidate preparation/acceptance rejection tests.
+differential cases; candidate preparation/acceptance rejection tests. The local INIT additionally
+compares its project data with three actual upstream CLI initializations and
+executes dedicated preservation, failure and downstream-script fixtures.
 
 Evidence contains source SHA, source content/mode digest, upstream SHA, declared
 and actual repositories, fixed product version, environment, individual results,
 unit-test output and package inventory. Evidence is outside the checkout. The
 read-only workflow checks that committed output is not rewritten during tests.
 
-No INIT Skill, native plugin install/discovery, LLM-driven end-to-end result,
+No automated native plugin install/discovery, LLM-driven end-to-end result,
 macOS, Windows, production or concurrent same-feature write guarantee is claimed.
 The user will run [SMOKE-TEST.md](SMOKE-TEST.md) independently in Codex and Cursor.
 
-## Initial single-package engineering record
+## Historical single-package engineering record (before INIT)
 
 The materialization job for source event `fcf212aeb3148ce1e200c55e955fda481a99360b`
 produced the independently checked tree
@@ -53,3 +55,19 @@ The following documentation-only delivery commit must receive its own successful
 read-only `SDLC engineering` run. Always select that final exact SHA, not this
 historical event SHA, when checking delivery. The temporary transport/workflow is
 absent from the tested product tree. Product version remains `1.0.0-beta`.
+
+## Project initialization coverage
+
+The init entry has its own local source and is tested without an existing `.sdlc`.
+A fresh initialization must seed the same constitution bytes and the same `script`,
+`feature_numbering` and `speckit_version` as each installed upstream CLI baseline.
+No Agent registry, tools or feature selection may be copied from those baselines.
+The synthetic suite covers manual-state completion, safe repeated calls, profile
+and JSON conflicts, template overrides, package isolation, read-only Git warnings,
+missing dependencies, interruption recovery, and init followed by existing core
+scripts for all hosts. A fixture-created tasks file tests script interoperability;
+it is not LLM-authored implementation evidence.
+
+Use the final exact source SHA CI run for counts and status; historical counts
+above describe only the previous implementation. Native INIT invocation remains
+for the user to verify in the installed clients.

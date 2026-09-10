@@ -1,7 +1,7 @@
 ---
 name: sdlc-converge
 description: Assess the current codebase against the feature's spec, plan, and tasks, then append any remaining unbuilt work as new tasks to tasks.md so implement can complete it.
-compatibility: Requires an initialized .sdlc project, Bash and Python 3.9+; INIT is not included in this engineering build
+compatibility: Requires an initialized .sdlc project, Bash and Python 3.9+; run sdlc-init once per project
 metadata:
   author: github-spec-kit
   source: templates/commands/converge.md

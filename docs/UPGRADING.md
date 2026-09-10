@@ -111,3 +111,18 @@ client-specific cache reload/reinstall verification. Do not delete project data.
 Source copying, rendering, factoring, manifests and comparison are deterministic.
 AI is not invoked by any tool. A future unsupported upstream change stops the
 candidate; it does not trigger an uncontrolled AI rewrite.
+
+## Local initializer across upgrades
+
+`init` is a local command, not part of the upstream command inventory. Preserve
+`adapters/INIT.md`, `src/scripts/python/init_project.py` and its tests during
+candidate generation. Changes to watched upstream `commands/init.py` require
+review of the project-data projection (template seeding and defaults), not a
+blind copy of the installer. Reinitialization does not rewrite an existing
+project to the new upstream version or reset documents; layout incompatibility
+needs a separate migration, never an implicit action of plugin installation.
+
+Upstream package version is read from watched `pyproject.toml` and recorded
+separately from the tag/ref. Preparing an upgrade by exact SHA must not write that
+SHA into project `speckit_version`. INIT retains existing project defaults; it
+does not silently run a data migration after a package update.

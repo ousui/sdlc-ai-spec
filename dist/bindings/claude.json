@@ -95,5 +95,10 @@
     "@@SDLC_BIND_0110@@": "/sdlc:",
     "@@SDLC_BIND_0239@@": "/sdlc:",
     "@@SDLC_BIND_0256@@": "/sdlc:"
+  },
+  "init": {
+    "@@SDLC_BIND_0003@@": "laude",
+    "@@SDLC_BIND_0057@@": "/sdlc:",
+    "@@SDLC_BIND_0058@@": "/sdlc:"
   }
 }

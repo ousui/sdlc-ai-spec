@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 import subprocess
 import sys
+import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
 IGNORED = {'.git', '.venv', '__pycache__', '.pytest_cache'}
@@ -75,7 +76,10 @@ def candidate_lock(upstream: Path, old: dict, commit: str, tag: str) -> tuple[di
     if upstream_commands != supported:
         raise ValueError('Core command inventory changed; review scope before preparing: '
                          + repr(sorted(upstream_commands ^ supported)))
-    return dict(old, commit=commit, tag=tag, files=selected, watch_files=watched), changes
+    version = tomllib.loads((upstream/'pyproject.toml').read_text())['project']['version']
+    if not isinstance(version, str) or not version:
+        raise ValueError('Upstream package version is missing')
+    return dict(old, commit=commit, tag=tag, version=version, files=selected, watch_files=watched), changes
 
 
 def prepare(root: Path, upstream: Path, out: Path, ref: str) -> dict:

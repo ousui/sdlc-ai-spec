@@ -1,7 +1,7 @@
 ---
 name: sdlc-clarify
 description: Identify underspecified areas in the current feature spec by asking up to 5 highly targeted clarification questions and encoding answers back into the spec.
-compatibility: Requires an initialized .sdlc project, Bash and Python 3.9+; INIT is not included in this engineering build
+compatibility: Requires an initialized .sdlc project, Bash and Python 3.9+; run sdlc-init once per project
 metadata:
   author: github-spec-kit
   source: templates/commands/clarify.md

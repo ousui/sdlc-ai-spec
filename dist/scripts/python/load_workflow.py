@@ -13,7 +13,7 @@ from pathlib import Path
 
 HOSTS = ('codex', 'claude', 'cursor')
 SKILLS = ('constitution', 'specify', 'clarify', 'plan', 'tasks', 'analyze',
-          'checklist', 'implement', 'converge')
+          'checklist', 'implement', 'converge', 'init')
 TOKEN = re.compile(r'@@SDLC_BIND_\d{4}@@')
 
 

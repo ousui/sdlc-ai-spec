@@ -10,6 +10,18 @@ import yaml
 from render import (ROOT, COMMANDS, HOSTS, LOCK, UPSTREAM_SHA, METADATA, REPOSITORY,
                     VERSION, AUTHOR, HINTS, render_source, split, relocate_body, binding)
 
+LOCAL_COMMANDS = ('init',)
+ALL_COMMANDS = COMMANDS + LOCAL_COMMANDS
+CORE_COMPATIBILITY = 'Requires an initialized .sdlc project, Bash and Python 3.9+; run sdlc-init once per project'
+
+def init_body(host: str) -> str:
+    prefix = '$sdlc-' if host == 'codex' else ('/' + METADATA['name'] + ':sdlc-' if host == 'claude' else '/sdlc-')
+    return ((ROOT / 'adapters/INIT.md').read_text(encoding='utf-8')
+            .replace('@HOST@', host)
+            .replace('@CONSTITUTION_COMMAND@', prefix + 'constitution')
+            .replace('@SPECIFY_COMMAND@', prefix + 'specify'))
+
+
 def factor(bodies: dict[str, str]) -> tuple[str, dict[str, dict[str, str]]]:
     """Lossless build-time factoring, never an LLM/semantic normalization.
 
@@ -123,8 +135,7 @@ def build(destination: Path) -> None:
                 raw = (ROOT / 'src/upstream/templates/commands' / (name + '.md')).read_text()
                 meta, body = render_source(raw, name, host)
                 meta['name'] = 'sdlc-' + name
-                meta['compatibility'] = ('Requires an initialized .sdlc project, Bash and Python 3.9+; '
-                                         'INIT is not included in this engineering build')
+                meta['compatibility'] = CORE_COMPATIBILITY
                 bodies[host] = binding(host) + relocate_body(body, host)
                 path = package / 'adapters' / host / 'skills' / ('sdlc-' + name) / 'SKILL.md'
                 path.parent.mkdir(parents=True)
@@ -133,6 +144,22 @@ def build(destination: Path) -> None:
             (package / 'references' / 'workflows' / (name + '.md')).write_text(core, encoding='utf-8')
             for host in HOSTS:
                 bindings[host][name] = fragments[host]
+        # Locally authored project bootstrap is NOT presented as an upstream command.
+        init_bodies = {host: init_body(host) for host in HOSTS}
+        core, fragments = factor(init_bodies)
+        (package / 'references/workflows/init.md').write_text(core, encoding='utf-8')
+        for host in HOSTS:
+            meta = {'name': 'sdlc-init',
+                    'description': 'Initialize or complete project-local .sdlc data without installing tools or overwriting existing work.',
+                    'compatibility': 'Requires Python 3.9+, Bash and an existing project directory; no specify-cli required',
+                    'metadata': {'author': AUTHOR['name'], 'source': 'adapters/INIT.md'}}
+            if host == 'claude':
+                meta.update({'user-invocable': True, 'disable-model-invocation': True,
+                             'argument-hint': 'Optional explicit project directory'})
+            path = package / 'adapters' / host / 'skills/sdlc-init/SKILL.md'
+            path.parent.mkdir(parents=True)
+            path.write_text(wrapper(meta, host, 'init'), encoding='utf-8')
+            bindings[host]['init'] = fragments[host]
         (package / 'bindings').mkdir()
         for host in HOSTS:
             (package / 'bindings' / (host + '.json')).write_text(
@@ -150,11 +177,11 @@ def build(destination: Path) -> None:
         for name in ('LICENSE', 'NOTICE'):
             shutil.copyfile(ROOT / name, package / name)
         (package / 'UPSTREAM.json').write_text(json.dumps({
-            'repository': LOCK['repository'], 'tag': LOCK['tag'], 'commit': UPSTREAM_SHA,
+            'repository': LOCK['repository'], 'tag': LOCK['tag'], 'version': LOCK['version'], 'commit': UPSTREAM_SHA,
             'port_repository': REPOSITORY, 'port_version': VERSION, 'port_author': AUTHOR['name'],
             'profile': {'script': 'sh', 'events': False, 'extensions': [], 'presets': []},
             'included_commands': list(COMMANDS), 'excluded_commands': ['taskstoissues'],
-            'init_implemented': False, 'native_host_verified': False,
+            'local_commands': list(LOCAL_COMMANDS), 'init_implemented': True, 'native_host_verified': False,
             'layout': 'single-package-native-entrypoints',
         }, indent=2) + '\n')
         (package / 'README.md').write_text(
@@ -163,10 +190,10 @@ def build(destination: Path) -> None:
             'select thin host entrypoints; workflows, Bash scripts and templates are shared. '
             'No install-time build, uv, specify-cli or network is required. Runtime requires '
             'Bash, Python 3.9+ and standard POSIX tools.\n\n'
-            'Nine upstream core skills. INIT and GitHub are NOT included. An uninitialized '
-            'project stops rather than modifying this package. Native discovery, model-driven '
-            'behavior and business acceptance are to be verified by the user. The engineering '
-            'test fixture is not an INIT implementation.\n\n'
+            'Nine upstream core skills plus sdlc-init. Run sdlc-init once per project; it '
+            'creates or completes project data without copying tools or resetting features. '
+            'GitHub is not included. Native discovery, model-driven behavior and business '
+            'acceptance are verified separately by the user. See the repository docs/INITIALIZATION.md.\n\n'
             'Based on Spec Kit by GitHub, Inc. (MIT), an independent source port. '
             'See LICENSE, NOTICE, UPSTREAM.json and BUILD.json.\n')
         for path in (package / 'scripts').rglob('*.sh'):

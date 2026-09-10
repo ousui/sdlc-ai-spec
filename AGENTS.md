@@ -12,8 +12,10 @@ repository transfer from a metadata edit.
 - Read README.md, docs/DEVELOPMENT.md, docs/MIGRATION.md and upstream.lock.json.
 - Preserve the nine pinned upstream English commands and the documented path,
   name and packaging deltas. No translation, new process rules or legacy runtime.
-- INIT, GitHub integration, real-project execution and native client installation
-  are not part of the current engineering work. They require separate authority.
+- Project-only INIT is authorized and implemented by adapters/INIT.md plus the
+  bundled stdlib initializer. Preserve existing project data; never install tools.
+- GitHub integration, real-project execution and native client installation remain
+  outside automated engineering verification. They require separate authority.
 - Shared resources are read-only; project state belongs to `.sdlc`. Never infer
   the business project root from the plugin installation directory.
 - Keep src/upstream byte-identical to the locked upstream. Edit adapters/ and tools/;

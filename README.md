@@ -15,14 +15,16 @@ thin host entrypoints; those pass a literal host to a stdlib-only read-only text
 binder. Business workflow content is shared without asking the model to guess
 which host it is running in.
 
-Nine skills: constitution, specify, clarify, plan, tasks, analyze, checklist,
+Ten skills: init (project bootstrap), constitution, specify, clarify, plan, tasks, analyze, checklist,
 implement and converge. English instructions and substantive template content
 remain upstream-derived. Project state belongs in `.sdlc`, never in the plugin.
 Bash, Python 3.9+ and standard POSIX tools are runtime dependencies. No uv,
 specify-cli, LLM API, MCP service or background process is required by the package.
 
-**INIT is not implemented.** This remains a core engineering beta, not a complete
-first-use workflow for arbitrary projects. There is no GitHub integration,
+**Project initialization is included.** Run the installed `sdlc-init` entry once
+per project; repeat calls preserve existing work and complete compatible partial
+state. It does not copy tools or create features. See
+[Project initialization](docs/INITIALIZATION.md). There is no GitHub integration,
 translation, new lifecycle or automatic project migration. Native installation
 and model-driven behavior must be verified separately; see the small isolated
 [smoke test](docs/SMOKE-TEST.md).
@@ -59,6 +61,7 @@ upstream, run a workflow or write state. Full output must be read before executi
 
 ## Documentation
 
+- [Project initialization and safe repeated calls](docs/INITIALIZATION.md)
 - [Installation and beta cache handling](docs/INSTALLATION.md)
 - [Build and independent engineering verification](docs/DEVELOPMENT.md)
 - [Exact migration differences](docs/MIGRATION.md)

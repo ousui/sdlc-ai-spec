@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Engineering verification only: source, installed-CLI parity and fixtures.
 
-Does NOT invoke Agents, implement INIT, or run on any real business project.
+Exercises project INIT only on disposable synthetic fixtures; never invokes Agents or real business projects.
 """
 from __future__ import annotations
 import argparse
@@ -21,7 +21,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from build import ROOT,COMMANDS,HOSTS,UPSTREAM_SHA,REPOSITORY,VERSION,AUTHOR,render_source,split,build,binding
+from build import ROOT,COMMANDS,HOSTS,UPSTREAM_SHA,REPOSITORY,VERSION,AUTHOR,render_source,split,build,binding,ALL_COMMANDS,CORE_COMPATIBILITY
 
 
 def digest(path: Path) -> str:return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -93,7 +93,7 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
         base=baselines/integ
         package=ROOT/'dist'
         actual_skills={p.parent.name for p in (package/'adapters'/host/'skills').glob('*/SKILL.md')}
-        require_equal(actual_skills,{'sdlc-'+c for c in COMMANDS},'Skill inventory '+host)
+        require_equal(actual_skills,{'sdlc-'+c for c in ALL_COMMANDS},'Skill inventory '+host)
         for name in COMMANDS:
             native=base/folder/'skills'/('speckit-'+name)/'SKILL.md'
             oracle_meta,oracle_body=split(native.read_text())
@@ -106,7 +106,7 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
             if '--host '+host+' --skill '+name not in entry or 'COMPLETE stdout' not in entry:
                 raise AssertionError('Thin entrypoint does not bind the full workflow')
             expected_meta=dict(oracle_meta,name='sdlc-'+name,
-                compatibility='Requires an initialized .sdlc project, Bash and Python 3.9+; INIT is not included in this engineering build')
+                compatibility=CORE_COMPATIBILITY)
             require_equal(meta,expected_meta,'Native metadata '+host+'/'+name)
             require_equal(normalize(oracle_body,host,ported=False),normalize(body,host,ported=True),'Migrated body '+host+'/'+name)
             # Negative control proves normalization cannot hide a prose mutation.
@@ -141,14 +141,34 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
                 if f.suffix=='.py':
                     ast.parse(f.read_text(),filename=str(f))
                     passed('python_syntax',host+'/'+f.name)
-        if list(package.rglob('sdlc-init')) or (package/'hooks').exists():
-            raise AssertionError('INIT or hooks unexpectedly shipped')
+        if (package/'hooks').exists():
+            raise AssertionError('Hooks unexpectedly shipped')
         for f in (package/'scripts').rglob('*'):
             if f.is_file():
                 text=f.read_text()
                 if re.search(r'(?m)^\s*(?:from\s+specify_cli\b|import\s+specify_cli\b|(?:exec\s+)?specify\s)',text):
                     raise AssertionError('CLI runtime dependency '+str(f))
         passed('runtime_dependency_and_inventory',host)
+    # Compare only the declared project-data projection of real CLI init outputs.
+    # Integration registries, scripts and templates are intentionally not copied.
+    with tempfile.TemporaryDirectory(prefix='sdlc-init-parity-') as temp:
+        for integ in ('codex','claude','cursor-agent'):
+            project = Path(temp) / integ
+            project.mkdir()
+            process = subprocess.run([sys.executable,'-I','-B',str(ROOT/'dist/scripts/python/init_project.py'),
+                '--project',str(project),'--json'],capture_output=True,text=True,check=True)
+            require_equal(json.loads(process.stdout)['status'],'initialized','Init status '+integ)
+            original = baselines/integ/'.specify'
+            actual = project/'.sdlc'
+            require_equal((actual/'memory/constitution.md').read_bytes(),
+                (original/'memory/constitution.md').read_bytes(),'CLI init constitution '+integ)
+            old_opts=json.loads((original/'init-options.json').read_text())
+            new_opts=json.loads((actual/'init-options.json').read_text())
+            for key in ('script','feature_numbering','speckit_version'):
+                require_equal(new_opts[key],old_opts[key],'CLI init project setting '+integ+'/'+key)
+            for name in ('scripts','skills','integrations','feature.json'):
+                if (actual/name).exists():raise AssertionError('Init copied non-project resource '+name)
+            passed('installed_init_project_data',integ)
     # Unmodified leaf scripts remain exact except the project marker.
     for name in ('check-prerequisites.sh','resolve-template.sh','setup-plan.sh'):
         expected=(upstream/'scripts/bash'/name).read_text().replace('.specify','.sdlc')
@@ -189,7 +209,7 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
     (evidence/'script-deltas.patch').write_text(''.join(diffs))
     from upgrade import source_digest
     source_id=os.environ.get('GITHUB_SHA')
-    report={'status':'PASS','scope':'engineering-only; one package, installed-tool parity and synthetic fixtures; no INIT or Agent execution',
+    report={'status':'PASS','scope':'engineering-only; one package, installed-tool parity and synthetic fixtures including project INIT; no Agent execution',
             'source_sha':source_id,'source_digest':source_digest(ROOT),'upstream_sha':UPSTREAM_SHA,
             'source_repository':os.environ.get('GITHUB_REPOSITORY'),
             'product_version':VERSION,'declared_repository':REPOSITORY,'author':AUTHOR['name'],
@@ -198,7 +218,7 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
                 'bash':subprocess.run(['bash','--version'],capture_output=True,text=True).stdout.splitlines()[0]},
             'checks':checks,'runtime_test_methods':result.testsRun,'differential_cases':len(differential_cases),
             'distribution_inventory':inventory(ROOT/'dist'),
-            'not_performed':['INIT skill construction','native plugin installation/discovery','LLM workflow execution',
+            'not_performed':['native plugin installation/discovery','LLM workflow execution',
                              'real project verification','macOS runtime verification','Windows/PowerShell verification']}
     (evidence/'result.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
     return report

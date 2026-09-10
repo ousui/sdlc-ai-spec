@@ -142,6 +142,11 @@
     "src/specify_cli/shared_infra.py": {
       "git_blob": "3aff73ae491b7a7762a963be640dd1575ce86eff",
       "sha256": "d2cbd0b78ac66ac8aafbfa262c18ad186321a6a74045d8e8bb169df134184c3f"
+    },
+    "pyproject.toml": {
+      "git_blob": "c9eb3644ab9ab5d4335c86c826f45e6e2c43a359",
+      "sha256": "c7bb6567c2683dbb062ad68811560393c111b68918703f351b9a38c758c630d1"
     }
-  }
+  },
+  "version": "1.0.5"
 }

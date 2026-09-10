@@ -1,7 +1,7 @@
 ---
 name: sdlc-specify
 description: Create or update the feature specification from a natural language feature description.
-compatibility: Requires an initialized .sdlc project, Bash and Python 3.9+; INIT is not included in this engineering build
+compatibility: Requires an initialized .sdlc project, Bash and Python 3.9+; run sdlc-init once per project
 metadata:
   author: github-spec-kit
   source: templates/commands/specify.md

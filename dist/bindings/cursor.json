@@ -95,5 +95,10 @@
     "@@SDLC_BIND_0110@@": "/",
     "@@SDLC_BIND_0239@@": "/",
     "@@SDLC_BIND_0256@@": "/"
+  },
+  "init": {
+    "@@SDLC_BIND_0003@@": "ursor",
+    "@@SDLC_BIND_0057@@": "/",
+    "@@SDLC_BIND_0058@@": "/"
   }
 }

@@ -1,0 +1,108 @@
+name: SDLC apply reviewed shared package once
+on:
+  push:
+    branches: [impl/spec-kit-plugin-v0]
+    paths: ['.github/transport/shared/**', '.github/workflows/materialize-shared-once.yml']
+permissions:
+  contents: write
+concurrency:
+  group: sdlc-materialize-shared
+  cancel-in-progress: false
+jobs:
+  materialize:
+    if: github.repository == 'ousui/sdlc-ai-spec'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    env:
+      PYTHONDONTWRITEBYTECODE: '1'
+    steps:
+      - name: Apply exactly reviewed authoring changes
+        shell: bash
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REF" = refs/heads/impl/spec-kit-plugin-v0
+          git init .
+          git remote add origin "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=2 origin "$SOURCE_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD^)" = 23663e97a492daaaef91906414d39d9755f19f4f
+          test -z "$(git status --porcelain)"
+          python3 - <<'PY'
+          import pathlib,subprocess
+          expected={0:'c670c644b90b4a5888531e8d1a16403d0055878f',1:'5d1a9e5c635d1c56780ff6dd710b6685f2138615',2:'1d6979d0795619b1933e2565fd62cf3b5e69e183',3:'8549bf48489dac73b5ab2c4e0e4d4cffecd56015',4:'554f08c0ee45edd42990976847982e7976ab86ce',6:'decfeafc12865b97dc9aea06ca28410e6bd5e47a',7:'24c65c34607f7ad68354d87172c145cb486d87e9',8:'55adef93ba8051ff977abec84bd3209b7da5d683'}
+          for n,sha in expected.items():
+              p=f'.github/transport/shared/patch-{n}.patch'
+              assert subprocess.check_output(['git','hash-object',p],text=True).strip()==sha
+              subprocess.run(['git','apply','--index',p],check=True)
+          p=pathlib.Path('.github/transport/shared/build.py')
+          assert subprocess.check_output(['git','hash-object',str(p)],text=True).strip()=='cbb651fdc55883d84a55d27bde5b290b5e43c31b'
+          pathlib.Path('tools/build.py').write_bytes(p.read_bytes())
+          p=pathlib.Path('tools/render.py')
+          p.write_text(p.read_text().rstrip()+'\n')
+          PY
+          git rm -r -- .github/transport/shared .github/workflows/materialize-shared-once.yml
+      - name: Fetch locked upstream and independent installed-tool baselines
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/sdlc-shared/upstream" "$RUNNER_TEMP/sdlc-shared/baselines" "$RUNNER_TEMP/sdlc-shared/logs"
+          UPSTREAM_SHA=$(python3 -c 'import json; print(json.load(open("upstream.lock.json"))["commit"])')
+          git -C "$RUNNER_TEMP/sdlc-shared/upstream" init .
+          git -C "$RUNNER_TEMP/sdlc-shared/upstream" remote add origin https://github.com/github/spec-kit.git
+          git -C "$RUNNER_TEMP/sdlc-shared/upstream" fetch --depth=1 origin "$UPSTREAM_SHA"
+          git -C "$RUNNER_TEMP/sdlc-shared/upstream" checkout --detach FETCH_HEAD
+          test "$(git -C "$RUNNER_TEMP/sdlc-shared/upstream" rev-parse HEAD)" = "$UPSTREAM_SHA"
+          python3 -m venv "$RUNNER_TEMP/sdlc-shared-env"
+          "$RUNNER_TEMP/sdlc-shared-env/bin/python" -m pip install -r tools/requirements.txt "$RUNNER_TEMP/sdlc-shared/upstream" > "$RUNNER_TEMP/sdlc-shared/logs/install.log" 2>&1
+          "$RUNNER_TEMP/sdlc-shared-env/bin/python" -m pip freeze > "$RUNNER_TEMP/sdlc-shared/logs/pip-freeze.txt"
+          "$RUNNER_TEMP/sdlc-shared-env/bin/specify" version > "$RUNNER_TEMP/sdlc-shared/logs/version.log" 2>&1
+          for agent in codex claude cursor-agent; do
+            mkdir "$RUNNER_TEMP/sdlc-shared/baselines/$agent"
+            (cd "$RUNNER_TEMP/sdlc-shared/baselines/$agent" && "$RUNNER_TEMP/sdlc-shared-env/bin/specify" init . --integration "$agent" --script sh --ignore-agent-tools --non-interactive --integration-options="--events=false") > "$RUNNER_TEMP/sdlc-shared/logs/init-$agent.log" 2>&1
+          done
+      - name: Materialize and verify reviewed exact source tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          PY="$RUNNER_TEMP/sdlc-shared-env/bin/python"
+          "$PY" -B tools/port.py --upstream "$RUNNER_TEMP/sdlc-shared/upstream"
+          "$PY" -B tools/build.py --marketplaces
+          "$PY" -B tools/verify.py --upstream "$RUNNER_TEMP/sdlc-shared/upstream" --baselines "$RUNNER_TEMP/sdlc-shared/baselines" --evidence "$RUNNER_TEMP/sdlc-shared/precommit"
+          git add -A -- .github .agents .claude-plugin .cursor-plugin AGENTS.md CHANGELOG.md README.md adapters docs tests tools src dist upstream.lock.json
+          git diff --cached --check
+          test "$(git write-tree)" = 6846f3d52066dc4acc85e964868cc33f7a3e4a26
+          git -c user.name=Blade -c user.email=blade@breaklegsquad.com commit -m 'feat: unify SDLC distribution and add controlled upstream upgrades'
+          git rev-parse HEAD > "$RUNNER_TEMP/sdlc-shared/commit.txt"
+          GITHUB_SHA=$(git rev-parse HEAD) "$PY" -B tools/verify.py --upstream "$RUNNER_TEMP/sdlc-shared/upstream" --baselines "$RUNNER_TEMP/sdlc-shared/baselines" --evidence "$RUNNER_TEMP/sdlc-shared/verification"
+          "$PY" -B tools/rehearse_upgrade.py --upstream "$RUNNER_TEMP/sdlc-shared/upstream" --baselines "$RUNNER_TEMP/sdlc-shared/baselines" --out "$RUNNER_TEMP/sdlc-shared/upgrade-rehearsal"
+          git diff --exit-code
+          test -z "$(git status --porcelain --untracked-files=all)"
+      - name: Fast-forward only the authorized implementation branch
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = ousui/sdlc-ai-spec
+          test "$GITHUB_REF" = refs/heads/impl/spec-kit-plugin-v0
+          test "$(git ls-remote origin refs/heads/impl/spec-kit-plugin-v0 | cut -f1)" = "$SOURCE_SHA"
+          git -c credential.helper='!f() { test "$1" = get && printf "username=x-access-token\npassword=%s\n" "$GH_TOKEN"; }; f' push origin HEAD:refs/heads/impl/spec-kit-plugin-v0
+      - name: Preserve exact source and evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/sdlc-shared-export" "$RUNNER_TEMP/sdlc-shared"
+          git archive HEAD | gzip > "$RUNNER_TEMP/sdlc-shared-export/product-source.tar.gz"
+          tar --exclude=.git -czf "$RUNNER_TEMP/sdlc-shared-export/source-and-baselines.tar.gz" -C "$RUNNER_TEMP/sdlc-shared" .
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sdlc-shared-materialized-${{ github.sha }}
+          path: ${{ runner.temp }}/sdlc-shared-export/
+          retention-days: 7
+          if-no-files-found: error

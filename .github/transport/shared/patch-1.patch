@@ -1,0 +1,261 @@
+diff --git a/docs/INSTALLATION.md b/docs/INSTALLATION.md
+new file mode 100644
+index 0000000..e21eefc
+--- /dev/null
++++ b/docs/INSTALLATION.md
+@@ -0,0 +1,85 @@
++# Installation and fixed-beta updates
++
++Product: `sdlc`, version `1.0.0-beta`, author Blade. Marketplace: `sdlc-ai-spec`.
++Declared repository: https://github.com/goedgecloud/sdlc-ai-spec.
++The working implementation is currently hosted on the explicitly authorized
++`ousui/sdlc-ai-spec` branch `impl/spec-kit-plugin-v0`. A repository metadata field
++is not a transfer. Use a repository/ref you can actually access; do not add its
++old default branch and assume it contains this build.
++
++## One installed package
++
++All three repository-root marketplace catalogs point to `./dist`.
++The package has three native manifests selecting `./adapters/<host>/skills/`.
++There is deliberately no portable root `plugin.json` and no default `skills/`
++inside dist: portable fixed discovery and Claude's additive default scan would
++otherwise undermine disjoint host selection. Scripts, templates, and nine
++workflow bodies are shared. Thin entrypoints retain native metadata and pass a
++literal host to the read-only loader. No CLI install, build or download happens
++when a member installs this package.
++
++## Codex
++
++Add the intended Git repository/ref or its local checkout using the client's
++marketplace management UI. Its catalog is `.agents/plugins/marketplace.json`.
++Find `sdlc` in marketplace `sdlc-ai-spec`, install at user scope, and start a new
++session. Actual discoverable commands should include `$sdlc-specify` and
++`$sdlc-plan`; use the command identifiers displayed by that client build.
++Do not install the Codex IDE extension and call that native plugin verification.
++
++## Claude Code
++
++For a reproducible branch test, clone/check out the exact implementation commit,
++then add that checkout as a local marketplace:
++
++```text
++/plugin marketplace add /absolute/path/to/sdlc-ai-spec
++/plugin install sdlc@sdlc-ai-spec
++```
++
++Choose user scope. Native invocation is `/sdlc:sdlc-specify`, etc. After the desired
++branch is available as the distribution source, adding its Git URL is also possible.
++For direct session-only diagnosis: `claude --plugin-dir /absolute/path/to/checkout/dist`.
++
++## Cursor
++
++Team marketplace: Dashboard > Plugins > Add Marketplace > Import from Repo;
++select the intended repository and ref, then find `sdlc` in Customize and install
++at user scope. Team marketplace availability depends on plan and permissions.
++For a local test independent of team-marketplace availability, copy the complete
++`dist` package to a fresh `~/.cursor/plugins/local/sdlc` directory, reload the
++window, and inspect Customize. Do not copy only the skills or merge files from a
++previous beta into the same directory. Native invocation is `/sdlc-specify`.
++Local loading is a documented diagnostic path, not proof that team distribution
++was tested.
++
++## Verify what is actually installed
++
++The plugin must expose exactly nine intended skills, from this host's adapter.
++Read the installed `UPSTREAM.json` and `BUILD.json`. `BUILD.json.build_id` identifies
++source-derived bytes while the product version remains fixed. Record the source
++commit, build_id, client version, model and loaded plugin directory for each test.
++Never inspect only the checkout: test the installed cache copy.
++
++Claude can skip updates when its explicit version string is unchanged. During
++this fixed-beta period, do not assume Update picked up a new commit; use a fresh
++installation or documented uninstall/reinstall/reload flow and verify build_id.
++Do not automatically delete users' plugin caches or project `.sdlc` directories.
++
++## Current stop point
++
++INIT is still not implemented. Use only the isolated test fixture procedure in
++[SMOKE-TEST.md](SMOKE-TEST.md) for the user's first workflow comparison. Installing
++this package does not initialize arbitrary business projects. Native client
++installation and model-driven behavior remain user verification tasks.
++
++## Primary references
++
++- OpenAI packaging and Codex compatibility paths: https://developers.openai.com/plugins/build/plugins
++- Claude component paths, cache and versions: https://code.claude.com/docs/en/plugins-reference
++- Claude marketplace sources: https://code.claude.com/docs/en/plugin-marketplaces
++- Cursor native manifests and explicit discovery: https://cursor.com/docs/reference/plugins
++- Cursor team and local installation: https://cursor.com/docs/plugins
++
++Reviewed 2026-09-10. These references justify format choices, not an installed
++client certification. Never put all host adapters under one default skill scan.
+diff --git a/docs/MIGRATION.md b/docs/MIGRATION.md
+index d442938..cbe0b18 100644
+--- a/docs/MIGRATION.md
++++ b/docs/MIGRATION.md
+@@ -16,5 +16,5 @@ no events, no presets and no extensions. This is NOT equivalence to the entire C
+ | Native hints use invocation host, not saved default integration | One project can be used sequentially by different hosts |
+ | Binding preamble is added to generated skills | Identify resources, resolve project, pass variables per tool call and fail clearly outside the selected profile |
+-| Plugin packaging + provenance | Two portable manifests and one Claude manifest; resources self-contained |
++| Plugin packaging + provenance | Three native manifests selecting thin entries in one self-contained package |
+ 
+ `check-prerequisites.sh`, `resolve-template.sh` and `setup-plan.sh` are otherwise
+@@ -24,5 +24,5 @@ patch anchors. The existing resolver's dormant optional code is not rewritten;
+ optional ecosystems are not installed or advertised as supported.
+ 
+-`src/commands` is the reviewed raw source, not copied generated Skills. The
++`src/upstream/templates/commands` is the reviewed raw source, not copied generated Skills. The
+ independent builder is checked against the installed upstream CLI's three-agent
+ outputs before applying port deltas. Normalization has a closed name/path
+@@ -37,8 +37,33 @@ normalize address changes and the intentional correction of Codex script hints;
+ they do not replace actual business or model-driven acceptance testing.
+ 
+-The portable manifest schema is captured from
+-https://agent-plugins.org/schemas/1.0.0/plugin.schema.json (read 2026-09-10).
+-Claude uses the documented minimal manifest subset from
+-https://code.claude.com/docs/en/plugins-reference. Neither is a native host test.
++## Single-package factoring and native selection
++
++`tools/build.py` first derives the complete host bodies using the reviewed source
++renderer and existing relocation rules. It then factors byte-identical portions
++into one workflow file; only the exact differing substrings become named literal
++fragments in `bindings/<host>.json`. Different line structures fail closed.
++`load_workflow.py` performs nonrecursive literal binding and emits the full body.
++It has no subprocess, network or writes. All 27 resolved bodies are independently
++compared with the original CLI outputs under the existing address allowlist.
++The thin wrappers keep the respective upstream frontmatter, literal host identity,
++original user input and an explicit full-output reading requirement. Truncation
++must be handled with bounded pages, never silently accepted.
++
++All three native manifests select `adapters/<host>/skills/`. No default skill
++scan or portable root manifest is shipped. References for the path rules:
++https://developers.openai.com/plugins/build/plugins
++https://code.claude.com/docs/en/plugins-reference
++https://cursor.com/docs/reference/plugins
++Static documented-field/path checks are NOT native-host certification.
++
++Shared artifact templates use canonical capability IDs such as `sdlc-plan` instead
++of a host's literal invocation prefix. They are instruction references, not shell
++commands. The wrapper/loaded workflow retains native invocation semantics. This
++is a separately allowlisted reference-only change: all other words, whitespace,
++checklist ownership and business steps remain part of exact comparison.
++
++Root marketplace catalogs all reference `./dist`. No component references paths
++outside this installation boundary. See [UPGRADING.md](UPGRADING.md) for the
++source map, watched generator code and fail-closed candidate acceptance.
+ 
+ ## Deliberately deferred
+diff --git a/docs/SMOKE-TEST.md b/docs/SMOKE-TEST.md
+new file mode 100644
+index 0000000..2dc3245
+--- /dev/null
++++ b/docs/SMOKE-TEST.md
+@@ -0,0 +1,108 @@
++# Small, comparable Codex / Cursor workflow test
++
++## Project (fixed source; no feature implemented by this migration)
++
++Use **golang/example/helloserver**, a standalone Go module with two files:
++`server.go` (simple HTTP greetings and `/version`) and `go.mod` (`go 1.19`).
++Its imports are standard library only. Pin the parent repository to:
++
++`7f05d217867b2af52b0a28c6d1c91df97e1b5b39`
++
++Sources:
++- https://github.com/golang/example/tree/7f05d217867b2af52b0a28c6d1c91df97e1b5b39/helloserver
++- https://github.com/golang/example/blob/7f05d217867b2af52b0a28c6d1c91df97e1b5b39/LICENSE
++
++Use the SAME project, SHA and requirement in two independent directories, not two
++different requirements. Otherwise host effects and task difficulty are confounded.
++Do not run the upstream entire examples repository: only this isolated module.
++The migration work does not run or modify this project; the user performs the test.
++
++## Prepare disposable copies
++
++Obtain the pinned example checkout outside the plugin repository:
++
++```sh
++git clone https://github.com/golang/example.git /tmp/sdlc-example-source
++git -C /tmp/sdlc-example-source checkout --detach 7f05d217867b2af52b0a28c6d1c91df97e1b5b39
++```
++
++Choose two NEW directories that do not already contain user work. Copy the
++`helloserver` folder to each and copy the source LICENSE and PATENTS into each
++copy. Open one in Codex and the other in Cursor. Use Go 1.19 or newer, and record
++`go version`. For offline testing use an already installed Go toolchain rather
++than triggering a toolchain download.
++
++Because **INIT is not implemented**, manually seed only this disposable fixture:
++
++```sh
++# Run inside EACH disposable helloserver copy. SDLC_PACKAGE is the installed dist path.
++test ! -e .sdlc
++mkdir -p .sdlc/memory
++printf '%s\n' '{"script":"sh","feature_numbering":"sequential"}' > .sdlc/init-options.json
++cp "$SDLC_PACKAGE/templates/constitution-template.md" .sdlc/memory/constitution.md
++```
++
++This is an explicit test fixture, NOT a public initializer or an INIT acceptance
++result. Do not use it to overwrite old business `.sdlc` state. No feature/spec is
++pre-created: `sdlc-specify` must create it. Optional: create a new local Git repo
++in each disposable copy, exclude `.sdlc/` using local Git excludes, and commit the
++seed before starting. No push, PR or remote writes are necessary.
++
++## Fixed requirement (paste unchanged in both hosts)
++
++> Add a health-check endpoint to this existing helloserver.
++>
++> GET /healthz must return HTTP 200, Content-Type application/json, and exactly
++> {"status":"ok"} followed by one newline. The endpoint must not access network
++> services, databases, files, or build information.
++>
++> Every method other than GET on exactly /healthz must return 405 with Allow: GET.
++> /healthz/ must continue to use the pre-existing greeting behavior, not health.
++> Preserve the current /, /<name>, /version, -g, and -addr behavior. Preserve HTML
++> escaping in greetings. Do not add third-party packages or change the Go version.
++>
++> Add isolated tests with net/http/httptest, including GET, POST/HEAD 405, the
++> /healthz/ boundary and regression checks for existing greetings. Tests must not
++> bind a real TCP port or depend on Internet connectivity. It is acceptable to
++> extract handler registration into a small function to test routing.
++>
++> Use the installed SDLC plugin. First produce the specification only and stop
++> for review. Do not implement until I explicitly request implementation. Work
++> only in this disposable project; do not commit/push, modify the plugin, install
++> dependencies or enable other plugins. Report actual checks and unverified items.
++
++## Run stages, deliberately checking stop behavior
++
++| Step | Codex | Cursor |
++| --- | --- | --- |
++| Establish minimal project principles | `$sdlc-constitution` | `/sdlc-constitution` |
++| Paste the fixed requirement | `$sdlc-specify` | `/sdlc-specify` |
++| Clarify only meaningful gaps | `$sdlc-clarify` | `/sdlc-clarify` |
++| Technical design (stdlib net/http) | `$sdlc-plan` | `/sdlc-plan` |
++| Generate tasks | `$sdlc-tasks` | `/sdlc-tasks` |
++| Cross-document consistency | `$sdlc-analyze` | `/sdlc-analyze` |
++| Requirements-quality checklist (review it before implementation) | `$sdlc-checklist` | `/sdlc-checklist` |
++| Authorize implementation | `$sdlc-implement` | `/sdlc-implement` |
++| Assess remaining gaps | `$sdlc-converge` | `/sdlc-converge` |
++
++For constitution: keep standard-library-only Go, preserve existing behavior,
++require isolated automated tests, and prohibit secrets/remote publication. Do not
++invent extra team rules. Preserve the upstream reviewer-owned checklist semantics;
++do not instruct implementation to check off its own review gate.
++
++`go test ./...` and `go vet ./...` should pass after implementation. Initial tests
++may be absent; report that instead of inventing baseline test coverage. A clean
++`converge` report does not substitute for the actual test results.
++
++## Record results independently
++
++Record exact plugin commit/build_id, installed cache path, client version,
++model/reasoning settings, number of intended skills discovered, whether the thin
++entry loaded its COMPLETE workflow, questions/repeated questions, phase stop
++behavior, .sdlc file paths, actual checks and final implementation diff.
++
++Compare capability and acceptance outcomes, not prose SHA or runtime duration.
++Do not transfer one host's generated spec/code to the other until the independent
++comparison finishes. A later sequential handoff can be tested separately. Stop
++and retain evidence if the loader is truncated, the wrong host entry appears, or
++project paths point inside the installed plugin.

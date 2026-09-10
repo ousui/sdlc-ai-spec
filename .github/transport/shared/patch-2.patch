@@ -1,0 +1,278 @@
+diff --git a/docs/UPGRADING.md b/docs/UPGRADING.md
+new file mode 100644
+index 0000000..d213d57
+--- /dev/null
++++ b/docs/UPGRADING.md
+@@ -0,0 +1,113 @@
++# Repeatable upstream upgrades
++
++## What is locked
++
++`upstream.lock.json` records the exact Spec Kit commit, the selected Bash/core-only
++profile, copied source identities and watched renderer/integration identities.
++`src/upstream/` retains those original bytes, including their original licenses.
++Derived source lives in `src/templates/` and `src/scripts/`; nine commands are
++read directly from `src/upstream/templates/commands/`. `adapters/` holds reviewed
++changes; `tools/port.py` applies strict anchors. `dist` is generated, not edited.
++
++Watched files include `integrations/base.py`, `agents.py`, the Codex/Claude/Cursor
++integrations, invocation styles, init, shared infrastructure, and events. A watch
++change requires review even when a patch still applies. Review the transitive
++imports if those files start depending on additional generator modules. This is
++not a claim that a fixed watch list can detect every future upstream architecture.
++
++## Prepare (no overwrite, no downloads)
++
++Use a clean checkout of this repository and a separately obtained, clean upstream
++Git checkout. The maintainer fetches/selects a release explicitly. Never follow
++`main` automatically or delete the accepted lock to bypass validation.
++
++```sh
++python3 -B tools/upgrade.py prepare \
++  --upstream /absolute/path/to/spec-kit \
++  --ref <EXACT_COMMIT_OR_TAG> \
++  --out /absolute/path/outside/this-repo/sdlc-candidate
++```
++
++The selected ref must equal upstream HEAD. The command creates a detached Git
++worktree from the current accepted commit, writes its candidate lock, materializes
++source, builds one package and generates marketplaces. A sibling file
++`sdlc-candidate.upgrade.json` records source/base identity, all changed watched or
++copied paths, readiness and exact content/mode fingerprint. The active worktree,
++its branch and accepted dist remain untouched. A failure leaves a BLOCKED
++candidate for inspection, not a half-updated accepted product.
++
++New core commands, changed patch anchors, host line-structure differences,
++missing watched modules or unknown source inventory are review events. Do not
++silently exclude them or loosen parity checks. If adapter code must change,
++review and commit that change first, then prepare a fresh candidate.
++
++## Verify independently
++
++Install the candidate's exact upstream in an isolated tool environment and
++initialize three NEW empty directories with Codex, Claude, Cursor, Bash,
++`--events=false`, no presets/extensions. Run the candidate's `tools/verify.py`
++against those outputs; use evidence outside both worktrees. See
++[DEVELOPMENT.md](DEVELOPMENT.md). Never build from these initialized directories;
++they are an independent oracle.
++
++The report must bind `source_digest` to the complete candidate bytes and executable
++modes, including dist, not merely claim PASS at the previous source commit. A
++same-version replay is an engineering regression, not acceptance of a new version.
++Existing synthetic project fixtures cover continued use of the established
++`.sdlc` format. A real format incompatibility requires a separate explicit project
++data migration; updating/installing the plugin must not rewrite users' projects.
++
++## Review and accept
++
++Inspect ALL changed original code, especially whole functions replaced by port
++patches: an upstream function can keep its name while adding a necessary fix.
++Also inspect original new English instructions; do not normalize away behavioral,
++permission, checklist ownership or stop-condition changes.
++
++Create an external review JSON after that review:
++
++```json
++{
++  "decision": "accept",
++  "reviewer": "<maintainer>",
++  "candidate_digest": "<from the candidate record and verifier>",
++  "reviewed_paths": ["<every changed upstream path, exactly once>"]
++}
++```
++
++```sh
++python3 -B tools/upgrade.py accept \
++  --record /absolute/path/sdlc-candidate.upgrade.json \
++  --evidence /absolute/path/candidate-evidence/result.json \
++  --review /absolute/path/review.json --check
++```
++
++After a successful check, the same command without `--check` commits ONLY the
++candidate detached worktree using the maintainer's Git identity. It never pushes,
++merges, changes the current branch, or creates/moves tags. Integrate that exact
++candidate commit through the normal reviewed Git process. Until then members
++continue to install the accepted dist. `accept` rejects changed candidate bytes,
++stale reports, incomplete reviews, a moved source HEAD or a dirty source tree.
++The JSON review is an explicit local workflow record, not cryptographic identity
++or a security boundary against a developer who controls the machine.
++
++## Version and rollback
++
++Product version stays `1.0.0-beta` in this debugging period. It is independent of
++the upstream tag; do not mix the two. Record commit and BUILD.json build_id.
++Rollback is selecting an earlier accepted source/distribution commit, followed by
++client-specific cache reload/reinstall verification. Do not delete project data.
++
++## Source map
++
++| Upstream | Local derivation | Verification |
++| --- | --- | --- |
++| templates/commands/*.md | original source -> source renderer -> host factoring | resolved full bodies vs 3 installed CLI baselines |
++| templates/*-template.md | default feature path and logical capability IDs | exact text except explicit path/reference projection |
++| scripts/bash/*.sh | strict port anchors and global-resource binding | source deltas + return codes, output and files on fixtures |
++| integrations/base.py, agents.py, three integrations | watched original source -> reviewed renderer/adapters | each host's metadata and original generated body |
++| LICENSE | unchanged in source and dist | byte equality |
++
++Source copying, rendering, factoring, manifests and comparison are deterministic.
++AI is not invoked by any tool. A future unsupported upstream change stops the
++candidate; it does not trigger an uncontrolled AI rewrite.
+diff --git a/docs/VERIFICATION.md b/docs/VERIFICATION.md
+index 8304e71..09ee833 100644
+--- a/docs/VERIFICATION.md
++++ b/docs/VERIFICATION.md
+@@ -1,51 +1,29 @@
+-# Engineering verification boundary
+-
+-Product: SDLC `1.0.0-beta`. Author: Blade.
+-Upstream: Spec Kit `v1.0.5`, commit
+-`a4e25ce6b96dc8e85f84206c6a54353fa9c5260b`.
+-
+-This document defines the current evidence contract, not a permanent PASS for
+-all builds carrying the same beta version. Obtain the exact commit's completed
+-`SDLC engineering` run and artifact `sdlc-engineering-<source-sha>`. Do not reuse a
+-previous run or a baseline-acquisition-only success as proof for a new commit.
+-
+-## Checks
+-
+-| Group | Evidence |
+-| --- | --- |
+-| Upstream identity | Selected source hashes against upstream.lock.json |
+-| Original English commands | Nine source files compared byte-for-byte |
+-| Three independent integrations | 27 renderer results compared with installed CLI output |
+-| Migrated skills | 27 bodies and native metadata checked under the explicit address mapping |
+-| Templates | 15 package templates compared with installed-tool baselines |
+-| Packaging | Native manifest fields, portable schemas, version, author, repository, license and NOTICE |
+-| Code | Bash/Python syntax, script derivation, reproducible package inventory |
+-| Runtime boundaries | 15 existing synthetic filesystem test methods, exercised across host packages |
+-| Upstream script behavior | 21 differential cases: return codes, stdout/stderr and output bytes |
+-| Repository | Root layout, product metadata, generated provenance, license copies, documentation links and CI paths |
+-
+-The verifier reports its actual count; groups and test methods are not added
+-together as a fabricated total. `result.json` contains itemized checks,
+-`runtime_test_methods`, `repository_test_methods`, and `differential_cases`.
+-A normalization negative control must reject extra business prose.
+-
+-## Consolidation invariants
+-
+-The repository cleanup changes placement, product metadata, package notices,
+-build/verification wiring and maintenance documentation only. The nine command
+-sources, migrated templates, runtime scripts and binding instructions remain the
+-reviewed implementation; core content differences must still fail parity checks.
+-No old runtime, old plugin entry, historical plan tree or obsolete workflow is
+-required by the current build. Earlier records remain available in Git history.
+-
+-## What a pass does not establish
+-
+-INIT is not implemented. No native plugin installation, discovery, parameter
+-substitution or host-driven Skill execution is certified. No real business
+-project or LLM workflow is run. macOS and Windows/PowerShell execution remain
+-unverified. Concurrent editing of one feature is not guaranteed.
+-
+-All filesystem scenarios use synthetic temporary fixtures. The fixture seeding
+-helper is not an initialization product and must not be exposed as one. The
+-same fixed beta version may identify multiple commits, so source SHA and
+-artifact hashes—not the version label alone—bind a verification result.
++# Engineering verification
++
++The CI run for the **exact source SHA** is authoritative for a particular build.
++Do not reuse a previous three-package PASS to claim the new single package passed.
++
++The verifier installs no Agent and runs no business task. CI independently installs
++the pinned Spec Kit CLI and initializes three new empty projects, Bash, events
++false, no presets/extensions. It compares upstream-generated frontmatter and full
++workflow bodies with the migrated loader's resolved result for each host.
++
++The package now uses native manifests and explicit component paths. The old
++portable-schema check is intentionally replaced by documented native-field/path
++checks and disjoint-discovery tests. This does NOT count as a native client test.
++
++Checks cover raw source hashes and watched generator hashes; 27 original source
++renderer comparisons; 27 resolved migrated workflow comparisons; shared template
++reference projections; literal factoring, malformed binding failures, bounded
++output pages, relocation and symlink boundaries; one reproducible dist; three root
++marketplaces; existing synthetic filesystem behavior and 21 upstream-script
++differential cases; candidate preparation/acceptance rejection tests.
++
++Evidence contains source SHA, source content/mode digest, upstream SHA, declared
++and actual repositories, fixed product version, environment, individual results,
++unit-test output and package inventory. Evidence is outside the checkout. The
++read-only workflow checks that committed output is not rewritten during tests.
++
++No INIT Skill, native plugin install/discovery, LLM-driven end-to-end result,
++macOS, Windows, production or concurrent same-feature write guarantee is claimed.
++The user will run [SMOKE-TEST.md](SMOKE-TEST.md) independently in Codex and Cursor.
+diff --git a/src/scripts/python/load_workflow.py b/src/scripts/python/load_workflow.py
+new file mode 100644
+index 0000000..85806b5
+--- /dev/null
++++ b/src/scripts/python/load_workflow.py
+@@ -0,0 +1,68 @@
++#!/usr/bin/env python3
++"""Read-only, stdlib-only binding of precompiled workflow fragments.
++
++Not an installer, interpreter for arbitrary templates, or workflow executor.
++No subprocesses, network, project reads, file writes or AI calls.
++"""
++from __future__ import annotations
++import argparse
++import json
++import re
++import sys
++from pathlib import Path
++
++HOSTS = ('codex', 'claude', 'cursor')
++SKILLS = ('constitution', 'specify', 'clarify', 'plan', 'tasks', 'analyze',
++          'checklist', 'implement', 'converge')
++TOKEN = re.compile(r'@@SDLC_BIND_\d{4}@@')
++
++
++def contained_file(root: Path, relative: str) -> Path:
++    file = (root / relative).resolve(strict=True)
++    if root not in file.parents or not file.is_file():
++        raise ValueError('Resource escapes plugin or is not a file: ' + relative)
++    return file
++
++
++def load(root: Path, host: str, skill: str) -> str:
++    if host not in HOSTS or skill not in SKILLS:
++        raise ValueError('Unsupported explicit host or skill')
++    root = root.resolve(strict=True)
++    text = contained_file(root, 'references/workflows/' + skill + '.md').read_text(encoding='utf-8')
++    bindings = json.loads(contained_file(root, 'bindings/' + host + '.json').read_text(encoding='utf-8'))
++    values = bindings[skill]
++    if not isinstance(values, dict) or not all(isinstance(v, str) for v in values.values()):
++        raise ValueError('Malformed binding values')
++    if set(TOKEN.findall(text)) != set(values):
++        raise ValueError('Missing or unexpected binding keys')
++    result = TOKEN.sub(lambda m: values[m[0]], text)
++    if '@@SDLC_BIND_' in result:
++        raise ValueError('Unresolved/reserved binding token')
++    return result
++
++
++def main() -> int:
++    parser = argparse.ArgumentParser(description=__doc__)
++    parser.add_argument('--host', choices=HOSTS, required=True)
++    parser.add_argument('--skill', choices=SKILLS, required=True)
++    parser.add_argument('--offset', type=int, default=0, help='Zero-based line offset')
++    parser.add_argument('--limit', type=int, help='Bounded page size if the host truncates tool output')
++    args = parser.parse_args()
++    if args.offset < 0 or (args.limit is not None and args.limit < 1):
++        parser.error('offset must be >= 0 and limit must be > 0')
++    try:
++        text = load(Path(__file__).resolve().parents[2], args.host, args.skill)
++        lines = text.splitlines(keepends=True)
++        if args.offset > len(lines):
++            raise ValueError('Offset exceeds total line count')
++        end = len(lines) if args.limit is None else min(len(lines), args.offset + args.limit)
++        print(f'WORKFLOW {args.host}/{args.skill}; lines {args.offset}:{end}/{len(lines)}', file=sys.stderr)
++        sys.stdout.write(''.join(lines[args.offset:end]))
++        return 0
++    except (OSError, ValueError, KeyError, TypeError, RuntimeError) as error:
++        print('ERROR: ' + str(error), file=sys.stderr)
++        return 1
++
++
++if __name__ == '__main__':
++    raise SystemExit(main())

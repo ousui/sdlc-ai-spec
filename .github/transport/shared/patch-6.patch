@@ -1,0 +1,326 @@
+diff --git a/tools/differential.py b/tools/differential.py
+index 577224b..3e14dc4 100644
+--- a/tools/differential.py
++++ b/tools/differential.py
+@@ -30,5 +30,5 @@ def compare(baselines: Path) -> list[dict]:
+         for host in HOSTS:
+             baseline=baselines/('cursor-agent' if host=='cursor' else host)
+-            package=ROOT/'dist'/host
++            package=ROOT/'dist'
+             for case,script,args in cases:
+                 output=[]
+@@ -60,5 +60,6 @@ def compare(baselines: Path) -> list[dict]:
+                         text=text.replace('.sdlc/specs/','specs/').replace('.sdlc/','.specify/')
+                         text=re.sub(r'(?<![\w./])/?specs/','@SPECS@/',text)
+-                        return text.replace('/sdlc:sdlc-','/speckit-').replace('$sdlc-','$speckit-').replace('/sdlc-','/speckit-')
++                        text=re.sub(r'(?<![\w:/\$-])sdlc-(constitution|specify|clarify|plan|tasks|analyze|checklist|implement|converge)\b',r'/speckit-\1',text)
++                        return text.replace('/sdlc:sdlc-','/speckit-').replace('$sdlc-','$speckit-').replace('/sdlc-','/speckit-').replace('$speckit-','/speckit-')
+                     files={p.name:normalize(p.read_text()) for p in feature.iterdir() if p.is_file()}
+                     # Upstream script diagnostics use / even for Codex.
+diff --git a/tools/port.py b/tools/port.py
+index f3ef2df..9445c4a 100644
+--- a/tools/port.py
++++ b/tools/port.py
+@@ -11,4 +11,6 @@ import re
+ from pathlib import Path
+ from build import ROOT,COMMANDS,UPSTREAM_SHA
++import shutil
++import tempfile
+ 
+ 
+@@ -52,39 +54,75 @@ def port_script(name: str,text: str) -> str:
+ 
+ 
++WATCHED = (
++    'src/specify_cli/integrations/base.py', 'src/specify_cli/agents.py',
++    'src/specify_cli/integrations/codex/__init__.py',
++    'src/specify_cli/integrations/claude/__init__.py',
++    'src/specify_cli/integrations/cursor_agent/__init__.py',
++    'src/specify_cli/_invocation_style.py', 'src/specify_cli/events.py',
++    'src/specify_cli/commands/init.py', 'src/specify_cli/shared_infra.py',
++)
++
++
++def record(data: bytes) -> dict:
++    return {'git_blob': hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest(),
++            'sha256': hashlib.sha256(data).hexdigest()}
++
++
+ def materialize(upstream: Path) -> dict:
+-    upstream=upstream.resolve()
+-    # Bind all selected files to the existing lock on later runs.
+-    lock_path=ROOT/'upstream.lock.json'
+-    previous=json.loads(lock_path.read_text()) if lock_path.exists() else None
+-    files={}
+-    pairs=[]
+-    for name in COMMANDS:
+-        pairs.append((f'templates/commands/{name}.md',f'commands/{name}.md'))
+-    for f in sorted((upstream/'templates').glob('*.md')):
+-        pairs.append(('templates/'+f.name,'templates/'+f.name))
+-    for f in sorted((upstream/'scripts/bash').glob('*.sh')):
+-        pairs.append(('scripts/bash/'+f.name,'scripts/bash/'+f.name))
+-    pairs.append(('LICENSE','LICENSE'))
+-    for source,dest in pairs:
+-        data=(upstream/source).read_bytes()
+-        blob=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
+-        files[source]={'git_blob':blob,'sha256':hashlib.sha256(data).hexdigest()}
+-        if previous and previous['files'].get(source)!=files[source]:
+-            raise ValueError(f'Pinned upstream source mismatch: {source}')
+-        text=data.decode('utf-8')
+-        if dest.startswith('scripts/bash/'):
+-            text=port_script(Path(dest).name,text)
+-        elif dest.startswith('templates/'):
+-            text=re.sub(r'(?<![\w./])/?specs/','.sdlc/specs/',text)
+-        target=ROOT/'src'/dest
+-        target.parent.mkdir(parents=True,exist_ok=True)
+-        target.write_text(text,encoding='utf-8')
+-        if target.suffix=='.sh':target.chmod(0o755)
+-    if previous and set(previous['files'])!=set(files):
+-        raise ValueError('Upstream source inventory changed')
+-    lock={'repository':'https://github.com/github/spec-kit','tag':'v1.0.5','commit':UPSTREAM_SHA,
+-          'script':'sh','events':False,'presets':[],'extensions':[],
+-          'commands':list(COMMANDS),'excluded_commands':['taskstoissues'],'files':files}
+-    lock_path.write_text(json.dumps(lock,indent=2)+'\n')
++    """Validate ALL inputs before staging; never rewrite the accepted lock."""
++    upstream = upstream.resolve()
++    lock = json.loads((ROOT/'upstream.lock.json').read_text())
++    selected = set(lock['files'])
++    discovered = {'templates/commands/'+name+'.md' for name in COMMANDS}
++    discovered.update('templates/'+f.name for f in (upstream/'templates').glob('*.md'))
++    discovered.update('scripts/bash/'+f.name for f in (upstream/'scripts/bash').glob('*.sh'))
++    discovered.add('LICENSE')
++    if selected != discovered:
++        raise ValueError('Upstream source inventory changed; prepare an upgrade candidate')
++    inputs = {}
++    for source, expected in {**lock['files'], **lock.get('watch_files', {})}.items():
++        data = (upstream/source).read_bytes()
++        if record(data) != expected:
++            raise ValueError('Pinned upstream source mismatch: '+source)
++        inputs[source] = data
++    # Start with non-upstream helpers; stale imported resources are eliminated.
++    with tempfile.TemporaryDirectory(prefix='.sdlc-port-', dir=ROOT.parent) as temp:
++        staging = Path(temp)/'src'
++        shutil.copytree(ROOT/'src', staging, ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
++        previous_scripts = list((staging/'upstream/scripts/bash').glob('*.sh'))
++        for prior in previous_scripts:
++            (staging/'scripts/bash'/prior.name).unlink(missing_ok=True)
++        for path in ('upstream', 'commands', 'templates'):
++            if (staging/path).exists(): shutil.rmtree(staging/path)
++        # Drop removed imported scripts, but keep local helpers. Source inventory
++        # is already validated; only known upstream-owned paths may be removed.
++        for source in lock['files']:
++            if source.startswith('scripts/bash/'):
++                (staging/source).unlink(missing_ok=True)
++        original = staging/'upstream'
++        for source, data in inputs.items():
++            target = original/source
++            target.parent.mkdir(parents=True, exist_ok=True)
++            target.write_bytes(data)
++            if source.endswith('.sh'): target.chmod(0o755)
++        for source in sorted(selected):
++            if source.startswith('templates/commands/'):
++                continue
++            text = inputs[source].decode('utf-8')
++            if source.startswith('scripts/bash/'):
++                text = port_script(Path(source).name, text)
++            elif source.startswith('templates/'):
++                text = re.sub(r'(?<![\w./])/?specs/', '.sdlc/specs/', text)
++            target = staging/source
++            target.parent.mkdir(parents=True, exist_ok=True)
++            target.write_text(text, encoding='utf-8')
++            if target.suffix == '.sh': target.chmod(0o755)
++        backup = Path(temp)/'previous'
++        (ROOT/'src').rename(backup)
++        try:
++            staging.rename(ROOT/'src')
++        except BaseException:
++            backup.rename(ROOT/'src')
++            raise
+     return lock
+ 
+diff --git a/tools/rehearse_upgrade.py b/tools/rehearse_upgrade.py
+new file mode 100644
+index 0000000..40b37d7
+--- /dev/null
++++ b/tools/rehearse_upgrade.py
+@@ -0,0 +1,46 @@
++#!/usr/bin/env python3
++"""Same-version engineering rehearsal of candidate/verify/accept-check.
++
++Does not accept a release, commit the candidate, push or run a business project.
++"""
++from __future__ import annotations
++import argparse
++import json
++from pathlib import Path
++import subprocess
++import sys
++from upgrade import ROOT,prepare,accept,source_digest,run
++
++
++def main() -> None:
++    p=argparse.ArgumentParser(description=__doc__)
++    p.add_argument('--upstream',type=Path,required=True)
++    p.add_argument('--baselines',type=Path,required=True)
++    p.add_argument('--out',type=Path,required=True)
++    args=p.parse_args()
++    out=args.out.resolve()
++    if out.exists() or ROOT == out or ROOT in out.parents:
++        raise ValueError('Rehearsal output must be a new directory outside the repository')
++    out.mkdir(parents=True)
++    before=source_digest(ROOT)
++    locked=json.loads((ROOT/'upstream.lock.json').read_text())
++    candidate=out/'candidate'
++    prepared=prepare(ROOT,args.upstream,candidate,locked['commit'])
++    if prepared['changes']:
++        raise ValueError('Rehearsal must use the same locked source')
++    try:
++        subprocess.run([sys.executable,'-B',str(candidate/'tools/verify.py'),
++            '--upstream',str(args.upstream.resolve()),'--baselines',str(args.baselines.resolve()),
++            '--evidence',str(out/'verification')],cwd=candidate,check=True,timeout=900)
++        review=out/'review.json'
++        review.write_text(json.dumps({'decision':'accept','reviewer':'synthetic CI check, not release approval',
++            'candidate_digest':prepared['candidate_digest'],'reviewed_paths':[]},indent=2)+'\n')
++        result=accept(out/'candidate.upgrade.json',out/'verification/result.json',review,True)
++        if source_digest(ROOT)!=before:raise AssertionError('Rehearsal changed accepted source')
++        (out/'result.json').write_text(json.dumps(result,indent=2)+'\n')
++        print('UPGRADE REHEARSAL PASS: accepted source untouched; no candidate commit')
++    finally:
++        run('git','worktree','remove','--force',str(candidate),cwd=ROOT)
++
++
++if __name__=='__main__':main()
+diff --git a/tools/render.py b/tools/render.py
+new file mode 100644
+index 0000000..261e0a0
+--- /dev/null
++++ b/tools/render.py
+@@ -0,0 +1,128 @@
++#!/usr/bin/env python3
++"""Render original source and explicit host address adaptations.
++
++The renderer is the sh/SkillsIntegration subset of upstream base.py and
++agents.py. verify.py independently checks it against installed-CLI outputs.
++"""
++from __future__ import annotations
++
++import argparse
++import json
++import re
++import shutil
++from pathlib import Path
++
++import yaml
++
++ROOT = Path(__file__).resolve().parents[1]
++COMMANDS = ('constitution', 'specify', 'clarify', 'plan', 'tasks', 'analyze',
++            'checklist', 'implement', 'converge')
++HOSTS = ('codex', 'claude', 'cursor')
++LOCK = json.loads((ROOT / 'upstream.lock.json').read_text(encoding='utf-8'))
++UPSTREAM_SHA = LOCK['commit']
++# Product metadata is independent from upstream provenance and Git transport.
++METADATA = json.loads((ROOT / 'plugin-metadata.json').read_text(encoding='utf-8'))
++REPOSITORY = METADATA['repository']
++VERSION = METADATA['version']
++AUTHOR = METADATA['author']
++HINTS = {
++    'specify': 'Describe the feature you want to specify',
++    'plan': 'Optional guidance for the planning phase',
++    'tasks': 'Optional task generation constraints',
++    'implement': 'Optional implementation guidance or task filter',
++    'analyze': 'Optional focus areas for analysis',
++    'clarify': 'Optional areas to clarify in the spec',
++    'constitution': 'Principles or values for the project constitution',
++    'checklist': 'Domain or focus area for the checklist',
++}
++HOOK_NOTE = ('- When constructing command invocations from hook command names, '
++             'replace dots (`.`) with hyphens (`-`). '
++             'For example, `speckit.git.commit` → `{prefix}speckit-git-commit`.\n')
++
++
++def split(text: str) -> tuple[dict, str]:
++    match = re.match(r'\A---\r?\n(.*?)\r?\n---(\r?\n.*)\Z', text, re.S)
++    if not match:
++        raise ValueError('Missing or malformed frontmatter')
++    meta = yaml.safe_load(match[1])
++    if not isinstance(meta, dict):
++        raise ValueError('Frontmatter must be a mapping')
++    return meta, match[2].replace('\r\n', '\n')
++
++
++def command_refs(text: str, host: str, *, ported: bool = False) -> str:
++    prefix = '$' if host == 'codex' else '/'
++    namespace = METADATA['name'] + ':sdlc-' if ported and host == 'claude' else ('sdlc-' if ported else 'speckit-')
++    return re.sub(r'__SPECKIT_COMMAND_([A-Z][A-Z0-9_-]*)__',
++                  lambda m: prefix + namespace + m[1].lower().replace('_', '-'), text)
++
++
++def upstream_paths(text: str) -> str:
++    # Literal copy of the relevant upstream path boundary rules.
++    for part in ('memory', 'scripts', 'templates'):
++        text = text.replace('../../' + part + '/', '.specify/' + part + '/')
++        text = re.sub(r'''(^|[\s`"'(])(?:\.?/)?''' + part + '/',
++                      lambda m: m[1] + '.specify/' + part + '/', text)
++    return text.replace('.specify/.specify/', '.specify/').replace('.specify.specify/', '.specify/')
++
++
++def render_source(raw: str, name: str, host: str) -> tuple[dict, str]:
++    """Render original English source independently of specify-cli."""
++    fm, body = split(raw)
++    scripts = fm.get('scripts', {})
++    if scripts:
++        if 'sh' not in scripts:
++            raise ValueError(f'{name}: no reviewed sh variant')
++        body = body.replace('{SCRIPT}', scripts['sh'])
++    body = body.replace('{ARGS}', '$ARGUMENTS').replace('__AGENT__', 'cursor-agent' if host == 'cursor' else host)
++    body = upstream_paths(body)
++    body = command_refs(body, host)
++    prefix = '$' if host == 'codex' else '/'
++    note = HOOK_NOTE.format(prefix=prefix).rstrip('\n')
++    body = re.sub(r'(?m)^([ \t]*)(- For each executable hook, output the following[^\r\n]*)(\n|$)',
++                  lambda m: m[1] + note + '\n' + m[1] + m[2] + (m[3] or '\n'), body)
++    meta = {
++        'name': 'speckit-' + name,
++        'description': fm['description'],
++        'compatibility': 'Requires spec-kit project structure with .specify/ directory',
++        'metadata': {'author': 'github-spec-kit', 'source': 'templates/commands/' + name + '.md'},
++    }
++    if host == 'claude':
++        meta.update({'user-invocable': True, 'disable-model-invocation': False})
++        if name in HINTS:
++            meta['argument-hint'] = HINTS[name]
++    # Upstream's SkillsIntegration adds one newline after rebuilding frontmatter.
++    return meta, '\n' + body
++
++
++def relocate_body(body: str, host: str) -> str:
++    """Only name/path/executable-reference changes; preserve all prose."""
++    # Alias replacement is deliberately scoped, never replace the English word 'specify'.
++    body = body.replace('$speckit-', '$sdlc-')
++    for old in ('/speckit-', '/speckit.'):
++        prefix = '/' + METADATA['name'] + ':sdlc-' if host == 'claude' else '/sdlc-'
++        body = body.replace(old, prefix)
++    body = body.replace('`speckit.git.commit`', '`sdlc.git.commit`')
++    body = body.replace('/skill:speckit-', '/skill:sdlc-')
++    body = body.replace('.specify/', '.sdlc/')
++    # specs is a project data path, not an install resource.
++    body = re.sub(r'(?<![\w./])/?specs/', '.sdlc/specs/', body)
++    script_prefix = (f'SDLC_HOST={host} SPECIFY_INIT_DIR="${{SDLC_PROJECT_ROOT:?}}" '
++                     'bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/')
++    body = re.sub(r'\.sdlc/scripts/bash/([a-z-]+\.sh)', lambda m: script_prefix + m[1] + '"', body)
++    body = body.replace('`specify preset resolve spec-template`',
++                        '`' + script_prefix + 'resolve-template.sh" spec-template`')
++    body = re.sub(r'\.sdlc/templates/(?!overrides/)([a-z-]+\.md)',
++                  r'${SDLC_PLUGIN_ROOT}/templates/\1', body)
++    return body
++
++
++def binding(host: str) -> str:
++    template = (ROOT/'adapters'/'BINDING.md').read_text()
++    detail = ('Use the host-provided `${CLAUDE_PLUGIN_ROOT}` or the absolute path of this loaded SKILL.md.'
++              if host == 'claude' else
++              'Use the absolute path of this loaded SKILL.md; do not assume a host-specific plugin-root environment variable exists.')
++    return template.replace('@HOST@', host).replace('@ROOT_DETAIL@', detail)
++
++
++

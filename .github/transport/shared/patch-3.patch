@@ -1,0 +1,295 @@
+diff --git a/tests/test_distribution.py b/tests/test_distribution.py
+new file mode 100644
+index 0000000..5b4f0a2
+--- /dev/null
++++ b/tests/test_distribution.py
+@@ -0,0 +1,75 @@
++"""Lossless factoring and read-only loader; no native host is simulated as PASS."""
++from __future__ import annotations
++import importlib.util
++import json
++from pathlib import Path
++import shutil
++import subprocess
++import sys
++import tempfile
++import unittest
++ROOT=Path(__file__).resolve().parents[1]
++sys.path.insert(0,str(ROOT/'tools'))
++from build import factor,render_source,relocate_body,binding,COMMANDS,HOSTS,split,build
++spec=importlib.util.spec_from_file_location('sdlc_workflow',ROOT/'dist/scripts/python/load_workflow.py')
++loader=importlib.util.module_from_spec(spec);spec.loader.exec_module(loader)
++
++class DistributionTests(unittest.TestCase):
++    def test_exact_reconstruction_of_all_host_prompts(self):
++        for host in HOSTS:
++            for name in COMMANDS:
++                raw=(ROOT/'src/upstream/templates/commands'/f'{name}.md').read_text()
++                _,body=render_source(raw,name,host)
++                self.assertEqual(loader.load(ROOT/'dist',host,name),binding(host)+relocate_body(body,host))
++                meta,entry=split((ROOT/'dist/adapters'/host/'skills'/('sdlc-'+name)/'SKILL.md').read_text())
++                self.assertIn('--host '+host+' --skill '+name,entry)
++                self.assertIn('read its COMPLETE stdout',entry)
++                self.assertNotIn('## Outline',entry)
++
++    def test_factor_structure_or_reserved_token_change_fails(self):
++        with self.assertRaises(ValueError):factor({'codex':'x\n','claude':'x\ny\n','cursor':'x\n'})
++        with self.assertRaises(ValueError):factor({h:'@@SDLC_BIND_0000@@' for h in HOSTS})
++
++    def test_literal_fragments_not_recursive_templates(self):
++        text,slots=factor({'codex':'foo $x bar\n','claude':'foo ${Y} bar\n','cursor':'foo \\1 bar\n'})
++        self.assertEqual(len(slots['codex']),1)
++        self.assertIn('@@SDLC_BIND_',text)
++
++    def test_loader_rejects_host_skill_and_corrupted_bindings(self):
++        for host,skill in [('guess','plan'),('codex','../plan')]:
++            with self.assertRaises(ValueError):loader.load(ROOT/'dist',host,skill)
++        with tempfile.TemporaryDirectory() as temp:
++            copy=Path(temp)/'package';shutil.copytree(ROOT/'dist',copy)
++            path=copy/'bindings/codex.json';data=json.loads(path.read_text())
++            data['plan']['@@SDLC_BIND_9999@@']='injected';path.write_text(json.dumps(data))
++            with self.assertRaises(ValueError):loader.load(copy,'codex','plan')
++
++    def test_loader_pages_reconstruct_without_project_or_cli(self):
++        before={p: p.read_bytes() for p in (ROOT/'dist').rglob('*') if p.is_file()}
++        script=ROOT/'dist/scripts/python/load_workflow.py'
++        complete=loader.load(ROOT/'dist','codex','specify')
++        output=[]
++        with tempfile.TemporaryDirectory() as temp:
++            for offset in range(0,len(complete.splitlines()),73):
++                r=subprocess.run([sys.executable,'-I','-B',str(script),'--host','codex','--skill','specify','--offset',str(offset),'--limit','73'],cwd=temp,text=True,capture_output=True,check=True)
++                output.append(r.stdout)
++            bad=subprocess.run([sys.executable,'-I','-B',str(script),'--host','codex','--skill','plan','--limit','0'],cwd=temp,capture_output=True)
++            self.assertNotEqual(bad.returncode,0)
++        self.assertEqual(''.join(output),complete)
++        self.assertEqual(before,{p: p.read_bytes() for p in (ROOT/'dist').rglob('*') if p.is_file()})
++
++    def test_loader_rejects_package_escape(self):
++        with tempfile.TemporaryDirectory() as temp:
++            copy=Path(temp)/'package';shutil.copytree(ROOT/'dist',copy)
++            target=copy/'references/workflows/plan.md';target.unlink()
++            outside=Path(temp)/'outside.md';outside.write_text('untrusted')
++            target.symlink_to(outside)
++            with self.assertRaises(ValueError):loader.load(copy,'codex','plan')
++
++    def test_builder_refuses_source_and_unmarked_output(self):
++        for path in (ROOT,ROOT/'src',ROOT/'tools',ROOT.parent):
++            with self.assertRaises(ValueError):build(path)
++        with tempfile.TemporaryDirectory() as temp:
++            out=Path(temp)/'unknown';out.mkdir();(out/'user.txt').write_text('keep')
++            with self.assertRaises(ValueError):build(out)
++            self.assertEqual((out/'user.txt').read_text(),'keep')
+diff --git a/tests/test_repository.py b/tests/test_repository.py
+index 5006db1..b132dc6 100644
+--- a/tests/test_repository.py
++++ b/tests/test_repository.py
+@@ -1,114 +1,81 @@
+-"""Repository-only regressions for product layout and fixed beta metadata."""
++"""One installation boundary, three disjoint native entries, no legacy/runtime extras."""
+ from __future__ import annotations
+-
+ import json
+ import re
++import sys
+ import unittest
+ from pathlib import Path
+-from urllib.parse import unquote, urlsplit
+-
++from urllib.parse import urlsplit,unquote
+ import yaml
+-
+-ROOT = Path(__file__).resolve().parents[1]
+-HOSTS = ('codex', 'claude', 'cursor')
+-EXPECTED_VERSION = '1.0.0-beta'
+-EXPECTED_REPOSITORY = 'https://github.com/goedgecloud/sdlc-ai-spec'
+-
++ROOT=Path(__file__).resolve().parents[1]
++sys.path.insert(0,str(ROOT/'tools'))
++from build import marketplaces,COMMANDS,HOSTS
+ 
+ class RepositoryTests(unittest.TestCase):
+-    def test_root_layout_and_no_legacy_entrypoints(self):
+-        allowed = {
+-            '.git', '.github', '.gitignore', '.venv', '.pytest_cache',
+-            'AGENTS.md', 'CLAUDE.md', 'README.md', 'CHANGELOG.md', 'LICENSE',
+-            'NOTICE', 'plugin-metadata.json', 'upstream.lock.json',
+-            'src', 'adapters', 'tools', 'tests', 'dist', 'docs',
+-        }
+-        self.assertLessEqual({p.name for p in ROOT.iterdir()}, allowed)
+-        self.assertEqual({p.name for p in (ROOT/'docs').iterdir()},
+-                         {'DEVELOPMENT.md', 'MIGRATION.md', 'VERIFICATION.md'})
+-        self.assertEqual({p.name for p in (ROOT/'dist').iterdir()},
+-                         set(HOSTS) | {'.sdlc-build'})
+-        self.assertEqual((ROOT/'CLAUDE.md').read_text(), '@AGENTS.md\n')
+-
+-    def test_single_product_metadata(self):
+-        metadata = json.loads((ROOT/'plugin-metadata.json').read_text())
+-        self.assertEqual(metadata['name'], 'sdlc')
+-        self.assertEqual(metadata['version'], EXPECTED_VERSION)
+-        self.assertEqual(metadata['author'], {'name': 'Blade'})
+-        self.assertEqual(metadata['repository'], EXPECTED_REPOSITORY)
+-        self.assertEqual(metadata['license'], 'MIT')
+-        builder = (ROOT/'tools/build.py').read_text()
+-        self.assertIn("ROOT / 'plugin-metadata.json'", builder)
+-        self.assertNotIn('0.0.0-engineering', builder)
++    def test_single_installation_boundary(self):
++        package=ROOT/'dist'
++        self.assertFalse((package/'plugin.json').exists())
++        self.assertFalse((package/'skills').exists())
++        for host in HOSTS:self.assertFalse((package/host).exists())
++        self.assertEqual(len(list((package/'references/workflows').glob('*.md'))),9)
++        self.assertEqual(len(list(package.rglob('common.sh'))),1)
++        self.assertFalse(list(package.rglob('sdlc-init')))
++        for legacy in ('v0','packages','skills/_shared','docs/v1.0','docs/v1.1'):
++            self.assertFalse((ROOT/legacy).exists())
+ 
+-    def test_packages_use_product_metadata(self):
+-        metadata = json.loads((ROOT/'plugin-metadata.json').read_text())
++    def test_native_manifests_select_only_their_entries(self):
++        metadata=json.loads((ROOT/'plugin-metadata.json').read_text())
++        all_entries=[]
+         for host in HOSTS:
+-            with self.subTest(host=host):
+-                package = ROOT/'dist'/host
+-                name = '.claude-plugin/plugin.json' if host == 'claude' else 'plugin.json'
+-                manifest = json.loads((package/name).read_text())
+-                manifest.pop('$schema', None)
+-                self.assertEqual(manifest, metadata)
+-                readme = (package/'README.md').read_text()
+-                self.assertIn('v'+EXPECTED_VERSION, readme)
+-                self.assertIn('Author: Blade', readme)
+-                self.assertIn(EXPECTED_REPOSITORY, readme)
++            manifest=json.loads((ROOT/'dist'/('.'+host+'-plugin/plugin.json')).read_text())
++            self.assertEqual(manifest,dict(metadata,skills='./adapters/'+host+'/skills/'))
++            folder=(ROOT/'dist'/manifest['skills']).resolve()
++            self.assertTrue(folder.is_relative_to((ROOT/'dist').resolve()))
++            entries=list(folder.glob('*/SKILL.md'))
++            self.assertEqual({p.parent.name for p in entries},{'sdlc-'+n for n in COMMANDS})
++            all_entries.extend(entries)
++        self.assertEqual(len(set(all_entries)),27)
+ 
+-    def test_provenance_separates_upstream_and_port(self):
+-        lock = json.loads((ROOT/'upstream.lock.json').read_text())
+-        for host in HOSTS:
+-            with self.subTest(host=host):
+-                provenance = json.loads((ROOT/'dist'/host/'UPSTREAM.json').read_text())
+-                self.assertEqual(provenance['repository'], lock['repository'])
+-                self.assertEqual(provenance['commit'], lock['commit'])
+-                self.assertEqual(provenance['port_repository'], EXPECTED_REPOSITORY)
+-                self.assertEqual(provenance['port_version'], EXPECTED_VERSION)
+-                self.assertEqual(provenance['port_author'], 'Blade')
+-                self.assertIs(provenance['init_implemented'], False)
+-                self.assertIs(provenance['native_host_verified'], False)
+-                self.assertEqual(provenance['included_commands'], lock['commands'])
++    def test_marketplaces_are_generated_and_point_to_dist(self):
++        for path,expected in marketplaces().items():
++            actual=json.loads((ROOT/path).read_text())
++            self.assertEqual(actual,expected)
++            entry=actual['plugins'][0]
++            source=entry['source']; source=source['path'] if isinstance(source,dict) else source
++            self.assertEqual(source,'./dist')
++            self.assertEqual(entry['name'],'sdlc')
+ 
+-    def test_license_and_notice_are_bundled(self):
+-        original = (ROOT/'src/LICENSE').read_bytes()
+-        self.assertEqual((ROOT/'LICENSE').read_bytes(), original)
+-        self.assertIn(b'Copyright GitHub, Inc.', original)
+-        notice = (ROOT/'NOTICE').read_bytes()
+-        for host in HOSTS:
+-            self.assertEqual((ROOT/'dist'/host/'LICENSE').read_bytes(), original)
+-            self.assertEqual((ROOT/'dist'/host/'NOTICE').read_bytes(), notice)
+-
+-    def test_documentation_links_and_new_tool_paths(self):
+-        documents = list((ROOT/'docs').glob('*.md')) + [
+-            ROOT/'README.md', ROOT/'AGENTS.md', ROOT/'CHANGELOG.md']
+-        for document in documents:
+-            text = document.read_text()
+-            self.assertNotIn('v0/', text)
+-            self.assertNotIn('0.0.0-engineering', text)
+-            for target in re.findall(r'(?<!!)\[[^\]]+\]\(([^)]+)\)', text):
+-                target = target.split(' "', 1)[0]
+-                if urlsplit(target).scheme or target.startswith('#'):
+-                    continue
+-                path = unquote(target.split('#', 1)[0])
+-                self.assertTrue((document.parent/path).exists(), (document, target))
+-        for name in ('build', 'port', 'verify'):
+-            self.assertIn('tools/'+name+'.py', (ROOT/'docs/DEVELOPMENT.md').read_text())
++    def test_metadata_and_attribution(self):
++        m=json.loads((ROOT/'plugin-metadata.json').read_text())
++        self.assertEqual(m['version'],'1.0.0-beta')
++        self.assertEqual(m['author'],{'name':'Blade'})
++        self.assertEqual(m['repository'],'https://github.com/goedgecloud/sdlc-ai-spec')
++        self.assertEqual((ROOT/'dist/LICENSE').read_bytes(),(ROOT/'src/upstream/LICENSE').read_bytes())
++        self.assertEqual((ROOT/'NOTICE').read_bytes(),(ROOT/'dist/NOTICE').read_bytes())
++        upstream=json.loads((ROOT/'dist/UPSTREAM.json').read_text())
++        self.assertEqual(upstream['port_version'],m['version'])
++        self.assertFalse(upstream['init_implemented'])
++        self.assertFalse(upstream['native_host_verified'])
+ 
+-    def test_ci_uses_root_paths_and_read_only_permissions(self):
+-        workflows = list((ROOT/'.github/workflows').glob('*.yml'))
+-        self.assertEqual([p.name for p in workflows], ['engineering.yml'])
+-        text = workflows[0].read_text()
+-        workflow = yaml.safe_load(text)
+-        self.assertEqual(workflow['permissions'], {'contents': 'read'})
+-        self.assertIn('${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git', text)
+-        self.assertIn('python" -B tools/verify.py', text)
+-        self.assertIn('for agent in codex claude cursor-agent', text)
+-        self.assertIn('--events=false', text)
+-        self.assertNotIn('v0/', text)
+-        self.assertNotIn('git push', text)
+-        self.assertNotIn('contents: write', text)
+-        self.assertIn('sdlc-engineering-${{ github.sha }}', text)
++    def test_working_data_and_dev_sources_not_shipped(self):
++        for path in ('src','tools','tests','docs','.sdlc','node_modules'):
++            self.assertFalse((ROOT/'dist'/path).exists())
++        for path in (ROOT/'dist').rglob('*'):
++            self.assertFalse(path.is_symlink())
++            self.assertNotIn('__pycache__',path.parts)
++        self.assertTrue((ROOT/'dist/BUILD.json').is_file())
+ 
+-
+-if __name__ == '__main__':
+-    unittest.main()
++    def test_docs_and_ci(self):
++        documents=list((ROOT/'docs').glob('*.md'))+[ROOT/'README.md',ROOT/'AGENTS.md']
++        for document in documents:
++            text=document.read_text()
++            self.assertNotIn('v0/',text)
++            for target in re.findall(r'(?<!!)\[[^\]]+\]\(([^)]+)\)',text):
++                if urlsplit(target).scheme or target.startswith('#'):continue
++                self.assertTrue((document.parent/unquote(target.split('#')[0])).exists(),(document,target))
++        ci=(ROOT/'.github/workflows/engineering.yml').read_text()
++        self.assertEqual(yaml.safe_load(ci)['permissions'],{'contents':'read'})
++        self.assertNotIn('git push',ci)
++        self.assertIn('for agent in codex claude cursor-agent',ci)
++        self.assertIn('--events=false',ci)
++        self.assertEqual((ROOT/'CLAUDE.md').read_text(),'@AGENTS.md\n')
+diff --git a/tests/test_runtime.py b/tests/test_runtime.py
+index e18eb4a..0466226 100644
+--- a/tests/test_runtime.py
++++ b/tests/test_runtime.py
+@@ -32,7 +32,7 @@ class RuntimeTests(unittest.TestCase):
+         trap.chmod(0o755)
+         self.trap_file=self.base/'unexpected-cli-call'
+-        self.package=ROOT/'dist/codex'
++        self.package=ROOT/'dist'
+         self.host='codex'
+-        self.before={host:tree(ROOT/'dist'/host) for host in HOSTS}
++        self.before={host:tree(ROOT/'dist') for host in HOSTS}
+         self.env={k:v for k,v in os.environ.items() if not k.startswith(('SPECIFY_','SDLC_','PYTHON'))}
+         self.env.update(PATH=str(self.trap)+os.pathsep+os.environ.get('PATH','/usr/bin:/bin'),
+@@ -45,5 +45,5 @@ class RuntimeTests(unittest.TestCase):
+         try:
+             self.assertFalse(self.trap_file.exists(),'Runtime invoked specify')
+-            for host in HOSTS:self.assertEqual(self.before[host],tree(ROOT/'dist'/host))
++            for host in HOSTS:self.assertEqual(self.before[host],tree(ROOT/'dist'))
+         finally:
+             for p in self.base.rglob('*'):
+@@ -55,5 +55,5 @@ class RuntimeTests(unittest.TestCase):
+     def hosts(self):
+         for host in HOSTS:
+-            self.host=host;self.package=ROOT/'dist'/host
++            self.host=host;self.package=ROOT/'dist'
+             yield host
+ 

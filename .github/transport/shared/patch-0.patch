@@ -1,0 +1,267 @@
+diff --git a/.github/workflows/engineering.yml b/.github/workflows/engineering.yml
+index 65d3187..3a4f93d 100644
+--- a/.github/workflows/engineering.yml
++++ b/.github/workflows/engineering.yml
+@@ -26,10 +26,11 @@ jobs:
+           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+           mkdir -p "$RUNNER_TEMP/sdlc-source/upstream" "$RUNNER_TEMP/sdlc-source/baselines" "$RUNNER_TEMP/sdlc-source/logs"
++          UPSTREAM_SHA=$(python3 -c 'import json,re; s=json.load(open("upstream.lock.json"))["commit"]; assert re.fullmatch("[0-9a-f]{40}",s); print(s)')
+           cd "$RUNNER_TEMP/sdlc-source/upstream"
+           git init .
+           git remote add origin https://github.com/github/spec-kit.git
+-          git fetch --depth=1 origin a4e25ce6b96dc8e85f84206c6a54353fa9c5260b
++          git fetch --depth=1 origin "$UPSTREAM_SHA"
+           git checkout --detach FETCH_HEAD
+-          test "$(git rev-parse HEAD)" = a4e25ce6b96dc8e85f84206c6a54353fa9c5260b
++          test "$(git rev-parse HEAD)" = "$UPSTREAM_SHA"
+       - name: Install pinned upstream and initialize three empty projects
+         shell: bash
+@@ -51,5 +52,5 @@ jobs:
+               if f.is_file():
+                   records[str(f.relative_to(root))] = hashlib.sha256(f.read_bytes()).hexdigest()
+-          (root/'baseline-manifest.json').write_text(json.dumps({'upstream_sha':'a4e25ce6b96dc8e85f84206c6a54353fa9c5260b','source_sha':os.environ['GITHUB_SHA'],'files':records}, indent=2)+'\n')
++          (root/'baseline-manifest.json').write_text(json.dumps({'upstream_sha':json.loads(pathlib.Path('upstream.lock.json').read_text())['commit'],'source_sha':os.environ['GITHUB_SHA'],'files':records}, indent=2)+'\n')
+           print('UPSTREAM INSTALL AND THREE EMPTY INITIALIZATIONS: PASS')
+           print('Collected files:', len(records))
+@@ -64,4 +65,11 @@ jobs:
+           git diff --exit-code
+           test -z "$(git status --porcelain --untracked-files=all)"
++      - name: Rehearse a same-version isolated upgrade candidate
++        shell: bash
++        run: |
++          set -euo pipefail
++          "$RUNNER_TEMP/sdlc-upstream-env/bin/python" -B tools/rehearse_upgrade.py --upstream "$RUNNER_TEMP/sdlc-source/upstream" --baselines "$RUNNER_TEMP/sdlc-source/baselines" --out "$RUNNER_TEMP/sdlc-source/upgrade-rehearsal"
++          git diff --exit-code
++          test -z "$(git status --porcelain --untracked-files=all)"
+       - name: Package exact source and engineering evidence
+         if: always()
+diff --git a/AGENTS.md b/AGENTS.md
+index 26c482b..24506ef 100644
+--- a/AGENTS.md
++++ b/AGENTS.md
+@@ -17,6 +17,7 @@ repository transfer from a metadata edit.
+ - Shared resources are read-only; project state belongs to `.sdlc`. Never infer
+   the business project root from the plugin installation directory.
+-- Edit src/, adapters/ and tools/ as appropriate; regenerate dist/ with the builder.
+-  Do not independently hand-edit the three generated packages.
++- Keep src/upstream byte-identical to the locked upstream. Edit adapters/ and tools/;
++  regenerate derived source, the single dist package and root marketplaces. Never
++  hand-edit generated wrappers, host fragments or shared workflow bodies.
+ - Preserve upstream copyright, license and provenance. Plugin authorship does not
+   replace the original authorship of the copied Spec Kit source.
+@@ -28,4 +29,7 @@ user work. Commit/push only within the explicitly authorized branch. Do not merg
+ retag, release, rewrite history or modify other branches without authorization.
+ 
++Use tools/upgrade.py for detached upstream candidates; never overwrite the accepted
++worktree during preparation or weaken comparisons to accept a new version.
++
+ Use the installed pinned upstream CLI only to produce independent empty-project
+ baselines. Never use migrated output as its own upstream oracle. Engineering
+diff --git a/CHANGELOG.md b/CHANGELOG.md
+index 265603d..753f4f7 100644
+--- a/CHANGELOG.md
++++ b/CHANGELOG.md
+@@ -16,2 +16,11 @@ The beta version remains fixed during debugging. Use the exact Git commit and
+ CI evidence to identify a tested build. Earlier development is available in Git
+ history rather than copied into the current product tree.
++
++## Unreleased changes (version remains 1.0.0-beta)
++
++- Replace three copied distributions with one self-contained dist package.
++- Generate three marketplace catalogs pointing to ./dist and native thin entries.
++- Losslessly factor host workflow differences and bind them without AI/CLI calls.
++- Vendor watched original generator source; add detached candidate upgrade/review.
++- Add explicit installation, cache, upgrade and Codex/Cursor smoke-test procedures.
++- INIT and native/model-driven acceptance remain deferred.
+diff --git a/README.md b/README.md
+index 1b5ab26..44b3d22 100644
+--- a/README.md
++++ b/README.md
+@@ -1,61 +1,77 @@
+-# SDLC
++# SDLC AI Spec — v1.0.0-beta
+ 
+-**版本：v1.0.0-beta · 作者：Blade**
++Author: **Blade**. Declared repository: **https://github.com/goedgecloud/sdlc-ai-spec**.
++An independent, user-scoped source port of **Spec Kit by GitHub, Inc.**, MIT.
++Upstream remains pinned to `v1.0.5`, commit
++`a4e25ce6b96dc8e85f84206c6a54353fa9c5260b`.
+ 
+-插件声明仓库：[goedgecloud/sdlc-ai-spec](https://github.com/goedgecloud/sdlc-ai-spec)。
+-基于 [GitHub Spec Kit](https://github.com/github/spec-kit) 的用户级插件移植，面向 Codex、Claude Code 和 Cursor。
+-共享 Skill、脚本和模板随插件安装；项目工作数据保存在各自的 `.sdlc/`。
++## One package, three host entrypoints
+ 
+-> 当前为核心迁移测试版，**尚未提供 `sdlc-init`**。已有验证仅覆盖工程完整性、静态检查和合成文件系统场景，未完成客户端原生安装或真实业务验证。版本在调试期间固定为 `1.0.0-beta`；区分构建请使用 Git 提交 SHA。
++Members install the prebuilt **dist/** package through a marketplace; they do not
++run a build, install specify-cli or fetch upstream on installation. Root catalogs
++for Codex, Claude Code and Cursor all select `./dist`. The package has one copy
++of workflows, scripts and templates. Explicit native manifests select disjoint,
++thin host entrypoints; those pass a literal host to a stdlib-only read-only text
++binder. Business workflow content is shared without asking the model to guess
++which host it is running in.
+ 
+-## 范围
++Nine skills: constitution, specify, clarify, plan, tasks, analyze, checklist,
++implement and converge. English instructions and substantive template content
++remain upstream-derived. Project state belongs in `.sdlc`, never in the plugin.
++Bash, Python 3.9+ and standard POSIX tools are runtime dependencies. No uv,
++specify-cli, LLM API, MCP service or background process is required by the package.
+ 
+-保留上游九项能力：`constitution`、`specify`、`clarify`、`plan`、`tasks`、`analyze`、`checklist`、`implement`、`converge`。调用标识使用 `sdlc-*`，具体语法按宿主生成。
++**INIT is not implemented.** This remains a core engineering beta, not a complete
++first-use workflow for arbitrary projects. There is no GitHub integration,
++translation, new lifecycle or automatic project migration. Native installation
++and model-driven behavior must be verified separately; see the small isolated
++[smoke test](docs/SMOKE-TEST.md).
+ 
+-英文流程和模板保持上游语义；仅适配名称、资源路径、项目数据位置和插件包装。当前不包含 INIT、GitHub、模板翻译、团队规则、事件 Hook、扩展安装管理或工作流引擎。
+-
+-固定上游：Spec Kit `v1.0.5`，提交 `a4e25ce6b96dc8e85f84206c6a54353fa9c5260b`。原始源码身份记录在 [upstream.lock.json](upstream.lock.json)。
+-
+-## 仓库结构
++## Layout
+ 
+ ```text
+-.
+-├── plugin-metadata.json       # 唯一产品版本、作者、声明仓库等元数据
+-├── upstream.lock.json         # 上游身份与选定配置
+-├── src/                       # 上游命令、模板及迁移后的必要脚本
+-├── adapters/                  # 资源绑定与宿主差异
+-├── tools/                     # 源码移植、构建、工程验证工具
+-├── tests/                     # 静态、布局和合成场景测试
+-├── dist/
+-│   ├── codex/                 # 自包含 Codex 工程包
+-│   ├── claude/                # 自包含 Claude Code 工程包
+-│   └── cursor/                # 自包含 Cursor 工程包
+-├── docs/
+-│   ├── DEVELOPMENT.md         # 开发和验证步骤
+-│   ├── MIGRATION.md           # 允许的上游差异
+-│   └── VERIFICATION.md        # 证据定位与验证边界
+-├── LICENSE                    # 上游 MIT 许可
+-└── NOTICE                     # 原始来源和移植归属
++.agents/plugins/marketplace.json
++.claude-plugin/marketplace.json
++.cursor-plugin/marketplace.json
++src/upstream/             Original, pinned source and renderer references
++src/scripts/              Shared migrated runtime plus small local helpers
++src/templates/            Derived template source
++adapters/                Strict migration and host-binding rules
++tools/                   Deterministic port, build, upgrade and comparison
++tests/                   Synthetic engineering tests, not business acceptance
++dist/                    Entire installed plugin boundary
++  .codex-plugin/         Explicit Codex entrypoint selection
++  .claude-plugin/        Explicit Claude entrypoint selection
++  .cursor-plugin/        Explicit Cursor entrypoint selection
++  adapters/<host>/skills/  Thin native wrappers (no copied business bodies)
++  references/workflows/  One factored body per capability
++  bindings/              Literal host differences generated at build time
++  scripts/               One shared runtime
++  templates/             One shared template collection
++  BUILD.json             Deterministic source build identity
+ ```
+ 
+-仓库根目录是源码和构建入口，不是第四个插件包。三个独立包位于 `dist/<host>/`，共享内容由同一构建器生成，不能直接分别修改。旧实现和旧规划不再保留在当前目录，历史通过 Git 追溯。
+-
+-## 工程使用
++The native manifests deliberately replace the previous portable root manifest:
++portable fixed skill discovery cannot select different host entrypoints. No
++root/default `skills` directory is used inside dist, preventing duplicate scans.
++The runtime loader only binds precompiled literal fragments; it does not compile
++upstream, run a workflow or write state. Full output must be read before execution.
+ 
+-运行期需要 Bash、Python 3.9+（路径检查仅使用标准库）及上游脚本使用的 POSIX 工具；`jq` 可选。不需要 `uv` 或 `specify-cli`。项目缺少 `.sdlc` 时明确报错，不会自动初始化。
+-
+-开发工具需要 Python 3.11+，依赖见 [tools/requirements.txt](tools/requirements.txt)。从仓库根目录执行：
+-
+-```sh
+-python -m pip install -r tools/requirements.txt
+-python -B tools/build.py
+-python -B -m unittest discover -s tests -v
+-```
++## Documentation
+ 
+-完整的“实际安装固定上游工具 → 三个空项目初始化 → 已提交工程包对照”步骤见 [开发说明](docs/DEVELOPMENT.md)。工程包尚不是可以直接完成首次项目初始化的成品，不要通过手工复制 `.specify` 或运行旧安装器绕过当前边界。
++- [Installation and beta cache handling](docs/INSTALLATION.md)
++- [Build and independent engineering verification](docs/DEVELOPMENT.md)
++- [Exact migration differences](docs/MIGRATION.md)
++- [Controlled upstream upgrade candidates](docs/UPGRADING.md)
++- [Verification boundaries](docs/VERIFICATION.md)
++- [Codex/Cursor comparison project and requirement](docs/SMOKE-TEST.md)
+ 
+-## 来源与声明
++The presently authorized working repository can differ from the declared product
++address. Updating metadata is not a GitHub transfer. Install from an accessible
++repository/ref containing this implementation, not an old default branch.
+ 
+-Spec Kit 原作者为 GitHub, Inc.，使用 MIT 许可证；本移植作者为 Blade。原始英文命令的来源元数据保留，插件作者单独定义。每个工程包携带 `LICENSE`、`NOTICE` 和 `UPSTREAM.json`。
++## Attribution
+ 
+-本项目不是 GitHub、OpenAI、Anthropic 或 Cursor 的官方发行版。插件声明仓库、当前 Git 托管位置和实际构建来源是不同概念；CI 从当前运行的仓库读取准确提交，不将声明地址当作已经迁仓成功的证明。
++Original Spec Kit copyright and MIT terms remain in LICENSE and NOTICE; original
++upstream files retain their attribution. Each package includes UPSTREAM.json.
++This is not an official release of GitHub, OpenAI, Anthropic or Cursor.
+diff --git a/adapters/BINDING.md b/adapters/BINDING.md
+index 1302dc8..7a0ee9b 100644
+--- a/adapters/BINDING.md
++++ b/adapters/BINDING.md
+@@ -5,5 +5,5 @@
+ This is the @HOST@ package of SDLC's fixed Spec Kit core port. Resolve paths before executing the unchanged workflow below.
+ 
+-- @ROOT_DETAIL@ `SDLC_PLUGIN_ROOT` is the package directory two levels above this skill's directory (`skills/<name>/SKILL.md`). Do not infer it from the business working directory, scan other installed versions, or assume this variable is already exported.
++- @ROOT_DETAIL@ `SDLC_PLUGIN_ROOT` is the package directory four levels above the loaded entrypoint skill directory (`adapters/@HOST@/skills/<name>/SKILL.md`). Do not infer it from the business working directory, scan other installed versions, or assume this variable is already exported.
+ - Keep the shell working directory in the selected business project. Run `SDLC_HOST=@HOST@ bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/project-paths.sh"` to resolve the nearest initialized `.sdlc`. When the user explicitly selected a project, pass its absolute path as command-local `SPECIFY_INIT_DIR`. Use the returned `PROJECT_ROOT` as `SDLC_PROJECT_ROOT`. If the project is missing or invalid, stop; this engineering build does not yet include `sdlc-init`.
+ - Set these resolved absolute values in EVERY shell invocation that uses them; shell state is not guaranteed to persist across tool calls. `${VAR:?}` intentionally fails on an unresolved variable. For non-shell file tools, substitute the resolved absolute value rather than passing `${VAR}` literally. Never change directory to the plugin to fix a resource lookup.
+diff --git a/docs/DEVELOPMENT.md b/docs/DEVELOPMENT.md
+index 93c5f6d..f69cdaf 100644
+--- a/docs/DEVELOPMENT.md
++++ b/docs/DEVELOPMENT.md
+@@ -9,14 +9,18 @@ Do not increment the version during this debugging period or create/move a tag
+ as part of an ordinary code change. Use the exact commit SHA to identify builds.
+ 
+-The root contains the implementation. `src/commands` retains original English
++The root contains the implementation. `src/upstream/templates/commands` retains original English
+ source; `src/templates` and `src/scripts` contain documented port deltas.
+ `adapters/` supplies resource binding and host differences. `tools/build.py`
+-generates `dist/codex`, `dist/claude` and `dist/cursor`, without importing
+-`specify_cli` or reading initialized projects. Each package is self-contained.
++generates a single self-contained `dist` package and three thin native entrypoint sets,
++without importing `specify_cli` or reading initialized projects. Use `--marketplaces`
++to also regenerate the three repository-root catalogs.
+ There is no root plugin manifest because the root is a source/build workspace.
+ 
+-Codex and Cursor packages use the captured Agent Plugins schema. Claude uses its
+-native `.claude-plugin/plugin.json`. Invocation references retain their host
+-forms: `$sdlc-*`, `/sdlc:sdlc-*`, and `/sdlc-*`. Preserve their distinction.
++All three native manifests declare `skills: ./adapters/<host>/skills/` inside
++the same dist package. No portable root manifest/default skills scan is shipped.
++The loaded wrapper pins its host and reads the complete, deterministic loader
++output. The shared workflows plus literal fragments reconstruct each formerly
++expanded host body exactly; this is tested against installed upstream output.
++[Installation](INSTALLATION.md) lists current official format references.
+ 
+ ## Build from source
+@@ -27,5 +31,5 @@ Use Python 3.11+ in an isolated development environment:
+ python -m venv .venv
+ .venv/bin/python -m pip install -r tools/requirements.txt
+-.venv/bin/python -B tools/build.py
++.venv/bin/python -B tools/build.py --marketplaces
+ .venv/bin/python -B -m unittest discover -s tests -v
+ git diff --check
+@@ -38,5 +42,5 @@ absolute path; the tool checks the selected source hashes against the lock.
+ ```sh
+ .venv/bin/python -B tools/port.py --upstream "$UPSTREAM"
+-.venv/bin/python -B tools/build.py
++.venv/bin/python -B tools/build.py --marketplaces
+ ```
+ 
+@@ -87,2 +91,9 @@ logs, baseline hashes, the source snapshot and verifier results. The report reco
+ source SHA, actual source repository, declared repository, product version,
+ environment, individual checks and distribution hashes. See VERIFICATION.md.
++
++## Upgrade a pinned upstream
++
++Do not edit hashes to make a check pass. Follow [UPGRADING.md](UPGRADING.md): prepare
++a detached candidate, compare installed tool outputs, review changed original
++source and accept only exact verified bytes. BUILD.json identifies a reproducible
++build while the beta product version remains fixed.

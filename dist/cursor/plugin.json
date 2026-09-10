@@ -1,0 +1,11 @@
+{
+  "name": "sdlc",
+  "version": "1.0.0-beta",
+  "description": "Spec Kit core user-scoped source port (beta; INIT not included)",
+  "author": {
+    "name": "Blade"
+  },
+  "repository": "https://github.com/goedgecloud/sdlc-ai-spec",
+  "license": "MIT",
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
+}

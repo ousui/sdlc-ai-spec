@@ -1,0 +1,11 @@
+# SDLC v1.0.0-beta
+
+Author: Blade
+
+Repository: https://github.com/goedgecloud/sdlc-ai-spec
+
+Source port of Spec Kit v1.0.5. Nine local skills; no INIT, GitHub, translation, workflow engine or event hooks. This package is not yet a complete end-user release. Only engineering/fixture checks are claimed. Native host discovery and real-project behavior have not been tested.
+
+Requires Bash and Python 3.9+ plus standard POSIX tools. Core resources stay in this package; project data belongs in .sdlc. No uv/specify-cli is needed at runtime. Plugin location must be obtained from the loaded skill path (or the documented Claude plugin variable), never stored in project metadata. Missing project state is an error, not automatic init.
+
+Based on Spec Kit by GitHub, Inc. (MIT). See LICENSE, NOTICE and UPSTREAM.json. This is an independent port, not an official upstream release.

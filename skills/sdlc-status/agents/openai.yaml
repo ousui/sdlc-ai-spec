@@ -1,5 +1,0 @@
-policy:
-  allow_implicit_invocation: false
-interface:
-  display_name: "SDLC · 生命周期状态"
-  short_description: "只读查看准确需求的生命周期、阻塞与下一动作，完整展示多个候选。"

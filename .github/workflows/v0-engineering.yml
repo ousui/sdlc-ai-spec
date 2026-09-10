@@ -1,0 +1,84 @@
+name: v0 engineering
+on:
+  push:
+    branches: [impl/spec-kit-plugin-v0]
+    paths: ['v0/**', '.github/workflows/v0-engineering.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: v0-engineering-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  engineering:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Fetch exact migration and upstream sources
+        shell: bash
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = ousui/sdlc-ai-spec
+          test "$GITHUB_REF" = refs/heads/impl/spec-kit-plugin-v0
+          git init .
+          git remote add origin https://github.com/ousui/sdlc-ai-spec.git
+          git fetch --depth=1 origin "$SOURCE_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          mkdir -p "$RUNNER_TEMP/v0-source/upstream" "$RUNNER_TEMP/v0-source/baselines" "$RUNNER_TEMP/v0-source/logs"
+          cd "$RUNNER_TEMP/v0-source/upstream"
+          git init .
+          git remote add origin https://github.com/github/spec-kit.git
+          git fetch --depth=1 origin a4e25ce6b96dc8e85f84206c6a54353fa9c5260b
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = a4e25ce6b96dc8e85f84206c6a54353fa9c5260b
+      - name: Install pinned upstream tool and collect empty-project baselines
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv "$RUNNER_TEMP/v0-upstream-env"
+          "$RUNNER_TEMP/v0-upstream-env/bin/python" -m pip install "$RUNNER_TEMP/v0-source/upstream" > "$RUNNER_TEMP/v0-source/logs/install.log" 2>&1
+          "$RUNNER_TEMP/v0-upstream-env/bin/python" -m pip freeze > "$RUNNER_TEMP/v0-source/logs/pip-freeze.txt"
+          "$RUNNER_TEMP/v0-upstream-env/bin/specify" version > "$RUNNER_TEMP/v0-source/logs/version.log" 2>&1
+          for agent in codex claude cursor-agent; do
+            mkdir -p "$RUNNER_TEMP/v0-source/baselines/$agent"
+            (cd "$RUNNER_TEMP/v0-source/baselines/$agent" && "$RUNNER_TEMP/v0-upstream-env/bin/specify" init . --integration "$agent" --script sh --ignore-agent-tools --non-interactive --integration-options="--events=false") > "$RUNNER_TEMP/v0-source/logs/init-$agent.log" 2>&1
+          done
+          python3 - <<'PY'
+          import json, os, pathlib, hashlib
+          root = pathlib.Path(os.environ['RUNNER_TEMP'])/'v0-source'
+          records = {}
+          for f in sorted((root/'baselines').rglob('*')):
+              if f.is_file():
+                  records[str(f.relative_to(root))] = hashlib.sha256(f.read_bytes()).hexdigest()
+          (root/'baseline-manifest.json').write_text(json.dumps({'upstream_sha':'a4e25ce6b96dc8e85f84206c6a54353fa9c5260b','source_sha':os.environ['GITHUB_SHA'],'files':records}, indent=2)+'\n')
+          print('UPSTREAM INSTALL AND THREE EMPTY INITIALIZATIONS: PASS')
+          print('Collected files:', len(records))
+          PY
+      - name: Run migration engineering tests when implementation is present
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -f v0/tools/verify.py ]; then
+            "$RUNNER_TEMP/v0-upstream-env/bin/python" v0/tools/verify.py --upstream "$RUNNER_TEMP/v0-source/upstream" --baselines "$RUNNER_TEMP/v0-source/baselines" --evidence "$RUNNER_TEMP/v0-source/verification"
+          else
+            echo 'Baseline acquisition only: no migration verification claimed.'
+          fi
+      - name: Package source and evidence for review
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/v0-export"
+          tar --exclude=.git -czf "$RUNNER_TEMP/v0-export/source-and-baselines.tar.gz" -C "$RUNNER_TEMP/v0-source" .
+          git archive HEAD | gzip > "$RUNNER_TEMP/v0-export/migration-source.tar.gz"
+      - name: Upload engineering evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: v0-engineering-${{ github.sha }}
+          path: ${{ runner.temp }}/v0-export/
+          retention-days: 7
+          if-no-files-found: error

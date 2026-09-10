@@ -25,12 +25,13 @@ jobs:
           git checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           mkdir -p "$RUNNER_TEMP/sdlc-source/upstream" "$RUNNER_TEMP/sdlc-source/baselines" "$RUNNER_TEMP/sdlc-source/logs"
+          UPSTREAM_SHA=$(python3 -c 'import json,re; s=json.load(open("upstream.lock.json"))["commit"]; assert re.fullmatch("[0-9a-f]{40}",s); print(s)')
           cd "$RUNNER_TEMP/sdlc-source/upstream"
           git init .
           git remote add origin https://github.com/github/spec-kit.git
-          git fetch --depth=1 origin a4e25ce6b96dc8e85f84206c6a54353fa9c5260b
+          git fetch --depth=1 origin "$UPSTREAM_SHA"
           git checkout --detach FETCH_HEAD
-          test "$(git rev-parse HEAD)" = a4e25ce6b96dc8e85f84206c6a54353fa9c5260b
+          test "$(git rev-parse HEAD)" = "$UPSTREAM_SHA"
       - name: Install pinned upstream and initialize three empty projects
         shell: bash
         run: |
@@ -50,7 +51,7 @@ jobs:
           for f in sorted((root/'baselines').rglob('*')):
               if f.is_file():
                   records[str(f.relative_to(root))] = hashlib.sha256(f.read_bytes()).hexdigest()
-          (root/'baseline-manifest.json').write_text(json.dumps({'upstream_sha':'a4e25ce6b96dc8e85f84206c6a54353fa9c5260b','source_sha':os.environ['GITHUB_SHA'],'files':records}, indent=2)+'\n')
+          (root/'baseline-manifest.json').write_text(json.dumps({'upstream_sha':json.loads(pathlib.Path('upstream.lock.json').read_text())['commit'],'source_sha':os.environ['GITHUB_SHA'],'files':records}, indent=2)+'\n')
           print('UPSTREAM INSTALL AND THREE EMPTY INITIALIZATIONS: PASS')
           print('Collected files:', len(records))
           PY
@@ -61,6 +62,13 @@ jobs:
           test -f tools/verify.py
           "$RUNNER_TEMP/sdlc-upstream-env/bin/python" -B tools/verify.py --upstream "$RUNNER_TEMP/sdlc-source/upstream" --baselines "$RUNNER_TEMP/sdlc-source/baselines" --evidence "$RUNNER_TEMP/sdlc-source/verification"
           git diff --check
+          git diff --exit-code
+          test -z "$(git status --porcelain --untracked-files=all)"
+      - name: Rehearse a same-version isolated upgrade candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          "$RUNNER_TEMP/sdlc-upstream-env/bin/python" -B tools/rehearse_upgrade.py --upstream "$RUNNER_TEMP/sdlc-source/upstream" --baselines "$RUNNER_TEMP/sdlc-source/baselines" --out "$RUNNER_TEMP/sdlc-source/upgrade-rehearsal"
           git diff --exit-code
           test -z "$(git status --porcelain --untracked-files=all)"
       - name: Package exact source and engineering evidence

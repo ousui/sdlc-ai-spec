@@ -1,114 +1,81 @@
-"""Repository-only regressions for product layout and fixed beta metadata."""
+"""One installation boundary, three disjoint native entries, no legacy/runtime extras."""
 from __future__ import annotations
-
 import json
 import re
+import sys
 import unittest
 from pathlib import Path
-from urllib.parse import unquote, urlsplit
-
+from urllib.parse import urlsplit,unquote
 import yaml
-
-ROOT = Path(__file__).resolve().parents[1]
-HOSTS = ('codex', 'claude', 'cursor')
-EXPECTED_VERSION = '1.0.0-beta'
-EXPECTED_REPOSITORY = 'https://github.com/goedgecloud/sdlc-ai-spec'
-
+ROOT=Path(__file__).resolve().parents[1]
+sys.path.insert(0,str(ROOT/'tools'))
+from build import marketplaces,COMMANDS,HOSTS
 
 class RepositoryTests(unittest.TestCase):
-    def test_root_layout_and_no_legacy_entrypoints(self):
-        allowed = {
-            '.git', '.github', '.gitignore', '.venv', '.pytest_cache',
-            'AGENTS.md', 'CLAUDE.md', 'README.md', 'CHANGELOG.md', 'LICENSE',
-            'NOTICE', 'plugin-metadata.json', 'upstream.lock.json',
-            'src', 'adapters', 'tools', 'tests', 'dist', 'docs',
-        }
-        self.assertLessEqual({p.name for p in ROOT.iterdir()}, allowed)
-        self.assertEqual({p.name for p in (ROOT/'docs').iterdir()},
-                         {'DEVELOPMENT.md', 'MIGRATION.md', 'VERIFICATION.md'})
-        self.assertEqual({p.name for p in (ROOT/'dist').iterdir()},
-                         set(HOSTS) | {'.sdlc-build'})
-        self.assertEqual((ROOT/'CLAUDE.md').read_text(), '@AGENTS.md\n')
+    def test_single_installation_boundary(self):
+        package=ROOT/'dist'
+        self.assertFalse((package/'plugin.json').exists())
+        self.assertFalse((package/'skills').exists())
+        for host in HOSTS:self.assertFalse((package/host).exists())
+        self.assertEqual(len(list((package/'references/workflows').glob('*.md'))),9)
+        self.assertEqual(len(list(package.rglob('common.sh'))),1)
+        self.assertFalse(list(package.rglob('sdlc-init')))
+        for legacy in ('v0','packages','skills/_shared','docs/v1.0','docs/v1.1'):
+            self.assertFalse((ROOT/legacy).exists())
 
-    def test_single_product_metadata(self):
-        metadata = json.loads((ROOT/'plugin-metadata.json').read_text())
-        self.assertEqual(metadata['name'], 'sdlc')
-        self.assertEqual(metadata['version'], EXPECTED_VERSION)
-        self.assertEqual(metadata['author'], {'name': 'Blade'})
-        self.assertEqual(metadata['repository'], EXPECTED_REPOSITORY)
-        self.assertEqual(metadata['license'], 'MIT')
-        builder = (ROOT/'tools/build.py').read_text()
-        self.assertIn("ROOT / 'plugin-metadata.json'", builder)
-        self.assertNotIn('0.0.0-engineering', builder)
-
-    def test_packages_use_product_metadata(self):
-        metadata = json.loads((ROOT/'plugin-metadata.json').read_text())
+    def test_native_manifests_select_only_their_entries(self):
+        metadata=json.loads((ROOT/'plugin-metadata.json').read_text())
+        all_entries=[]
         for host in HOSTS:
-            with self.subTest(host=host):
-                package = ROOT/'dist'/host
-                name = '.claude-plugin/plugin.json' if host == 'claude' else 'plugin.json'
-                manifest = json.loads((package/name).read_text())
-                manifest.pop('$schema', None)
-                self.assertEqual(manifest, metadata)
-                readme = (package/'README.md').read_text()
-                self.assertIn('v'+EXPECTED_VERSION, readme)
-                self.assertIn('Author: Blade', readme)
-                self.assertIn(EXPECTED_REPOSITORY, readme)
+            manifest=json.loads((ROOT/'dist'/('.'+host+'-plugin/plugin.json')).read_text())
+            self.assertEqual(manifest,dict(metadata,skills='./adapters/'+host+'/skills/'))
+            folder=(ROOT/'dist'/manifest['skills']).resolve()
+            self.assertTrue(folder.is_relative_to((ROOT/'dist').resolve()))
+            entries=list(folder.glob('*/SKILL.md'))
+            self.assertEqual({p.parent.name for p in entries},{'sdlc-'+n for n in COMMANDS})
+            all_entries.extend(entries)
+        self.assertEqual(len(set(all_entries)),27)
 
-    def test_provenance_separates_upstream_and_port(self):
-        lock = json.loads((ROOT/'upstream.lock.json').read_text())
-        for host in HOSTS:
-            with self.subTest(host=host):
-                provenance = json.loads((ROOT/'dist'/host/'UPSTREAM.json').read_text())
-                self.assertEqual(provenance['repository'], lock['repository'])
-                self.assertEqual(provenance['commit'], lock['commit'])
-                self.assertEqual(provenance['port_repository'], EXPECTED_REPOSITORY)
-                self.assertEqual(provenance['port_version'], EXPECTED_VERSION)
-                self.assertEqual(provenance['port_author'], 'Blade')
-                self.assertIs(provenance['init_implemented'], False)
-                self.assertIs(provenance['native_host_verified'], False)
-                self.assertEqual(provenance['included_commands'], lock['commands'])
+    def test_marketplaces_are_generated_and_point_to_dist(self):
+        for path,expected in marketplaces().items():
+            actual=json.loads((ROOT/path).read_text())
+            self.assertEqual(actual,expected)
+            entry=actual['plugins'][0]
+            source=entry['source']; source=source['path'] if isinstance(source,dict) else source
+            self.assertEqual(source,'./dist')
+            self.assertEqual(entry['name'],'sdlc')
 
-    def test_license_and_notice_are_bundled(self):
-        original = (ROOT/'src/LICENSE').read_bytes()
-        self.assertEqual((ROOT/'LICENSE').read_bytes(), original)
-        self.assertIn(b'Copyright GitHub, Inc.', original)
-        notice = (ROOT/'NOTICE').read_bytes()
-        for host in HOSTS:
-            self.assertEqual((ROOT/'dist'/host/'LICENSE').read_bytes(), original)
-            self.assertEqual((ROOT/'dist'/host/'NOTICE').read_bytes(), notice)
+    def test_metadata_and_attribution(self):
+        m=json.loads((ROOT/'plugin-metadata.json').read_text())
+        self.assertEqual(m['version'],'1.0.0-beta')
+        self.assertEqual(m['author'],{'name':'Blade'})
+        self.assertEqual(m['repository'],'https://github.com/goedgecloud/sdlc-ai-spec')
+        self.assertEqual((ROOT/'dist/LICENSE').read_bytes(),(ROOT/'src/upstream/LICENSE').read_bytes())
+        self.assertEqual((ROOT/'NOTICE').read_bytes(),(ROOT/'dist/NOTICE').read_bytes())
+        upstream=json.loads((ROOT/'dist/UPSTREAM.json').read_text())
+        self.assertEqual(upstream['port_version'],m['version'])
+        self.assertFalse(upstream['init_implemented'])
+        self.assertFalse(upstream['native_host_verified'])
 
-    def test_documentation_links_and_new_tool_paths(self):
-        documents = list((ROOT/'docs').glob('*.md')) + [
-            ROOT/'README.md', ROOT/'AGENTS.md', ROOT/'CHANGELOG.md']
+    def test_working_data_and_dev_sources_not_shipped(self):
+        for path in ('src','tools','tests','docs','.sdlc','node_modules'):
+            self.assertFalse((ROOT/'dist'/path).exists())
+        for path in (ROOT/'dist').rglob('*'):
+            self.assertFalse(path.is_symlink())
+            self.assertNotIn('__pycache__',path.parts)
+        self.assertTrue((ROOT/'dist/BUILD.json').is_file())
+
+    def test_docs_and_ci(self):
+        documents=list((ROOT/'docs').glob('*.md'))+[ROOT/'README.md',ROOT/'AGENTS.md']
         for document in documents:
-            text = document.read_text()
-            self.assertNotIn('v0/', text)
-            self.assertNotIn('0.0.0-engineering', text)
-            for target in re.findall(r'(?<!!)\[[^\]]+\]\(([^)]+)\)', text):
-                target = target.split(' "', 1)[0]
-                if urlsplit(target).scheme or target.startswith('#'):
-                    continue
-                path = unquote(target.split('#', 1)[0])
-                self.assertTrue((document.parent/path).exists(), (document, target))
-        for name in ('build', 'port', 'verify'):
-            self.assertIn('tools/'+name+'.py', (ROOT/'docs/DEVELOPMENT.md').read_text())
-
-    def test_ci_uses_root_paths_and_read_only_permissions(self):
-        workflows = list((ROOT/'.github/workflows').glob('*.yml'))
-        self.assertEqual([p.name for p in workflows], ['engineering.yml'])
-        text = workflows[0].read_text()
-        workflow = yaml.safe_load(text)
-        self.assertEqual(workflow['permissions'], {'contents': 'read'})
-        self.assertIn('${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git', text)
-        self.assertIn('python" -B tools/verify.py', text)
-        self.assertIn('for agent in codex claude cursor-agent', text)
-        self.assertIn('--events=false', text)
-        self.assertNotIn('v0/', text)
-        self.assertNotIn('git push', text)
-        self.assertNotIn('contents: write', text)
-        self.assertIn('sdlc-engineering-${{ github.sha }}', text)
-
-
-if __name__ == '__main__':
-    unittest.main()
+            text=document.read_text()
+            self.assertNotIn('v0/',text)
+            for target in re.findall(r'(?<!!)\[[^\]]+\]\(([^)]+)\)',text):
+                if urlsplit(target).scheme or target.startswith('#'):continue
+                self.assertTrue((document.parent/unquote(target.split('#')[0])).exists(),(document,target))
+        ci=(ROOT/'.github/workflows/engineering.yml').read_text()
+        self.assertEqual(yaml.safe_load(ci)['permissions'],{'contents':'read'})
+        self.assertNotIn('git push',ci)
+        self.assertIn('for agent in codex claude cursor-agent',ci)
+        self.assertIn('--events=false',ci)
+        self.assertEqual((ROOT/'CLAUDE.md').read_text(),'@AGENTS.md\n')

@@ -1,0 +1,13 @@
+{
+  "name": "sdlc-ai-spec",
+  "owner": {
+    "name": "Blade"
+  },
+  "plugins": [
+    {
+      "name": "sdlc",
+      "description": "Spec Kit core user-scoped source port (beta; INIT not included)",
+      "source": "./dist"
+    }
+  ]
+}

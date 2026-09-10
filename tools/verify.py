@@ -58,7 +58,8 @@ def normalize(text: str,host: str, *, ported: bool) -> str:
 def template_norm(text: str) -> str:
     text=text.replace('.sdlc/specs/','@SPECS@/')
     text=re.sub(r'(?<![\w./])/?specs/','@SPECS@/',text)
-    return text.replace('/sdlc:sdlc-','/speckit-').replace('/sdlc-','/speckit-').replace('$sdlc-','$speckit-')
+    text=re.sub(r'(?<![\w:/\$-])sdlc-(constitution|specify|clarify|plan|tasks|analyze|checklist|implement|converge)\b',r'/speckit-\1',text)
+    return text.replace('/sdlc:sdlc-','/speckit-').replace('/sdlc-','/speckit-').replace('$sdlc-','$speckit-').replace('$speckit-','/speckit-')
 
 
 def require_equal(a,b,label):
@@ -70,6 +71,8 @@ def require_equal(a,b,label):
 
 
 def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
+    if evidence.resolve() == ROOT or ROOT in evidence.resolve().parents:
+        raise ValueError('Evidence must be outside the source checkout')
     evidence.mkdir(parents=True,exist_ok=True)
     (evidence/"failure.txt").unlink(missing_ok=True)
     (evidence/"result.json").unlink(missing_ok=True)
@@ -79,25 +82,29 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
         print('PASS:',group,item,flush=True)
     lock=json.loads((ROOT/'upstream.lock.json').read_text())
     require_equal(lock['commit'],UPSTREAM_SHA,'Pinned SHA')
-    for source,record in lock['files'].items():
+    for source,record in {**lock['files'], **lock.get('watch_files', {})}.items():
         require_equal(digest(upstream/source),record['sha256'],'Upstream source '+source)
         passed('pinned_source',source)
     for command in COMMANDS:
-        require_equal((ROOT/'src/commands'/f'{command}.md').read_bytes(),
+        require_equal((ROOT/'src/upstream/templates/commands'/f'{command}.md').read_bytes(),
                       (upstream/'templates/commands'/f'{command}.md').read_bytes(),'English command source '+command)
         passed('unchanged_source_command',command)
     for host,integ,folder in [('codex','codex','.agents'),('claude','claude','.claude'),('cursor','cursor-agent','.cursor')]:
         base=baselines/integ
-        package=ROOT/'dist'/host
-        actual_skills={p.parent.name for p in (package/'skills').glob('*/SKILL.md')}
+        package=ROOT/'dist'
+        actual_skills={p.parent.name for p in (package/'adapters'/host/'skills').glob('*/SKILL.md')}
         require_equal(actual_skills,{'sdlc-'+c for c in COMMANDS},'Skill inventory '+host)
         for name in COMMANDS:
             native=base/folder/'skills'/('speckit-'+name)/'SKILL.md'
             oracle_meta,oracle_body=split(native.read_text())
-            rendered=render_source((ROOT/'src/commands'/f'{name}.md').read_text(),name,host)
+            rendered=render_source((ROOT/'src/upstream/templates/commands'/f'{name}.md').read_text(),name,host)
             require_equal(rendered,(oracle_meta,oracle_body),'Source renderer vs installed CLI '+host+'/'+name)
             passed('source_renderer_vs_installed_cli',host+'/'+name)
-            meta,body=split((package/'skills'/('sdlc-'+name)/'SKILL.md').read_text())
+            meta,entry=split((package/'adapters'/host/'skills'/('sdlc-'+name)/'SKILL.md').read_text())
+            loader=subprocess.run([sys.executable,'-I','-B',str(package/'scripts/python/load_workflow.py'),'--host',host,'--skill',name],capture_output=True,text=True,check=True)
+            body='\n'+loader.stdout
+            if '--host '+host+' --skill '+name not in entry or 'COMPLETE stdout' not in entry:
+                raise AssertionError('Thin entrypoint does not bind the full workflow')
             expected_meta=dict(oracle_meta,name='sdlc-'+name,
                 compatibility='Requires an initialized .sdlc project, Bash and Python 3.9+; INIT is not included in this engineering build')
             require_equal(meta,expected_meta,'Native metadata '+host+'/'+name)
@@ -113,24 +120,17 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
             native=base/'.specify/templates'/template.name
             require_equal(template_norm(native.read_text()),template_norm(template.read_text()),'Template parity '+host+'/'+template.name)
             passed('template_vs_installed_cli',host+'/'+template.name)
-        manifest=package/('.claude-plugin/plugin.json' if host=='claude' else 'plugin.json')
+        manifest=package/('.'+host+'-plugin/plugin.json')
         m=json.loads(manifest.read_text())
         require_equal(m['name'],'sdlc','Plugin name')
         require_equal(m['repository'],REPOSITORY,'Fixed repository')
         require_equal(m['version'],VERSION,'Version')
         require_equal(m['author'],AUTHOR,'Plugin author')
-        allowed={'name','version','description','repository','license','author'}
-        if host!='claude':
-            allowed.add('$schema')
-            require_equal(m['$schema'],'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json','Schema identifier')
-        require_equal(set(m),allowed,'Documented manifest subset')
-        passed('manifest_documented_subset',host)
-        if host!='claude':
-            from jsonschema import Draft202012Validator
-            schema=json.loads((ROOT/'tests/agent-plugins-1.0.0.schema.json').read_text())
-            Draft202012Validator.check_schema(schema)
-            Draft202012Validator(schema).validate(m)
-            passed('official_portable_manifest_schema',host)
+        require_equal(m['skills'],'./adapters/'+host+'/skills/','Explicit host selection')
+        require_equal(set(m),{'name','version','description','repository','license','author','skills'},'Native minimal manifest fields')
+        if (package/'plugin.json').exists() or (package/'skills').exists():
+            raise AssertionError('Portable/default discovery would expose duplicate host skills')
+        passed('native_manifest_documented_subset',host)
         for f in package.rglob('*'):
             if f.is_symlink():raise AssertionError('Package symlink '+str(f))
             if f.is_file():
@@ -141,7 +141,7 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
                 if f.suffix=='.py':
                     ast.parse(f.read_text(),filename=str(f))
                     passed('python_syntax',host+'/'+f.name)
-        if (package/'skills/sdlc-init').exists() or (package/'hooks').exists():
+        if list(package.rglob('sdlc-init')) or (package/'hooks').exists():
             raise AssertionError('INIT or hooks unexpectedly shipped')
         for f in (package/'scripts').rglob('*'):
             if f.is_file():
@@ -165,23 +165,15 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
         out=Path(temp)/'dist'
         build(out)
         require_equal(inventory(ROOT/'dist'),inventory(out),'Reproducible distribution')
-    passed('reproducible_build','all three packages')
-    spec=importlib.util.spec_from_file_location('sdlc_runtime_tests',ROOT/'tests/test_runtime.py')
-    module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+    passed('reproducible_build','one self-contained package')
+    sys.path.insert(0,str(ROOT/'tools'))
     stream=io.StringIO()
-    result=unittest.TextTestRunner(stream=stream,verbosity=2).run(unittest.defaultTestLoader.loadTestsFromModule(module))
-    (evidence/'runtime-tests.txt').write_text(stream.getvalue())
+    suite=unittest.defaultTestLoader.discover(str(ROOT/'tests'), pattern='test_*.py')
+    result=unittest.TextTestRunner(stream=stream,verbosity=2).run(suite)
+    (evidence/'unit-tests.txt').write_text(stream.getvalue())
     print(stream.getvalue())
-    if not result.wasSuccessful():raise AssertionError('Synthetic runtime fixture tests failed')
-    passed('synthetic_runtime_tests',str(result.testsRun)+' test methods (mostly parameterized over three packages)')
-    repo_spec=importlib.util.spec_from_file_location('sdlc_repository_tests',ROOT/'tests/test_repository.py')
-    repo_module=importlib.util.module_from_spec(repo_spec);repo_spec.loader.exec_module(repo_module)
-    repo_stream=io.StringIO()
-    repo_result=unittest.TextTestRunner(stream=repo_stream,verbosity=2).run(unittest.defaultTestLoader.loadTestsFromModule(repo_module))
-    (evidence/'repository-tests.txt').write_text(repo_stream.getvalue())
-    print(repo_stream.getvalue())
-    if not repo_result.wasSuccessful():raise AssertionError('Repository layout/metadata tests failed')
-    passed('repository_layout_metadata_tests',str(repo_result.testsRun)+' test methods')
+    if not result.wasSuccessful():raise AssertionError('Engineering unit tests failed')
+    passed('engineering_unit_tests',str(result.testsRun)+' test methods')
     from differential import compare
     differential_cases=compare(baselines)
     (evidence/'differential-tests.json').write_text(json.dumps(differential_cases,indent=2)+'\n')
@@ -195,12 +187,13 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
         diffs.extend(difflib.unified_diff(old.splitlines(True),f.read_text().splitlines(True),
                       fromfile='upstream/scripts/bash/'+f.name,tofile='ported/scripts/bash/'+f.name))
     (evidence/'script-deltas.patch').write_text(''.join(diffs))
+    from upgrade import source_digest
     source_id=os.environ.get('GITHUB_SHA')
-    report={'status':'PASS','scope':'engineering-only; synthetic fixtures; no INIT or Agent execution',
-            'source_sha':source_id,'upstream_sha':UPSTREAM_SHA,
+    report={'status':'PASS','scope':'engineering-only; one package, installed-tool parity and synthetic fixtures; no INIT or Agent execution',
+            'source_sha':source_id,'source_digest':source_digest(ROOT),'upstream_sha':UPSTREAM_SHA,
             'source_repository':os.environ.get('GITHUB_REPOSITORY'),
             'product_version':VERSION,'declared_repository':REPOSITORY,'author':AUTHOR['name'],
-            'repository_test_methods':repo_result.testsRun,
+            'unit_test_methods':result.testsRun,
             'environment':{'python':sys.version,'platform':platform.platform(),
                 'bash':subprocess.run(['bash','--version'],capture_output=True,text=True).stdout.splitlines()[0]},
             'checks':checks,'runtime_test_methods':result.testsRun,'differential_cases':len(differential_cases),

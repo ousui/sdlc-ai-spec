@@ -31,9 +31,9 @@ class RuntimeTests(unittest.TestCase):
         trap.write_text('#!/bin/sh\nprintf called >> "$SDLC_TRAP_FILE"\nexit 97\n')
         trap.chmod(0o755)
         self.trap_file=self.base/'unexpected-cli-call'
-        self.package=ROOT/'dist/codex'
+        self.package=ROOT/'dist'
         self.host='codex'
-        self.before={host:tree(ROOT/'dist'/host) for host in HOSTS}
+        self.before={host:tree(ROOT/'dist') for host in HOSTS}
         self.env={k:v for k,v in os.environ.items() if not k.startswith(('SPECIFY_','SDLC_','PYTHON'))}
         self.env.update(PATH=str(self.trap)+os.pathsep+os.environ.get('PATH','/usr/bin:/bin'),
                         HOME=str(self.base/'home'),SDLC_TRAP_FILE=str(self.trap_file),
@@ -44,7 +44,7 @@ class RuntimeTests(unittest.TestCase):
     def tearDown(self):
         try:
             self.assertFalse(self.trap_file.exists(),'Runtime invoked specify')
-            for host in HOSTS:self.assertEqual(self.before[host],tree(ROOT/'dist'/host))
+            for host in HOSTS:self.assertEqual(self.before[host],tree(ROOT/'dist'))
         finally:
             for p in self.base.rglob('*'):
                 if not p.is_symlink():
@@ -54,7 +54,7 @@ class RuntimeTests(unittest.TestCase):
 
     def hosts(self):
         for host in HOSTS:
-            self.host=host;self.package=ROOT/'dist'/host
+            self.host=host;self.package=ROOT/'dist'
             yield host
 
     def seed(self, *, plan=True, tasks=False, feature=True, name=None):

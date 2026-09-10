@@ -10,6 +10,8 @@ import json
 import re
 from pathlib import Path
 from build import ROOT,COMMANDS,UPSTREAM_SHA
+import shutil
+import tempfile
 
 
 def replace_once(text: str, old: str, new: str, count: int = 1) -> str:
@@ -51,41 +53,77 @@ def port_script(name: str,text: str) -> str:
     return text
 
 
+WATCHED = (
+    'src/specify_cli/integrations/base.py', 'src/specify_cli/agents.py',
+    'src/specify_cli/integrations/codex/__init__.py',
+    'src/specify_cli/integrations/claude/__init__.py',
+    'src/specify_cli/integrations/cursor_agent/__init__.py',
+    'src/specify_cli/_invocation_style.py', 'src/specify_cli/events.py',
+    'src/specify_cli/commands/init.py', 'src/specify_cli/shared_infra.py',
+)
+
+
+def record(data: bytes) -> dict:
+    return {'git_blob': hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest(),
+            'sha256': hashlib.sha256(data).hexdigest()}
+
+
 def materialize(upstream: Path) -> dict:
-    upstream=upstream.resolve()
-    # Bind all selected files to the existing lock on later runs.
-    lock_path=ROOT/'upstream.lock.json'
-    previous=json.loads(lock_path.read_text()) if lock_path.exists() else None
-    files={}
-    pairs=[]
-    for name in COMMANDS:
-        pairs.append((f'templates/commands/{name}.md',f'commands/{name}.md'))
-    for f in sorted((upstream/'templates').glob('*.md')):
-        pairs.append(('templates/'+f.name,'templates/'+f.name))
-    for f in sorted((upstream/'scripts/bash').glob('*.sh')):
-        pairs.append(('scripts/bash/'+f.name,'scripts/bash/'+f.name))
-    pairs.append(('LICENSE','LICENSE'))
-    for source,dest in pairs:
-        data=(upstream/source).read_bytes()
-        blob=hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest()
-        files[source]={'git_blob':blob,'sha256':hashlib.sha256(data).hexdigest()}
-        if previous and previous['files'].get(source)!=files[source]:
-            raise ValueError(f'Pinned upstream source mismatch: {source}')
-        text=data.decode('utf-8')
-        if dest.startswith('scripts/bash/'):
-            text=port_script(Path(dest).name,text)
-        elif dest.startswith('templates/'):
-            text=re.sub(r'(?<![\w./])/?specs/','.sdlc/specs/',text)
-        target=ROOT/'src'/dest
-        target.parent.mkdir(parents=True,exist_ok=True)
-        target.write_text(text,encoding='utf-8')
-        if target.suffix=='.sh':target.chmod(0o755)
-    if previous and set(previous['files'])!=set(files):
-        raise ValueError('Upstream source inventory changed')
-    lock={'repository':'https://github.com/github/spec-kit','tag':'v1.0.5','commit':UPSTREAM_SHA,
-          'script':'sh','events':False,'presets':[],'extensions':[],
-          'commands':list(COMMANDS),'excluded_commands':['taskstoissues'],'files':files}
-    lock_path.write_text(json.dumps(lock,indent=2)+'\n')
+    """Validate ALL inputs before staging; never rewrite the accepted lock."""
+    upstream = upstream.resolve()
+    lock = json.loads((ROOT/'upstream.lock.json').read_text())
+    selected = set(lock['files'])
+    discovered = {'templates/commands/'+name+'.md' for name in COMMANDS}
+    discovered.update('templates/'+f.name for f in (upstream/'templates').glob('*.md'))
+    discovered.update('scripts/bash/'+f.name for f in (upstream/'scripts/bash').glob('*.sh'))
+    discovered.add('LICENSE')
+    if selected != discovered:
+        raise ValueError('Upstream source inventory changed; prepare an upgrade candidate')
+    inputs = {}
+    for source, expected in {**lock['files'], **lock.get('watch_files', {})}.items():
+        data = (upstream/source).read_bytes()
+        if record(data) != expected:
+            raise ValueError('Pinned upstream source mismatch: '+source)
+        inputs[source] = data
+    # Start with non-upstream helpers; stale imported resources are eliminated.
+    with tempfile.TemporaryDirectory(prefix='.sdlc-port-', dir=ROOT.parent) as temp:
+        staging = Path(temp)/'src'
+        shutil.copytree(ROOT/'src', staging, ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
+        previous_scripts = list((staging/'upstream/scripts/bash').glob('*.sh'))
+        for prior in previous_scripts:
+            (staging/'scripts/bash'/prior.name).unlink(missing_ok=True)
+        for path in ('upstream', 'commands', 'templates'):
+            if (staging/path).exists(): shutil.rmtree(staging/path)
+        # Drop removed imported scripts, but keep local helpers. Source inventory
+        # is already validated; only known upstream-owned paths may be removed.
+        for source in lock['files']:
+            if source.startswith('scripts/bash/'):
+                (staging/source).unlink(missing_ok=True)
+        original = staging/'upstream'
+        for source, data in inputs.items():
+            target = original/source
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_bytes(data)
+            if source.endswith('.sh'): target.chmod(0o755)
+        for source in sorted(selected):
+            if source.startswith('templates/commands/'):
+                continue
+            text = inputs[source].decode('utf-8')
+            if source.startswith('scripts/bash/'):
+                text = port_script(Path(source).name, text)
+            elif source.startswith('templates/'):
+                text = re.sub(r'(?<![\w./])/?specs/', '.sdlc/specs/', text)
+            target = staging/source
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(text, encoding='utf-8')
+            if target.suffix == '.sh': target.chmod(0o755)
+        backup = Path(temp)/'previous'
+        (ROOT/'src').rename(backup)
+        try:
+            staging.rename(ROOT/'src')
+        except BaseException:
+            backup.rename(ROOT/'src')
+            raise
     return lock
 
 

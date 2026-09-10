@@ -16,8 +16,9 @@ repository transfer from a metadata edit.
   are not part of the current engineering work. They require separate authority.
 - Shared resources are read-only; project state belongs to `.sdlc`. Never infer
   the business project root from the plugin installation directory.
-- Edit src/, adapters/ and tools/ as appropriate; regenerate dist/ with the builder.
-  Do not independently hand-edit the three generated packages.
+- Keep src/upstream byte-identical to the locked upstream. Edit adapters/ and tools/;
+  regenerate derived source, the single dist package and root marketplaces. Never
+  hand-edit generated wrappers, host fragments or shared workflow bodies.
 - Preserve upstream copyright, license and provenance. Plugin authorship does not
   replace the original authorship of the copied Spec Kit source.
 
@@ -26,6 +27,9 @@ repository transfer from a metadata edit.
 Verify the repository, branch, HEAD and worktree before writes. Preserve unrelated
 user work. Commit/push only within the explicitly authorized branch. Do not merge,
 retag, release, rewrite history or modify other branches without authorization.
+
+Use tools/upgrade.py for detached upstream candidates; never overwrite the accepted
+worktree during preparation or weaken comparisons to accept a new version.
 
 Use the installed pinned upstream CLI only to produce independent empty-project
 baselines. Never use migrated output as its own upstream oracle. Engineering

@@ -1,0 +1,21 @@
+{
+  "name": "sdlc-ai-spec",
+  "interface": {
+    "displayName": "SDLC AI Spec"
+  },
+  "plugins": [
+    {
+      "name": "sdlc",
+      "description": "Spec Kit core user-scoped source port (beta; INIT not included)",
+      "source": {
+        "source": "local",
+        "path": "./dist"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

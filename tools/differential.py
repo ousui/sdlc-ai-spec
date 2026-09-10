@@ -29,7 +29,7 @@ def compare(baselines: Path) -> list[dict]:
         root=Path(temp)
         for host in HOSTS:
             baseline=baselines/('cursor-agent' if host=='cursor' else host)
-            package=ROOT/'dist'/host
+            package=ROOT/'dist'
             for case,script,args in cases:
                 output=[]
                 for ported in (False,True):
@@ -59,7 +59,8 @@ def compare(baselines: Path) -> list[dict]:
                         text=text.replace(str(project),'<PROJECT>')
                         text=text.replace('.sdlc/specs/','specs/').replace('.sdlc/','.specify/')
                         text=re.sub(r'(?<![\w./])/?specs/','@SPECS@/',text)
-                        return text.replace('/sdlc:sdlc-','/speckit-').replace('$sdlc-','$speckit-').replace('/sdlc-','/speckit-')
+                        text=re.sub(r'(?<![\w:/\$-])sdlc-(constitution|specify|clarify|plan|tasks|analyze|checklist|implement|converge)\b',r'/speckit-\1',text)
+                        return text.replace('/sdlc:sdlc-','/speckit-').replace('$sdlc-','$speckit-').replace('/sdlc-','/speckit-').replace('$speckit-','/speckit-')
                     files={p.name:normalize(p.read_text()) for p in feature.iterdir() if p.is_file()}
                     # Upstream script diagnostics use / even for Codex.
                     stderr=normalize(result.stderr).replace('$speckit-','/speckit-')

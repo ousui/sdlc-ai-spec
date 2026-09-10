@@ -15,7 +15,7 @@ no events, no presets and no extensions. This is NOT equivalence to the entire C
 | `specify preset resolve spec-template` instruction uses bundled `resolve-template.sh` | No persistent specify-cli runtime dependency; original template selection remains for selected core profile |
 | Native hints use invocation host, not saved default integration | One project can be used sequentially by different hosts |
 | Binding preamble is added to generated skills | Identify resources, resolve project, pass variables per tool call and fail clearly outside the selected profile |
-| Plugin packaging + provenance | Two portable manifests and one Claude manifest; resources self-contained |
+| Plugin packaging + provenance | Three native manifests selecting thin entries in one self-contained package |
 
 `check-prerequisites.sh`, `resolve-template.sh` and `setup-plan.sh` are otherwise
 byte-identical to the upstream source after the marker relocation. `common.sh`,
@@ -23,7 +23,7 @@ byte-identical to the upstream source after the marker relocation. `common.sh`,
 patch anchors. The existing resolver's dormant optional code is not rewritten;
 optional ecosystems are not installed or advertised as supported.
 
-`src/commands` is the reviewed raw source, not copied generated Skills. The
+`src/upstream/templates/commands` is the reviewed raw source, not copied generated Skills. The
 independent builder is checked against the installed upstream CLI's three-agent
 outputs before applying port deltas. Normalization has a closed name/path
 allowlist: it does NOT drop arbitrary paragraphs, whitespace, normative words,
@@ -36,10 +36,35 @@ stdout, stderr and produced documents on synthetic fixtures. Those comparisons
 normalize address changes and the intentional correction of Codex script hints;
 they do not replace actual business or model-driven acceptance testing.
 
-The portable manifest schema is captured from
-https://agent-plugins.org/schemas/1.0.0/plugin.schema.json (read 2026-09-10).
-Claude uses the documented minimal manifest subset from
-https://code.claude.com/docs/en/plugins-reference. Neither is a native host test.
+## Single-package factoring and native selection
+
+`tools/build.py` first derives the complete host bodies using the reviewed source
+renderer and existing relocation rules. It then factors byte-identical portions
+into one workflow file; only the exact differing substrings become named literal
+fragments in `bindings/<host>.json`. Different line structures fail closed.
+`load_workflow.py` performs nonrecursive literal binding and emits the full body.
+It has no subprocess, network or writes. All 27 resolved bodies are independently
+compared with the original CLI outputs under the existing address allowlist.
+The thin wrappers keep the respective upstream frontmatter, literal host identity,
+original user input and an explicit full-output reading requirement. Truncation
+must be handled with bounded pages, never silently accepted.
+
+All three native manifests select `adapters/<host>/skills/`. No default skill
+scan or portable root manifest is shipped. References for the path rules:
+https://developers.openai.com/plugins/build/plugins
+https://code.claude.com/docs/en/plugins-reference
+https://cursor.com/docs/reference/plugins
+Static documented-field/path checks are NOT native-host certification.
+
+Shared artifact templates use canonical capability IDs such as `sdlc-plan` instead
+of a host's literal invocation prefix. They are instruction references, not shell
+commands. The wrapper/loaded workflow retains native invocation semantics. This
+is a separately allowlisted reference-only change: all other words, whitespace,
+checklist ownership and business steps remain part of exact comparison.
+
+Root marketplace catalogs all reference `./dist`. No component references paths
+outside this installation boundary. See [UPGRADING.md](UPGRADING.md) for the
+source map, watched generator code and fail-closed candidate acceptance.
 
 ## Deliberately deferred
 

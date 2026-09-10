@@ -8,16 +8,20 @@ Use `v1.0.0-beta` as a display label; machine manifests use `1.0.0-beta`.
 Do not increment the version during this debugging period or create/move a tag
 as part of an ordinary code change. Use the exact commit SHA to identify builds.
 
-The root contains the implementation. `src/commands` retains original English
+The root contains the implementation. `src/upstream/templates/commands` retains original English
 source; `src/templates` and `src/scripts` contain documented port deltas.
 `adapters/` supplies resource binding and host differences. `tools/build.py`
-generates `dist/codex`, `dist/claude` and `dist/cursor`, without importing
-`specify_cli` or reading initialized projects. Each package is self-contained.
+generates a single self-contained `dist` package and three thin native entrypoint sets,
+without importing `specify_cli` or reading initialized projects. Use `--marketplaces`
+to also regenerate the three repository-root catalogs.
 There is no root plugin manifest because the root is a source/build workspace.
 
-Codex and Cursor packages use the captured Agent Plugins schema. Claude uses its
-native `.claude-plugin/plugin.json`. Invocation references retain their host
-forms: `$sdlc-*`, `/sdlc:sdlc-*`, and `/sdlc-*`. Preserve their distinction.
+All three native manifests declare `skills: ./adapters/<host>/skills/` inside
+the same dist package. No portable root manifest/default skills scan is shipped.
+The loaded wrapper pins its host and reads the complete, deterministic loader
+output. The shared workflows plus literal fragments reconstruct each formerly
+expanded host body exactly; this is tested against installed upstream output.
+[Installation](INSTALLATION.md) lists current official format references.
 
 ## Build from source
 
@@ -26,7 +30,7 @@ Use Python 3.11+ in an isolated development environment:
 ```sh
 python -m venv .venv
 .venv/bin/python -m pip install -r tools/requirements.txt
-.venv/bin/python -B tools/build.py
+.venv/bin/python -B tools/build.py --marketplaces
 .venv/bin/python -B -m unittest discover -s tests -v
 git diff --check
 ```
@@ -37,7 +41,7 @@ absolute path; the tool checks the selected source hashes against the lock.
 
 ```sh
 .venv/bin/python -B tools/port.py --upstream "$UPSTREAM"
-.venv/bin/python -B tools/build.py
+.venv/bin/python -B tools/build.py --marketplaces
 ```
 
 Do not use `specify init` output to construct the port. It is an independent
@@ -86,3 +90,10 @@ Evidence is uploaded as `sdlc-engineering-<source-sha>` and includes installed-t
 logs, baseline hashes, the source snapshot and verifier results. The report records
 source SHA, actual source repository, declared repository, product version,
 environment, individual checks and distribution hashes. See VERIFICATION.md.
+
+## Upgrade a pinned upstream
+
+Do not edit hashes to make a check pass. Follow [UPGRADING.md](UPGRADING.md): prepare
+a detached candidate, compare installed tool outputs, review changed original
+source and accept only exact verified bytes. BUILD.json identifies a reproducible
+build while the beta product version remains fixed.

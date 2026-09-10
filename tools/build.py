@@ -1,199 +1,207 @@
 #!/usr/bin/env python3
-"""Build nine skills from source; no specify-cli or initialized project is used.
-
-The renderer is the sh/SkillsIntegration subset of upstream base.py and
-agents.py. verify.py independently checks it against installed-CLI outputs.
-"""
+"""Build one self-contained package with shared workflows and native thin entries."""
 from __future__ import annotations
-
 import argparse
 import json
 import re
 import shutil
 from pathlib import Path
-
 import yaml
+from render import (ROOT, COMMANDS, HOSTS, LOCK, UPSTREAM_SHA, METADATA, REPOSITORY,
+                    VERSION, AUTHOR, HINTS, render_source, split, relocate_body, binding)
 
-ROOT = Path(__file__).resolve().parents[1]
-COMMANDS = ('constitution', 'specify', 'clarify', 'plan', 'tasks', 'analyze',
-            'checklist', 'implement', 'converge')
-HOSTS = ('codex', 'claude', 'cursor')
-UPSTREAM_SHA = 'a4e25ce6b96dc8e85f84206c6a54353fa9c5260b'
-# Product metadata is independent from upstream provenance and Git transport.
-METADATA = json.loads((ROOT / 'plugin-metadata.json').read_text(encoding='utf-8'))
-REPOSITORY = METADATA['repository']
-VERSION = METADATA['version']
-AUTHOR = METADATA['author']
-HINTS = {
-    'specify': 'Describe the feature you want to specify',
-    'plan': 'Optional guidance for the planning phase',
-    'tasks': 'Optional task generation constraints',
-    'implement': 'Optional implementation guidance or task filter',
-    'analyze': 'Optional focus areas for analysis',
-    'clarify': 'Optional areas to clarify in the spec',
-    'constitution': 'Principles or values for the project constitution',
-    'checklist': 'Domain or focus area for the checklist',
-}
-HOOK_NOTE = ('- When constructing command invocations from hook command names, '
-             'replace dots (`.`) with hyphens (`-`). '
-             'For example, `speckit.git.commit` → `{prefix}speckit-git-commit`.\n')
+def factor(bodies: dict[str, str]) -> tuple[str, dict[str, dict[str, str]]]:
+    """Lossless build-time factoring, never an LLM/semantic normalization.
 
-
-def split(text: str) -> tuple[dict, str]:
-    match = re.match(r'\A---\r?\n(.*?)\r?\n---(\r?\n.*)\Z', text, re.S)
-    if not match:
-        raise ValueError('Missing or malformed frontmatter')
-    meta = yaml.safe_load(match[1])
-    if not isinstance(meta, dict):
-        raise ValueError('Frontmatter must be a mapping')
-    return meta, match[2].replace('\r\n', '\n')
-
-
-def command_refs(text: str, host: str, *, ported: bool = False) -> str:
-    prefix = '$' if host == 'codex' else '/'
-    namespace = 'sdlc:sdlc-' if ported and host == 'claude' else ('sdlc-' if ported else 'speckit-')
-    return re.sub(r'__SPECKIT_COMMAND_([A-Z][A-Z0-9_-]*)__',
-                  lambda m: prefix + namespace + m[1].lower().replace('_', '-'), text)
+    Fail closed when an upstream host starts changing the line structure. Only
+    explicit differing substrings become bindings; reconstruct all hosts exactly.
+    """
+    rows = {host: text.splitlines(keepends=True) for host, text in bodies.items()}
+    if len({len(lines) for lines in rows.values()}) != 1:
+        raise ValueError('Host body structure changed; review the adapter before upgrading')
+    if any('@@SDLC_BIND_' in text for text in bodies.values()):
+        raise ValueError('Source collides with reserved binding marker')
+    import os
+    common, slots = [], {host: {} for host in HOSTS}
+    for i in range(len(rows[HOSTS[0]])):
+        values = [rows[host][i] for host in HOSTS]
+        if len(set(values)) == 1:
+            common.append(values[0]); continue
+        prefix = os.path.commonprefix(values)
+        tails = [v[len(prefix):] for v in values]
+        suffix = os.path.commonprefix([v[::-1] for v in tails])[::-1]
+        key = f'@@SDLC_BIND_{i:04d}@@'
+        common.append(prefix + key + suffix)
+        for host, tail in zip(HOSTS, tails):
+            slots[host][key] = tail[:-len(suffix)] if suffix else tail
+    text = ''.join(common)
+    for host in HOSTS:
+        restored = re.sub(r'@@SDLC_BIND_\d{4}@@', lambda m: slots[host][m[0]], text)
+        if restored != bodies[host]:
+            raise ValueError('Lossless factoring failed for ' + host)
+    return text, slots
 
 
-def upstream_paths(text: str) -> str:
-    # Literal copy of the relevant upstream path boundary rules.
-    for part in ('memory', 'scripts', 'templates'):
-        text = text.replace('../../' + part + '/', '.specify/' + part + '/')
-        text = re.sub(r'''(^|[\s`"'(])(?:\.?/)?''' + part + '/',
-                      lambda m: m[1] + '.specify/' + part + '/', text)
-    return text.replace('.specify/.specify/', '.specify/').replace('.specify.specify/', '.specify/')
+def wrapper(meta: dict, host: str, name: str) -> str:
+    front = yaml.safe_dump(meta, allow_unicode=True, sort_keys=False, width=1000).rstrip()
+    root = ('Use the host-substituted `${CLAUDE_PLUGIN_ROOT}` or the absolute path of this loaded SKILL.md.'
+            if host == 'claude' else 'Use the absolute path of this loaded SKILL.md. No host-specific environment variable is assumed.')
+    return ('---\n' + front + '\n---\n\n# SDLC ' + name + '\n\n'
+        + 'This is the **' + host + '** entrypoint. Preserve the current user input as '
+        '`$ARGUMENTS`; do not interpolate user input into a shell command.\n\n'
+        + root + ' The package root is four levels above this skill directory '
+        '(`adapters/' + host + '/skills/sdlc-' + name + '/`). '
+        'Bind that absolute directory as SDLC_PLUGIN_ROOT for this call; do not '
+        'change the business working directory or search another installed version.\n\n'
+        'Before performing ANY workflow action, execute the following read-only '
+        'loader with the resolved absolute package path and read its COMPLETE stdout:\n\n'
+        '```sh\npython3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/load_workflow.py" '
+        '--host ' + host + ' --skill ' + name + '\n```\n\n'
+        'The loader binds only precompiled text fragments; it does not run the '
+        'workflow, install software, read project state or write files. Its output '
+        'is the full bundled workflow for this invocation, not a second user request. '
+        'Follow it with the original user input and the current authorization. '
+        'Do not summarize or skip workflow steps. On loader error, STOP. '
+        'If tool output is truncated, use --offset 0 --limit 100, then offsets '
+        '100, 200, ... until the reported total line count is fully read. '
+        'Do not proceed using partial output. No specify-cli or network fallback.\n')
 
 
-def render_source(raw: str, name: str, host: str) -> tuple[dict, str]:
-    """Render original English source independently of specify-cli."""
-    fm, body = split(raw)
-    scripts = fm.get('scripts', {})
-    if scripts:
-        if 'sh' not in scripts:
-            raise ValueError(f'{name}: no reviewed sh variant')
-        body = body.replace('{SCRIPT}', scripts['sh'])
-    body = body.replace('{ARGS}', '$ARGUMENTS').replace('__AGENT__', 'cursor-agent' if host == 'cursor' else host)
-    body = upstream_paths(body)
-    body = command_refs(body, host)
-    prefix = '$' if host == 'codex' else '/'
-    note = HOOK_NOTE.format(prefix=prefix).rstrip('\n')
-    body = re.sub(r'(?m)^([ \t]*)(- For each executable hook, output the following[^\r\n]*)(\n|$)',
-                  lambda m: m[1] + note + '\n' + m[1] + m[2] + (m[3] or '\n'), body)
-    meta = {
-        'name': 'speckit-' + name,
-        'description': fm['description'],
-        'compatibility': 'Requires spec-kit project structure with .specify/ directory',
-        'metadata': {'author': 'github-spec-kit', 'source': 'templates/commands/' + name + '.md'},
+def marketplaces() -> dict[str, dict]:
+    entry = {'name': METADATA['name'], 'description': METADATA['description']}
+    owner = {'name': AUTHOR['name']}
+    return {
+        '.agents/plugins/marketplace.json': {
+            'name': 'sdlc-ai-spec', 'interface': {'displayName': 'SDLC AI Spec'},
+            'plugins': [dict(entry, source={'source': 'local', 'path': './dist'},
+                policy={'installation': 'AVAILABLE', 'authentication': 'ON_INSTALL'},
+                category='Productivity')]},
+        '.claude-plugin/marketplace.json': {'name': 'sdlc-ai-spec', 'owner': owner,
+            'plugins': [dict(entry, source='./dist')]},
+        '.cursor-plugin/marketplace.json': {'name': 'sdlc-ai-spec', 'owner': owner,
+            'plugins': [dict(entry, source='./dist')]},
     }
-    if host == 'claude':
-        meta.update({'user-invocable': True, 'disable-model-invocation': False})
-        if name in HINTS:
-            meta['argument-hint'] = HINTS[name]
-    # Upstream's SkillsIntegration adds one newline after rebuilding frontmatter.
-    return meta, '\n' + body
 
 
-def relocate_body(body: str, host: str) -> str:
-    """Only name/path/executable-reference changes; preserve all prose."""
-    # Alias replacement is deliberately scoped, never replace the English word 'specify'.
-    body = body.replace('$speckit-', '$sdlc-')
-    for old in ('/speckit-', '/speckit.'):
-        prefix = '/sdlc:sdlc-' if host == 'claude' else '/sdlc-'
-        body = body.replace(old, prefix)
-    body = body.replace('`speckit.git.commit`', '`sdlc.git.commit`')
-    body = body.replace('/skill:speckit-', '/skill:sdlc-')
-    body = body.replace('.specify/', '.sdlc/')
-    # specs is a project data path, not an install resource.
-    body = re.sub(r'(?<![\w./])/?specs/', '.sdlc/specs/', body)
-    script_prefix = (f'SDLC_HOST={host} SPECIFY_INIT_DIR="${{SDLC_PROJECT_ROOT:?}}" '
-                     'bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/')
-    body = re.sub(r'\.sdlc/scripts/bash/([a-z-]+\.sh)', lambda m: script_prefix + m[1] + '"', body)
-    body = body.replace('`specify preset resolve spec-template`',
-                        '`' + script_prefix + 'resolve-template.sh" spec-template`')
-    body = re.sub(r'\.sdlc/templates/(?!overrides/)([a-z-]+\.md)',
-                  r'${SDLC_PLUGIN_ROOT}/templates/\1', body)
-    return body
-
-
-def binding(host: str) -> str:
-    template = (ROOT/'adapters'/'BINDING.md').read_text()
-    detail = ('Use the host-provided `${CLAUDE_PLUGIN_ROOT}` or the absolute path of this loaded SKILL.md.'
-              if host == 'claude' else
-              'Use the absolute path of this loaded SKILL.md; do not assume a host-specific plugin-root environment variable exists.')
-    return template.replace('@HOST@', host).replace('@ROOT_DETAIL@', detail)
+def generate_markets(root: Path) -> None:
+    for name, data in marketplaces().items():
+        path = root / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(data, indent=2) + '\n')
 
 
 def build(destination: Path) -> None:
-    destination = destination.resolve()
-    if destination == ROOT or destination == ROOT/'src' or ROOT.is_relative_to(destination):
+    import hashlib
+    import tempfile
+    destination = destination.absolute()
+    if destination.is_symlink():
+        raise ValueError('Refusing symlink build destination')
+    resolved = destination.resolve()
+    # Never remove or replace source, tests, repository root, or its ancestors.
+    if resolved == ROOT or resolved in ROOT.parents or any(
+        resolved == ROOT / d or ROOT / d in resolved.parents
+        for d in ('src', 'tools', 'tests', 'adapters', 'docs', '.git')
+    ):
         raise ValueError('Refusing unsafe build destination')
-    if destination.exists():
-        # Only remove directories previously produced by this builder.
-        marker = destination/'.sdlc-build'
-        if not marker.is_file() or marker.read_text().strip() != UPSTREAM_SHA:
-            raise ValueError(f'Refusing to replace unmarked directory: {destination}')
-        shutil.rmtree(destination)
-    destination.mkdir(parents=True)
-    (destination/'.sdlc-build').write_text(UPSTREAM_SHA+'\n')
-    for host in HOSTS:
-        package = destination/host
-        (package/'skills').mkdir(parents=True)
-        shutil.copytree(ROOT/'src/scripts', package/'scripts', ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
-        (package/'templates').mkdir()
-        for template in sorted((ROOT/'src/templates').glob('*.md')):
-            text = command_refs(template.read_text(), host, ported=True)
-            (package/'templates'/template.name).write_text(text, encoding='utf-8')
+    if destination.exists() and not (destination / '.sdlc-build').is_file():
+        raise ValueError(f'Refusing to replace unmarked directory: {destination}')
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix='.sdlc-stage-', dir=destination.parent) as tmp:
+        package = Path(tmp) / 'package'
+        package.mkdir()
+        (package / '.sdlc-build').write_text(UPSTREAM_SHA + '\n')
+        shutil.copytree(ROOT / 'src/scripts', package / 'scripts',
+                        ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
+        shutil.copytree(ROOT / 'src/templates', package / 'templates')
+        # Native manifests select disjoint entrypoints. No portable root manifest:
+        # portable fixed skills discovery would defeat host-specific selection.
+        bindings = {host: {} for host in HOSTS}
+        (package / 'references' / 'workflows').mkdir(parents=True)
         for name in COMMANDS:
-            raw = (ROOT/'src/commands'/f'{name}.md').read_text()
-            meta, body = render_source(raw, name, host)
-            meta['name'] = 'sdlc-' + name
-            meta['compatibility'] = 'Requires an initialized .sdlc project, Bash and Python 3.9+; INIT is not included in this engineering build'
-            ported = relocate_body(body, host)
-            skill = package/'skills'/('sdlc-'+name)/'SKILL.md'
-            skill.parent.mkdir()
-            front = yaml.safe_dump(meta, allow_unicode=True, sort_keys=False, width=1000).rstrip()
-            skill.write_text('---\n'+front+'\n---\n'+binding(host)+ported, encoding='utf-8')
-        manifest = dict(METADATA)
-        if host == 'claude':
-            manifest_path = package/'.claude-plugin/plugin.json'
-        else:
-            manifest['$schema'] = 'https://agent-plugins.org/schemas/1.0.0/plugin.schema.json'
-            manifest_path = package/'plugin.json'
-        manifest_path.parent.mkdir(exist_ok=True)
-        manifest_path.write_text(json.dumps(manifest, indent=2)+'\n')
-        shutil.copyfile(ROOT/'LICENSE', package/'LICENSE')
-        shutil.copyfile(ROOT/'NOTICE', package/'NOTICE')
-        (package/'UPSTREAM.json').write_text(json.dumps({
-            'repository':'https://github.com/github/spec-kit', 'tag':'v1.0.5', 'commit':UPSTREAM_SHA,
-            'port_repository':REPOSITORY, 'port_version':VERSION, 'port_author':AUTHOR['name'],
-            'profile':{'script':'sh','events':False,'extensions':[],'presets':[]},
-            'included_commands':list(COMMANDS), 'excluded_commands':['taskstoissues'],
-            'init_implemented':False, 'native_host_verified':False,
-        }, indent=2)+'\n')
-        (package/'README.md').write_text(
-            '# SDLC v'+VERSION+'\n\n'
-            'Author: '+AUTHOR['name']+'\n\n'
-            'Repository: '+REPOSITORY+'\n\n'
-            'Source port of Spec Kit v1.0.5. Nine local skills; no INIT, GitHub, '
-            'translation, workflow engine or event hooks. This package is not yet a '
-            'complete end-user release. Only engineering/fixture checks are claimed. Native '
-            'host discovery and real-project behavior have not been tested.\n\n'
-            'Requires Bash and Python 3.9+ plus standard POSIX tools. Core resources '
-            'stay in this package; project data belongs in .sdlc. No uv/specify-cli '
-            'is needed at runtime. Plugin location must be obtained from the loaded '
-            'skill path (or the documented Claude plugin variable), never stored in '
-            'project metadata. Missing project state is an error, not automatic init.\n\n'
-            'Based on Spec Kit by GitHub, Inc. (MIT). See LICENSE, NOTICE and '
-            'UPSTREAM.json. This is an independent port, not an official upstream release.\n'
-        )
-        for script in (package/'scripts').rglob('*.sh'):
-            script.chmod(0o755)
+            bodies = {}
+            for host in HOSTS:
+                raw = (ROOT / 'src/upstream/templates/commands' / (name + '.md')).read_text()
+                meta, body = render_source(raw, name, host)
+                meta['name'] = 'sdlc-' + name
+                meta['compatibility'] = ('Requires an initialized .sdlc project, Bash and Python 3.9+; '
+                                         'INIT is not included in this engineering build')
+                bodies[host] = binding(host) + relocate_body(body, host)
+                path = package / 'adapters' / host / 'skills' / ('sdlc-' + name) / 'SKILL.md'
+                path.parent.mkdir(parents=True)
+                path.write_text(wrapper(meta, host, name), encoding='utf-8')
+            core, fragments = factor(bodies)
+            (package / 'references' / 'workflows' / (name + '.md')).write_text(core, encoding='utf-8')
+            for host in HOSTS:
+                bindings[host][name] = fragments[host]
+        (package / 'bindings').mkdir()
+        for host in HOSTS:
+            (package / 'bindings' / (host + '.json')).write_text(
+                json.dumps(bindings[host], ensure_ascii=False, indent=2) + '\n')
+            manifest = dict(METADATA, skills='./adapters/' + host + '/skills/')
+            path = package / ('.' + host + '-plugin') / 'plugin.json'
+            path.parent.mkdir()
+            path.write_text(json.dumps(manifest, indent=2) + '\n')
+        # Template references name logical capabilities, not shell commands.
+        # Each explicit host entrypoint supplies the native invocation mapping.
+        for path in (package / 'templates').glob('*.md'):
+            text = re.sub(r'__SPECKIT_COMMAND_([A-Z][A-Z0-9_-]*)__',
+                          lambda m: 'sdlc-' + m[1].lower().replace('_', '-'), path.read_text())
+            path.write_text(text, encoding='utf-8')
+        for name in ('LICENSE', 'NOTICE'):
+            shutil.copyfile(ROOT / name, package / name)
+        (package / 'UPSTREAM.json').write_text(json.dumps({
+            'repository': LOCK['repository'], 'tag': LOCK['tag'], 'commit': UPSTREAM_SHA,
+            'port_repository': REPOSITORY, 'port_version': VERSION, 'port_author': AUTHOR['name'],
+            'profile': {'script': 'sh', 'events': False, 'extensions': [], 'presets': []},
+            'included_commands': list(COMMANDS), 'excluded_commands': ['taskstoissues'],
+            'init_implemented': False, 'native_host_verified': False,
+            'layout': 'single-package-native-entrypoints',
+        }, indent=2) + '\n')
+        (package / 'README.md').write_text(
+            '# SDLC v' + VERSION + '\n\nAuthor: ' + AUTHOR['name'] + '\n\nRepository: ' + REPOSITORY + '\n\n'
+            'One self-contained package for Codex, Claude Code and Cursor. Native manifests '
+            'select thin host entrypoints; workflows, Bash scripts and templates are shared. '
+            'No install-time build, uv, specify-cli or network is required. Runtime requires '
+            'Bash, Python 3.9+ and standard POSIX tools.\n\n'
+            'Nine upstream core skills. INIT and GitHub are NOT included. An uninitialized '
+            'project stops rather than modifying this package. Native discovery, model-driven '
+            'behavior and business acceptance are to be verified by the user. The engineering '
+            'test fixture is not an INIT implementation.\n\n'
+            'Based on Spec Kit by GitHub, Inc. (MIT), an independent source port. '
+            'See LICENSE, NOTICE, UPSTREAM.json and BUILD.json.\n')
+        for path in (package / 'scripts').rglob('*.sh'):
+            path.chmod(0o755)
+        inputs = {}
+        for folder in ('src', 'adapters', 'tools'):
+            for path in sorted((ROOT / folder).rglob('*')):
+                if path.is_file() and '__pycache__' not in path.parts and path.suffix != '.pyc':
+                    inputs[path.relative_to(ROOT).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
+        for name in ('plugin-metadata.json', 'upstream.lock.json', 'LICENSE', 'NOTICE'):
+            inputs[name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
+        build_id = hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest()
+        (package / 'BUILD.json').write_text(json.dumps({
+            'build_id': build_id, 'product_version': VERSION, 'upstream_sha': UPSTREAM_SHA,
+            'inputs': inputs,
+        }, indent=2) + '\n')
+        # Stage completely before touching accepted output. Backup restores on error.
+        backup = Path(tmp) / 'previous'
+        had_previous = destination.exists()
+        if had_previous:
+            destination.rename(backup)
+        try:
+            package.rename(destination)
+        except BaseException:
+            if had_previous:
+                backup.rename(destination)
+            raise
 
 
 if __name__ == '__main__':
-    parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--out',type=Path,default=ROOT/'dist')
-    args=parser.parse_args()
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--out', type=Path, default=ROOT / 'dist')
+    parser.add_argument('--marketplaces', action='store_true', help='Also generate root marketplace catalogs')
+    args = parser.parse_args()
     build(args.out)
-    print('Built:',args.out)
+    if args.marketplaces:
+        generate_markets(ROOT)
+    print('Built single package:', args.out)

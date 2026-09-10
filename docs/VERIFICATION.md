@@ -1,51 +1,29 @@
-# Engineering verification boundary
+# Engineering verification
 
-Product: SDLC `1.0.0-beta`. Author: Blade.
-Upstream: Spec Kit `v1.0.5`, commit
-`a4e25ce6b96dc8e85f84206c6a54353fa9c5260b`.
+The CI run for the **exact source SHA** is authoritative for a particular build.
+Do not reuse a previous three-package PASS to claim the new single package passed.
 
-This document defines the current evidence contract, not a permanent PASS for
-all builds carrying the same beta version. Obtain the exact commit's completed
-`SDLC engineering` run and artifact `sdlc-engineering-<source-sha>`. Do not reuse a
-previous run or a baseline-acquisition-only success as proof for a new commit.
+The verifier installs no Agent and runs no business task. CI independently installs
+the pinned Spec Kit CLI and initializes three new empty projects, Bash, events
+false, no presets/extensions. It compares upstream-generated frontmatter and full
+workflow bodies with the migrated loader's resolved result for each host.
 
-## Checks
+The package now uses native manifests and explicit component paths. The old
+portable-schema check is intentionally replaced by documented native-field/path
+checks and disjoint-discovery tests. This does NOT count as a native client test.
 
-| Group | Evidence |
-| --- | --- |
-| Upstream identity | Selected source hashes against upstream.lock.json |
-| Original English commands | Nine source files compared byte-for-byte |
-| Three independent integrations | 27 renderer results compared with installed CLI output |
-| Migrated skills | 27 bodies and native metadata checked under the explicit address mapping |
-| Templates | 15 package templates compared with installed-tool baselines |
-| Packaging | Native manifest fields, portable schemas, version, author, repository, license and NOTICE |
-| Code | Bash/Python syntax, script derivation, reproducible package inventory |
-| Runtime boundaries | 15 existing synthetic filesystem test methods, exercised across host packages |
-| Upstream script behavior | 21 differential cases: return codes, stdout/stderr and output bytes |
-| Repository | Root layout, product metadata, generated provenance, license copies, documentation links and CI paths |
+Checks cover raw source hashes and watched generator hashes; 27 original source
+renderer comparisons; 27 resolved migrated workflow comparisons; shared template
+reference projections; literal factoring, malformed binding failures, bounded
+output pages, relocation and symlink boundaries; one reproducible dist; three root
+marketplaces; existing synthetic filesystem behavior and 21 upstream-script
+differential cases; candidate preparation/acceptance rejection tests.
 
-The verifier reports its actual count; groups and test methods are not added
-together as a fabricated total. `result.json` contains itemized checks,
-`runtime_test_methods`, `repository_test_methods`, and `differential_cases`.
-A normalization negative control must reject extra business prose.
+Evidence contains source SHA, source content/mode digest, upstream SHA, declared
+and actual repositories, fixed product version, environment, individual results,
+unit-test output and package inventory. Evidence is outside the checkout. The
+read-only workflow checks that committed output is not rewritten during tests.
 
-## Consolidation invariants
-
-The repository cleanup changes placement, product metadata, package notices,
-build/verification wiring and maintenance documentation only. The nine command
-sources, migrated templates, runtime scripts and binding instructions remain the
-reviewed implementation; core content differences must still fail parity checks.
-No old runtime, old plugin entry, historical plan tree or obsolete workflow is
-required by the current build. Earlier records remain available in Git history.
-
-## What a pass does not establish
-
-INIT is not implemented. No native plugin installation, discovery, parameter
-substitution or host-driven Skill execution is certified. No real business
-project or LLM workflow is run. macOS and Windows/PowerShell execution remain
-unverified. Concurrent editing of one feature is not guaranteed.
-
-All filesystem scenarios use synthetic temporary fixtures. The fixture seeding
-helper is not an initialization product and must not be exposed as one. The
-same fixed beta version may identify multiple commits, so source SHA and
-artifact hashes—not the version label alone—bind a verification result.
+No INIT Skill, native plugin install/discovery, LLM-driven end-to-end result,
+macOS, Windows, production or concurrent same-feature write guarantee is claimed.
+The user will run [SMOKE-TEST.md](SMOKE-TEST.md) independently in Codex and Cursor.

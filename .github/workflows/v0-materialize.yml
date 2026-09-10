@@ -1,0 +1,111 @@
+name: v0 materialize once
+on:
+  push:
+    branches: [impl/spec-kit-plugin-v0]
+    paths: ['v0/**', '.github/workflows/v0-materialize.yml']
+permissions:
+  contents: read
+concurrency:
+  group: v0-materialize-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  materialize:
+    if: github.repository == 'ousui/sdlc-ai-spec' && github.ref == 'refs/heads/impl/spec-kit-plugin-v0'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    permissions:
+      contents: write
+    steps:
+      - name: Fetch exact reviewed authoring source and pinned upstream
+        shell: bash
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin https://github.com/ousui/sdlc-ai-spec.git
+          git fetch --depth=1 origin "$SOURCE_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test "$(cat v0/MATERIALIZE_REQUEST)" = a4e25ce6b96dc8e85f84206c6a54353fa9c5260b
+          mkdir -p "$RUNNER_TEMP/v0-source/upstream" "$RUNNER_TEMP/v0-source/baselines" "$RUNNER_TEMP/v0-source/logs"
+          cd "$RUNNER_TEMP/v0-source/upstream"
+          git init .
+          git remote add origin https://github.com/github/spec-kit.git
+          git fetch --depth=1 origin a4e25ce6b96dc8e85f84206c6a54353fa9c5260b
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = a4e25ce6b96dc8e85f84206c6a54353fa9c5260b
+      - name: Source migration then independent installed-tool baselines
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m venv "$RUNNER_TEMP/v0-upstream-env"
+          PY="$RUNNER_TEMP/v0-upstream-env/bin/python"
+          "$PY" -m pip install -r v0/tools/requirements.txt "$RUNNER_TEMP/v0-source/upstream" > "$RUNNER_TEMP/v0-source/logs/install.log" 2>&1
+          "$PY" -B v0/tools/port.py --upstream "$RUNNER_TEMP/v0-source/upstream"
+          "$PY" -B v0/tools/build.py
+          "$PY" -m pip freeze > "$RUNNER_TEMP/v0-source/logs/pip-freeze.txt"
+          "$RUNNER_TEMP/v0-upstream-env/bin/specify" version > "$RUNNER_TEMP/v0-source/logs/version.log" 2>&1
+          for agent in codex claude cursor-agent; do
+            mkdir -p "$RUNNER_TEMP/v0-source/baselines/$agent"
+            (cd "$RUNNER_TEMP/v0-source/baselines/$agent" && "$RUNNER_TEMP/v0-upstream-env/bin/specify" init . --integration "$agent" --script sh --ignore-agent-tools --non-interactive --integration-options="--events=false") > "$RUNNER_TEMP/v0-source/logs/init-$agent.log" 2>&1
+          done
+          "$PY" -B v0/tools/verify.py --upstream "$RUNNER_TEMP/v0-source/upstream" --baselines "$RUNNER_TEMP/v0-source/baselines" --evidence "$RUNNER_TEMP/v0-source/prepublication"
+      - name: Commit only generated v0 resources to the exact implementation branch
+        shell: bash
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+          GH_WRITE_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          test "$GITHUB_REPOSITORY" = ousui/sdlc-ai-spec
+          test "$GITHUB_REF" = refs/heads/impl/spec-kit-plugin-v0
+          test "$(git remote get-url origin)" = https://github.com/ousui/sdlc-ai-spec.git
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          test "$(git ls-remote origin refs/heads/impl/spec-kit-plugin-v0 | cut -f1)" = "$SOURCE_SHA"
+          git add -f -- v0/src v0/dist v0/upstream.lock.json
+          git rm -- v0/MATERIALIZE_REQUEST
+          python3 - <<'PY'
+          import subprocess
+          paths=subprocess.check_output(['git','diff','--cached','--name-only','-z']).decode().split('\0')
+          for path in filter(None,paths):
+              assert path.startswith(('v0/src/','v0/dist/')) or path in ('v0/upstream.lock.json','v0/MATERIALIZE_REQUEST'), path
+          assert any(p.startswith('v0/dist/') for p in paths)
+          PY
+          git diff --cached --check
+          git -c user.name='github-actions[bot]' -c user.email='41898282+github-actions[bot]@users.noreply.github.com' commit -m 'feat(v0): materialize reviewed source port and three engineering plugin packages'
+          cat > "$RUNNER_TEMP/v0-askpass" <<'SH'
+          #!/bin/sh
+          case "$1" in
+            *Username*) printf '%s\n' 'x-access-token' ;;
+            *Password*) printf '%s\n' "$GH_WRITE_TOKEN" ;;
+            *) exit 1 ;;
+          esac
+          SH
+          chmod 700 "$RUNNER_TEMP/v0-askpass"
+          trap 'rm -f "$RUNNER_TEMP/v0-askpass"' EXIT
+          GIT_TERMINAL_PROMPT=0 GIT_ASKPASS="$RUNNER_TEMP/v0-askpass" git push origin HEAD:refs/heads/impl/spec-kit-plugin-v0
+          git rev-parse HEAD > "$RUNNER_TEMP/v0-source/published-sha.txt"
+      - name: Verify the committed exact version again
+        shell: bash
+        run: |
+          set -euo pipefail
+          export GITHUB_SHA="$(git rev-parse HEAD)"
+          "$RUNNER_TEMP/v0-upstream-env/bin/python" -B v0/tools/verify.py --upstream "$RUNNER_TEMP/v0-source/upstream" --baselines "$RUNNER_TEMP/v0-source/baselines" --evidence "$RUNNER_TEMP/v0-source/verification"
+          git diff --exit-code
+          test -z "$(git status --porcelain --untracked-files=all)"
+      - name: Preserve source and engineering evidence
+        if: always()
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/v0-export"
+          tar --exclude=.git -czf "$RUNNER_TEMP/v0-export/source-and-baselines.tar.gz" -C "$RUNNER_TEMP/v0-source" .
+          git archive HEAD | gzip > "$RUNNER_TEMP/v0-export/migration-source.tar.gz"
+      - name: Upload evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: v0-materialized-${{ github.sha }}
+          path: ${{ runner.temp }}/v0-export/
+          retention-days: 7
+          if-no-files-found: error

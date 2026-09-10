@@ -39,7 +39,7 @@ jobs:
         run: |
           set -euo pipefail
           python3 -m venv "$RUNNER_TEMP/v0-upstream-env"
-          "$RUNNER_TEMP/v0-upstream-env/bin/python" -m pip install "$RUNNER_TEMP/v0-source/upstream" > "$RUNNER_TEMP/v0-source/logs/install.log" 2>&1
+          "$RUNNER_TEMP/v0-upstream-env/bin/python" -m pip install -r v0/tools/requirements.txt "$RUNNER_TEMP/v0-source/upstream" > "$RUNNER_TEMP/v0-source/logs/install.log" 2>&1
           "$RUNNER_TEMP/v0-upstream-env/bin/python" -m pip freeze > "$RUNNER_TEMP/v0-source/logs/pip-freeze.txt"
           "$RUNNER_TEMP/v0-upstream-env/bin/specify" version > "$RUNNER_TEMP/v0-source/logs/version.log" 2>&1
           for agent in codex claude cursor-agent; do
@@ -57,15 +57,18 @@ jobs:
           print('UPSTREAM INSTALL AND THREE EMPTY INITIALIZATIONS: PASS')
           print('Collected files:', len(records))
           PY
-      - name: Run migration engineering tests when implementation is present
+      - name: Verify committed migration resources
         shell: bash
         run: |
           set -euo pipefail
-          if [ -f v0/tools/verify.py ]; then
-            "$RUNNER_TEMP/v0-upstream-env/bin/python" v0/tools/verify.py --upstream "$RUNNER_TEMP/v0-source/upstream" --baselines "$RUNNER_TEMP/v0-source/baselines" --evidence "$RUNNER_TEMP/v0-source/verification"
-          else
-            echo 'Baseline acquisition only: no migration verification claimed.'
+          if [ -f v0/MATERIALIZE_REQUEST ]; then
+            echo 'One-time source materialization is pending; this run is NOT a migration pass.'
+            exit 0
           fi
+          "$RUNNER_TEMP/v0-upstream-env/bin/python" -B v0/tools/verify.py --upstream "$RUNNER_TEMP/v0-source/upstream" --baselines "$RUNNER_TEMP/v0-source/baselines" --evidence "$RUNNER_TEMP/v0-source/verification"
+          git diff --check
+          git diff --exit-code
+          test -z "$(git status --porcelain --untracked-files=all)"
       - name: Package source and evidence for review
         if: always()
         shell: bash

@@ -162,7 +162,7 @@ class RuntimeTests(unittest.TestCase):
                 (overrides/'tasks-template.md').write_text('User override\n\n')
                 r=self.run_script(p,'setup-tasks.sh','--json')
                 self.assertEqual(json.loads(r.stdout)['TASKS_TEMPLATE_CONTENT'],'User override\n\n')
-                self.assertEqual(json.loads(r.stdout)['TASKS_TEMPLATE'],str(overrides/'tasks-template.md'))
+                self.assertEqual(canonical(json.loads(r.stdout)['TASKS_TEMPLATE']), canonical(overrides/'tasks-template.md'))
 
     def test_two_projects_and_cross_host_sequential_reuse(self):
         a,af=self.seed();b,bf=self.seed()
@@ -246,7 +246,7 @@ class RuntimeTests(unittest.TestCase):
                 self.assertTrue(json.loads(r.stdout)['DRY_RUN']);self.assertEqual(before,tree(p))
                 r=self.run_script(p,'create-new-feature.sh','--json','--short-name','sample','Example feature')
                 created=Path(json.loads(r.stdout)['SPEC_FILE'])
-                self.assertEqual(created,p/'.sdlc/specs/001-sample/spec.md')
+                self.assertEqual(canonical(created), canonical(p/'.sdlc/specs/001-sample/spec.md'))
                 self.assertEqual(created.read_text(),(self.package/'templates/spec-template.md').read_text())
                 created.write_text('Human spec\n')
                 self.run_script(p,'create-new-feature.sh','--json','--allow-existing-branch','--number','1','--short-name','sample','Example feature')

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepare project data for the installed SDLC plugin; never install tool resources.
+"""Prepare project data for the installed SDLC AI SPEC plugin; never install tool resources.
 
 Stdlib only. --project is explicit so a nested module is not silently replaced by
 its enclosing Git root. Existing user files are preserved; compatible partial
@@ -18,7 +18,7 @@ import sys
 import tempfile
 
 LAYOUT = 1
-README = b'''# SDLC project data\n\nThis directory contains project-local Spec Kit workflow data.\n- memory/constitution.md: project principles; review with sdlc-constitution.\n- init-options.json: project defaults, not a global Agent selection.\n- specs/: feature specifications, plans and tasks.\n- feature.json: written by sdlc-specify, not by initialization.\n\nSkills, scripts, applications and core templates stay in the user-installed\nplugin. Do not run specify init here or copy plugin resources into this directory.\nRe-running sdlc-init only completes missing compatible data; it does not reset\nfeatures or overwrite human documents. The local .gitignore excludes this data\nfrom new Git additions; files already tracked by Git remain tracked.\n'''
+README = b'''# SDLC AI SPEC project data\n\nThis directory contains project-local SDLC AI SPEC workflow data.\n- memory/constitution.md: project principles; review with sdlc-010-rule.\n- init-options.json: project defaults, not a global Agent selection.\n- specs/: feature specifications, plans and tasks.\n- feature.json: written by sdlc-100-spec, not by initialization.\n\nSkills, scripts, applications and core templates stay in the user-installed\nplugin. Do not run the upstream initializer here or copy plugin resources into this directory.\nRe-running sdlc-000-init only completes missing compatible data; it does not reset\nfeatures or overwrite human documents. The local .gitignore excludes this data\nfrom new Git additions; files already tracked by Git remain tracked.\n'''
 ALLOWED = {'memory', 'specs', 'templates', 'feature.json', 'init-options.json',
            '.gitignore', 'README.md'}
 

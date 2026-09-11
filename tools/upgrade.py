@@ -1,6 +1,10 @@
 #!/usr/bin/env python3
 """Controlled upstream candidates. No LLM, downloads, pushes or automatic merge.
 
+Naming projections are governed by docs/NAMING.md and docs/naming-map.json.
+Keep raw upstream identifiers in the lock; regenerate all public names and
+verify the exact candidate. Do not infer new aliases or edit accepted output.
+
 prepare creates a detached worktree and an external change record. Run the
 installed-CLI verifier independently; accept validates its exact-byte report and
 an explicit human review, then commits ONLY that candidate worktree. The current

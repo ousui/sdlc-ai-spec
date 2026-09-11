@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "status": "approved-contract-runtime-migration-pending",
+  "status": "implemented-runtime-naming",
   "product": {
     "display_name": "SDLC AI SPEC",
     "target_plugin_id": "sdlc-ai-spec",
-    "current_plugin_id": "sdlc",
+    "current_plugin_id": "sdlc-ai-spec",
     "state_directory": ".sdlc",
     "code_prefix": "sdlc",
     "environment_prefix": "SDLC_"

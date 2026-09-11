@@ -24,6 +24,9 @@ from pathlib import Path
 from build import ROOT,COMMANDS,HOSTS,UPSTREAM_SHA,REPOSITORY,VERSION,AUTHOR,render_source,split,build,binding,ALL_COMMANDS,CORE_COMPATIBILITY
 
 
+from naming_check import EXPECTED, reverse_names, leaf_projection
+
+
 def digest(path: Path) -> str:return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
@@ -42,11 +45,13 @@ def normalize(text: str,host: str, *, ported: bool) -> str:
         prefix='\n'+binding(host)
         if not text.startswith(prefix):raise AssertionError('Package binding is missing or modified')
         text=text[len(prefix):]
-        shell=(r'SDLC_HOST='+host+r' SPECIFY_INIT_DIR="\$\{SDLC_PROJECT_ROOT:\?\}" '
+        shell=(r'SDLC_HOST='+host+r' SDLC_INIT_DIR="\$\{SDLC_PROJECT_ROOT:\?\}" '
                r'bash "\$\{SDLC_PLUGIN_ROOT:\?\}/scripts/bash/([a-z-]+\.sh)"')
         text=re.sub(shell,r'.specify/scripts/bash/\1',text)
         text=text.replace('.specify/scripts/bash/resolve-template.sh spec-template','specify preset resolve spec-template')
         text=text.replace('${SDLC_PLUGIN_ROOT}/templates/','.specify/templates/')
+        text=reverse_names(text)
+        text=text.replace('/sdlc-ai-spec:sdlc-git-commit','/speckit-git-commit')
         text=text.replace('/sdlc:sdlc-','/speckit-').replace('/sdlc-','/speckit-').replace('$sdlc-','$speckit-')
         text=text.replace('/skill:sdlc-','/skill:speckit-').replace('`sdlc.git.commit`','`speckit.git.commit`')
         text=text.replace('.sdlc/specs/','@SPECS@/').replace('.sdlc/','.specify/')
@@ -56,6 +61,7 @@ def normalize(text: str,host: str, *, ported: bool) -> str:
 
 
 def template_norm(text: str) -> str:
+    text=reverse_names(text, bare=True)
     text=text.replace('.sdlc/specs/','@SPECS@/')
     text=re.sub(r'(?<![\w./])/?specs/','@SPECS@/',text)
     text=re.sub(r'(?<![\w:/\$-])sdlc-(constitution|specify|clarify|plan|tasks|analyze|checklist|implement|converge)\b',r'/speckit-\1',text)
@@ -93,20 +99,22 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
         base=baselines/integ
         package=ROOT/'dist'
         actual_skills={p.parent.name for p in (package/'adapters'/host/'skills').glob('*/SKILL.md')}
-        require_equal(actual_skills,{'sdlc-'+c for c in ALL_COMMANDS},'Skill inventory '+host)
+        require_equal(actual_skills,set(EXPECTED.values()),'Skill inventory '+host)
         for name in COMMANDS:
             native=base/folder/'skills'/('speckit-'+name)/'SKILL.md'
             oracle_meta,oracle_body=split(native.read_text())
             rendered=render_source((ROOT/'src/upstream/templates/commands'/f'{name}.md').read_text(),name,host)
             require_equal(rendered,(oracle_meta,oracle_body),'Source renderer vs installed CLI '+host+'/'+name)
             passed('source_renderer_vs_installed_cli',host+'/'+name)
-            meta,entry=split((package/'adapters'/host/'skills'/('sdlc-'+name)/'SKILL.md').read_text())
-            loader=subprocess.run([sys.executable,'-I','-B',str(package/'scripts/python/load_workflow.py'),'--host',host,'--skill',name],capture_output=True,text=True,check=True)
+            meta,entry=split((package/'adapters'/host/'skills'/EXPECTED[name]/'SKILL.md').read_text())
+            loader=subprocess.run([sys.executable,'-I','-B',str(package/'scripts/python/load_workflow.py'),'--host',host,'--skill',EXPECTED[name]],capture_output=True,text=True,check=True)
             body='\n'+loader.stdout
-            if '--host '+host+' --skill '+name not in entry or 'COMPLETE stdout' not in entry:
+            if '--host '+host+' --skill '+EXPECTED[name] not in entry or 'COMPLETE stdout' not in entry:
                 raise AssertionError('Thin entrypoint does not bind the full workflow')
-            expected_meta=dict(oracle_meta,name='sdlc-'+name,
+            expected_meta=dict(oracle_meta,name=EXPECTED[name],
                 compatibility=CORE_COMPATIBILITY)
+            if 'argument-hint' in expected_meta:
+                expected_meta['argument-hint'] = expected_meta['argument-hint'].replace('feature you want to specify', 'feature you want to define')
             require_equal(meta,expected_meta,'Native metadata '+host+'/'+name)
             require_equal(normalize(oracle_body,host,ported=False),normalize(body,host,ported=True),'Migrated body '+host+'/'+name)
             # Negative control proves normalization cannot hide a prose mutation.
@@ -122,7 +130,7 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
             passed('template_vs_installed_cli',host+'/'+template.name)
         manifest=package/('.'+host+'-plugin/plugin.json')
         m=json.loads(manifest.read_text())
-        require_equal(m['name'],'sdlc','Plugin name')
+        require_equal(m['name'],'sdlc-ai-spec','Plugin name')
         require_equal(m['repository'],REPOSITORY,'Fixed repository')
         require_equal(m['version'],VERSION,'Version')
         require_equal(m['author'],AUTHOR,'Plugin author')
@@ -171,7 +179,7 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
             passed('installed_init_project_data',integ)
     # Unmodified leaf scripts remain exact except the project marker.
     for name in ('check-prerequisites.sh','resolve-template.sh','setup-plan.sh'):
-        expected=(upstream/'scripts/bash'/name).read_text().replace('.specify','.sdlc')
+        expected=leaf_projection((upstream/'scripts/bash'/name).read_text())
         require_equal((ROOT/'src/scripts/bash'/name).read_text(),expected,'Leaf script preservation '+name)
         passed('leaf_script_source_parity',name)
     from port import port_script

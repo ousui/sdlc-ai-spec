@@ -1,12 +1,12 @@
 {
   "name": "sdlc-ai-spec",
   "interface": {
-    "displayName": "SDLC AI Spec"
+    "displayName": "SDLC AI SPEC"
   },
   "plugins": [
     {
-      "name": "sdlc",
-      "description": "Spec Kit core user-scoped source port (beta; project initialization included)",
+      "name": "sdlc-ai-spec",
+      "description": "SDLC AI SPEC: project initialization and spec-driven development workflows (beta)",
       "source": {
         "source": "local",
         "path": "./dist"

@@ -122,7 +122,7 @@
 <!--
   ACTION REQUIRED: The content in this section represents placeholders.
   Fill them out with the right assumptions based on reasonable defaults
-  chosen when the feature description did not specify certain details.
+  chosen when the feature description did not define certain details.
 -->
 
 - [Assumption about target users, e.g., "Users have stable internet connectivity"]

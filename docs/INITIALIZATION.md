@@ -1,15 +1,15 @@
 # Project initialization
 
 Install the plugin once through the marketplace. In each selected project, invoke
-`sdlc-init` once before the core workflow. It runs the bundled initializer, not
+`sdlc-000-init` once before the core workflow. It runs the bundled initializer, not
 `specify init`: no uv/specify-cli/application installation, network access or
 project-local copies of Skills, scripts and core templates are required.
 
 | Client | Entry |
 | --- | --- |
-| Codex | `$sdlc-init` |
-| Claude Code | `/sdlc:sdlc-init` |
-| Cursor | `/sdlc-init`, or the actual plugin-namespaced entry in its menu |
+| Codex | `$sdlc-000-init` |
+| Claude Code | `/sdlc-ai-spec:sdlc-000-init` |
+| Cursor | `/sdlc-000-init`, or the actual plugin-namespaced entry in its menu |
 
 Select the project root explicitly in multi-root workspaces. For a nested module
 such as `example/helloserver`, select that module, not its enclosing Git root.
@@ -35,7 +35,7 @@ existing version data. It is not a document-freeze or runtime-version gate.
 
 `constitution.md` is copied byte-for-byte from the installed core template, or an
 existing project `templates/overrides/constitution-template.md`. It is NOT a
-ratified constitution: use `sdlc-constitution` to establish project principles.
+ratified constitution: use `sdlc-010-rule` to establish project principles.
 If you have already established principles, they are preserved verbatim.
 
 The data-local `.gitignore` contains `*`, including the ignore file itself. It
@@ -46,7 +46,7 @@ An existing `.gitignore` is preserved, with a warning to check its existing poli
 Non-Git projects work without `git init`; absent Git does not block initialization.
 
 No `feature.json`, specification, plan or tasks are generated. The core
-`sdlc-specify` creates and selects the first feature under `.sdlc/specs` later.
+`sdlc-100-spec` creates and selects the first feature under `.sdlc/specs` later.
 
 ## Repeated calls and manual-state completion
 
@@ -83,7 +83,7 @@ Requires Python 3.9+ and Bash already installed. Optional `--dry-run` reports
 planned changes without writing; optional `--feature-numbering timestamp` changes
 the default for a new project only. There is no force/reset/upgrade switch.
 `--project` is mandatory: the script never guesses from its installation path,
-ambient `SPECIFY_INIT_DIR`, or an enclosing Git repository.
+ambient `SDLC_INIT_DIR`, or an enclosing Git repository.
 
 On success stdout is one JSON object with `status`, `dry_run`, selected paths,
 created/updated/preserved paths and warnings. On failure it exits nonzero with an
@@ -101,3 +101,14 @@ pinned CLI initialization in three empty projects. Synthetic fixtures also test
 preservation and interoperability with existing core scripts. They do not prove
 native client discovery or model-driven execution. See [VERIFICATION.md](VERIFICATION.md)
 and the updated [smoke test](SMOKE-TEST.md).
+
+## Names and existing data
+
+The initializer now emits SDLC AI SPEC product wording and numbered Skill IDs in
+new project README files. Existing README, constitution, features, config keys
+and `speckit_version` (upstream provenance) are preserved; installation is not a
+project-data rewrite. The legacy `.specify` detector still refuses implicit
+conversion. Runtime Bash overrides use `SDLC_INIT_DIR`, `SDLC_FEATURE` and
+`SDLC_FEATURE_DIRECTORY`; obsolete nonempty `SPECIFY_*` overrides are rejected
+with a rename diagnostic rather than silently routing to a different project.
+There is no old-variable alias and no automatic RULE-to-INIT transition.

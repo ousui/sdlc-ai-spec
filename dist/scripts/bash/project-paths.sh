@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Read-only package/project binding. This is deliberately not sdlc-init.
+# Read-only package/project binding. This is deliberately not sdlc-000-init.
 set -e
 SCRIPT_DIR="$(CDPATH="" cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd -P)"
 source "$SCRIPT_DIR/common.sh"

@@ -14,15 +14,17 @@ from build import factor,render_source,relocate_body,binding,COMMANDS,HOSTS,spli
 spec=importlib.util.spec_from_file_location('sdlc_workflow',ROOT/'dist/scripts/python/load_workflow.py')
 loader=importlib.util.module_from_spec(spec);spec.loader.exec_module(loader)
 
+from naming_check import EXPECTED
+
 class DistributionTests(unittest.TestCase):
     def test_exact_reconstruction_of_all_host_prompts(self):
         for host in HOSTS:
             for name in COMMANDS:
                 raw=(ROOT/'src/upstream/templates/commands'/f'{name}.md').read_text()
                 _,body=render_source(raw,name,host)
-                self.assertEqual(loader.load(ROOT/'dist',host,name),binding(host)+relocate_body(body,host))
-                meta,entry=split((ROOT/'dist/adapters'/host/'skills'/('sdlc-'+name)/'SKILL.md').read_text())
-                self.assertIn('--host '+host+' --skill '+name,entry)
+                self.assertEqual(loader.load(ROOT/'dist',host,EXPECTED[name]),binding(host)+relocate_body(body,host))
+                meta,entry=split((ROOT/'dist/adapters'/host/'skills'/EXPECTED[name]/'SKILL.md').read_text())
+                self.assertIn('--host '+host+' --skill '+EXPECTED[name],entry)
                 self.assertIn('read its COMPLETE stdout',entry)
                 self.assertNotIn('## Outline',entry)
 
@@ -41,19 +43,19 @@ class DistributionTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp:
             copy=Path(temp)/'package';shutil.copytree(ROOT/'dist',copy)
             path=copy/'bindings/codex.json';data=json.loads(path.read_text())
-            data['plan']['@@SDLC_BIND_9999@@']='injected';path.write_text(json.dumps(data))
-            with self.assertRaises(ValueError):loader.load(copy,'codex','plan')
+            data['sdlc-200-plan']['@@SDLC_BIND_9999@@']='injected';path.write_text(json.dumps(data))
+            with self.assertRaises(ValueError):loader.load(copy,'codex','sdlc-200-plan')
 
     def test_loader_pages_reconstruct_without_project_or_cli(self):
         before={p: p.read_bytes() for p in (ROOT/'dist').rglob('*') if p.is_file()}
         script=ROOT/'dist/scripts/python/load_workflow.py'
-        complete=loader.load(ROOT/'dist','codex','specify')
+        complete=loader.load(ROOT/'dist','codex','sdlc-100-spec')
         output=[]
         with tempfile.TemporaryDirectory() as temp:
             for offset in range(0,len(complete.splitlines()),73):
-                r=subprocess.run([sys.executable,'-I','-B',str(script),'--host','codex','--skill','specify','--offset',str(offset),'--limit','73'],cwd=temp,text=True,capture_output=True,check=True)
+                r=subprocess.run([sys.executable,'-I','-B',str(script),'--host','codex','--skill','sdlc-100-spec','--offset',str(offset),'--limit','73'],cwd=temp,text=True,capture_output=True,check=True)
                 output.append(r.stdout)
-            bad=subprocess.run([sys.executable,'-I','-B',str(script),'--host','codex','--skill','plan','--limit','0'],cwd=temp,capture_output=True)
+            bad=subprocess.run([sys.executable,'-I','-B',str(script),'--host','codex','--skill','sdlc-200-plan','--limit','0'],cwd=temp,capture_output=True)
             self.assertNotEqual(bad.returncode,0)
         self.assertEqual(''.join(output),complete)
         self.assertEqual(before,{p: p.read_bytes() for p in (ROOT/'dist').rglob('*') if p.is_file()})
@@ -61,10 +63,10 @@ class DistributionTests(unittest.TestCase):
     def test_loader_rejects_package_escape(self):
         with tempfile.TemporaryDirectory() as temp:
             copy=Path(temp)/'package';shutil.copytree(ROOT/'dist',copy)
-            target=copy/'references/workflows/plan.md';target.unlink()
+            target=copy/'references/workflows/sdlc-200-plan.md';target.unlink()
             outside=Path(temp)/'outside.md';outside.write_text('untrusted')
             target.symlink_to(outside)
-            with self.assertRaises(ValueError):loader.load(copy,'codex','plan')
+            with self.assertRaises(ValueError):loader.load(copy,'codex','sdlc-200-plan')
 
     def test_builder_refuses_source_and_unmarked_output(self):
         for path in (ROOT,ROOT/'src',ROOT/'tools',ROOT.parent):

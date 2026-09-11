@@ -1,13 +1,13 @@
 # SDLC AI SPEC 命名与迁移契约
 
-状态：**用户已确认命名；运行时改名尚未实施**。本文件约束后续转换和上游升级，
-不是已完成迁移或客户端验收的声明。流程记录使用
+状态：**已实施生成层与运行入口的命名迁移；原生宿主验收另行记录**。本文件约束后续转换和上游升级，
+不是原生客户端验收通过的声明。流程记录使用
 [PR #24](https://github.com/ousui/sdlc-ai-spec/pull/24)，初始工作基线为
 `13273b95bbf6db8b7caf5b97011fd9e9a39fa46e`，产品版本保持 `1.0.0-beta`。
 
 ## 1. 权威映射与原则
 
-完整 Skill 表在 [README](../README.md#skill-命名与含义已确认的迁移目标)。
+完整 Skill 表在 [README](../README.md#skill-命名与含义)。
 [命名映射](naming-map.json) 是同一约定的机器可读表示。修改约定时必须同时更新
 这两个文件及本契约，并在 PR 说明原因；不能由升级程序自行推导新名字。
 
@@ -18,7 +18,7 @@
 | 场景 | 目标名称 | 说明 |
 | --- | --- | --- |
 | 产品显示名称、文档标题 | SDLC AI SPEC | 使用该大小写 |
-| 插件机器标识、包身份 | `sdlc-ai-spec` | 当前仍为 `sdlc`，迁移须同步 namespace 与 marketplace |
+| 插件机器标识、包身份 | `sdlc-ai-spec` | 已同步 namespace 与 marketplace；旧插件需按安装说明处理 |
 | 项目数据目录 | `.sdlc` | 保留，不为品牌统一移动已有项目数据 |
 | 环境变量与常量前缀 | `SDLC_` | 大写、下划线 |
 | 内部函数等程序简称 | `sdlc` | 遵循对应语言命名风格 |
@@ -149,3 +149,27 @@ README 和本契约保存长期规范，不另建一套与 PR 重复的流水进
 未验证边界。对外报告先核实远端分支与 PR 的 HEAD。Draft、CI 通过、原生宿主
 验证、业务验收和可合并是不同状态，不互相替代。不得自行合并、改标签、发布
 或改写其他分支历史。
+
+## 7. 本次实现与精确例外
+
+生成实现集中在 `tools/naming.py`，消费本目录的映射；`port.py` 在保留原始
+锚点校验后转换程序声明与调用，`render.py` 先复现原文再转换产品名称，
+`build.py` 使用编号 ID 生成 Skill、工作流文件及 binding 键。loader 接收
+完整公开 Skill ID，不再接收上游 capability ID。三宿主仍保留各自薄入口，
+没有新增调用策略、跨阶段授权或共享 skills 目录。
+
+除前文示例，运行标识还包括 `format_speckit_command -> format_sdlc_command`、
+`SPECKIT_EXTENSIONS/REGISTRY/MANIFEST/TMPL -> SDLC_EXTENSIONS/REGISTRY/MANIFEST/TMPL`；
+这些只是现有模板解析逻辑的标识投影，不启用扩展或预设子系统。生成正文中的
+`before_specify/after_specify` 投影为 `before_spec/after_spec`；它们仍是被
+core-only 配置阻止执行的条件 hook 文案，不宣称支持外部 hook 配置迁移。
+
+安装包旧标记允许范围为：LICENSE、NOTICE、UPSTREAM.json 的真实来源信息；
+BUILD.json 的原始输入路径；SKILL.md 元数据中的 `author` 与 `source` 来源字段；
+README 的 Attribution 段；初始化器中 `.specify` 旧数据检测与
+`speckit_version` 既有来源键；Bash 项目解析器对旧 `SPECIFY_*` 参数的拒绝诊断。
+这些例外按字段/代码位置验证，不把整个 scripts、adapters 或 dist 排除。
+
+旧环境变量不作为别名保留。非空旧覆盖变量出现时明确要求改名，在路径选择
+之前失败，避免静默忽略后写错项目。新调用链行为不变；现有 `.sdlc` 数据、
+已有模板覆盖和已生成文档不被安装动作或重复 INIT 擅自改写。

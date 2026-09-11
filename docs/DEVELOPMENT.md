@@ -71,7 +71,7 @@ git diff --check
 ```
 
 Use Bash with no events, presets or extensions. These upstream CLI calls do not launch Codex, Claude or Cursor. Their project
-settings and constitution are independently compared with our local `sdlc-init`
+settings and constitution are independently compared with our local `sdlc-000-init`
 output; host registries and installed tool resources are intentionally excluded. Do not pass `--force`
 to reuse nonempty baseline directories: create new directories instead.
 
@@ -111,3 +111,14 @@ package inventory. Upgrade preparation must retain this local source and its tes
 `tests/test_init.py` covers initial setup, manual-state completion, byte/mode/mtime
 idempotence, safety failures, no CLI fallback, local ignore rules, and downstream
 script compatibility. These are synthetic script tests, not Agent executions.
+
+## Mandatory naming projection
+
+Read [NAMING.md](NAMING.md) and [naming-map.json](naming-map.json) before changing
+the upstream version. `tools/naming.py` applies the reviewed mapping after raw
+source rendering; `tools/naming_check.py` is an independently maintained finite
+comparison oracle. The build identity includes the naming map. Upstream locks
+and copied source paths retain original names, while generated workflows use
+`references/workflows/<full-skill-id>.md` and loader calls use the same public ID.
+Unknown source references must stop preparation; never infer new abbreviations
+or weaken full-body parity to accept a candidate. See PR #24 for execution evidence.

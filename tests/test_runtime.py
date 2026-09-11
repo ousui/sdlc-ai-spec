@@ -120,8 +120,8 @@ class RuntimeTests(unittest.TestCase):
             with self.subTest(host=host):
                 p,f=self.seed(plan=False)
                 r=self.run_script(p,'check-prerequisites.sh','--json',success=False)
-                prefix={'codex':'$sdlc-','claude':'/sdlc:sdlc-','cursor':'/sdlc-'}[host]
-                self.assertIn(prefix+'plan',r.stderr)
+                prefix={'codex':'$sdlc-','claude':'/sdlc-ai-spec:sdlc-','cursor':'/sdlc-'}[host]
+                self.assertIn(prefix+'200-plan',r.stderr)
                 (f/'plan.md').write_text('plan\n')
                 self.run_script(p,'check-prerequisites.sh','--require-tasks',success=False)
                 (f/'tasks.md').write_text('tasks\n')
@@ -138,7 +138,7 @@ class RuntimeTests(unittest.TestCase):
                 state=p/'.sdlc/feature.json';before=state.read_bytes()
                 target='.sdlc/specs/099-uncreated'
                 r=self.run_script(p,'check-prerequisites.sh','--json','--paths-only',
-                                  overrides={'SPECIFY_FEATURE_DIRECTORY':target})
+                                  overrides={'SDLC_FEATURE_DIRECTORY':target})
                 self.assertEqual(json.loads(r.stdout)['FEATURE_DIR'],str(p/target))
                 self.assertEqual(before,state.read_bytes())
                 self.assertFalse((p/target).exists())
@@ -174,9 +174,9 @@ class RuntimeTests(unittest.TestCase):
                 r=json.loads(self.run_script(p,'project-paths.sh',cwd=nested).stdout)
                 self.assertEqual(r['PROJECT_ROOT'],str(p))
                 other,_=self.seed()
-                r=json.loads(self.run_script(p,'project-paths.sh',cwd=nested,overrides={'SPECIFY_INIT_DIR':str(other)}).stdout)
+                r=json.loads(self.run_script(p,'project-paths.sh',cwd=nested,overrides={'SDLC_INIT_DIR':str(other)}).stdout)
                 self.assertEqual(r['PROJECT_ROOT'],str(other))
-                self.run_script(p,'project-paths.sh',overrides={'SPECIFY_INIT_DIR':str(self.base/'missing')},success=False)
+                self.run_script(p,'project-paths.sh',overrides={'SDLC_INIT_DIR':str(self.base/'missing')},success=False)
 
     def test_no_initialized_project_never_falls_back_to_plugin(self):
         for host in self.hosts():
@@ -192,7 +192,7 @@ class RuntimeTests(unittest.TestCase):
             with self.subTest(host=host):
                 p,f=self.seed();before=tree(p)
                 self.run_script(p,'check-prerequisites.sh','--paths-only',
-                                overrides={'SPECIFY_FEATURE_DIRECTORY':str(self.package)},success=False)
+                                overrides={'SDLC_FEATURE_DIRECTORY':str(self.package)},success=False)
                 self.assertEqual(before,tree(p))
                 (f/'plan.md').unlink();(f/'plan.md').symlink_to(self.package/'templates/plan-template.md')
                 self.run_script(p,'setup-plan.sh','--json',success=False)
@@ -205,7 +205,7 @@ class RuntimeTests(unittest.TestCase):
             with self.subTest(host=host):
                 p,_=self.seed(name=f"{host} quote' Unicode中文 $(touch INJECTED)")
                 target='.sdlc/specs/007-quote"-$HOME-$(touch INJECTED)'
-                r=self.run_script(p,'check-prerequisites.sh','--json','--paths-only',overrides={'SPECIFY_FEATURE_DIRECTORY':target})
+                r=self.run_script(p,'check-prerequisites.sh','--json','--paths-only',overrides={'SDLC_FEATURE_DIRECTORY':target})
                 self.assertEqual(json.loads(r.stdout)['FEATURE_DIR'],str(p/target))
                 self.assertFalse((p/'INJECTED').exists())
                 self.assertFalse((p/target).exists())

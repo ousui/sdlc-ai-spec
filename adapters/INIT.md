@@ -1,8 +1,8 @@
 # Initialize project data
 
-This is SDLC's project-only initializer, not the upstream CLI installer. This
+This is SDLC AI SPEC's project-only initializer, not the upstream CLI installer. This
 invocation is in **@HOST@**. Use the original user input and current authorization.
-Initialization never requires a pre-existing `.sdlc` or an installed `specify`.
+Initialization never requires a pre-existing `.sdlc` or an installed upstream CLI.
 
 ## 1. Select the project and installed package
 
@@ -18,7 +18,7 @@ Never select the plugin directory, home or filesystem root by guessing.
 Read any applicable project instructions. Do not inspect all business code to
 invent project principles. Confirm Python 3.9+, Bash and the bundled script are
 available. If an execution dependency is missing, report it; do not install one
-or fall back to `specify`, `uv`, network access or ad-hoc shell scaffolding.
+or fall back to the upstream CLI, `uv`, network access or ad-hoc shell scaffolding.
 
 ## 2. Run the deterministic initializer once
 
@@ -56,6 +56,6 @@ switch branches, commit, push, or install tools. Git inspection is read-only.
 
 Initialization is normally needed once per project, not once per Agent or session.
 Repeat calls are safe completion/no-ops, not resets. Suggest @CONSTITUTION_COMMAND@
-to ratify project principles, or @SPECIFY_COMMAND@ to resume the already requested
+to ratify project principles, or @SPEC_COMMAND@ to resume the already requested
 specification. Do not launch either automatically unless the current user request
 explicitly authorizes continuation beyond initialization.

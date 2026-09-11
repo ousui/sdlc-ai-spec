@@ -1,7 +1,7 @@
-"""Test approved naming documentation, NOT runtime migration or host compatibility.
+"""Test approved naming documentation, NOT native host compatibility.
 
 The source/target IDs are deliberately asserted independently from the README
-renderer. Generator integration is a later change; these tests must not count
+renderer. Generator integration uses the same contract; these tests must not count
 reserved skills as installed or approve unknown upstream names automatically.
 See docs/NAMING.md and PR #24.
 """
@@ -96,8 +96,8 @@ class NamingContractTests(unittest.TestCase):
         self.assertIs(skills[-1]['existing_capability'], False)
         self.assertEqual(skills[-1]['scope'], 'utility')
         self.assertIn('当前未实现', self.readme)
-        self.assertIn('运行时改名尚未实施', self.readme)
-        self.assertEqual(self.data['status'], 'approved-contract-runtime-migration-pending')
+        self.assertIn('已迁移生成入口', self.readme)
+        self.assertEqual(self.data['status'], 'implemented-runtime-naming')
 
     def test_contract_links_and_work_package_boundary(self):
         self.assertIn('docs/NAMING.md', self.readme)

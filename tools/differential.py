@@ -12,6 +12,7 @@ import subprocess
 import tempfile
 from pathlib import Path
 from build import ROOT, HOSTS
+from naming_check import reverse_names
 
 
 def compare(baselines: Path) -> list[dict]:
@@ -55,6 +56,7 @@ def compare(baselines: Path) -> list[dict]:
                     result=subprocess.run(['bash',str(script_dir/script),*args],cwd=project,
                         env=env,capture_output=True,text=True,timeout=20)
                     def normalize(text):
+                        if ported: text=reverse_names(text, bare=True)
                         text=text.replace(str(package)+'/templates/',str(project)+'/.specify/templates/')
                         text=text.replace(str(project),'<PROJECT>')
                         text=text.replace('.sdlc/specs/','specs/').replace('.sdlc/','.specify/')

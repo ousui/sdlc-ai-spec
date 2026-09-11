@@ -90,3 +90,24 @@ layout marker, README and safe partial-state completion are local additions.
 
 The new helper is not called `specify init` and never invokes that executable.
 A successful local INIT is not a claim of full CLI initialization equivalence.
+
+## PR #24: numbered product identity migration
+
+[NAMING.md](NAMING.md) and [naming-map.json](naming-map.json) now govern product
+names. Raw sources, lock and upstream oracle remain unchanged. Generated Skill
+directories, name fields, full workflow filenames, binding keys and loader IDs
+use the approved four-letter stage names. The product ID is `sdlc-ai-spec`;
+display name is **SDLC AI SPEC**. Existing project data paths are unchanged.
+
+Runtime declarations/callers and emitted hints use SDLC identifiers. All three
+hosts retain their literal host, original control metadata and input-handling
+contract. The only input hint wording change is “feature you want to specify”
+to “feature you want to define”. Explicit compatibility/provenance exceptions
+are listed in NAMING.md. New nonempty obsolete environment overrides fail with
+a rename diagnostic rather than selecting an unintended project.
+
+Full workflow parity uses an independently enumerated inverse mapping and keeps
+the negative prose-mutation control. Script leaf comparisons enumerate only
+path/function/argument renames. No permissive whitespace or business-rule
+normalization was added. This supersedes the historical unnumbered name ledger
+above, not the original nine workflows, INIT idempotence or native test boundary.

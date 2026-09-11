@@ -11,6 +11,8 @@ ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
 from build import marketplaces,COMMANDS,HOSTS,ALL_COMMANDS
 
+from naming_check import EXPECTED
+
 class RepositoryTests(unittest.TestCase):
     def test_single_installation_boundary(self):
         package=ROOT/'dist'
@@ -19,7 +21,7 @@ class RepositoryTests(unittest.TestCase):
         for host in HOSTS:self.assertFalse((package/host).exists())
         self.assertEqual(len(list((package/'references/workflows').glob('*.md'))),len(ALL_COMMANDS))
         self.assertEqual(len(list(package.rglob('common.sh'))),1)
-        self.assertEqual(len(list(package.rglob('sdlc-init'))),3)
+        self.assertEqual(len(list(package.rglob('sdlc-000-init'))),3)
         for legacy in ('v0','packages','skills/_shared','docs/v1.0','docs/v1.1'):
             self.assertFalse((ROOT/legacy).exists())
 
@@ -32,7 +34,7 @@ class RepositoryTests(unittest.TestCase):
             folder=(ROOT/'dist'/manifest['skills']).resolve()
             self.assertTrue(folder.is_relative_to((ROOT/'dist').resolve()))
             entries=list(folder.glob('*/SKILL.md'))
-            self.assertEqual({p.parent.name for p in entries},{'sdlc-'+n for n in ALL_COMMANDS})
+            self.assertEqual({p.parent.name for p in entries},set(EXPECTED.values()))
             all_entries.extend(entries)
         self.assertEqual(len(set(all_entries)),3*len(ALL_COMMANDS))
 
@@ -43,7 +45,7 @@ class RepositoryTests(unittest.TestCase):
             entry=actual['plugins'][0]
             source=entry['source']; source=source['path'] if isinstance(source,dict) else source
             self.assertEqual(source,'./dist')
-            self.assertEqual(entry['name'],'sdlc')
+            self.assertEqual(entry['name'],'sdlc-ai-spec')
 
     def test_metadata_and_attribution(self):
         m=json.loads((ROOT/'plugin-metadata.json').read_text())

@@ -1,7 +1,7 @@
 {
-  "name": "sdlc",
+  "name": "sdlc-ai-spec",
   "version": "1.0.0-beta",
-  "description": "Spec Kit core user-scoped source port (beta; project initialization included)",
+  "description": "SDLC AI SPEC: project initialization and spec-driven development workflows (beta)",
   "author": {
     "name": "Blade"
   },

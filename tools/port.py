@@ -12,6 +12,7 @@ from pathlib import Path
 from build import ROOT,COMMANDS,UPSTREAM_SHA
 import shutil
 import tempfile
+from naming import script_projection, template_references, invocation_adapter
 
 
 def replace_once(text: str, old: str, new: str, count: int = 1) -> str:
@@ -34,7 +35,7 @@ def port_script(name: str,text: str) -> str:
     if name=='common.sh':
         text=function(text,'get_repo_root',(ROOT/'adapters/path-functions.sh').read_text())
         text=function(text,'get_invoke_separator','')
-        text=function(text,'format_speckit_command',(ROOT/'adapters/invocation-functions.sh').read_text())
+        text=function(text,'format_speckit_command',invocation_adapter())
         text=replace_once(text,'    local fj="$repo_root/.sdlc/feature.json"\n\n    # Strip',
             '    local fj="$repo_root/.sdlc/feature.json"\n    _sdlc_validate_paths "$repo_root" "$feature_dir_value" || return 1\n\n    # Strip')
         text=replace_once(text,'            _persist_feature_json "$repo_root" "$SPECIFY_FEATURE_DIRECTORY"',
@@ -49,8 +50,9 @@ def port_script(name: str,text: str) -> str:
             'SPEC_FILE="$FEATURE_DIR/spec.md"\n_sdlc_validate_paths "$REPO_ROOT" "$FEATURE_DIR" || exit 1')
     elif name=='setup-tasks.sh':
         text=replace_once(text,"or run 'specify init' / reinstall shared infra to restore the core .sdlc/templates/tasks-template.md template.",
-            'or reinstall the SDLC plugin to restore its templates/tasks-template.md template.')
-    return text
+            'or reinstall the SDLC AI SPEC plugin to restore its templates/tasks-template.md template.')
+    # docs/NAMING.md: preserve raw inputs; project all declarations and callers.
+    return script_projection(text)
 
 
 WATCHED = (
@@ -112,7 +114,7 @@ def materialize(upstream: Path) -> dict:
             if source.startswith('scripts/bash/'):
                 text = port_script(Path(source).name, text)
             elif source.startswith('templates/'):
-                text = re.sub(r'(?<![\w./])/?specs/', '.sdlc/specs/', text)
+                text = template_references(re.sub(r'(?<![\w./])/?specs/', '.sdlc/specs/', text))
             target = staging/source
             target.parent.mkdir(parents=True, exist_ok=True)
             target.write_text(text, encoding='utf-8')

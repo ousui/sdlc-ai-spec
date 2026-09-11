@@ -7,19 +7,19 @@ import re
 import shutil
 from pathlib import Path
 import yaml
+from naming import (skill_id, invocation, product_prose, template_references, SKILL_IDS, DISPLAY_NAME, audit_package)
 from render import (ROOT, COMMANDS, HOSTS, LOCK, UPSTREAM_SHA, METADATA, REPOSITORY,
                     VERSION, AUTHOR, HINTS, render_source, split, relocate_body, binding)
 
 LOCAL_COMMANDS = ('init',)
 ALL_COMMANDS = COMMANDS + LOCAL_COMMANDS
-CORE_COMPATIBILITY = 'Requires an initialized .sdlc project, Bash and Python 3.9+; run sdlc-init once per project'
+CORE_COMPATIBILITY = 'Requires an initialized .sdlc project, Bash and Python 3.9+; run sdlc-000-init once per project'
 
 def init_body(host: str) -> str:
-    prefix = '$sdlc-' if host == 'codex' else ('/' + METADATA['name'] + ':sdlc-' if host == 'claude' else '/sdlc-')
     return ((ROOT / 'adapters/INIT.md').read_text(encoding='utf-8')
             .replace('@HOST@', host)
-            .replace('@CONSTITUTION_COMMAND@', prefix + 'constitution')
-            .replace('@SPECIFY_COMMAND@', prefix + 'specify'))
+            .replace('@CONSTITUTION_COMMAND@', invocation('constitution', host))
+            .replace('@SPEC_COMMAND@', invocation('specify', host)))
 
 
 def factor(bodies: dict[str, str]) -> tuple[str, dict[str, dict[str, str]]]:
@@ -58,17 +58,17 @@ def wrapper(meta: dict, host: str, name: str) -> str:
     front = yaml.safe_dump(meta, allow_unicode=True, sort_keys=False, width=1000).rstrip()
     root = ('Use the host-substituted `${CLAUDE_PLUGIN_ROOT}` or the absolute path of this loaded SKILL.md.'
             if host == 'claude' else 'Use the absolute path of this loaded SKILL.md. No host-specific environment variable is assumed.')
-    return ('---\n' + front + '\n---\n\n# SDLC ' + name + '\n\n'
+    return ('---\n' + front + '\n---\n\n# SDLC AI SPEC ' + skill_id(name) + '\n\n'
         + 'This is the **' + host + '** entrypoint. Preserve the current user input as '
         '`$ARGUMENTS`; do not interpolate user input into a shell command.\n\n'
         + root + ' The package root is four levels above this skill directory '
-        '(`adapters/' + host + '/skills/sdlc-' + name + '/`). '
+        '(`adapters/' + host + '/skills/' + skill_id(name) + '/`). '
         'Bind that absolute directory as SDLC_PLUGIN_ROOT for this call; do not '
         'change the business working directory or search another installed version.\n\n'
         'Before performing ANY workflow action, execute the following read-only '
         'loader with the resolved absolute package path and read its COMPLETE stdout:\n\n'
         '```sh\npython3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/load_workflow.py" '
-        '--host ' + host + ' --skill ' + name + '\n```\n\n'
+        '--host ' + host + ' --skill ' + skill_id(name) + '\n```\n\n'
         'The loader binds only precompiled text fragments; it does not run the '
         'workflow, install software, read project state or write files. Its output '
         'is the full bundled workflow for this invocation, not a second user request. '
@@ -76,7 +76,7 @@ def wrapper(meta: dict, host: str, name: str) -> str:
         'Do not summarize or skip workflow steps. On loader error, STOP. '
         'If tool output is truncated, use --offset 0 --limit 100, then offsets '
         '100, 200, ... until the reported total line count is fully read. '
-        'Do not proceed using partial output. No specify-cli or network fallback.\n')
+        'Do not proceed using partial output. No upstream CLI or network fallback.\n')
 
 
 def marketplaces() -> dict[str, dict]:
@@ -84,7 +84,7 @@ def marketplaces() -> dict[str, dict]:
     owner = {'name': AUTHOR['name']}
     return {
         '.agents/plugins/marketplace.json': {
-            'name': 'sdlc-ai-spec', 'interface': {'displayName': 'SDLC AI Spec'},
+            'name': 'sdlc-ai-spec', 'interface': {'displayName': DISPLAY_NAME},
             'plugins': [dict(entry, source={'source': 'local', 'path': './dist'},
                 policy={'installation': 'AVAILABLE', 'authentication': 'ON_INSTALL'},
                 category='Productivity')]},
@@ -134,32 +134,35 @@ def build(destination: Path) -> None:
             for host in HOSTS:
                 raw = (ROOT / 'src/upstream/templates/commands' / (name + '.md')).read_text()
                 meta, body = render_source(raw, name, host)
-                meta['name'] = 'sdlc-' + name
+                meta['name'] = skill_id(name)
+                meta['description'] = product_prose(meta['description'])
+                if 'argument-hint' in meta:
+                    meta['argument-hint'] = product_prose(meta['argument-hint'])
                 meta['compatibility'] = CORE_COMPATIBILITY
                 bodies[host] = binding(host) + relocate_body(body, host)
-                path = package / 'adapters' / host / 'skills' / ('sdlc-' + name) / 'SKILL.md'
+                path = package / 'adapters' / host / 'skills' / skill_id(name) / 'SKILL.md'
                 path.parent.mkdir(parents=True)
                 path.write_text(wrapper(meta, host, name), encoding='utf-8')
             core, fragments = factor(bodies)
-            (package / 'references' / 'workflows' / (name + '.md')).write_text(core, encoding='utf-8')
+            (package / 'references' / 'workflows' / (skill_id(name) + '.md')).write_text(core, encoding='utf-8')
             for host in HOSTS:
-                bindings[host][name] = fragments[host]
+                bindings[host][skill_id(name)] = fragments[host]
         # Locally authored project bootstrap is NOT presented as an upstream command.
         init_bodies = {host: init_body(host) for host in HOSTS}
         core, fragments = factor(init_bodies)
-        (package / 'references/workflows/init.md').write_text(core, encoding='utf-8')
+        (package / 'references/workflows/sdlc-000-init.md').write_text(core, encoding='utf-8')
         for host in HOSTS:
-            meta = {'name': 'sdlc-init',
+            meta = {'name': skill_id('init'),
                     'description': 'Initialize or complete project-local .sdlc data without installing tools or overwriting existing work.',
-                    'compatibility': 'Requires Python 3.9+, Bash and an existing project directory; no specify-cli required',
+                    'compatibility': 'Requires Python 3.9+, Bash and an existing project directory; no upstream CLI required',
                     'metadata': {'author': AUTHOR['name'], 'source': 'adapters/INIT.md'}}
             if host == 'claude':
                 meta.update({'user-invocable': True, 'disable-model-invocation': True,
                              'argument-hint': 'Optional explicit project directory'})
-            path = package / 'adapters' / host / 'skills/sdlc-init/SKILL.md'
+            path = package / 'adapters' / host / 'skills/sdlc-000-init/SKILL.md'
             path.parent.mkdir(parents=True)
             path.write_text(wrapper(meta, host, 'init'), encoding='utf-8')
-            bindings[host]['init'] = fragments[host]
+            bindings[host][skill_id('init')] = fragments[host]
         (package / 'bindings').mkdir()
         for host in HOSTS:
             (package / 'bindings' / (host + '.json')).write_text(
@@ -171,8 +174,7 @@ def build(destination: Path) -> None:
         # Template references name logical capabilities, not shell commands.
         # Each explicit host entrypoint supplies the native invocation mapping.
         for path in (package / 'templates').glob('*.md'):
-            text = re.sub(r'__SPECKIT_COMMAND_([A-Z][A-Z0-9_-]*)__',
-                          lambda m: 'sdlc-' + m[1].lower().replace('_', '-'), path.read_text())
+            text = template_references(path.read_text())
             path.write_text(text, encoding='utf-8')
         for name in ('LICENSE', 'NOTICE'):
             shutil.copyfile(ROOT / name, package / name)
@@ -183,14 +185,15 @@ def build(destination: Path) -> None:
             'included_commands': list(COMMANDS), 'excluded_commands': ['taskstoissues'],
             'local_commands': list(LOCAL_COMMANDS), 'init_implemented': True, 'native_host_verified': False,
             'layout': 'single-package-native-entrypoints',
+            'source_to_skill': SKILL_IDS,
         }, indent=2) + '\n')
         (package / 'README.md').write_text(
-            '# SDLC v' + VERSION + '\n\nAuthor: ' + AUTHOR['name'] + '\n\nRepository: ' + REPOSITORY + '\n\n'
+            '# SDLC AI SPEC v' + VERSION + '\n\nAuthor: ' + AUTHOR['name'] + '\n\nRepository: ' + REPOSITORY + '\n\n'
             'One self-contained package for Codex, Claude Code and Cursor. Native manifests '
             'select thin host entrypoints; workflows, Bash scripts and templates are shared. '
-            'No install-time build, uv, specify-cli or network is required. Runtime requires '
+            'No install-time build, uv, upstream CLI or network is required. Runtime requires '
             'Bash, Python 3.9+ and standard POSIX tools.\n\n'
-            'Nine upstream core skills plus sdlc-init. Run sdlc-init once per project; it '
+            'Nine upstream core skills plus sdlc-000-init. Run sdlc-000-init once per project; it '
             'creates or completes project data without copying tools or resetting features. '
             'GitHub is not included. Native discovery, model-driven behavior and business '
             'acceptance are verified separately by the user. See the repository docs/INITIALIZATION.md.\n\n'
@@ -203,13 +206,14 @@ def build(destination: Path) -> None:
             for path in sorted((ROOT / folder).rglob('*')):
                 if path.is_file() and '__pycache__' not in path.parts and path.suffix != '.pyc':
                     inputs[path.relative_to(ROOT).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
-        for name in ('plugin-metadata.json', 'upstream.lock.json', 'LICENSE', 'NOTICE'):
+        for name in ('plugin-metadata.json', 'upstream.lock.json', 'LICENSE', 'NOTICE', 'docs/naming-map.json'):
             inputs[name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
         build_id = hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest()
         (package / 'BUILD.json').write_text(json.dumps({
             'build_id': build_id, 'product_version': VERSION, 'upstream_sha': UPSTREAM_SHA,
             'inputs': inputs,
         }, indent=2) + '\n')
+        audit_package(package)
         # Stage completely before touching accepted output. Backup restores on error.
         backup = Path(tmp) / 'previous'
         had_previous = destination.exists()

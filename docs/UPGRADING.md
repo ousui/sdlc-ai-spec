@@ -126,3 +126,14 @@ Upstream package version is read from watched `pyproject.toml` and recorded
 separately from the tag/ref. Preparing an upgrade by exact SHA must not write that
 SHA into project `speckit_version`. INIT retains existing project defaults; it
 does not silently run a data migration after a package update.
+
+## Mandatory naming projection
+
+Read [NAMING.md](NAMING.md) and [naming-map.json](naming-map.json) before changing
+the upstream version. `tools/naming.py` applies the reviewed mapping after raw
+source rendering; `tools/naming_check.py` is an independently maintained finite
+comparison oracle. The build identity includes the naming map. Upstream locks
+and copied source paths retain original names, while generated workflows use
+`references/workflows/<full-skill-id>.md` and loader calls use the same public ID.
+Unknown source references must stop preparation; never infer new abbreviations
+or weaken full-body parity to accept a candidate. See PR #24 for execution evidence.

@@ -2,8 +2,8 @@
 # Common functions and variables for all scripts
 
 # Find repository root by searching upward for .sdlc directory
-# This is the primary marker for spec-kit projects
-find_specify_root() {
+# This is the primary marker for sdlc-ai-spec projects
+find_sdlc_root() {
     local dir="${1:-$(pwd)}"
     # Normalize to absolute path to prevent infinite loop with relative paths
     # Use -- to handle paths starting with - (e.g., -P, -L)
@@ -24,35 +24,35 @@ find_specify_root() {
     return 1
 }
 
-# Resolve an explicit SPECIFY_INIT_DIR project override (the directory that
-# *contains* .sdlc/), for non-interactive / CI use — e.g. running a Spec Kit
+# Resolve an explicit SDLC_INIT_DIR project override (the directory that
+# *contains* .sdlc/), for non-interactive / CI use — e.g. running a SDLC AI SPEC
 # command against a member project from a monorepo root without cd.
 #
-# Precondition: SPECIFY_INIT_DIR is non-empty. Echoes the validated absolute
+# Precondition: SDLC_INIT_DIR is non-empty. Echoes the validated absolute
 # project root, or prints an error and returns 1. Strict by design: the path
 # must exist and contain .sdlc/, with no silent fallback to cwd or the
 # script-location default (which would silently write to the wrong project).
 #
 # This is the single resolver: bundled extensions inherit it by sourcing core
 # (e.g. the git extension's create-new-feature-branch) rather than duplicating it.
-resolve_specify_init_dir() {
+resolve_sdlc_init_dir() {
     local init_root
     # Normalize: relative paths resolve against $(pwd); a trailing slash collapses.
     # CDPATH="" so a relative value cannot be resolved against the caller's CDPATH
     # (which would also echo to stdout and corrupt the captured path).
-    if ! init_root="$(CDPATH="" cd -- "$SPECIFY_INIT_DIR" 2>/dev/null && pwd)"; then
-        echo "ERROR: SPECIFY_INIT_DIR does not point to an existing directory: $SPECIFY_INIT_DIR" >&2
+    if ! init_root="$(CDPATH="" cd -- "$SDLC_INIT_DIR" 2>/dev/null && pwd)"; then
+        echo "ERROR: SDLC_INIT_DIR does not point to an existing directory: $SDLC_INIT_DIR" >&2
         return 1
     fi
     if [[ ! -d "$init_root/.sdlc" ]]; then
-        echo "ERROR: SPECIFY_INIT_DIR is not a Spec Kit project (no .sdlc/ directory): $init_root" >&2
+        echo "ERROR: SDLC_INIT_DIR is not a SDLC AI SPEC project (no .sdlc/ directory): $init_root" >&2
         return 1
     fi
     printf '%s\n' "$init_root"
 }
 
 # Get repository root, prioritizing .sdlc directory
-# This prevents using a parent repository when spec-kit is initialized in a subdirectory
+# This prevents using a parent repository when sdlc-ai-spec is initialized in a subdirectory
 # SDLC: resources resolve from this file, projects NEVER resolve from this file.
 _sdlc_plugin_root() {
     local dir
@@ -75,11 +75,18 @@ _sdlc_validate_paths() {
 }
 
 get_repo_root() {
-    local root
-    if [[ -n "${SPECIFY_INIT_DIR:-}" ]]; then
-        root=$(resolve_specify_init_dir) || return 1
-    elif ! root=$(find_specify_root); then
-        echo 'ERROR: No initialized .sdlc project found; run sdlc-init in the selected project first' >&2
+    local root legacy
+    # Compatibility rejection only: never ignore an obsolete project override.
+    for legacy in ${!SPECIFY_@}; do
+        if [[ -n "${!legacy}" ]]; then
+            echo "ERROR: Obsolete $legacy; use SDLC_${legacy#SPECIFY_} instead" >&2
+            return 1
+        fi
+    done
+    if [[ -n "${SDLC_INIT_DIR:-}" ]]; then
+        root=$(resolve_sdlc_init_dir) || return 1
+    elif ! root=$(find_sdlc_root); then
+        echo 'ERROR: No initialized .sdlc project found; run sdlc-000-init in the selected project first' >&2
         return 1
     fi
     _sdlc_validate_paths "$root" || return 1
@@ -88,11 +95,11 @@ get_repo_root() {
 
 # Get current feature name from explicit state only.
 # Returns the feature identifier or empty string if none is set.
-# Feature state is set by SPECIFY_FEATURE (from create-new-feature or
+# Feature state is set by SDLC_FEATURE (from create-new-feature or
 # the git extension) or implicitly via .sdlc/feature.json.
 get_current_branch() {
-    if [[ -n "${SPECIFY_FEATURE:-}" ]]; then
-        echo "$SPECIFY_FEATURE"
+    if [[ -n "${SDLC_FEATURE:-}" ]]; then
+        echo "$SDLC_FEATURE"
         return
     fi
 
@@ -185,7 +192,7 @@ get_feature_paths() {
         shift
     fi
 
-    # Split decl/assignment so a SPECIFY_INIT_DIR validation failure in
+    # Split decl/assignment so a SDLC_INIT_DIR validation failure in
     # get_repo_root propagates as a hard error instead of being masked by `local`.
     local repo_root
     repo_root=$(get_repo_root) || return 1
@@ -193,18 +200,18 @@ get_feature_paths() {
     current_branch=$(get_current_branch)
 
     # Resolve feature directory.  Priority:
-    #   1. SPECIFY_FEATURE_DIRECTORY env var (explicit override)
-    #   2. .sdlc/feature.json "feature_directory" key (persisted by specify command)
+    #   1. SDLC_FEATURE_DIRECTORY env var (explicit override)
+    #   2. .sdlc/feature.json "feature_directory" key (persisted by sdlc-100-spec command)
     #   3. Error — no feature context available
     local feature_dir
-    if [[ -n "${SPECIFY_FEATURE_DIRECTORY:-}" ]]; then
-        feature_dir="$SPECIFY_FEATURE_DIRECTORY"
+    if [[ -n "${SDLC_FEATURE_DIRECTORY:-}" ]]; then
+        feature_dir="$SDLC_FEATURE_DIRECTORY"
         # Normalize relative paths to absolute under repo root
         [[ "$feature_dir" != /* ]] && feature_dir="$repo_root/$feature_dir"
         # Persist to feature.json so future sessions without the env var still
         # work — unless the caller opted out for read-only resolution (#3025).
         if [[ "$no_persist" != true ]]; then
-            _persist_feature_json "$repo_root" "$SPECIFY_FEATURE_DIRECTORY" || return 1
+            _persist_feature_json "$repo_root" "$SDLC_FEATURE_DIRECTORY" || return 1
         fi
     elif [[ -f "$repo_root/.sdlc/feature.json" ]]; then
         local _fd
@@ -214,18 +221,18 @@ get_feature_paths() {
             # Normalize relative paths to absolute under repo root
             [[ "$feature_dir" != /* ]] && feature_dir="$repo_root/$feature_dir"
         else
-            echo "ERROR: Feature directory not found. Set SPECIFY_FEATURE_DIRECTORY or ensure .sdlc/feature.json contains feature_directory." >&2
+            echo "ERROR: Feature directory not found. Set SDLC_FEATURE_DIRECTORY or ensure .sdlc/feature.json contains feature_directory." >&2
             return 1
         fi
     else
-        echo "ERROR: Feature directory not found. Set SPECIFY_FEATURE_DIRECTORY or run the specify command to create .sdlc/feature.json." >&2
+        echo "ERROR: Feature directory not found. Set SDLC_FEATURE_DIRECTORY or run the sdlc-100-spec command to create .sdlc/feature.json." >&2
         return 1
     fi
 
     _sdlc_validate_paths "$repo_root" "$feature_dir" || return 1
 
-    # When no branch context exists (no SPECIFY_FEATURE, feature resolved via
-    # SPECIFY_FEATURE_DIRECTORY or feature.json), fall back to the feature
+    # When no branch context exists (no SDLC_FEATURE, feature resolved via
+    # SDLC_FEATURE_DIRECTORY or feature.json), fall back to the feature
     # directory basename so CURRENT_BRANCH is a usable identifier rather than
     # an empty, misleading value (issue #3026).
     if [[ -z "$current_branch" ]]; then
@@ -258,18 +265,18 @@ get_invoke_separator() {
     printf '%s\n' '-'
 }
 
-format_speckit_command() {
+format_sdlc_command() {
     local name="$1" prefix
     case "${SDLC_HOST:-}" in
-        codex) prefix='$sdlc-' ;;
-        claude) prefix='/sdlc:sdlc-' ;;
-        cursor|'') prefix='/sdlc-' ;;
+        codex) prefix='$' ;;
+        claude) prefix='/sdlc-ai-spec:' ;;
+        cursor|'') prefix='/' ;;
         *) echo 'ERROR: Unsupported SDLC_HOST' >&2; return 1 ;;
     esac
-    name="${name#/}"
-    name="${name#speckit.}"
-    name="${name#speckit-}"
-    name="${name//./-}"
+    case "$name" in
+        sdlc-000-init|sdlc-010-rule|sdlc-100-spec|sdlc-110-clar|sdlc-200-plan|sdlc-300-task|sdlc-310-xchk|sdlc-320-huma|sdlc-400-impl|sdlc-500-conv) ;;
+        *) echo 'ERROR: Unsupported SDLC AI SPEC capability' >&2; return 1 ;;
+    esac
     printf '%s%s\n' "$prefix" "$name"
 }
 
@@ -327,11 +334,11 @@ _sorted_extension_ids() {
         read -r -a python_cmd <<< "$python_spec"
         local py_stderr sorted_ids
         py_stderr=$(mktemp)
-        if sorted_ids=$(SPECKIT_EXTENSIONS="$ext_dir" "${python_cmd[@]}" -c "
+        if sorted_ids=$(SDLC_EXTENSIONS="$ext_dir" "${python_cmd[@]}" -c "
 import json, os, re, sys
 from pathlib import Path
 
-root = Path(os.environ['SPECKIT_EXTENSIONS'])
+root = Path(os.environ['SDLC_EXTENSIONS'])
 registered = {}
 registry = root / '.registry'
 if os.path.lexists(registry):
@@ -429,10 +436,10 @@ resolve_template() {
             # The python3 call is wrapped in an if-condition so that set -e does not
             # abort the function when python3 exits non-zero (e.g. invalid JSON).
             local sorted_presets=""
-            if sorted_presets=$(SPECKIT_REGISTRY="$registry_file" "${python_cmd[@]}" -c "
+            if sorted_presets=$(SDLC_REGISTRY="$registry_file" "${python_cmd[@]}" -c "
 import json, re, sys, os
 try:
-    with open(os.environ['SPECKIT_REGISTRY'], encoding='utf-8') as f:
+    with open(os.environ['SDLC_REGISTRY'], encoding='utf-8') as f:
         data = json.load(f)
     presets = data.get('presets', {})
     def priority(meta):
@@ -548,10 +555,10 @@ resolve_template_content() {
             read -r -a python_cmd <<< "$python_spec"
         fi
         if [ -f "$registry_file" ] && [ "${#python_cmd[@]}" -gt 0 ]; then
-            if sorted_presets=$(SPECKIT_REGISTRY="$registry_file" "${python_cmd[@]}" -c "
+            if sorted_presets=$(SDLC_REGISTRY="$registry_file" "${python_cmd[@]}" -c "
 import json, re, sys, os
 try:
-    with open(os.environ['SPECKIT_REGISTRY'], encoding='utf-8') as f:
+    with open(os.environ['SDLC_REGISTRY'], encoding='utf-8') as f:
         data = json.load(f)
     presets = data.get('presets', {})
     def priority(meta):
@@ -596,7 +603,7 @@ except Exception:
                     local py_stderr
                     local parse_status
                     py_stderr=$(mktemp)
-                    if result=$(SPECKIT_MANIFEST="$manifest" SPECKIT_TMPL="$template_name" "${python_cmd[@]}" -c "
+                    if result=$(SDLC_MANIFEST="$manifest" SDLC_TMPL="$template_name" "${python_cmd[@]}" -c "
 import sys, os
 try:
     import yaml
@@ -604,7 +611,7 @@ except ImportError:
     print('yaml_missing', file=sys.stderr)
     sys.exit(2)
 try:
-    with open(os.environ['SPECKIT_MANIFEST'], encoding='utf-8') as f:
+    with open(os.environ['SDLC_MANIFEST'], encoding='utf-8') as f:
         data = yaml.safe_load(f)
     if not isinstance(data, dict):
         raise ValueError('manifest root must be a mapping')
@@ -641,7 +648,7 @@ try:
         if t['type'] == 'script' and strategy not in ('replace', 'wrap'):
             raise ValueError('invalid manifest script strategy')
     for t in templates:
-        if t.get('name') == os.environ['SPECKIT_TMPL'] and t.get('type', 'template') == 'template':
+        if t.get('name') == os.environ['SDLC_TMPL'] and t.get('type', 'template') == 'template':
             file_value = t.get('file', '')
             strategy = t.get('strategy', 'replace')
             print('found\t' + strategy + '\t' + file_value)

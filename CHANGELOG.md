@@ -32,3 +32,13 @@ history rather than copied into the current product tree.
 - Preserve existing documents and feature state; reject unsupported layouts.
 - Add init-versus-installed-CLI projection tests and downstream script fixtures.
 - Replace manual smoke-test seeding with the real init entry; no version/tag bump.
+
+## PR #24 — numbered product naming (1.0.0-beta unchanged)
+
+- Use the approved INIT/RULE/SPEC/CLAR/PLAN/TASK/XCHK/HUMA/IMPL/CONV IDs in all
+  generated host entries, workflow filenames, loader arguments and references.
+- Product ID `sdlc-ai-spec`, display name SDLC AI SPEC, SDLC runtime identifiers;
+  keep `.sdlc` and existing business-artifact paths.
+- Generate through the documented naming map, retaining untouched upstream
+  provenance and independent parity checks.
+- STATUS, RULE auto-init and shared host entrypoints remain separate work.

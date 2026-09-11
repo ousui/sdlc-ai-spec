@@ -30,13 +30,13 @@ unset _paths_output
 # Validate required files
 if [[ ! -f "$IMPL_PLAN" ]]; then
     echo "ERROR: plan.md not found in $FEATURE_DIR" >&2
-    echo "Run $(format_speckit_command plan "$REPO_ROOT") first to create the implementation plan." >&2
+    echo "Run $(format_sdlc_command sdlc-200-plan "$REPO_ROOT") first to create the implementation plan." >&2
     exit 1
 fi
 
 if [[ ! -f "$FEATURE_SPEC" ]]; then
     echo "ERROR: spec.md not found in $FEATURE_DIR" >&2
-    echo "Run $(format_speckit_command specify "$REPO_ROOT") first to create the feature structure." >&2
+    echo "Run $(format_sdlc_command sdlc-100-spec "$REPO_ROOT") first to create the feature structure." >&2
     exit 1
 fi
 
@@ -55,7 +55,7 @@ if TASKS_TEMPLATE_CONTENT=$(resolve_template_content "tasks-template" "$REPO_ROO
     TASKS_TEMPLATE_CONTENT="${TASKS_TEMPLATE_CONTENT%x}"
 else
     echo "ERROR: Could not resolve required tasks-template from the template override stack for $REPO_ROOT" >&2
-    echo "Template 'tasks-template' was not found in any supported location (overrides, presets, extensions, or shared core). Add an override at .sdlc/templates/overrides/tasks-template.md, or reinstall the SDLC plugin to restore its templates/tasks-template.md template." >&2
+    echo "Template 'tasks-template' was not found in any supported location (overrides, presets, extensions, or shared core). Add an override at .sdlc/templates/overrides/tasks-template.md, or reinstall the SDLC AI SPEC plugin to restore its templates/tasks-template.md template." >&2
     exit 1
 fi
 

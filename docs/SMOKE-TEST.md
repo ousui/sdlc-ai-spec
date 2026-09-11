@@ -34,9 +34,9 @@ than triggering a toolchain download.
 
 Initialize using the installed plugin entry, not hand-written scaffolding:
 
-- Codex: `$sdlc-init` (select the disposable helloserver directory explicitly).
-- Cursor: `/sdlc-init` (or the exact name exposed by its plugin menu).
-- Claude, when tested: `/sdlc:sdlc-init`.
+- Codex: `$sdlc-000-init` (select the disposable helloserver directory explicitly).
+- Cursor: `/sdlc-000-init` (or the exact name exposed by its plugin menu).
+- Claude, when tested: `/sdlc-ai-spec:sdlc-000-init`.
 
 Require a report of the selected project and created/preserved files. Reinvoke
 once: the second result must be `unchanged`, with no file content or mtime changes.
@@ -74,16 +74,16 @@ INIT itself does not create or change repositories or branches. No remote writes
 
 | Step | Codex | Cursor |
 | --- | --- | --- |
-| Initialize project once | `$sdlc-init` | `/sdlc-init` |
-| Establish minimal project principles | `$sdlc-constitution` | `/sdlc-constitution` |
-| Paste the fixed requirement | `$sdlc-specify` | `/sdlc-specify` |
-| Clarify only meaningful gaps | `$sdlc-clarify` | `/sdlc-clarify` |
-| Technical design (stdlib net/http) | `$sdlc-plan` | `/sdlc-plan` |
-| Generate tasks | `$sdlc-tasks` | `/sdlc-tasks` |
-| Cross-document consistency | `$sdlc-analyze` | `/sdlc-analyze` |
-| Requirements-quality checklist (review it before implementation) | `$sdlc-checklist` | `/sdlc-checklist` |
-| Authorize implementation | `$sdlc-implement` | `/sdlc-implement` |
-| Assess remaining gaps | `$sdlc-converge` | `/sdlc-converge` |
+| Initialize project once | `$sdlc-000-init` | `/sdlc-000-init` |
+| Establish minimal project principles | `$sdlc-010-rule` | `/sdlc-010-rule` |
+| Paste the fixed requirement | `$sdlc-100-spec` | `/sdlc-100-spec` |
+| Clarify only meaningful gaps | `$sdlc-110-clar` | `/sdlc-110-clar` |
+| Technical design (stdlib net/http) | `$sdlc-200-plan` | `/sdlc-200-plan` |
+| Generate tasks | `$sdlc-300-task` | `/sdlc-300-task` |
+| Cross-document consistency | `$sdlc-310-xchk` | `/sdlc-310-xchk` |
+| Requirements-quality checklist (review it before implementation) | `$sdlc-320-huma` | `/sdlc-320-huma` |
+| Authorize implementation | `$sdlc-400-impl` | `/sdlc-400-impl` |
+| Assess remaining gaps | `$sdlc-500-conv` | `/sdlc-500-conv` |
 
 For constitution: keep standard-library-only Go, preserve existing behavior,
 require isolated automated tests, and prohibit secrets/remote publication. Do not

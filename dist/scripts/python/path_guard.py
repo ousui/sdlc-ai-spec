@@ -23,7 +23,7 @@ def validate(plugin: Path, project: Path, feature: str | None = None) -> dict:
         raise ValueError('Project must be a business directory outside the plugin')
     state = project/'.sdlc'
     if not state.is_dir() or state.is_symlink():
-        raise ValueError('Missing initialized .sdlc directory or unsupported symlink; run sdlc-init explicitly for a new project')
+        raise ValueError('Missing initialized .sdlc directory or unsupported symlink; run sdlc-000-init explicitly for a new project')
     paths = [state, state/'feature.json', state/'init-options.json',
              state/'memory', state/'memory/constitution.md', state/'specs']
     feature_path = None

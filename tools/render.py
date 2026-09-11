@@ -13,6 +13,7 @@ import shutil
 from pathlib import Path
 
 import yaml
+from naming import (skill_id, invocation, identifiers, product_prose, capability_references)
 
 ROOT = Path(__file__).resolve().parents[1]
 COMMANDS = ('constitution', 'specify', 'clarify', 'plan', 'tasks', 'analyze',
@@ -51,10 +52,12 @@ def split(text: str) -> tuple[dict, str]:
 
 
 def command_refs(text: str, host: str, *, ported: bool = False) -> str:
+    for source in re.findall(r'__SPECKIT_COMMAND_([A-Z][A-Z0-9_-]*)__', text):
+        skill_id(source.lower().replace('_', '-'))  # unknown upstream reference fails closed
     prefix = '$' if host == 'codex' else '/'
     namespace = METADATA['name'] + ':sdlc-' if ported and host == 'claude' else ('sdlc-' if ported else 'speckit-')
     return re.sub(r'__SPECKIT_COMMAND_([A-Z][A-Z0-9_-]*)__',
-                  lambda m: prefix + namespace + m[1].lower().replace('_', '-'), text)
+                  lambda m: (invocation(m[1].lower().replace('_', '-'), host) if ported else prefix + namespace + m[1].lower().replace('_', '-')), text)
 
 
 def upstream_paths(text: str) -> str:
@@ -114,7 +117,7 @@ def relocate_body(body: str, host: str) -> str:
                         '`' + script_prefix + 'resolve-template.sh" spec-template`')
     body = re.sub(r'\.sdlc/templates/(?!overrides/)([a-z-]+\.md)',
                   r'${SDLC_PLUGIN_ROOT}/templates/\1', body)
-    return body
+    return capability_references(product_prose(identifiers(body)))
 
 
 def binding(host: str) -> str:

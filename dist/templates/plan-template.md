@@ -4,7 +4,7 @@
 
 **Input**: Feature specification from `.sdlc/specs/[###-feature-name]/spec.md`
 
-**Note**: This template is filled in by the `sdlc-plan` command; its definition describes the execution workflow.
+**Note**: This template is filled in by the `sdlc-200-plan` command; its definition describes the execution workflow.
 
 ## Summary
 
@@ -48,12 +48,12 @@
 
 ```text
 .sdlc/specs/[###-feature]/
-├── plan.md              # This file (sdlc-plan command output)
-├── research.md          # Phase 0 output (sdlc-plan command)
-├── data-model.md        # Phase 1 output (sdlc-plan command)
-├── quickstart.md        # Phase 1 output (sdlc-plan command)
-├── contracts/           # Phase 1 output (sdlc-plan command)
-└── tasks.md             # Phase 2 output (sdlc-tasks command - NOT created by sdlc-plan)
+├── plan.md              # This file (sdlc-200-plan command output)
+├── research.md          # Phase 0 output (sdlc-200-plan command)
+├── data-model.md        # Phase 1 output (sdlc-200-plan command)
+├── quickstart.md        # Phase 1 output (sdlc-200-plan command)
+├── contracts/           # Phase 1 output (sdlc-200-plan command)
+└── tasks.md             # Phase 2 output (sdlc-300-task command - NOT created by sdlc-200-plan)
 ```
 
 ### Source Code (repository root)

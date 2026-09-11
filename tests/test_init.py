@@ -36,7 +36,7 @@ class InitTests(unittest.TestCase):
     def run_init(self, *args, project=None, package=PACKAGE, success=True, env=None):
         result = subprocess.run([sys.executable, '-I', '-B',
             str(package / 'scripts/python/init_project.py'), '--project', str(project or self.project),
-            '--json', *args], cwd=self.base, text=True, capture_output=True, env=env)
+            '--json', *args], cwd=self.base, text=True, capture_output=True, env=env, timeout=60)
         if success:
             self.assertEqual(result.returncode, 0, result.stderr)
             return json.loads(result.stdout)
@@ -270,13 +270,13 @@ class InitTests(unittest.TestCase):
 
     def test_all_host_init_entries_and_loader_do_not_require_state(self):
         for host in HOSTS:
-            entry = PACKAGE / 'adapters' / host / 'skills/sdlc-init/SKILL.md'
+            entry = PACKAGE / 'adapters' / host / 'skills/sdlc-000-init/SKILL.md'
             meta, body = split(entry.read_text())
-            self.assertEqual(meta['name'], 'sdlc-init')
+            self.assertEqual(meta['name'], 'sdlc-000-init')
             self.assertEqual(meta['metadata']['author'], 'Blade')
-            self.assertIn('--host ' + host + ' --skill init', body)
+            self.assertIn('--host ' + host + ' --skill sdlc-000-init', body)
             proc = subprocess.run([sys.executable, '-I', '-B', str(PACKAGE / 'scripts/python/load_workflow.py'),
-                '--host', host, '--skill', 'init'], cwd=self.project, capture_output=True, text=True, check=True)
+                '--host', host, '--skill', 'sdlc-000-init'], cwd=self.project, capture_output=True, text=True, check=True)
             self.assertEqual(proc.stdout, init_body(host))
             self.assertNotIn('project-paths.sh', proc.stdout)
             self.assertFalse((self.project / '.sdlc').exists())
@@ -285,11 +285,11 @@ class InitTests(unittest.TestCase):
         for host in HOSTS:
             project = self.base / host; project.mkdir()
             self.run_init(project=project)
-            env = dict(os.environ, SDLC_HOST=host, SPECIFY_INIT_DIR=str(project))
+            env = dict(os.environ, SDLC_HOST=host, SDLC_INIT_DIR=str(project))
             script = PACKAGE / 'scripts/bash'
             def run(name, *args):
                 return subprocess.run(['bash', str(script / name), *args], env=env,
-                    cwd=project, text=True, capture_output=True, check=True)
+                    cwd=project, text=True, capture_output=True, check=True, timeout=60)
             paths = json.loads(run('project-paths.sh').stdout)
             self.assertEqual(paths['PROJECT_ROOT'], str(project))
             run('create-new-feature.sh', '--short-name', 'health', 'Health endpoint')

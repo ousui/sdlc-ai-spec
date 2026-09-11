@@ -5,14 +5,14 @@ An independent, user-scoped source port of **Spec Kit by GitHub, Inc.**, MIT.
 Upstream remains pinned to `v1.0.5`, commit
 `a4e25ce6b96dc8e85f84206c6a54353fa9c5260b`.
 
-## Skill 命名与含义（已确认的迁移目标）
+## Skill 命名与含义
 
-**状态：命名定义已确认，运行时改名尚未实施。** 下表是目标命名，不代表当前
-`dist/` 已经暴露这些入口。当前安装仍使用后文说明的 `sdlc-init`、
-`sdlc-constitution` 等旧入口；实际迁移及其验证结果以 [PR #24](https://github.com/ousui/sdlc-ai-spec/pull/24)
-中的准确提交记录为准。`sdlc-status` 是已预留名称的新能力，当前未实现。
+**状态：已迁移生成入口，三个宿主各安装 10 个阶段 Skill。** 下表名称对应当前
+生成包；原生客户端发现与模型执行仍须实际验证，不能仅由工程测试推定。
+`sdlc-status` 是预留的新能力，当前未实现。提交和验证记录见
+[PR #24](https://github.com/ousui/sdlc-ai-spec/pull/24)。
 
-| 目标 Skill 名称 | 英文含义 | 中文职责 | 现有能力 / 来源 ID |
+| Skill 名称 | 英文含义 | 中文职责 | 现有能力 / 来源 ID |
 | --- | --- | --- | --- |
 | `sdlc-000-init` | Initialize | 项目初始化 | `init` |
 | `sdlc-010-rule` | Project Rules | 项目宪法与规则 | `constitution` |
@@ -44,29 +44,28 @@ INIT 每个项目通常完成一次，重复执行保持幂等、保留已有数
 和显式更新项目原则。**改名不新增 RULE 自动初始化、STATUS 实现或自动跨阶段
 执行**；这些行为变更应在各自工作包中记录。
 
-产品名称按语境使用 **SDLC AI SPEC**（显示名）、`sdlc-ai-spec`（目标机器标识）、
-`sdlc` / `SDLC_`（程序简称），项目目录继续使用 `.sdlc`。当前插件机器标识仍为
-`sdlc`，直到生成包及原生调用引用一并迁移。详细转换、例外与升级规则见
+产品名称按语境使用 **SDLC AI SPEC**（显示名）、`sdlc-ai-spec`（机器标识）、
+`sdlc` / `SDLC_`（程序简称），项目目录继续使用 `.sdlc`。当前插件机器标识为
+`sdlc-ai-spec`，三个原生清单、marketplace 与调用命名空间已同步。详细转换、例外与升级规则见
 [命名与迁移契约](docs/NAMING.md)，机器可读映射见
 [docs/naming-map.json](docs/naming-map.json)。
 
 ## One package, three host entrypoints
 
 Members install the prebuilt **dist/** package through a marketplace; they do not
-run a build, install specify-cli or fetch upstream on installation. Root catalogs
+run a build, install the upstream CLI or fetch upstream on installation. Root catalogs
 for Codex, Claude Code and Cursor all select `./dist`. The package has one copy
 of workflows, scripts and templates. Explicit native manifests select disjoint,
 thin host entrypoints; those pass a literal host to a stdlib-only read-only text
 binder. Business workflow content is shared without asking the model to guess
 which host it is running in.
 
-Ten skills: init (project bootstrap), constitution, specify, clarify, plan, tasks, analyze, checklist,
-implement and converge. English instructions and substantive template content
+Ten numbered skills: INIT, RULE, SPEC, CLAR, PLAN, TASK, XCHK, HUMA, IMPL and CONV. English instructions and substantive template content
 remain upstream-derived. Project state belongs in `.sdlc`, never in the plugin.
 Bash, Python 3.9+ and standard POSIX tools are runtime dependencies. No uv,
-specify-cli, LLM API, MCP service or background process is required by the package.
+upstream CLI, LLM API, MCP service or background process is required by the package.
 
-**Project initialization is included.** Run the installed `sdlc-init` entry once
+**Project initialization is included.** Run the installed `sdlc-000-init` entry once
 per project; repeat calls preserve existing work and complete compatible partial
 state. It does not copy tools or create features. See
 [Project initialization](docs/INITIALIZATION.md). There is no GitHub integration,
@@ -91,7 +90,7 @@ dist/                    Entire installed plugin boundary
   .claude-plugin/        Explicit Claude entrypoint selection
   .cursor-plugin/        Explicit Cursor entrypoint selection
   adapters/<host>/skills/  Thin native wrappers (no copied business bodies)
-  references/workflows/  One factored body per capability
+  references/workflows/  <full-skill-id>.md; one factored body per capability
   bindings/              Literal host differences generated at build time
   scripts/               One shared runtime
   templates/             One shared template collection
@@ -124,3 +123,17 @@ repository/ref containing this implementation, not an old default branch.
 Original Spec Kit copyright and MIT terms remain in LICENSE and NOTICE; original
 upstream files retain their attribution. Each package includes UPSTREAM.json.
 This is not an official release of GitHub, OpenAI, Anthropic or Cursor.
+
+## 命名迁移后的使用边界
+
+Codex 示例：`$sdlc-100-spec`；Claude Code 示例：
+`/sdlc-ai-spec:sdlc-100-spec`；Cursor 示例：`/sdlc-100-spec`（以客户端菜单
+实际入口为准）。Skill 名称、目录、共享工作流文件、加载参数和提示统一使用
+同一编号 ID。三套薄入口继续保留各自的宿主参数与元数据，不在本次合并目录。
+
+运行变量为 `SDLC_INIT_DIR`、`SDLC_FEATURE`、`SDLC_FEATURE_DIRECTORY`。
+旧的非空 `SPECIFY_*` 运行覆盖参数会明确报错，不能静默回退到其他项目。
+`.sdlc`、`spec.md`、`plan.md`、`tasks.md` 等业务路径不变；旧项目的已有文档
+不自动重写。插件 ID 从旧 `sdlc` 改为 `sdlc-ai-spec` 后，请按
+[安装迁移说明](docs/INSTALLATION.md#naming-migration-in-pr-24)处理旧安装，
+避免重复入口。原始来源名称仅用于版权、来源映射和明确列出的兼容性边界。

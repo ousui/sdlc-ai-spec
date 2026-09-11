@@ -70,58 +70,49 @@ INIT 每个项目通常完成一次，重复执行保持幂等、保留已有数
 [命名与迁移契约](docs/NAMING.md)，机器可读映射见
 [docs/naming-map.json](docs/naming-map.json)。
 
-## One package, three host entrypoints
+## 一个插件包，公共核心 Skills
 
-Members install the prebuilt **dist/** package through a marketplace; they do not
-run a build, install the upstream CLI or fetch upstream on installation. Root catalogs
-for Codex, Claude Code and Cursor all select `./dist`. The package has one copy
-of workflows, scripts and templates. Explicit native manifests select disjoint,
-thin host entrypoints; those pass a literal host to a stdlib-only read-only text
-binder. Business workflow content is shared without asking the model to guess
-which host it is running in.
+正式分发边界为 **dist/**，成员安装预构建插件，不运行构建、不安装上游 CLI。
+九个上游核心 Skill 位于公共 `dist/skills/`，正文与摘要使用简体中文；三个宿主
+读取同一份入口和流程来源。宿主命令语法仍通过明确 bindings 绑定，不猜测模型身份。
 
-Ten numbered skills: INIT, RULE, SPEC, CLAR, PLAN, TASK, XCHK, HUMA, IMPL and CONV. English instructions and substantive template content
-remain upstream-derived. Project state belongs in `.sdlc`, never in the plugin.
-Bash, Python 3.9+ and standard POSIX tools are runtime dependencies. No uv,
-upstream CLI, LLM API, MCP service or background process is required by the package.
-
-**Project initialization is included.** Run the installed `sdlc-000-init` entry once
-per project; repeat calls preserve existing work and complete compatible partial
-state. It does not copy tools or create features. See
-[Project initialization](docs/INITIALIZATION.md). There is no GitHub integration,
-translation, new lifecycle or automatic project migration. Native installation
-and model-driven behavior must be verified separately; see the small isolated
-[smoke test](docs/SMOKE-TEST.md).
-
-## Layout
+本地 INIT 的调用策略原本不同：Claude 为显式调用，Codex/Cursor 沿用原有默认。
+为不改变策略，仅 INIT 保留三个最小入口；**每个宿主仍发现 10 项，不是 12 项**。
+这是已批准的例外，不是把不同策略强行合并。
 
 ```text
-.agents/plugins/marketplace.json
-.claude-plugin/marketplace.json
-.cursor-plugin/marketplace.json
-src/upstream/             Original, pinned source and renderer references
-src/scripts/              Shared migrated runtime plus small local helpers
-src/templates/            Derived template source
-adapters/                Strict migration and host-binding rules
-tools/                   Deterministic port, build, upgrade and comparison
-tests/                   Synthetic engineering tests, not business acceptance
-dist/                    Entire installed plugin boundary
-  .codex-plugin/         Explicit Codex entrypoint selection
-  .claude-plugin/        Explicit Claude entrypoint selection
-  .cursor-plugin/        Explicit Cursor entrypoint selection
-  adapters/<host>/skills/  Thin native wrappers (no copied business bodies)
-  references/workflows/  <full-skill-id>.md; one factored body per capability
-  bindings/              Literal host differences generated at build time
-  scripts/               One shared runtime
-  templates/             One shared template collection
-  BUILD.json             Deterministic source build identity
+src/upstream/                 锁定的原始上游，逐字节保留
+src/scripts/                  派生 Runtime 与本地辅助脚本
+src/templates/                英文模板骨架与已批准名称/路径映射
+src/locales/zh-CN/             中文正文、摘要、绑定说明及来源复核目录
+adapters/                     确定性资源适配规则
+tools/                        构建、本地化检查、升级与验证工具
+dist/
+  .codex-plugin/plugin.json    公共 skills + Codex INIT
+  .claude-plugin/plugin.json   默认 skills 扫描 + Claude INIT
+  .cursor-plugin/plugin.json   公共 skills + Cursor INIT
+  skills/<id>/SKILL.md         九个公共核心入口
+  adapters/<host>/skills/      仅 sdlc-000-init 最小入口
+  references/workflows/       一份完整正文 + 按需宿主文本片段
+  references/TEMPLATE-LANGUAGE.md
+  bindings/                   明确的宿主差异
+  scripts/                    无 uv Runtime 依赖
+  templates/                  固定英文骨架，业务自然语言填写中文
+  BUILD.json                  确定性构建身份
 ```
 
-The native manifests deliberately replace the previous portable root manifest:
-portable fixed skill discovery cannot select different host entrypoints. No
-root/default `skills` directory is used inside dist, preventing duplicate scans.
-The runtime loader only binds precompiled literal fragments; it does not compile
-upstream, run a workflow or write state. Full output must be read before execution.
+本地化仅改变呈现。Skill 执行顺序、条件、提问数量、权限和上游既有缺陷不变。
+模板固定标题、机器占位符、任务编号、路径、参数和事件键保留英文；依原流程
+创建/修改的自然语言内容使用中文。现有业务文档不因升级批量翻译；INIT 复制
+的未填写宪法模板可保持英文，不新增翻译回写。详见 [LOCALIZATION.md](docs/LOCALIZATION.md)。
+
+包内 loader 仅还原预编译全文，不运行流程、不读取项目状态、不写文件或访问网络。
+必须完整读取输出，截断时分页。公共入口从当前已加载核心 Skill 目录向上两级
+定位包根，INIT 向上四级；两者都不得把插件目录当作业务项目。
+
+运行仍只需要 Bash、Python 3.9+ 和标准 POSIX 工具，无 uv、上游 CLI、后台服务。
+原生安装、模型执行和业务验收与程序回归是不同证据；此前用户验收不冒充新版本
+再次验证。STATUS 和 RULE 自动 INIT 当前未实现。
 
 ## Development tooling
 
@@ -157,10 +148,12 @@ This is not an official release of GitHub, OpenAI, Anthropic or Cursor.
 Codex 示例：`$sdlc-100-spec`；Claude Code 示例：
 `/sdlc-ai-spec:sdlc-100-spec`；Cursor 示例：`/sdlc-100-spec`（以客户端菜单
 实际入口为准）。Skill 名称、目录、共享工作流文件、加载参数和提示统一使用
-同一编号 ID。三套薄入口继续保留各自的宿主参数与元数据，不在本次合并目录。
+同一编号 ID。九个核心入口共用目录；INIT 保留宿主策略例外。
 
 运行变量为 `SDLC_INIT_DIR`、`SDLC_FEATURE`、`SDLC_FEATURE_DIRECTORY`。
-旧的非空 `SPECIFY_*` 运行覆盖参数会明确报错，不能静默回退到其他项目。
+已撤回对所有非空 `SPECIFY_*` 的整体拒绝；不相关旧前缀不影响选定项目。
+正式调用使用上述 `SDLC_*` 名称；没有新增旧变量别名。事件键 `before_specify` /
+`after_specify` 保持原名，不属于展示性品牌。
 `.sdlc`、`spec.md`、`plan.md`、`tasks.md` 等业务路径不变；旧项目的已有文档
 不自动重写。插件 ID 从旧 `sdlc` 改为 `sdlc-ai-spec` 后，请按
 [安装迁移说明](docs/INSTALLATION.md#naming-migration-in-pr-24)处理旧安装，

@@ -1,40 +1,50 @@
 
 <!-- SDLC-PACKAGE-BINDING:BEGIN -->
-## Installed package and project binding
+## 已安装插件与业务项目绑定
 
-This is the c@@SDLC_BIND_0004@@ package of SDLC AI SPEC. Resolve paths before executing the unchanged workflow below.
+本次调用宿主为 c@@SDLC_BIND_0004@@。先完成路径绑定，再执行下面的原有流程。
 
-- Use the @@SDLC_BIND_0006@@/skills/<name>/SKILL.md`). Do not infer it from the business working directory, scan other installed versions, or assume this variable is already exported.
-- Keep the shell working directory in the selected business project. Run `SDLC_HOST=c@@SDLC_BIND_0007@@ bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/project-paths.sh"` to resolve the nearest initialized `.sdlc`. When the user explicitly selected a project, pass its absolute path as command-local `SDLC_INIT_DIR`. Use the returned `PROJECT_ROOT` as `SDLC_PROJECT_ROOT`. If the project is missing or invalid, stop; run `sdlc-000-init` explicitly to initialize or complete the project; do not fall back to another tool.
-- Set these resolved absolute values in EVERY shell invocation that uses them; shell state is not guaranteed to persist across tool calls. `${VAR:?}` intentionally fails on an unresolved variable. For non-shell file tools, substitute the resolved absolute value rather than passing `${VAR}` literally. Never change directory to the plugin to fix a resource lookup.
-- Before creating/updating feature files, call the same `project-paths.sh --feature <resolved-feature-directory>` with command-local `SDLC_INIT_DIR` to validate that explicit paths and symlinks cannot target this plugin. The script is read-only and is not an initializer. Project state, current feature and constitution are never written under the plugin.
-- This package carries the core-only, no-Preset/no-Extension/no-event profile. Do not install or invoke extensions or the upstream CLI to satisfy a reference. If the project contains `.sdlc/extensions.yml`, installed presets or extension state, stop and report that profile as unsupported. The upstream conditional hook text is retained below for source equivalence, not an authorization to enable that optional subsystem.
-- `$ARGUMENTS` denotes the current invocation's user input. Where the host does not substitute it, read that input from the conversation; never treat the literal placeholder as the feature description.
+- @@SDLC_BIND_0006@@。 `SDLC_PLUGIN_ROOT` 是已加载核心 Skill 目录向上两级的插件包目录（`skills/<name>/SKILL.md`）。不得从业务工作目录推断、扫描其他安装版本，或假定变量已导出。
+- 保持 shell 工作目录位于选定的业务项目。执行 `SDLC_HOST=c@@SDLC_BIND_0007@@ bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/project-paths.sh"` 解析最近的已初始化 `.sdlc`。用户明确选定项目时，以命令局部变量 `SDLC_INIT_DIR` 传入其绝对路径。将返回的 `PROJECT_ROOT` 作为 `SDLC_PROJECT_ROOT`。项目不存在或无效时停止，明确运行 `sdlc-000-init` 初始化或补全；不得回退到其他工具。
+- 每次使用这些变量的 shell 调用都显式传入已解析的绝对值；工具调用之间不保证 shell 状态持久化。`${VAR:?}` 有意在变量未解析时失败。非 shell 文件工具使用实际绝对路径，不把 `${VAR}` 字面量传给工具。不得通过切换到插件目录来修复资源定位。
+- 创建或更新需求文件前，通过命令局部 `SDLC_INIT_DIR` 调用同一 `project-paths.sh --feature <resolved-feature-directory>`，检查显式路径和符号链接不会指向本插件。该脚本只读，不执行初始化。项目状态、当前需求和宪法不得写到插件内。
+- 本包沿用仅核心、无 Preset、无 Extension、无事件的既有 profile。不得为满足引用而安装或调用扩展、上游 CLI。项目包含 `.sdlc/extensions.yml`、已安装预设或扩展状态时，停止并说明该 profile 不受支持。下面保留上游条件钩子文本用于来源等价，不构成启用可选子系统的授权。
+- `$ARGUMENTS` 表示本次调用的用户输入。宿主没有替换它时，从当前对话读取这次输入；不得将占位符字面量作为需求描述。
 <!-- SDLC-PACKAGE-BINDING:END -->
 
+<!-- SDLC-OUTPUT-LANGUAGE:BEGIN -->
+## 输出语言（仅呈现层）
+
+向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节定位名、占位符、状态值、任务语法、代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
+
+例如保留 `User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记，业务描述、理由、测试说明和任务内容填写中文。代码块中的英文示例用于保留格式和定位约定，不要求将实际填写的自然语言也写成英文。刚复制且尚未填写的模板可以保持英文；不增加一次翻译回写动作。
+
+此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。
+<!-- SDLC-OUTPUT-LANGUAGE:END -->
 
 
-## User Input
+
+## 用户输入
 
 ```text
 $ARGUMENTS
 ```
 
-You **MUST** consider the user input before proceeding (if not empty).
+继续之前，**必须**考虑用户输入（如果非空）。
 
-## Pre-Execution Checks
+## 执行前检查
 
-**Check for extension hooks (before specification)**:
-- Check if `.sdlc/extensions.yml` exists in the project root.
-- If it exists, read it and look for entries under the `hooks.before_spec` key
-- If the YAML cannot be parsed or is invalid, skip hook checking silently and continue normally
-- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
-- For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
-  - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
-  - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
-- When constructing command invocations from hook command names, replace dots (`.`) with hyphens (`-`). For example, `sdlc.git.commit` → `@@SDLC_BIND_0034@@sdlc-git-commit`.
-- For each executable hook, output the following based on its `optional` flag:
-  - **Optional hook** (`optional: true`):
+**检查扩展钩子（规格编写前）**：
+- 检查项目根目录是否存在 `.sdlc/extensions.yml`。
+- 如果存在，读取文件并查找 `hooks.before_specify` 键下的条目。
+- 如果 YAML 无法解析或无效，静默跳过钩子检查，正常继续。
+- 排除 `enabled` 明确为 `false` 的钩子。未包含 `enabled` 字段的钩子默认启用。
+- 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
+  - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
+  - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0044@@sdlc-git-commit`。
+- 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
+  - **可选钩子**（`optional: true`）：
     ```
     ## Extension Hooks
 
@@ -45,7 +55,7 @@ You **MUST** consider the user input before proceeding (if not empty).
     Prompt: {prompt}
     To execute: `/{command}`
     ```
-  - **Mandatory hook** (`optional: false`):
+  - **必需钩子**（`optional: false`）：
     ```
     ## Extension Hooks
 
@@ -55,100 +65,97 @@ You **MUST** consider the user input before proceeding (if not empty).
 
     Wait for the result of the hook command before proceeding to the Outline.
     ```
-    After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:sdlc-...` or `$sdlc-...`). Emitting the block alone does not run the hook.
-- If no hooks are registered or `.sdlc/extensions.yml` does not exist, skip silently
+    输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
+- 如果没有注册钩子，或 `.sdlc/extensions.yml` 不存在，静默跳过。
 
-## Outline
+## 执行概要
 
-The text the user typed after `@@SDLC_BIND_0062@@sdlc-100-spec` in the triggering message **is** the feature description. Assume you always have it available in this conversation even if `$ARGUMENTS` appears literally below. Do not ask the user to repeat it unless they provided an empty command.
+触发消息中，用户在 `@@SDLC_BIND_0072@@sdlc-100-spec` 后输入的文本**就是**功能描述。即使下面出现字面 `$ARGUMENTS`，也应视为本会话中已经有该输入。除非用户提交了空命令，否则不要要求重复描述。
 
-Given that feature description, do this:
+根据该功能描述执行：
 
-1. **Generate a concise short name** (2-4 words) for the feature:
-   - Analyze the feature description and extract the most meaningful keywords
-   - Create a 2-4 word short name that captures the essence of the feature
-   - Use action-noun format when possible (e.g., "add-user-auth", "fix-payment-bug")
-   - Preserve technical terms and acronyms (OAuth2, API, JWT, etc.)
-   - Keep it concise but descriptive enough to understand the feature at a glance
-   - Examples:
-     - "I want to add user authentication" → "user-auth"
-     - "Implement OAuth2 integration for the API" → "oauth2-api-integration"
-     - "Create a dashboard for analytics" → "analytics-dashboard"
-     - "Fix payment processing timeout bug" → "fix-payment-timeout"
+1. 为功能**生成简洁短名称**，2–4 个词：
+   - 分析功能描述，提取最有意义的关键词。
+   - 用 2–4 个词概括功能核心。
+   - 尽量采用动作－名词形式，例如 add-user-auth、fix-payment-bug。
+   - 保留技术术语及缩写，例如 OAuth2、API、JWT。
+   - 简洁，同时让人能一眼理解功能。
+   - 示例：
+     - “添加用户认证” → user-auth。
+     - “为 API 实现 OAuth2 集成” → oauth2-api-integration。
+     - “创建分析看板” → analytics-dashboard。
+     - “修复支付处理超时” → fix-payment-timeout。
 
-2. **Branch creation** (optional, via hook):
+2. **创建分支**，可选、通过钩子进行：
 
-   If a `before_spec` hook ran successfully in the Pre-Execution Checks above, it will have created/switched to a git branch and output JSON containing `BRANCH_NAME` and `FEATURE_NUM`. Note these values for reference, but the branch name does **not** dictate the spec directory name.
+   如果上述执行前检查中的 `before_specify` 钩子成功运行，它会创建／切换 Git 分支，并输出包含 `BRANCH_NAME`、`FEATURE_NUM` 的 JSON。记录这些值以便引用，但分支名称**不决定**规格目录名称。
 
-   If the user explicitly provided `GIT_BRANCH_NAME`, pass it through to the hook so the branch script uses the exact value as the branch name (bypassing all prefix/suffix generation).
+   用户明确提供 `GIT_BRANCH_NAME` 时，原样传递给钩子，让分支脚本直接使用该值，绕过所有前缀／后缀生成。
 
-3. **Create the spec feature directory**:
+3. **创建规格功能目录**：
 
-   Specs live under the default `.sdlc/specs/` directory unless the user explicitly provides `SDLC_FEATURE_DIRECTORY`.
+   除非用户明确提供 `SDLC_FEATURE_DIRECTORY`，否则规格位于默认 `.sdlc/specs/` 目录下。
 
-   **Resolution order for `SDLC_FEATURE_DIRECTORY`**:
-   1. If the user explicitly provided `SDLC_FEATURE_DIRECTORY` (e.g., via environment variable, argument, or configuration), use it as-is
-   2. Otherwise, auto-generate it under `.sdlc/specs/`:
-      - Check `.sdlc/init-options.json` for `feature_numbering` (preferred) or `branch_numbering` (deprecated, migration only — will be removed in a future release)
-      - If `"timestamp"`: prefix is `YYYYMMDD-HHMMSS` (current timestamp)
-      - If `"sequential"` or absent: prefix is `NNN` (next available 3-digit number after scanning existing directories in `.sdlc/specs/`)
-      - Construct the directory name: `<prefix>-<short-name>` (e.g., `003-user-auth` or `20260319-143022-user-auth`)
-      - Set `SDLC_FEATURE_DIRECTORY` to `.sdlc/specs/<directory-name>`
-      - If `branch_numbering` was used (and `feature_numbering` was absent), emit a one-line warning: "⚠️ `branch_numbering` in init-options.json is deprecated. Rename to `feature_numbering`."
+   **`SDLC_FEATURE_DIRECTORY` 解析顺序**：
+   1. 用户通过环境变量、参数或配置明确提供 `SDLC_FEATURE_DIRECTORY` 时，原样使用。
+   2. 否则在 `.sdlc/specs/` 下自动生成：
+      - 读取 `.sdlc/init-options.json` 中的 `feature_numbering`（优先），或 `branch_numbering`（已弃用，仅供迁移，未来版本将移除）。
+      - 为 `"timestamp"` 时：前缀是 `YYYYMMDD-HHMMSS`，使用当前时间戳。
+      - 为 `"sequential"` 或缺省时：前缀是 `NNN`，扫描 `.sdlc/specs/` 下既有目录后得到下一个可用三位数。
+      - 构造目录名 `<prefix>-<short-name>`，例如 `003-user-auth` 或 `20260319-143022-user-auth`。
+      - 将 `SDLC_FEATURE_DIRECTORY` 设置为 `.sdlc/specs/<directory-name>`。
+      - 使用了 `branch_numbering` 且没有 `feature_numbering` 时，输出一行警告：“⚠️ init-options.json 中的 `branch_numbering` 已弃用，请重命名为 `feature_numbering`。”
 
-   **Create the directory and spec file**:
+   **创建目录和规格文件**：
    - `mkdir -p SDLC_FEATURE_DIRECTORY`
-   - Resolve the active `spec-template` through the SDLC AI SPEC preset/template resolution stack (equivalent to `SDLC_HOST=c@@SDLC_BIND_0100@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/resolve-template.sh" spec-template`)
-   - Copy the resolved `spec-template` file to `SDLC_FEATURE_DIRECTORY/spec.md` as the starting point
-   - Set `SPEC_FILE` to `SDLC_FEATURE_DIRECTORY/spec.md`
-   - Persist the resolved path to `.sdlc/feature.json`:
+   - 通过 SDLC AI SPEC 预设／模板解析栈解析当前生效的 `spec-template`，等价于 `SDLC_HOST=c@@SDLC_BIND_0110@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/resolve-template.sh" spec-template`。
+   - 将解析出的 `spec-template` 文件复制到 `SDLC_FEATURE_DIRECTORY/spec.md`，作为起点。
+   - 把 `SPEC_FILE` 设置为 `SDLC_FEATURE_DIRECTORY/spec.md`。
+   - 将解析后的路径持久化到 `.sdlc/feature.json`：
      ```json
      {
        "feature_directory": "<resolved feature dir>"
      }
      ```
-     Write the actual resolved directory path value (for example, `.sdlc/specs/003-user-auth`), not the literal string `SDLC_FEATURE_DIRECTORY`.
-     This allows downstream commands (`@@SDLC_BIND_0110@@sdlc-300-task`, etc.) to locate the feature directory without relying on git branch name conventions.
+     写入实际解析的目录路径，例如 `.sdlc/specs/003-user-auth`，而不是字面字符串 `SDLC_FEATURE_DIRECTORY`。
+     这样后续命令（`@@SDLC_BIND_0120@@sdlc-300-task` 等）无需依赖 Git 分支命名惯例即可定位功能目录。
 
-   **IMPORTANT**:
-   - You must only create one feature per `@@SDLC_BIND_0113@@sdlc-100-spec` invocation
-   - The spec directory name and the git branch name are independent — they may be the same but that is the user's choice
-   - The spec directory and file are always created by this command, never by the hook
+   **重要**：
+   - 每次 `@@SDLC_BIND_0123@@sdlc-100-spec` 调用只能创建一个功能。
+   - 规格目录名称与 Git 分支名称互相独立；可以相同，但由用户选择。
+   - 规格目录和文件始终由本命令创建，绝不由钩子创建。
 
-4. Load the resolved active `spec-template` file to understand required sections.
+4. 加载解析出的生效 `spec-template` 文件，了解必需章节。
 
-5. **IF EXISTS**: Load `.sdlc/memory/constitution.md` for project principles and governance constraints.
+5. **如果存在**：加载 `.sdlc/memory/constitution.md`，获取项目原则和治理约束。
 
-6. Follow this execution flow:
-    1. Parse user description from arguments
-       If empty: ERROR "No feature description provided"
-    2. Extract key concepts from description
-       Identify: actors, actions, data, constraints
-    3. For unclear aspects:
-       - Make informed guesses based on context and industry standards
-       - Only mark with [NEEDS CLARIFICATION: specific question] if:
-         - The choice significantly impacts feature scope or user experience
-         - Multiple reasonable interpretations exist with different implications
-         - No reasonable default exists
-       - **LIMIT: Maximum 3 [NEEDS CLARIFICATION] markers total**
-       - Prioritize clarifications by impact: scope > security/privacy > user experience > technical details
-    4. Fill User Scenarios & Testing section
-       If no clear user flow: ERROR "Cannot determine user scenarios"
-    5. Generate Functional Requirements
-       Each requirement must be testable
-       Use reasonable defaults for unspecified details (document assumptions in Assumptions section)
-    6. Define Success Criteria
-       Create measurable, technology-agnostic outcomes
-       Include both quantitative metrics (time, performance, volume) and qualitative measures (user satisfaction, task completion)
-       Each criterion must be verifiable without implementation details
-    7. Identify Key Entities (if data involved)
-    8. Return: SUCCESS (spec ready for planning)
+6. 按以下流程执行：
+    1. 从参数解析用户描述。
+       为空时，返回 ERROR：“未提供功能描述”。
+    2. 提取关键概念：角色、动作、数据、约束。
+    3. 对不清楚的方面：
+       - 根据上下文及行业标准作有依据的推断。
+       - 仅在以下条件下标注 [NEEDS CLARIFICATION: specific question]：
+         - 选择显著影响功能范围或用户体验。
+         - 存在多种合理解释，且影响不同。
+         - 没有合理默认值。
+       - **限制：总共最多 3 个 [NEEDS CLARIFICATION] 标记。**
+       - 按影响排序：范围 > 安全／隐私 > 用户体验 > 技术细节。
+    4. 填写 User Scenarios & Testing。
+       无法确定清晰用户流程时，返回 ERROR：“无法确定用户场景”。
+    5. 生成功能需求，每项必须可测试。
+       对未说明细节采用合理默认值，在 Assumptions 中记录假设。
+    6. 定义 Success Criteria。
+       生成可衡量、与技术无关的结果，同时包含时间、性能、数量等定量指标及用户满意度、任务完成等定性衡量。
+       每条标准必须能在不了解实现细节的情况下验证。
+    7. 涉及数据时，识别 Key Entities。
+    8. 返回 SUCCESS：规格已准备好进入规划。
 
-7. Write the specification to SPEC_FILE using the template structure, replacing placeholders with concrete details derived from the feature description (arguments) while preserving section order and headings.
+7. 按模板结构把规格写入 SPEC_FILE，用从功能描述（参数）得到的具体细节替换占位符，保留章节顺序和标题。
 
-8. **Specification Quality Validation**: After writing the initial spec, validate it against quality criteria:
+8. **规格质量验证**：初稿写入后，按质量标准验证：
 
-   a. **Create Spec Quality Checklist**: Generate a checklist file at `SDLC_FEATURE_DIRECTORY/checklists/requirements.md` using the checklist template structure with these validation items:
+   a. **创建规格质量清单**：在 `SDLC_FEATURE_DIRECTORY/checklists/requirements.md` 生成清单，采用清单模板结构和以下验证项：
 
       ```markdown
       # Specification Quality Checklist: [FEATURE NAME]
@@ -184,27 +191,27 @@ Given that feature description, do this:
 
       ## Notes
 
-      - Items marked incomplete require spec updates before `@@SDLC_BIND_0186@@sdlc-200-plan`
+      - Items marked incomplete require spec updates before `@@SDLC_BIND_0193@@sdlc-200-plan`
       ```
 
-   b. **Run Validation Check**: Review the spec against each checklist item:
-      - For each item, determine if it passes or fails
-      - Document specific issues found (quote relevant spec sections)
+   b. **执行验证**：逐项检查规格。
+      - 确定每项通过或失败。
+      - 记录具体问题，并引用相关规格章节。
 
-   c. **Handle Validation Results**:
+   c. **处理验证结果**：
 
-      - **If all items pass**: Mark checklist complete and proceed to the Mandatory Post-Execution Hooks section
+      - **全部通过**：将清单标记为完成，继续“必需的执行后钩子”。
 
-      - **If items fail (excluding [NEEDS CLARIFICATION])**:
-        1. List the failing items and specific issues
-        2. Update the spec to address each issue
-        3. Re-run validation until all items pass (max 3 iterations)
-        4. If still failing after 3 iterations, document remaining issues in checklist notes and warn user
+      - **条目失败，但不包括 [NEEDS CLARIFICATION]**：
+        1. 列出失败条目和具体问题。
+        2. 更新规格，逐项解决。
+        3. 重新验证直到全部通过，最多 3 轮。
+        4. 3 轮后仍失败，将剩余问题写入清单备注并警告用户。
 
-      - **If [NEEDS CLARIFICATION] markers remain**:
-        1. Extract all [NEEDS CLARIFICATION: ...] markers from the spec
-        2. **LIMIT CHECK**: If more than 3 markers exist, keep only the 3 most critical (by scope/security/UX impact) and make informed guesses for the rest
-        3. For each clarification needed (max 3), present options to user in this format:
+      - **仍存在 [NEEDS CLARIFICATION] 标记**：
+        1. 从规格提取全部 [NEEDS CLARIFICATION: ...]。
+        2. **额度检查**：超过 3 个时，仅保留对范围／安全／UX 影响最大的 3 个；其余采用有依据的推断。
+        3. 对每个待澄清项（最多 3 个），按以下格式向用户提供选项：
 
            ```markdown
            ## Question [N]: [Topic]
@@ -225,34 +232,34 @@ Given that feature description, do this:
            **Your choice**: _[Wait for user response]_
            ```
 
-        4. **CRITICAL - Table Formatting**: Ensure markdown tables are properly formatted:
-           - Use consistent spacing with pipes aligned
-           - Each cell should have spaces around content: `| Content |` not `|Content|`
-           - Header separator must have at least 3 dashes: `|--------|`
-           - Test that the table renders correctly in markdown preview
-        5. Number questions sequentially (Q1, Q2, Q3 - max 3 total)
-        6. Present all questions together before waiting for responses
-        7. Wait for user to respond with their choices for all questions (e.g., "Q1: A, Q2: Custom - [details], Q3: B")
-        8. Update the spec by replacing each [NEEDS CLARIFICATION] marker with the user's selected or provided answer
-        9. Re-run validation after all clarifications are resolved
+        4. **关键——表格格式**：保证 Markdown 表格有效：
+           - 管道符对齐，间距一致。
+           - 每个单元格内容两侧保留空格：`| Content |`，不是 `|Content|`。
+           - 表头分隔线至少 3 个连字符：`|--------|`。
+           - 在 Markdown 预览中检查表格能正确呈现。
+        5. 问题依次编号 Q1、Q2、Q3，总计最多 3 个。
+        6. 先一起展示全部问题，再等待回答。
+        7. 等待用户给出全部选择，例如“Q1: A, Q2: Custom - [详情], Q3: B”。
+        8. 用用户选择或提供的答案替换每个 [NEEDS CLARIFICATION] 标记，更新规格。
+        9. 所有澄清解决后重新验证。
 
-   d. **Update Checklist**: After each validation iteration, update the checklist file with current pass/fail status
+   d. **更新清单**：每轮验证后，把当前通过／失败状态更新到清单文件。
 
-## Mandatory Post-Execution Hooks
+## 必需的执行后钩子
 
-**You MUST complete this section before reporting completion to the user.**
+**在向用户报告完成之前，必须完成本节。**
 
-Check if `.sdlc/extensions.yml` exists in the project root.
-- If it does not exist, or no hooks are registered under `hooks.after_spec`, skip to the Completion Report.
-- If it exists, read it and look for entries under the `hooks.after_spec` key.
-- If the YAML cannot be parsed or is invalid, skip hook checking silently and continue to the Completion Report.
-- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
-- For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
-  - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
-  - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
-- When constructing command invocations from hook command names, replace dots (`.`) with hyphens (`-`). For example, `sdlc.git.commit` → `@@SDLC_BIND_0252@@sdlc-git-commit`.
-- For each executable hook, output the following based on its `optional` flag:
-  - **Mandatory hook** (`optional: false`) — **You MUST emit `EXECUTE_COMMAND:` for each mandatory hook**:
+检查项目根目录是否存在 `.sdlc/extensions.yml`。
+- 如果不存在，或 `hooks.after_specify` 下没有注册钩子，跳转到完成报告。
+- 如果存在，读取文件并查找 `hooks.after_specify` 键下的条目。
+- 如果 YAML 无法解析或无效，静默跳过钩子检查，继续到完成报告。
+- 排除 `enabled` 明确为 `false` 的钩子。未包含 `enabled` 字段的钩子默认启用。
+- 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
+  - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
+  - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0259@@sdlc-git-commit`。
+- 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
+  - **必需钩子**（`optional: false`）——**必须为每个必需钩子输出 `EXECUTE_COMMAND:`**：
     ```
     ## Extension Hooks
 
@@ -260,8 +267,8 @@ Check if `.sdlc/extensions.yml` exists in the project root.
     Executing: `/{command}`
     EXECUTE_COMMAND: {command}
     ```
-    After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:sdlc-...` or `$sdlc-...`). Emitting the block alone does not run the hook.
-  - **Optional hook** (`optional: true`):
+    输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
+  - **可选钩子**（`optional: true`）：
     ```
     ## Extension Hooks
 
@@ -273,79 +280,79 @@ Check if `.sdlc/extensions.yml` exists in the project root.
     To execute: `/{command}`
     ```
 
-## Completion Report
+## 完成报告
 
-Report completion to the user with:
-- `SDLC_FEATURE_DIRECTORY` — the feature directory path
-- `SPEC_FILE` — the spec file path
-- Checklist results summary
-- Readiness for the next phase (`@@SDLC_BIND_0281@@sdlc-200-plan`)
+向用户报告完成，包含：
+- `SDLC_FEATURE_DIRECTORY`：功能目录路径。
+- `SPEC_FILE`：规格文件路径。
+- 清单结果摘要。
+- 是否准备好进入下一阶段（`@@SDLC_BIND_0288@@sdlc-200-plan`）。
 
-**NOTE:** Branch creation is handled by the `before_spec` hook (git extension). Spec directory and file creation are always handled by this core command.
+**注意**：分支创建由 `before_specify` 钩子（Git 扩展）负责。规格目录和文件始终由本核心命令创建。
 
-## Quick Guidelines
+## 简要准则
 
-- Focus on **WHAT** users need and **WHY**.
-- Avoid HOW to implement (no tech stack, APIs, code structure).
-- Written for business stakeholders, not developers.
-- DO NOT create any checklists that are embedded in the spec. That will be a separate command.
+- 聚焦用户需要**什么**以及**为什么**。
+- 避免描述如何实现，不写技术栈、API 或代码结构。
+- 面向业务相关者，而非开发者撰写。
+- 不要在规格内嵌入任何核对清单；清单由独立命令处理。
 
-### Section Requirements
+### 章节要求
 
-- **Mandatory sections**: Must be completed for every feature
-- **Optional sections**: Include only when relevant to the feature
-- When a section doesn't apply, remove it entirely (don't leave as "N/A")
+- **必需章节**：每个功能都必须完成。
+- **可选章节**：仅与本功能相关时包含。
+- 章节不适用时，直接删除整个章节，不保留 N/A。
 
-### For AI Generation
+### AI 生成准则
 
-When creating this spec from a user prompt:
+根据用户提示创建规格时：
 
-1. **Make informed guesses**: Use context, industry standards, and common patterns to fill gaps
-2. **Document assumptions**: Record reasonable defaults in the Assumptions section
-3. **Limit clarifications**: Maximum 3 [NEEDS CLARIFICATION] markers - use only for critical decisions that:
-   - Significantly impact feature scope or user experience
-   - Have multiple reasonable interpretations with different implications
-   - Lack any reasonable default
-4. **Prioritize clarifications**: scope > security/privacy > user experience > technical details
-5. **Think like a tester**: Every vague requirement should fail the "testable and unambiguous" checklist item
-6. **Common areas needing clarification** (only if no reasonable default exists):
-   - Feature scope and boundaries (include/exclude specific use cases)
-   - User types and permissions (if multiple conflicting interpretations possible)
-   - Security/compliance requirements (when legally/financially significant)
+1. **有依据地推断**：依据上下文、行业标准和常见模式填补空缺。
+2. **记录假设**：在 Assumptions 中记录合理默认值。
+3. **限制澄清**：最多 3 个 [NEEDS CLARIFICATION]，只用于以下关键决策：
+   - 显著影响功能范围或用户体验。
+   - 存在影响不同的多种合理解释。
+   - 没有任何合理默认值。
+4. **澄清优先级**：范围 > 安全／隐私 > 用户体验 > 技术细节。
+5. **像测试者一样思考**：模糊需求应无法通过“可测试且无歧义”的清单项。
+6. **常见待澄清领域**，仅无合理默认值时询问：
+   - 功能范围和边界：包括／排除哪些用例。
+   - 用户类型和权限：存在多种冲突解释时。
+   - 安全／合规要求：具有显著法律／财务影响时。
 
-**Examples of reasonable defaults** (don't ask about these):
+**合理默认值示例，不要为这些提问：**
 
-- Data retention: Industry-standard practices for the domain
-- Performance targets: Standard web/mobile app expectations unless specified
-- Error handling: User-friendly messages with appropriate fallbacks
-- Authentication method: Standard session-based or OAuth2 for web apps
-- Integration patterns: Use project-appropriate patterns (REST/GraphQL for web services, function calls for libraries, CLI args for tools, etc.)
+- 数据保留：采用该领域行业惯例。
+- 性能目标：无特别要求时，采用常见 Web／移动应用预期。
+- 错误处理：用户友好的信息及合适的回退。
+- 认证方式：Web 应用采用标准会话认证或 OAuth2。
+- 集成模式：选用适合项目的模式，如 Web 服务 REST／GraphQL、库函数调用、工具 CLI 参数。
 
-### Success Criteria Guidelines
+### 成功标准准则
 
-Success criteria must be:
+成功标准必须：
 
-1. **Measurable**: Include specific metrics (time, percentage, count, rate)
-2. **Technology-agnostic**: No mention of frameworks, languages, databases, or tools
-3. **User-focused**: Describe outcomes from user/business perspective, not system internals
-4. **Verifiable**: Can be tested/validated without knowing implementation details
+1. **可衡量**：包含具体时间、百分比、数量或速率。
+2. **技术无关**：不提框架、语言、数据库或工具。
+3. **以用户为中心**：从用户／业务角度描述结果，而非系统内部实现。
+4. **可验证**：无需知道实现细节即可测试／验证。
 
-**Good examples**:
+**良好示例：**
 
-- "Users can complete checkout in under 3 minutes"
-- "System supports 10,000 concurrent users"
-- "95% of searches return results in under 1 second"
-- "Task completion rate improves by 40%"
+- 用户能在 3 分钟内完成结账。
+- 系统支持 10,000 名并发用户。
+- 95% 的搜索在 1 秒内返回结果。
+- 任务完成率提高 40%。
 
-**Bad examples** (implementation-focused):
+**不佳示例，过于关注实现：**
 
-- "API response time is under 200ms" (too technical, use "Users see results instantly")
-- "Database can handle 1000 TPS" (implementation detail, use user-facing metric)
-- "React components render efficiently" (framework-specific)
-- "Redis cache hit rate above 80%" (technology-specific)
+- API 响应时间低于 200ms：过于技术化，改为用户能立即看到结果。
+- 数据库能处理 1000 TPS：实现细节，应采用用户可感知指标。
+- React 组件高效渲染：绑定具体框架。
+- Redis 缓存命中率超过 80%：绑定具体技术。
 
-## Done When
+## 完成条件
 
-- [ ] Specification written to `SPEC_FILE` and validated against quality checklist
-- [ ] Extension hooks dispatched or skipped according to the rules in Mandatory Post-Execution Hooks above
-- [ ] Completion reported to user with feature directory, spec file path, and checklist results
+- [ ] 规格已写入 `SPEC_FILE`，并通过质量清单验证。
+- [ ] 已按上文“必需的执行后钩子”规则分派或跳过扩展钩子。
+- [ ] 已向用户报告功能目录、规格文件路径及清单结果。

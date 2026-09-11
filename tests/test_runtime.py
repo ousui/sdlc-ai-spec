@@ -209,7 +209,11 @@ class RuntimeTests(unittest.TestCase):
                 self.run_script(p,'setup-plan.sh','--json',success=False)
                 other=self.base/('linked-'+host);other.mkdir()
                 (other/'.sdlc').symlink_to(p/'.sdlc',target_is_directory=True)
-                self.run_script(other,'project-paths.sh',success=False)
+                # The upstream resolver accepts an external state alias. Reject
+                # only aliases that target plugin data, not all symlinks.
+                resolved=json.loads(self.run_script(other,'project-paths.sh').stdout)
+                self.assertEqual(canonical(resolved['PROJECT_ROOT']),canonical(other))
+                self.run_script(other,'setup-plan.sh','--json',success=False)
 
     def test_quoted_unicode_paths_and_shell_injection_are_data(self):
         for host in self.hosts():

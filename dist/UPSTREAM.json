@@ -31,7 +31,9 @@
   ],
   "init_implemented": true,
   "native_host_verified": false,
-  "layout": "single-package-native-entrypoints",
+  "layout": "shared-core-skills-with-host-init",
+  "locale": "zh-CN",
+  "template_language": "English skeleton; Chinese natural-language fill",
   "source_to_skill": {
     "init": "sdlc-000-init",
     "constitution": "sdlc-010-rule",

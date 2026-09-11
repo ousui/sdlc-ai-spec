@@ -6,7 +6,7 @@ no events, no presets and no extensions. This is NOT equivalence to the entire C
 
 | Change | Reason / preserved behavior |
 | --- | --- |
-| Nine original command sources are kept byte-for-byte | Do not translate, optimize prompts, alter stages or introduce unrelated process rules |
+| Nine original command sources are kept byte-for-byte | Do not modify raw sources; reviewed derived Chinese prose preserves steps and machine contracts |
 | `speckit-*` callable references become host-native `sdlc-*` references | Codex `$`, Claude plugin namespace, Cursor `/`; illustrative hook variants stay illustrative |
 | `.specify` state becomes project `.sdlc`; default `specs` becomes `.sdlc/specs` | Keep file names, field keys, numbering and explicit feature overrides |
 | Core templates/scripts move to plugin resources | Project overrides still resolve from project `.sdlc`; no shared state |
@@ -15,7 +15,7 @@ no events, no presets and no extensions. This is NOT equivalence to the entire C
 | `specify preset resolve spec-template` instruction uses bundled `resolve-template.sh` | No persistent specify-cli runtime dependency; original template selection remains for selected core profile |
 | Native hints use invocation host, not saved default integration | One project can be used sequentially by different hosts |
 | Binding preamble is added to generated skills | Identify resources, resolve project, pass variables per tool call and fail clearly outside the selected profile |
-| Plugin packaging + provenance | Three native manifests selecting thin entries in one self-contained package |
+| Plugin packaging + provenance | Three native manifests selecting nine shared cores plus host-specific INIT |
 
 `check-prerequisites.sh`, `resolve-template.sh` and `setup-plan.sh` are otherwise
 byte-identical to the upstream source after the marker relocation. `common.sh`,
@@ -43,14 +43,16 @@ renderer and existing relocation rules. It then factors byte-identical portions
 into one workflow file; only the exact differing substrings become named literal
 fragments in `bindings/<host>.json`. Different line structures fail closed.
 `load_workflow.py` performs nonrecursive literal binding and emits the full body.
-It has no subprocess, network or writes. All 27 resolved bodies are independently
-compared with the original CLI outputs under the existing address allowlist.
-The thin wrappers keep the respective upstream frontmatter, literal host identity,
+It has no subprocess, network or writes. All 27 English pre-localization bodies are independently compared with original
+CLI outputs under the address allowlist. Chinese resolved bodies additionally
+match reviewed full translations, with source freshness and machine-span checks.
+Shared wrappers retain equivalent core frontmatter defaults, explicit calling-host identity,
 original user input and an explicit full-output reading requirement. Truncation
 must be handled with bounded pages, never silently accepted.
 
-All three native manifests select `adapters/<host>/skills/`. No default skill
-scan or portable root manifest is shipped. References for the path rules:
+Nine cores live in `skills/`; only INIT remains in `adapters/<host>/skills/`.
+Claude uses its default core scan plus the custom INIT path; Codex/Cursor list
+both paths. No portable root manifest is shipped. References for the path rules:
 https://developers.openai.com/plugins/build/plugins
 https://code.claude.com/docs/en/plugins-reference
 https://cursor.com/docs/reference/plugins
@@ -111,3 +113,17 @@ the negative prose-mutation control. Script leaf comparisons enumerate only
 path/function/argument renames. No permissive whitespace or business-rule
 normalization was added. This supersedes the historical unnumbered name ledger
 above, not the original nine workflows, INIT idempotence or native test boundary.
+
+## Shared Skills and localization delta
+
+This round corrects only previously introduced deviations: event keys remain
+`before_specify/after_specify`; unrelated SPECIFY_* environment variables no longer
+cause blanket refusal; an external state alias is allowed unless it targets the
+plugin. Shared-resource isolation remains necessary for external plugin resources.
+Upstream bugs, including prerequisite persistence, are not independently repaired.
+
+Chinese sources live under src/locales/zh-CN. English-dependent rendering precedes
+translation; factoring follows it. Templates are NOT translated wholesale; fixed
+headings, placeholders and task grammar remain English, while normal authored
+content is Chinese. No existing project data is rewritten during upgrade.
+See [LOCALIZATION.md](LOCALIZATION.md) for checks, review limits and resumption.

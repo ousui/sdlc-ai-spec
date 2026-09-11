@@ -17,26 +17,31 @@ class RepositoryTests(unittest.TestCase):
     def test_single_installation_boundary(self):
         package=ROOT/'dist'
         self.assertFalse((package/'plugin.json').exists())
-        self.assertFalse((package/'skills').exists())
+        self.assertEqual({p.name for p in (package/'skills').iterdir()}, set(EXPECTED.values())-{'sdlc-000-init'})
         for host in HOSTS:self.assertFalse((package/host).exists())
         self.assertEqual(len(list((package/'references/workflows').glob('*.md'))),len(ALL_COMMANDS))
         self.assertEqual(len(list(package.rglob('common.sh'))),1)
         self.assertEqual(len(list(package.rglob('sdlc-000-init'))),3)
         for legacy in ('v0','packages','skills/_shared','docs/v1.0','docs/v1.1'):
-            self.assertFalse((ROOT/legacy).exists())
+            self.assertFalse((ROOT/legacy).exists(), 'Legacy local residue (inspect before removal): '+legacy)
 
     def test_native_manifests_select_only_their_entries(self):
         metadata=json.loads((ROOT/'plugin-metadata.json').read_text())
         all_entries=[]
         for host in HOSTS:
             manifest=json.loads((ROOT/'dist'/('.'+host+'-plugin/plugin.json')).read_text())
-            self.assertEqual(manifest,dict(metadata,skills='./adapters/'+host+'/skills/'))
-            folder=(ROOT/'dist'/manifest['skills']).resolve()
-            self.assertTrue(folder.is_relative_to((ROOT/'dist').resolve()))
-            entries=list(folder.glob('*/SKILL.md'))
+            expected = './adapters/claude/skills/' if host == 'claude' else ['./skills/', './adapters/'+host+'/skills/']
+            self.assertEqual(manifest,dict(metadata,skills=expected))
+            paths = ['./skills/', manifest['skills']] if host == 'claude' else manifest['skills']
+            entries=[]
+            for path in paths:
+                folder=(ROOT/'dist'/path).resolve()
+                self.assertTrue(folder.is_relative_to((ROOT/'dist').resolve()))
+                entries.extend(folder.glob('*/SKILL.md'))
+            self.assertEqual(len(entries),len(ALL_COMMANDS))
             self.assertEqual({p.parent.name for p in entries},set(EXPECTED.values()))
             all_entries.extend(entries)
-        self.assertEqual(len(set(all_entries)),3*len(ALL_COMMANDS))
+        self.assertEqual(len(set(all_entries)),len(COMMANDS)+len(HOSTS))
 
     def test_marketplaces_are_generated_and_point_to_dist(self):
         for path,expected in marketplaces().items():

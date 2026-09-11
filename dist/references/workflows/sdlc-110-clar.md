@@ -1,40 +1,50 @@
 
 <!-- SDLC-PACKAGE-BINDING:BEGIN -->
-## Installed package and project binding
+## 已安装插件与业务项目绑定
 
-This is the c@@SDLC_BIND_0004@@ package of SDLC AI SPEC. Resolve paths before executing the unchanged workflow below.
+本次调用宿主为 c@@SDLC_BIND_0004@@。先完成路径绑定，再执行下面的原有流程。
 
-- Use the @@SDLC_BIND_0006@@/skills/<name>/SKILL.md`). Do not infer it from the business working directory, scan other installed versions, or assume this variable is already exported.
-- Keep the shell working directory in the selected business project. Run `SDLC_HOST=c@@SDLC_BIND_0007@@ bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/project-paths.sh"` to resolve the nearest initialized `.sdlc`. When the user explicitly selected a project, pass its absolute path as command-local `SDLC_INIT_DIR`. Use the returned `PROJECT_ROOT` as `SDLC_PROJECT_ROOT`. If the project is missing or invalid, stop; run `sdlc-000-init` explicitly to initialize or complete the project; do not fall back to another tool.
-- Set these resolved absolute values in EVERY shell invocation that uses them; shell state is not guaranteed to persist across tool calls. `${VAR:?}` intentionally fails on an unresolved variable. For non-shell file tools, substitute the resolved absolute value rather than passing `${VAR}` literally. Never change directory to the plugin to fix a resource lookup.
-- Before creating/updating feature files, call the same `project-paths.sh --feature <resolved-feature-directory>` with command-local `SDLC_INIT_DIR` to validate that explicit paths and symlinks cannot target this plugin. The script is read-only and is not an initializer. Project state, current feature and constitution are never written under the plugin.
-- This package carries the core-only, no-Preset/no-Extension/no-event profile. Do not install or invoke extensions or the upstream CLI to satisfy a reference. If the project contains `.sdlc/extensions.yml`, installed presets or extension state, stop and report that profile as unsupported. The upstream conditional hook text is retained below for source equivalence, not an authorization to enable that optional subsystem.
-- `$ARGUMENTS` denotes the current invocation's user input. Where the host does not substitute it, read that input from the conversation; never treat the literal placeholder as the feature description.
+- @@SDLC_BIND_0006@@。 `SDLC_PLUGIN_ROOT` 是已加载核心 Skill 目录向上两级的插件包目录（`skills/<name>/SKILL.md`）。不得从业务工作目录推断、扫描其他安装版本，或假定变量已导出。
+- 保持 shell 工作目录位于选定的业务项目。执行 `SDLC_HOST=c@@SDLC_BIND_0007@@ bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/project-paths.sh"` 解析最近的已初始化 `.sdlc`。用户明确选定项目时，以命令局部变量 `SDLC_INIT_DIR` 传入其绝对路径。将返回的 `PROJECT_ROOT` 作为 `SDLC_PROJECT_ROOT`。项目不存在或无效时停止，明确运行 `sdlc-000-init` 初始化或补全；不得回退到其他工具。
+- 每次使用这些变量的 shell 调用都显式传入已解析的绝对值；工具调用之间不保证 shell 状态持久化。`${VAR:?}` 有意在变量未解析时失败。非 shell 文件工具使用实际绝对路径，不把 `${VAR}` 字面量传给工具。不得通过切换到插件目录来修复资源定位。
+- 创建或更新需求文件前，通过命令局部 `SDLC_INIT_DIR` 调用同一 `project-paths.sh --feature <resolved-feature-directory>`，检查显式路径和符号链接不会指向本插件。该脚本只读，不执行初始化。项目状态、当前需求和宪法不得写到插件内。
+- 本包沿用仅核心、无 Preset、无 Extension、无事件的既有 profile。不得为满足引用而安装或调用扩展、上游 CLI。项目包含 `.sdlc/extensions.yml`、已安装预设或扩展状态时，停止并说明该 profile 不受支持。下面保留上游条件钩子文本用于来源等价，不构成启用可选子系统的授权。
+- `$ARGUMENTS` 表示本次调用的用户输入。宿主没有替换它时，从当前对话读取这次输入；不得将占位符字面量作为需求描述。
 <!-- SDLC-PACKAGE-BINDING:END -->
 
+<!-- SDLC-OUTPUT-LANGUAGE:BEGIN -->
+## 输出语言（仅呈现层）
+
+向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节定位名、占位符、状态值、任务语法、代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
+
+例如保留 `User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记，业务描述、理由、测试说明和任务内容填写中文。代码块中的英文示例用于保留格式和定位约定，不要求将实际填写的自然语言也写成英文。刚复制且尚未填写的模板可以保持英文；不增加一次翻译回写动作。
+
+此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。
+<!-- SDLC-OUTPUT-LANGUAGE:END -->
 
 
-## User Input
+
+## 用户输入
 
 ```text
 $ARGUMENTS
 ```
 
-You **MUST** consider the user input before proceeding (if not empty).
+继续之前，**必须**考虑用户输入（如果非空）。
 
-## Pre-Execution Checks
+## 执行前检查
 
-**Check for extension hooks (before clarification)**:
-- Check if `.sdlc/extensions.yml` exists in the project root.
-- If it exists, read it and look for entries under the `hooks.before_clarify` key
-- If the YAML cannot be parsed or is invalid, skip hook checking silently and continue normally
-- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
-- For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
-  - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
-  - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
-- When constructing command invocations from hook command names, replace dots (`.`) with hyphens (`-`). For example, `sdlc.git.commit` → `@@SDLC_BIND_0034@@sdlc-git-commit`.
-- For each executable hook, output the following based on its `optional` flag:
-  - **Optional hook** (`optional: true`):
+**检查扩展钩子（需求澄清前）**：
+- 检查项目根目录是否存在 `.sdlc/extensions.yml`。
+- 如果存在，读取文件并查找 `hooks.before_clarify` 键下的条目。
+- 如果 YAML 无法解析或无效，静默跳过钩子检查，正常继续。
+- 排除 `enabled` 明确为 `false` 的钩子。未包含 `enabled` 字段的钩子默认启用。
+- 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
+  - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
+  - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0044@@sdlc-git-commit`。
+- 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
+  - **可选钩子**（`optional: true`）：
     ```
     ## Extension Hooks
 
@@ -45,7 +55,7 @@ You **MUST** consider the user input before proceeding (if not empty).
     Prompt: {prompt}
     To execute: `/{command}`
     ```
-  - **Mandatory hook** (`optional: false`):
+  - **必需钩子**（`optional: false`）：
     ```
     ## Extension Hooks
 
@@ -55,209 +65,209 @@ You **MUST** consider the user input before proceeding (if not empty).
 
     Wait for the result of the hook command before proceeding to the Outline.
     ```
-    After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:sdlc-...` or `$sdlc-...`). Emitting the block alone does not run the hook.
-- If no hooks are registered or `.sdlc/extensions.yml` does not exist, skip silently
+    输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
+- 如果没有注册钩子，或 `.sdlc/extensions.yml` 不存在，静默跳过。
 
-## Outline
+## 执行概要
 
-Goal: Detect and reduce ambiguity or missing decision points in the active feature specification and record the clarifications directly in the spec file.
+目标：发现并减少当前功能规格的歧义或缺失决策点，将澄清内容直接记录到规格文件中。
 
-Note: This clarification workflow is expected to run (and be completed) BEFORE invoking `@@SDLC_BIND_0064@@sdlc-200-plan`. If the user explicitly states they are skipping clarification (e.g., exploratory spike), you may proceed, but must warn that downstream rework risk increases.
+注意：此澄清流程预期在调用 `@@SDLC_BIND_0074@@sdlc-200-plan` 之前运行并完成。用户明确表示跳过澄清（例如探索性试验）时，可以继续，但必须提醒后续返工风险会上升。
 
-Execution steps:
+执行步骤：
 
-1. Run `SDLC_HOST=c@@SDLC_BIND_0068@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --paths-only` from repo root **once** (combined `--json --paths-only` mode / `-Json -PathsOnly`). Parse minimal JSON payload fields:
+1. 在仓库根目录**只运行一次** `SDLC_HOST=c@@SDLC_BIND_0078@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --paths-only`，使用组合 `--json --paths-only` 模式／`-Json -PathsOnly`。解析最少 JSON 字段：
    - `FEATURE_DIR`
    - `FEATURE_SPEC`
-   - (Optionally capture `IMPL_PLAN`, `TASKS` for future chained flows.)
-   - If JSON parsing fails, abort and instruct user to re-run `@@SDLC_BIND_0072@@sdlc-100-spec` or verify feature branch environment.
-   - For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+   - 可选地记录 `IMPL_PLAN`、`TASKS`，用于后续串联流程。
+   - JSON 解析失败时，中止并指导用户重新运行 `@@SDLC_BIND_0082@@sdlc-100-spec` 或检查功能分支环境。
+   - 参数包含单引号（如 "I'm Groot"）时，使用转义语法，如 'I'\''m Groot'；可以使用双引号时也可写作 "I'm Groot"。
 
-2. **IF EXISTS**: Load `.sdlc/memory/constitution.md` for project principles and governance constraints.
+2. **如果存在**：加载 `.sdlc/memory/constitution.md`，获取项目原则和治理约束。
 
-3. Load the current spec file. Perform a structured ambiguity & coverage scan using this taxonomy. For each category, mark status: Clear / Partial / Missing. Produce an internal coverage map used for prioritization (do not output raw map unless no questions will be asked).
+3. 加载当前规格文件，按以下分类执行结构化的歧义与覆盖扫描。每类标记 Clear／Partial／Missing。生成用于排序的内部覆盖图；除非不会提问，否则不输出原始覆盖图。
 
-   Functional Scope & Behavior:
-   - Core user goals & success criteria
-   - Explicit out-of-scope declarations
-   - User roles / personas differentiation
+   功能范围与行为：
+   - 核心用户目标及成功标准。
+   - 明确的不包含范围。
+   - 用户角色／画像的区分。
 
-   Domain & Data Model:
-   - Entities, attributes, relationships
-   - Identity & uniqueness rules
-   - Lifecycle/state transitions
-   - Data volume / scale assumptions
+   领域与数据模型：
+   - 实体、属性、关系。
+   - 身份与唯一性规则。
+   - 生命周期／状态转换。
+   - 数据量／规模假设。
 
-   Interaction & UX Flow:
-   - Critical user journeys / sequences
-   - Error/empty/loading states
-   - Accessibility or localization notes
+   交互与用户体验流程：
+   - 关键用户旅程／操作顺序。
+   - 错误、空结果及加载状态。
+   - 无障碍或本地化说明。
 
-   Non-Functional Quality Attributes:
-   - Performance (latency, throughput targets)
-   - Scalability (horizontal/vertical, limits)
-   - Reliability & availability (uptime, recovery expectations)
-   - Observability (logging, metrics, tracing signals)
-   - Security & privacy (authN/Z, data protection, threat assumptions)
-   - Compliance / regulatory constraints (if any)
+   非功能质量属性：
+   - 性能：延迟、吞吐量目标。
+   - 可扩展性：横向／纵向及限制。
+   - 可靠性与可用性：正常运行时间、恢复预期。
+   - 可观测性：日志、指标、追踪信号。
+   - 安全与隐私：认证／授权、数据保护、威胁假设。
+   - 合规／监管约束（若有）。
 
-   Integration & External Dependencies:
-   - External services/APIs and failure modes
-   - Data import/export formats
-   - Protocol/versioning assumptions
+   集成与外部依赖：
+   - 外部服务／API 及失败模式。
+   - 数据导入／导出格式。
+   - 协议／版本假设。
 
-   Edge Cases & Failure Handling:
-   - Negative scenarios
-   - Rate limiting / throttling
-   - Conflict resolution (e.g., concurrent edits)
+   边界情况与失败处理：
+   - 负面场景。
+   - 速率限制／节流。
+   - 冲突解决，例如并发编辑。
 
-   Constraints & Tradeoffs:
-   - Technical constraints (language, storage, hosting)
-   - Explicit tradeoffs or rejected alternatives
+   约束与取舍：
+   - 技术约束：语言、存储、托管。
+   - 明确的取舍或被否决方案。
 
-   Terminology & Consistency:
-   - Canonical glossary terms
-   - Avoided synonyms / deprecated terms
+   术语与一致性：
+   - 规范术语表。
+   - 应避免的同义词／已弃用术语。
 
-   Completion Signals:
-   - Acceptance criteria testability
-   - Measurable Definition of Done style indicators
+   完成信号：
+   - 验收标准可测试性。
+   - 可衡量、类似 Definition of Done 的指标。
 
-   Misc / Placeholders:
-   - TODO markers / unresolved decisions
-   - Ambiguous adjectives ("robust", "intuitive") lacking quantification
+   其他／占位符：
+   - TODO 标记／未决策事项。
+   - 缺乏量化的模糊形容词，例如“健壮”“直观”。
 
-   For each category with Partial or Missing status, add a candidate question opportunity unless:
-   - Clarification would not materially change implementation or validation strategy
-   - Information is better deferred to planning phase (note internally)
+   对每个 Partial 或 Missing 类别，生成候选澄清问题，除非：
+   - 澄清不会实质影响实施或验证策略。
+   - 信息更适合留到规划阶段处理，在内部注明。
 
-4. Generate (internally) a prioritized queue of candidate clarification questions (maximum 5). Do NOT output them all at once. Apply these constraints:
-    - Maximum of 5 total questions across the whole session.
-    - Each question must be answerable with EITHER:
-       - A short multiple‑choice selection (2–5 distinct, mutually exclusive options), OR
-       - A one-word / short‑phrase answer (explicitly constrain: "Answer in <=5 words").
-    - Only include questions whose answers materially impact architecture, data modeling, task decomposition, test design, UX behavior, operational readiness, or compliance validation.
-    - Ensure category coverage balance: attempt to cover the highest impact unresolved categories first; avoid asking two low-impact questions when a single high-impact area (e.g., security posture) is unresolved.
-    - Exclude questions already answered, trivial stylistic preferences, or plan-level execution details (unless blocking correctness).
-    - Favor clarifications that reduce downstream rework risk or prevent misaligned acceptance tests.
-    - If more than 5 categories remain unresolved, select the top 5 by (Impact * Uncertainty) heuristic.
+4. 在内部生成按优先级排序的候选澄清问题队列，最多 5 个。**不要**一次输出全部问题。遵循：
+    - 整个会话最多提问 5 个问题。
+    - 每个问题必须能用以下任一方式回答：
+       - 简短的多项选择：2–5 个不同且互斥的选项；或
+       - 一个词／简短短语，明确限制“答案不超过 5 个词”。
+    - 仅包含答案会实质影响架构、数据建模、任务分解、测试设计、UX 行为、运维准备或合规验证的问题。
+    - 平衡类别覆盖，优先覆盖影响最大的未决类别；高影响领域（如安全策略）未解决时，不要连续问两个低影响问题。
+    - 排除已回答的问题、琐碎风格偏好及规划层面的执行细节，除非其阻塞正确性。
+    - 优先选择能减少后续返工风险或防止验收测试偏离的问题。
+    - 超过 5 个类别未解决时，按“影响 × 不确定性”选择最高的 5 个。
 
-5. Sequential questioning loop (interactive):
-    - Present EXACTLY ONE question at a time.
-    - **Question writing quality (applies to every question, MC or short-answer):**
-       - Lead with `**Question:**` followed by a full interrogative that ends with `?`. The question text before the `?` must make sense on its own.
-       - NEVER use a topic label, section heading, or requirement id as the question itself. For example, `Acceptance device/runtime matrix (FR-023)` is INVALID — it is a label, not a question.
-       - After the `?`, the only permitted suffix is an optional parenthesized requirement/question id. Exact format: `**Question:** <interrogative>?` or `**Question:** <interrogative>? (FR-023)`. Never put the id before the `?`, and never use the id (alone or with a topic label) as the whole prompt.
-       - Immediately after the question line, add one plain-language "Why it matters" sentence (the stake for acceptance or shipping) before the recommendation/options.
-       - Use everyday wording; introduce jargon only if defined in the same sentence. Self-check: a reader who does not know SDLC AI SPEC must be able to answer from the Question line alone. Terse is fine; cryptic labels are not.
-    - For multiple‑choice questions:
-       - **Analyze all options** and determine the **most suitable option** based on:
-          - Best practices for the project type
-          - Common patterns in similar implementations
-          - Risk reduction (security, performance, maintainability)
-          - Alignment with any explicit project goals or constraints visible in the spec
-       - Present your **recommended option prominently** at the top with clear reasoning (1-2 sentences explaining why this is the best choice).
-       - Format as: `**Recommended:** Option [X] - <reasoning>`
-       - Then render all options as a Markdown table:
+5. 顺序提问循环（交互式）：
+    - 每次**只问一个问题**。
+    - **提问质量要求，适用于选择题及简答题**：
+       - 以 `**Question:**` 开头，后接以 `?` 结尾的完整疑问句。`?` 前的问题本身必须能独立理解。
+       - **绝不**用主题标签、章节标题或需求 ID 充当问题。例如 `Acceptance device/runtime matrix (FR-023)` 无效：它是标签，不是问题。
+       - `?` 之后只允许可选的括号需求／问题 ID。准确格式为 `**Question:** <interrogative>?` 或 `**Question:** <interrogative>? (FR-023)`。绝不把 ID 放在 `?` 前，也不把 ID 单独或配合主题标签用作整段提问。
+       - 问题行之后、推荐／选项之前，立即用一句通俗语言解释“为何重要”，说明对验收或交付的影响。
+       - 使用日常表达；术语只在同一句已定义时引入。自查：不了解 SDLC AI SPEC 的读者，仅凭问题行也应能回答。可以简短，不能只给晦涩标签。
+    - 对选择题：
+       - **分析全部选项**，依据以下因素确定**最合适选项**：
+          - 该项目类型的最佳实践。
+          - 相似实现的常见模式。
+          - 降低安全、性能及可维护性风险。
+          - 与规格中明确可见的项目目标或约束一致。
+       - 在顶部**突出推荐选项**，并用 1–2 句话说明它为何最佳。
+       - 格式为 `**Recommended:** Option [X] - <reasoning>`。
+       - 然后用 Markdown 表展示全部选项：
 
        | Option | Description |
        |--------|-------------|
-       | A | <Option A description> |
-       | B | <Option B description> |
-       | C | <Option C description> (add D/E as needed up to 5) |
-       | Short | Provide a different short answer (<=5 words) (Include only if free-form alternative is appropriate) |
+       | A | 选项 A 的说明 |
+       | B | 选项 B 的说明 |
+       | C | 选项 C 的说明；按需增加 D／E，总数最多 5 个 |
+       | Short | 其他简短答案，不超过 5 个词；仅在适合自由回答时提供 |
 
-       - After the table, add: `You can reply with the option letter (e.g., "A"), accept the recommendation by saying "yes" or "recommended", or provide your own short answer.`
-    - For short‑answer style (no meaningful discrete options):
-       - Provide your **suggested answer** based on best practices and context.
-       - Format as: `**Suggested:** <your proposed answer> - <brief reasoning>`
-       - Then output: `Format: Short answer (<=5 words). You can accept the suggestion by saying "yes" or "suggested", or provide your own answer.`
-    - After the user answers:
-       - If the user replies with "yes", "recommended", or "suggested", use your previously stated recommendation/suggestion as the answer.
-       - Otherwise, validate the answer maps to one option or fits the <=5 word constraint.
-       - If ambiguous, ask for a quick disambiguation (count still belongs to same question; do not advance).
-       - Once satisfactory, record it in working memory (do not yet write to disk) and move to the next queued question.
-    - Stop asking further questions when:
-       - All critical ambiguities resolved early (remaining queued items become unnecessary), OR
-       - User signals completion ("done", "good", "no more"), OR
-       - You reach 5 asked questions.
-    - Never reveal future queued questions in advance.
-    - If no valid questions exist at start, immediately report no critical ambiguities.
+       - 表格后添加以下回应说明：`You can reply with the option letter (e.g., "A"), accept the recommendation by saying "yes" or "recommended", or provide your own short answer.`
+    - 对没有合理离散选项的简答题：
+       - 依据最佳实践和上下文给出**建议答案**。
+       - 格式为 `**Suggested:** <your proposed answer> - <brief reasoning>`。
+       - 然后说明简短答案格式：`Format: Short answer (<=5 words). You can accept the suggestion by saying "yes" or "suggested", or provide your own answer.`
+    - 用户回答后：
+       - 用户回复 yes、recommended 或 suggested 时，使用此前明确提出的推荐／建议作为答案。
+       - 否则，验证答案对应某个选项，或满足不超过 5 个词的约束。
+       - 答案有歧义时，简短追问以消除歧义；仍计为同一个问题，不推进队列。
+       - 答案足够明确后，先记录在工作记忆中，暂不写盘，再移向下一个排队问题。
+    - 以下任一条件满足就停止提问：
+       - 关键歧义提前全部解决，剩余队列问题已无必要；或
+       - 用户表示完成，例如 done、good、no more；或
+       - 已经提问 5 个问题。
+    - 不得提前透露尚未轮到的问题。
+    - 开始时没有有效问题，立即报告没有关键歧义。
 
-6. Integration after EACH accepted answer (incremental update approach):
-    - Maintain in-memory representation of the spec (loaded once at start) plus the raw file contents.
-    - For the first integrated answer in this session:
-       - Ensure a `## Clarifications` section exists (create it just after the highest-level contextual/overview section per the spec template if missing).
-       - Under it, create (if not present) a `### Session YYYY-MM-DD` subheading for today.
-    - Append a bullet line immediately after acceptance: `- Q: <question> → A: <final answer>`.
-    - Then immediately apply the clarification to the most appropriate section(s):
-       - Functional ambiguity → Update or add a bullet in Functional Requirements.
-       - User interaction / actor distinction → Update User Stories or Actors subsection (if present) with clarified role, constraint, or scenario.
-       - Data shape / entities → Update Data Model (add fields, types, relationships) preserving ordering; note added constraints succinctly.
-       - Non-functional constraint → Add/modify measurable criteria in Success Criteria > Measurable Outcomes (convert vague adjective to metric or explicit target).
-       - Edge case / negative flow → Add a new bullet under Edge Cases / Error Handling (or create such subsection if template provides placeholder for it).
-       - Terminology conflict → Normalize term across spec; retain original only if necessary by adding `(formerly referred to as "X")` once.
-    - If the clarification invalidates an earlier ambiguous statement, replace that statement instead of duplicating; leave no obsolete contradictory text.
-    - Save the spec file AFTER each integration to minimize risk of context loss (atomic overwrite).
-    - Preserve formatting: do not reorder unrelated sections; keep heading hierarchy intact.
-    - Keep each inserted clarification minimal and testable (avoid narrative drift).
+6. 每次接受答案后整合（增量更新）：
+    - 保存规格的内存表示及原始文件内容，开始时只加载一次。
+    - 本会话第一次整合答案时：
+       - 确保存在 `## Clarifications`；缺失时，按规格模板在最高层级的上下文／概述章节后创建。
+       - 在其下创建今天的 `### Session YYYY-MM-DD` 子标题；已有则不重复创建。
+    - 接受答案后立即追加条目：`- Q: <question> → A: <final answer>`。
+    - 然后立即把澄清应用到最合适的章节：
+       - 功能歧义 → 更新或新增 Functional Requirements 条目。
+       - 用户交互／角色区分 → 在 User Stories 或 Actors 子节（若存在）补充澄清后的角色、约束或场景。
+       - 数据形态／实体 → 更新 Data Model，添加字段、类型和关系，保持顺序；简要注明新增约束。
+       - 非功能约束 → 在 Success Criteria > Measurable Outcomes 中新增／修改可衡量标准，将模糊形容词转换为指标或明确目标。
+       - 边界情况／异常流程 → 在 Edge Cases／Error Handling 下新增条目；模板提供占位时，可创建对应子节。
+       - 术语冲突 → 在规格中统一术语；仅必要时用一次 `(formerly referred to as "X")` 保留原称。
+    - 澄清使旧的模糊陈述失效时，应替换旧陈述而非重复添加，不留下过时且矛盾的内容。
+    - 每次整合后保存规格，降低上下文丢失风险，采用原子覆盖。
+    - 保持格式：不重排无关章节，标题层级不变。
+    - 每项新增澄清应最小、可测试，避免扩写导致偏离。
 
-7. Validation (performed after EACH write plus final pass):
-   - Clarifications session contains exactly one bullet per accepted answer (no duplicates).
-   - Total asked (accepted) questions ≤ 5.
-   - Updated sections contain no lingering vague placeholders the new answer was meant to resolve.
-   - No contradictory earlier statement remains (scan for now-invalid alternative choices removed).
-   - Markdown structure valid; only allowed new headings: `## Clarifications`, `### Session YYYY-MM-DD`.
-   - Terminology consistency: same canonical term used across all updated sections.
+7. 验证：每次写入后执行，并在结束时再完整检查：
+   - Clarifications 会话对每个已接受答案恰好有一条记录，不重复。
+   - 已提问并接受的问题总数 ≤ 5。
+   - 更新章节没有残留本次答案应解决的模糊占位。
+   - 不存在相矛盾的旧陈述；检查失效的替代选项是否已移除。
+   - Markdown 结构有效；只允许新增 `## Clarifications` 和 `### Session YYYY-MM-DD` 标题。
+   - 术语一致：所有更新章节使用同一规范术语。
 
-8. Write the updated spec back to `FEATURE_SPEC`.
+8. 将更新后的规格写回 `FEATURE_SPEC`。
 
-9. **Re-validate Spec Quality Checklist** (if it exists):
-   - Check if `FEATURE_DIR/checklists/requirements.md` exists.
-   - If it does NOT exist, skip this step silently.
-   - If it exists:
-     1. Read the checklist file.
-     2. Identify all GitHub task-list checkbox lines — lines matching `- [ ]`, `- [x]`, or `- [X]` (case-insensitive, tolerant of leading whitespace for nested items) outside of code fences. Ignore all other content (headings, notes, non-checkbox bullets, metadata).
-     3. For each checkbox line, record its current marker state (checked or unchecked) and item text into a before-snapshot list.
-     4. Re-evaluate each checkbox item against the **updated** spec (the version just saved in step 7).
-     5. For each checkbox item, update only if the checked/unchecked state actually changes:
-        - If the item now passes and was unchecked: change `[ ]` to `[x]`.
-        - If the item now fails and was checked: change `[x]`/`[X]` to `[ ]`.
-        - If the state is unchanged: leave the marker as-is (preserve existing case to avoid cosmetic diffs).
-     6. Save the updated checklist file. **Only toggle the `[ ]`/`[x]` marker portion of checkbox lines whose state changed.** All other file content — headings, metadata, notes, line ordering, whitespace — must remain unchanged to avoid noisy diffs.
-     7. Compare the before-snapshot with the current state to compute three lists for the Completion Report:
-        - **Newly passing**: items that changed from unchecked to checked.
-        - **Regressions**: items that changed from checked to unchecked.
-        - **Still unchecked**: items that remain unchecked.
-     8. Record the before/after pass counts as checked/total checkbox items (e.g., "12/16 → 15/16 items passing").
+9. **重新验证规格质量清单**（如果存在）：
+   - 检查 `FEATURE_DIR/checklists/requirements.md` 是否存在。
+   - 不存在时，静默跳过。
+   - 存在时：
+     1. 读取清单文件。
+     2. 识别代码围栏之外匹配 `- [ ]`、`- [x]` 或 `- [X]` 的 GitHub 任务列表行，忽略大小写并允许嵌套条目前导空白。忽略其他内容：标题、备注、非复选框列表、元数据。
+     3. 为每个复选框行记录当前勾选状态及条目文本，形成修改前快照。
+     4. 根据**更新后的**规格（第 7 步刚保存的版本）重新评估每项。
+     5. 仅在勾选／未勾选状态确实变化时更新：
+        - 条目现在通过、原来未勾选：将 `[ ]` 改为 `[x]`。
+        - 条目现在失败、原来已勾选：将 `[x]`／`[X]` 改为 `[ ]`。
+        - 状态未变：保持原标记及大小写，避免装饰性差异。
+     6. 保存清单。**只切换状态发生变化行中的 `[ ]`／`[x]` 标记部分。**其他内容，包括标题、元数据、备注、行顺序和空白，必须不变，避免无关差异。
+     7. 比较修改前快照与当前状态，为完成报告生成三类列表：
+        - **新增通过**：未勾选 → 已勾选。
+        - **回退项**：已勾选 → 未勾选。
+        - **仍未勾选**：继续保持未勾选。
+     8. 以已勾选／总条目记录前后通过数，例如“12/16 → 15/16 项通过”。
 
-Behavior rules:
+行为规则：
 
-- If no meaningful ambiguities found (or all potential questions would be low-impact), respond: "No critical ambiguities detected worth formal clarification." and suggest proceeding.
-- If spec file missing, instruct user to run `@@SDLC_BIND_0236@@sdlc-100-spec` first (do not create a new spec here).
-- Never exceed 5 total asked questions (clarification retries for a single question do not count as new questions).
-- Avoid speculative tech stack questions unless the absence blocks functional clarity.
-- Respect user early termination signals ("stop", "done", "proceed").
-- If no questions asked due to full coverage, output a compact coverage summary (all categories Clear) then suggest advancing.
-- If quota reached with unresolved high-impact categories remaining, explicitly flag them under Deferred with rationale.
+- 未发现有意义歧义，或全部候选问题影响很低时，回复“未发现值得正式澄清的关键歧义”，并建议继续。
+- 规格文件缺失时，指导用户先运行 `@@SDLC_BIND_0246@@sdlc-100-spec`；不要在此处创建新规格。
+- 总提问数绝不超过 5；同一问题的澄清追问不另计新问题。
+- 除非缺失技术栈信息阻塞功能清晰度，否则避免猜测性技术栈提问。
+- 尊重用户提前结束的信号，如 stop、done、proceed。
+- 覆盖完整而未提问时，输出紧凑覆盖摘要，全部类别为 Clear，然后建议进入下一步。
+- 用尽额度后仍有高影响未决类别时，在 Deferred 中明确指出并说明理由。
 
-Context for prioritization: $ARGUMENTS
+优先级上下文：$ARGUMENTS
 
-## Mandatory Post-Execution Hooks
+## 必需的执行后钩子
 
-**You MUST complete this section before reporting completion to the user.**
+**在向用户报告完成之前，必须完成本节。**
 
-Check if `.sdlc/extensions.yml` exists in the project root.
-- If it does not exist, or no hooks are registered under `hooks.after_clarify`, skip to the Completion Report.
-- If it exists, read it and look for entries under the `hooks.after_clarify` key.
-- If the YAML cannot be parsed or is invalid, skip hook checking silently and continue to the Completion Report.
-- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
-- For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
-  - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
-  - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
-- When constructing command invocations from hook command names, replace dots (`.`) with hyphens (`-`). For example, `sdlc.git.commit` → `@@SDLC_BIND_0257@@sdlc-git-commit`.
-- For each executable hook, output the following based on its `optional` flag:
-  - **Mandatory hook** (`optional: false`) — **You MUST emit `EXECUTE_COMMAND:` for each mandatory hook**:
+检查项目根目录是否存在 `.sdlc/extensions.yml`。
+- 如果不存在，或 `hooks.after_clarify` 下没有注册钩子，跳转到完成报告。
+- 如果存在，读取文件并查找 `hooks.after_clarify` 键下的条目。
+- 如果 YAML 无法解析或无效，静默跳过钩子检查，继续到完成报告。
+- 排除 `enabled` 明确为 `false` 的钩子。未包含 `enabled` 字段的钩子默认启用。
+- 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
+  - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
+  - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0267@@sdlc-git-commit`。
+- 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
+  - **必需钩子**（`optional: false`）——**必须为每个必需钩子输出 `EXECUTE_COMMAND:`**：
     ```
     ## Extension Hooks
 
@@ -265,8 +275,8 @@ Check if `.sdlc/extensions.yml` exists in the project root.
     Executing: `/{command}`
     EXECUTE_COMMAND: {command}
     ```
-    After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:sdlc-...` or `$sdlc-...`). Emitting the block alone does not run the hook.
-  - **Optional hook** (`optional: true`):
+    输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
+  - **可选钩子**（`optional: true`）：
     ```
     ## Extension Hooks
 
@@ -278,20 +288,20 @@ Check if `.sdlc/extensions.yml` exists in the project root.
     To execute: `/{command}`
     ```
 
-## Completion Report
+## 完成报告
 
-Report completion (after questioning loop ends or early termination):
-- Number of questions asked & answered.
-- Path to updated spec.
-- Sections touched (list names).
-- Spec quality checklist status (if `FEATURE_DIR/checklists/requirements.md` was re-validated): show before/after pass counts (e.g., "Spec Quality Checklist: 12/16 → 15/16 items passing") and list any items that changed state — both newly checked (unchecked → checked) and any regressions (checked → unchecked). If any items remain unchecked, list them as areas needing attention.
-- Coverage summary table listing each taxonomy category with Status: Resolved (was Partial/Missing and addressed), Deferred (exceeds question quota or better suited for planning), Clear (already sufficient), Outstanding (still Partial/Missing but low impact).
-- If any Outstanding or Deferred remain, recommend whether to proceed to `@@SDLC_BIND_0288@@sdlc-110-clar` again later post-plan.
-- Suggested next command.
+提问循环结束或提前终止后，报告：
+- 提问及已回答数量。
+- 更新的规格路径。
+- 修改过的章节名称。
+- 规格质量清单状态：重新验证了 `FEATURE_DIR/checklists/requirements.md` 时，展示前后通过数，例如“规格质量清单：12/16 → 15/16 项通过”，并列出所有状态变化项，包括新增勾选和回退项。仍未勾选的条目列为待关注领域。
+- 覆盖汇总表：每个分类的状态为 Resolved（原 Partial／Missing，现已解决）、Deferred（超出提问额度或更适合规划）、Clear（本来已充分）、Outstanding（仍 Partial／Missing，但影响较低）。
+- 存在 Outstanding 或 Deferred 时，建议是否继续 `@@SDLC_BIND_0298@@sdlc-110-clar`。
+- 建议的下一条命令。
 
-## Done When
+## 完成条件
 
-- [ ] Spec ambiguities identified and clarifications integrated into spec file
-- [ ] Spec quality checklist re-validated against updated spec (if `FEATURE_DIR/checklists/requirements.md` exists)
-- [ ] Extension hooks dispatched or skipped according to the rules in Mandatory Post-Execution Hooks above
-- [ ] Completion reported to user with questions answered, sections touched, checklist status, and coverage summary
+- [ ] 已识别规格歧义，并把澄清整合进规格文件。
+- [ ] `FEATURE_DIR/checklists/requirements.md` 存在时，已根据更新后的规格重新验证。
+- [ ] 已按上文“必需的执行后钩子”规则分派或跳过扩展钩子。
+- [ ] 已向用户报告回答数、修改章节、清单状态和覆盖摘要。

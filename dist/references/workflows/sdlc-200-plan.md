@@ -1,40 +1,50 @@
 
 <!-- SDLC-PACKAGE-BINDING:BEGIN -->
-## Installed package and project binding
+## 已安装插件与业务项目绑定
 
-This is the c@@SDLC_BIND_0004@@ package of SDLC AI SPEC. Resolve paths before executing the unchanged workflow below.
+本次调用宿主为 c@@SDLC_BIND_0004@@。先完成路径绑定，再执行下面的原有流程。
 
-- Use the @@SDLC_BIND_0006@@/skills/<name>/SKILL.md`). Do not infer it from the business working directory, scan other installed versions, or assume this variable is already exported.
-- Keep the shell working directory in the selected business project. Run `SDLC_HOST=c@@SDLC_BIND_0007@@ bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/project-paths.sh"` to resolve the nearest initialized `.sdlc`. When the user explicitly selected a project, pass its absolute path as command-local `SDLC_INIT_DIR`. Use the returned `PROJECT_ROOT` as `SDLC_PROJECT_ROOT`. If the project is missing or invalid, stop; run `sdlc-000-init` explicitly to initialize or complete the project; do not fall back to another tool.
-- Set these resolved absolute values in EVERY shell invocation that uses them; shell state is not guaranteed to persist across tool calls. `${VAR:?}` intentionally fails on an unresolved variable. For non-shell file tools, substitute the resolved absolute value rather than passing `${VAR}` literally. Never change directory to the plugin to fix a resource lookup.
-- Before creating/updating feature files, call the same `project-paths.sh --feature <resolved-feature-directory>` with command-local `SDLC_INIT_DIR` to validate that explicit paths and symlinks cannot target this plugin. The script is read-only and is not an initializer. Project state, current feature and constitution are never written under the plugin.
-- This package carries the core-only, no-Preset/no-Extension/no-event profile. Do not install or invoke extensions or the upstream CLI to satisfy a reference. If the project contains `.sdlc/extensions.yml`, installed presets or extension state, stop and report that profile as unsupported. The upstream conditional hook text is retained below for source equivalence, not an authorization to enable that optional subsystem.
-- `$ARGUMENTS` denotes the current invocation's user input. Where the host does not substitute it, read that input from the conversation; never treat the literal placeholder as the feature description.
+- @@SDLC_BIND_0006@@。 `SDLC_PLUGIN_ROOT` 是已加载核心 Skill 目录向上两级的插件包目录（`skills/<name>/SKILL.md`）。不得从业务工作目录推断、扫描其他安装版本，或假定变量已导出。
+- 保持 shell 工作目录位于选定的业务项目。执行 `SDLC_HOST=c@@SDLC_BIND_0007@@ bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/project-paths.sh"` 解析最近的已初始化 `.sdlc`。用户明确选定项目时，以命令局部变量 `SDLC_INIT_DIR` 传入其绝对路径。将返回的 `PROJECT_ROOT` 作为 `SDLC_PROJECT_ROOT`。项目不存在或无效时停止，明确运行 `sdlc-000-init` 初始化或补全；不得回退到其他工具。
+- 每次使用这些变量的 shell 调用都显式传入已解析的绝对值；工具调用之间不保证 shell 状态持久化。`${VAR:?}` 有意在变量未解析时失败。非 shell 文件工具使用实际绝对路径，不把 `${VAR}` 字面量传给工具。不得通过切换到插件目录来修复资源定位。
+- 创建或更新需求文件前，通过命令局部 `SDLC_INIT_DIR` 调用同一 `project-paths.sh --feature <resolved-feature-directory>`，检查显式路径和符号链接不会指向本插件。该脚本只读，不执行初始化。项目状态、当前需求和宪法不得写到插件内。
+- 本包沿用仅核心、无 Preset、无 Extension、无事件的既有 profile。不得为满足引用而安装或调用扩展、上游 CLI。项目包含 `.sdlc/extensions.yml`、已安装预设或扩展状态时，停止并说明该 profile 不受支持。下面保留上游条件钩子文本用于来源等价，不构成启用可选子系统的授权。
+- `$ARGUMENTS` 表示本次调用的用户输入。宿主没有替换它时，从当前对话读取这次输入；不得将占位符字面量作为需求描述。
 <!-- SDLC-PACKAGE-BINDING:END -->
 
+<!-- SDLC-OUTPUT-LANGUAGE:BEGIN -->
+## 输出语言（仅呈现层）
+
+向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节定位名、占位符、状态值、任务语法、代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
+
+例如保留 `User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记，业务描述、理由、测试说明和任务内容填写中文。代码块中的英文示例用于保留格式和定位约定，不要求将实际填写的自然语言也写成英文。刚复制且尚未填写的模板可以保持英文；不增加一次翻译回写动作。
+
+此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。
+<!-- SDLC-OUTPUT-LANGUAGE:END -->
 
 
-## User Input
+
+## 用户输入
 
 ```text
 $ARGUMENTS
 ```
 
-You **MUST** consider the user input before proceeding (if not empty).
+继续之前，**必须**考虑用户输入（如果非空）。
 
-## Pre-Execution Checks
+## 执行前检查
 
-**Check for extension hooks (before planning)**:
-- Check if `.sdlc/extensions.yml` exists in the project root.
-- If it exists, read it and look for entries under the `hooks.before_plan` key
-- If the YAML cannot be parsed or is invalid, skip hook checking silently and continue normally
-- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
-- For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
-  - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
-  - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
-- When constructing command invocations from hook command names, replace dots (`.`) with hyphens (`-`). For example, `sdlc.git.commit` → `@@SDLC_BIND_0034@@sdlc-git-commit`.
-- For each executable hook, output the following based on its `optional` flag:
-  - **Optional hook** (`optional: true`):
+**检查扩展钩子（规划前）**：
+- 检查项目根目录是否存在 `.sdlc/extensions.yml`。
+- 如果存在，读取文件并查找 `hooks.before_plan` 键下的条目。
+- 如果 YAML 无法解析或无效，静默跳过钩子检查，正常继续。
+- 排除 `enabled` 明确为 `false` 的钩子。未包含 `enabled` 字段的钩子默认启用。
+- 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
+  - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
+  - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0044@@sdlc-git-commit`。
+- 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
+  - **可选钩子**（`optional: true`）：
     ```
     ## Extension Hooks
 
@@ -45,7 +55,7 @@ You **MUST** consider the user input before proceeding (if not empty).
     Prompt: {prompt}
     To execute: `/{command}`
     ```
-  - **Mandatory hook** (`optional: false`):
+  - **必需钩子**（`optional: false`）：
     ```
     ## Extension Hooks
 
@@ -55,38 +65,38 @@ You **MUST** consider the user input before proceeding (if not empty).
 
     Wait for the result of the hook command before proceeding to the Outline.
     ```
-    After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:sdlc-...` or `$sdlc-...`). Emitting the block alone does not run the hook.
-- If no hooks are registered or `.sdlc/extensions.yml` does not exist, skip silently
+    输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
+- 如果没有注册钩子，或 `.sdlc/extensions.yml` 不存在，静默跳过。
 
-## Outline
+## 执行概要
 
-1. **Setup**: Run `SDLC_HOST=c@@SDLC_BIND_0062@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/setup-plan.sh" --json` from repo root and parse JSON for FEATURE_SPEC, IMPL_PLAN, FEATURE_DIR, BRANCH. For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. **准备**：在仓库根目录运行 `SDLC_HOST=c@@SDLC_BIND_0072@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/setup-plan.sh" --json`，从 JSON 解析 FEATURE_SPEC、IMPL_PLAN、FEATURE_DIR、BRANCH。参数包含单引号（如 "I'm Groot"）时，使用转义语法，如 'I'\''m Groot'；可以使用双引号时也可写作 "I'm Groot"。
 
-2. **Load context**: Read FEATURE_SPEC and `.sdlc/memory/constitution.md`. Load IMPL_PLAN template (already copied).
+2. **加载上下文**：读取 FEATURE_SPEC 和 `.sdlc/memory/constitution.md`。加载已经复制好的 IMPL_PLAN 模板。
 
-3. **Execute plan workflow**: Follow the structure in IMPL_PLAN template to:
-   - Fill Technical Context (mark unknowns as "NEEDS CLARIFICATION")
-   - Fill Constitution Check section from constitution
-   - Evaluate gates (ERROR if violations unjustified)
-   - Phase 0: Generate research.md (resolve all NEEDS CLARIFICATION)
-   - Phase 1: Generate data-model.md, contracts/, quickstart.md
-   - Re-evaluate Constitution Check post-design
+3. **执行规划流程**：按照 IMPL_PLAN 模板结构：
+   - 填写 Technical Context，将未知项标为 "NEEDS CLARIFICATION"。
+   - 依据宪法填写 Constitution Check 章节。
+   - 评估门禁，违规且没有充分理由时返回 ERROR。
+   - Phase 0：生成 research.md，解决全部 NEEDS CLARIFICATION。
+   - Phase 1：生成 data-model.md、contracts/、quickstart.md。
+   - 设计完成后重新评估 Constitution Check。
 
-## Mandatory Post-Execution Hooks
+## 必需的执行后钩子
 
-**You MUST complete this section before reporting completion to the user.**
+**在向用户报告完成之前，必须完成本节。**
 
-Check if `.sdlc/extensions.yml` exists in the project root.
-- If it does not exist, or no hooks are registered under `hooks.after_plan`, skip to the Completion Report.
-- If it exists, read it and look for entries under the `hooks.after_plan` key.
-- If the YAML cannot be parsed or is invalid, skip hook checking silently and continue to the Completion Report.
-- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
-- For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
-  - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
-  - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
-- When constructing command invocations from hook command names, replace dots (`.`) with hyphens (`-`). For example, `sdlc.git.commit` → `@@SDLC_BIND_0086@@sdlc-git-commit`.
-- For each executable hook, output the following based on its `optional` flag:
-  - **Mandatory hook** (`optional: false`) — **You MUST emit `EXECUTE_COMMAND:` for each mandatory hook**:
+检查项目根目录是否存在 `.sdlc/extensions.yml`。
+- 如果不存在，或 `hooks.after_plan` 下没有注册钩子，跳转到完成报告。
+- 如果存在，读取文件并查找 `hooks.after_plan` 键下的条目。
+- 如果 YAML 无法解析或无效，静默跳过钩子检查，继续到完成报告。
+- 排除 `enabled` 明确为 `false` 的钩子。未包含 `enabled` 字段的钩子默认启用。
+- 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
+  - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
+  - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0096@@sdlc-git-commit`。
+- 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
+  - **必需钩子**（`optional: false`）——**必须为每个必需钩子输出 `EXECUTE_COMMAND:`**：
     ```
     ## Extension Hooks
 
@@ -94,8 +104,8 @@ Check if `.sdlc/extensions.yml` exists in the project root.
     Executing: `/{command}`
     EXECUTE_COMMAND: {command}
     ```
-    After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:sdlc-...` or `$sdlc-...`). Emitting the block alone does not run the hook.
-  - **Optional hook** (`optional: true`):
+    输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
+  - **可选钩子**（`optional: true`）：
     ```
     ## Extension Hooks
 
@@ -107,20 +117,20 @@ Check if `.sdlc/extensions.yml` exists in the project root.
     To execute: `/{command}`
     ```
 
-## Completion Report
+## 完成报告
 
-Command ends after Phase 1 design. Report branch, IMPL_PLAN path, and generated artifacts.
+命令在 Phase 1 设计完成后结束。报告分支、IMPL_PLAN 路径及生成的产物。
 
-## Phases
+## 各阶段
 
-### Phase 0: Outline & Research
+### Phase 0：概要与研究
 
-1. **Extract unknowns from Technical Context** above:
-   - For each NEEDS CLARIFICATION → research task
-   - For each dependency → best practices task
-   - For each integration → patterns task
+1. **从上面的 Technical Context 提取未知项**：
+   - 每个 NEEDS CLARIFICATION → 一项研究任务。
+   - 每项依赖 → 一项最佳实践任务。
+   - 每项集成 → 一项模式研究任务。
 
-2. **Generate and dispatch research agents**:
+2. **生成并分派研究 Agent**：
 
    ```text
    For each unknown in Technical Context:
@@ -129,44 +139,44 @@ Command ends after Phase 1 design. Report branch, IMPL_PLAN path, and generated 
      Task: "Find best practices for {tech} in {domain}"
    ```
 
-3. **Consolidate findings** in `research.md` using format:
-   - Decision: [what was chosen]
-   - Rationale: [why chosen]
-   - Alternatives considered: [what else evaluated]
+3. 在 `research.md` 中**汇总发现**，使用以下格式：
+   - Decision：[选定的方案]。
+   - Rationale：[选择理由]。
+   - Alternatives considered：[还评估过哪些方案]。
 
-**Output**: research.md with all NEEDS CLARIFICATION resolved
+**输出**：research.md，全部 NEEDS CLARIFICATION 均已解决。
 
-### Phase 1: Design & Contracts
+### Phase 1：设计与契约
 
-**Prerequisites:** `research.md` complete
+**前置条件：**`research.md` 已完成。
 
-1. **Extract entities from feature spec** → `data-model.md`:
-   - Entity name, fields, relationships
-   - Validation rules from requirements
-   - State transitions if applicable
+1. **从功能规格提取实体** → `data-model.md`：
+   - 实体名称、字段、关系。
+   - 需求中的验证规则。
+   - 适用时的状态转换。
 
-2. **Define interface contracts** (if project has external interfaces) → `/contracts/`:
-   - Identify what interfaces the project exposes to users or other systems
-   - Document the contract format appropriate for the project type
-   - Examples: public APIs for libraries, command schemas for CLI tools, endpoints for web services, grammars for parsers, UI contracts for applications
-   - Skip if project is purely internal (build scripts, one-off tools, etc.)
+2. **定义接口契约**（项目存在外部接口时）→ `/contracts/`：
+   - 识别项目向用户或其他系统暴露的接口。
+   - 使用适合项目类型的契约格式记录。
+   - 例如：库的公共 API、CLI 工具的命令模式、Web 服务端点、解析器的语法、应用的 UI 契约。
+   - 纯内部项目（构建脚本、一次性工具等）跳过此项。
 
-3. **Create quickstart validation guide** → `quickstart.md`:
-   - Document runnable validation scenarios that prove the feature works end-to-end
-   - Include prerequisites, setup commands, test/run commands, and expected outcomes
-   - Use links or references to contracts and data model details instead of duplicating them
-   - Do not include full implementation code, model/service/controller bodies, migrations, or complete test suites
-   - Keep this artifact as a validation/run guide; implementation details belong in `tasks.md` and the implementation phase
+3. **创建快速开始验证指南** → `quickstart.md`：
+   - 记录可运行的验证场景，以证明功能端到端可用。
+   - 包含前置条件、准备命令、测试／运行命令及预期结果。
+   - 使用链接或引用指向契约与数据模型细节，不重复它们。
+   - 不包含完整实现代码、模型／服务／控制器实现体、迁移脚本或完整测试套件。
+   - 将该产物保持为验证／运行指南；实现细节属于 `tasks.md` 和实施阶段。
 
-**Output**: data-model.md, /contracts/*, quickstart.md
+**输出**：data-model.md、/contracts/*、quickstart.md。
 
-## Key rules
+## 关键规则
 
-- Use absolute paths for filesystem operations; use project-relative paths for references in documentation
-- ERROR on gate failures or unresolved clarifications
+- 文件系统操作使用绝对路径；文档引用使用项目相对路径。
+- 门禁失败或存在未解决澄清项时返回 ERROR。
 
-## Done When
+## 完成条件
 
-- [ ] Plan workflow executed and design artifacts generated
-- [ ] Extension hooks dispatched or skipped according to the rules in Mandatory Post-Execution Hooks above
-- [ ] Completion reported to user with branch, plan path, and generated artifacts
+- [ ] 已执行规划流程并生成设计产物。
+- [ ] 已按照上文“必需的执行后钩子”规则分派或跳过扩展钩子。
+- [ ] 已向用户报告完成，包括分支、方案路径及生成的产物。

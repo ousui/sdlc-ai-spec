@@ -55,3 +55,14 @@ history rather than copied into the current product tree.
 - Make path-valued unit-test assertions compare canonical filesystem identity so
   macOS `/var` and `/private/var` aliases do not produce false failures; run the
   engineering workflow on both Ubuntu 24.04 and macOS 15 ARM64.
+
+## Shared core Skills and zh-CN projection (1.0.0-beta)
+
+- Nine core entries now share dist/skills; INIT keeps three minimal host-policy
+  wrappers. Each host still exposes ten capabilities without changing its policy.
+- Full core workflow prose, metadata, binding and INIT guidance are localized.
+  Template skeletons and machine contracts stay English; authored content is Chinese.
+- Reviewed locale assets bind exact rendered inputs; stale translations block new
+  packages. Localization-only candidate refresh rebuilds and invalidates old evidence.
+- Correct local-only event-key renaming, blanket unrelated environment rejection
+  and blanket external-state symlink rejection. No independent upstream bug fixes.

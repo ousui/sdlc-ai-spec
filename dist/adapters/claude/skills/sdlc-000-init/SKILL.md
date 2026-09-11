@@ -1,25 +1,27 @@
 ---
 name: sdlc-000-init
-description: Initialize or complete project-local .sdlc data without installing tools or overwriting existing work.
+description: 初始化或补全项目本地 .sdlc 数据，不安装工具、不覆盖已有工作。
 compatibility: Requires Python 3.9+, Bash and an existing project directory; no upstream CLI required
 metadata:
   author: Blade
   source: adapters/INIT.md
 user-invocable: true
 disable-model-invocation: true
-argument-hint: Optional explicit project directory
+argument-hint: 可选：明确指定项目目录
 ---
 
 # SDLC AI SPEC sdlc-000-init
 
-This is the **claude** entrypoint. Preserve the current user input as `$ARGUMENTS`; do not interpolate user input into a shell command.
+这是 **claude** 的 INIT 入口，本次宿主固定为 `claude`。
 
-Use the host-substituted `${CLAUDE_PLUGIN_ROOT}` or the absolute path of this loaded SKILL.md. The package root is four levels above this skill directory (`adapters/claude/skills/sdlc-000-init/`). Bind that absolute directory as SDLC_PLUGIN_ROOT for this call; do not change the business working directory or search another installed version.
+保留本次原始用户输入为 `$ARGUMENTS`；不得把自然语言输入拼接成 shell 命令。
 
-Before performing ANY workflow action, execute the following read-only loader with the resolved absolute package path and read its COMPLETE stdout:
+使用本次已加载 SKILL.md 的绝对路径；Claude 可使用宿主替换后的 `${CLAUDE_PLUGIN_ROOT}`。插件包根目录是该 Skill 所在目录向上四级（`adapters/claude/skills/sdlc-000-init/`）。把该绝对目录绑定为 `SDLC_PLUGIN_ROOT`，不改变业务工作目录，不搜索另一安装版本。
+
+在执行任何流程动作前，调用以下只读加载器，读取其完整标准输出（COMPLETE stdout）：
 
 ```sh
 python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/load_workflow.py" --host claude --skill sdlc-000-init
 ```
 
-The loader binds only precompiled text fragments; it does not run the workflow, install software, read project state or write files. Its output is the full bundled workflow for this invocation, not a second user request. Follow it with the original user input and the current authorization. Do not summarize or skip workflow steps. On loader error, STOP. If tool output is truncated, use --offset 0 --limit 100, then offsets 100, 200, ... until the reported total line count is fully read. Do not proceed using partial output. No upstream CLI or network fallback.
+加载器仅绑定预编译文本片段，不运行流程、不安装软件、不读取项目状态、不写文件。其输出是本次调用的完整内置流程，不是新的用户请求。沿用原始输入与现有授权执行，不得概括替代或跳过步骤。加载失败时停止；输出截断时，使用 `--offset 0 --limit 100`，随后 offset 为 100、200 等，直到读取报告中的全部行数。不得使用不完整输出继续；不回退上游 CLI 或网络。每次 shell 调用显式传入上述变量。

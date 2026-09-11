@@ -1,61 +1,29 @@
-# Initialize project data
+# 初始化项目数据
 
-This is SDLC AI SPEC's project-only initializer, not the upstream CLI installer. This
-invocation is in **c@@SDLC_BIND_0003@@**. Use the original user input and current authorization.
-Initialization never requires a pre-existing `.sdlc` or an installed upstream CLI.
+这是 SDLC AI SPEC 的项目级初始化能力，不是上游 CLI 安装器。本次调用位于 **c@@SDLC_BIND_0002@@**。沿用原始用户输入和当前授权；不要求事先存在 `.sdlc` 或安装上游 CLI。
 
-## 1. Select the project and installed package
+## 1. 选择项目与已安装插件
 
-Resolve `SDLC_PLUGIN_ROOT` from this already-loaded Skill/package (as the wrapper
-instructs). Select the explicit project directory from the user's request or the
-current workspace root. Use its resolved absolute path as `SDLC_PROJECT_ROOT`.
-Do not substitute a parent Git root: a nested module such as `helloserver` can be
-the intended project. When no path is explicit and the working directory is a
-subdirectory of an already initialized workspace, use that workspace's `.sdlc`
-root. In a multi-root or genuinely ambiguous workspace, ask which root to use.
-Never select the plugin directory, home or filesystem root by guessing.
+按入口说明，从已经加载的 Skill/插件确定 `SDLC_PLUGIN_ROOT`。选择用户明确指定的项目目录或当前工作区根目录，将其解析后的绝对路径作为 `SDLC_PROJECT_ROOT`。不得用父级 Git 根替代：`helloserver` 一类嵌套模块可能就是目标项目。未明确指定目录、且当前目录处于已初始化工作区的子目录时，使用该工作区的 `.sdlc` 根。在多根工作区或确有歧义时询问应使用哪个根。不得猜测插件目录、用户主目录或文件系统根目录。
 
-Read any applicable project instructions. Do not inspect all business code to
-invent project principles. Confirm Python 3.9+, Bash and the bundled script are
-available. If an execution dependency is missing, report it; do not install one
-or fall back to the upstream CLI, `uv`, network access or ad-hoc shell scaffolding.
+读取适用的项目指令；不得为了臆造项目原则遍历全部业务代码。确认 Python 3.9+、Bash 和内置脚本可用。缺少执行依赖时报告，不安装依赖，也不回退到上游 CLI、`uv`、网络或临时拼凑的 shell 初始化。
 
-## 2. Run the deterministic initializer once
+## 2. 调用一次确定性初始化器
 
-Pass the selected absolute paths in this tool call; do not rely on shell variables
-persisting between calls. Preserve quoting, and do not interpolate raw natural
-language user input into a shell command.
+本次工具调用显式传入选定的绝对路径，不依赖调用间的变量持久化。保持引号，不将自然语言用户输入拼接进 shell 命令。
 
 ```sh
 python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/init_project.py" --project "${SDLC_PROJECT_ROOT:?}" --json
 ```
 
-Use `--dry-run` only when the user requested a preview. Use
-`--feature-numbering timestamp` only when explicitly requested; the default is
-sequential and existing valid numbering is preserved. No `--force` or reset exists.
+仅当用户要求预览时使用 `--dry-run`。仅当用户明确要求时使用 `--feature-numbering timestamp`；默认 sequential，并保留已有合法编号方式。不存在 `--force` 或 reset。
 
-The script creates `.sdlc/memory/`, `.sdlc/specs/`, `init-options.json`, a project
-copy of the constitution template, a data README and `.sdlc/.gitignore`. It does
-not copy Skills, scripts, applications, integrations or core templates into the
-project. Existing compatible partial/manual `.sdlc` directories are completed.
-Existing documents and feature selection are preserved. Malformed, symlinked,
-legacy or unsupported profiles stop with a diagnostic, not automatic conversion.
-The copied constitution is an unratified template, not confirmed project policy.
+脚本创建 `.sdlc/memory/`、`.sdlc/specs/`、`init-options.json`、项目宪法模板副本、数据 README 和 `.sdlc/.gitignore`。不会把 Skills、脚本、应用、集成或核心模板目录复制到项目。兼容的部分/人工 `.sdlc` 状态会被补全，已有文档和需求选择会被保留。损坏、符号链接、旧版或不受支持的 profile 以诊断停止，不自动转换。复制的宪法是尚未批准的模板，不是已确认的项目政策；不为了中文化额外改写此模板副本。
 
-On nonzero exit, report the diagnostic and STOP. Do not fabricate success,
-hand-repair a legacy layout, delete `.sdlc`, or invoke a different initializer.
-On success, report `initialized`, `completed` or `unchanged`, the selected project,
-created/updated/preserved paths and warnings. A successful dry-run is not an
-initialized project. Ignore rules do not untrack files already in Git.
+退出非零时，报告诊断并停止。不得伪造成功、手工修补旧布局、删除 `.sdlc` 或调用其他初始化器。成功时用中文说明 `initialized`、`completed` 或 `unchanged`，列出选定项目、创建/更新/保留路径及警告。成功的 dry-run 不等于项目已初始化。忽略规则不会将已在 Git 中的文件取消跟踪。
 
-## 3. Stop at the initialization boundary
+## 3. 停在初始化边界
 
-Do not create a feature, `feature.json`, spec, plan or task list. Do not implement
-business code, change user/system/Agent configuration, initialize Git, create or
-switch branches, commit, push, or install tools. Git inspection is read-only.
+不得创建需求、`feature.json`、规格、方案或任务清单。不得实施业务代码、改变用户/系统/Agent 配置、初始化 Git、创建或切换分支、提交、推送或安装工具。Git 检查仅只读。
 
-Initialization is normally needed once per project, not once per Agent or session.
-Repeat calls are safe completion/no-ops, not resets. Suggest @@SDLC_BIND_0057@@sdlc-010-rule
-to ratify project principles, or @@SDLC_BIND_0058@@sdlc-100-spec to resume the already requested
-specification. Do not launch either automatically unless the current user request
-explicitly authorizes continuation beyond initialization.
+通常每个项目初始化一次，而不是每个 Agent 或会话一次。重复调用是安全补全或无操作，不是重置。建议 @@SDLC_BIND_0028@@sdlc-100-spec 继续已请求的规格工作。除非本次用户请求明确授权继续超出初始化范围，否则不得自动启动二者。

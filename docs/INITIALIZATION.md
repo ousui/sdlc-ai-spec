@@ -109,6 +109,8 @@ new project README files. Existing README, constitution, features, config keys
 and `speckit_version` (upstream provenance) are preserved; installation is not a
 project-data rewrite. The legacy `.specify` detector still refuses implicit
 conversion. Runtime Bash overrides use `SDLC_INIT_DIR`, `SDLC_FEATURE` and
-`SDLC_FEATURE_DIRECTORY`; obsolete nonempty `SPECIFY_*` overrides are rejected
-with a rename diagnostic rather than silently routing to a different project.
+`SDLC_FEATURE_DIRECTORY`. The blanket rejection of unrelated `SPECIFY_*` names
+has been removed to retain upstream behavior. External state symlinks are allowed
+by core path resolution unless they target plugin resources; INIT itself retains
+its separately specified preservation and refusal rules.
 There is no old-variable alias and no automatic RULE-to-INIT transition.

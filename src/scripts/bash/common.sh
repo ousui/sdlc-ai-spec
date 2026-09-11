@@ -75,14 +75,7 @@ _sdlc_validate_paths() {
 }
 
 get_repo_root() {
-    local root legacy
-    # Compatibility rejection only: never ignore an obsolete project override.
-    for legacy in ${!SPECIFY_@}; do
-        if [[ -n "${!legacy}" ]]; then
-            echo "ERROR: Obsolete $legacy; use SDLC_${legacy#SPECIFY_} instead" >&2
-            return 1
-        fi
-    done
+    local root
     if [[ -n "${SDLC_INIT_DIR:-}" ]]; then
         root=$(resolve_sdlc_init_dir) || return 1
     elif ! root=$(find_sdlc_root); then

@@ -29,14 +29,15 @@ repository transfer from a metadata edit.
 
 ## Source and scope
 
-- Read README.md, docs/DEVELOPMENT.md, docs/MIGRATION.md and upstream.lock.json.
+- Read README.md, docs/DEVELOPMENT.md, docs/MIGRATION.md, docs/LOCALIZATION.md and upstream.lock.json.
 - Before naming changes or upstream upgrades, also read docs/NAMING.md and
   docs/naming-map.json. Apply the approved context-specific product/Skill mapping
   in the generation layer, preserve raw upstream provenance, and update all
   callers together. Naming changes do not authorize behavior changes. An approved
   target name is not evidence that the runtime migration has shipped.
 - Preserve the nine pinned upstream English commands and the documented path,
-  name and packaging deltas. No translation, new process rules or legacy runtime.
+  name and packaging deltas. Translation is permitted only in derived prose, not
+  raw sources or machine contracts; no new process rules or legacy runtime.
 - Project-only INIT is authorized and implemented by adapters/INIT.md plus the
   bundled stdlib initializer. Preserve existing project data; never install tools.
 - GitHub integration, real-project execution and native client installation remain
@@ -59,6 +60,8 @@ Verify the repository, branch, HEAD and worktree before writes. Preserve unrelat
 user work. Commit/push only within the explicitly authorized branch. Do not merge,
 retag, release, rewrite history or modify other branches without authorization.
 
+For translated inputs use the documented LOCALIZATION_REQUIRED / reviewed refresh
+path; do not hand-edit candidate digests or reuse stale evidence.
 Use tools/upgrade.py for detached upstream candidates; never overwrite the accepted
 worktree during preparation or weaken comparisons to accept a new version.
 

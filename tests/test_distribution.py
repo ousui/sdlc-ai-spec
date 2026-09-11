@@ -10,7 +10,8 @@ import tempfile
 import unittest
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
-from build import factor,render_source,relocate_body,binding,COMMANDS,HOSTS,split,build
+from build import factor,render_source,relocate_body,binding,COMMANDS,HOSTS,split,build,skill_entry
+from localize import localized_workflow
 spec=importlib.util.spec_from_file_location('sdlc_workflow',ROOT/'dist/scripts/python/load_workflow.py')
 loader=importlib.util.module_from_spec(spec);spec.loader.exec_module(loader)
 
@@ -22,10 +23,10 @@ class DistributionTests(unittest.TestCase):
             for name in COMMANDS:
                 raw=(ROOT/'src/upstream/templates/commands'/f'{name}.md').read_text()
                 _,body=render_source(raw,name,host)
-                self.assertEqual(loader.load(ROOT/'dist',host,EXPECTED[name]),binding(host)+relocate_body(body,host))
-                meta,entry=split((ROOT/'dist/adapters'/host/'skills'/EXPECTED[name]/'SKILL.md').read_text())
-                self.assertIn('--host '+host+' --skill '+EXPECTED[name],entry)
-                self.assertIn('read its COMPLETE stdout',entry)
+                self.assertEqual(loader.load(ROOT/'dist',host,EXPECTED[name]),localized_workflow(name,host))
+                meta,entry=split(skill_entry(ROOT/'dist',host,name).read_text())
+                self.assertIn('--host "${SDLC_HOST:?}" --skill '+EXPECTED[name],entry)
+                self.assertIn('COMPLETE stdout',entry)
                 self.assertNotIn('## Outline',entry)
 
     def test_factor_structure_or_reserved_token_change_fails(self):

@@ -46,6 +46,61 @@ def source_digest(root: Path) -> str:
     return hashlib.sha256(json.dumps(records, sort_keys=True).encode()).hexdigest()
 
 
+def localization_digest(root: Path) -> str:
+    return source_digest(root / 'src/locales/zh-CN')
+
+
+def frozen_localization_inputs(root: Path) -> str:
+    """Fingerprint EVERYTHING except the explicitly editable translation subtree.
+
+    A blocked candidate may be translated, not patched into another source version.
+    Generated dist is frozen too, until the reviewed refresh rebuilds it itself.
+    """
+    records = {}
+    for path in sorted(root.rglob('*')):
+        relative = path.relative_to(root)
+        if any(part in IGNORED for part in relative.parts) or path.suffix in ('.pyc', '.pyo'):
+            continue
+        if relative.parts[:3] == ('src', 'locales', 'zh-CN'):
+            continue
+        if path.is_symlink():
+            raise ValueError('Candidate contains a symlink: ' + str(relative))
+        if path.is_file():
+            records[relative.as_posix()] = [hashlib.sha256(path.read_bytes()).hexdigest(), path.stat().st_mode & 0o111]
+    return hashlib.sha256(json.dumps(records, sort_keys=True).encode()).hexdigest()
+
+
+def refresh_localization(record_path: Path, review: Path) -> dict:
+    """Resume only a localization-blocked candidate after an explicit text review.
+
+    Reviewer JSON is a local decision record, NOT authentication. No push, source
+    branch update, upstream switch, test approval or release occurs here.
+    """
+    record = json.loads(record_path.read_text())
+    if record.get('status') != 'LOCALIZATION_REQUIRED':
+        raise ValueError('Candidate is not awaiting localization')
+    candidate, source = Path(record['candidate_root']), Path(record['source_root'])
+    if git_clean(source) != record['base_sha'] or run('git', 'rev-parse', 'HEAD', cwd=candidate) != record['base_sha']:
+        raise ValueError('Source or candidate base moved; prepare again')
+    if subprocess.run(['git', 'symbolic-ref', '-q', 'HEAD'], cwd=candidate, capture_output=True).returncode == 0:
+        raise ValueError('Candidate must remain detached')
+    if frozen_localization_inputs(candidate) != record.get('localization_frozen_digest'):
+        raise ValueError('Non-localization candidate files changed; prepare again')
+    approval = json.loads(review.read_text())
+    if (approval.get('decision') != 'refresh-localization' or not approval.get('reviewer')
+            or approval.get('localization_digest') != localization_digest(candidate)
+            or approval.get('upstream_sha') != record['upstream_sha']):
+        raise ValueError('Review must bind exact translation bytes and upstream SHA')
+    # Validate first: never update recorded source hashes or auto-approve text.
+    run(sys.executable, '-B', str(candidate/'tools/localize.py'), 'check', cwd=candidate)
+    run(sys.executable, '-B', str(candidate/'tools/build.py'), '--marketplaces', cwd=candidate)
+    record.update(status='CANDIDATE_READY', candidate_digest=source_digest(candidate),
+                  localization_review=approval)
+    record.pop('error', None)
+    record_path.write_text(json.dumps(record, indent=2)+'\n')
+    return record
+
+
 def blob(data: bytes) -> dict:
     return {'git_blob': hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest(),
             'sha256': hashlib.sha256(data).hexdigest()}
@@ -113,7 +168,11 @@ def prepare(root: Path, upstream: Path, out: Path, ref: str) -> dict:
         run(sys.executable, '-B', str(out/'tools/build.py'), '--marketplaces', cwd=out)
         record.update(status='CANDIDATE_READY', candidate_digest=source_digest(out))
     except Exception as error:
-        record.update(status='BLOCKED', error=str(error))
+        status = 'LOCALIZATION_REQUIRED' if 'LocalizationError:' in str(error) else 'BLOCKED'
+        record.update(status=status, error=str(error))
+        if status == 'LOCALIZATION_REQUIRED':
+            record['localization_frozen_digest'] = frozen_localization_inputs(out)
+            record['localization_digest'] = localization_digest(out)
         raise
     finally:
         record_path.write_text(json.dumps(record, indent=2)+'\n')
@@ -173,6 +232,9 @@ def main() -> int:
     q.add_argument('--upstream', type=Path, required=True)
     q.add_argument('--ref', required=True)
     q.add_argument('--out', type=Path, required=True)
+    q = sub.add_parser('refresh-localization', help='Resume a candidate after reviewed incremental translation only')
+    q.add_argument('--record', type=Path, required=True)
+    q.add_argument('--review', type=Path, required=True)
     q = sub.add_parser('accept')
     q.add_argument('--record', type=Path, required=True)
     q.add_argument('--evidence', type=Path, required=True, help='External verifier result.json')
@@ -180,8 +242,12 @@ def main() -> int:
     q.add_argument('--check', action='store_true')
     args = p.parse_args()
     try:
-        result = (prepare(ROOT,args.upstream,args.out,args.ref) if args.action == 'prepare'
-                  else accept(args.record,args.evidence,args.review,args.check))
+        if args.action == 'prepare':
+            result = prepare(ROOT,args.upstream,args.out,args.ref)
+        elif args.action == 'refresh-localization':
+            result = refresh_localization(args.record,args.review)
+        else:
+            result = accept(args.record,args.evidence,args.review,args.check)
         print(json.dumps(result, indent=2)); return 0
     except (ValueError,OSError,KeyError,TypeError,subprocess.TimeoutExpired) as error:
         print('ERROR: '+str(error),file=sys.stderr);return 1

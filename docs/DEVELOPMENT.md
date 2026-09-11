@@ -11,17 +11,18 @@ as part of an ordinary code change. Use the exact commit SHA to identify builds.
 The root contains the implementation. `src/upstream/templates/commands` retains original English
 source; `src/templates` and `src/scripts` contain documented port deltas.
 `adapters/` supplies resource binding and host differences. `tools/build.py`
-generates a single self-contained `dist` package and three thin native entrypoint sets,
+generates one self-contained `dist` with nine shared cores and host-specific INIT entries,
 without importing the upstream CLI or reading initialized projects. Use `--marketplaces`
 to also regenerate the three repository-root catalogs.
 There is no root plugin manifest because the root is a source/build workspace.
 
-All three native manifests declare `skills: ./adapters/<host>/skills/` inside
-the same dist package. No portable root manifest/default skills scan is shipped.
-The loaded wrapper pins its host and reads the complete, deterministic loader
-output. The shared workflows plus literal fragments reconstruct each formerly
-expanded host body exactly; this is tested against installed upstream output.
-[Installation](INSTALLATION.md) lists current official format references.
+Core entries live under `dist/skills/`; only INIT lives under
+`dist/adapters/<host>/skills/`. Claude's custom path supplements its default scan;
+Codex/Cursor explicitly list both paths. Shared core metadata preserves original
+invocation defaults. INIT retains its original per-host control fields.
+The English source renderer remains independently compared with upstream output;
+Chinese complete bodies are validated against reviewed, source-bound locale assets.
+See [LOCALIZATION.md](LOCALIZATION.md) for incremental translation and protected tokens.
 
 ## Development environment: uv only
 

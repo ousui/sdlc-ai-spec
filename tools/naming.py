@@ -54,7 +54,6 @@ def product_prose(text: str) -> str:
     for old, new in (
         ('Spec Kit', DISPLAY_NAME), ('spec-kit', PRODUCT_ID),
         ('[specify]', '[sdlc]'),
-        ('before_specify', 'before_spec'), ('after_specify', 'after_spec'),
         ('the specify command', 'the sdlc-100-spec command'),
         ('by specify command', 'by sdlc-100-spec command'),
         ('or specify a different number', 'or choose a different number'),
@@ -128,5 +127,5 @@ def audit_package(package: Path) -> None:
         for line in text.splitlines():
             if line in exceptions.get(relative, set()):
                 continue
-            if legacy.search(line) or old_command.search(line):
+            if legacy.search(re.sub(r'\b(?:before|after)_specify\b', '<EVENT_KEY>', line)) or old_command.search(line):
                 raise ValueError(f'Residual product name in {relative}: {line[:180]}')

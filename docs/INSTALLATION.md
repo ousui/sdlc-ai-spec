@@ -10,13 +10,17 @@ old default branch and assume it contains this build.
 ## One installed package
 
 All three repository-root marketplace catalogs point to `./dist`.
-The package has three native manifests selecting `./adapters/<host>/skills/`.
-There is deliberately no portable root `plugin.json` and no default `skills/`
-inside dist: portable fixed discovery and Claude's additive default scan would
-otherwise undermine disjoint host selection. Scripts, templates, and the ten
-workflow bodies are shared. Thin entrypoints retain native metadata and pass a
-literal host to the read-only loader. No CLI install, build or download happens
-when a member installs this package.
+Nine shared core entries live in `dist/skills/`. Only INIT keeps three host-specific
+wrappers because its previous invocation policies differ. Each host loads nine
+shared cores plus its own INIT, never another host's INIT.
+
+Codex and Cursor use `skills: ["./skills/", "./adapters/<host>/skills/"]`.
+Claude automatically scans `skills/` and adds its custom `./adapters/claude/skills/`.
+There is no portable root plugin.json. Do not separately install both the root
+workspace and the dist package. Remove the old cached plugin version through the
+host's normal uninstall/update UI rather than merging old folders into the new one.
+Runtime dependencies remain Bash and Python 3.9+; installation does not build or
+translate anything. Chinese is precompiled; template structure remains English.
 
 ## Codex
 

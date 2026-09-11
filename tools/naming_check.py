@@ -39,7 +39,7 @@ def reverse_names(text: str, *, bare: bool = False) -> str:
         ('SDLC AI SPEC', 'Spec Kit'), ('[sdlc]', '[specify]'),
         ('did not define certain details', 'did not specify certain details'),
         ('or choose a different number', 'or specify a different number'),
-        ('before_spec', 'before_specify'), ('after_spec', 'after_specify'),
+
     ):
         text = re.sub(r'(?<![\w])' + re.escape(new) + r'(?![\w])', lambda m: old, text)
     return text

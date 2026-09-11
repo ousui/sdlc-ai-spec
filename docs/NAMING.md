@@ -136,7 +136,7 @@ XCHK 严格只读；HUMA 生成评审者拥有的需求质量清单；CONV 仅�
 不直接实现代码，无发现时不产生空的收敛章节。
 
 以下是已讨论但不由本次改名自动实现的能力：RULE 代初始化、`sdlc-status`
-实际状态展示、`dist/skills` 公共入口与宿主策略合并、旧项目数据自动迁移。
+实际状态展示、INIT 跨宿主策略统一（不实施）、旧项目数据自动迁移。
 不能把预留名称写成已经安装，也不能把命名测试通过写成行为兼容性通过。
 
 ## 6. PR 作为工作包流程记录
@@ -155,21 +155,21 @@ README 和本契约保存长期规范，不另建一套与 PR 重复的流水进
 生成实现集中在 `tools/naming.py`，消费本目录的映射；`port.py` 在保留原始
 锚点校验后转换程序声明与调用，`render.py` 先复现原文再转换产品名称，
 `build.py` 使用编号 ID 生成 Skill、工作流文件及 binding 键。loader 接收
-完整公开 Skill ID，不再接收上游 capability ID。三宿主仍保留各自薄入口，
-没有新增调用策略、跨阶段授权或共享 skills 目录。
+完整公开 Skill ID，不再接收上游 capability ID。九个核心入口共用 dist/skills，
+INIT 保留最小策略例外；不新增调用策略或跨阶段授权。
 
 除前文示例，运行标识还包括 `format_speckit_command -> format_sdlc_command`、
 `SPECKIT_EXTENSIONS/REGISTRY/MANIFEST/TMPL -> SDLC_EXTENSIONS/REGISTRY/MANIFEST/TMPL`；
 这些只是现有模板解析逻辑的标识投影，不启用扩展或预设子系统。生成正文中的
-`before_specify/after_specify` 投影为 `before_spec/after_spec`；它们仍是被
-core-only 配置阻止执行的条件 hook 文案，不宣称支持外部 hook 配置迁移。
+`before_specify/after_specify` 是事件键，保持原名。旧版将其改为
+`before_spec/after_spec` 的错误转换已撤回；不因品牌清理修改机器契约。
 
 安装包旧标记允许范围为：LICENSE、NOTICE、UPSTREAM.json 的真实来源信息；
 BUILD.json 的原始输入路径；SKILL.md 元数据中的 `author` 与 `source` 来源字段；
 README 的 Attribution 段；初始化器中 `.specify` 旧数据检测与
-`speckit_version` 既有来源键；Bash 项目解析器对旧 `SPECIFY_*` 参数的拒绝诊断。
+`speckit_version` 既有来源键；原始 `before_specify/after_specify` 事件键。
 这些例外按字段/代码位置验证，不把整个 scripts、adapters 或 dist 排除。
 
-旧环境变量不作为别名保留。非空旧覆盖变量出现时明确要求改名，在路径选择
-之前失败，避免静默忽略后写错项目。新调用链行为不变；现有 `.sdlc` 数据、
+旧环境变量不作为别名保留；也不增加整类 `SPECIFY_*` 拒绝条件。不相关
+变量沿用上游忽略行为，正式调用明确使用 SDLC_*。现有 `.sdlc` 数据、
 已有模板覆盖和已生成文档不被安装动作或重复 INIT 擅自改写。

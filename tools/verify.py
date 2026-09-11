@@ -21,7 +21,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from build import ROOT,COMMANDS,HOSTS,UPSTREAM_SHA,REPOSITORY,VERSION,AUTHOR,render_source,split,build,binding,ALL_COMMANDS,CORE_COMPATIBILITY
+from build import ROOT,COMMANDS,HOSTS,UPSTREAM_SHA,REPOSITORY,VERSION,AUTHOR,render_source,split,build,binding,ALL_COMMANDS,CORE_COMPATIBILITY,skill_entry,manifest_skills
+from localize import english_body,localized_workflow,translated_metadata,check_all
+from naming import product_prose
 
 
 from naming_check import EXPECTED, reverse_names, leaf_projection
@@ -98,7 +100,7 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
     for host,integ,folder in [('codex','codex','.agents'),('claude','claude','.claude'),('cursor','cursor-agent','.cursor')]:
         base=baselines/integ
         package=ROOT/'dist'
-        actual_skills={p.parent.name for p in (package/'adapters'/host/'skills').glob('*/SKILL.md')}
+        actual_skills={p.parent.name for directory in (package/'skills',package/'adapters'/host/'skills') for p in directory.glob('*/SKILL.md')}
         require_equal(actual_skills,set(EXPECTED.values()),'Skill inventory '+host)
         for name in COMMANDS:
             native=base/folder/'skills'/('speckit-'+name)/'SKILL.md'
@@ -106,16 +108,23 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
             rendered=render_source((ROOT/'src/upstream/templates/commands'/f'{name}.md').read_text(),name,host)
             require_equal(rendered,(oracle_meta,oracle_body),'Source renderer vs installed CLI '+host+'/'+name)
             passed('source_renderer_vs_installed_cli',host+'/'+name)
-            meta,entry=split((package/'adapters'/host/'skills'/EXPECTED[name]/'SKILL.md').read_text())
+            meta,entry=split(skill_entry(package,host,name).read_text())
             loader=subprocess.run([sys.executable,'-I','-B',str(package/'scripts/python/load_workflow.py'),'--host',host,'--skill',EXPECTED[name]],capture_output=True,text=True,check=True)
-            body='\n'+loader.stdout
-            if '--host '+host+' --skill '+EXPECTED[name] not in entry or 'COMPLETE stdout' not in entry:
+            body='\n'+binding(host)+english_body(name,host)
+            require_equal(loader.stdout,localized_workflow(name,host),'Localized complete workflow '+host+'/'+name)
+            passed('localized_workflow_source_binding',host+'/'+name)
+            if '--host "${SDLC_HOST:?}" --skill '+EXPECTED[name] not in entry or 'COMPLETE stdout' not in entry:
                 raise AssertionError('Thin entrypoint does not bind the full workflow')
-            expected_meta=dict(oracle_meta,name=EXPECTED[name],
-                compatibility=CORE_COMPATIBILITY)
-            if 'argument-hint' in expected_meta:
-                expected_meta['argument-hint'] = expected_meta['argument-hint'].replace('feature you want to specify', 'feature you want to define')
-            require_equal(meta,expected_meta,'Native metadata '+host+'/'+name)
+            # Compare native behavior first: common core defaults must preserve
+            # each host's original policy. UI hints do not control invocation.
+            require_equal(meta.get('user-invocable',True),oracle_meta.get('user-invocable',True),'User invocation '+host+'/'+name)
+            require_equal(meta.get('disable-model-invocation',False),oracle_meta.get('disable-model-invocation',False),'Implicit invocation '+host+'/'+name)
+            common,_=render_source((ROOT/'src/upstream/templates/commands'/f'{name}.md').read_text(),name,'claude')
+            common.update(name=EXPECTED[name],compatibility=CORE_COMPATIBILITY)
+            for field in ('description','argument-hint'):
+                if field in common:common[field]=product_prose(common[field])
+            expected_meta=translated_metadata(name,common)
+            require_equal(meta,expected_meta,'Shared localized metadata '+host+'/'+name)
             require_equal(normalize(oracle_body,host,ported=False),normalize(body,host,ported=True),'Migrated body '+host+'/'+name)
             # Negative control proves normalization cannot hide a prose mutation.
             mutated=body+'\nUNAPPROVED BUSINESS RULE\n'
@@ -134,10 +143,10 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
         require_equal(m['repository'],REPOSITORY,'Fixed repository')
         require_equal(m['version'],VERSION,'Version')
         require_equal(m['author'],AUTHOR,'Plugin author')
-        require_equal(m['skills'],'./adapters/'+host+'/skills/','Explicit host selection')
+        require_equal(m['skills'],manifest_skills(host),'Shared core and host INIT selection')
         require_equal(set(m),{'name','version','description','repository','license','author','skills'},'Native minimal manifest fields')
-        if (package/'plugin.json').exists() or (package/'skills').exists():
-            raise AssertionError('Portable/default discovery would expose duplicate host skills')
+        if (package/'plugin.json').exists() or not (package/'skills').is_dir():
+            raise AssertionError('Missing shared core or ambiguous portable root manifest')
         passed('native_manifest_documented_subset',host)
         for f in package.rglob('*'):
             if f.is_symlink():raise AssertionError('Package symlink '+str(f))
@@ -157,6 +166,8 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
                 if re.search(r'(?m)^\s*(?:from\s+specify_cli\b|import\s+specify_cli\b|(?:exec\s+)?specify\s)',text):
                     raise AssertionError('CLI runtime dependency '+str(f))
         passed('runtime_dependency_and_inventory',host)
+    check_all()
+    passed('localization_freshness_and_protected_spans','nine complete Chinese workflows')
     # Compare only the declared project-data projection of real CLI init outputs.
     # Integration registries, scripts and templates are intentionally not copied.
     with tempfile.TemporaryDirectory(prefix='sdlc-init-parity-') as temp:

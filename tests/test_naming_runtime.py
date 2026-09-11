@@ -17,6 +17,8 @@ from naming import audit_package, identifiers, invocation, skill_id, template_re
 from naming_check import EXPECTED
 from render import command_refs, HOSTS
 from verify import normalize
+from build import binding
+from localize import english_body
 
 
 class NamingRuntimeTests(unittest.TestCase):
@@ -25,7 +27,8 @@ class NamingRuntimeTests(unittest.TestCase):
         package = ROOT / 'dist'
         for host in HOSTS:
             path = package / 'adapters' / host / 'skills'
-            self.assertEqual({p.name for p in path.iterdir()}, wanted)
+            self.assertEqual({p.name for p in path.iterdir()}, {'sdlc-000-init'})
+            self.assertEqual({p.name for p in (package/'skills').iterdir()}, wanted-{'sdlc-000-init'})
             self.assertEqual(set(json.loads((package / 'bindings' / (host + '.json')).read_text())), wanted)
         self.assertEqual({p.stem for p in (package / 'references/workflows').glob('*.md')}, wanted)
         self.assertNotIn('sdlc-status', wanted)
@@ -73,7 +76,7 @@ class NamingRuntimeTests(unittest.TestCase):
         for host in HOSTS:
             proc = subprocess.run([sys.executable, '-I', '-B', str(ROOT / 'dist/scripts/python/load_workflow.py'),
                 '--host', host, '--skill', 'sdlc-310-xchk'], capture_output=True, text=True, check=True, timeout=10)
-            full = '\n' + proc.stdout
+            full = '\n' + binding(host) + english_body('analyze', host)
             normal = normalize(full, host, ported=True)
             self.assertNotEqual(normal, normalize(full.replace('STRICTLY READ-ONLY', 'WRITES ALLOWED'), host, ported=True))
             self.assertNotEqual(normal, normalize(full + '\nUNAPPROVED BUSINESS RULE\n', host, ported=True))
@@ -91,20 +94,25 @@ class NamingRuntimeTests(unittest.TestCase):
             'naming-test', str(common), 'sdlc-900-fake'], capture_output=True, text=True, timeout=5)
         self.assertNotEqual(result.returncode, 0)
 
-    def test_obsolete_overrides_never_silently_select_another_project(self):
-        with tempfile.TemporaryDirectory() as temp:
-            root = Path(temp); (root / '.sdlc').mkdir()
-            (root / '.sdlc/init-options.json').write_text('{"script":"sh"}')
-            before = {str(p): p.read_bytes() for p in root.rglob('*') if p.is_file()}
-            base_env = {k: v for k, v in os.environ.items() if not k.startswith(('SPECIFY_', 'SDLC_'))}
-            for legacy in ('SPECIFY_INIT_DIR', 'SPECIFY_FEATURE', 'SPECIFY_FEATURE_DIRECTORY'):
-                env = dict(base_env, **{legacy: '/another-project', 'SDLC_INIT_DIR': str(root)})
-                proc = subprocess.run(['bash', str(ROOT / 'dist/scripts/bash/project-paths.sh')], cwd=root,
-                    env=env, capture_output=True, text=True, timeout=5)
-                self.assertNotEqual(proc.returncode, 0)
-                self.assertIn('Obsolete ' + legacy, proc.stderr)
-                self.assertIn(legacy.replace('SPECIFY_', 'SDLC_'), proc.stderr)
-            self.assertEqual(before, {str(p): p.read_bytes() for p in root.rglob('*') if p.is_file()})
+    def test_unrelated_legacy_prefix_preserves_explicit_project_selection(self):
+        # Upstream ignores unrelated SPECIFY_* names. The documented SDLC
+        # override still determines the selected project after the rename.
+        import os
+        import subprocess
+        import tempfile
+        from pathlib import Path
+        root = Path(__file__).resolve().parents[1]
+        with tempfile.TemporaryDirectory() as temporary:
+            project = Path(temporary) / 'project'
+            (project / '.sdlc').mkdir(parents=True)
+            env = dict(os.environ, SDLC_INIT_DIR=str(project), SPECIFY_UNRELATED='1')
+            result = subprocess.run(
+                ['bash', '-c', 'source "$1"; get_repo_root', 'fixture',
+                 str(root / 'dist/scripts/bash/common.sh')],
+                cwd=project, env=env, text=True, capture_output=True)
+            self.assertEqual(result.returncode, 0, result.stderr)
+            self.assertEqual(Path(result.stdout.strip()).resolve(), project.resolve())
+
 
     def test_new_project_readme_names_and_repeat_preservation(self):
         with tempfile.TemporaryDirectory() as temp:

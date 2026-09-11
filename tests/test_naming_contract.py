@@ -105,7 +105,7 @@ class NamingContractTests(unittest.TestCase):
         self.assertIn('https://github.com/ousui/sdlc-ai-spec/pull/24', self.policy)
         self.assertEqual(set(self.data['deferred_behaviors']), {
             'status-implementation', 'rule-auto-initialization',
-            'shared-dist-skills', 'legacy-project-data-migration',
+            'legacy-project-data-migration',
         })
         self.assertEqual(self.data['schema_version'], 1)
 

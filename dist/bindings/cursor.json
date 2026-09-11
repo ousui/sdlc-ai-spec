@@ -1,104 +1,101 @@
 {
   "sdlc-010-rule": {
     "@@SDLC_BIND_0004@@": "ursor",
-    "@@SDLC_BIND_0006@@": "absolute path of this loaded SKILL.md; do not assume a host-specific plugin-root environment variable exists. `SDLC_PLUGIN_ROOT` is the package directory four levels above the loaded entrypoint skill directory (`adapters/cursor",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
     "@@SDLC_BIND_0007@@": "ursor",
-    "@@SDLC_BIND_0040@@": "/",
-    "@@SDLC_BIND_0053@@": "/",
+    "@@SDLC_BIND_0042@@": "/",
+    "@@SDLC_BIND_0055@@": "/",
     "@@SDLC_BIND_0087@@": "ursor",
-    "@@SDLC_BIND_0160@@": "/"
+    "@@SDLC_BIND_0156@@": "/"
   },
   "sdlc-100-spec": {
     "@@SDLC_BIND_0004@@": "ursor",
-    "@@SDLC_BIND_0006@@": "absolute path of this loaded SKILL.md; do not assume a host-specific plugin-root environment variable exists. `SDLC_PLUGIN_ROOT` is the package directory four levels above the loaded entrypoint skill directory (`adapters/cursor",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
     "@@SDLC_BIND_0007@@": "ursor",
-    "@@SDLC_BIND_0034@@": "/",
-    "@@SDLC_BIND_0062@@": "/",
-    "@@SDLC_BIND_0100@@": "ursor",
-    "@@SDLC_BIND_0110@@": "/sdlc-200-plan`, `/",
-    "@@SDLC_BIND_0113@@": "/",
-    "@@SDLC_BIND_0186@@": "/sdlc-110-clar` or `/",
-    "@@SDLC_BIND_0252@@": "/",
-    "@@SDLC_BIND_0281@@": "/sdlc-110-clar` or `/"
+    "@@SDLC_BIND_0044@@": "/",
+    "@@SDLC_BIND_0072@@": "/",
+    "@@SDLC_BIND_0110@@": "ursor",
+    "@@SDLC_BIND_0120@@": "/sdlc-200-plan`、`/",
+    "@@SDLC_BIND_0123@@": "/",
+    "@@SDLC_BIND_0193@@": "/sdlc-110-clar` or `/",
+    "@@SDLC_BIND_0259@@": "/",
+    "@@SDLC_BIND_0288@@": "/sdlc-110-clar` 或 `/"
   },
   "sdlc-110-clar": {
     "@@SDLC_BIND_0004@@": "ursor",
-    "@@SDLC_BIND_0006@@": "absolute path of this loaded SKILL.md; do not assume a host-specific plugin-root environment variable exists. `SDLC_PLUGIN_ROOT` is the package directory four levels above the loaded entrypoint skill directory (`adapters/cursor",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
     "@@SDLC_BIND_0007@@": "ursor",
-    "@@SDLC_BIND_0034@@": "/",
-    "@@SDLC_BIND_0064@@": "/",
-    "@@SDLC_BIND_0068@@": "ursor",
-    "@@SDLC_BIND_0072@@": "/",
-    "@@SDLC_BIND_0236@@": "/",
-    "@@SDLC_BIND_0257@@": "/",
-    "@@SDLC_BIND_0288@@": "/sdlc-200-plan` or run `/"
+    "@@SDLC_BIND_0044@@": "/",
+    "@@SDLC_BIND_0074@@": "/",
+    "@@SDLC_BIND_0078@@": "ursor",
+    "@@SDLC_BIND_0082@@": "/",
+    "@@SDLC_BIND_0246@@": "/",
+    "@@SDLC_BIND_0267@@": "/",
+    "@@SDLC_BIND_0298@@": "/sdlc-200-plan`，或在规划后再次运行 `/"
   },
   "sdlc-200-plan": {
     "@@SDLC_BIND_0004@@": "ursor",
-    "@@SDLC_BIND_0006@@": "absolute path of this loaded SKILL.md; do not assume a host-specific plugin-root environment variable exists. `SDLC_PLUGIN_ROOT` is the package directory four levels above the loaded entrypoint skill directory (`adapters/cursor",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
     "@@SDLC_BIND_0007@@": "ursor",
-    "@@SDLC_BIND_0034@@": "/",
-    "@@SDLC_BIND_0062@@": "ursor",
-    "@@SDLC_BIND_0086@@": "/"
+    "@@SDLC_BIND_0044@@": "/",
+    "@@SDLC_BIND_0072@@": "ursor",
+    "@@SDLC_BIND_0096@@": "/"
   },
   "sdlc-300-task": {
     "@@SDLC_BIND_0004@@": "ursor",
-    "@@SDLC_BIND_0006@@": "absolute path of this loaded SKILL.md; do not assume a host-specific plugin-root environment variable exists. `SDLC_PLUGIN_ROOT` is the package directory four levels above the loaded entrypoint skill directory (`adapters/cursor",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
     "@@SDLC_BIND_0007@@": "ursor",
-    "@@SDLC_BIND_0034@@": "/",
-    "@@SDLC_BIND_0062@@": "ursor",
-    "@@SDLC_BIND_0106@@": "/"
+    "@@SDLC_BIND_0044@@": "/",
+    "@@SDLC_BIND_0072@@": "ursor",
+    "@@SDLC_BIND_0116@@": "/"
   },
   "sdlc-310-xchk": {
     "@@SDLC_BIND_0004@@": "ursor",
-    "@@SDLC_BIND_0006@@": "absolute path of this loaded SKILL.md; do not assume a host-specific plugin-root environment variable exists. `SDLC_PLUGIN_ROOT` is the package directory four levels above the loaded entrypoint skill directory (`adapters/cursor",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
     "@@SDLC_BIND_0007@@": "ursor",
-    "@@SDLC_BIND_0034@@": "/",
-    "@@SDLC_BIND_0062@@": "/",
-    "@@SDLC_BIND_0068@@": "/",
-    "@@SDLC_BIND_0074@@": "ursor",
-    "@@SDLC_BIND_0204@@": "/",
-    "@@SDLC_BIND_0206@@": "/sdlc-100-spec with refinement\", \"Run /",
-    "@@SDLC_BIND_0221@@": "/"
+    "@@SDLC_BIND_0044@@": "/",
+    "@@SDLC_BIND_0072@@": "/",
+    "@@SDLC_BIND_0078@@": "/",
+    "@@SDLC_BIND_0084@@": "ursor",
+    "@@SDLC_BIND_0214@@": "/",
+    "@@SDLC_BIND_0216@@": "/sdlc-100-spec 细化规格”“运行 /",
+    "@@SDLC_BIND_0232@@": "/"
   },
   "sdlc-320-huma": {
     "@@SDLC_BIND_0004@@": "ursor",
-    "@@SDLC_BIND_0006@@": "absolute path of this loaded SKILL.md; do not assume a host-specific plugin-root environment variable exists. `SDLC_PLUGIN_ROOT` is the package directory four levels above the loaded entrypoint skill directory (`adapters/cursor",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
     "@@SDLC_BIND_0007@@": "ursor",
-    "@@SDLC_BIND_0044@@": "/sdlc-100-spec` and `/",
-    "@@SDLC_BIND_0064@@": "/",
-    "@@SDLC_BIND_0092@@": "ursor",
-    "@@SDLC_BIND_0266@@": "/",
-    "@@SDLC_BIND_0274@@": "/",
-    "@@SDLC_BIND_0366@@": "/"
+    "@@SDLC_BIND_0054@@": "/sdlc-100-spec` 和 `/",
+    "@@SDLC_BIND_0074@@": "/",
+    "@@SDLC_BIND_0102@@": "ursor",
+    "@@SDLC_BIND_0276@@": "/",
+    "@@SDLC_BIND_0284@@": "/",
+    "@@SDLC_BIND_0377@@": "/"
   },
   "sdlc-400-impl": {
     "@@SDLC_BIND_0004@@": "ursor",
-    "@@SDLC_BIND_0006@@": "absolute path of this loaded SKILL.md; do not assume a host-specific plugin-root environment variable exists. `SDLC_PLUGIN_ROOT` is the package directory four levels above the loaded entrypoint skill directory (`adapters/cursor",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
     "@@SDLC_BIND_0007@@": "ursor",
-    "@@SDLC_BIND_0034@@": "/",
-    "@@SDLC_BIND_0062@@": "ursor",
-    "@@SDLC_BIND_0066@@": "/sdlc-100-spec` and `/sdlc-110-clar`; custom checklists generated by `/",
-    "@@SDLC_BIND_0185@@": "/",
-    "@@SDLC_BIND_0199@@": "/"
+    "@@SDLC_BIND_0044@@": "/",
+    "@@SDLC_BIND_0072@@": "ursor",
+    "@@SDLC_BIND_0076@@": "/sdlc-100-spec` 和 `/sdlc-110-clar` 维护的内置规格质量清单；`/",
+    "@@SDLC_BIND_0196@@": "/",
+    "@@SDLC_BIND_0210@@": "/"
   },
   "sdlc-500-conv": {
     "@@SDLC_BIND_0004@@": "ursor",
-    "@@SDLC_BIND_0006@@": "absolute path of this loaded SKILL.md; do not assume a host-specific plugin-root environment variable exists. `SDLC_PLUGIN_ROOT` is the package directory four levels above the loaded entrypoint skill directory (`adapters/cursor",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
     "@@SDLC_BIND_0007@@": "ursor",
-    "@@SDLC_BIND_0035@@": "/",
-    "@@SDLC_BIND_0073@@": "/",
-    "@@SDLC_BIND_0074@@": "/sdlc-400-impl` has run on the current `tasks.md`, and after `/",
-    "@@SDLC_BIND_0088@@": "/",
-    "@@SDLC_BIND_0102@@": "ursor",
-    "@@SDLC_BIND_0109@@": "/sdlc-100-spec` for a missing spec, `/",
-    "@@SDLC_BIND_0110@@": "/",
-    "@@SDLC_BIND_0239@@": "/",
-    "@@SDLC_BIND_0256@@": "/"
+    "@@SDLC_BIND_0045@@": "/",
+    "@@SDLC_BIND_0077@@": "/sdlc-400-impl` 完成。本命令**只能**在 `/sdlc-400-impl` 已针对当前 `tasks.md` 运行，且 `/",
+    "@@SDLC_BIND_0087@@": "/",
+    "@@SDLC_BIND_0097@@": "ursor",
+    "@@SDLC_BIND_0103@@": "/sdlc-100-spec`，缺方案用 `/sdlc-200-plan`，缺任务用 `/",
+    "@@SDLC_BIND_0210@@": "/",
+    "@@SDLC_BIND_0224@@": "/"
   },
   "sdlc-000-init": {
-    "@@SDLC_BIND_0003@@": "ursor",
-    "@@SDLC_BIND_0057@@": "/",
-    "@@SDLC_BIND_0058@@": "/"
+    "@@SDLC_BIND_0002@@": "ursor",
+    "@@SDLC_BIND_0028@@": "/sdlc-010-rule 批准项目原则，或 /"
   }
 }

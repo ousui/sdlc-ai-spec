@@ -11,12 +11,14 @@ from naming import (skill_id, invocation, product_prose, template_references, SK
 from render import (ROOT, COMMANDS, HOSTS, LOCK, UPSTREAM_SHA, METADATA, REPOSITORY,
                     VERSION, AUTHOR, HINTS, render_source, split, relocate_body, binding)
 
+from localize import (translate_body, translated_metadata, localized_workflow, resource, check_all)
+
 LOCAL_COMMANDS = ('init',)
 ALL_COMMANDS = COMMANDS + LOCAL_COMMANDS
 CORE_COMPATIBILITY = 'Requires an initialized .sdlc project, Bash and Python 3.9+; run sdlc-000-init once per project'
 
 def init_body(host: str) -> str:
-    return ((ROOT / 'adapters/INIT.md').read_text(encoding='utf-8')
+    return (resource('init')
             .replace('@HOST@', host)
             .replace('@CONSTITUTION_COMMAND@', invocation('constitution', host))
             .replace('@SPEC_COMMAND@', invocation('specify', host)))
@@ -54,29 +56,68 @@ def factor(bodies: dict[str, str]) -> tuple[str, dict[str, dict[str, str]]]:
     return text, slots
 
 
-def wrapper(meta: dict, host: str, name: str) -> str:
+def skill_entry(package: Path, host: str, name: str) -> Path:
+    """Nine shared core entries; INIT alone preserves the existing host policies."""
+    if host not in HOSTS or name not in ALL_COMMANDS:
+        raise ValueError('Unknown entry selection')
+    folder = package / 'adapters' / host / 'skills' if name == 'init' else package / 'skills'
+    return folder / skill_id(name) / 'SKILL.md'
+
+
+def manifest_skills(host: str):
+    if host not in HOSTS:
+        raise ValueError('Unknown host')
+    # Claude adds custom paths to its automatic skills/ scan. Cursor and Codex
+    # use an explicit list. Never list shared entries twice or load another INIT.
+    private = './adapters/' + host + '/skills/'
+    return private if host == 'claude' else ['./skills/', private]
+
+
+def common_core_metadata(raw: str, name: str) -> dict:
+    """Only share metadata whose effective semantics agree across all hosts."""
+    original = {host: render_source(raw,name,host)[0] for host in HOSTS}
+    shared = original['claude']
+    def effective(meta):
+        meta = dict(meta)
+        meta.pop('argument-hint',None)  # display-only hint, currently Claude-only
+        for key,default in (('user-invocable',True),('disable-model-invocation',False)):
+            meta.setdefault(key,default)
+            if not isinstance(meta[key],bool):
+                raise ValueError('Invalid native invocation policy: '+name)
+        return meta
+    for host,meta in original.items():
+        if effective(meta) != effective(shared):
+            raise ValueError('Native core metadata diverged; cannot share without policy change: '+name+'/'+host)
+        if 'argument-hint' in meta and meta['argument-hint'] != shared.get('argument-hint'):
+            raise ValueError('Native hint diverged: '+name+'/'+host)
+    return dict(shared)
+
+
+def wrapper(meta: dict, host: str | None, name: str) -> str:
     front = yaml.safe_dump(meta, allow_unicode=True, sort_keys=False, width=1000).rstrip()
-    root = ('Use the host-substituted `${CLAUDE_PLUGIN_ROOT}` or the absolute path of this loaded SKILL.md.'
-            if host == 'claude' else 'Use the absolute path of this loaded SKILL.md. No host-specific environment variable is assumed.')
+    if host is None:
+        host_detail = ('这是三个宿主共用的核心入口。依据本次调用的实际宿主，将 `SDLC_HOST` 显式设为 '
+            '`codex`、`claude` 或 `cursor`；不得根据模型名称、项目中的配置目录或历史会话猜测。'
+            '无法确定当前宿主时停止并说明，不选择默认宿主。')
+        host_arg = '"${SDLC_HOST:?}"'
+        location = '两级（`skills/' + skill_id(name) + '/`）'
+    else:
+        host_detail = '这是 **' + host + '** 的 INIT 入口，本次宿主固定为 `' + host + '`。'
+        host_arg = host
+        location = '四级（`adapters/' + host + '/skills/' + skill_id(name) + '/`）'
     return ('---\n' + front + '\n---\n\n# SDLC AI SPEC ' + skill_id(name) + '\n\n'
-        + 'This is the **' + host + '** entrypoint. Preserve the current user input as '
-        '`$ARGUMENTS`; do not interpolate user input into a shell command.\n\n'
-        + root + ' The package root is four levels above this skill directory '
-        '(`adapters/' + host + '/skills/' + skill_id(name) + '/`). '
-        'Bind that absolute directory as SDLC_PLUGIN_ROOT for this call; do not '
-        'change the business working directory or search another installed version.\n\n'
-        'Before performing ANY workflow action, execute the following read-only '
-        'loader with the resolved absolute package path and read its COMPLETE stdout:\n\n'
+        + host_detail + '\n\n保留本次原始用户输入为 `$ARGUMENTS`；不得把自然语言输入拼接成 shell 命令。\n\n'
+        '使用本次已加载 SKILL.md 的绝对路径；Claude 可使用宿主替换后的 `${CLAUDE_PLUGIN_ROOT}`。'
+        '插件包根目录是该 Skill 所在目录向上' + location + '。'
+        '把该绝对目录绑定为 `SDLC_PLUGIN_ROOT`，不改变业务工作目录，不搜索另一安装版本。\n\n'
+        '在执行任何流程动作前，调用以下只读加载器，读取其完整标准输出（COMPLETE stdout）：\n\n'
         '```sh\npython3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/load_workflow.py" '
-        '--host ' + host + ' --skill ' + skill_id(name) + '\n```\n\n'
-        'The loader binds only precompiled text fragments; it does not run the '
-        'workflow, install software, read project state or write files. Its output '
-        'is the full bundled workflow for this invocation, not a second user request. '
-        'Follow it with the original user input and the current authorization. '
-        'Do not summarize or skip workflow steps. On loader error, STOP. '
-        'If tool output is truncated, use --offset 0 --limit 100, then offsets '
-        '100, 200, ... until the reported total line count is fully read. '
-        'Do not proceed using partial output. No upstream CLI or network fallback.\n')
+        '--host ' + host_arg + ' --skill ' + skill_id(name) + '\n```\n\n'
+        '加载器仅绑定预编译文本片段，不运行流程、不安装软件、不读取项目状态、不写文件。'
+        '其输出是本次调用的完整内置流程，不是新的用户请求。沿用原始输入与现有授权执行，'
+        '不得概括替代或跳过步骤。加载失败时停止；输出截断时，使用 `--offset 0 --limit 100`，'
+        '随后 offset 为 100、200 等，直到读取报告中的全部行数。不得使用不完整输出继续；'
+        '不回退上游 CLI 或网络。每次 shell 调用显式传入上述变量。\n')
 
 
 def marketplaces() -> dict[str, dict]:
@@ -125,26 +166,27 @@ def build(destination: Path) -> None:
         shutil.copytree(ROOT / 'src/scripts', package / 'scripts',
                         ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
         shutil.copytree(ROOT / 'src/templates', package / 'templates')
-        # Native manifests select disjoint entrypoints. No portable root manifest:
-        # portable fixed skills discovery would defeat host-specific selection.
+        # Validate all translations before publishing any generated package.
+        check_all()
         bindings = {host: {} for host in HOSTS}
         (package / 'references' / 'workflows').mkdir(parents=True)
         for name in COMMANDS:
-            bodies = {}
-            for host in HOSTS:
-                raw = (ROOT / 'src/upstream/templates/commands' / (name + '.md')).read_text()
-                meta, body = render_source(raw, name, host)
-                meta['name'] = skill_id(name)
-                meta['description'] = product_prose(meta['description'])
-                if 'argument-hint' in meta:
-                    meta['argument-hint'] = product_prose(meta['argument-hint'])
-                meta['compatibility'] = CORE_COMPATIBILITY
-                bodies[host] = binding(host) + relocate_body(body, host)
-                path = package / 'adapters' / host / 'skills' / skill_id(name) / 'SKILL.md'
-                path.parent.mkdir(parents=True)
-                path.write_text(wrapper(meta, host, name), encoding='utf-8')
+            raw = (ROOT / 'src/upstream/templates/commands' / (name + '.md')).read_text()
+            # Core host policies agree: explicit/implicit calls allowed. Preserve
+            # Claude's supported defaults and hints; other hosts ignore hints.
+            meta = common_core_metadata(raw, name)
+            meta['name'] = skill_id(name)
+            for key in ('description', 'argument-hint'):
+                if key in meta:
+                    meta[key] = product_prose(meta[key])
+            meta = translated_metadata(name, meta)
+            meta['compatibility'] = CORE_COMPATIBILITY
+            path = skill_entry(package, 'codex', name)
+            path.parent.mkdir(parents=True)
+            path.write_text(wrapper(meta, None, name), encoding='utf-8')
+            bodies = {host: localized_workflow(name, host) for host in HOSTS}
             core, fragments = factor(bodies)
-            (package / 'references' / 'workflows' / (skill_id(name) + '.md')).write_text(core, encoding='utf-8')
+            (package / 'references/workflows' / (skill_id(name) + '.md')).write_text(core, encoding='utf-8')
             for host in HOSTS:
                 bindings[host][skill_id(name)] = fragments[host]
         # Locally authored project bootstrap is NOT presented as an upstream command.
@@ -153,12 +195,12 @@ def build(destination: Path) -> None:
         (package / 'references/workflows/sdlc-000-init.md').write_text(core, encoding='utf-8')
         for host in HOSTS:
             meta = {'name': skill_id('init'),
-                    'description': 'Initialize or complete project-local .sdlc data without installing tools or overwriting existing work.',
+                    'description': '初始化或补全项目本地 .sdlc 数据，不安装工具、不覆盖已有工作。',
                     'compatibility': 'Requires Python 3.9+, Bash and an existing project directory; no upstream CLI required',
                     'metadata': {'author': AUTHOR['name'], 'source': 'adapters/INIT.md'}}
             if host == 'claude':
                 meta.update({'user-invocable': True, 'disable-model-invocation': True,
-                             'argument-hint': 'Optional explicit project directory'})
+                             'argument-hint': '可选：明确指定项目目录'})
             path = package / 'adapters' / host / 'skills/sdlc-000-init/SKILL.md'
             path.parent.mkdir(parents=True)
             path.write_text(wrapper(meta, host, 'init'), encoding='utf-8')
@@ -167,7 +209,7 @@ def build(destination: Path) -> None:
         for host in HOSTS:
             (package / 'bindings' / (host + '.json')).write_text(
                 json.dumps(bindings[host], ensure_ascii=False, indent=2) + '\n')
-            manifest = dict(METADATA, skills='./adapters/' + host + '/skills/')
+            manifest = dict(METADATA, skills=manifest_skills(host))
             path = package / ('.' + host + '-plugin') / 'plugin.json'
             path.parent.mkdir()
             path.write_text(json.dumps(manifest, indent=2) + '\n')
@@ -184,21 +226,21 @@ def build(destination: Path) -> None:
             'profile': {'script': 'sh', 'events': False, 'extensions': [], 'presets': []},
             'included_commands': list(COMMANDS), 'excluded_commands': ['taskstoissues'],
             'local_commands': list(LOCAL_COMMANDS), 'init_implemented': True, 'native_host_verified': False,
-            'layout': 'single-package-native-entrypoints',
+            'layout': 'shared-core-skills-with-host-init', 'locale': 'zh-CN',
+            'template_language': 'English skeleton; Chinese natural-language fill',
             'source_to_skill': SKILL_IDS,
         }, indent=2) + '\n')
+        (package / 'references/TEMPLATE-LANGUAGE.md').write_text(resource('output-language'), encoding='utf-8')
         (package / 'README.md').write_text(
-            '# SDLC AI SPEC v' + VERSION + '\n\nAuthor: ' + AUTHOR['name'] + '\n\nRepository: ' + REPOSITORY + '\n\n'
-            'One self-contained package for Codex, Claude Code and Cursor. Native manifests '
-            'select thin host entrypoints; workflows, Bash scripts and templates are shared. '
-            'No install-time build, uv, upstream CLI or network is required. Runtime requires '
-            'Bash, Python 3.9+ and standard POSIX tools.\n\n'
-            'Nine upstream core skills plus sdlc-000-init. Run sdlc-000-init once per project; it '
-            'creates or completes project data without copying tools or resetting features. '
-            'GitHub is not included. Native discovery, model-driven behavior and business '
-            'acceptance are verified separately by the user. See the repository docs/INITIALIZATION.md.\n\n'
-            'Based on Spec Kit by GitHub, Inc. (MIT), an independent source port. '
-            'See LICENSE, NOTICE, UPSTREAM.json and BUILD.json.\n')
+            '# SDLC AI SPEC v' + VERSION + '\n\n作者：' + AUTHOR['name'] + '\n\n仓库：' + REPOSITORY + '\n\n'
+            '九个核心入口位于 skills/，由 Codex、Claude Code 和 Cursor 共用；INIT 保留各宿主最小策略入口。'
+            '完整流程正文及摘要为简体中文；模板固定骨架保持英文，按原流程填入的自然语言内容使用中文。'
+            '不因升级或语言要求重写已有业务文档。\n\n'
+            '安装不需要构建、uv、上游 CLI 或网络。Runtime requires Bash, Python 3.9+ and standard POSIX tools. '
+            'No install-time build, uv, upstream CLI or network is required.\n\n'
+            '每个项目通常运行一次 sdlc-000-init；重复调用只补全兼容状态，不重置已有工作。'
+            '原生发现、模型行为与真实业务验收不由静态工程检查代替。\n\n'
+            'Based on Spec Kit by GitHub, Inc. (MIT), an independent source port. See LICENSE, NOTICE, UPSTREAM.json and BUILD.json.\n', encoding='utf-8')
         for path in (package / 'scripts').rglob('*.sh'):
             path.chmod(0o755)
         inputs = {}

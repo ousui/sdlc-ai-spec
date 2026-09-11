@@ -146,3 +146,23 @@ and copied source paths retain original names, while generated workflows use
 `references/workflows/<full-skill-id>.md` and loader calls use the same public ID.
 Unknown source references must stop preparation; never infer new abbreviations
 or weaken full-body parity to accept a candidate. See PR #24 for execution evidence.
+
+## Shared entrypoints and localized candidate resumption
+
+Current distribution uses nine shared core entries under `dist/skills/`, with only
+INIT retaining host-specific policy wrappers. Original English source rendering
+is still independently checked; Chinese source assets are version-bound in
+`src/locales/zh-CN`. No translation service runs during build or installation.
+English template skeletons and existing project data remain unchanged.
+
+A changed upstream input can now stop preparation as `LOCALIZATION_REQUIRED`.
+Only the candidate translation subtree can be edited in this state. After explicit
+translation review, `tools/upgrade.py refresh-localization --record ... --review ...`
+validates frozen non-translation inputs, rechecks Chinese and rebuilds the candidate.
+It creates a new candidate digest, not a new accepted version. Old test evidence
+must not be reused. Full commands and the review record format are in
+[LOCALIZATION.md](LOCALIZATION.md). Review strings are workflow records, not auth.
+
+The original "candidate must not be edited" rule still applies outside this
+explicit, narrow translation-resumption path. Changed adapter/code requires a
+reviewed source update and freshly prepared candidate, not a digest edit.

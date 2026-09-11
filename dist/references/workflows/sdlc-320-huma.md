@@ -1,70 +1,80 @@
 
 <!-- SDLC-PACKAGE-BINDING:BEGIN -->
-## Installed package and project binding
+## 已安装插件与业务项目绑定
 
-This is the c@@SDLC_BIND_0004@@ package of SDLC AI SPEC. Resolve paths before executing the unchanged workflow below.
+本次调用宿主为 c@@SDLC_BIND_0004@@。先完成路径绑定，再执行下面的原有流程。
 
-- Use the @@SDLC_BIND_0006@@/skills/<name>/SKILL.md`). Do not infer it from the business working directory, scan other installed versions, or assume this variable is already exported.
-- Keep the shell working directory in the selected business project. Run `SDLC_HOST=c@@SDLC_BIND_0007@@ bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/project-paths.sh"` to resolve the nearest initialized `.sdlc`. When the user explicitly selected a project, pass its absolute path as command-local `SDLC_INIT_DIR`. Use the returned `PROJECT_ROOT` as `SDLC_PROJECT_ROOT`. If the project is missing or invalid, stop; run `sdlc-000-init` explicitly to initialize or complete the project; do not fall back to another tool.
-- Set these resolved absolute values in EVERY shell invocation that uses them; shell state is not guaranteed to persist across tool calls. `${VAR:?}` intentionally fails on an unresolved variable. For non-shell file tools, substitute the resolved absolute value rather than passing `${VAR}` literally. Never change directory to the plugin to fix a resource lookup.
-- Before creating/updating feature files, call the same `project-paths.sh --feature <resolved-feature-directory>` with command-local `SDLC_INIT_DIR` to validate that explicit paths and symlinks cannot target this plugin. The script is read-only and is not an initializer. Project state, current feature and constitution are never written under the plugin.
-- This package carries the core-only, no-Preset/no-Extension/no-event profile. Do not install or invoke extensions or the upstream CLI to satisfy a reference. If the project contains `.sdlc/extensions.yml`, installed presets or extension state, stop and report that profile as unsupported. The upstream conditional hook text is retained below for source equivalence, not an authorization to enable that optional subsystem.
-- `$ARGUMENTS` denotes the current invocation's user input. Where the host does not substitute it, read that input from the conversation; never treat the literal placeholder as the feature description.
+- @@SDLC_BIND_0006@@。 `SDLC_PLUGIN_ROOT` 是已加载核心 Skill 目录向上两级的插件包目录（`skills/<name>/SKILL.md`）。不得从业务工作目录推断、扫描其他安装版本，或假定变量已导出。
+- 保持 shell 工作目录位于选定的业务项目。执行 `SDLC_HOST=c@@SDLC_BIND_0007@@ bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/project-paths.sh"` 解析最近的已初始化 `.sdlc`。用户明确选定项目时，以命令局部变量 `SDLC_INIT_DIR` 传入其绝对路径。将返回的 `PROJECT_ROOT` 作为 `SDLC_PROJECT_ROOT`。项目不存在或无效时停止，明确运行 `sdlc-000-init` 初始化或补全；不得回退到其他工具。
+- 每次使用这些变量的 shell 调用都显式传入已解析的绝对值；工具调用之间不保证 shell 状态持久化。`${VAR:?}` 有意在变量未解析时失败。非 shell 文件工具使用实际绝对路径，不把 `${VAR}` 字面量传给工具。不得通过切换到插件目录来修复资源定位。
+- 创建或更新需求文件前，通过命令局部 `SDLC_INIT_DIR` 调用同一 `project-paths.sh --feature <resolved-feature-directory>`，检查显式路径和符号链接不会指向本插件。该脚本只读，不执行初始化。项目状态、当前需求和宪法不得写到插件内。
+- 本包沿用仅核心、无 Preset、无 Extension、无事件的既有 profile。不得为满足引用而安装或调用扩展、上游 CLI。项目包含 `.sdlc/extensions.yml`、已安装预设或扩展状态时，停止并说明该 profile 不受支持。下面保留上游条件钩子文本用于来源等价，不构成启用可选子系统的授权。
+- `$ARGUMENTS` 表示本次调用的用户输入。宿主没有替换它时，从当前对话读取这次输入；不得将占位符字面量作为需求描述。
 <!-- SDLC-PACKAGE-BINDING:END -->
 
+<!-- SDLC-OUTPUT-LANGUAGE:BEGIN -->
+## 输出语言（仅呈现层）
+
+向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节定位名、占位符、状态值、任务语法、代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
+
+例如保留 `User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记，业务描述、理由、测试说明和任务内容填写中文。代码块中的英文示例用于保留格式和定位约定，不要求将实际填写的自然语言也写成英文。刚复制且尚未填写的模板可以保持英文；不增加一次翻译回写动作。
+
+此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。
+<!-- SDLC-OUTPUT-LANGUAGE:END -->
 
 
-## Checklist Purpose: "Unit Tests for English"
 
-**CRITICAL CONCEPT**: Checklists are **UNIT TESTS FOR REQUIREMENTS WRITING** - they validate the quality, clarity, and completeness of requirements in a given domain.
+## 清单用途：“自然语言需求的单元测试”
 
-**NOT for verification/testing**:
+**核心概念**：清单是**需求写作的单元测试**，用于验证特定领域需求的质量、清晰度和完整性。
 
-- ❌ NOT "Verify the button clicks correctly"
-- ❌ NOT "Test error handling works"
-- ❌ NOT "Confirm the API returns 200"
-- ❌ NOT checking if code/implementation matches the spec
+**不是实现验证／测试：**
 
-**FOR requirements quality validation**:
+- ❌ 不是“验证按钮能正确点击”。
+- ❌ 不是“测试错误处理正常工作”。
+- ❌ 不是“确认 API 返回 200”。
+- ❌ 不检查代码／实现是否匹配规格。
 
-- ✅ "Are visual hierarchy requirements defined for all card types?" (completeness)
-- ✅ "Is 'prominent display' quantified with specific sizing/positioning?" (clarity)
-- ✅ "Are hover state requirements consistent across all interactive elements?" (consistency)
-- ✅ "Are accessibility requirements defined for keyboard navigation?" (coverage)
-- ✅ "Does the spec define what happens when logo image fails to load?" (edge cases)
+**用于需求质量验证：**
 
-**Metaphor**: If your spec is code written in English, the checklist is its unit test suite. You're testing whether the requirements are well-written, complete, unambiguous, and ready for implementation - NOT whether the implementation works.
+- ✅ “是否为所有卡片类型定义了视觉层级要求？”（完整性）
+- ✅ “‘突出显示’是否量化为具体尺寸／位置？”（清晰度）
+- ✅ “所有交互元素的悬停状态要求是否一致？”（一致性）
+- ✅ “是否定义了键盘导航的无障碍要求？”（覆盖）
+- ✅ “规格是否定义了徽标图片加载失败时的行为？”（边界情况）
 
-**Ownership and checkbox lifecycle**:
+**比喻**：如果规格是用英文写成的代码，清单就是它的单元测试套件。检查的是需求是否写得好、完整、无歧义并可进入实现，而**不是**实现是否正常工作。
 
-- Custom checklists generated by this command are reviewer-owned requirements-quality review artifacts.
-- `[x]` means the reviewer determined the requirements-quality criterion is satisfied.
-- `[x]` does NOT mean implementation work is complete.
-- This command generates or appends checklist items; it MUST NOT mark generated items `[x]`.
-- An agent may assist with evaluating items only when explicitly asked by the reviewer.
-- `checklists/requirements.md` is a separate built-in spec-quality checklist maintained by `@@SDLC_BIND_0044@@sdlc-110-clar`; do not treat that exception as applying to custom checklists generated here.
+**责任归属与复选框生命周期：**
 
-## User Input
+- 本命令生成的自定义清单，是评审者负责的需求质量评审产物。
+- `[x]` 表示评审者判定需求质量条件已满足。
+- `[x]` **不**表示实现工作已经完成。
+- 本命令生成或追加清单条目；**不得**把新生成条目标为 `[x]`。
+- 只有评审者明确要求时，Agent 才能协助评估条目。
+- `checklists/requirements.md` 是独立的内置规格质量清单，由 `@@SDLC_BIND_0054@@sdlc-110-clar` 维护；不能将这一例外套用于此处生成的自定义清单。
+
+## 用户输入
 
 ```text
 $ARGUMENTS
 ```
 
-You **MUST** consider the user input before proceeding (if not empty).
+继续之前，**必须**考虑用户输入（如果非空）。
 
-## Pre-Execution Checks
+## 执行前检查
 
-**Check for extension hooks (before checklist generation)**:
-- Check if `.sdlc/extensions.yml` exists in the project root.
-- If it exists, read it and look for entries under the `hooks.before_checklist` key
-- If the YAML cannot be parsed or is invalid, skip hook checking silently and continue normally
-- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
-- For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
-  - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
-  - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
-- When constructing command invocations from hook command names, replace dots (`.`) with hyphens (`-`). For example, `sdlc.git.commit` → `@@SDLC_BIND_0064@@sdlc-git-commit`.
-- For each executable hook, output the following based on its `optional` flag:
-  - **Optional hook** (`optional: true`):
+**检查扩展钩子（清单生成前）**：
+- 检查项目根目录是否存在 `.sdlc/extensions.yml`。
+- 如果存在，读取文件并查找 `hooks.before_checklist` 键下的条目。
+- 如果 YAML 无法解析或无效，静默跳过钩子检查，正常继续。
+- 排除 `enabled` 明确为 `false` 的钩子。未包含 `enabled` 字段的钩子默认启用。
+- 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
+  - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
+  - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0074@@sdlc-git-commit`。
+- 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
+  - **可选钩子**（`optional: true`）：
     ```
     ## Extension Hooks
 
@@ -75,7 +85,7 @@ You **MUST** consider the user input before proceeding (if not empty).
     Prompt: {prompt}
     To execute: `/{command}`
     ```
-  - **Mandatory hook** (`optional: false`):
+  - **必需钩子**（`optional: false`）：
     ```
     ## Extension Hooks
 
@@ -85,247 +95,247 @@ You **MUST** consider the user input before proceeding (if not empty).
 
     Wait for the result of the hook command before proceeding to the Execution Steps.
     ```
-    After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:sdlc-...` or `$sdlc-...`). Emitting the block alone does not run the hook.
-- If no hooks are registered or `.sdlc/extensions.yml` does not exist, skip silently
+    输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
+- 如果没有注册钩子，或 `.sdlc/extensions.yml` 不存在，静默跳过。
 
-## Execution Steps
+## 执行步骤
 
-1. **Setup**: Run `SDLC_HOST=c@@SDLC_BIND_0092@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --template checklist-template` from repo root and parse JSON for FEATURE_DIR, AVAILABLE_DOCS list, and TEMPLATE_CONTENT.
-   - All file paths must be absolute.
-   - For single quotes in args like "I'm Groot", use escape syntax: e.g 'I'\''m Groot' (or double-quote if possible: "I'm Groot").
+1. **准备**：在仓库根目录运行 `SDLC_HOST=c@@SDLC_BIND_0102@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --template checklist-template`，解析 JSON 中的 FEATURE_DIR、AVAILABLE_DOCS 列表及 TEMPLATE_CONTENT。
+   - 全部文件路径必须为绝对路径。
+   - 参数包含单引号（如 "I'm Groot"）时，使用转义语法，如 'I'\''m Groot'；可以使用双引号时也可写作 "I'm Groot"。
 
-2. **IF EXISTS**: Load `.sdlc/memory/constitution.md` for project principles and governance constraints.
+2. **如果存在**：加载 `.sdlc/memory/constitution.md`，获取项目原则和治理约束。
 
-3. **Clarify intent (dynamic)**: Derive up to THREE initial contextual clarifying questions (no pre-baked catalog). They MUST:
-   - Be generated from the user's phrasing + extracted signals from spec/plan/tasks
-   - Only ask about information that materially changes checklist content
-   - Be skipped individually if already unambiguous in `$ARGUMENTS`
-   - Prefer precision over breadth
+3. **动态澄清意图**：推导最多三个初始上下文问题，不使用预设问题库。问题必须：
+   - 来自用户表述，以及从 spec／plan／tasks 提取的信号。
+   - 只问会实质改变清单内容的信息。
+   - `$ARGUMENTS` 已明确回答的各项分别跳过。
+   - 优先准确，而非覆盖面宽。
 
-   Generation algorithm:
-   1. Extract signals: feature domain keywords (e.g., auth, latency, UX, API), risk indicators ("critical", "must", "compliance"), stakeholder hints ("QA", "review", "security team"), and explicit deliverables ("a11y", "rollback", "contracts").
-   2. Cluster signals into candidate focus areas (max 4) ranked by relevance.
-   3. Identify probable audience & timing (author, reviewer, QA, release) if not explicit.
-   4. Detect missing dimensions: scope breadth, depth/rigor, risk emphasis, exclusion boundaries, measurable acceptance criteria.
-   5. Formulate questions chosen from these archetypes:
-      - Scope refinement (e.g., "Should this include integration touchpoints with X and Y or stay limited to local module correctness?")
-      - Risk prioritization (e.g., "Which of these potential risk areas should receive mandatory gating checks?")
-      - Depth calibration (e.g., "Is this a lightweight pre-commit sanity list or a formal release gate?")
-      - Audience framing (e.g., "Will this be used by the author only or peers during PR review?")
-      - Boundary exclusion (e.g., "Should we explicitly exclude performance tuning items this round?")
-      - Scenario class gap (e.g., "No recovery flows detected—are rollback / partial failure paths in scope?")
+   生成算法：
+   1. 提取信号：功能领域关键词（认证、延迟、UX、API）、风险指标（关键、必须、合规）、相关者提示（QA、评审、安全团队）及明确交付物（a11y、回退、契约）。
+   2. 按相关性把信号聚为候选重点领域，最多 4 个。
+   3. 未明确时，识别可能的使用者和时机：作者、评审者、QA、发布。
+   4. 检测缺少的维度：范围宽度、深度／严谨度、风险重点、排除边界及可衡量验收标准。
+   5. 从以下问题类型中选择并表述：
+      - 范围细化，例如“包含与 X、Y 的集成点，还是仅检查本模块正确性？”
+      - 风险排序，例如“哪些潜在风险需要强制门禁检查？”
+      - 深度校准，例如“这是提交前的轻量检查，还是正式发布门禁？”
+      - 使用者定位，例如“仅作者使用，还是同事在 PR 评审时使用？”
+      - 边界排除，例如“本轮是否明确排除性能调优项？”
+      - 场景类别缺口，例如“未发现恢复流程，回退／部分失败路径是否在范围内？”
 
-   Question formatting rules:
-   - If presenting options, generate a compact table with columns: Option | Candidate | Why It Matters
-   - Limit to A–E options maximum; omit table if a free-form answer is clearer
-   - Never ask the user to restate what they already said
-   - Avoid speculative categories (no hallucination). If uncertain, ask explicitly: "Confirm whether X belongs in scope."
+   问题格式规则：
+   - 提供选项时，生成紧凑表格，列为 Option | Candidate | Why It Matters。
+   - 最多 A–E 选项；自由回答更清楚时省略表格。
+   - 绝不要求用户重述已说过的内容。
+   - 避免猜测类别；不确定时明确询问“请确认 X 是否属于范围”。
 
-   Defaults when interaction impossible:
-   - Depth: Standard
-   - Audience: Reviewer (PR) if code-related; Author otherwise
-   - Focus: Top 2 relevance clusters
+   无法交互时的默认值：
+   - 深度：Standard。
+   - 使用者：代码相关时为 Reviewer（PR），否则为 Author。
+   - 重点：相关性最高的 2 个聚类。
 
-   Output the questions (label Q1/Q2/Q3). After answers: if ≥2 scenario classes (Alternate / Exception / Recovery / Non-Functional domain) remain unclear, you MAY ask up to TWO more targeted follow‑ups (Q4/Q5) with a one-line justification each (e.g., "Unresolved recovery path risk"). Do not exceed five total questions. Skip escalation if user explicitly declines more.
+   输出 Q1／Q2／Q3。回答后，如果仍有至少 2 类场景（替代／异常／恢复／非功能领域）不明确，**可以**再提最多两个针对性追问 Q4／Q5，每个附一行理由，如“恢复路径风险尚未明确”。总问题数不超过五个。用户明确拒绝更多问题时，不升级追问。
 
-4. **Understand user request**: Combine `$ARGUMENTS` + clarifying answers:
-   - Derive checklist theme (e.g., security, review, deploy, ux)
-   - Consolidate explicit must-have items mentioned by user
-   - Map focus selections to category scaffolding
-   - Infer any missing context from spec/plan/tasks (do NOT hallucinate)
+4. **理解用户请求**：结合 `$ARGUMENTS` 与澄清答案：
+   - 推导清单主题，例如 security、review、deploy、ux。
+   - 汇总用户明确要求的必需项。
+   - 将重点选择映射到类别骨架。
+   - 从 spec／plan／tasks 推导缺失上下文，**不得臆造**。
 
-5. **Load feature context**: Read from FEATURE_DIR:
-   - spec.md: Feature requirements and scope
-   - plan.md (if exists): Technical details, dependencies
-   - tasks.md (if exists): Implementation tasks
+5. **加载功能上下文**：从 FEATURE_DIR 读取：
+   - spec.md：功能需求和范围。
+   - plan.md（若存在）：技术细节、依赖。
+   - tasks.md（若存在）：实施任务。
 
-   **Context Loading Strategy**:
-   - Load only necessary portions relevant to active focus areas (avoid full-file dumping)
-   - Prefer summarizing long sections into concise scenario/requirement bullets
-   - Use progressive disclosure: add follow-on retrieval only if gaps detected
-   - If source docs are large, generate interim summary items instead of embedding raw text
+   **上下文加载策略：**
+   - 只加载与当前重点领域有关的必要部分，不整文件堆入。
+   - 优先把长章节概括为简洁的场景／需求条目。
+   - 渐进式读取，仅发现缺口时继续检索。
+   - 源文档很大时，先生成中间摘要项，不嵌入原始全文。
 
-6. **Generate checklist** - Use TEMPLATE_CONTENT as the structural template and create "Unit Tests for Requirements":
-   - Create `FEATURE_DIR/checklists/` directory if it doesn't exist
-   - Generate unique checklist filename:
-     - Use short, descriptive name based on domain (e.g., `ux.md`, `api.md`, `security.md`)
-     - Format: `[domain].md`
-   - File handling behavior:
-     - If file does NOT exist: Create new file and number items starting from CHK001
-     - If file exists: Append new items to existing file, continuing from the last CHK ID (e.g., if last item is CHK015, start new items at CHK016)
-   - Never delete or replace existing checklist content - always preserve and append
-   - Leave every newly generated item unchecked (`[ ]`); checkbox state belongs to the reviewer
+6. **生成清单**：使用 TEMPLATE_CONTENT 作为结构模板，创建“需求的单元测试”。
+   - `FEATURE_DIR/checklists/` 不存在时创建。
+   - 生成唯一的清单文件名：
+     - 根据领域使用简短、描述性名称，例如 `ux.md`、`api.md`、`security.md`。
+     - 格式：`[domain].md`。
+   - 文件处理行为：
+     - 文件不存在：创建新文件，条目从 CHK001 编号。
+     - 文件已存在：向既有文件追加新条目，承接最后的 CHK ID；例如最后为 CHK015，则新条目从 CHK016 开始。
+   - 绝不删除或替换已有清单内容，始终保留并追加。
+   - 所有新生成条目保持未勾选（`[ ]`）；复选框状态由评审者负责。
 
-   **CORE PRINCIPLE - Test the Requirements, Not the Implementation**:
-   Every checklist item MUST evaluate the REQUIREMENTS THEMSELVES for:
-   - **Completeness**: Are all necessary requirements present?
-   - **Clarity**: Are requirements unambiguous and specific?
-   - **Consistency**: Do requirements align with each other?
-   - **Measurability**: Can requirements be objectively verified?
-   - **Coverage**: Are all scenarios/edge cases addressed?
+   **核心原则——测试需求，而不是实现：**
+   每项清单必须评估**需求本身**的：
+   - **完整性**：是否包含全部必要需求？
+   - **清晰度**：需求是否具体、无歧义？
+   - **一致性**：需求之间是否对齐？
+   - **可衡量性**：能否客观验证？
+   - **覆盖度**：是否包含全部场景／边界情况？
 
-   **Category Structure** - Group items by requirement quality dimensions:
-   - **Requirement Completeness** (Are all necessary requirements documented?)
-   - **Requirement Clarity** (Are requirements specific and unambiguous?)
-   - **Requirement Consistency** (Do requirements align without conflicts?)
-   - **Acceptance Criteria Quality** (Are success criteria measurable?)
-   - **Scenario Coverage** (Are all flows/cases addressed?)
-   - **Edge Case Coverage** (Are boundary conditions defined?)
-   - **Non-Functional Requirements** (Performance, Security, Accessibility, etc. - are they specified?)
-   - **Dependencies & Assumptions** (Are they documented and validated?)
-   - **Ambiguities & Conflicts** (What needs clarification?)
+   **类别结构**：按需求质量维度分组：
+   - Requirement Completeness：必要需求是否都已记录？
+   - Requirement Clarity：需求是否明确、无歧义？
+   - Requirement Consistency：需求是否对齐、无冲突？
+   - Acceptance Criteria Quality：成功标准是否可衡量？
+   - Scenario Coverage：是否覆盖全部流程／场景？
+   - Edge Case Coverage：边界条件是否定义？
+   - Non-Functional Requirements：性能、安全、无障碍等是否明确？
+   - Dependencies & Assumptions：是否记录并验证依赖与假设？
+   - Ambiguities & Conflicts：哪些内容需要澄清？
 
-   **HOW TO WRITE CHECKLIST ITEMS - "Unit Tests for English"**:
+   **条目写法——“自然语言的单元测试”：**
 
-   ❌ **WRONG** (Testing implementation):
-   - "Verify landing page displays 3 episode cards"
-   - "Test hover states work on desktop"
-   - "Confirm logo click navigates home"
+   ❌ **错误，检查的是实现：**
+   - “验证落地页展示 3 张剧集卡片”。
+   - “测试桌面端悬停状态正常”。
+   - “确认点击徽标回到首页”。
 
-   ✅ **CORRECT** (Testing requirements quality):
-   - "Are the exact number and layout of featured episodes specified?" [Completeness]
-   - "Is 'prominent display' quantified with specific sizing/positioning?" [Clarity]
-   - "Are hover state requirements consistent across all interactive elements?" [Consistency]
-   - "Are keyboard navigation requirements defined for all interactive UI?" [Coverage]
-   - "Is the fallback behavior specified when logo image fails to load?" [Edge Cases]
-   - "Are loading states defined for asynchronous episode data?" [Completeness]
-   - "Does the spec define visual hierarchy for competing UI elements?" [Clarity]
+   ✅ **正确，检查的是需求质量：**
+   - “是否规定了精选剧集的准确数量及布局？”[Completeness]
+   - “‘突出显示’是否量化为具体尺寸／位置？”[Clarity]
+   - “全部交互元素的悬停状态需求是否一致？”[Consistency]
+   - “是否为全部交互 UI 定义了键盘导航要求？”[Coverage]
+   - “是否规定了徽标图片加载失败时的回退行为？”[Edge Cases]
+   - “是否为异步剧集数据定义了加载状态？”[Completeness]
+   - “规格是否定义了相互竞争 UI 元素的视觉层级？”[Clarity]
 
-   **ITEM STRUCTURE**:
-   Each item should follow this pattern:
-   - Question format asking about requirement quality
-   - Focus on what's WRITTEN (or not written) in the spec/plan
-   - Include quality dimension in brackets [Completeness/Clarity/Consistency/etc.]
-   - Reference spec section `[Spec §X.Y]` when checking existing requirements
-   - Use `[Gap]` marker when checking for missing requirements
+   **条目结构：**
+   每项遵循：
+   - 以问题形式询问需求质量。
+   - 聚焦规格／方案中**写了什么或没写什么**。
+   - 方括号中标出质量维度：[Completeness/Clarity/Consistency/etc.]。
+   - 检查已有需求时引用规格章节 `[Spec §X.Y]`。
+   - 检查缺失需求时使用 `[Gap]` 标记。
 
-   **EXAMPLES BY QUALITY DIMENSION**:
+   **按质量维度举例：**
 
-   Completeness:
-   - "Are error handling requirements defined for all API failure modes? [Gap]"
-   - "Are accessibility requirements specified for all interactive elements? [Completeness]"
-   - "Are mobile breakpoint requirements defined for responsive layouts? [Gap]"
+   完整性：
+   - “是否定义了全部 API 失败模式的错误处理要求？[Gap]”
+   - “是否为全部交互元素规定了无障碍要求？[Completeness]”
+   - “是否为响应式布局定义了移动端断点要求？[Gap]”
 
-   Clarity:
-   - "Is 'fast loading' quantified with specific timing thresholds? [Clarity, Spec §NFR-2]"
-   - "Are 'related episodes' selection criteria explicitly defined? [Clarity, Spec §FR-5]"
-   - "Is 'prominent' defined with measurable visual properties? [Ambiguity, Spec §FR-4]"
+   清晰度：
+   - “‘快速加载’是否量化为明确时间阈值？[Clarity, Spec §NFR-2]”
+   - “‘相关剧集’的选择标准是否明确？[Clarity, Spec §FR-5]”
+   - “‘突出’是否定义为可衡量的视觉属性？[Ambiguity, Spec §FR-4]”
 
-   Consistency:
-   - "Do navigation requirements align across all pages? [Consistency, Spec §FR-10]"
-   - "Are card component requirements consistent between landing and detail pages? [Consistency]"
+   一致性：
+   - “所有页面的导航需求是否一致？[Consistency, Spec §FR-10]”
+   - “落地页与详情页的卡片组件需求是否一致？[Consistency]”
 
-   Coverage:
-   - "Are requirements defined for zero-state scenarios (no episodes)? [Coverage, Edge Case]"
-   - "Are concurrent user interaction scenarios addressed? [Coverage, Gap]"
-   - "Are requirements specified for partial data loading failures? [Coverage, Exception Flow]"
+   覆盖度：
+   - “是否定义了零状态（无剧集）场景的需求？[Coverage, Edge Case]”
+   - “是否覆盖并发用户交互场景？[Coverage, Gap]”
+   - “是否规定了部分数据加载失败的需求？[Coverage, Exception Flow]”
 
-   Measurability:
-   - "Are visual hierarchy requirements measurable/testable? [Acceptance Criteria, Spec §FR-1]"
-   - "Can 'balanced visual weight' be objectively verified? [Measurability, Spec §FR-2]"
+   可衡量性：
+   - “视觉层级需求是否可衡量／测试？[Acceptance Criteria, Spec §FR-1]”
+   - “‘视觉权重均衡’能否客观验证？[Measurability, Spec §FR-2]”
 
-   **Scenario Classification & Coverage** (Requirements Quality Focus):
-   - Check if requirements exist for: Primary, Alternate, Exception/Error, Recovery, Non-Functional scenarios
-   - For each scenario class, ask: "Are [scenario type] requirements complete, clear, and consistent?"
-   - If scenario class missing: "Are [scenario type] requirements intentionally excluded or missing? [Gap]"
-   - Include resilience/rollback when state mutation occurs: "Are rollback requirements defined for migration failures? [Gap]"
+   **场景分类与覆盖，聚焦需求质量：**
+   - 检查是否存在主要、替代、异常／错误、恢复及非功能场景的需求。
+   - 对每类场景询问：“[场景类型] 的需求是否完整、清晰且一致？”
+   - 类别缺失时询问：“[场景类型] 是被有意排除，还是需求缺失？[Gap]”
+   - 有状态变更时包含韧性／回退：“是否定义了迁移失败的回退要求？[Gap]”
 
-   **Traceability Requirements**:
-   - MINIMUM: ≥80% of items MUST include at least one traceability reference
-   - Each item should reference: spec section `[Spec §X.Y]`, or use markers: `[Gap]`, `[Ambiguity]`, `[Conflict]`, `[Assumption]`
-   - If no ID system exists: "Is a requirement & acceptance criteria ID scheme established? [Traceability]"
+   **可追溯性要求：**
+   - 最低要求：至少 80% 的条目必须包含一个可追溯引用。
+   - 每项应引用规格章节 `[Spec §X.Y]`，或使用 `[Gap]`、`[Ambiguity]`、`[Conflict]`、`[Assumption]` 标记。
+   - 没有 ID 体系时，询问：“是否建立了需求及验收标准的 ID 方案？[Traceability]”
 
-   **Surface & Resolve Issues** (Requirements Quality Problems):
-   Ask questions about the requirements themselves:
-   - Ambiguities: "Is the term 'fast' quantified with specific metrics? [Ambiguity, Spec §NFR-1]"
-   - Conflicts: "Do navigation requirements conflict between §FR-10 and §FR-10a? [Conflict]"
-   - Assumptions: "Is the assumption of 'always available podcast API' validated? [Assumption]"
-   - Dependencies: "Are external podcast API requirements documented? [Dependency, Gap]"
-   - Missing definitions: "Is 'visual hierarchy' defined with measurable criteria? [Gap]"
+   **发现并解决需求质量问题：**
+   询问需求本身：
+   - 歧义：“‘快速’是否量化为具体指标？[Ambiguity, Spec §NFR-1]”
+   - 冲突：“§FR-10 与 §FR-10a 的导航需求是否冲突？[Conflict]”
+   - 假设：“‘播客 API 始终可用’这一假设是否经过验证？[Assumption]”
+   - 依赖：“是否记录了外部播客 API 的要求？[Dependency, Gap]”
+   - 缺失定义：“‘视觉层级’是否有可衡量标准？[Gap]”
 
-   **Content Consolidation**:
-   - Soft cap: If raw candidate items > 40, prioritize by risk/impact
-   - Merge near-duplicates checking the same requirement aspect
-   - If >5 low-impact edge cases, create one item: "Are edge cases X, Y, Z addressed in requirements? [Coverage]"
+   **内容整合：**
+   - 软上限：原始候选超过 40 项时，按风险／影响排序。
+   - 合并检查同一需求方面的近似重复项。
+   - 低影响边界情况超过 5 个时，合为一项：“需求是否覆盖边界情况 X、Y、Z？[Coverage]”
 
-   **🚫 ABSOLUTELY PROHIBITED** - These make it an implementation test, not a requirements test:
-   - ❌ Any item starting with "Verify", "Test", "Confirm", "Check" + implementation behavior
-   - ❌ References to code execution, user actions, system behavior
-   - ❌ "Displays correctly", "works properly", "functions as expected"
-   - ❌ "Click", "navigate", "render", "load", "execute"
-   - ❌ Test cases, test plans, QA procedures
-   - ❌ Implementation details (frameworks, APIs, algorithms)
+   **🚫 绝对禁止**——以下会把清单变成实现测试而非需求测试：
+   - ❌ 以 Verify、Test、Confirm、Check 加实现行为开头的条目。
+   - ❌ 指向代码执行、用户动作、系统行为的验证。
+   - ❌ “正确显示”“正常工作”“功能符合预期”。
+   - ❌ “点击”“导航”“渲染”“加载”“执行”。
+   - ❌ 测试用例、测试计划、QA 程序。
+   - ❌ 实现细节，如框架、API、算法。
 
-   **✅ REQUIRED PATTERNS** - These test requirements quality:
-   - ✅ "Are [requirement type] defined/specified/documented for [scenario]?"
-   - ✅ "Is [vague term] quantified/clarified with specific criteria?"
-   - ✅ "Are requirements consistent between [section A] and [section B]?"
-   - ✅ "Can [requirement] be objectively measured/verified?"
-   - ✅ "Are [edge cases/scenarios] addressed in requirements?"
-   - ✅ "Does the spec define [missing aspect]?"
+   **✅ 必需句式**——检查需求质量：
+   - ✅ “是否为 [场景] 定义／规定／记录了 [需求类型]？”
+   - ✅ “[模糊术语] 是否用具体标准量化／澄清？”
+   - ✅ “[章节 A] 与 [章节 B] 的需求是否一致？”
+   - ✅ “[需求] 能否客观衡量／验证？”
+   - ✅ “需求是否覆盖 [边界情况／场景]？”
+   - ✅ “规格是否定义了 [缺失方面]？”
 
-7. **Structure Reference**: Generate the checklist following the canonical template in `${SDLC_PLUGIN_ROOT}/templates/checklist-template.md` for title, meta section, category headings, ownership note, notes section, and ID formatting. If template is unavailable, use: H1 title, purpose/created meta lines, an ownership note explaining that `[x]` means reviewer approval of requirements quality, `##` category sections containing `- [ ] CHK### <requirement item>` lines with globally incrementing IDs starting at CHK001, and notes that `@@SDLC_BIND_0266@@sdlc-400-impl` reads checklist state but does not modify markers.
+7. **结构参考**：遵循 `${SDLC_PLUGIN_ROOT}/templates/checklist-template.md` 的规范模板，生成标题、元数据区、类别标题、责任说明、备注及 ID 格式。模板不可用时采用：H1 标题、用途／创建日期元数据行、解释 `[x]` 代表评审者认可需求质量的责任说明、包含 `- [ ] CHK### <requirement item>` 行的 `##` 类别章节；ID 从 CHK001 开始全局递增；备注说明 `@@SDLC_BIND_0276@@sdlc-400-impl` 读取清单状态但不修改标记。
 
-8. **Report**: Output full path to checklist file, item count, and summarize whether the run created a new file or appended to an existing one. Summarize:
-   - Focus areas selected
-   - Depth level
-   - Actor/timing
-   - Any explicit user-specified must-have items incorporated
+8. **报告**：输出清单完整路径、条目数，说明本次新建了文件还是追加到已有文件，并汇总：
+   - 选定重点领域。
+   - 深度等级。
+   - 使用者／使用时机。
+   - 已纳入的用户明确必需项。
 
-**Important**: Each `@@SDLC_BIND_0274@@sdlc-320-huma` command invocation uses a short, descriptive checklist filename and either creates a new file or appends to an existing one. This allows:
+**重要**：每次 `@@SDLC_BIND_0284@@sdlc-320-huma` 调用使用简短、描述性文件名，新建或追加至已有清单。这样可以：
 
-- Multiple checklists of different types (e.g., `ux.md`, `test.md`, `security.md`)
-- Simple, memorable filenames that indicate checklist purpose
-- Easy identification and navigation in the `checklists/` folder
+- 保存不同类型清单，例如 `ux.md`、`test.md`、`security.md`。
+- 使用简单易记、表明用途的文件名。
+- 在 `checklists/` 中方便识别和导航。
 
-To avoid clutter, use descriptive types and clean up obsolete checklists when done.
+为避免杂乱，使用描述性类型，并在完成后清理过时清单。
 
-## Example Checklist Types & Sample Items
+## 清单类型及条目示例
 
-**UX Requirements Quality:** `ux.md`
+**UX 需求质量：**`ux.md`
 
-Sample items (testing the requirements, NOT the implementation):
+条目示例，检查需求而非实现：
 
-- "Are visual hierarchy requirements defined with measurable criteria? [Clarity, Spec §FR-1]"
-- "Is the number and positioning of UI elements explicitly specified? [Completeness, Spec §FR-1]"
-- "Are interaction state requirements (hover, focus, active) consistently defined? [Consistency]"
-- "Are accessibility requirements specified for all interactive elements? [Coverage, Gap]"
-- "Is fallback behavior defined when images fail to load? [Edge Case, Gap]"
-- "Can 'prominent display' be objectively measured? [Measurability, Spec §FR-4]"
+- “视觉层级是否有可衡量标准？[Clarity, Spec §FR-1]”
+- “是否明确规定 UI 元素数量及位置？[Completeness, Spec §FR-1]”
+- “交互状态（hover、focus、active）的需求定义是否一致？[Consistency]”
+- “是否为全部交互元素规定无障碍要求？[Coverage, Gap]”
+- “图片加载失败时是否定义回退行为？[Edge Case, Gap]”
+- “‘突出显示’能否客观衡量？[Measurability, Spec §FR-4]”
 
-**API Requirements Quality:** `api.md`
+**API 需求质量：**`api.md`
 
-Sample items:
+条目示例：
 
-- "Are error response formats specified for all failure scenarios? [Completeness]"
-- "Are rate limiting requirements quantified with specific thresholds? [Clarity]"
-- "Are authentication requirements consistent across all endpoints? [Consistency]"
-- "Are retry/timeout requirements defined for external dependencies? [Coverage, Gap]"
-- "Is versioning strategy documented in requirements? [Gap]"
+- “是否规定了全部失败场景的错误响应格式？[Completeness]”
+- “速率限制要求是否量化为具体阈值？[Clarity]”
+- “各端点的认证要求是否一致？[Consistency]”
+- “是否为外部依赖定义重试／超时要求？[Coverage, Gap]”
+- “需求是否记录了版本策略？[Gap]”
 
-**Performance Requirements Quality:** `performance.md`
+**性能需求质量：**`performance.md`
 
-Sample items:
+条目示例：
 
-- "Are performance requirements quantified with specific metrics? [Clarity]"
-- "Are performance targets defined for all critical user journeys? [Coverage]"
-- "Are performance requirements under different load conditions specified? [Completeness]"
-- "Can performance requirements be objectively measured? [Measurability]"
-- "Are degradation requirements defined for high-load scenarios? [Edge Case, Gap]"
+- “性能要求是否以具体指标量化？[Clarity]”
+- “是否为全部关键用户旅程定义性能目标？[Coverage]”
+- “是否规定不同负载条件下的性能要求？[Completeness]”
+- “性能要求能否客观衡量？[Measurability]”
+- “是否定义高负载场景的降级要求？[Edge Case, Gap]”
 
-**Security Requirements Quality:** `security.md`
+**安全需求质量：**`security.md`
 
-Sample items:
+条目示例：
 
-- "Are authentication requirements specified for all protected resources? [Coverage]"
-- "Are data protection requirements defined for sensitive information? [Completeness]"
-- "Is the threat model documented and requirements aligned to it? [Traceability]"
-- "Are security requirements consistent with compliance obligations? [Consistency]"
-- "Are security failure/breach response requirements defined? [Gap, Exception Flow]"
+- “是否为全部受保护资源规定认证要求？[Coverage]”
+- “是否为敏感信息定义数据保护要求？[Completeness]”
+- “是否记录威胁模型，需求是否与之对齐？[Traceability]”
+- “安全需求是否与合规义务一致？[Consistency]”
+- “是否定义安全失败／泄露的响应要求？[Gap, Exception Flow]”
 
-## Anti-Examples: What NOT To Do
+## 反例：不要这样做
 
-**❌ WRONG - These test implementation, not requirements:**
+**❌ 错误——这些检查实现，而非需求：**
 
 ```markdown
 - [ ] CHK001 - Verify landing page displays 3 episode cards [Spec §FR-001]
@@ -334,7 +344,7 @@ Sample items:
 - [ ] CHK004 - Check that related episodes section shows 3-5 items [Spec §FR-005]
 ```
 
-**✅ CORRECT - These test requirements quality:**
+**✅ 正确——这些检查需求质量：**
 
 ```markdown
 - [ ] CHK001 - Are the number and layout of featured episodes explicitly specified? [Completeness, Spec §FR-001]
@@ -345,28 +355,29 @@ Sample items:
 - [ ] CHK006 - Can "visual hierarchy" requirements be objectively measured? [Measurability, Spec §FR-001]
 ```
 
-**Key Differences:**
 
-- Wrong: Tests if the system works correctly
-- Correct: Tests if the requirements are written correctly
-- Wrong: Verification of behavior
-- Correct: Validation of requirement quality
-- Wrong: "Does it do X?"
-- Correct: "Is X clearly specified?"
+**关键区别：**
 
-## Post-Execution Checks
+- 错误：测试系统是否正常工作。
+- 正确：测试需求是否写得正确。
+- 错误：验证行为。
+- 正确：验证需求质量。
+- 错误：“它是否做到了 X？”
+- 正确：“X 是否被明确规定？”
 
-**Check for extension hooks (after checklist generation)**:
-Check if `.sdlc/extensions.yml` exists in the project root.
-- If it exists, read it and look for entries under the `hooks.after_checklist` key
-- If the YAML cannot be parsed or is invalid, skip hook checking silently and continue normally
-- Filter out hooks where `enabled` is explicitly `false`. Treat hooks without an `enabled` field as enabled by default.
-- For each remaining hook, do **not** attempt to interpret or evaluate hook `condition` expressions:
-  - If the hook has no `condition` field, or it is null/empty, treat the hook as executable
-  - If the hook defines a non-empty `condition`, skip the hook and leave condition evaluation to the HookExecutor implementation
-- When constructing command invocations from hook command names, replace dots (`.`) with hyphens (`-`). For example, `sdlc.git.commit` → `@@SDLC_BIND_0366@@sdlc-git-commit`.
-- For each executable hook, output the following based on its `optional` flag:
-  - **Optional hook** (`optional: true`):
+## 执行后检查
+
+**检查扩展钩子（清单生成后）**：
+检查项目根目录是否存在 `.sdlc/extensions.yml`。
+- 如果存在，读取文件并查找 `hooks.after_checklist` 键下的条目。
+- 如果 YAML 无法解析或无效，静默跳过钩子检查，正常继续。
+- 排除 `enabled` 明确为 `false` 的钩子。未包含 `enabled` 字段的钩子默认启用。
+- 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
+  - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
+  - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0377@@sdlc-git-commit`。
+- 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
+  - **可选钩子**（`optional: true`）：
     ```
     ## Extension Hooks
 
@@ -377,7 +388,7 @@ Check if `.sdlc/extensions.yml` exists in the project root.
     Prompt: {prompt}
     To execute: `/{command}`
     ```
-  - **Mandatory hook** (`optional: false`):
+  - **必需钩子**（`optional: false`）：
     ```
     ## Extension Hooks
 
@@ -385,5 +396,5 @@ Check if `.sdlc/extensions.yml` exists in the project root.
     Executing: `/{command}`
     EXECUTE_COMMAND: {command}
     ```
-    After emitting the block above you MUST actually invoke the hook and wait for it to finish before continuing. Run it the same way you would run the command yourself in this agent/session (the invocation may differ from the literal `{command}` id shown above, e.g. a skills-mode agent runs it as `/skill:sdlc-...` or `$sdlc-...`). Emitting the block alone does not run the hook.
-- If no hooks are registered or `.sdlc/extensions.yml` does not exist, skip silently
+    输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
+- 如果没有注册钩子，或 `.sdlc/extensions.yml` 不存在，静默跳过。

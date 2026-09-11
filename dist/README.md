@@ -1,11 +1,13 @@
 # SDLC AI SPEC v1.0.0-beta
 
-Author: Blade
+作者：Blade
 
-Repository: https://github.com/goedgecloud/sdlc-ai-spec
+仓库：https://github.com/goedgecloud/sdlc-ai-spec
 
-One self-contained package for Codex, Claude Code and Cursor. Native manifests select thin host entrypoints; workflows, Bash scripts and templates are shared. No install-time build, uv, upstream CLI or network is required. Runtime requires Bash, Python 3.9+ and standard POSIX tools.
+九个核心入口位于 skills/，由 Codex、Claude Code 和 Cursor 共用；INIT 保留各宿主最小策略入口。完整流程正文及摘要为简体中文；模板固定骨架保持英文，按原流程填入的自然语言内容使用中文。不因升级或语言要求重写已有业务文档。
 
-Nine upstream core skills plus sdlc-000-init. Run sdlc-000-init once per project; it creates or completes project data without copying tools or resetting features. GitHub is not included. Native discovery, model-driven behavior and business acceptance are verified separately by the user. See the repository docs/INITIALIZATION.md.
+安装不需要构建、uv、上游 CLI 或网络。Runtime requires Bash, Python 3.9+ and standard POSIX tools. No install-time build, uv, upstream CLI or network is required.
+
+每个项目通常运行一次 sdlc-000-init；重复调用只补全兼容状态，不重置已有工作。原生发现、模型行为与真实业务验收不由静态工程检查代替。
 
 Based on Spec Kit by GitHub, Inc. (MIT), an independent source port. See LICENSE, NOTICE, UPSTREAM.json and BUILD.json.

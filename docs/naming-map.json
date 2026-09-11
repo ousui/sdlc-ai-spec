@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "status": "approved-contract-runtime-migration-pending",
+  "product": {
+    "display_name": "SDLC AI SPEC",
+    "target_plugin_id": "sdlc-ai-spec",
+    "current_plugin_id": "sdlc",
+    "state_directory": ".sdlc",
+    "code_prefix": "sdlc",
+    "environment_prefix": "SDLC_"
+  },
+  "skills": [
+    {
+      "source_id": "init",
+      "target_id": "sdlc-000-init",
+      "english": "Initialize",
+      "chinese": "项目初始化",
+      "scope": "project",
+      "existing_capability": true
+    },
+    {
+      "source_id": "constitution",
+      "target_id": "sdlc-010-rule",
+      "english": "Project Rules",
+      "chinese": "项目宪法与规则",
+      "scope": "project",
+      "existing_capability": true
+    },
+    {
+      "source_id": "specify",
+      "target_id": "sdlc-100-spec",
+      "english": "Specification",
+      "chinese": "需求规格",
+      "scope": "feature",
+      "existing_capability": true
+    },
+    {
+      "source_id": "clarify",
+      "target_id": "sdlc-110-clar",
+      "english": "Clarification",
+      "chinese": "需求澄清",
+      "scope": "feature",
+      "existing_capability": true
+    },
+    {
+      "source_id": "plan",
+      "target_id": "sdlc-200-plan",
+      "english": "Planning",
+      "chinese": "技术方案与实施规划",
+      "scope": "feature",
+      "existing_capability": true
+    },
+    {
+      "source_id": "tasks",
+      "target_id": "sdlc-300-task",
+      "english": "Task Breakdown",
+      "chinese": "任务分解",
+      "scope": "feature",
+      "existing_capability": true
+    },
+    {
+      "source_id": "analyze",
+      "target_id": "sdlc-310-xchk",
+      "english": "Cross-artifact Consistency Check",
+      "chinese": "跨产物一致性检查",
+      "scope": "feature",
+      "existing_capability": true
+    },
+    {
+      "source_id": "checklist",
+      "target_id": "sdlc-320-huma",
+      "english": "Human Review Checklist",
+      "chinese": "人工需求质量核对清单",
+      "scope": "feature",
+      "existing_capability": true
+    },
+    {
+      "source_id": "implement",
+      "target_id": "sdlc-400-impl",
+      "english": "Implementation",
+      "chinese": "实施",
+      "scope": "feature",
+      "existing_capability": true
+    },
+    {
+      "source_id": "converge",
+      "target_id": "sdlc-500-conv",
+      "english": "Implementation Convergence",
+      "chinese": "实现结果收敛",
+      "scope": "feature",
+      "existing_capability": true
+    },
+    {
+      "source_id": null,
+      "target_id": "sdlc-status",
+      "english": "Status",
+      "chinese": "状态与产物导航",
+      "scope": "utility",
+      "existing_capability": false
+    }
+  ],
+  "identifier_examples": {
+    "SPECIFY_INIT_DIR": "SDLC_INIT_DIR",
+    "SPECIFY_FEATURE": "SDLC_FEATURE",
+    "SPECIFY_FEATURE_DIRECTORY": "SDLC_FEATURE_DIRECTORY",
+    "find_specify_root": "find_sdlc_root",
+    "resolve_specify_init_dir": "resolve_sdlc_init_dir"
+  },
+  "preserve_paths": [
+    "src/upstream/",
+    "upstream.lock.json",
+    "LICENSE",
+    "NOTICE"
+  ],
+  "stable_artifact_paths": [
+    ".sdlc/specs/",
+    "spec.md",
+    "plan.md",
+    "tasks.md",
+    "memory/constitution.md",
+    "checklists/requirements.md"
+  ],
+  "deferred_behaviors": [
+    "status-implementation",
+    "rule-auto-initialization",
+    "shared-dist-skills",
+    "legacy-project-data-migration"
+  ]
+}

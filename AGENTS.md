@@ -10,6 +10,11 @@ repository transfer from a metadata edit.
 ## Source and scope
 
 - Read README.md, docs/DEVELOPMENT.md, docs/MIGRATION.md and upstream.lock.json.
+- Before naming changes or upstream upgrades, also read docs/NAMING.md and
+  docs/naming-map.json. Apply the approved context-specific product/Skill mapping
+  in the generation layer, preserve raw upstream provenance, and update all
+  callers together. Naming changes do not authorize behavior changes. An approved
+  target name is not evidence that the runtime migration has shipped.
 - Preserve the nine pinned upstream English commands and the documented path,
   name and packaging deltas. No translation, new process rules or legacy runtime.
 - Project-only INIT is authorized and implemented by adapters/INIT.md plus the
@@ -43,3 +48,11 @@ replace raw evidence with a historical PASS statement.
 A valid manifest is not native host compatibility, and engineering success is
 not business acceptance. State the environment, source SHA, counts and unperformed
 checks precisely. Keep docs current without adding a separate process platform.
+
+Use the work package PR as the decision, implementation and verification record.
+Keep its body current and append milestone comments with exact source SHAs,
+actual tests, failures/corrections and unperformed checks. README and naming
+contracts hold lasting definitions; do not create a duplicate progress platform.
+Record actual Git author/committer separately from product authorship. Never
+claim merge-readiness, native-host acceptance or business acceptance from a
+naming-documentation check alone.

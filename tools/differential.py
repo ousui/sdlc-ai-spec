@@ -15,6 +15,25 @@ from build import ROOT, HOSTS
 from naming_check import reverse_names
 
 
+def normalize_project_paths(text: str, project: Path) -> str:
+    """Collapse logical and physical spellings of one project to <PROJECT>.
+
+    macOS commonly exposes temporary directories as /var/... while physical
+    resolution returns /private/var/.... Upstream and ported scripts are both
+    allowed to canonicalize filesystem paths, so the differential verifier must
+    compare path identity rather than the platform-specific spelling. This only
+    normalizes the selected synthetic project root; unrelated paths are untouched.
+    """
+    forms={str(project)}
+    try:
+        forms.add(str(project.resolve()))
+    except OSError:
+        pass
+    for value in sorted(forms,key=len,reverse=True):
+        text=text.replace(value,'<PROJECT>')
+    return text
+
+
 def compare(baselines: Path) -> list[dict]:
     records=[]
     cases=[
@@ -58,7 +77,7 @@ def compare(baselines: Path) -> list[dict]:
                     def normalize(text):
                         if ported: text=reverse_names(text, bare=True)
                         text=text.replace(str(package)+'/templates/',str(project)+'/.specify/templates/')
-                        text=text.replace(str(project),'<PROJECT>')
+                        text=normalize_project_paths(text,project)
                         text=text.replace('.sdlc/specs/','specs/').replace('.sdlc/','.specify/')
                         text=re.sub(r'(?<![\w./])/?specs/','@SPECS@/',text)
                         text=re.sub(r'(?<![\w:/\$-])sdlc-(constitution|specify|clarify|plan|tasks|analyze|checklist|implement|converge)\b',r'/speckit-\1',text)

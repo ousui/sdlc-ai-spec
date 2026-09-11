@@ -18,36 +18,34 @@ from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
 import localize
-from build import COMMANDS,HOSTS,skill_entry,init_body,split,build
+from build import ALL_COMMANDS,COMMANDS,HOSTS,skill_entry,init_body,split,build
 from naming import skill_id,invocation
 from render import render_source
 import upgrade
 
 class SharedLocalizationTests(unittest.TestCase):
-    def test_nine_shared_cores_and_exact_init_exceptions(self):
+    def test_all_public_skills_have_one_entry_without_exceptions(self):
         package=ROOT/'dist'
-        self.assertEqual({p.name for p in (package/'skills').iterdir()}, {skill_id(n) for n in COMMANDS})
-        self.assertEqual(len(list(package.rglob('SKILL.md'))),12)
-        for name in COMMANDS:
+        self.assertEqual({p.name for p in (package/'skills').iterdir()}, {skill_id(n) for n in ALL_COMMANDS})
+        self.assertEqual(len(list(package.rglob('SKILL.md'))),11)
+        for name in ALL_COMMANDS:
             self.assertEqual(len({skill_entry(package,h,name) for h in HOSTS}),1)
-        for host in HOSTS:
-            self.assertEqual([p.name for p in (package/'adapters'/host/'skills').iterdir()],['sdlc-000-init'])
+        self.assertFalse((package/'adapters').exists())
 
-    def test_core_policy_defaults_are_not_changed_by_sharing(self):
-        for name in COMMANDS:
+    def test_ui_fields_removed_but_native_source_metadata_preserved(self):
+        for name in ALL_COMMANDS:
             meta,_=split(skill_entry(ROOT/'dist','codex',name).read_text())
-            for host in HOSTS:
-                original,_=render_source((ROOT/f'src/upstream/templates/commands/{name}.md').read_text(),name,host)
-                for key,default in [('user-invocable',True),('disable-model-invocation',False)]:
-                    self.assertEqual(meta.get(key,default),original.get(key,default))
-        for host in HOSTS:
-            meta,_=split(skill_entry(ROOT/'dist',host,'init').read_text())
-            self.assertEqual(meta.get('disable-model-invocation',False),host=='claude')
+            for key in ('user-invocable','disable-model-invocation','argument-hint'):
+                self.assertNotIn(key,meta)
+        # Raw renderer remains a faithful source oracle, not our public policy.
+        meta,_=render_source((ROOT/'src/upstream/templates/commands/plan.md').read_text(),'plan','claude')
+        self.assertIn('argument-hint',meta)
+        self.assertIn('disable-model-invocation',meta)
 
     def test_every_description_and_complete_workflow_is_chinese(self):
         result=localize.check_all()
         self.assertEqual(result['commands'],list(COMMANDS))
-        for name in (*COMMANDS,'init'):
+        for name in ALL_COMMANDS:
             for host in HOSTS:
                 meta,entry=split(skill_entry(ROOT/'dist',host,name).read_text())
                 self.assertRegex(meta['description'],r'[\u4e00-\u9fff]')
@@ -139,13 +137,13 @@ class SharedLocalizationTests(unittest.TestCase):
                 with self.assertRaises(localize.LocalizationError):localize.record_review('analyze','fixture review')
             self.assertEqual(before,(copy_root/'catalog.json').read_bytes())
 
-    def test_future_host_policy_drift_blocks_shared_build(self):
+    def test_unknown_host_execution_metadata_still_blocks_shared_build(self):
         import build as builder
         raw=(ROOT/'src/upstream/templates/commands/plan.md').read_text()
         real=builder.render_source
         def changed(raw,name,host):
             meta,body=real(raw,name,host)
-            if host=='cursor':meta['disable-model-invocation']=True
+            if host=='cursor':meta['allowed-tools']=['Read']
             return meta,body
         with patch.object(builder,'render_source',side_effect=changed):
             with self.assertRaisesRegex(ValueError,'metadata diverged'):

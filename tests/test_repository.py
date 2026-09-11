@@ -17,11 +17,12 @@ class RepositoryTests(unittest.TestCase):
     def test_single_installation_boundary(self):
         package=ROOT/'dist'
         self.assertFalse((package/'plugin.json').exists())
-        self.assertEqual({p.name for p in (package/'skills').iterdir()}, set(EXPECTED.values())-{'sdlc-000-init'})
+        self.assertEqual({p.name for p in (package/'skills').iterdir()}, set(EXPECTED.values()))
         for host in HOSTS:self.assertFalse((package/host).exists())
         self.assertEqual(len(list((package/'references/workflows').glob('*.md'))),len(ALL_COMMANDS))
         self.assertEqual(len(list(package.rglob('common.sh'))),1)
-        self.assertEqual(len(list(package.rglob('sdlc-000-init'))),3)
+        self.assertEqual(len(list(package.rglob('sdlc-000-init'))),1)
+        self.assertFalse((package/'adapters').exists())
         for legacy in ('v0','packages','skills/_shared','docs/v1.0','docs/v1.1'):
             self.assertFalse((ROOT/legacy).exists(), 'Legacy local residue (inspect before removal): '+legacy)
 
@@ -30,9 +31,9 @@ class RepositoryTests(unittest.TestCase):
         all_entries=[]
         for host in HOSTS:
             manifest=json.loads((ROOT/'dist'/('.'+host+'-plugin/plugin.json')).read_text())
-            expected = './adapters/claude/skills/' if host == 'claude' else ['./skills/', './adapters/'+host+'/skills/']
-            self.assertEqual(manifest,dict(metadata,skills=expected))
-            paths = ['./skills/', manifest['skills']] if host == 'claude' else manifest['skills']
+            expected = metadata if host == 'claude' else dict(metadata,skills='./skills/')
+            self.assertEqual(manifest,expected)
+            paths = ['./skills/'] if host == 'claude' else [manifest['skills']]
             entries=[]
             for path in paths:
                 folder=(ROOT/'dist'/path).resolve()
@@ -41,7 +42,7 @@ class RepositoryTests(unittest.TestCase):
             self.assertEqual(len(entries),len(ALL_COMMANDS))
             self.assertEqual({p.parent.name for p in entries},set(EXPECTED.values()))
             all_entries.extend(entries)
-        self.assertEqual(len(set(all_entries)),len(COMMANDS)+len(HOSTS))
+        self.assertEqual(len(set(all_entries)),len(ALL_COMMANDS))
 
     def test_marketplaces_are_generated_and_point_to_dist(self):
         for path,expected in marketplaces().items():
@@ -62,7 +63,7 @@ class RepositoryTests(unittest.TestCase):
         upstream=json.loads((ROOT/'dist/UPSTREAM.json').read_text())
         self.assertEqual(upstream['port_version'],m['version'])
         self.assertTrue(upstream['init_implemented'])
-        self.assertEqual(upstream['local_commands'],['init'])
+        self.assertEqual(upstream['local_commands'],['init', 'status'])
         self.assertFalse(upstream['native_host_verified'])
 
     def test_working_data_and_dev_sources_not_shipped(self):

@@ -26,17 +26,16 @@ class NamingRuntimeTests(unittest.TestCase):
         wanted = set(EXPECTED.values())
         package = ROOT / 'dist'
         for host in HOSTS:
-            path = package / 'adapters' / host / 'skills'
-            self.assertEqual({p.name for p in path.iterdir()}, {'sdlc-000-init'})
-            self.assertEqual({p.name for p in (package/'skills').iterdir()}, wanted-{'sdlc-000-init'})
+            self.assertFalse((package/'adapters'/host/'skills').exists())
+            self.assertEqual({p.name for p in (package/'skills').iterdir()}, wanted)
             self.assertEqual(set(json.loads((package / 'bindings' / (host + '.json')).read_text())), wanted)
         self.assertEqual({p.stem for p in (package / 'references/workflows').glob('*.md')}, wanted)
-        self.assertNotIn('sdlc-status', wanted)
+        self.assertIn('sdlc-status', wanted)
         spec = importlib.util.spec_from_file_location('naming_loader', package / 'scripts/python/load_workflow.py')
         mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
         self.assertEqual(set(mod.SKILLS), wanted)
         with self.assertRaises(ValueError): mod.load(package, 'codex', 'specify')
-        with self.assertRaises(ValueError): mod.load(package, 'codex', 'sdlc-status')
+        with self.assertRaises(ValueError): mod.load(package, 'codex', 'sdlc-999-status')
 
     def test_source_map_matches_independent_approved_inventory(self):
         for source, target in EXPECTED.items():
@@ -48,7 +47,7 @@ class NamingRuntimeTests(unittest.TestCase):
         with self.assertRaises(ValueError): invocation('plan', 'guess')
 
     def test_new_upstream_placeholders_fail_closed(self):
-        for source in ('UNREVIEWED', 'SPECIFY_EXTRA', 'TASKSTOISSUES'):
+        for source in ('UNREVIEWED', 'SPECIFY_EXTRA', 'TASKSTOISSUES', 'STATUS'):
             text = '__SPECKIT_COMMAND_' + source + '__'
             with self.assertRaises(ValueError): template_references(text)
             with self.assertRaises(ValueError): command_refs(text, 'codex')
@@ -86,6 +85,8 @@ class NamingRuntimeTests(unittest.TestCase):
         common = ROOT / 'dist/scripts/bash/common.sh'
         for host in HOSTS:
             for source, target in EXPECTED.items():
+                if source == 'status':
+                    continue  # local read-only collector does not call core Bash diagnostic formatter
                 result = subprocess.run(['bash', '-c', 'source "$1"; format_sdlc_command "$2"',
                     'naming-test', str(common), target], env=dict(os.environ, SDLC_HOST=host),
                     capture_output=True, text=True, check=True, timeout=5)

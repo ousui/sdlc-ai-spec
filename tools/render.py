@@ -53,6 +53,8 @@ def split(text: str) -> tuple[dict, str]:
 
 def command_refs(text: str, host: str, *, ported: bool = False) -> str:
     for source in re.findall(r'__SPECKIT_COMMAND_([A-Z][A-Z0-9_-]*)__', text):
+        if source == 'STATUS':
+            raise ValueError('STATUS is local, not an upstream reference')
         skill_id(source.lower().replace('_', '-'))  # unknown upstream reference fails closed
     prefix = '$' if host == 'codex' else '/'
     namespace = METADATA['name'] + ':sdlc-' if ported and host == 'claude' else ('sdlc-' if ported else 'speckit-')

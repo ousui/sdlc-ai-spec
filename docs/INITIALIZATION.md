@@ -114,3 +114,19 @@ has been removed to retain upstream behavior. External state symlinks are allowe
 by core path resolution unless they target plugin resources; INIT itself retains
 its separately specified preservation and refusal rules.
 There is no old-variable alias and no automatic RULE-to-INIT transition.
+
+## Unified public inventory and STATUS
+
+The current package exposes exactly eleven entries under `dist/skills`: nine
+upstream core Skills plus local INIT and STATUS. There are no private host Skill
+wrappers. All public entries omit user-invocable, disable-model-invocation and
+argument-hint; host defaults apply. This supersedes earlier descriptions of the
+INIT policy exception, not the existing INIT data-preservation contract.
+Claude uses default skills/ discovery without a duplicate custom path. Other
+manifests select ./skills/. All wrappers resolve the package two levels up.
+
+STATUS is an optional local read-only utility, not another lifecycle phase or an
+upstream command. It tolerates incomplete/uninitialized state, never persists a
+feature switch, never initializes, and never executes the suggested next Skill.
+See [STATUS.md](STATUS.md). Existing core bodies/templates and runtime behavior
+are not modified to store history for STATUS.

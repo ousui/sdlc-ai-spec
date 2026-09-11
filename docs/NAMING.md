@@ -23,7 +23,7 @@
 | 环境变量与常量前缀 | `SDLC_` | 大写、下划线 |
 | 内部函数等程序简称 | `sdlc` | 遵循对应语言命名风格 |
 | 阶段 Skill | `sdlc-<三位编号>-<四字母代号>` | 以命名映射为准，不猜测缩写 |
-| 非阶段导航 | `sdlc-status` | 预留名称，当前未实现 |
+| 非阶段导航 | `sdlc-status` | 本地 utility，已实现 |
 
 000–099 表示项目级前置能力，其余已定义编号表示需求级能力。编号不是
 状态机，也不表示阶段只能调用一次。`xchk`、`huma` 是本项目代号，不宣称为
@@ -135,8 +135,7 @@ INIT 保留现有幂等补全行为，不覆盖已有数据。RULE 保留项目�
 XCHK 严格只读；HUMA 生成评审者拥有的需求质量清单；CONV 仅追加差距任务，
 不直接实现代码，无发现时不产生空的收敛章节。
 
-以下是已讨论但不由本次改名自动实现的能力：RULE 代初始化、`sdlc-status`
-实际状态展示、INIT 跨宿主策略统一（不实施）、旧项目数据自动迁移。
+以下是已讨论但不由本次改名自动实现的能力：RULE 代初始化、INIT 跨宿主策略统一（不实施）、旧项目数据自动迁移。
 不能把预留名称写成已经安装，也不能把命名测试通过写成行为兼容性通过。
 
 ## 6. PR 作为工作包流程记录
@@ -155,8 +154,8 @@ README 和本契约保存长期规范，不另建一套与 PR 重复的流水进
 生成实现集中在 `tools/naming.py`，消费本目录的映射；`port.py` 在保留原始
 锚点校验后转换程序声明与调用，`render.py` 先复现原文再转换产品名称，
 `build.py` 使用编号 ID 生成 Skill、工作流文件及 binding 键。loader 接收
-完整公开 Skill ID，不再接收上游 capability ID。九个核心入口共用 dist/skills，
-INIT 保留最小策略例外；不新增调用策略或跨阶段授权。
+完整公开 Skill ID，不再接收上游 capability ID。11 个入口共用 dist/skills；使用宿主默认展示和调用选择策略，
+不增加执行后的写入或跨阶段授权。
 
 除前文示例，运行标识还包括 `format_speckit_command -> format_sdlc_command`、
 `SPECKIT_EXTENSIONS/REGISTRY/MANIFEST/TMPL -> SDLC_EXTENSIONS/REGISTRY/MANIFEST/TMPL`；
@@ -173,3 +172,15 @@ README 的 Attribution 段；初始化器中 `.specify` 旧数据检测与
 旧环境变量不作为别名保留；也不增加整类 `SPECIFY_*` 拒绝条件。不相关
 变量沿用上游忽略行为，正式调用明确使用 SDLC_*。现有 `.sdlc` 数据、
 已有模板覆盖和已生成文档不被安装动作或重复 INIT 擅自改写。
+
+## 统一入口与本地 STATUS（本迭代）
+
+所有入口位于 `dist/skills`；不生成宿主私有包装。三个 UI/选择字段不交付，
+宿主默认行为不在业务等价范围，流程内授权仍受约束。元数据未知的新执行语义
+仍须审查，不可随 UI 字段一起删除。
+
+`source_id: null, local_id: status` 表示本地只读辅助能力；公开 ID 固定为
+`sdlc-status`。十个编号 Skill 的四字母规则继续适用，不放宽未知命名。
+STATUS 不加入上游核心 COMMANDS，也不接受伪造的上游 STATUS 占位符。
+运行时 Bash 核心诊断清单保持既有十项；STATUS 通过只读采集器输出建议，不
+借该核心脚本执行或注册流程。loader 的显式能力清单为 11 项。

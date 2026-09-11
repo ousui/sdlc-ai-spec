@@ -7,8 +7,5 @@
   },
   "repository": "https://github.com/goedgecloud/sdlc-ai-spec",
   "license": "MIT",
-  "skills": [
-    "./skills/",
-    "./adapters/codex/skills/"
-  ]
+  "skills": "./skills/"
 }

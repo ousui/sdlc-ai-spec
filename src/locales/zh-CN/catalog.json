@@ -172,6 +172,13 @@
       "translation_sha256": "b59cff59a9ada4b3729bf36724244388b81ea01a2028c5c1a9b66dd7849042ed",
       "status": "reviewed",
       "reviewer": "approved presentation scope; AI text review"
+    },
+    "status": {
+      "source": "adapters/STATUS.md",
+      "source_sha256": "11d8468c43725f4e2d5a25a945baa677494a3f0c2eb1e82a85cf9d2f72086499",
+      "translation_sha256": "5dcab8941b50d9fff7b3d6a9a471790d51cf66fa0778c82ff00778e60acd0c34",
+      "status": "reviewed",
+      "reviewer": "AI contract review: local STATUS specification; not user authentication"
     }
   }
 }

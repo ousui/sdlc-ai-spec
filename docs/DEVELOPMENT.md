@@ -11,15 +11,15 @@ as part of an ordinary code change. Use the exact commit SHA to identify builds.
 The root contains the implementation. `src/upstream/templates/commands` retains original English
 source; `src/templates` and `src/scripts` contain documented port deltas.
 `adapters/` supplies resource binding and host differences. `tools/build.py`
-generates one self-contained `dist` with nine shared cores and host-specific INIT entries,
+generates one self-contained `dist` with 11 unique public entries (nine upstream cores, local INIT and STATUS),
 without importing the upstream CLI or reading initialized projects. Use `--marketplaces`
 to also regenerate the three repository-root catalogs.
 There is no root plugin manifest because the root is a source/build workspace.
 
-Core entries live under `dist/skills/`; only INIT lives under
-`dist/adapters/<host>/skills/`. Claude's custom path supplements its default scan;
-Codex/Cursor explicitly list both paths. Shared core metadata preserves original
-invocation defaults. INIT retains its original per-host control fields.
+All entries live under `dist/skills/`; no private entry directories remain.
+Claude uses its default skills/ scan; Codex/Cursor explicitly select ./skills/.
+The three approved UI/selection fields are omitted from every generated entry.
+Raw upstream metadata and execution contracts remain independently checked.
 The English source renderer remains independently compared with upstream output;
 Chinese complete bodies are validated against reviewed, source-bound locale assets.
 See [LOCALIZATION.md](LOCALIZATION.md) for incremental translation and protected tokens.
@@ -131,9 +131,9 @@ build while the beta product version remains fixed.
 
 `adapters/INIT.md` is a local workflow, not a tenth upstream command.
 `src/scripts/python/init_project.py` is its deterministic stdlib-only implementation.
-The build generates three thin entries and one shared init body, through the same
+The build generates one public INIT entry and one shared init body, through the same
 loader as the nine upstream commands, but without the initialized-project gate.
-`COMMANDS` and the upstream lock stay at nine; `ALL_COMMANDS` adds local INIT for
+`COMMANDS` and the upstream lock stay at nine; `ALL_COMMANDS` adds local INIT and STATUS for
 package inventory. Upgrade preparation must retain this local source and its tests.
 
 `tests/test_init.py` covers initial setup, manual-state completion, byte/mode/mtime
@@ -150,3 +150,12 @@ and copied source paths retain original names, while generated workflows use
 `references/workflows/<full-skill-id>.md` and loader calls use the same public ID.
 Unknown source references must stop preparation; never infer new abbreviations
 or weaken full-body parity to accept a candidate. See PR #24 for execution evidence.
+
+## Read-only STATUS utility
+
+`adapters/STATUS.md` defines this local (not upstream) capability; its Chinese
+resource is `src/locales/zh-CN/status.md`. `project_status.py` uses Python 3.9+
+standard library only and writes solely to stdout. See [STATUS.md](STATUS.md).
+The local tests use synthetic directories, including empty, malformed, aliased,
+read-only and concurrently modified data. File contents/modes/mtime, directory
+inventory and Git index/config are compared; atime is not an immutability metric.

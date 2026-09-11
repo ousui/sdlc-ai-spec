@@ -96,7 +96,8 @@
       "english": "Status",
       "chinese": "状态与产物导航",
       "scope": "utility",
-      "existing_capability": false
+      "existing_capability": true,
+      "local_id": "status"
     }
   ],
   "identifier_examples": {
@@ -121,9 +122,8 @@
     "checklists/requirements.md"
   ],
   "deferred_behaviors": [
-    "status-implementation",
     "rule-auto-initialization",
     "legacy-project-data-migration"
   ],
-  "delivery_layout": "shared-core-skills-with-host-init"
+  "delivery_layout": "unified-public-skills"
 }

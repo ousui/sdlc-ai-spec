@@ -15,7 +15,7 @@ no events, no presets and no extensions. This is NOT equivalence to the entire C
 | `specify preset resolve spec-template` instruction uses bundled `resolve-template.sh` | No persistent specify-cli runtime dependency; original template selection remains for selected core profile |
 | Native hints use invocation host, not saved default integration | One project can be used sequentially by different hosts |
 | Binding preamble is added to generated skills | Identify resources, resolve project, pass variables per tool call and fail clearly outside the selected profile |
-| Plugin packaging + provenance | Three native manifests selecting nine shared cores plus host-specific INIT |
+| Plugin packaging + provenance | Three native manifests discovering one shared set of eleven entries |
 
 `check-prerequisites.sh`, `resolve-template.sh` and `setup-plan.sh` are otherwise
 byte-identical to the upstream source after the marker relocation. `common.sh`,
@@ -46,19 +46,18 @@ fragments in `bindings/<host>.json`. Different line structures fail closed.
 It has no subprocess, network or writes. All 27 English pre-localization bodies are independently compared with original
 CLI outputs under the address allowlist. Chinese resolved bodies additionally
 match reviewed full translations, with source freshness and machine-span checks.
-Shared wrappers retain equivalent core frontmatter defaults, explicit calling-host identity,
+Shared wrappers omit only approved UI/selection fields, retaining explicit calling-host identity,
 original user input and an explicit full-output reading requirement. Truncation
 must be handled with bounded pages, never silently accepted.
 
-Nine cores live in `skills/`; only INIT remains in `adapters/<host>/skills/`.
-Claude uses its default core scan plus the custom INIT path; Codex/Cursor list
-both paths. No portable root manifest is shipped. References for the path rules:
+Eleven capabilities live only in `skills/`, including local INIT and STATUS.
+Claude uses its default scan; Codex/Cursor explicitly select the same directory. No portable root manifest is shipped. References for the path rules:
 https://developers.openai.com/plugins/build/plugins
 https://code.claude.com/docs/en/plugins-reference
 https://cursor.com/docs/reference/plugins
 Static documented-field/path checks are NOT native-host certification.
 
-Shared artifact templates use canonical capability IDs such as `sdlc-plan` instead
+Shared artifact templates use canonical capability IDs such as `sdlc-200-plan` instead
 of a host's literal invocation prefix. They are instruction references, not shell
 commands. The wrapper/loaded workflow retains native invocation semantics. This
 is a separately allowlisted reference-only change: all other words, whitespace,
@@ -102,11 +101,11 @@ use the approved four-letter stage names. The product ID is `sdlc-ai-spec`;
 display name is **SDLC AI SPEC**. Existing project data paths are unchanged.
 
 Runtime declarations/callers and emitted hints use SDLC identifiers. All three
-hosts retain their literal host, original control metadata and input-handling
-contract. The only input hint wording change is “feature you want to specify”
-to “feature you want to define”. Explicit compatibility/provenance exceptions
-are listed in NAMING.md. New nonempty obsolete environment overrides fail with
-a rename diagnostic rather than selecting an unintended project.
+hosts retain explicit host binding and the input-handling contract. The approved
+UI/selection metadata is omitted from generated entries; original source metadata
+remains in the independent upstream comparison. Compatibility/provenance
+exceptions are listed in NAMING.md. Unrelated obsolete environment prefixes are
+not rejected; public overrides use the documented SDLC names.
 
 Full workflow parity uses an independently enumerated inverse mapping and keeps
 the negative prose-mutation control. Script leaf comparisons enumerate only
@@ -127,3 +126,19 @@ translation; factoring follows it. Templates are NOT translated wholesale; fixed
 headings, placeholders and task grammar remain English, while normal authored
 content is Chinese. No existing project data is rewritten during upgrade.
 See [LOCALIZATION.md](LOCALIZATION.md) for checks, review limits and resumption.
+
+## Unified public inventory and STATUS
+
+The current package exposes exactly eleven entries under `dist/skills`: nine
+upstream core Skills plus local INIT and STATUS. There are no private host Skill
+wrappers. All public entries omit user-invocable, disable-model-invocation and
+argument-hint; host defaults apply. This supersedes earlier descriptions of the
+INIT policy exception, not the existing INIT data-preservation contract.
+Claude uses default skills/ discovery without a duplicate custom path. Other
+manifests select ./skills/. All wrappers resolve the package two levels up.
+
+STATUS is an optional local read-only utility, not another lifecycle phase or an
+upstream command. It tolerates incomplete/uninitialized state, never persists a
+feature switch, never initializes, and never executes the suggested next Skill.
+See [STATUS.md](STATUS.md). Existing core bodies/templates and runtime behavior
+are not modified to store history for STATUS.

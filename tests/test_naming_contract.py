@@ -89,13 +89,14 @@ class NamingContractTests(unittest.TestCase):
             'memory/constitution.md', 'checklists/requirements.md',
         })
 
-    def test_reserved_status_does_not_claim_an_existing_capability(self):
+    def test_status_is_local_utility_not_upstream_command(self):
         skills = self.data['skills']
         self.assertTrue(all(i['existing_capability'] is True for i in skills[:-1]))
         self.assertIs(skills[-1]['source_id'], None)
-        self.assertIs(skills[-1]['existing_capability'], False)
+        self.assertIs(skills[-1]['existing_capability'], True)
+        self.assertEqual(skills[-1]['local_id'], 'status')
         self.assertEqual(skills[-1]['scope'], 'utility')
-        self.assertIn('当前未实现', self.readme)
+        self.assertIn('状态与产物导航', self.readme)
         self.assertIn('已迁移生成入口', self.readme)
         self.assertEqual(self.data['status'], 'implemented-runtime-naming')
 
@@ -104,7 +105,7 @@ class NamingContractTests(unittest.TestCase):
         self.assertIn('docs/naming-map.json', self.readme)
         self.assertIn('https://github.com/ousui/sdlc-ai-spec/pull/24', self.policy)
         self.assertEqual(set(self.data['deferred_behaviors']), {
-            'status-implementation', 'rule-auto-initialization',
+            'rule-auto-initialization',
             'legacy-project-data-migration',
         })
         self.assertEqual(self.data['schema_version'], 1)

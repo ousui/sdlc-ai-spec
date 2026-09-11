@@ -13,6 +13,7 @@ EXPECTED = {
     'plan': 'sdlc-200-plan', 'tasks': 'sdlc-300-task',
     'analyze': 'sdlc-310-xchk', 'checklist': 'sdlc-320-huma',
     'implement': 'sdlc-400-impl', 'converge': 'sdlc-500-conv',
+    'status': 'sdlc-status',  # locally authored utility, not a source CLI command
 }
 IDENTIFIERS = {
     'SPECIFY_INIT_DIR': 'SDLC_INIT_DIR', 'SPECIFY_FEATURE': 'SDLC_FEATURE',

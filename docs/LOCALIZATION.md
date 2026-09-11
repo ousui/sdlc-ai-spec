@@ -2,19 +2,16 @@
 
 ## 当前交付
 
-九个上游核心入口在 `dist/skills/<id>/SKILL.md` 共用。仅本地 INIT 保留三个
-宿主专用包装：Claude 的 `disable-model-invocation: true` 不传播到其他宿主。
-Core 原有自动/手动调用默认策略一致，公共头部保留等效默认值。每个宿主发现
-九个核心和自己的 INIT，共 10 项。不要扫描 `dist/adapters` 整棵树加载三个 INIT。
-
-Claude 自带默认 skills/ 扫描，自定义路径只指向其 INIT；Codex/Cursor 的清单
-显式列出两条路径。以官方 native manifest 为准，不另放 portable root manifest。
-核心入口从已经加载 Skill 的目录向上两级找插件根；INIT 向上四级。公共入口
-要求实际调用环境明确宿主，不根据模型名、配置目录或历史会话猜测。
+九核心、INIT 和 STATUS 共 11 个入口全部位于 `dist/skills/<id>/SKILL.md`。
+不保留生成包内宿主私有 Skill，不输出 `user-invocable`、
+`disable-model-invocation`、`argument-hint`；使用宿主默认选择行为。
+Claude 默认扫描 skills/，不重复声明；Codex/Cursor 显式指向 ./skills/。
+所有入口从已加载 Skill 目录向上两级定位插件；不从模型名猜宿主。
+这项展示/选择边界是用户批准的调整，流程中的写入与授权要求未改变。
 
 ## 中文范围与等价宪法
 
-Skill 摘要、完整流程正文、入口/绑定说明及 INIT 指引使用简体中文，不是缩写
+Skill 摘要、完整流程正文、入口/绑定说明及 INIT/STATUS 指引使用简体中文，不是缩写
 摘要替代上游正文。每个能力仅维护一份译文，再绑定三宿主调用差异。
 
 模板骨架保留英文：固定标题、文件名、机器占位符、JSON/YAML 键、事件键、
@@ -66,8 +63,8 @@ uv run --locked python -B tools/localize.py record \
 uv run --locked python -B tools/localize.py check
 ```
 
-若 description/argument-hint 原文也变化，先在 catalog 对应 metadata 中明确更新
-source 与 zh_CN；record 不会替新原文自动批准旧译文。绑定/INIT 说明变更可以用
+若 description 原文变化，先在 catalog 对应 metadata 中明确更新
+source 与 zh_CN；record 不会替新原文自动批准旧译文。未交付的 argument-hint 不作为翻译门禁，原始来源仍保留。绑定/INIT 说明变更可以用
 `--resource binding` 或 `--resource init`，同样先完成对照审查。
 
 随后计算候选当前翻译目录摘要（程序维护，不是 Git author 身份证明）：
@@ -104,6 +101,7 @@ refresh 只接受因本地化而受阻的 detached 候选，核对源 HEAD 和�
 
 ## 边界
 
-此处没有新增维护者发版平台、权限规则、STATUS 或 RULE 自动初始化。review JSON
+STATUS 属于本地中文资源，不在九项上游译文列表中。`--resource status` 可记录
+其来源与中文说明的已完成审查。此处没有维护者发版平台、权限规则或 RULE 自动初始化。review JSON
 不是访问控制；也没有改变远端分支、创建 tag 或发布 Release。现有移植审查中
 已确认继承的上游问题保持记录，不通过翻译暗中修正。

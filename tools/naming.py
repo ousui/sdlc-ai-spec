@@ -15,9 +15,10 @@ ROOT = Path(__file__).resolve().parents[1]
 CONTRACT = json.loads((ROOT / 'docs/naming-map.json').read_text(encoding='utf-8'))
 PRODUCT_ID = CONTRACT['product']['target_plugin_id']
 DISPLAY_NAME = CONTRACT['product']['display_name']
-SKILL_IDS = {s['source_id']: s['target_id'] for s in CONTRACT['skills'] if s['existing_capability']}
-if (len(SKILL_IDS) != 10 or len(set(SKILL_IDS.values())) != 10
-        or any(not re.fullmatch(r'sdlc-\d{3}-[a-z]{4}', value) for value in SKILL_IDS.values())):
+SKILL_IDS = {(s['source_id'] or s.get('local_id')): s['target_id'] for s in CONTRACT['skills'] if s['existing_capability']}
+if (len(SKILL_IDS) != 11 or len(set(SKILL_IDS.values())) != 11
+        or any(not re.fullmatch(r'sdlc-\d{3}-[a-z]{4}', value) for source, value in SKILL_IDS.items() if source != 'status')
+        or SKILL_IDS.get('status') != 'sdlc-status'):
     raise ValueError('Invalid approved skill inventory; review docs/NAMING.md')
 
 IDENTIFIERS = dict(CONTRACT['identifier_examples'],
@@ -73,6 +74,8 @@ def capability_references(text: str) -> str:
 
 
 def template_references(text: str) -> str:
+    if '__SPECKIT_COMMAND_STATUS__' in text:
+        raise ValueError('STATUS is local, not an upstream capability')
     return re.sub(r'__SPECKIT_COMMAND_([A-Z][A-Z0-9_-]*)__',
                   lambda m: skill_id(m[1].lower().replace('_', '-')), product_prose(text))
 
@@ -88,7 +91,7 @@ def invocation_adapter() -> str:
     template = (ROOT / 'adapters/invocation-functions.sh').read_text(encoding='utf-8')
     if template.count('@SKILL_CASES@') != 1:
         raise ValueError('Invocation adapter mapping anchor changed')
-    cases = '|'.join(SKILL_IDS.values())
+    cases = '|'.join(v for k, v in SKILL_IDS.items() if k != 'status')
     return template.replace('@SKILL_CASES@', cases).replace('@PLUGIN_ID@', PRODUCT_ID)
 
 
@@ -96,8 +99,11 @@ def audit_package(package: Path) -> None:
     """Reject residual product markers, allowing only documented provenance lines."""
     import yaml
     legacy = re.compile(r'specify|spec[- ]kit|speckit', re.I)
-    old_command = re.compile(r'(?<![\w.-])sdlc-(?:' + '|'.join(SKILL_IDS) + r')(?![\w-])')
+    old_command = re.compile(r'(?<![\w.-])sdlc-(?:' + '|'.join(k for k in SKILL_IDS if k != 'status') + r')(?![\w-])')
     exceptions = {
+        'scripts/python/project_status.py': {
+            "            'recorded_upstream_version': (options or {}).get('speckit_version'),",
+        },
         'scripts/python/init_project.py': {
             "    if (root / '.specify').exists() or (root / '.specify').is_symlink():",
             "        raise ValueError('Existing .specify requires explicit migration; no files were changed')",

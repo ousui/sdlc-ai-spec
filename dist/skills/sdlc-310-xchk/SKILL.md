@@ -5,14 +5,11 @@ compatibility: Requires an initialized .sdlc project, Bash and Python 3.9+; run 
 metadata:
   author: github-spec-kit
   source: templates/commands/analyze.md
-user-invocable: true
-disable-model-invocation: false
-argument-hint: 可选：分析关注点
 ---
 
 # SDLC AI SPEC sdlc-310-xchk
 
-这是三个宿主共用的核心入口。依据本次调用的实际宿主，将 `SDLC_HOST` 显式设为 `codex`、`claude` 或 `cursor`；不得根据模型名称、项目中的配置目录或历史会话猜测。无法确定当前宿主时停止并说明，不选择默认宿主。
+这是三个宿主共用的入口。依据本次调用的实际宿主，将 `SDLC_HOST` 显式设为 `codex`、`claude` 或 `cursor`；不得根据模型名称、项目中的配置目录或历史会话猜测。无法确定当前宿主时停止并说明，不选择默认宿主。
 
 保留本次原始用户输入为 `$ARGUMENTS`；不得把自然语言输入拼接成 shell 命令。
 

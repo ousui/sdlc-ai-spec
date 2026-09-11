@@ -10,7 +10,9 @@ SDLC AI SPEC 是锁定版本 Spec Kit 的产品化移植，不是独立演进的
 数据键、参数和机器标记不是普通产品文案。保持 src/upstream 原始字节，dist
 由生成器产生。中文呈现不授权新增业务写入或批量重写已有产物。
 本地 INIT 是独立项目初始化能力，不冒充完整原版安装器；本项目构建和升级
-工具的错误由本项目负责。公共入口不得改变各宿主的调用策略。
+工具的错误由本项目负责。执行后的业务逻辑仍保持等价。Agent 的菜单展示、hint 和调用选择策略不属于
+等价契约：公共入口不声明 user-invocable、disable-model-invocation、argument-hint，
+使用宿主默认行为。被模型选择不增加写入、跨阶段或发布授权；流程内权限不变。
 
 ## Web 交付及补丁回退
 
@@ -29,7 +31,7 @@ repository transfer from a metadata edit.
 
 ## Source and scope
 
-- Read README.md, docs/DEVELOPMENT.md, docs/MIGRATION.md, docs/LOCALIZATION.md and upstream.lock.json.
+- Read README.md, docs/DEVELOPMENT.md, docs/MIGRATION.md, docs/LOCALIZATION.md, docs/STATUS.md and upstream.lock.json.
 - Before naming changes or upstream upgrades, also read docs/NAMING.md and
   docs/naming-map.json. Apply the approved context-specific product/Skill mapping
   in the generation layer, preserve raw upstream provenance, and update all
@@ -38,6 +40,9 @@ repository transfer from a metadata edit.
 - Preserve the nine pinned upstream English commands and the documented path,
   name and packaging deltas. Translation is permitted only in derived prose, not
   raw sources or machine contracts; no new process rules or legacy runtime.
+- STATUS is a local read-only utility, not an upstream stage. Never make it
+  persist selection, initialize projects, run other Skills, or invent phase history.
+  All 11 entries live in dist/skills; do not regenerate host-private wrappers.
 - Project-only INIT is authorized and implemented by adapters/INIT.md plus the
   bundled stdlib initializer. Preserve existing project data; never install tools.
 - GitHub integration, real-project execution and native client installation remain

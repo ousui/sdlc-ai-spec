@@ -13,7 +13,8 @@ from render import (ROOT, COMMANDS, HOSTS, LOCK, UPSTREAM_SHA, METADATA, REPOSIT
 
 from localize import (translate_body, translated_metadata, localized_workflow, resource, check_all)
 
-LOCAL_COMMANDS = ('init',)
+LOCAL_COMMANDS = ('init', 'status')
+HOST_UI_FIELDS = frozenset(('user-invocable', 'disable-model-invocation', 'argument-hint'))
 ALL_COMMANDS = COMMANDS + LOCAL_COMMANDS
 CORE_COMPATIBILITY = 'Requires an initialized .sdlc project, Bash and Python 3.9+; run sdlc-000-init once per project'
 
@@ -57,54 +58,50 @@ def factor(bodies: dict[str, str]) -> tuple[str, dict[str, dict[str, str]]]:
 
 
 def skill_entry(package: Path, host: str, name: str) -> Path:
-    """Nine shared core entries; INIT alone preserves the existing host policies."""
+    """Exactly one public entry for every upstream or explicitly local capability."""
     if host not in HOSTS or name not in ALL_COMMANDS:
         raise ValueError('Unknown entry selection')
-    folder = package / 'adapters' / host / 'skills' if name == 'init' else package / 'skills'
-    return folder / skill_id(name) / 'SKILL.md'
+    return package / 'skills' / skill_id(name) / 'SKILL.md'
 
 
 def manifest_skills(host: str):
     if host not in HOSTS:
         raise ValueError('Unknown host')
-    # Claude adds custom paths to its automatic skills/ scan. Cursor and Codex
-    # use an explicit list. Never list shared entries twice or load another INIT.
-    private = './adapters/' + host + '/skills/'
-    return private if host == 'claude' else ['./skills/', private]
+    # Claude always scans skills/. Do not add the default folder a second time.
+    return None if host == 'claude' else './skills/'
 
 
 def common_core_metadata(raw: str, name: str) -> dict:
-    """Only share metadata whose effective semantics agree across all hosts."""
-    original = {host: render_source(raw,name,host)[0] for host in HOSTS}
-    shared = original['claude']
-    def effective(meta):
-        meta = dict(meta)
-        meta.pop('argument-hint',None)  # display-only hint, currently Claude-only
-        for key,default in (('user-invocable',True),('disable-model-invocation',False)):
-            meta.setdefault(key,default)
-            if not isinstance(meta[key],bool):
-                raise ValueError('Invalid native invocation policy: '+name)
-        return meta
-    for host,meta in original.items():
-        if effective(meta) != effective(shared):
-            raise ValueError('Native core metadata diverged; cannot share without policy change: '+name+'/'+host)
-        if 'argument-hint' in meta and meta['argument-hint'] != shared.get('argument-hint'):
-            raise ValueError('Native hint diverged: '+name+'/'+host)
-    return dict(shared)
+    """Discard only the three approved UI/selection fields, not execution policy.
+
+    Raw upstream metadata is still independently verified. Any OTHER host-field
+    divergence requires review; never silently drop unknown controls.
+    """
+    original = {host: render_source(raw, name, host)[0] for host in HOSTS}
+    shared = {k: v for k, v in original['claude'].items() if k not in HOST_UI_FIELDS}
+    for host, meta in original.items():
+        if {k: v for k, v in meta.items() if k not in HOST_UI_FIELDS} != shared:
+            raise ValueError('Native core metadata diverged outside approved UI fields: '+name+'/'+host)
+    return shared
+
+
+def status_body(host: str) -> str:
+    if host not in HOSTS:
+        raise ValueError('Unknown host')
+    return resource('status')
 
 
 def wrapper(meta: dict, host: str | None, name: str) -> str:
+    if HOST_UI_FIELDS.intersection(meta):
+        raise ValueError('Public entry must use host-default UI and selection policies')
     front = yaml.safe_dump(meta, allow_unicode=True, sort_keys=False, width=1000).rstrip()
-    if host is None:
-        host_detail = ('这是三个宿主共用的核心入口。依据本次调用的实际宿主，将 `SDLC_HOST` 显式设为 '
-            '`codex`、`claude` 或 `cursor`；不得根据模型名称、项目中的配置目录或历史会话猜测。'
-            '无法确定当前宿主时停止并说明，不选择默认宿主。')
-        host_arg = '"${SDLC_HOST:?}"'
-        location = '两级（`skills/' + skill_id(name) + '/`）'
-    else:
-        host_detail = '这是 **' + host + '** 的 INIT 入口，本次宿主固定为 `' + host + '`。'
-        host_arg = host
-        location = '四级（`adapters/' + host + '/skills/' + skill_id(name) + '/`）'
+    if host is not None:
+        raise ValueError('All public entries use the common wrapper')
+    host_detail = ('这是三个宿主共用的入口。依据本次调用的实际宿主，将 `SDLC_HOST` 显式设为 '
+        '`codex`、`claude` 或 `cursor`；不得根据模型名称、项目中的配置目录或历史会话猜测。'
+        '无法确定当前宿主时停止并说明，不选择默认宿主。')
+    host_arg = '"${SDLC_HOST:?}"'
+    location = '两级（`skills/' + skill_id(name) + '/`）'
     return ('---\n' + front + '\n---\n\n# SDLC AI SPEC ' + skill_id(name) + '\n\n'
         + host_detail + '\n\n保留本次原始用户输入为 `$ARGUMENTS`；不得把自然语言输入拼接成 shell 命令。\n\n'
         '使用本次已加载 SKILL.md 的绝对路径；Claude 可使用宿主替换后的 `${CLAUDE_PLUGIN_ROOT}`。'
@@ -172,8 +169,7 @@ def build(destination: Path) -> None:
         (package / 'references' / 'workflows').mkdir(parents=True)
         for name in COMMANDS:
             raw = (ROOT / 'src/upstream/templates/commands' / (name + '.md')).read_text()
-            # Core host policies agree: explicit/implicit calls allowed. Preserve
-            # Claude's supported defaults and hints; other hosts ignore hints.
+            # User-approved UI/selection defaults; execution semantics remain intact.
             meta = common_core_metadata(raw, name)
             meta['name'] = skill_id(name)
             for key in ('description', 'argument-hint'):
@@ -193,23 +189,35 @@ def build(destination: Path) -> None:
         init_bodies = {host: init_body(host) for host in HOSTS}
         core, fragments = factor(init_bodies)
         (package / 'references/workflows/sdlc-000-init.md').write_text(core, encoding='utf-8')
+        meta = {'name': skill_id('init'),
+                'description': '初始化或补全项目本地 .sdlc 数据，不安装工具、不覆盖已有工作。',
+                'compatibility': 'Requires Python 3.9+, Bash and an existing project directory; no upstream CLI required',
+                'metadata': {'author': AUTHOR['name'], 'source': 'adapters/INIT.md'}}
+        path = skill_entry(package, 'codex', 'init')
+        path.parent.mkdir(parents=True)
+        path.write_text(wrapper(meta, None, 'init'), encoding='utf-8')
         for host in HOSTS:
-            meta = {'name': skill_id('init'),
-                    'description': '初始化或补全项目本地 .sdlc 数据，不安装工具、不覆盖已有工作。',
-                    'compatibility': 'Requires Python 3.9+, Bash and an existing project directory; no upstream CLI required',
-                    'metadata': {'author': AUTHOR['name'], 'source': 'adapters/INIT.md'}}
-            if host == 'claude':
-                meta.update({'user-invocable': True, 'disable-model-invocation': True,
-                             'argument-hint': '可选：明确指定项目目录'})
-            path = package / 'adapters' / host / 'skills/sdlc-000-init/SKILL.md'
-            path.parent.mkdir(parents=True)
-            path.write_text(wrapper(meta, host, 'init'), encoding='utf-8')
             bindings[host][skill_id('init')] = fragments[host]
+        # STATUS is a local read-only utility. No initialized-project binding
+        # or lifecycle prerequisites are prepended to its workflow.
+        core, fragments = factor({host: status_body(host) for host in HOSTS})
+        (package / 'references/workflows/sdlc-status.md').write_text(core, encoding='utf-8')
+        meta = {'name': skill_id('status'),
+                'description': '只读查看当前项目、当前需求、产物路径和任务勾选进度；用于恢复上下文与定位文件，不初始化、不修改文件、不执行其他阶段。',
+                'compatibility': 'Requires Python 3.9+; project initialization and upstream CLI are not required',
+                'metadata': {'author': AUTHOR['name'], 'source': 'adapters/STATUS.md'}}
+        path = skill_entry(package, 'codex', 'status')
+        path.parent.mkdir(parents=True)
+        path.write_text(wrapper(meta, None, 'status'), encoding='utf-8')
+        for host in HOSTS:
+            bindings[host][skill_id('status')] = fragments[host]
         (package / 'bindings').mkdir()
         for host in HOSTS:
             (package / 'bindings' / (host + '.json')).write_text(
                 json.dumps(bindings[host], ensure_ascii=False, indent=2) + '\n')
-            manifest = dict(METADATA, skills=manifest_skills(host))
+            manifest = dict(METADATA)
+            if manifest_skills(host) is not None:
+                manifest['skills'] = manifest_skills(host)
             path = package / ('.' + host + '-plugin') / 'plugin.json'
             path.parent.mkdir()
             path.write_text(json.dumps(manifest, indent=2) + '\n')
@@ -226,19 +234,21 @@ def build(destination: Path) -> None:
             'profile': {'script': 'sh', 'events': False, 'extensions': [], 'presets': []},
             'included_commands': list(COMMANDS), 'excluded_commands': ['taskstoissues'],
             'local_commands': list(LOCAL_COMMANDS), 'init_implemented': True, 'native_host_verified': False,
-            'layout': 'shared-core-skills-with-host-init', 'locale': 'zh-CN',
+            'layout': 'unified-public-skills', 'locale': 'zh-CN',
             'template_language': 'English skeleton; Chinese natural-language fill',
-            'source_to_skill': SKILL_IDS,
+            'source_to_skill': {name: SKILL_IDS[name] for name in COMMANDS},
+            'local_to_skill': {name: SKILL_IDS[name] for name in LOCAL_COMMANDS},
         }, indent=2) + '\n')
         (package / 'references/TEMPLATE-LANGUAGE.md').write_text(resource('output-language'), encoding='utf-8')
         (package / 'README.md').write_text(
             '# SDLC AI SPEC v' + VERSION + '\n\n作者：' + AUTHOR['name'] + '\n\n仓库：' + REPOSITORY + '\n\n'
-            '九个核心入口位于 skills/，由 Codex、Claude Code 和 Cursor 共用；INIT 保留各宿主最小策略入口。'
+            '11 个公共入口位于 skills/，由 Codex、Claude Code 和 Cursor 共用；使用宿主默认展示与调用选择策略。'
             '完整流程正文及摘要为简体中文；模板固定骨架保持英文，按原流程填入的自然语言内容使用中文。'
             '不因升级或语言要求重写已有业务文档。\n\n'
             '安装不需要构建、uv、上游 CLI 或网络。Runtime requires Bash, Python 3.9+ and standard POSIX tools. '
             'No install-time build, uv, upstream CLI or network is required.\n\n'
             '每个项目通常运行一次 sdlc-000-init；重复调用只补全兼容状态，不重置已有工作。'
+            'sdlc-status 只读查看项目和产物，不初始化、不修改文件、不执行其他阶段。'
             '原生发现、模型行为与真实业务验收不由静态工程检查代替。\n\n'
             'Based on Spec Kit by GitHub, Inc. (MIT), an independent source port. See LICENSE, NOTICE, UPSTREAM.json and BUILD.json.\n', encoding='utf-8')
         for path in (package / 'scripts').rglob('*.sh'):

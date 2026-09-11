@@ -6,6 +6,5 @@
     "name": "Blade"
   },
   "repository": "https://github.com/goedgecloud/sdlc-ai-spec",
-  "license": "MIT",
-  "skills": "./adapters/claude/skills/"
+  "license": "MIT"
 }

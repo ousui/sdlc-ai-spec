@@ -100,7 +100,7 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
     for host,integ,folder in [('codex','codex','.agents'),('claude','claude','.claude'),('cursor','cursor-agent','.cursor')]:
         base=baselines/integ
         package=ROOT/'dist'
-        actual_skills={p.parent.name for directory in (package/'skills',package/'adapters'/host/'skills') for p in directory.glob('*/SKILL.md')}
+        actual_skills={p.parent.name for p in (package/'skills').glob('*/SKILL.md')}
         require_equal(actual_skills,set(EXPECTED.values()),'Skill inventory '+host)
         for name in COMMANDS:
             native=base/folder/'skills'/('speckit-'+name)/'SKILL.md'
@@ -115,15 +115,16 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
             passed('localized_workflow_source_binding',host+'/'+name)
             if '--host "${SDLC_HOST:?}" --skill '+EXPECTED[name] not in entry or 'COMPLETE stdout' not in entry:
                 raise AssertionError('Thin entrypoint does not bind the full workflow')
-            # Compare native behavior first: common core defaults must preserve
-            # each host's original policy. UI hints do not control invocation.
-            require_equal(meta.get('user-invocable',True),oracle_meta.get('user-invocable',True),'User invocation '+host+'/'+name)
-            require_equal(meta.get('disable-model-invocation',False),oracle_meta.get('disable-model-invocation',False),'Implicit invocation '+host+'/'+name)
+            # Only the three user-approved UI/selection fields are omitted.
+            for field in ('user-invocable','disable-model-invocation','argument-hint'):
+                if field in meta:raise AssertionError('Public UI override remains: '+field)
             common,_=render_source((ROOT/'src/upstream/templates/commands'/f'{name}.md').read_text(),name,'claude')
             common.update(name=EXPECTED[name],compatibility=CORE_COMPATIBILITY)
             for field in ('description','argument-hint'):
                 if field in common:common[field]=product_prose(common[field])
             expected_meta=translated_metadata(name,common)
+            for field in ('user-invocable','disable-model-invocation','argument-hint'):
+                expected_meta.pop(field,None)
             require_equal(meta,expected_meta,'Shared localized metadata '+host+'/'+name)
             require_equal(normalize(oracle_body,host,ported=False),normalize(body,host,ported=True),'Migrated body '+host+'/'+name)
             # Negative control proves normalization cannot hide a prose mutation.
@@ -143,9 +144,9 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
         require_equal(m['repository'],REPOSITORY,'Fixed repository')
         require_equal(m['version'],VERSION,'Version')
         require_equal(m['author'],AUTHOR,'Plugin author')
-        require_equal(m['skills'],manifest_skills(host),'Shared core and host INIT selection')
-        require_equal(set(m),{'name','version','description','repository','license','author','skills'},'Native minimal manifest fields')
-        if (package/'plugin.json').exists() or not (package/'skills').is_dir():
+        require_equal(m.get('skills'),manifest_skills(host),'One public Skill inventory')
+        require_equal(set(m),{'name','version','description','repository','license','author'} | ({'skills'} if host!='claude' else set()),'Native minimal manifest fields')
+        if (package/'plugin.json').exists() or (package/'adapters').exists() or not (package/'skills').is_dir():
             raise AssertionError('Missing shared core or ambiguous portable root manifest')
         passed('native_manifest_documented_subset',host)
         for f in package.rglob('*'):

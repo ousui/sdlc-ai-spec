@@ -275,11 +275,11 @@ class InitTests(unittest.TestCase):
 
     def test_all_host_init_entries_and_loader_do_not_require_state(self):
         for host in HOSTS:
-            entry = PACKAGE / 'adapters' / host / 'skills/sdlc-000-init/SKILL.md'
+            entry = PACKAGE / 'skills/sdlc-000-init/SKILL.md'
             meta, body = split(entry.read_text())
             self.assertEqual(meta['name'], 'sdlc-000-init')
             self.assertEqual(meta['metadata']['author'], 'Blade')
-            self.assertIn('--host ' + host + ' --skill sdlc-000-init', body)
+            self.assertIn('--host "${SDLC_HOST:?}" --skill sdlc-000-init', body)
             proc = subprocess.run([sys.executable, '-I', '-B', str(PACKAGE / 'scripts/python/load_workflow.py'),
                 '--host', host, '--skill', 'sdlc-000-init'], cwd=self.project, capture_output=True, text=True, check=True)
             self.assertEqual(proc.stdout, init_body(host))

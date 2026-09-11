@@ -27,15 +27,15 @@
     "taskstoissues"
   ],
   "local_commands": [
-    "init"
+    "init",
+    "status"
   ],
   "init_implemented": true,
   "native_host_verified": false,
-  "layout": "shared-core-skills-with-host-init",
+  "layout": "unified-public-skills",
   "locale": "zh-CN",
   "template_language": "English skeleton; Chinese natural-language fill",
   "source_to_skill": {
-    "init": "sdlc-000-init",
     "constitution": "sdlc-010-rule",
     "specify": "sdlc-100-spec",
     "clarify": "sdlc-110-clar",
@@ -45,5 +45,9 @@
     "checklist": "sdlc-320-huma",
     "implement": "sdlc-400-impl",
     "converge": "sdlc-500-conv"
+  },
+  "local_to_skill": {
+    "init": "sdlc-000-init",
+    "status": "sdlc-status"
   }
 }

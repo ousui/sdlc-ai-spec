@@ -12,7 +12,7 @@ is not semantic proof.
 
 The package now uses native manifests and explicit component paths. The old
 portable-schema check is intentionally replaced by documented native-field/path
-checks and shared-core/isolated-INIT discovery tests. This does NOT count as a native client test.
+checks and eleven-entry unified-inventory tests. This does NOT count as a native client test.
 
 Checks cover raw source hashes and watched generator hashes; 27 original source
 renderer comparisons; 27 English migrated workflow comparisons; 27 localized resolved bodies; shared template
@@ -75,3 +75,19 @@ it is not LLM-authored implementation evidence.
 Use the final exact source SHA CI run for counts and status; historical counts
 above describe only the previous implementation. Native INIT invocation remains
 for the user to verify in the installed clients.
+
+## Unified public inventory and STATUS
+
+The current package exposes exactly eleven entries under `dist/skills`: nine
+upstream core Skills plus local INIT and STATUS. There are no private host Skill
+wrappers. All public entries omit user-invocable, disable-model-invocation and
+argument-hint; host defaults apply. This supersedes earlier descriptions of the
+INIT policy exception, not the existing INIT data-preservation contract.
+Claude uses default skills/ discovery without a duplicate custom path. Other
+manifests select ./skills/. All wrappers resolve the package two levels up.
+
+STATUS is an optional local read-only utility, not another lifecycle phase or an
+upstream command. It tolerates incomplete/uninitialized state, never persists a
+feature switch, never initializes, and never executes the suggested next Skill.
+See [STATUS.md](STATUS.md). Existing core bodies/templates and runtime behavior
+are not modified to store history for STATUS.

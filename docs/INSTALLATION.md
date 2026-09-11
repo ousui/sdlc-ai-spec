@@ -10,12 +10,11 @@ old default branch and assume it contains this build.
 ## One installed package
 
 All three repository-root marketplace catalogs point to `./dist`.
-Nine shared core entries live in `dist/skills/`. Only INIT keeps three host-specific
-wrappers because its previous invocation policies differ. Each host loads nine
-shared cores plus its own INIT, never another host's INIT.
+All eleven entries (nine upstream cores, local INIT and STATUS) live in
+`dist/skills/`. No host-private wrappers or selection-policy overrides remain.
 
-Codex and Cursor use `skills: ["./skills/", "./adapters/<host>/skills/"]`.
-Claude automatically scans `skills/` and adds its custom `./adapters/claude/skills/`.
+Codex and Cursor use `skills: "./skills/"`.
+Claude automatically scans `skills/` without a redundant custom path.
 There is no portable root plugin.json. Do not separately install both the root
 workspace and the dist package. Remove the old cached plugin version through the
 host's normal uninstall/update UI rather than merging old folders into the new one.
@@ -59,7 +58,7 @@ was tested.
 
 ## Verify what is actually installed
 
-The plugin must expose exactly ten intended skills, from this host's adapter.
+The plugin must expose exactly eleven intended skills from the common skills/ directory.
 Read the installed `UPSTREAM.json` and `BUILD.json`. `BUILD.json.build_id` identifies
 source-derived bytes while the product version remains fixed. Record the source
 commit, build_id, client version, model and loaded plugin directory for each test.
@@ -92,16 +91,33 @@ client certification. Never put all host adapters under one default skill scan.
 ## Naming migration in PR #24
 
 The plugin ID changed from `sdlc` to `sdlc-ai-spec`; display name is **SDLC AI SPEC**.
-All ten entry directories and `SKILL.md.name` now use the numbered IDs in README.
-The three native manifests still select their own adapters; this is not the
-shared `dist/skills` redesign. Native metadata controls and literal host identity
-are unchanged. `sdlc-status` is reserved, not an installed eleventh skill.
+The ten numbered entry directories use the IDs in README; sdlc-status is the
+un-numbered local utility. All eleven entries now live in dist/skills and the
+three manifests select that same inventory using native discovery semantics.
+Generated entries omit the three approved UI/selection fields; business execution
+and explicit host binding remain unchanged.
 
 Treat the old and new IDs as different installations. Remove/disable the old
 plugin via the client's normal management flow, install the new ID from the
-intended exact source, then verify ten entries and the new build_id. Do not
+intended exact source, then verify eleven entries and the new build_id. Do not
 combine both package trees or assume a fixed beta version invalidated caches.
 No automatic cache removal or business-data migration is performed. Old public
 command aliases are not advertised or installed. Existing documents are not
 rewritten by installing/updating the plugin; historical command references in
 user-authored overrides need deliberate review.
+
+## Unified public inventory and STATUS
+
+The current package exposes exactly eleven entries under `dist/skills`: nine
+upstream core Skills plus local INIT and STATUS. There are no private host Skill
+wrappers. All public entries omit user-invocable, disable-model-invocation and
+argument-hint; host defaults apply. This supersedes earlier descriptions of the
+INIT policy exception, not the existing INIT data-preservation contract.
+Claude uses default skills/ discovery without a duplicate custom path. Other
+manifests select ./skills/. All wrappers resolve the package two levels up.
+
+STATUS is an optional local read-only utility, not another lifecycle phase or an
+upstream command. It tolerates incomplete/uninitialized state, never persists a
+feature switch, never initializes, and never executes the suggested next Skill.
+See [STATUS.md](STATUS.md). Existing core bodies/templates and runtime behavior
+are not modified to store history for STATUS.

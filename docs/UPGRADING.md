@@ -149,8 +149,8 @@ or weaken full-body parity to accept a candidate. See PR #24 for execution evide
 
 ## Shared entrypoints and localized candidate resumption
 
-Current distribution uses nine shared core entries under `dist/skills/`, with only
-INIT retaining host-specific policy wrappers. Original English source rendering
+Current distribution uses eleven public entries under `dist/skills/`, including
+local INIT and STATUS, with no host-private wrappers. Original English source rendering
 is still independently checked; Chinese source assets are version-bound in
 `src/locales/zh-CN`. No translation service runs during build or installation.
 English template skeletons and existing project data remain unchanged.
@@ -166,3 +166,28 @@ must not be reused. Full commands and the review record format are in
 The original "candidate must not be edited" rule still applies outside this
 explicit, narrow translation-resumption path. Changed adapter/code requires a
 reviewed source update and freshly prepared candidate, not a digest edit.
+
+## Unified public inventory and STATUS
+
+The current package exposes exactly eleven entries under `dist/skills`: nine
+upstream core Skills plus local INIT and STATUS. There are no private host Skill
+wrappers. All public entries omit user-invocable, disable-model-invocation and
+argument-hint; host defaults apply. This supersedes earlier descriptions of the
+INIT policy exception, not the existing INIT data-preservation contract.
+Claude uses default skills/ discovery without a duplicate custom path. Other
+manifests select ./skills/. All wrappers resolve the package two levels up.
+
+STATUS is an optional local read-only utility, not another lifecycle phase or an
+upstream command. It tolerates incomplete/uninitialized state, never persists a
+feature switch, never initializes, and never executes the suggested next Skill.
+See [STATUS.md](STATUS.md). Existing core bodies/templates and runtime behavior
+are not modified to store history for STATUS.
+
+Upgrades must retain adapters/STATUS.md, src/locales/zh-CN/status.md and its local
+resource catalog record, src/scripts/python/project_status.py and its tests.
+These are local sources, not copied upstream commands. Materialization rebuilds
+the same eleven-entry package without overwriting this utility. Source changes
+that affect field interpretation require STATUS compatibility review and tests;
+do not silently migrate business data. The existing localization refresh path
+remains scoped to reviewed locale changes. No new release/permission platform
+is introduced in this iteration.

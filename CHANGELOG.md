@@ -66,3 +66,14 @@ history rather than copied into the current product tree.
   packages. Localization-only candidate refresh rebuilds and invalidates old evidence.
 - Correct local-only event-key renaming, blanket unrelated environment rejection
   and blanket external-state symlink rejection. No independent upstream bug fixes.
+
+## Unified entries and read-only STATUS (1.0.0-beta)
+
+- Move INIT into public skills/ and remove all three host-private Skill directories.
+- Omit only the approved UI/selection metadata; use each host's default behavior.
+- Add local sdlc-status with bounded standard-library collection, JSON/Chinese
+  stdout, explicit/current/list selection and no persistence or project execution.
+- Preserve upstream sources, nine workflow bodies, English template structures
+  and existing INIT data behavior. STATUS adds no stage completion verdicts.
+- Expand synthetic path/format/read-only tests and retain deterministic build,
+  localization freshness and upstream upgrade compatibility checks.

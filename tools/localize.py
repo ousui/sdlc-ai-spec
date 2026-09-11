@@ -118,7 +118,9 @@ def translate_body(name: str, host: str) -> str:
 def translated_metadata(name: str, source_meta: dict) -> dict:
     record = catalog()['commands'][name]
     meta = dict(source_meta)
-    expected = {k: source_meta[k] for k in ('description', 'argument-hint') if k in source_meta}
+    # Generated entries no longer publish UI hints. Do not make an unused
+    # upstream hint a localization gate; raw source metadata remains verified.
+    expected = {k: source_meta[k] for k in ('description',) if k in source_meta}
     for key, original in expected.items():
         entry = record.get('metadata', {}).get(key)
         if not entry or entry.get('source') != original or not entry.get('zh_CN'):
@@ -128,7 +130,7 @@ def translated_metadata(name: str, source_meta: dict) -> dict:
 
 
 def resource(name: str) -> str:
-    if name not in ('binding', 'init', 'output-language'):
+    if name not in ('binding', 'init', 'output-language', 'status'):
         raise LocalizationError('Unknown local resource: ' + name)
     rec = catalog().get('resources', {}).get(name, {})
     text = (LOCALES / (name + '.md')).read_text(encoding='utf-8')
@@ -153,7 +155,7 @@ def localized_workflow(name: str, host: str) -> str:
 
 def check_all() -> dict:
     data = catalog()
-    for item in ('binding', 'init', 'output-language'):
+    for item in ('binding', 'init', 'output-language', 'status'):
         resource(item)
     checked = []
     for name in COMMANDS:
@@ -179,7 +181,7 @@ def record_review(name: str, reviewer: str, *, is_resource: bool = False) -> dic
         raise LocalizationError('A nonempty review declaration is required')
     data = catalog()
     if is_resource:
-        if name not in ('binding', 'init', 'output-language'):
+        if name not in ('binding', 'init', 'output-language', 'status'):
             raise LocalizationError('Unknown local resource')
         rec = dict(data['resources'][name])
         text = (LOCALES / (name + '.md')).read_text(encoding='utf-8')
@@ -199,7 +201,7 @@ def record_review(name: str, reviewer: str, *, is_resource: bool = False) -> dic
         # silently attach an old Chinese description to a new English meaning.
         from naming import product_prose
         original,_ = render_source((ROOT / 'src/upstream/templates/commands' / (name+'.md')).read_text(),name,'claude')
-        for key in ('description','argument-hint'):
+        for key in ('description',):
             if key in original:
                 entry = rec.get('metadata',{}).get(key,{})
                 if entry.get('source') != product_prose(original[key]) or not entry.get('zh_CN'):
@@ -218,7 +220,7 @@ def main() -> int:
     review = sub.add_parser('record', help='Record an explicit completed translation review; never auto-called')
     group = review.add_mutually_exclusive_group(required=True)
     group.add_argument('--command', choices=COMMANDS)
-    group.add_argument('--resource', choices=('binding','init','output-language'))
+    group.add_argument('--resource', choices=('binding','init','output-language','status'))
     review.add_argument('--reviewer', required=True)
     review.add_argument('--reviewed', action='store_true', required=True)
     args = p.parse_args()

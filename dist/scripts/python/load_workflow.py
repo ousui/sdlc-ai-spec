@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 HOSTS = ('codex', 'claude', 'cursor')
-SKILLS = ('sdlc-000-init', 'sdlc-010-rule', 'sdlc-100-spec', 'sdlc-110-clar', 'sdlc-200-plan', 'sdlc-300-task', 'sdlc-310-xchk', 'sdlc-320-huma', 'sdlc-400-impl', 'sdlc-500-conv')
+SKILLS = ('sdlc-000-init', 'sdlc-010-rule', 'sdlc-100-spec', 'sdlc-110-clar', 'sdlc-200-plan', 'sdlc-300-task', 'sdlc-310-xchk', 'sdlc-320-huma', 'sdlc-400-impl', 'sdlc-500-conv', 'sdlc-status')
 TOKEN = re.compile(r'@@SDLC_BIND_\d{4}@@')
 
 

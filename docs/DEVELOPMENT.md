@@ -12,7 +12,7 @@ The root contains the implementation. `src/upstream/templates/commands` retains 
 source; `src/templates` and `src/scripts` contain documented port deltas.
 `adapters/` supplies resource binding and host differences. `tools/build.py`
 generates a single self-contained `dist` package and three thin native entrypoint sets,
-without importing `specify_cli` or reading initialized projects. Use `--marketplaces`
+without importing the upstream CLI or reading initialized projects. Use `--marketplaces`
 to also regenerate the three repository-root catalogs.
 There is no root plugin manifest because the root is a source/build workspace.
 
@@ -23,41 +23,63 @@ output. The shared workflows plus literal fragments reconstruct each formerly
 expanded host body exactly; this is tested against installed upstream output.
 [Installation](INSTALLATION.md) lists current official format references.
 
-## Build from source
+## Development environment: uv only
 
-Use Python 3.11+ in an isolated development environment:
+Development, build, test and verification dependencies outside `dist/` are managed
+by **uv**. `pyproject.toml` declares direct development dependencies; committed
+`uv.lock` locks their transitive graph. `.python-version` selects Python 3.12 as
+the canonical development interpreter while the project accepts Python 3.11–3.15.
+The tooling project version `0.0.0` is not the plugin/product version; product
+metadata remains authoritative in `plugin-metadata.json`.
+
+Use uv `0.12.13` or another compatible `0.12.x` version allowed by
+`tool.uv.required-version`:
 
 ```sh
-python -m venv .venv
-.venv/bin/python -m pip install -r tools/requirements.txt
-.venv/bin/python -B tools/build.py --marketplaces
-.venv/bin/python -B -m unittest discover -s tests -v
+uv sync --locked
+uv run --locked python -B tools/build.py --marketplaces
+uv run --locked python -B -m unittest discover -s tests -v
 git diff --check
 ```
 
-To reproduce source materialization, obtain the upstream commit recorded in
-`upstream.lock.json` in a separate checkout. Run the command below with its
-absolute path; the tool checks the selected source hashes against the lock.
+`uv sync` creates/manages `.venv`; activation is unnecessary. CI pins uv exactly
+to `0.12.13` and uses `--locked`, so stale or missing lock changes fail closed.
+When dependencies change, update `pyproject.toml`, run `uv lock`, review `uv.lock`,
+and commit both together. `tools/requirements.txt` is intentionally absent; do
+not add a second dependency source of truth.
+
+`dist/` does **not** use uv at runtime and does not ship `pyproject.toml`, `uv.lock`,
+`.python-version`, or a virtual environment. Installed plugin requirements remain
+Bash, Python 3.9+ and standard POSIX tools. Build metadata may record the hashes
+of the uv project files as reproducibility inputs; that is not a runtime dependency.
+
+## Reproduce source materialization
+
+Obtain the upstream commit recorded in `upstream.lock.json` in a separate checkout.
+Run the commands below with its absolute path; the tool checks the selected source
+hashes against the lock.
 
 ```sh
-.venv/bin/python -B tools/port.py --upstream "$UPSTREAM"
-.venv/bin/python -B tools/build.py --marketplaces
+uv sync --locked
+uv run --locked python -B tools/port.py --upstream "$UPSTREAM"
+uv run --locked python -B tools/build.py --marketplaces
 ```
 
-Do not use `specify init` output to construct the port. It is an independent
+Do not use upstream initialized output to construct the port. It is an independent
 comparison baseline only. Do not introduce CLI callbacks into runtime scripts.
 
 ## Independent installed-tool comparison
 
-Use three new empty directories and an isolated upstream tool environment, all
-outside this repository and outside business projects. Set absolute paths for
+Use three new empty directories and a separate uv-created upstream tool environment,
+all outside this repository and outside business projects. Set absolute paths for
 `UPSTREAM`, `TOOL_ENV`, `BASELINES` and `EVIDENCE` first. The upstream checkout must
 be exactly `a4e25ce6b96dc8e85f84206c6a54353fa9c5260b` (Spec Kit `v1.0.5`).
 
 ```sh
 test "$(git -C "$UPSTREAM" rev-parse HEAD)" = a4e25ce6b96dc8e85f84206c6a54353fa9c5260b
-python -m venv "$TOOL_ENV"
-"$TOOL_ENV/bin/python" -m pip install -r tools/requirements.txt "$UPSTREAM"
+uv sync --locked
+uv venv "$TOOL_ENV" --python 3.12
+uv pip install --python "$TOOL_ENV/bin/python" "$UPSTREAM"
 "$TOOL_ENV/bin/specify" version
 for agent in codex claude cursor-agent; do
   mkdir -p "$BASELINES/$agent"
@@ -65,22 +87,26 @@ for agent in codex claude cursor-agent; do
     --integration "$agent" --script sh --ignore-agent-tools \
     --non-interactive --integration-options="--events=false")
 done
-"$TOOL_ENV/bin/python" -B tools/verify.py --upstream "$UPSTREAM" \
+uv run --locked python -B tools/verify.py --upstream "$UPSTREAM" \
   --baselines "$BASELINES" --evidence "$EVIDENCE"
 git diff --check
 ```
 
-Use Bash with no events, presets or extensions. These upstream CLI calls do not launch Codex, Claude or Cursor. Their project
-settings and constitution are independently compared with our local `sdlc-000-init`
-output; host registries and installed tool resources are intentionally excluded. Do not pass `--force`
-to reuse nonempty baseline directories: create new directories instead.
+`uv pip` is used only for the explicitly isolated upstream CLI environment; it
+does not replace the repository project's lockfile. Use Bash with no events,
+presets or extensions. These upstream CLI calls do not launch Codex, Claude or
+Cursor. Their project settings and constitution are independently compared with
+our local `sdlc-000-init` output; host registries and installed tool resources are
+intentionally excluded. Always use new empty baseline directories.
 
 ## CI and evidence
 
 `.github/workflows/engineering.yml` fetches the triggering repository's exact
-commit and the pinned upstream, installs the tool, initializes three empty
-projects and verifies already committed packages. It must not regenerate and
-commit packages in CI or silently skip checks when files are absent.
+commit and the pinned upstream, installs the pinned uv version, runs
+`uv sync --locked`, creates an isolated upstream CLI environment with `uv venv` /
+`uv pip`, initializes three empty projects and verifies already committed packages.
+It must not regenerate and commit packages in CI or silently skip checks when
+files are absent.
 
 The workflow has read-only repository permissions. Source transport uses
 `GITHUB_REPOSITORY`; package metadata uses the separately declared repository.

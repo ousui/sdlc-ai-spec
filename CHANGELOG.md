@@ -42,3 +42,13 @@ history rather than copied into the current product tree.
 - Generate through the documented naming map, retaining untouched upstream
   provenance and independent parity checks.
 - STATUS, RULE auto-init and shared host entrypoints remain separate work.
+
+## Development tooling — uv migration
+
+- Manage repository development/build/test dependencies with `pyproject.toml` and
+  committed `uv.lock`; use Python 3.12 as the canonical development interpreter.
+- Pin CI to uv 0.12.13 and use `uv sync --locked` / `uv run --locked`; isolate the
+  upstream Spec Kit CLI in a separate `uv venv` installed through `uv pip`.
+- Remove `tools/requirements.txt` as a second dependency source of truth.
+- Keep installed `dist` runtime uv-independent; only BUILD.json metadata changes
+  to record the new reproducibility inputs.

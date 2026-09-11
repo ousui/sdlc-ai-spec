@@ -2,6 +2,14 @@
 
 ## What is locked
 
+## Development-tool environment
+
+Run upgrade tooling through the repository's locked uv project: `uv sync --locked`
+then `uv run --locked ...`. The candidate's upstream CLI remains an independently
+created `uv venv` / `uv pip` environment as documented in DEVELOPMENT.md. uv is
+never added to the installed `dist` runtime. Changes to `pyproject.toml`, `uv.lock`
+or `.python-version` are reviewed build inputs and must remain synchronized.
+
 `upstream.lock.json` records the exact Spec Kit commit, the selected Bash/core-only
 profile, copied source identities and watched renderer/integration identities.
 `src/upstream/` retains those original bytes, including their original licenses.
@@ -22,7 +30,8 @@ Git checkout. The maintainer fetches/selects a release explicitly. Never follow
 `main` automatically or delete the accepted lock to bypass validation.
 
 ```sh
-python3 -B tools/upgrade.py prepare \
+uv sync --locked
+uv run --locked python -B tools/upgrade.py prepare \
   --upstream /absolute/path/to/spec-kit \
   --ref <EXACT_COMMIT_OR_TAG> \
   --out /absolute/path/outside/this-repo/sdlc-candidate
@@ -76,7 +85,7 @@ Create an external review JSON after that review:
 ```
 
 ```sh
-python3 -B tools/upgrade.py accept \
+uv run --locked python -B tools/upgrade.py accept \
   --record /absolute/path/sdlc-candidate.upgrade.json \
   --evidence /absolute/path/candidate-evidence/result.json \
   --review /absolute/path/review.json --check

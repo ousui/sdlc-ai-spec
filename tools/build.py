@@ -206,7 +206,8 @@ def build(destination: Path) -> None:
             for path in sorted((ROOT / folder).rglob('*')):
                 if path.is_file() and '__pycache__' not in path.parts and path.suffix != '.pyc':
                     inputs[path.relative_to(ROOT).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
-        for name in ('plugin-metadata.json', 'upstream.lock.json', 'LICENSE', 'NOTICE', 'docs/naming-map.json'):
+        for name in ('plugin-metadata.json', 'upstream.lock.json', 'LICENSE', 'NOTICE', 'docs/naming-map.json',
+                     'pyproject.toml', 'uv.lock', '.python-version'):
             inputs[name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
         build_id = hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest()
         (package / 'BUILD.json').write_text(json.dumps({

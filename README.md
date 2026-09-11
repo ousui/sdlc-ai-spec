@@ -103,6 +103,14 @@ root/default `skills` directory is used inside dist, preventing duplicate scans.
 The runtime loader only binds precompiled literal fragments; it does not compile
 upstream, run a workflow or write state. Full output must be read before execution.
 
+## Development tooling
+
+Repository development, build, unit-test and upgrade-verification tooling uses
+**uv** with committed `pyproject.toml` and `uv.lock`. Start with `uv sync --locked`
+and run Python tools through `uv run --locked`. This tooling boundary is outside
+the installed plugin: `dist/` continues to require only Bash, Python 3.9+ and
+standard POSIX tools. See [Development](docs/DEVELOPMENT.md).
+
 ## Documentation
 
 - [Project initialization and safe repeated calls](docs/INITIALIZATION.md)

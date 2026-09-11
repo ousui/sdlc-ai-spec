@@ -61,7 +61,7 @@ class RepositoryTests(unittest.TestCase):
         self.assertFalse(upstream['native_host_verified'])
 
     def test_working_data_and_dev_sources_not_shipped(self):
-        for path in ('src','tools','tests','docs','.sdlc','node_modules'):
+        for path in ('src','tools','tests','docs','.sdlc','node_modules','pyproject.toml','uv.lock','.python-version','.venv'):
             self.assertFalse((ROOT/'dist'/path).exists())
         for path in (ROOT/'dist').rglob('*'):
             self.assertFalse(path.is_symlink())
@@ -81,4 +81,8 @@ class RepositoryTests(unittest.TestCase):
         self.assertNotIn('git push',ci)
         self.assertIn('for agent in codex claude cursor-agent',ci)
         self.assertIn('--events=false',ci)
+        self.assertIn('uv sync --locked',ci)
+        self.assertIn('uv run --locked python',ci)
+        self.assertNotIn('tools/requirements.txt',ci)
+        self.assertNotIn('python3 -m venv',ci)
         self.assertEqual((ROOT/'CLAUDE.md').read_text(),'@AGENTS.md\n')

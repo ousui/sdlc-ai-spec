@@ -1,5 +1,5 @@
 {
-  "build_id": "ad8d5db5efd85f3d059b22fcc98ca3a67f8a1c469cbc81017e576e026770bd0b",
+  "build_id": "9b5cfe2be8ad09a41818e97d11869069b4192726810795e9ad869da2d26dbc73",
   "product_version": "1.0.0-beta",
   "upstream_sha": "a4e25ce6b96dc8e85f84206c6a54353fa9c5260b",
   "inputs": {
@@ -54,20 +54,22 @@
     "adapters/INIT.md": "ca67dfb4101a68b2430332d5f123a6e1672187dae9c722b1d5f06113b1c1dc02",
     "adapters/invocation-functions.sh": "f8d38f42c53b643e2a127c71b544d32dea9222aae8be7196096903e7f17b04f7",
     "adapters/path-functions.sh": "9dabb43aee4915d628d52bb1078384e015de8fd3df2b5ec8836e0ff311d63fde",
-    "tools/build.py": "7cc0c968f4447fd199116e6afedaf8bf99249b4a8e4010ac89c1dd7c764fec28",
+    "tools/build.py": "262fb2df8a751b33b78034329bd2f5875085b0d4620092b15e5a64821c70de72",
     "tools/differential.py": "d1cd979edfa341a50cdae6b39fe3b17c9c2a3a50b6080e3b89a0463168b6bf41",
     "tools/naming.py": "a84a7a0f6c098aa9003057c09d77eea5a408109a4c6dfe64a89914fc24d0fb9f",
     "tools/naming_check.py": "2fa68db45409478c818805a4825fc2e7a62fc7b4e192cee78c4bc5cd2f79b065",
     "tools/port.py": "d2851a07fe23201133eaf3ac9fcb0fb586e411378f30fb033418bf67b7c61477",
     "tools/rehearse_upgrade.py": "a94aced720b501d6df9e56be1504e0f8efdcd3997cb2ed701e244cd3746af6e9",
     "tools/render.py": "810f6d24a58071ec67a71bb1b1b6fa52fe7ba4bd68487724a3c628784ab60744",
-    "tools/requirements.txt": "0b0709dc3105d98b29f4fc6a870c15c0cf42191498384ef8a2a32d3fcf5f34ed",
     "tools/upgrade.py": "028ce94fab36799b060825835cbddbee09036af00710d1e26bed8b5e1ef36df4",
     "tools/verify.py": "f9d2887cbf23eac185ca9524e97c6fd556de2d1ee6e2e0911bf410d24582c20d",
     "plugin-metadata.json": "dfd2bf2479da710c0a051ae267283c802a6565b66715673ca906c904c11edd52",
     "upstream.lock.json": "72dab23d0fa346d63c48e047f880c719c0e324720ae7bd435cfb80bf62f4a6cd",
     "LICENSE": "2510b446bc1f0cf9702453075d20cd88631e20e5642658edb7325d9c1eb534f7",
     "NOTICE": "f688f41949f50df11ee89c3e7ca44c380e621c532b21a2ae43f1cadb517ddb69",
-    "docs/naming-map.json": "1b515a789ffb05dc47e3d31e0162d667c6c2b316a93949972435413032328f04"
+    "docs/naming-map.json": "1b515a789ffb05dc47e3d31e0162d667c6c2b316a93949972435413032328f04",
+    "pyproject.toml": "dcf91b586b26ad91ccf136726bf561b2180f522fe298ff8f2dfdd75c35743259",
+    "uv.lock": "5699e8c4287b9e9e809b82d4fd3c218d3d811ae8fee2c23ae71b66a113a03544",
+    ".python-version": "7b55f8e67b5623c4bef3fa691288da9437d79d3aba156de48d481db32ac7d16d"
   }
 }

@@ -28,6 +28,10 @@ repository transfer from a metadata edit.
   hand-edit generated wrappers, host fragments or shared workflow bodies.
 - Preserve upstream copyright, license and provenance. Plugin authorship does not
   replace the original authorship of the copied Spec Kit source.
+- Development/build/test/upgrade tooling outside `dist/` is uv-managed. Keep
+  `pyproject.toml` and `uv.lock` synchronized, use `uv sync --locked` /
+  `uv run --locked`, and do not reintroduce a requirements.txt dependency source.
+  `dist/` must remain uv-independent at runtime.
 
 ## Verification and delivery
 

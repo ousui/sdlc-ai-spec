@@ -17,6 +17,17 @@ ROOT=Path(__file__).resolve().parents[1]
 HOSTS=('codex','claude','cursor')
 
 
+def canonical(path) -> str:
+    """Compare path identity, not a platform-specific logical spelling.
+
+    macOS temporary directories are commonly exposed through /var while the
+    same path resolves physically under /private/var. Runtime path guards may
+    canonicalize either spelling, so path-valued contracts must be compared
+    after resolution rather than as raw strings.
+    """
+    return str(Path(path).resolve())
+
+
 def tree(root: Path) -> dict:
     return {str(p.relative_to(root)):(hashlib.sha256(p.read_bytes()).hexdigest(),p.stat().st_mode&0o777)
             for p in sorted(root.rglob('*')) if p.is_file()}
@@ -96,8 +107,8 @@ class RuntimeTests(unittest.TestCase):
             with self.subTest(host=host):
                 p,f=self.seed(plan=False)
                 result=json.loads(self.run_script(p,'setup-plan.sh','--json').stdout)
-                self.assertEqual(result['FEATURE_DIR'],str(f))
-                self.assertEqual(result['FEATURE_SPEC'],str(f/'spec.md'))
+                self.assertEqual(canonical(result['FEATURE_DIR']), canonical(f))
+                self.assertEqual(canonical(result['FEATURE_SPEC']), canonical(f/'spec.md'))
                 self.assertEqual((f/'plan.md').read_text(),(self.package/'templates/plan-template.md').read_text())
                 (f/'plan.md').write_text('Human edits survive\n\n')
                 self.run_script(p,'setup-plan.sh','--json')
@@ -109,7 +120,7 @@ class RuntimeTests(unittest.TestCase):
                 p,f=self.seed(tasks=True)
                 before=(f/'tasks.md').read_bytes()
                 result=json.loads(self.run_script(p,'setup-tasks.sh','--json').stdout)
-                self.assertEqual(result['TASKS_TEMPLATE'],str(self.package/'templates/tasks-template.md'))
+                self.assertEqual(canonical(result['TASKS_TEMPLATE']), canonical(self.package/'templates/tasks-template.md'))
                 self.assertEqual(result['TASKS_TEMPLATE_CONTENT'],(self.package/'templates/tasks-template.md').read_text())
                 self.assertEqual(before,(f/'tasks.md').read_bytes())
                 (f/'spec.md').unlink()
@@ -139,7 +150,7 @@ class RuntimeTests(unittest.TestCase):
                 target='.sdlc/specs/099-uncreated'
                 r=self.run_script(p,'check-prerequisites.sh','--json','--paths-only',
                                   overrides={'SDLC_FEATURE_DIRECTORY':target})
-                self.assertEqual(json.loads(r.stdout)['FEATURE_DIR'],str(p/target))
+                self.assertEqual(canonical(json.loads(r.stdout)['FEATURE_DIR']), canonical(p/target))
                 self.assertEqual(before,state.read_bytes())
                 self.assertFalse((p/target).exists())
 
@@ -159,7 +170,7 @@ class RuntimeTests(unittest.TestCase):
             with self.subTest(host=host):
                 ar=json.loads(self.run_script(a,'check-prerequisites.sh','--json','--paths-only').stdout)
                 br=json.loads(self.run_script(b,'check-prerequisites.sh','--json','--paths-only').stdout)
-                self.assertEqual(ar['FEATURE_DIR'],str(af));self.assertEqual(br['FEATURE_DIR'],str(bf))
+                self.assertEqual(canonical(ar['FEATURE_DIR']), canonical(af));self.assertEqual(canonical(br['FEATURE_DIR']), canonical(bf))
                 self.assertNotEqual(ar['REPO_ROOT'],br['REPO_ROOT'])
         for p in (a,b):
             for d in ('.agents','.claude','.cursor','.sdlc/scripts'):
@@ -172,10 +183,10 @@ class RuntimeTests(unittest.TestCase):
             with self.subTest(host=host):
                 p,f=self.seed();nested=f/'nested';nested.mkdir()
                 r=json.loads(self.run_script(p,'project-paths.sh',cwd=nested).stdout)
-                self.assertEqual(r['PROJECT_ROOT'],str(p))
+                self.assertEqual(canonical(r['PROJECT_ROOT']), canonical(p))
                 other,_=self.seed()
                 r=json.loads(self.run_script(p,'project-paths.sh',cwd=nested,overrides={'SDLC_INIT_DIR':str(other)}).stdout)
-                self.assertEqual(r['PROJECT_ROOT'],str(other))
+                self.assertEqual(canonical(r['PROJECT_ROOT']), canonical(other))
                 self.run_script(p,'project-paths.sh',overrides={'SDLC_INIT_DIR':str(self.base/'missing')},success=False)
 
     def test_no_initialized_project_never_falls_back_to_plugin(self):
@@ -206,7 +217,7 @@ class RuntimeTests(unittest.TestCase):
                 p,_=self.seed(name=f"{host} quote' Unicode中文 $(touch INJECTED)")
                 target='.sdlc/specs/007-quote"-$HOME-$(touch INJECTED)'
                 r=self.run_script(p,'check-prerequisites.sh','--json','--paths-only',overrides={'SDLC_FEATURE_DIRECTORY':target})
-                self.assertEqual(json.loads(r.stdout)['FEATURE_DIR'],str(p/target))
+                self.assertEqual(canonical(json.loads(r.stdout)['FEATURE_DIR']), canonical(p/target))
                 self.assertFalse((p/'INJECTED').exists())
                 self.assertFalse((p/target).exists())
 
@@ -223,7 +234,7 @@ class RuntimeTests(unittest.TestCase):
                 p,_=self.seed(plan=False)
                 self.run_script(p,'setup-plan.sh','--json')
                 r=json.loads(self.run_script(p,'setup-tasks.sh','--json').stdout)
-                self.assertEqual(r['TASKS_TEMPLATE'],str(relocated/'templates/tasks-template.md'))
+                self.assertEqual(canonical(r['TASKS_TEMPLATE']), canonical(relocated/'templates/tasks-template.md'))
                 self.assertEqual(before,tree(relocated))
                 self.package=original
 

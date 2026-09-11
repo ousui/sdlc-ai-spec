@@ -20,6 +20,11 @@ initializer = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(initializer)
 
 
+def canonical(path) -> str:
+    """Normalize logical/physical aliases such as macOS /var and /private/var."""
+    return str(Path(path).resolve())
+
+
 def snapshot(root):
     return {str(p.relative_to(root)): (p.read_bytes(), p.stat().st_mtime_ns, p.stat().st_mode)
             for p in root.rglob('*') if p.is_file() and '.git' not in p.parts}
@@ -291,13 +296,13 @@ class InitTests(unittest.TestCase):
                 return subprocess.run(['bash', str(script / name), *args], env=env,
                     cwd=project, text=True, capture_output=True, check=True, timeout=60)
             paths = json.loads(run('project-paths.sh').stdout)
-            self.assertEqual(paths['PROJECT_ROOT'], str(project))
+            self.assertEqual(canonical(paths['PROJECT_ROOT']), canonical(project))
             run('create-new-feature.sh', '--short-name', 'health', 'Health endpoint')
             feature = json.loads((project / '.sdlc/feature.json').read_text())['feature_directory']
             directory = project / feature
             self.assertTrue((directory / 'spec.md').exists())
             plan = json.loads(run('setup-plan.sh', '--json').stdout)
-            self.assertEqual(plan['FEATURE_DIR'], str(directory))
+            self.assertEqual(canonical(plan['FEATURE_DIR']), canonical(directory))
             task_setup = json.loads(run('setup-tasks.sh', '--json').stdout)
             # Upstream returns a template; Agent authoring is outside this test.
             (directory / 'tasks.md').write_text(task_setup['TASKS_TEMPLATE_CONTENT'])

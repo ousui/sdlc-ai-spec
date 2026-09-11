@@ -77,7 +77,12 @@ class RepositoryTests(unittest.TestCase):
                 if urlsplit(target).scheme or target.startswith('#'):continue
                 self.assertTrue((document.parent/unquote(target.split('#')[0])).exists(),(document,target))
         ci=(ROOT/'.github/workflows/engineering.yml').read_text()
-        self.assertEqual(yaml.safe_load(ci)['permissions'],{'contents':'read'})
+        parsed=yaml.safe_load(ci)
+        self.assertEqual(parsed['permissions'],{'contents':'read'})
+        engineering=parsed['jobs']['engineering']
+        self.assertEqual(engineering['strategy']['matrix']['os'], ['ubuntu-24.04', 'macos-15'])
+        self.assertEqual(engineering['runs-on'], '${{ matrix.os }}')
+        self.assertIn('sdlc-engineering-${{ matrix.os }}-${{ github.sha }}', ci)
         self.assertNotIn('git push',ci)
         self.assertIn('for agent in codex claude cursor-agent',ci)
         self.assertIn('--events=false',ci)

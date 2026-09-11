@@ -52,3 +52,6 @@ history rather than copied into the current product tree.
 - Remove `tools/requirements.txt` as a second dependency source of truth.
 - Keep installed `dist` runtime uv-independent; only BUILD.json metadata changes
   to record the new reproducibility inputs.
+- Make path-valued unit-test assertions compare canonical filesystem identity so
+  macOS `/var` and `/private/var` aliases do not produce false failures; run the
+  engineering workflow on both Ubuntu 24.04 and macOS 15 ARM64.

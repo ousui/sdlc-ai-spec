@@ -10,7 +10,11 @@ concurrency:
   cancel-in-progress: false
 jobs:
   engineering:
-    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     steps:
       - name: Fetch exact product and upstream sources
@@ -104,7 +108,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
-          name: sdlc-engineering-${{ github.sha }}
+          name: sdlc-engineering-${{ matrix.os }}-${{ github.sha }}
           path: ${{ runner.temp }}/sdlc-export/
           retention-days: 7
           if-no-files-found: error

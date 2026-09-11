@@ -101,8 +101,9 @@ intentionally excluded. Always use new empty baseline directories.
 
 ## CI and evidence
 
-`.github/workflows/engineering.yml` fetches the triggering repository's exact
-commit and the pinned upstream, installs the pinned uv version, runs
+`.github/workflows/engineering.yml` runs the same engineering contract on
+Ubuntu 24.04 and macOS 15 ARM64. Each job fetches the triggering repository's
+exact commit and the pinned upstream, installs the pinned uv version, runs
 `uv sync --locked`, creates an isolated upstream CLI environment with `uv venv` /
 `uv pip`, initializes three empty projects and verifies already committed packages.
 It must not regenerate and commit packages in CI or silently skip checks when
@@ -113,7 +114,7 @@ The workflow has read-only repository permissions. Source transport uses
 This permits verification before or after an explicit repository transfer without
 claiming that the transfer happened. No production credentials are required.
 
-Evidence is uploaded as `sdlc-engineering-<source-sha>` and includes installed-tool
+Evidence is uploaded as `sdlc-engineering-<runner>-<source-sha>` and includes installed-tool
 logs, baseline hashes, the source snapshot and verifier results. The report records
 source SHA, actual source repository, declared repository, product version,
 environment, individual checks and distribution hashes. See VERIFICATION.md.

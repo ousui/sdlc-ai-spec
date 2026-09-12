@@ -163,10 +163,10 @@
     },
     "init": {
       "source": "adapters/INIT.md",
-      "source_sha256": "ca67dfb4101a68b2430332d5f123a6e1672187dae9c722b1d5f06113b1c1dc02",
-      "translation_sha256": "343df7c03a20eede8bd81d5bd7ebe71c2d8067006712c335d38411d6bf8f0690",
+      "source_sha256": "e3bc611fd521b6cfce6ad0dc2308b072d84faccc7ed40efe8cc729e97c3f497c",
+      "translation_sha256": "347fd3fd6bc803860c3d197d51707bd28283ffb2df8273737a4774be9ea04b00",
       "status": "reviewed",
-      "reviewer": "AI source-to-translation review"
+      "reviewer": "AI implementation review: constitution provenance semantics"
     },
     "output-language": {
       "translation_sha256": "9543777de880ba7422490a275bf3fa245a9dd7665d746be24923daa6df62b3c0",
@@ -175,17 +175,17 @@
     },
     "status": {
       "source": "adapters/STATUS.md",
-      "source_sha256": "11d8468c43725f4e2d5a25a945baa677494a3f0c2eb1e82a85cf9d2f72086499",
-      "translation_sha256": "5dcab8941b50d9fff7b3d6a9a471790d51cf66fa0778c82ff00778e60acd0c34",
+      "source_sha256": "aefe2d650f93b1f3b25bcbba25c23465d20c0e8f461493bad5b1099a7f14ee3f",
+      "translation_sha256": "cfba687112e155ebc4849f9f1f16ab5f65958f226bb2572f2c3d24fcbbd9c0d6",
       "status": "reviewed",
-      "reviewer": "AI contract review: local STATUS specification; not user authentication"
+      "reviewer": "AI implementation review: constitution provenance semantics"
     },
     "project-readme": {
       "source": "adapters/PROJECT-README.md",
       "status": "reviewed",
-      "reviewer": "AI source/approved language-scope review",
-      "source_sha256": "bfc0f3a029d742617276c23e8d7e72119d6d6730aa7a8aec2e3f4f5d7e73c4bb",
-      "translation_sha256": "c64349654d3689251a88f7c0fd32453d9af33ae4bcaff1d38e79a3054dad9de3"
+      "reviewer": "AI implementation review: constitution provenance semantics",
+      "source_sha256": "70d0fd77e39c9b3cf78334255ed37bfef9c7a014b74082c16a7efde97bc897a3",
+      "translation_sha256": "19837916e0a008bd58d4e44b60673201f462b02737f095f4c0e75986a0abcd59"
     }
   },
   "presentations": {

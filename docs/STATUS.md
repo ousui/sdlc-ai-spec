@@ -39,8 +39,17 @@ python3 -I -B "$SDLC_PLUGIN_ROOT/scripts/python/project_status.py" --project "$P
 
 当前包版本来自 UPSTREAM.json，build_id 来自 BUILD.json；初始化记录不是当前
 运行版本或自动升级理由。文件分别标为存在、缺失、空、不可读、编码/类型错误、
-断链或过大。可选产物缺失不是业务失败。匹配默认/覆盖模板的宪法标记为模板
-副本；其他文本也不自动标为已批准。
+断链或过大。可选产物缺失不是业务失败。
+
+宪法单独展示三个互不等价的事实：文件状态、可选生成来源记录，以及占位符观察。
+若 `.sdlc/memory/.constitution-template.json` 有效，STATUS 对本次稳定读取到的
+`constitution.md` 原始字节计算 SHA-256，并显示 `matches_baseline` 或
+`differs_from_baseline`；不使用当前插件模板重新推断历史。来源记录缺失时显示
+`missing/unknown`，不会补造；损坏、不可读或读取期间变化时明确诊断并把比较结果
+降为 `unknown`。`source` 只作为字符串数据显示，不按其路径读取、执行或联网。
+
+生成内容一致不等于 RULE 未执行或宪法未批准；内容不同也不等于 RULE 已完成。
+占位符是否存在只是另一个文件观察项，不能与审批或治理质量合并成阶段结论。
 
 任务仅统计顶层 Markdown 复选框中带 T 和至少三位数字的任务行，勾选支持空格、
 x、X。忽略 fenced/indented code、HTML 注释和标为 Examples/示例的章节。
@@ -55,8 +64,11 @@ x、X。忽略 fenced/indented code、HTML 注释和标为 Examples/示例的章
 
 schema_version 为 1。顶层有 status、snapshot、plugin、project、selection、
 artifacts、tasks、checklists、features、warnings、suggestions、history。
-有状态目录时包含 initialization；请求列表时有 feature_list。
-读取失败的计数是 null，不是零。reliable 只描述已识别格式，不表示实现正确。
+有状态目录时包含 initialization；请求列表时有 feature_list。宪法 artifact 保持
+`assessment: not_verified`，并增加 `generation.record_state`（valid/missing/invalid/
+unreadable）、`generation.content_relation`（matches_baseline/differs_from_baseline/
+unknown）、`generation.source` 和独立的 `placeholder_observation`。读取失败的计数是
+null，不是零。reliable 只描述已识别格式，不表示实现正确。
 
 | status | 意义 | 退出码 |
 |---|---|---|

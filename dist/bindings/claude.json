@@ -96,7 +96,7 @@
   },
   "sdlc-000-init": {
     "@@SDLC_BIND_0002@@": "laude",
-    "@@SDLC_BIND_0028@@": "/sdlc-ai-spec:sdlc-010-rule 批准项目原则，或 /sdlc-ai-spec:"
+    "@@SDLC_BIND_0030@@": "/sdlc-ai-spec:sdlc-010-rule 批准项目原则，或 /sdlc-ai-spec:"
   },
   "sdlc-status": {}
 }

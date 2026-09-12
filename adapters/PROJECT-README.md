@@ -1,7 +1,8 @@
 # SDLC AI SPEC project data
 
 This directory contains project-local SDLC AI SPEC workflow data.
-- memory/constitution.md: project principles; review with sdlc-010-rule.
+- memory/constitution.md: project principles/scaffold; review with sdlc-010-rule.
+- memory/.constitution-template.json: optional generation baseline for the constitution; not a phase/approval record.
 - init-options.json: project defaults, not a global Agent selection.
 - specs/: feature specifications, plans and tasks.
 - feature.json: written by sdlc-100-spec, not by initialization.

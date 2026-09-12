@@ -8,6 +8,7 @@ snapshot, not a workflow validator or a transaction across concurrent writers.
 from __future__ import annotations
 
 import argparse
+import hashlib
 from datetime import datetime, timezone
 import json
 import os
@@ -65,7 +66,8 @@ class Reader:
             info['state'] = 'invalid_path'
         return info
 
-    def text(self, path: Path, *, resource: bool = False) -> tuple[dict, str | None]:
+    def raw(self, path: Path, *, resource: bool = False) -> tuple[dict, bytes | None]:
+        """Read stable raw bytes once so byte identity is not reconstructed from text."""
         info = self.inspect(path, resource=resource)
         if info['state'] not in ('present', 'empty'):
             if info['state'] == 'directory':
@@ -94,16 +96,25 @@ class Reader:
                     _signature(path.stat()) != _signature(after)):
                 info['state'] = 'changed_during_read'
                 return info, None
-            text = data.decode('utf-8-sig')
-            info['state'] = 'empty' if not text.strip() else 'present'
-            return info, text
-        except UnicodeError:
-            info['state'] = 'invalid_encoding'
+            info['state'] = 'empty' if not data else 'present'
+            return info, data
         except PermissionError:
             info['state'] = 'unreadable'
         except (OSError, ValueError):
             info['state'] = 'changed_or_unreadable'
         return info, None
+
+    def text(self, path: Path, *, resource: bool = False) -> tuple[dict, str | None]:
+        info, data = self.raw(path, resource=resource)
+        if data is None:
+            return info, None
+        try:
+            text = data.decode('utf-8-sig')
+            info['state'] = 'empty' if not text.strip() else 'present'
+            return info, text
+        except UnicodeError:
+            info['state'] = 'invalid_encoding'
+            return info, None
 
     def object(self, path: Path, *, resource: bool = False) -> tuple[dict, dict | None]:
         info, text = self.text(path, resource=resource)
@@ -260,6 +271,41 @@ def checkbox_counts(text: str, *, tasks: bool, limit: int = 5) -> dict:
             'meaning': 'recognized_task_checkboxes' if tasks else 'checklist_checkboxes'}
 
 
+SHA256_RE = re.compile(r'^[0-9a-f]{64}$')
+
+
+def _provenance_record(reader: Reader, path: Path) -> tuple[dict, dict | None, str]:
+    """Read the optional generation baseline as data; never follow its source."""
+    info, text = reader.text(path)
+    if info['state'] == 'missing':
+        return info, None, 'missing'
+    if text is None:
+        return info, None, 'unreadable'
+    try:
+        def unique(pairs):
+            result = {}
+            for key, value in pairs:
+                if key in result:
+                    raise ValueError('duplicate key: ' + key)
+                result[key] = value
+            return result
+        data = json.loads(text, object_pairs_hook=unique)
+    except (ValueError, RecursionError):
+        info['state'] = 'invalid_json'
+        return info, None, 'invalid'
+    if not isinstance(data, dict):
+        info['state'] = 'invalid_json_type'
+        return info, None, 'invalid'
+    digest, source = data.get('sha256'), data.get('source')
+    if not isinstance(digest, str) or not SHA256_RE.fullmatch(digest.lower()):
+        info['state'] = 'invalid_provenance'
+        return info, None, 'invalid'
+    if not isinstance(source, str) or not source.strip():
+        info['state'] = 'invalid_provenance'
+        return info, None, 'invalid'
+    return info, {'sha256': digest.lower(), 'source': source.strip()}, 'valid'
+
+
 def _selected(value: str, base: Path) -> Path:
     if not isinstance(value, str) or not value.strip() or '\x00' in value:
         raise ValueError('路径必须是非空字符串，且不能包含 NUL。')
@@ -332,16 +378,33 @@ def collect_status(plugin: Path, *, project: str | None = None, feature: str | N
         report['initialization'] = {'file': options_info, 'recorded_plugin_version': (options or {}).get('sdlc_version'),
             'recorded_upstream_version': (options or {}).get('speckit_version'),
             'meaning': 'historical_record_not_current_plugin_version'}
-        constitution, text = reader.text(state / 'memory/constitution.md')
+        constitution_path = state / 'memory/constitution.md'
+        constitution, constitution_bytes = reader.raw(constitution_path)
+        text = None
+        if constitution_bytes is not None:
+            try:
+                text = constitution_bytes.decode('utf-8-sig')
+                constitution['state'] = 'empty' if not text.strip() else 'present'
+            except UnicodeError:
+                constitution['state'] = 'invalid_encoding'
         abnormal(constitution)
-        constitution.update(kind='constitution', assessment='not_verified')
-        if text is not None:
-            _, default = reader.text(reader.plugin / 'templates/constitution-template.md', resource=True)
-            _, override = reader.text(state / 'templates/overrides/constitution-template.md')
-            if text and (text == default or text == override):
-                constitution['assessment'] = 'template_copy_not_ratified'
-            elif re.search(r'\[[A-Z][A-Z0-9_ ]+\]', text):
-                constitution['assessment'] = 'contains_placeholders'
+        provenance_path = state / 'memory/.constitution-template.json'
+        provenance_info, provenance, record_state = _provenance_record(reader, provenance_path)
+        relation = 'unknown'
+        source_value = provenance.get('source') if provenance else None
+        if record_state == 'valid' and constitution_bytes is not None:
+            relation = ('matches_baseline' if hashlib.sha256(constitution_bytes).hexdigest() == provenance['sha256']
+                        else 'differs_from_baseline')
+        if record_state in ('invalid', 'unreadable'):
+            warn('constitution_provenance_unavailable', provenance_info)
+        if record_state == 'valid' and constitution_bytes is None:
+            warn('constitution_provenance_orphaned', provenance_info)
+        placeholder = ('detected' if text is not None and re.search(r'\[[A-Z][A-Z0-9_ ]+\]', text)
+                       else 'not_detected' if text is not None else 'unknown')
+        constitution.update(kind='constitution', assessment='not_verified',
+            generation={'record_state': record_state, 'content_relation': relation,
+                        'source': source_value, 'record': provenance_info},
+            placeholder_observation=placeholder)
         report['artifacts'].append(constitution)
         persisted_info, persisted = reader.object(state / 'feature.json')
         if persisted_info['state'] != 'missing' and persisted is None:
@@ -440,6 +503,22 @@ def markdown(report: dict) -> str:
     lines += ['| 产物 | 文件状态 | 路径 |', '|---|---|---|']
     for item in report['artifacts']:
         lines.append('| ' + ' | '.join(cell(value) for value in (item.get('kind'), file_labels.get(item['state'], item['state']), item['path'])) + ' |')
+    constitution = next((item for item in report['artifacts'] if item.get('kind') == 'constitution'), None)
+    if constitution:
+        generation = constitution.get('generation', {})
+        relation_label = {'matches_baseline':'与记录的生成内容一致',
+                          'differs_from_baseline':'相对记录的生成基线有变化',
+                          'unknown':'无法确定与生成基线的关系'}.get(generation.get('content_relation'), '未记录')
+        record_label = {'valid':'生成来源记录有效', 'missing':'生成来源未记录',
+                        'invalid':'生成来源记录无效', 'unreadable':'生成来源记录不可读'}.get(generation.get('record_state'), '生成来源状态未知')
+        placeholder_label = {'detected':'检测到形似待填写的占位标记',
+                             'not_detected':'未检测到约定格式的占位标记',
+                             'unknown':'无法检查占位内容'}.get(constitution.get('placeholder_observation'), '无法检查占位内容')
+        lines += ['', '宪法生成关系：' + cell(relation_label),
+                  '生成来源记录：' + cell(record_label),
+                  '生成来源：' + cell(generation.get('source')),
+                  '占位内容：' + cell(placeholder_label),
+                  '说明：生成关系仅比较历史生成基线，不代表 RULE 已完成或宪法已批准。']
     tasks = report.get('tasks')
     if tasks:
         lines += ['', '任务勾选（仅识别到的任务行）：' + cell(tasks.get('checked')) + '/' + cell(tasks.get('total'))]
@@ -455,7 +534,7 @@ def markdown(report: dict) -> str:
             lines.append('列表已截断；需要进一步定位指定需求。')
     if report['warnings']:
         lines += ['', '## 提醒'] + ['- ' + cell(json.dumps(item, ensure_ascii=False)) for item in report['warnings']]
-    lines += ['', report['notice'], '宪法可能仍是模板；CLAR/XCHK/CONV 无持久化结论时不推断阶段历史。']
+    lines += ['', report['notice'], '宪法生成关系不等于治理完成度；CLAR/XCHK/CONV 无持久化结论时不推断阶段历史。']
     for item in report['suggestions']:
         lines += ['', '参考入口：' + cell(item['skill']) + '。' + cell(item['reason'])]
     return '\n'.join(lines) + '\n'

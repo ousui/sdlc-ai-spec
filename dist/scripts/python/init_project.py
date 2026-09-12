@@ -8,9 +8,11 @@ initializations are completed. This is not an upstream/legacy data migrator.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import shutil
 import stat
 import subprocess
@@ -20,6 +22,8 @@ import tempfile
 LAYOUT = 1
 ALLOWED = {'memory', 'specs', 'templates', 'feature.json', 'init-options.json',
            '.gitignore', 'README.md'}
+PROVENANCE_NAME = '.constitution-template.json'
+SHA256_RE = re.compile(r'^[0-9a-f]{64}$')
 
 
 def inside(path: Path, root: Path) -> bool:
@@ -38,6 +42,29 @@ def read_json(path: Path) -> dict:
     if not isinstance(value, dict):
         raise ValueError(f'{path} must contain a JSON object')
     return value
+
+
+def provenance_bytes(content: bytes, source: str) -> bytes:
+    return (json.dumps({'sha256': hashlib.sha256(content).hexdigest(), 'source': source},
+                       ensure_ascii=False, indent=2) + '\n').encode('utf-8')
+
+
+def inspect_existing_provenance(path: Path) -> tuple[str, str | None]:
+    """Classify an optional existing record without turning it into an INIT gate."""
+    if not os.path.lexists(path):
+        return 'missing', None
+    if path.is_symlink() or not path.is_file():
+        return 'unavailable', 'Existing constitution generation provenance is not a regular file; preserved without repair.'
+    try:
+        data = read_json(path)
+    except (OSError, UnicodeError, ValueError, TypeError) as exc:
+        return 'unavailable', f'Existing constitution generation provenance is unreadable or invalid; preserved without repair: {exc}'
+    digest, source = data.get('sha256'), data.get('source')
+    if not isinstance(digest, str) or not SHA256_RE.fullmatch(digest.lower()):
+        return 'unavailable', 'Existing constitution generation provenance has an invalid sha256; preserved without repair.'
+    if not isinstance(source, str) or not source.strip():
+        return 'unavailable', 'Existing constitution generation provenance has an invalid source; preserved without repair.'
+    return 'preserved', None
 
 
 def check_path(path: Path, directory: bool = False) -> None:
@@ -162,13 +189,18 @@ def initialize(plugin: Path, project: Path, numbering: str | None = None,
     check_path(override)
     seed = override if override.is_file() else source
     constitution = seed.read_bytes()
+    constitution_path = state / 'memory/constitution.md'
+    provenance_path = state / 'memory' / PROVENANCE_NAME
+    source_label = ('project-override:.sdlc/templates/overrides/constitution-template.md'
+                    if seed == override else 'plugin-template:templates/constitution-template.md')
+    provenance_state, provenance_warning = inspect_existing_provenance(provenance_path)
     readme = plugin / 'references/PROJECT-README.md'
     if not readme.is_file() or not inside(readme.resolve(), plugin):
         raise ValueError('Installed plugin lacks its project README; reinstall the plugin')
     readme_content = readme.read_bytes()
     proposed = {
         options_file: (json.dumps(merged, ensure_ascii=False, indent=2) + '\n').encode(),
-        state / 'memory/constitution.md': constitution,
+        constitution_path: constitution,
         state / 'README.md': readme_content,
         state / '.gitignore': b'*\n',
     }
@@ -190,21 +222,46 @@ def initialize(plugin: Path, project: Path, numbering: str | None = None,
         warnings.append('Existing host metadata retained for compatibility, not used to select this plugin host.')
     if (state / '.gitignore').exists():
         warnings.append('Existing .sdlc/.gitignore preserved; its ignore policy was not replaced.')
+    if provenance_warning:
+        warnings.append(provenance_warning)
+
+    constitution_will_create = any(path == constitution_path and old is None for path, _, old in writes)
+    provenance_result = provenance_state if provenance_state != 'missing' else 'not_recorded'
+    provenance_created = False
+    if constitution_will_create and provenance_state == 'missing':
+        provenance_result = 'would_record' if dry_run else 'not_recorded'
+    elif constitution_will_create and provenance_state == 'preserved':
+        warnings.append('Pre-existing provenance was preserved; it is not claimed as the record for the constitution created by this run.')
+
+    if not constitution_will_create and provenance_state == 'missing' and constitution_path.exists():
+        warnings.append('Existing constitution has no generation provenance; preserved without backfilling historical origin.')
+
     if not dry_run:
         for path in directories:
             check_path(path, True)
             path.mkdir(exist_ok=True)
         for path, data, expected in writes:
             publish(path, data, expected)
-    changes = bool(new_dirs or writes)
+            if path == constitution_path and expected is None and provenance_state == 'missing':
+                try:
+                    publish(provenance_path, provenance_bytes(data, source_label), None)
+                    provenance_result = 'recorded'
+                    provenance_created = True
+                except (OSError, ValueError) as exc:
+                    provenance_result = 'unavailable'
+                    warnings.append('Constitution generation provenance was not recorded; the constitution was preserved: ' + str(exc))
+    changes = bool(new_dirs or writes or provenance_created)
     status = ('initialized' if not was_initialized else 'completed') if changes else 'unchanged'
     return {'status': status, 'dry_run': dry_run, 'PROJECT_ROOT': str(root),
             'SDLC_DIR': str(state),
             'created': [p.relative_to(root).as_posix() + '/' for p in new_dirs]
-                       + [p.relative_to(root).as_posix() for p, _, old in writes if old is None],
+                       + [p.relative_to(root).as_posix() for p, _, old in writes if old is None]
+                       + ([provenance_path.relative_to(root).as_posix()]
+                          if provenance_created or (dry_run and constitution_will_create and provenance_state == 'missing') else []),
             'updated': [p.relative_to(root).as_posix() for p, _, old in writes if old is not None],
             'preserved': preserved, 'feature_created': False,
             'constitution_source': 'project-override' if seed == override else 'plugin-template',
+            'constitution_provenance': provenance_result,
             'git_tracking': git_status, 'warnings': warnings}
 
 

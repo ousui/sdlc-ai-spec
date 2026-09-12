@@ -18,7 +18,9 @@ python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/init_project.py" --project "
 
 仅当用户要求预览时使用 `--dry-run`。仅当用户明确要求时使用 `--feature-numbering timestamp`；默认 sequential，并保留已有合法编号方式。不存在 `--force` 或 reset。
 
-脚本创建 `.sdlc/memory/`、`.sdlc/specs/`、`init-options.json`、项目宪法模板副本、数据 README 和 `.sdlc/.gitignore`。不会把 Skills、脚本、应用、集成或核心模板目录复制到项目。兼容的部分/人工 `.sdlc` 状态会被补全，已有文档和需求选择会被保留。损坏、符号链接、旧版或不受支持的 profile 以诊断停止，不自动转换。复制的宪法是尚未批准的模板，不是已确认的项目政策；不为了中文化额外改写此模板副本。
+脚本创建 `.sdlc/memory/`、`.sdlc/specs/`、`init-options.json`、项目宪法模板副本、数据 README 和 `.sdlc/.gitignore`。当本次调用确实新建 `memory/constitution.md` 时，还会尝试在 `memory/.constitution-template.json` 记录这次实际生成字节的 SHA-256 与来源。该记录只表示生成基线：内容与基线相同或不同，都不能证明 RULE 是否完成、宪法是否批准或治理质量如何。已有宪法不会被覆盖，也不会因为恰好与当前模板一致就补造历史来源；仅来源记录失败时保留已创建宪法并明确提示。
+
+不会把 Skills、脚本、应用、集成或核心模板目录复制到项目。兼容的部分/人工 `.sdlc` 状态会被补全，已有文档和需求选择会被保留。损坏、符号链接、旧版或不受支持的 profile 以诊断停止，不自动转换；不为了中文化额外改写已有宪法。
 
 退出非零时，报告诊断并停止。不得伪造成功、手工修补旧布局、删除 `.sdlc` 或调用其他初始化器。成功时用中文说明 `initialized`、`completed` 或 `unchanged`，列出选定项目、创建/更新/保留路径及警告。成功的 dry-run 不等于项目已初始化。忽略规则不会将已在 Git 中的文件取消跟踪。
 

@@ -45,9 +45,15 @@ repository transfer from a metadata edit.
   Never add language-tag comments or translate existing project files implicitly.
 - STATUS is a local read-only utility, not an upstream stage. Never make it
   persist selection, initialize projects, run other Skills, or invent phase history.
-  All 11 entries live in dist/skills; do not regenerate host-private wrappers.
+  Constitution generation provenance is observation data only: do not equate hash
+  equality/difference with RULE completion or approval, and never backfill missing
+  legacy provenance from the current template. All 11 entries live in dist/skills;
+  do not regenerate host-private wrappers.
 - Project-only INIT is authorized and implemented by adapters/INIT.md plus the
-  bundled stdlib initializer. Preserve existing project data; never install tools.
+  bundled stdlib initializer. When it actually creates a constitution it may record
+  the exact generated-byte baseline/source once; existing constitutions and records
+  are preserved. Provenance failure must not authorize overwrites or data repair.
+  Preserve existing project data; never install tools.
 - GitHub integration, real-project execution and native client installation remain
   outside automated engineering verification. They require separate authority.
 - Shared resources are read-only; project state belongs to `.sdlc`. Never infer

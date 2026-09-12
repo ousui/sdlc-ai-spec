@@ -35,12 +35,20 @@ Use `--dry-run` only when the user requested a preview. Use
 sequential and existing valid numbering is preserved. No `--force` or reset exists.
 
 The script creates `.sdlc/memory/`, `.sdlc/specs/`, `init-options.json`, a project
-copy of the constitution template, a data README and `.sdlc/.gitignore`. It does
-not copy Skills, scripts, applications, integrations or core templates into the
-project. Existing compatible partial/manual `.sdlc` directories are completed.
-Existing documents and feature selection are preserved. Malformed, symlinked,
-legacy or unsupported profiles stop with a diagnostic, not automatic conversion.
-The copied constitution is an unratified template, not confirmed project policy.
+copy of the resolved constitution template, a data README and `.sdlc/.gitignore`.
+When this invocation actually creates `memory/constitution.md`, it also attempts to
+record the exact generated-byte SHA-256 and source in
+`memory/.constitution-template.json`. The record is generation provenance only:
+matching or differing bytes do not prove RULE completion, approval or governance
+quality. Existing constitutions are preserved and never backfilled with invented
+historical provenance. A provenance-only write failure is reported without deleting
+or rewriting the created constitution.
+
+The initializer does not copy Skills, scripts, applications, integrations or core
+templates into the project. Existing compatible partial/manual `.sdlc` directories
+are completed. Existing documents and feature selection are preserved. Malformed,
+symlinked, legacy or unsupported profiles stop with a diagnostic, not automatic
+conversion.
 
 On nonzero exit, report the diagnostic and STOP. Do not fabricate success,
 hand-repair a legacy layout, delete `.sdlc`, or invoke a different initializer.

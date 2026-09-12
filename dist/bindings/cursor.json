@@ -96,7 +96,7 @@
   },
   "sdlc-000-init": {
     "@@SDLC_BIND_0002@@": "ursor",
-    "@@SDLC_BIND_0028@@": "/sdlc-010-rule 批准项目原则，或 /"
+    "@@SDLC_BIND_0030@@": "/sdlc-010-rule 批准项目原则，或 /"
   },
   "sdlc-status": {}
 }

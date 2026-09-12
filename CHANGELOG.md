@@ -88,3 +88,13 @@ history rather than copied into the current product tree.
   checklist and new-project README; preserve machine anchors and user-owned files.
 - Prohibit artificial language-tag comments; extend incremental locale freshness,
   whole-template baseline projection and negative-control regression tests.
+## Constitution generation provenance (1.0.0-beta)
+
+- Record the exact generated constitution SHA-256 and source only when INIT actually
+  creates the constitution; preserve existing/manual projects without backfilling.
+- Keep provenance optional and non-authoritative: it is not phase completion, approval,
+  signature, template-sync permission, or a new prerequisite for core workflows.
+- Let read-only STATUS compare stable raw constitution bytes with the historical baseline,
+  separately reporting record health and placeholder observations without current-template guesses.
+- Preserve malformed/orphaned records for diagnosis, keep provenance-only write failures
+  non-destructive, and add lifecycle/read-only regression coverage.

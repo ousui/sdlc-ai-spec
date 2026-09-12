@@ -68,11 +68,16 @@ class StatusTests(unittest.TestCase):
         self.assertEqual(r['initialization']['recorded_plugin_version'], 'older-record')
         self.assertEqual(r['initialization']['recorded_upstream_version'], 'older-upstream')
 
-    def test_template_copy_is_not_ratification(self):
+    def test_constitution_without_generation_record_is_not_a_phase_verdict(self):
         item = self.collect()['artifacts'][0]
-        self.assertEqual(item['assessment'], 'template_copy_not_ratified')
+        self.assertEqual(item['assessment'], 'not_verified')
+        self.assertEqual(item['generation']['record_state'], 'missing')
+        self.assertEqual(item['generation']['content_relation'], 'unknown')
+        self.assertIn(item['placeholder_observation'], ('detected', 'not_detected'))
         (self.state/'memory/constitution.md').write_text('# 已定义的原则\n不得记录密钥。\n')
-        self.assertEqual(self.collect()['artifacts'][0]['assessment'], 'not_verified')
+        changed = self.collect()['artifacts'][0]
+        self.assertEqual(changed['assessment'], 'not_verified')
+        self.assertEqual(changed['generation']['record_state'], 'missing')
 
     def test_uninitialized_project_returns_without_writing(self):
         empty = self.base / 'empty'; empty.mkdir(); before = snapshot(empty)

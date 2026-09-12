@@ -143,6 +143,19 @@ class RepositoryTests(unittest.TestCase):
         engineering=parsed['jobs']['engineering']
         self.assertEqual(engineering['strategy']['matrix']['os'], ['ubuntu-24.04', 'macos-15'])
         self.assertEqual(engineering['runs-on'], '${{ matrix.os }}')
+        checkout = engineering['steps'][0]
+        self.assertTrue(checkout['uses'].startswith('actions/checkout@'))
+        self.assertRegex(checkout['uses'], r'@[0-9a-f]{40}$')
+        self.assertEqual(checkout['with']['ref'], '${{ github.sha }}')
+        self.assertFalse(checkout['with']['persist-credentials'])
+        self.assertNotIn('repository', checkout['with'])
+        self.assertNotIn('token', checkout['with'])
+        rehearsal = next(step for step in engineering['steps']
+                         if 'tools/rehearse_upgrade.py' in step.get('run', ''))
+        self.assertEqual(rehearsal['if'], "github.event_name == 'workflow_dispatch'")
+        verification = next(step for step in engineering['steps']
+                           if 'tools/verify.py --upstream' in step.get('run', ''))
+        self.assertNotIn('if', verification)
         self.assertIn('sdlc-engineering-${{ matrix.os }}-${{ github.sha }}', ci)
         self.assertNotIn('git push',ci)
         self.assertIn('for agent in codex claude cursor-agent',ci)

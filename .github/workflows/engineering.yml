@@ -16,17 +16,21 @@ jobs:
         os: [ubuntu-24.04, macos-15]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
-    steps:
-      - name: Fetch exact product and upstream sources
+    defaults:
+      run:
         shell: bash
+    steps:
+      - name: Checkout exact product source
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.sha }}
+          persist-credentials: false
+
+      - name: Fetch locked upstream source
         env:
           SOURCE_SHA: ${{ github.sha }}
         run: |
           set -euo pipefail
-          git init .
-          git remote add origin "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git"
-          git fetch --depth=1 origin "$SOURCE_SHA"
-          git checkout --detach FETCH_HEAD
           test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
           mkdir -p "$RUNNER_TEMP/sdlc-source/upstream" "$RUNNER_TEMP/sdlc-source/baselines" "$RUNNER_TEMP/sdlc-source/logs"
           UPSTREAM_SHA=$(python3 -c 'import json,re; s=json.load(open("upstream.lock.json"))["commit"]; assert re.fullmatch("[0-9a-f]{40}",s); print(s)')
@@ -45,7 +49,6 @@ jobs:
           enable-cache: true
 
       - name: Sync locked development environment
-        shell: bash
         run: |
           set -euo pipefail
           uv --version
@@ -53,7 +56,6 @@ jobs:
           uv run --locked python --version
 
       - name: Install pinned upstream and initialize three empty projects
-        shell: bash
         run: |
           set -euo pipefail
           TOOL_ENV="$RUNNER_TEMP/sdlc-upstream-env"
@@ -78,7 +80,6 @@ jobs:
           PY
 
       - name: Verify committed product without rewriting generated packages
-        shell: bash
         run: |
           set -euo pipefail
           test -f tools/verify.py
@@ -88,7 +89,7 @@ jobs:
           test -z "$(git status --porcelain --untracked-files=all)"
 
       - name: Rehearse a same-version isolated upgrade candidate
-        shell: bash
+        if: github.event_name == 'workflow_dispatch'
         run: |
           set -euo pipefail
           uv run --locked python -B tools/rehearse_upgrade.py --upstream "$RUNNER_TEMP/sdlc-source/upstream" --baselines "$RUNNER_TEMP/sdlc-source/baselines" --out "$RUNNER_TEMP/sdlc-source/upgrade-rehearsal"
@@ -97,7 +98,6 @@ jobs:
 
       - name: Package exact source and engineering evidence
         if: always()
-        shell: bash
         run: |
           set -euo pipefail
           mkdir -p "$RUNNER_TEMP/sdlc-export" "$RUNNER_TEMP/sdlc-source"

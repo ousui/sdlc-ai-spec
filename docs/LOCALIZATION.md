@@ -11,6 +11,19 @@ Claude 默认扫描 skills/，不重复声明；Codex/Cursor 显式指向 ./skil
 
 ## 中文范围与等价宪法
 
+## 仓库语言分层
+
+仓库中的“英文”和“中文”承担不同职责，不以全仓统一语言为目标：
+
+1. `src/upstream/**` 是锁定 Spec Kit 原始来源，保持原始字节，不翻译。
+2. `src/templates/**` 是经过产品名称/路径适配后的英文模板基线，用于独立上游对照。
+3. `src/adapters/*.md` 是本项目原创绑定、INIT/STATUS 和项目 README 的英文 source baseline；对应中文审查版本位于 `src/locales/zh-CN/`。
+4. `src/locales/zh-CN/**` 保存面向 Agent/使用者的中文呈现；机器 key、路径、命令、状态枚举和代码保持原样。
+5. `dist/**` 是最终插件产品，由构建器生成，不手工翻译或编辑。
+6. `AGENTS.md`、`docs/*.md` 等本项目原创维护文档不属于产品 source→translation 链，默认直接使用简体中文；其中技术 token 和机器契约保持原样。
+
+因此，`src/adapters/` 中出现英文不是“漏翻译”，而是为了保留“英文适配源 → 审查后的中文呈现 → 最终 dist”的可审计链路。目录职责和未来演进结构见 `src/adapters/README.md`。
+
 Skill 摘要、完整流程正文、入口/绑定说明及 INIT/STATUS 指引使用简体中文，不是缩写
 摘要替代上游正文。每个能力仅维护一份译文，再绑定三宿主调用差异。
 

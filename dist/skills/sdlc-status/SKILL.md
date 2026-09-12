@@ -4,7 +4,7 @@ description: 只读查看当前项目、当前需求、产物路径和任务勾�
 compatibility: Requires Python 3.9+; project initialization and upstream CLI are not required
 metadata:
   author: Blade
-  source: adapters/STATUS.md
+  source: src/adapters/STATUS.md
 ---
 
 # SDLC AI SPEC sdlc-status

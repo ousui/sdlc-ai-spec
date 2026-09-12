@@ -10,7 +10,7 @@ as part of an ordinary code change. Use the exact commit SHA to identify builds.
 
 The root contains the implementation. `src/upstream/templates/commands` retains original English
 source; `src/templates` and `src/scripts` contain documented port deltas.
-`adapters/` supplies resource binding and host differences. `tools/build.py`
+`src/adapters/` supplies resource binding and host differences. `tools/build.py`
 generates one self-contained `dist` with 11 unique public entries (nine upstream cores, local INIT and STATUS),
 without importing the upstream CLI or reading initialized projects. Use `--marketplaces`
 to also regenerate the three repository-root catalogs.
@@ -129,7 +129,7 @@ build while the beta product version remains fixed.
 
 ## Local project initializer
 
-`adapters/INIT.md` is a local workflow, not a tenth upstream command.
+`src/adapters/INIT.md` is a local workflow, not a tenth upstream command.
 `src/scripts/python/init_project.py` is its deterministic stdlib-only implementation.
 The build generates one public INIT entry and one shared init body, through the same
 loader as the nine upstream commands, but without the initialized-project gate.
@@ -153,7 +153,7 @@ or weaken full-body parity to accept a candidate. See PR #24 for execution evide
 
 ## Read-only STATUS utility
 
-`adapters/STATUS.md` defines this local (not upstream) capability; its Chinese
+`src/adapters/STATUS.md` defines this local (not upstream) capability; its Chinese
 resource is `src/locales/zh-CN/status.md`. `project_status.py` uses Python 3.9+
 standard library only and writes solely to stdout. See [STATUS.md](STATUS.md).
 The local tests use synthetic directories, including empty, malformed, aliased,

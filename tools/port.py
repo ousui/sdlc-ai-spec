@@ -33,7 +33,7 @@ def function(text: str, name: str, replacement: str) -> str:
 def port_script(name: str,text: str) -> str:
     text=text.replace('.specify','.sdlc')
     if name=='common.sh':
-        text=function(text,'get_repo_root',(ROOT/'adapters/path-functions.sh').read_text())
+        text=function(text,'get_repo_root',(ROOT/'src/adapters/path-functions.sh').read_text())
         text=function(text,'get_invoke_separator','')
         text=function(text,'format_speckit_command',invocation_adapter())
         text=replace_once(text,'    local fj="$repo_root/.sdlc/feature.json"\n\n    # Strip',

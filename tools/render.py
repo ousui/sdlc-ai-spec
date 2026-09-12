@@ -123,7 +123,7 @@ def relocate_body(body: str, host: str) -> str:
 
 
 def binding(host: str) -> str:
-    template = (ROOT/'adapters'/'BINDING.md').read_text()
+    template = (ROOT/'src'/'adapters'/'BINDING.md').read_text()
     detail = ('Use the host-provided `${CLAUDE_PLUGIN_ROOT}` or the absolute path of this loaded SKILL.md.'
               if host == 'claude' else
               'Use the absolute path of this loaded SKILL.md; do not assume a host-specific plugin-root environment variable exists.')

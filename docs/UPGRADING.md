@@ -14,7 +14,7 @@ or `.python-version` are reviewed build inputs and must remain synchronized.
 profile, copied source identities and watched renderer/integration identities.
 `src/upstream/` retains those original bytes, including their original licenses.
 Derived source lives in `src/templates/` and `src/scripts/`; nine commands are
-read directly from `src/upstream/templates/commands/`. `adapters/` holds reviewed
+read directly from `src/upstream/templates/commands/`. `src/adapters/` holds reviewed
 changes; `tools/port.py` applies strict anchors. `dist` is generated, not edited.
 
 Watched files include `integrations/base.py`, `agents.py`, the Codex/Claude/Cursor
@@ -124,7 +124,7 @@ candidate; it does not trigger an uncontrolled AI rewrite.
 ## Local initializer across upgrades
 
 `init` is a local command, not part of the upstream command inventory. Preserve
-`adapters/INIT.md`, `src/scripts/python/init_project.py` and its tests during
+`src/adapters/INIT.md`, `src/scripts/python/init_project.py` and its tests during
 candidate generation. Changes to watched upstream `commands/init.py` require
 review of the project-data projection (template seeding and defaults), not a
 blind copy of the installer. Reinitialization does not rewrite an existing
@@ -184,7 +184,7 @@ feature switch, never initializes, and never executes the suggested next Skill.
 See [STATUS.md](STATUS.md). Existing core bodies/templates and runtime behavior
 are not modified to store history for STATUS.
 
-Upgrades must retain adapters/STATUS.md, src/locales/zh-CN/status.md and its local
+Upgrades must retain src/adapters/STATUS.md, src/locales/zh-CN/status.md and its local
 resource catalog record, src/scripts/python/project_status.py and its tests.
 These are local sources, not copied upstream commands. Materialization rebuilds
 the same eleven-entry package without overwriting this utility. Source changes

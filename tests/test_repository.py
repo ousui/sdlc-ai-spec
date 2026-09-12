@@ -26,6 +26,26 @@ class RepositoryTests(unittest.TestCase):
         for legacy in ('v0','packages','skills/_shared','docs/v1.0','docs/v1.1'):
             self.assertFalse((ROOT/legacy).exists(), 'Legacy local residue (inspect before removal): '+legacy)
 
+    def test_source_adapter_layout_is_explicit_and_not_shipped(self):
+        source=ROOT/'src/adapters'
+        self.assertTrue((source/'README.md').is_file())
+        self.assertFalse((ROOT/'adapters').exists())
+        self.assertEqual({p.name for p in source.iterdir()}, {
+            'README.md','BINDING.md','INIT.md','PROJECT-README.md','STATUS.md',
+            'invocation-functions.sh','path-functions.sh',
+        })
+        inputs=json.loads((ROOT/'dist/BUILD.json').read_text())['inputs']
+        for name in ('BINDING.md','INIT.md','PROJECT-README.md','STATUS.md',
+                     'invocation-functions.sh','path-functions.sh'):
+            self.assertIn('src/adapters/'+name,inputs)
+            self.assertNotIn('adapters/'+name,inputs)
+        self.assertFalse((ROOT/'dist/adapters').exists())
+        self.assertIn('# 移植适配源', (source/'README.md').read_text())
+        self.assertTrue((source/'INIT.md').read_text().startswith('# Initialize project data'))
+        self.assertTrue((source/'STATUS.md').read_text().startswith('# Local STATUS contract'))
+        self.assertIn('# 仓库指令', (ROOT/'AGENTS.md').read_text())
+        self.assertIn('# 项目初始化', (ROOT/'docs/INITIALIZATION.md').read_text())
+
     def test_native_manifests_select_only_their_entries(self):
         metadata=json.loads((ROOT/'plugin-metadata.json').read_text())
         all_entries=[]
@@ -75,7 +95,7 @@ class RepositoryTests(unittest.TestCase):
         self.assertTrue((ROOT/'dist/BUILD.json').is_file())
 
     def test_docs_and_ci(self):
-        documents=list((ROOT/'docs').glob('*.md'))+[ROOT/'README.md',ROOT/'AGENTS.md']
+        documents=list((ROOT/'docs').glob('*.md'))+[ROOT/'README.md',ROOT/'AGENTS.md',ROOT/'src/adapters/README.md']
         for document in documents:
             text=document.read_text()
             self.assertNotIn('v0/',text)

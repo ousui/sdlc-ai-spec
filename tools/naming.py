@@ -88,7 +88,7 @@ def script_projection(text: str) -> str:
 
 
 def invocation_adapter() -> str:
-    template = (ROOT / 'adapters/invocation-functions.sh').read_text(encoding='utf-8')
+    template = (ROOT / 'src/adapters/invocation-functions.sh').read_text(encoding='utf-8')
     if template.count('@SKILL_CASES@') != 1:
         raise ValueError('Invocation adapter mapping anchor changed')
     cases = '|'.join(v for k, v in SKILL_IDS.items() if k != 'status')

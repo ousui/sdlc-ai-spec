@@ -150,7 +150,7 @@ def build(destination: Path) -> None:
     # Never remove or replace source, tests, repository root, or its ancestors.
     if resolved == ROOT or resolved in ROOT.parents or any(
         resolved == ROOT / d or ROOT / d in resolved.parents
-        for d in ('src', 'tools', 'tests', 'adapters', 'docs', '.git')
+        for d in ('src', 'tools', 'tests', 'docs', '.git')
     ):
         raise ValueError('Refusing unsafe build destination')
     if destination.exists() and not (destination / '.sdlc-build').is_file():
@@ -192,7 +192,7 @@ def build(destination: Path) -> None:
         meta = {'name': skill_id('init'),
                 'description': '初始化或补全项目本地 .sdlc 数据，不安装工具、不覆盖已有工作。',
                 'compatibility': 'Requires Python 3.9+, Bash and an existing project directory; no upstream CLI required',
-                'metadata': {'author': AUTHOR['name'], 'source': 'adapters/INIT.md'}}
+                'metadata': {'author': AUTHOR['name'], 'source': 'src/adapters/INIT.md'}}
         path = skill_entry(package, 'codex', 'init')
         path.parent.mkdir(parents=True)
         path.write_text(wrapper(meta, None, 'init'), encoding='utf-8')
@@ -205,7 +205,7 @@ def build(destination: Path) -> None:
         meta = {'name': skill_id('status'),
                 'description': '只读查看当前项目、当前需求、产物路径和任务勾选进度；用于恢复上下文与定位文件，不初始化、不修改文件、不执行其他阶段。',
                 'compatibility': 'Requires Python 3.9+; project initialization and upstream CLI are not required',
-                'metadata': {'author': AUTHOR['name'], 'source': 'adapters/STATUS.md'}}
+                'metadata': {'author': AUTHOR['name'], 'source': 'src/adapters/STATUS.md'}}
         path = skill_entry(package, 'codex', 'status')
         path.parent.mkdir(parents=True)
         path.write_text(wrapper(meta, None, 'status'), encoding='utf-8')
@@ -257,7 +257,7 @@ def build(destination: Path) -> None:
         for path in (package / 'scripts').rglob('*.sh'):
             path.chmod(0o755)
         inputs = {}
-        for folder in ('src', 'adapters', 'tools'):
+        for folder in ('src', 'tools'):
             for path in sorted((ROOT / folder).rglob('*')):
                 if path.is_file() and '__pycache__' not in path.parts and path.suffix != '.pyc':
                     inputs[path.relative_to(ROOT).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()

@@ -4,7 +4,7 @@ description: 初始化或补全项目本地 .sdlc 数据，不安装工具、不
 compatibility: Requires Python 3.9+, Bash and an existing project directory; no upstream CLI required
 metadata:
   author: Blade
-  source: adapters/INIT.md
+  source: src/adapters/INIT.md
 ---
 
 # SDLC AI SPEC sdlc-000-init

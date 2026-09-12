@@ -86,7 +86,7 @@ src/upstream/                 锁定的原始上游，逐字节保留
 src/scripts/                  派生 Runtime 与本地辅助脚本
 src/templates/                英文模板骨架与已批准名称/路径映射
 src/locales/zh-CN/             中文正文、摘要、绑定说明及来源复核目录
-adapters/                     确定性资源适配规则
+src/adapters/                 英文适配源、Runtime 代码适配片段及职责说明
 tools/                        构建、本地化检查、升级与验证工具
 dist/
   .codex-plugin/plugin.json    唯一公共 skills 集合

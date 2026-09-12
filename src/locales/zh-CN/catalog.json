@@ -155,14 +155,14 @@
   },
   "resources": {
     "binding": {
-      "source": "adapters/BINDING.md",
+      "source": "src/adapters/BINDING.md",
       "source_sha256": "c8470f5fe1b668de78c06adfbe821b066dc1a25e1f4d87d27162cb90fc0b3705",
       "translation_sha256": "f4592174b0b8cd49a76ea4569fd6e0c3657a33703d2419dffd24d6571380e8a7",
       "status": "reviewed",
       "reviewer": "AI source-to-translation review"
     },
     "init": {
-      "source": "adapters/INIT.md",
+      "source": "src/adapters/INIT.md",
       "source_sha256": "e3bc611fd521b6cfce6ad0dc2308b072d84faccc7ed40efe8cc729e97c3f497c",
       "translation_sha256": "347fd3fd6bc803860c3d197d51707bd28283ffb2df8273737a4774be9ea04b00",
       "status": "reviewed",
@@ -174,14 +174,14 @@
       "reviewer": "AI source/approved language-scope review"
     },
     "status": {
-      "source": "adapters/STATUS.md",
+      "source": "src/adapters/STATUS.md",
       "source_sha256": "aefe2d650f93b1f3b25bcbba25c23465d20c0e8f461493bad5b1099a7f14ee3f",
       "translation_sha256": "cfba687112e155ebc4849f9f1f16ab5f65958f226bb2572f2c3d24fcbbd9c0d6",
       "status": "reviewed",
       "reviewer": "AI implementation review: constitution provenance semantics"
     },
     "project-readme": {
-      "source": "adapters/PROJECT-README.md",
+      "source": "src/adapters/PROJECT-README.md",
       "status": "reviewed",
       "reviewer": "AI implementation review: constitution provenance semantics",
       "source_sha256": "70d0fd77e39c9b3cf78334255ed37bfef9c7a014b74082c16a7efde97bc897a3",

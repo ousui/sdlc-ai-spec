@@ -98,3 +98,11 @@ history rather than copied into the current product tree.
   separately reporting record health and placeholder observations without current-template guesses.
 - Preserve malformed/orphaned records for diagnosis, keep provenance-only write failures
   non-destructive, and add lifecycle/read-only regression coverage.
+
+## 仓库布局与维护文档可读性整理（1.0.0-beta）
+
+- 将根目录 `adapters/` 迁移到 `src/adapters/`，明确其属于产品源码/构建输入，而不是 `tools/` 实现或 Runtime 目录；六个既有 adapter 文件保持原字节和权限。
+- 新增 `src/adapters/README.md`，说明当前职责、数据流、修改规则，以及未来按 `workflows/`、`resources/`、`scripts/` 进一步拆分的演进参考。
+- 将 `AGENTS.md` 与 `docs/INITIALIZATION.md` 的维护说明统一为简体中文；命令、路径、环境变量、状态枚举和其他机器契约保持原样。
+- 在 `docs/LOCALIZATION.md` 明确上游原文、英文适配基线、中文呈现、维护文档和 `dist` 的语言分层；`src/adapters/*.md` 继续作为英文 source baseline，不改现有翻译内容。
+- 同步构建器、移植器、本地化 catalog、文档和测试中的路径引用；最终 Runtime workflow、模板、脚本、bindings 和用户文案保持不变，仅构建来源元数据及 INIT/STATUS `metadata.source` 反映新路径。

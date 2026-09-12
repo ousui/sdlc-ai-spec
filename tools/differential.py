@@ -30,8 +30,12 @@ def normalize_project_paths(text: str, project: Path) -> str:
         forms.add(str(project.resolve()))
     except OSError:
         pass
+    # Replace only a complete path occurrence or a path prefix followed by a
+    # separator/output delimiter. Do not rewrite unrelated same-prefix paths such
+    # as /tmp/project-backup when the selected project is /tmp/project.
+    boundary = r'(?=$|[\/\s"\',;:)}\]])'
     for value in sorted(forms,key=len,reverse=True):
-        text=text.replace(value,'<PROJECT>')
+        text=re.sub(re.escape(value)+boundary,'<PROJECT>',text)
     return text
 
 

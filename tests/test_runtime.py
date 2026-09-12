@@ -215,6 +215,16 @@ class RuntimeTests(unittest.TestCase):
                 self.assertEqual(canonical(resolved['PROJECT_ROOT']),canonical(other))
                 self.run_script(other,'setup-plan.sh','--json',success=False)
 
+    def test_hardlinked_project_artifact_is_rejected_before_write(self):
+        for host in self.hosts():
+            with self.subTest(host=host):
+                p,f=self.seed();shared=self.base/('shared-'+host+'.md');shared.write_text('shared bytes\n')
+                (f/'plan.md').unlink();os.link(shared,f/'plan.md')
+                before=shared.read_bytes()
+                result=self.run_script(p,'setup-plan.sh','--json',success=False)
+                self.assertIn('hardlinked project data',result.stderr)
+                self.assertEqual(shared.read_bytes(),before)
+
     def test_quoted_unicode_paths_and_shell_injection_are_data(self):
         for host in self.hosts():
             with self.subTest(host=host):

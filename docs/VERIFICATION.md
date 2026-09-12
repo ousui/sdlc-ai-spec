@@ -23,9 +23,10 @@ differential cases; candidate preparation/acceptance rejection tests. The local 
 compares its project data with three actual upstream CLI initializations and
 executes dedicated preservation, failure and downstream-script fixtures.
 
-Evidence contains source SHA, source content/mode digest, upstream SHA, declared
-and actual repositories, fixed product version, environment, individual results,
-unit-test output and package inventory. Evidence is outside the checkout. The
+Evidence contains an explicit verification contract version, source SHA, source content/mode digest,
+upstream SHA, declared and actual repositories, fixed product version, environment,
+individual results, unit-test output and package inventory. Upgrade acceptance rejects
+reports that omit required check groups, counts, environment identity or inventory. Evidence is outside the checkout. The
 read-only workflow checks that committed output is not rewritten during tests.
 
 No automated native plugin install/discovery, LLM-driven end-to-end result,

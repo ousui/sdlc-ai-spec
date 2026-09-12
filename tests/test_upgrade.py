@@ -9,10 +9,24 @@ import tempfile
 import unittest
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
-from upgrade import source_digest,candidate_lock,check_accept,blob,prepare
+from upgrade import (source_digest,candidate_lock,check_accept,blob,prepare,
+                     VERIFICATION_CONTRACT_VERSION,REQUIRED_VERIFICATION_GROUPS)
 from port import replace_once,function
 
 class UpgradeTests(unittest.TestCase):
+    def complete_report(self, digest: str, upstream_sha: str) -> dict:
+        checks=[{'group':group,'item':'fixture','result':'PASS'}
+                for group in sorted(REQUIRED_VERIFICATION_GROUPS)]
+        return {
+            'verification_contract_version': VERIFICATION_CONTRACT_VERSION,
+            'status':'PASS', 'scope':'fixture verification contract',
+            'source_digest':digest, 'upstream_sha':upstream_sha,
+            'unit_test_methods':1, 'runtime_test_methods':1, 'differential_cases':1,
+            'environment':{'python':'Python fixture','platform':'fixture','bash':'bash fixture'},
+            'checks':checks, 'distribution_inventory':{'README.md':{'sha256':'0'*64,'mode':'0o644'}},
+            'not_performed':[],
+        }
+
     def test_byte_mode_fingerprint_and_caches(self):
         with tempfile.TemporaryDirectory() as temp:
             p=Path(temp);f=p/'a';f.write_text('same');old=source_digest(p)
@@ -74,6 +88,41 @@ class UpgradeTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError,'not ready'):
                 check_accept(record,p/'not-opened',p/'not-opened-review')
 
+    def test_prepare_rejects_symlinked_parent_into_source_or_upstream(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);source=root/'source';upstream=root/'upstream'
+            for repo in (source,upstream):
+                repo.mkdir();subprocess.run(['git','init','-q',str(repo)],check=True)
+                subprocess.run(['git','-C',str(repo),'config','user.name','Fixture'],check=True)
+                subprocess.run(['git','-C',str(repo),'config','user.email','fixture@example.invalid'],check=True)
+                (repo/'tracked').write_text('x')
+                subprocess.run(['git','-C',str(repo),'add','.'],check=True)
+                subprocess.run(['git','-C',str(repo),'commit','-qm','fixture'],check=True)
+            for target in (source,upstream):
+                alias=root/('alias-'+target.name);alias.symlink_to(target,target_is_directory=True)
+                with self.subTest(target=target.name), self.assertRaisesRegex(ValueError,'outside the source and upstream'):
+                    prepare(source,upstream,alias/'candidate','HEAD')
+                self.assertFalse((target/'candidate').exists())
+
+    def test_accept_rejects_truncated_pass_report(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root=Path(temp);source=root/'source';source.mkdir()
+            def git(*args,cwd=source):
+                return subprocess.run(['git',*args],cwd=cwd,check=True,text=True,capture_output=True).stdout.strip()
+            git('init','-q');git('config','user.name','Fixture');git('config','user.email','fixture@example.invalid')
+            (source/'base.txt').write_text('base');git('add','.');git('commit','-qm','fixture')
+            head=git('rev-parse','HEAD');candidate=root/'candidate';git('worktree','add','--detach',str(candidate),head)
+            (candidate/'base.txt').write_text('candidate');digest=source_digest(candidate)
+            record={'status':'CANDIDATE_READY','source_root':str(source),'candidate_root':str(candidate),
+                    'base_sha':head,'candidate_digest':digest,'upstream_sha':'1'*40,'changes':[]}
+            approval={'decision':'accept','reviewer':'Fixture','candidate_digest':digest,'reviewed_paths':[]}
+            report={'verification_contract_version':VERIFICATION_CONTRACT_VERSION,'status':'PASS',
+                    'source_digest':digest,'upstream_sha':'1'*40,'checks':[{'group':'pinned_source','item':'x','result':'PASS'}]}
+            for name,data in [('record',record),('report',report),('review',approval)]:
+                (root/(name+'.json')).write_text(json.dumps(data))
+            with self.assertRaisesRegex(ValueError,'Incomplete verification report|invalid test counts'):
+                check_accept(root/'record.json',root/'report.json',root/'review.json')
+
     def test_accept_binds_candidate_review_and_evidence(self):
         with tempfile.TemporaryDirectory() as temp:
             root=Path(temp);source=root/'source';source.mkdir()
@@ -87,8 +136,7 @@ class UpgradeTests(unittest.TestCase):
             digest=source_digest(candidate)
             record={'status':'CANDIDATE_READY','source_root':str(source),'candidate_root':str(candidate),
                     'base_sha':head,'candidate_digest':digest,'upstream_sha':'1'*40,'changes':[{'path':'scripts/x.sh'}]}
-            report={'status':'PASS','source_digest':digest,'upstream_sha':'1'*40,
-                    'checks':[{'result':'PASS'}]}
+            report=self.complete_report(digest,'1'*40)
             approval={'decision':'accept','reviewer':'Fixture','candidate_digest':digest,'reviewed_paths':['scripts/x.sh']}
             for name,data in [('record',record),('report',report),('review',approval)]:
                 (root/(name+'.json')).write_text(json.dumps(data))

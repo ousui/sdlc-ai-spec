@@ -25,6 +25,15 @@ class DifferentialPathTests(unittest.TestCase):
             self.assertEqual(normalize_project_paths(logical_text,logical),'<PROJECT>/specs/001-fixture')
             self.assertEqual(normalize_project_paths(physical_text,logical),'<PROJECT>/specs/001-fixture')
 
+    def test_same_prefix_unrelated_path_is_not_rewritten(self):
+        with tempfile.TemporaryDirectory() as temp:
+            project=Path(temp)/'project'
+            project.mkdir()
+            text=str(project)+'-backup/file'
+            self.assertEqual(normalize_project_paths(text,project),text)
+            quoted='path="'+str(project)+'" next='+str(project/'spec.md')
+            self.assertEqual(normalize_project_paths(quoted,project),'path="<PROJECT>" next=<PROJECT>/spec.md')
+
     def test_unrelated_paths_are_not_rewritten(self):
         with tempfile.TemporaryDirectory() as temp:
             project=Path(temp)/'project'

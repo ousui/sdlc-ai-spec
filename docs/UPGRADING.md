@@ -37,7 +37,9 @@ uv run --locked python -B tools/upgrade.py prepare \
   --out /absolute/path/outside/this-repo/sdlc-candidate
 ```
 
-The selected ref must equal upstream HEAD. The command creates a detached Git
+The selected ref must equal upstream HEAD. Candidate placement is checked using the
+resolved filesystem path, so a symlinked parent cannot place it back inside either source
+checkout. The command creates a detached Git
 worktree from the current accepted commit, writes its candidate lock, materializes
 source, builds one package and generates marketplaces. A sibling file
 `sdlc-candidate.upgrade.json` records source/base identity, all changed watched or
@@ -60,7 +62,10 @@ against those outputs; use evidence outside both worktrees. See
 they are an independent oracle.
 
 The report must bind `source_digest` to the complete candidate bytes and executable
-modes, including dist, not merely claim PASS at the previous source commit. A
+modes, including dist, not merely claim PASS at the previous source commit. It must also
+carry the supported verification contract version, all required check groups, test and
+differential counts, environment identity, and the distribution inventory; a truncated
+or hand-minimized PASS JSON is rejected. A
 same-version replay is an engineering regression, not acceptance of a new version.
 Existing synthetic project fixtures cover continued use of the established
 `.sdlc` format. A real format incompatibility requires a separate explicit project

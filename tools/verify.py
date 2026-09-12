@@ -227,9 +227,10 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
         diffs.extend(difflib.unified_diff(old.splitlines(True),f.read_text().splitlines(True),
                       fromfile='upstream/scripts/bash/'+f.name,tofile='ported/scripts/bash/'+f.name))
     (evidence/'script-deltas.patch').write_text(''.join(diffs))
-    from upgrade import source_digest
+    from upgrade import source_digest, VERIFICATION_CONTRACT_VERSION
     source_id=os.environ.get('GITHUB_SHA')
-    report={'status':'PASS','scope':'engineering-only; one package, installed-tool parity and synthetic fixtures including project INIT; no Agent execution',
+    report={'verification_contract_version':VERIFICATION_CONTRACT_VERSION,
+            'status':'PASS','scope':'engineering-only; one package, installed-tool parity and synthetic fixtures including project INIT; no Agent execution',
             'source_sha':source_id,'source_digest':source_digest(ROOT),'upstream_sha':UPSTREAM_SHA,
             'source_repository':os.environ.get('GITHUB_REPOSITORY'),
             'product_version':VERSION,'declared_repository':REPOSITORY,'author':AUTHOR['name'],
@@ -239,7 +240,7 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
             'checks':checks,'runtime_test_methods':result.testsRun,'differential_cases':len(differential_cases),
             'distribution_inventory':inventory(ROOT/'dist'),
             'not_performed':['native plugin installation/discovery','LLM workflow execution',
-                             'real project verification','macOS runtime verification','Windows/PowerShell verification']}
+                             'real project verification','Windows/PowerShell verification']}
     (evidence/'result.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
     return report
 

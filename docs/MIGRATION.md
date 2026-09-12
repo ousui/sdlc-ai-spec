@@ -70,7 +70,7 @@ source map, watched generator code and fail-closed candidate acceptance.
 ## Deliberately deferred
 
 Real business project use; actual Codex/Claude/Cursor install,
-discovery and invocation; model quality; macOS execution; Windows/PowerShell;
+discovery and invocation; model quality; Windows/PowerShell;
 concurrent writes to one feature; legacy data migration; GitHub operations.
 
 Project-only INIT was separately authorized after the native-user smoke test

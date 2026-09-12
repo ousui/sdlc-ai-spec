@@ -37,6 +37,10 @@ def validate(plugin: Path, project: Path, feature: str | None = None) -> dict:
         resolved = path.resolve()
         if inside(resolved, plugin):
             raise ValueError(f'Project data path resolves inside the plugin: {path}')
+        # A hardlink has no path relationship to the plugin, so resolve() cannot
+        # detect it. Reject shared regular-file inodes before later workflow writes.
+        if path.exists() and path.is_file() and path.stat().st_nlink != 1:
+            raise ValueError(f'Refusing hardlinked project data: {path}')
     result = {'PROJECT_ROOT':str(project),'PLUGIN_ROOT':str(plugin)}
     if feature_path is not None:
         result['FEATURE_DIR'] = str(feature_path.resolve())

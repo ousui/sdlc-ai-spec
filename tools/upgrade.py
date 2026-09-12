@@ -22,6 +22,16 @@ import tomllib
 
 ROOT = Path(__file__).resolve().parents[1]
 IGNORED = {'.git', '.venv', '__pycache__', '.pytest_cache'}
+VERIFICATION_CONTRACT_VERSION = 1
+REQUIRED_VERIFICATION_GROUPS = frozenset({
+    'pinned_source', 'unchanged_source_command', 'source_renderer_vs_installed_cli',
+    'localized_workflow_source_binding', 'migrated_skill_vs_installed_cli',
+    'template_vs_installed_cli', 'native_manifest_documented_subset', 'bash_syntax',
+    'python_syntax', 'runtime_dependency_and_inventory', 'localization_freshness_and_protected_spans',
+    'installed_init_project_data', 'leaf_script_source_parity', 'reviewed_script_transform',
+    'tool_python_syntax', 'reproducible_build', 'engineering_unit_tests',
+    'installed_script_differential',
+})
 
 
 def run(*args: str, cwd: Path) -> str:
@@ -150,8 +160,12 @@ def prepare(root: Path, upstream: Path, out: Path, ref: str) -> dict:
     commit = run('git', 'rev-parse', '--verify', ref+'^{commit}', cwd=upstream)
     if upstream_head != commit:
         raise ValueError('Upstream checkout HEAD is not the selected ref')
-    if out.exists() or out.is_symlink() or root == out or root in out.parents:
-        raise ValueError('Candidate must be a new directory outside the source repository')
+    # Resolve existing parent symlinks even though the candidate itself must not exist.
+    # Otherwise /tmp/link-to-source/candidate can bypass the lexical parents check.
+    resolved_out = out.resolve(strict=False)
+    if (out.exists() or out.is_symlink() or resolved_out == root or root in resolved_out.parents
+            or resolved_out == upstream or upstream in resolved_out.parents):
+        raise ValueError('Candidate must be a new directory outside the source and upstream repositories')
     record_path = out.parent/(out.name+'.upgrade.json')
     if record_path.exists():
         raise ValueError('Candidate record already exists')
@@ -179,6 +193,46 @@ def prepare(root: Path, upstream: Path, out: Path, ref: str) -> dict:
     return record
 
 
+def validate_verification_report(report: dict, actual: str, upstream_sha: str) -> None:
+    """Require a complete verifier contract, not merely a PASS-looking JSON fragment."""
+    if not isinstance(report, dict) or report.get('verification_contract_version') != VERIFICATION_CONTRACT_VERSION:
+        raise ValueError('Verification report contract is missing or unsupported')
+    if (report.get('status') != 'PASS' or report.get('source_digest') != actual
+            or report.get('upstream_sha') != upstream_sha):
+        raise ValueError('Verification does not attest the exact candidate')
+    checks = report.get('checks')
+    if not isinstance(checks, list) or not checks:
+        raise ValueError('Missing verification checks')
+    groups = set()
+    for check in checks:
+        if (not isinstance(check, dict) or not isinstance(check.get('group'), str)
+                or not isinstance(check.get('item'), str) or check.get('result') != 'PASS'):
+            raise ValueError('Malformed or failed verification checks')
+        groups.add(check['group'])
+    missing = sorted(REQUIRED_VERIFICATION_GROUPS - groups)
+    if missing:
+        raise ValueError('Incomplete verification report; missing groups: ' + ', '.join(missing))
+    unit = report.get('unit_test_methods')
+    runtime = report.get('runtime_test_methods')
+    differentials = report.get('differential_cases')
+    if (type(unit) is not int or unit <= 0 or type(runtime) is not int or runtime != unit
+            or type(differentials) is not int or differentials <= 0):
+        raise ValueError('Verification report has invalid test counts')
+    if sum(c['group'] == 'installed_script_differential' for c in checks) != differentials:
+        raise ValueError('Verification differential count does not match check evidence')
+    if not isinstance(report.get('distribution_inventory'), dict) or not report['distribution_inventory']:
+        raise ValueError('Verification report is missing the distribution inventory')
+    environment = report.get('environment')
+    if (not isinstance(environment, dict)
+            or not all(isinstance(environment.get(k), str) and environment[k] for k in ('python','platform','bash'))):
+        raise ValueError('Verification report is missing environment identity')
+    if not isinstance(report.get('scope'), str) or not report['scope']:
+        raise ValueError('Verification report is missing scope')
+    if (not isinstance(report.get('not_performed'), list)
+            or not all(isinstance(item, str) and item for item in report['not_performed'])):
+        raise ValueError('Verification report has invalid not_performed evidence')
+
+
 def check_accept(record_path: Path, evidence: Path, review: Path) -> tuple[Path, dict]:
     record = json.loads(record_path.read_text())
     if record.get('status') != 'CANDIDATE_READY':
@@ -196,11 +250,7 @@ def check_accept(record_path: Path, evidence: Path, review: Path) -> tuple[Path,
     if actual != record['candidate_digest']:
         raise ValueError('Candidate was edited; prepare again with reviewed adapter changes')
     report = json.loads(evidence.read_text())
-    if (report.get('status') != 'PASS' or report.get('source_digest') != actual
-            or report.get('upstream_sha') != record['upstream_sha']):
-        raise ValueError('Verification does not attest the exact candidate')
-    if not report.get('checks') or not all(c.get('result') == 'PASS' for c in report['checks']):
-        raise ValueError('Missing/failed verification checks')
+    validate_verification_report(report, actual, record['upstream_sha'])
     approval = json.loads(review.read_text())
     required = sorted({c['path'] for c in record['changes']})
     if (approval.get('decision') != 'accept' or not approval.get('reviewer')

@@ -13,6 +13,7 @@ import tempfile
 from pathlib import Path
 from build import ROOT, HOSTS
 from naming_check import reverse_names
+from localize import restore_template
 
 
 def normalize_project_paths(text: str, project: Path) -> str:
@@ -82,10 +83,26 @@ def compare(baselines: Path) -> list[dict]:
                         text=re.sub(r'(?<![\w./])/?specs/','@SPECS@/',text)
                         text=re.sub(r'(?<![\w:/\$-])sdlc-(constitution|specify|clarify|plan|tasks|analyze|checklist|implement|converge)\b',r'/speckit-\1',text)
                         return text.replace('/sdlc:sdlc-','/speckit-').replace('$sdlc-','$speckit-').replace('/sdlc-','/speckit-').replace('$speckit-','/speckit-')
-                    files={p.name:normalize(p.read_text()) for p in feature.iterdir() if p.is_file()}
+                    files={}
+                    for p in feature.iterdir():
+                        if p.is_file():
+                            text=p.read_text()
+                            if ported and case == 'plan' and p.name == 'plan.md':
+                                text=restore_template('plan-template',text)
+                            files[p.name]=normalize(text)
+                    stdout=result.stdout
+                    if ported and result.returncode == 0 and case in ('tasks','template'):
+                        payload=json.loads(stdout)
+                        key='TASKS_TEMPLATE_CONTENT' if case == 'tasks' else 'TEMPLATE_CONTENT'
+                        name='tasks-template' if case == 'tasks' else 'checklist-template'
+                        payload[key]=restore_template(name,payload[key])
+                        # Compare JSON values, not encoder spacing/key order.
+                        stdout=json.dumps(payload,ensure_ascii=False,sort_keys=True)
+                    elif not ported and result.returncode == 0 and case in ('tasks','template'):
+                        stdout=json.dumps(json.loads(stdout),ensure_ascii=False,sort_keys=True)
                     # Upstream script diagnostics use / even for Codex.
                     stderr=normalize(result.stderr).replace('$speckit-','/speckit-')
-                    output.append((result.returncode,normalize(result.stdout),stderr,files))
+                    output.append((result.returncode,normalize(stdout),stderr,files))
                 if output[0]!=output[1]:
                     raise AssertionError(f'Differential mismatch {host}/{case}: {output!r}')
                 records.append({'host':host,'case':case,'result':'PASS'})

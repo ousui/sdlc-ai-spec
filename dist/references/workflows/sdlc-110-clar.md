@@ -15,11 +15,13 @@
 <!-- SDLC-OUTPUT-LANGUAGE:BEGIN -->
 ## 输出语言（仅呈现层）
 
-向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节定位名、占位符、状态值、任务语法、代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
+向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节层级和定位用英文锚点保留，标题可附中文释义；占位符、状态值、任务语法、实际代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
 
-例如保留 `User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记，业务描述、理由、测试说明和任务内容填写中文。代码块中的英文示例用于保留格式和定位约定，不要求将实际填写的自然语言也写成英文。刚复制且尚未填写的模板可以保持英文；不增加一次翻译回写动作。
+使用插件中已审查的本地化模板。`User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记保留；模板说明、业务描述、理由、测试说明和任务内容使用中文。代码块中的格式示例不强制自然语言使用英文；SPEC 的内置 requirements.md 清单采用流程中的本地化条目，条目顺序、数量、条件和勾选责任不变。用户自定义模板仍按原流程处理，不为本地化新增覆盖动作。
 
-此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。
+文档、注释与说明直接表达业务内容，不添加“中文注释”“中文说明”“中文版本”等语言标签。确需标签时使用“注释”或“说明”。不要为了标明语言新增 HTML 注释；只有原流程本来要求的注释才按其规则处理。保留有语义的注释，不做全文件删除或批量清理。不得插入 U+FFFC 等对象替换字符。
+
+此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。它是给执行者的指引，不是待复制进业务产物的正文。
 <!-- SDLC-OUTPUT-LANGUAGE:END -->
 
 
@@ -42,7 +44,7 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0044@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0046@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
@@ -72,15 +74,15 @@ $ARGUMENTS
 
 目标：发现并减少当前功能规格的歧义或缺失决策点，将澄清内容直接记录到规格文件中。
 
-注意：此澄清流程预期在调用 `@@SDLC_BIND_0074@@sdlc-200-plan` 之前运行并完成。用户明确表示跳过澄清（例如探索性试验）时，可以继续，但必须提醒后续返工风险会上升。
+注意：此澄清流程预期在调用 `@@SDLC_BIND_0076@@sdlc-200-plan` 之前运行并完成。用户明确表示跳过澄清（例如探索性试验）时，可以继续，但必须提醒后续返工风险会上升。
 
 执行步骤：
 
-1. 在仓库根目录**只运行一次** `SDLC_HOST=c@@SDLC_BIND_0078@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --paths-only`，使用组合 `--json --paths-only` 模式／`-Json -PathsOnly`。解析最少 JSON 字段：
+1. 在仓库根目录**只运行一次** `SDLC_HOST=c@@SDLC_BIND_0080@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --paths-only`，使用组合 `--json --paths-only` 模式／`-Json -PathsOnly`。解析最少 JSON 字段：
    - `FEATURE_DIR`
    - `FEATURE_SPEC`
    - 可选地记录 `IMPL_PLAN`、`TASKS`，用于后续串联流程。
-   - JSON 解析失败时，中止并指导用户重新运行 `@@SDLC_BIND_0082@@sdlc-100-spec` 或检查功能分支环境。
+   - JSON 解析失败时，中止并指导用户重新运行 `@@SDLC_BIND_0084@@sdlc-100-spec` 或检查功能分支环境。
    - 参数包含单引号（如 "I'm Groot"）时，使用转义语法，如 'I'\''m Groot'；可以使用双引号时也可写作 "I'm Groot"。
 
 2. **如果存在**：加载 `.sdlc/memory/constitution.md`，获取项目原则和治理约束。
@@ -244,7 +246,7 @@ $ARGUMENTS
 行为规则：
 
 - 未发现有意义歧义，或全部候选问题影响很低时，回复“未发现值得正式澄清的关键歧义”，并建议继续。
-- 规格文件缺失时，指导用户先运行 `@@SDLC_BIND_0246@@sdlc-100-spec`；不要在此处创建新规格。
+- 规格文件缺失时，指导用户先运行 `@@SDLC_BIND_0248@@sdlc-100-spec`；不要在此处创建新规格。
 - 总提问数绝不超过 5；同一问题的澄清追问不另计新问题。
 - 除非缺失技术栈信息阻塞功能清晰度，否则避免猜测性技术栈提问。
 - 尊重用户提前结束的信号，如 stop、done、proceed。
@@ -265,7 +267,7 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0267@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0269@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **必需钩子**（`optional: false`）——**必须为每个必需钩子输出 `EXECUTE_COMMAND:`**：
     ```
@@ -296,7 +298,7 @@ $ARGUMENTS
 - 修改过的章节名称。
 - 规格质量清单状态：重新验证了 `FEATURE_DIR/checklists/requirements.md` 时，展示前后通过数，例如“规格质量清单：12/16 → 15/16 项通过”，并列出所有状态变化项，包括新增勾选和回退项。仍未勾选的条目列为待关注领域。
 - 覆盖汇总表：每个分类的状态为 Resolved（原 Partial／Missing，现已解决）、Deferred（超出提问额度或更适合规划）、Clear（本来已充分）、Outstanding（仍 Partial／Missing，但影响较低）。
-- 存在 Outstanding 或 Deferred 时，建议是否继续 `@@SDLC_BIND_0298@@sdlc-110-clar`。
+- 存在 Outstanding 或 Deferred 时，建议是否继续 `@@SDLC_BIND_0300@@sdlc-110-clar`。
 - 建议的下一条命令。
 
 ## 完成条件

@@ -97,14 +97,15 @@ dist/
   references/TEMPLATE-LANGUAGE.md
   bindings/                   明确的宿主差异
   scripts/                    无 uv Runtime 依赖
-  templates/                  固定英文骨架，业务自然语言填写中文
+  templates/                  中文说明/示例与双语标题，机器锚点不变
   BUILD.json                  确定性构建身份
 ```
 
 本地化仅改变呈现。Skill 执行顺序、条件、提问数量、权限和上游既有缺陷不变。
-模板固定标题、机器占位符、任务编号、路径、参数和事件键保留英文；依原流程
-创建/修改的自然语言内容使用中文。现有业务文档不因升级批量翻译；INIT 复制
-的未填写宪法模板可保持英文，不新增翻译回写。详见 [LOCALIZATION.md](docs/LOCALIZATION.md)。
+默认模板正文、说明、示例和 SPEC 内置 requirements.md 清单均已中文化；标题
+保留英文定位锚点并附中文释义，机器占位符、任务编号、路径、参数和事件键不变。
+INIT 为新项目复制中文默认宪法并生成中文数据 README；已有业务文档和自定义模板
+不因升级或重复 INIT 被覆盖。不额外生成“中文注释／中文说明”等语言标签。详见 [LOCALIZATION.md](docs/LOCALIZATION.md)。
 
 包内 loader 仅还原预编译全文，不运行流程、不读取项目状态、不写文件或访问网络。
 必须完整读取输出，截断时分页。公共入口从当前已加载Skill 目录向上两级

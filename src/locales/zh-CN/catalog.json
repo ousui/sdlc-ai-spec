@@ -22,10 +22,10 @@
     },
     "specify": {
       "source_path": "src/upstream/templates/commands/specify.md",
-      "source_sha256": "814835d049d27591ae47e069869ee08baaf6740405a0c3b8d94a27d46a41f428",
-      "translation_sha256": "30a066a0d4365dbc8705806ac2d49b85138479908da57d9652bdf9306937bea2",
+      "source_sha256": "1725b095edf14bf9c373c0c3e040abb69e38ebaa5812e28790bf02f8b50c68e9",
+      "translation_sha256": "57da23ea27c9fedbdee26f8598daea1a18a8523954e674d27e458fc6115fcda7",
       "status": "reviewed",
-      "reviewer": "AI source-to-translation review",
+      "reviewer": "AI review: REV-007 path producer-consumer repair",
       "metadata": {
         "description": {
           "source": "Create or update the feature specification from a natural language feature description.",
@@ -169,9 +169,9 @@
       "reviewer": "AI source-to-translation review"
     },
     "output-language": {
-      "translation_sha256": "b59cff59a9ada4b3729bf36724244388b81ea01a2028c5c1a9b66dd7849042ed",
+      "translation_sha256": "9543777de880ba7422490a275bf3fa245a9dd7665d746be24923daa6df62b3c0",
       "status": "reviewed",
-      "reviewer": "approved presentation scope; AI text review"
+      "reviewer": "AI source/approved language-scope review"
     },
     "status": {
       "source": "adapters/STATUS.md",
@@ -179,6 +179,51 @@
       "translation_sha256": "5dcab8941b50d9fff7b3d6a9a471790d51cf66fa0778c82ff00778e60acd0c34",
       "status": "reviewed",
       "reviewer": "AI contract review: local STATUS specification; not user authentication"
+    },
+    "project-readme": {
+      "source": "adapters/PROJECT-README.md",
+      "status": "reviewed",
+      "reviewer": "AI source/approved language-scope review",
+      "source_sha256": "bfc0f3a029d742617276c23e8d7e72119d6d6730aa7a8aec2e3f4f5d7e73c4bb",
+      "translation_sha256": "c64349654d3689251a88f7c0fd32453d9af33ae4bcaff1d38e79a3054dad9de3"
+    }
+  },
+  "presentations": {
+    "checklist-template": {
+      "source_sha256": "77929c61bdd183ca0ea122592a6c0ca93fb04707981f31acb7ae8257da2d0e91",
+      "translation_sha256": "43217fa1d3bd0534f8a1c4ddfa9ea2435fdc105f4e075c97e0a5154803fbec1f",
+      "status": "reviewed",
+      "reviewer": "AI line-by-line source translation review; not user authentication"
+    },
+    "constitution-template": {
+      "source_sha256": "ce7549540fa45543cca797a150201d868e64495fdff39dc38246fb17bd4024b3",
+      "translation_sha256": "02394b609211db73b2d5c3fb8721cfd152d7801a804bb3e0e73a0b7fd2ea310a",
+      "status": "reviewed",
+      "reviewer": "AI line-by-line source translation review; not user authentication"
+    },
+    "spec-template": {
+      "source_sha256": "ce298a5ea9d1d736dad6437230f54980fdb68a6d2bccbfe721ddc5866e386e01",
+      "translation_sha256": "429efda68967a50a54e2557921918e98a401626eb4b4923f4d7d74d0a12547e9",
+      "status": "reviewed",
+      "reviewer": "AI line-by-line source translation review; not user authentication"
+    },
+    "requirements": {
+      "source_sha256": "eeae1667afa4de0e1b2bd371ad217cef175505fe4bff020535ab19629de8fd5e",
+      "translation_sha256": "c6f7442779ee78451c64a668b56b2bf328548323dee7412cfe56bd4000b858a2",
+      "status": "reviewed",
+      "reviewer": "AI line-by-line source translation review; not user authentication"
+    },
+    "plan-template": {
+      "source_sha256": "617f3ef3a3d2a878c8c4539e897f7b20ce1bf0e04d5c64b6ebd78f1caa364465",
+      "translation_sha256": "c1e302b0ac36a6d95d8589004bc730f80c8ff698fee71874e01f98aa9f061a9a",
+      "status": "reviewed",
+      "reviewer": "AI line-by-line source translation review; not user authentication"
+    },
+    "tasks-template": {
+      "source_sha256": "2352303c003c9546874d55f75ee67e49ad8f9a85ddcebd7a258e4f4b7c1294e2",
+      "translation_sha256": "032d8f1b35eb862c8c6096561783b03446f10c455943b6ced1654fe061dbc284",
+      "status": "reviewed",
+      "reviewer": "AI line-by-line source translation review; not user authentication"
     }
   }
 }

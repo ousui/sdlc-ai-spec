@@ -147,35 +147,98 @@ class Reader:
         return result
 
 
+def _visible_comment_text(line: str, in_comment: bool) -> tuple:
+    """Mask HTML comments outside code spans, without changing physical line numbers."""
+    visible, offset = [], 0
+    while offset < len(line):
+        if in_comment:
+            end = line.find('-->', offset)
+            if end < 0:
+                visible.append(' ' * (len(line) - offset))
+                return ''.join(visible), True
+            visible.append(' ' * (end + 3 - offset))
+            offset, in_comment = end + 3, False
+        elif line.startswith('<!--', offset):
+            visible.append(' ' * 4)
+            offset, in_comment = offset + 4, True
+        elif line[offset] == '`':
+            run = re.match(r'`+', line[offset:])[0]
+            end = line.find(run, offset + len(run))
+            if end >= 0:
+                visible.append(line[offset:end + len(run)])
+                offset = end + len(run)
+            else:
+                visible.append(run)
+                offset += len(run)
+        else:
+            visible.append(line[offset])
+            offset += 1
+    return ''.join(visible), in_comment
+
+
 def meaningful_lines(text: str):
-    """Exclude comments, fenced/indented code and explicitly labelled examples."""
-    text = re.sub(r'<!--[\s\S]*?(?:-->|$)', lambda m: '\n' * m[0].count('\n'), text)
+    """Read Markdown in block order; do not infer examples from business-title words.
+
+    Preserve nested list checkboxes (upstream CLAR's contract). Four columns
+    relative to the active list content, not the document root, begin indented
+    code. This is a bounded checkbox scanner, not a general Markdown renderer.
+    """
     fence = None
+    comment = False
     example_level = None
-    for number, line in enumerate(text.splitlines(), 1):
-        match = re.match(r'^\s*(`{3,}|~{3,})(.*)$', line)
-        if fence:
-            if match and match[1][0] == fence[0] and len(match[1]) >= len(fence) and not match[2].strip():
+    list_indents = []
+    example_title = re.compile(
+        r'^(?:parallel\s+examples?|usage\s+examples?|examples?|示例|用法示例|并行示例)'
+        r'(?:\s*[:：].*|\s*[（(].*[)）])?$', re.I)
+    for number, raw in enumerate(text.splitlines(), 1):
+        line = raw.expandtabs(4)
+        indent = len(line) - len(line.lstrip(' '))
+        if fence is not None:
+            char, length, base = fence
+            close = re.match(r'^ {0,3}(' + re.escape(char) + r'{'+str(length)+r',})\s*$', line[base:])
+            if close:
                 fence = None
             continue
-        if match:
-            fence = match[1]
+        if not comment and line.strip():
+            while list_indents and indent < list_indents[-1]:
+                list_indents.pop()
+            base = list_indents[-1] if list_indents else 0
+            # HTML-looking text in an indented code block is also literal.
+            if indent - base >= 4:
+                continue
+            opening = re.match(r'^ {0,3}(`{3,}|~{3,})(.*)$', line[base:])
+            if opening and not (opening[1][0] == '`' and '`' in opening[2]):
+                fence = (opening[1][0], len(opening[1]), base)
+                continue
+        else:
+            base = list_indents[-1] if list_indents else 0
+        line, comment = _visible_comment_text(line, comment)
+        if not line.strip():
+            continue
+        # Fences can occur at document level or relative to list content.
+        opening = re.match(r'^ {0,3}(`{3,}|~{3,})(.*)$', line[base:])
+        if opening and not (opening[1][0] == '`' and '`' in opening[2]):
+            fence = (opening[1][0], len(opening[1]), base)
             continue
         heading = re.match(r'^ {0,3}(#{1,6})\s+(.+)', line)
         if heading:
-            if example_level is not None and len(heading[1]) <= example_level:
+            level = len(heading[1])
+            if example_level is not None and level <= example_level:
                 example_level = None
-            if re.search(r'\bexamples?\b|示例', heading[2], re.I):
-                example_level = len(heading[1])
-        if example_level is not None or line.startswith(('    ', '\t')):
-            continue
-        yield number, line
+            title = re.sub(r'\s+#+\s*$', '', heading[2]).strip()
+            if example_title.fullmatch(title):
+                example_level = level
+        marker = re.match(r'^( *)(?:[-+*]|\d+[.)])( {1,4})(?=\S)', line)
+        if marker:
+            list_indents.append(marker.end())
+        if example_level is None:
+            yield number, line
 
 
 def checkbox_counts(text: str, *, tasks: bool, limit: int = 5) -> dict:
     items, seen, duplicates, unrecognized = [], set(), set(), 0
     for number, line in meaningful_lines(text):
-        match = re.match(r'^ {0,3}(?:[-+*]|\d+[.)])\s+\[([ xX])\]\s+(.+?)\s*$', line)
+        match = re.match(r'^ *(?:[-+*]|\d+[.)])\s+\[([ xX])\]\s+(.+?)\s*$', line)
         if not match:
             continue
         label = match[2]

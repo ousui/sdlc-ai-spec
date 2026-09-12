@@ -22,7 +22,7 @@ import unittest
 from pathlib import Path
 
 from build import ROOT,COMMANDS,HOSTS,UPSTREAM_SHA,REPOSITORY,VERSION,AUTHOR,render_source,split,build,binding,ALL_COMMANDS,CORE_COMPATIBILITY,skill_entry,manifest_skills
-from localize import english_body,localized_workflow,translated_metadata,check_all
+from localize import english_body,localized_workflow,translated_metadata,check_all,restore_template
 from naming import product_prose
 
 
@@ -50,7 +50,7 @@ def normalize(text: str,host: str, *, ported: bool) -> str:
         shell=(r'SDLC_HOST='+host+r' SDLC_INIT_DIR="\$\{SDLC_PROJECT_ROOT:\?\}" '
                r'bash "\$\{SDLC_PLUGIN_ROOT:\?\}/scripts/bash/([a-z-]+\.sh)"')
         text=re.sub(shell,r'.specify/scripts/bash/\1',text)
-        text=text.replace('.specify/scripts/bash/resolve-template.sh spec-template','specify preset resolve spec-template')
+        text=text.replace('.specify/scripts/bash/resolve-template-path.sh spec-template','specify preset resolve spec-template')
         text=text.replace('${SDLC_PLUGIN_ROOT}/templates/','.specify/templates/')
         text=reverse_names(text)
         text=text.replace('/sdlc-ai-spec:sdlc-git-commit','/speckit-git-commit')
@@ -136,7 +136,7 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
             passed('migrated_skill_vs_installed_cli',host+'/'+name)
         for template in sorted((package/'templates').glob('*.md')):
             native=base/'.specify/templates'/template.name
-            require_equal(template_norm(native.read_text()),template_norm(template.read_text()),'Template parity '+host+'/'+template.name)
+            require_equal(template_norm(native.read_text()),template_norm(restore_template(template.stem,template.read_text())),'Template parity '+host+'/'+template.name)
             passed('template_vs_installed_cli',host+'/'+template.name)
         manifest=package/('.'+host+'-plugin/plugin.json')
         m=json.loads(manifest.read_text())
@@ -180,8 +180,8 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
             require_equal(json.loads(process.stdout)['status'],'initialized','Init status '+integ)
             original = baselines/integ/'.specify'
             actual = project/'.sdlc'
-            require_equal((actual/'memory/constitution.md').read_bytes(),
-                (original/'memory/constitution.md').read_bytes(),'CLI init constitution '+integ)
+            require_equal(template_norm(restore_template('constitution-template',(actual/'memory/constitution.md').read_text())),
+                template_norm((original/'memory/constitution.md').read_text()),'CLI init constitution '+integ)
             old_opts=json.loads((original/'init-options.json').read_text())
             new_opts=json.loads((actual/'init-options.json').read_text())
             for key in ('script','feature_numbering','speckit_version'):

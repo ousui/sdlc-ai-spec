@@ -15,11 +15,13 @@
 <!-- SDLC-OUTPUT-LANGUAGE:BEGIN -->
 ## 输出语言（仅呈现层）
 
-向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节定位名、占位符、状态值、任务语法、代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
+向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节层级和定位用英文锚点保留，标题可附中文释义；占位符、状态值、任务语法、实际代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
 
-例如保留 `User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记，业务描述、理由、测试说明和任务内容填写中文。代码块中的英文示例用于保留格式和定位约定，不要求将实际填写的自然语言也写成英文。刚复制且尚未填写的模板可以保持英文；不增加一次翻译回写动作。
+使用插件中已审查的本地化模板。`User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记保留；模板说明、业务描述、理由、测试说明和任务内容使用中文。代码块中的格式示例不强制自然语言使用英文；SPEC 的内置 requirements.md 清单采用流程中的本地化条目，条目顺序、数量、条件和勾选责任不变。用户自定义模板仍按原流程处理，不为本地化新增覆盖动作。
 
-此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。
+文档、注释与说明直接表达业务内容，不添加“中文注释”“中文说明”“中文版本”等语言标签。确需标签时使用“注释”或“说明”。不要为了标明语言新增 HTML 注释；只有原流程本来要求的注释才按其规则处理。保留有语义的注释，不做全文件删除或批量清理。不得插入 U+FFFC 等对象替换字符。
+
+此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。它是给执行者的指引，不是待复制进业务产物的正文。
 <!-- SDLC-OUTPUT-LANGUAGE:END -->
 
 
@@ -42,7 +44,7 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0044@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0046@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
@@ -70,7 +72,7 @@ $ARGUMENTS
 
 ## 执行概要
 
-触发消息中，用户在 `@@SDLC_BIND_0072@@sdlc-100-spec` 后输入的文本**就是**功能描述。即使下面出现字面 `$ARGUMENTS`，也应视为本会话中已经有该输入。除非用户提交了空命令，否则不要要求重复描述。
+触发消息中，用户在 `@@SDLC_BIND_0074@@sdlc-100-spec` 后输入的文本**就是**功能描述。即使下面出现字面 `$ARGUMENTS`，也应视为本会话中已经有该输入。除非用户提交了空命令，否则不要要求重复描述。
 
 根据该功能描述执行：
 
@@ -108,7 +110,7 @@ $ARGUMENTS
 
    **创建目录和规格文件**：
    - `mkdir -p SDLC_FEATURE_DIRECTORY`
-   - 通过 SDLC AI SPEC 预设／模板解析栈解析当前生效的 `spec-template`，等价于 `SDLC_HOST=c@@SDLC_BIND_0110@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/resolve-template.sh" spec-template`。
+   - 通过 SDLC AI SPEC 预设／模板解析栈解析当前生效的 `spec-template`，等价于 `SDLC_HOST=c@@SDLC_BIND_0112@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/resolve-template-path.sh" spec-template`。
    - 将解析出的 `spec-template` 文件复制到 `SDLC_FEATURE_DIRECTORY/spec.md`，作为起点。
    - 把 `SPEC_FILE` 设置为 `SDLC_FEATURE_DIRECTORY/spec.md`。
    - 将解析后的路径持久化到 `.sdlc/feature.json`：
@@ -118,10 +120,10 @@ $ARGUMENTS
      }
      ```
      写入实际解析的目录路径，例如 `.sdlc/specs/003-user-auth`，而不是字面字符串 `SDLC_FEATURE_DIRECTORY`。
-     这样后续命令（`@@SDLC_BIND_0120@@sdlc-300-task` 等）无需依赖 Git 分支命名惯例即可定位功能目录。
+     这样后续命令（`@@SDLC_BIND_0122@@sdlc-300-task` 等）无需依赖 Git 分支命名惯例即可定位功能目录。
 
    **重要**：
-   - 每次 `@@SDLC_BIND_0123@@sdlc-100-spec` 调用只能创建一个功能。
+   - 每次 `@@SDLC_BIND_0125@@sdlc-100-spec` 调用只能创建一个功能。
    - 规格目录名称与 Git 分支名称互相独立；可以相同，但由用户选择。
    - 规格目录和文件始终由本命令创建，绝不由钩子创建。
 
@@ -158,40 +160,40 @@ $ARGUMENTS
    a. **创建规格质量清单**：在 `SDLC_FEATURE_DIRECTORY/checklists/requirements.md` 生成清单，采用清单模板结构和以下验证项：
 
       ```markdown
-      # Specification Quality Checklist: [FEATURE NAME]
+      # Specification Quality Checklist: [FEATURE NAME]（规格质量清单）
 
-      **Purpose**: Validate specification completeness and quality before proceeding to planning
+      **Purpose**: 进入规划之前，验证规格的完整性与质量
       **Created**: [DATE]
-      **Feature**: [Link to spec.md]
+      **Feature**: [指向 spec.md 的链接]
 
-      ## Content Quality
+      ## Content Quality（内容质量）
 
-      - [ ] No implementation details (languages, frameworks, APIs)
-      - [ ] Focused on user value and business needs
-      - [ ] Written for non-technical stakeholders
-      - [ ] All mandatory sections completed
+      - [ ] 不包含实现细节（语言、框架、API）
+      - [ ] 聚焦用户价值和业务需求
+      - [ ] 面向非技术利益相关方编写
+      - [ ] 所有必需章节已填写
 
-      ## Requirement Completeness
+      ## Requirement Completeness（需求完整性）
 
-      - [ ] No [NEEDS CLARIFICATION] markers remain
-      - [ ] Requirements are testable and unambiguous
-      - [ ] Success criteria are measurable
-      - [ ] Success criteria are technology-agnostic (no implementation details)
-      - [ ] All acceptance scenarios are defined
-      - [ ] Edge cases are identified
-      - [ ] Scope is clearly bounded
-      - [ ] Dependencies and assumptions identified
+      - [ ] 不再残留 [NEEDS CLARIFICATION] 标记
+      - [ ] 需求可测试且无歧义
+      - [ ] 成功标准可衡量
+      - [ ] 成功标准与技术无关，不包含实现细节
+      - [ ] 所有验收场景均已定义
+      - [ ] 已识别边界情况
+      - [ ] 范围边界清晰
+      - [ ] 已识别依赖和假设
 
-      ## Feature Readiness
+      ## Feature Readiness（功能准备情况）
 
-      - [ ] All functional requirements have clear acceptance criteria
-      - [ ] User scenarios cover primary flows
-      - [ ] Feature meets measurable outcomes defined in Success Criteria
-      - [ ] No implementation details leak into specification
+      - [ ] 所有功能需求都有明确验收标准
+      - [ ] 用户场景覆盖主要流程
+      - [ ] 功能满足 Success Criteria 中定义的可衡量结果
+      - [ ] 规格没有混入实现细节
 
-      ## Notes
+      ## Notes（说明）
 
-      - Items marked incomplete require spec updates before `@@SDLC_BIND_0193@@sdlc-200-plan`
+      - 标记为未完成的条目必须在 `@@SDLC_BIND_0195@@sdlc-200-plan` 前通过更新规格解决
       ```
 
    b. **执行验证**：逐项检查规格。
@@ -257,7 +259,7 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0259@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0261@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **必需钩子**（`optional: false`）——**必须为每个必需钩子输出 `EXECUTE_COMMAND:`**：
     ```
@@ -286,7 +288,7 @@ $ARGUMENTS
 - `SDLC_FEATURE_DIRECTORY`：功能目录路径。
 - `SPEC_FILE`：规格文件路径。
 - 清单结果摘要。
-- 是否准备好进入下一阶段（`@@SDLC_BIND_0288@@sdlc-200-plan`）。
+- 是否准备好进入下一阶段（`@@SDLC_BIND_0290@@sdlc-200-plan`）。
 
 **注意**：分支创建由 `before_specify` 钩子（Git 扩展）负责。规格目录和文件始终由本核心命令创建。
 

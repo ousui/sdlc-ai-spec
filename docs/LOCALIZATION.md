@@ -14,12 +14,27 @@ Claude 默认扫描 skills/，不重复声明；Codex/Cursor 显式指向 ./skil
 Skill 摘要、完整流程正文、入口/绑定说明及 INIT/STATUS 指引使用简体中文，不是缩写
 摘要替代上游正文。每个能力仅维护一份译文，再绑定三宿主调用差异。
 
-模板骨架保留英文：固定标题、文件名、机器占位符、JSON/YAML 键、事件键、
-参数、代码块与任务语法不翻译。正常执行原流程时，用中文填写自然语言业务
-描述、理由、验收场景与任务内容；不因语言约定新增写入、不重写未授权内容。
+本期将此前“英文模板骨架＋中文填写”扩展为：五类默认模板的说明、示例、
+自然语言占位说明均中文化；标题保留英文定位锚点并附中文释义，章节层级不变。
+文件名、机器占位符、JSON/YAML 键、事件键、参数、任务编号和实际代码不翻译。
 `User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、
-`[US1]`、`[P]` 等保持原样。刚复制的未填写模板可能是英文，这不触发自动回写。
-现有业务文档和用户覆盖模板不会在插件升级时批量中文化。
+`[US1]`、`[P]` 等继续保留。不是通过附加“中文说明”来替代正文翻译。
+
+`src/templates/` 仍是英文的名称/路径投影，用于独立上游比较；
+`src/locales/zh-CN/templates/` 是五类审查后的模板译文，生成到 `dist/templates/`。
+SPEC 原文代码围栏中的 requirements.md 是文档内容示例，不是可执行代码；
+只将这一完整、准确绑定的片段替换为 `fragments/requirements.md`，保留 16 项的
+顺序、勾选语法、条件和生命周期，不放开其他代码围栏或 JSON 的翻译检查。
+
+初始化 README 来自 `project-readme.md`，生成到包内 references，再由 INIT
+正常创建缺失的 `.sdlc/README.md`。新初始化的默认宪法也直接复制本地化模板。
+已有 README、宪法、用户覆盖模板及其他业务文档保持原有保留规则；插件更新不
+批量改写已有产物。再次调用 INIT 不承担迁移或翻译已有文件的职责。
+
+输出语言指引要求直接使用“注释”“说明”，禁止在业务内容中添加“中文注释”
+“中文说明”等标签；不为标注语言新增 HTML 注释，不删除有业务意义的原注释。
+该指引不授权额外写操作，也不保证每次模型输出一致；客户端实际加载的包和
+运行上下文仍需区分。此规则不能被用来清空已有注释或清理整个业务仓库。
 
 保留原版逻辑、流程、条件、数量限制与缺陷；不在本项目修复上游 bug。已纠正
 本项目引入的事件键改名、无关环境变量整体拒绝、外部合法状态别名整体拒绝。
@@ -31,7 +46,8 @@ Skill 摘要、完整流程正文、入口/绑定说明及 INIT/STATUS 指引使
 明确的宿主命令/宿主值映射成命名占位符，得到三宿主完全一致的待译正文。
 中文文件位于 `src/locales/zh-CN/workflows/<source-id>.md`，`catalog.json` 将
 实际待译全文与译文字节分别绑定，并保存自然语言元数据的原文/译文。
-绑定说明和 INIT 源码说明有独立来源绑定。最后再做无损 factoring，写入 dist。
+绑定说明、INIT/STATUS 和项目 README 有独立来源绑定。模板和内置清单还分别
+绑定完整英文输入与译文；这些资源全部进入构建身份。最后再做无损 factoring，写入 dist。
 
 ```sh
 uv run --locked python -B tools/localize.py check
@@ -40,7 +56,8 @@ uv run --locked python -B -m unittest discover -s tests -v
 ```
 
 编译/安装/运行不调用网络、模型或翻译服务。`check` 验证九项覆盖、来源新鲜度、
-已审查译文字节、代码块与内联代码的精确多重集合、命名占位符和标题层级；
+已审查译文字节、核心指令代码块与内联代码的精确多重集合、命名占位符和标题层级；
+模板的自然语言示例单独检查标题锚点、字段、任务/清单顺序、代码和路径。
 单元测试包括过期原文、篡改译文、即使重算摘要仍损坏的参数等失败对照。
 源码英文渲染仍保留与独立原版 CLI 产物的完整比较，不能用中文摘要取代。
 这些程序检查不证明语义完全等价或模型实际输出；译文还需要逐条对照审查。
@@ -66,6 +83,21 @@ uv run --locked python -B tools/localize.py check
 若 description 原文变化，先在 catalog 对应 metadata 中明确更新
 source 与 zh_CN；record 不会替新原文自动批准旧译文。未交付的 argument-hint 不作为翻译门禁，原始来源仍保留。绑定/INIT 说明变更可以用
 `--resource binding` 或 `--resource init`，同样先完成对照审查。
+
+模板或固定清单变更后，分别完成逐条语义审查，再记录：
+
+```sh
+uv run --locked python -B tools/localize.py record \
+  --presentation spec-template --reviewer '<实际审查标识>' --reviewed
+uv run --locked python -B tools/localize.py record \
+  --presentation requirements --reviewer '<实际审查标识>' --reviewed
+uv run --locked python -B tools/localize.py record \
+  --resource project-readme --reviewer '<实际审查标识>' --reviewed
+```
+
+`export` 同时导出五类英文模板和内置清单供增量审查。仅修改一段译文后更新
+摘要并不能证明译意正确，必须完成源文对照。结构或机器参数损坏时，record
+也会拒绝写入；缺失或过期内容继续阻断候选，不回退到英文伪装完成。
 
 随后计算候选当前翻译目录摘要（程序维护，不是 Git author 身份证明）：
 

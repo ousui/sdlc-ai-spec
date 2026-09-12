@@ -91,3 +91,19 @@ upstream command. It tolerates incomplete/uninitialized state, never persists a
 feature switch, never initializes, and never executes the suggested next Skill.
 See [STATUS.md](STATUS.md). Existing core bodies/templates and runtime behavior
 are not modified to store history for STATUS.
+
+## Presentation comparison and review fixes
+
+Default templates and SPEC's fixed requirements example now have source-bound
+Chinese presentations. Verification first requires the complete distributed
+artifact to equal its reviewed Chinese bytes; only then does it compare the
+original English template projection with the independent upstream baseline.
+The same whole-artifact rule applies to generated plan.md, init constitution and
+known template-content JSON fields in synthetic differential fixtures. Arbitrary
+business text is never substring-normalized as a translation.
+
+REV-007 tests execute both path and content resolvers and verify that the selected
+path can actually be read, including a project override. STATUS regressions test
+business titles containing “示例”, nested checklists and literal HTML comment
+openers in code. They verify both correct counts/line numbers and file nonmutation.
+These synthetic checks do not prove every Agent output or all Markdown grammar.

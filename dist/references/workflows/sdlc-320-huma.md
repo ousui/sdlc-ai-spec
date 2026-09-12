@@ -15,11 +15,13 @@
 <!-- SDLC-OUTPUT-LANGUAGE:BEGIN -->
 ## 输出语言（仅呈现层）
 
-向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节定位名、占位符、状态值、任务语法、代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
+向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节层级和定位用英文锚点保留，标题可附中文释义；占位符、状态值、任务语法、实际代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
 
-例如保留 `User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记，业务描述、理由、测试说明和任务内容填写中文。代码块中的英文示例用于保留格式和定位约定，不要求将实际填写的自然语言也写成英文。刚复制且尚未填写的模板可以保持英文；不增加一次翻译回写动作。
+使用插件中已审查的本地化模板。`User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记保留；模板说明、业务描述、理由、测试说明和任务内容使用中文。代码块中的格式示例不强制自然语言使用英文；SPEC 的内置 requirements.md 清单采用流程中的本地化条目，条目顺序、数量、条件和勾选责任不变。用户自定义模板仍按原流程处理，不为本地化新增覆盖动作。
 
-此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。
+文档、注释与说明直接表达业务内容，不添加“中文注释”“中文说明”“中文版本”等语言标签。确需标签时使用“注释”或“说明”。不要为了标明语言新增 HTML 注释；只有原流程本来要求的注释才按其规则处理。保留有语义的注释，不做全文件删除或批量清理。不得插入 U+FFFC 等对象替换字符。
+
+此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。它是给执行者的指引，不是待复制进业务产物的正文。
 <!-- SDLC-OUTPUT-LANGUAGE:END -->
 
 
@@ -52,7 +54,7 @@
 - `[x]` **不**表示实现工作已经完成。
 - 本命令生成或追加清单条目；**不得**把新生成条目标为 `[x]`。
 - 只有评审者明确要求时，Agent 才能协助评估条目。
-- `checklists/requirements.md` 是独立的内置规格质量清单，由 `@@SDLC_BIND_0054@@sdlc-110-clar` 维护；不能将这一例外套用于此处生成的自定义清单。
+- `checklists/requirements.md` 是独立的内置规格质量清单，由 `@@SDLC_BIND_0056@@sdlc-110-clar` 维护；不能将这一例外套用于此处生成的自定义清单。
 
 ## 用户输入
 
@@ -72,7 +74,7 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0074@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0076@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
@@ -100,7 +102,7 @@ $ARGUMENTS
 
 ## 执行步骤
 
-1. **准备**：在仓库根目录运行 `SDLC_HOST=c@@SDLC_BIND_0102@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --template checklist-template`，解析 JSON 中的 FEATURE_DIR、AVAILABLE_DOCS 列表及 TEMPLATE_CONTENT。
+1. **准备**：在仓库根目录运行 `SDLC_HOST=c@@SDLC_BIND_0104@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --template checklist-template`，解析 JSON 中的 FEATURE_DIR、AVAILABLE_DOCS 列表及 TEMPLATE_CONTENT。
    - 全部文件路径必须为绝对路径。
    - 参数包含单引号（如 "I'm Groot"）时，使用转义语法，如 'I'\''m Groot'；可以使用双引号时也可写作 "I'm Groot"。
 
@@ -274,7 +276,7 @@ $ARGUMENTS
    - ✅ “需求是否覆盖 [边界情况／场景]？”
    - ✅ “规格是否定义了 [缺失方面]？”
 
-7. **结构参考**：遵循 `${SDLC_PLUGIN_ROOT}/templates/checklist-template.md` 的规范模板，生成标题、元数据区、类别标题、责任说明、备注及 ID 格式。模板不可用时采用：H1 标题、用途／创建日期元数据行、解释 `[x]` 代表评审者认可需求质量的责任说明、包含 `- [ ] CHK### <requirement item>` 行的 `##` 类别章节；ID 从 CHK001 开始全局递增；备注说明 `@@SDLC_BIND_0276@@sdlc-400-impl` 读取清单状态但不修改标记。
+7. **结构参考**：遵循 `${SDLC_PLUGIN_ROOT}/templates/checklist-template.md` 的规范模板，生成标题、元数据区、类别标题、责任说明、备注及 ID 格式。模板不可用时采用：H1 标题、用途／创建日期元数据行、解释 `[x]` 代表评审者认可需求质量的责任说明、包含 `- [ ] CHK### <requirement item>` 行的 `##` 类别章节；ID 从 CHK001 开始全局递增；备注说明 `@@SDLC_BIND_0278@@sdlc-400-impl` 读取清单状态但不修改标记。
 
 8. **报告**：输出清单完整路径、条目数，说明本次新建了文件还是追加到已有文件，并汇总：
    - 选定重点领域。
@@ -282,7 +284,7 @@ $ARGUMENTS
    - 使用者／使用时机。
    - 已纳入的用户明确必需项。
 
-**重要**：每次 `@@SDLC_BIND_0284@@sdlc-320-huma` 调用使用简短、描述性文件名，新建或追加至已有清单。这样可以：
+**重要**：每次 `@@SDLC_BIND_0286@@sdlc-320-huma` 调用使用简短、描述性文件名，新建或追加至已有清单。这样可以：
 
 - 保存不同类型清单，例如 `ux.md`、`test.md`、`security.md`。
 - 使用简单易记、表明用途的文件名。
@@ -375,7 +377,7 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0377@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0379@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```

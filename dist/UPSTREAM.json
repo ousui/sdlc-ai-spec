@@ -34,7 +34,7 @@
   "native_host_verified": false,
   "layout": "unified-public-skills",
   "locale": "zh-CN",
-  "template_language": "English skeleton; Chinese natural-language fill",
+  "template_language": "zh-CN prose and bilingual headings; preserved machine anchors",
   "source_to_skill": {
     "constitution": "sdlc-010-rule",
     "specify": "sdlc-100-spec",

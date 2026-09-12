@@ -84,3 +84,12 @@ adapters/STATUS.md 和中文资源，不冒充原版命令。构建身份覆盖�
 来源，升级必须保留它们；上游格式变化时评审读取兼容性，不自动迁移业务数据。
 不新增阶段状态文件，不要求其他流程补日志，不包含 RULE 自动 INIT、维护者
 发版权限平台或自动发布。
+
+## List parsing boundaries
+
+Example sections are excluded only for explicit section labels (such as Examples,
+Parallel Example: … or 示例); a User Story title containing “示例” is not excluded.
+Nested checklist items remain items; indentation is interpreted relative to list
+content, so actual indented code is still excluded. Fences are handled before HTML
+comments, and code literals cannot hide subsequent tasks. Physical line numbers
+are retained. This is a bounded checkbox scanner, not a full Markdown renderer.

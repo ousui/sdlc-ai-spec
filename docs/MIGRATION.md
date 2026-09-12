@@ -12,7 +12,7 @@ no events, no presets and no extensions. This is NOT equivalence to the entire C
 | Core templates/scripts move to plugin resources | Project overrides still resolve from project `.sdlc`; no shared state |
 | Business root can no longer fall back to script location | Missing project is an error; explicit target / nearest project still supported |
 | A small Python path check protects plugin resources | Validate canonical paths, symlink targets and explicit feature paths before script writes; not a sandbox or general authorization engine |
-| `specify preset resolve spec-template` instruction uses bundled `resolve-template.sh` | No persistent specify-cli runtime dependency; original template selection remains for selected core profile |
+| `specify preset resolve spec-template` instruction uses local `resolve-template-path.sh` | SPEC receives an existing path for its copy/read consumer; the existing content resolver is unchanged; project override precedes bundled core in the selected profile |
 | Native hints use invocation host, not saved default integration | One project can be used sequentially by different hosts |
 | Binding preamble is added to generated skills | Identify resources, resolve project, pass variables per tool call and fail clearly outside the selected profile |
 | Plugin packaging + provenance | Three native manifests discovering one shared set of eleven entries |
@@ -122,9 +122,9 @@ plugin. Shared-resource isolation remains necessary for external plugin resource
 Upstream bugs, including prerequisite persistence, are not independently repaired.
 
 Chinese sources live under src/locales/zh-CN. English-dependent rendering precedes
-translation; factoring follows it. Templates are NOT translated wholesale; fixed
-headings, placeholders and task grammar remain English, while normal authored
-content is Chinese. No existing project data is rewritten during upgrade.
+translation; factoring follows it. Five reviewed template presentations and the built-in requirements checklist are
+localized. Original English template projections remain in src/templates; bilingual
+heading anchors, placeholders, code paths and task grammar are checked separately. No existing project data is rewritten during upgrade.
 See [LOCALIZATION.md](LOCALIZATION.md) for checks, review limits and resumption.
 
 ## Unified public inventory and STATUS
@@ -142,3 +142,19 @@ upstream command. It tolerates incomplete/uninitialized state, never persists a
 feature switch, never initializes, and never executes the suggested next Skill.
 See [STATUS.md](STATUS.md). Existing core bodies/templates and runtime behavior
 are not modified to store history for STATUS.
+
+## REV-007–010 and expanded document localization
+
+SPEC now uses a local path-only adapter backed by the existing resolve_template
+function. resolve-template.sh still returns content, and its other consumers are
+unchanged. No original command source or upstream Bash script was patched.
+
+STATUS narrows example-section recognition to explicit labels, honors nested
+checklists, and recognizes fenced/indented code before HTML comments. It remains
+read-only; this corrects our own statistics, not upstream workflow behavior.
+
+Default template output, the exact built-in requirements example and new project
+README are reviewed Chinese presentations. Only exact whole-template equality
+can be projected back for the independent English baseline and script comparison;
+unknown/modified text fails, rather than being stripped or loosely retranslated.
+Existing project files are preserved, including existing English/custom templates.

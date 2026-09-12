@@ -108,7 +108,8 @@ class SharedLocalizationTests(unittest.TestCase):
         for name in ('spec','plan','tasks','constitution','checklist'):
             source=(ROOT/f'src/templates/{name}-template.md').read_text()
             from naming import template_references
-            self.assertEqual((ROOT/f'dist/templates/{name}-template.md').read_text(),template_references(source))
+            deployed=(ROOT/f'dist/templates/{name}-template.md').read_text()
+            self.assertEqual(localize.restore_template(name+'-template',deployed),template_references(source))
 
     def test_upstream_source_bytes_are_still_exact(self):
         import hashlib

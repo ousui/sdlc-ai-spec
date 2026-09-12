@@ -153,7 +153,8 @@ Current distribution uses eleven public entries under `dist/skills/`, including
 local INIT and STATUS, with no host-private wrappers. Original English source rendering
 is still independently checked; Chinese source assets are version-bound in
 `src/locales/zh-CN`. No translation service runs during build or installation.
-English template skeletons and existing project data remain unchanged.
+Original English template projections remain available for independent comparison.
+Reviewed Chinese default-template presentations are regenerated; existing project data remains unchanged.
 
 A changed upstream input can now stop preparation as `LOCALIZATION_REQUIRED`.
 Only the candidate translation subtree can be edited in this state. After explicit
@@ -191,3 +192,9 @@ that affect field interpretation require STATUS compatibility review and tests;
 do not silently migrate business data. The existing localization refresh path
 remains scoped to reviewed locale changes. No new release/permission platform
 is introduced in this iteration.
+
+Template and requirements-example freshness participates in LOCALIZATION_REQUIRED.
+`localize.py export` includes those English inputs; `record --presentation NAME`
+records their completed source review before the existing localization-only
+refresh. The new locale templates live under the already-authorized locale subtree;
+refresh does not permit changes elsewhere or hand-edited candidate digests.

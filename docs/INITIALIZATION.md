@@ -33,7 +33,7 @@ No host selection, plugin installation path or active feature is stored globally
 The `sdlc_version` records the initializer used; repeat calls do not rewrite
 existing version data. It is not a document-freeze or runtime-version gate.
 
-`constitution.md` is copied byte-for-byte from the installed core template, or an
+`constitution.md` is copied byte-for-byte from the installed localized core template, or an
 existing project `templates/overrides/constitution-template.md`. It is NOT a
 ratified constitution: use `sdlc-010-rule` to establish project principles.
 If you have already established principles, they are preserved verbatim.
@@ -130,3 +130,13 @@ upstream command. It tolerates incomplete/uninitialized state, never persists a
 feature switch, never initializes, and never executes the suggested next Skill.
 See [STATUS.md](STATUS.md). Existing core bodies/templates and runtime behavior
 are not modified to store history for STATUS.
+
+## Default document language
+
+New `.sdlc/README.md` comes from the reviewed Chinese
+`references/PROJECT-README.md`. The default constitution contains Chinese example
+text and bilingual heading anchors. An existing project override, README or
+constitution is still preserved verbatim; repeat INIT is not a translation tool.
+A missing packaged README fails before writes, like a missing core template.
+The guidance forbids language-tag comments, but does not delete legitimate comments
+or create additional write permissions.

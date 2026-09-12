@@ -11,7 +11,7 @@ from naming import (skill_id, invocation, product_prose, template_references, SK
 from render import (ROOT, COMMANDS, HOSTS, LOCK, UPSTREAM_SHA, METADATA, REPOSITORY,
                     VERSION, AUTHOR, HINTS, render_source, split, relocate_body, binding)
 
-from localize import (translate_body, translated_metadata, localized_workflow, resource, check_all)
+from localize import (translate_body, translated_metadata, localized_workflow, resource, check_all, presentation, presentation_source)
 
 LOCAL_COMMANDS = ('init', 'status')
 HOST_UI_FIELDS = frozenset(('user-invocable', 'disable-model-invocation', 'argument-hint'))
@@ -225,7 +225,10 @@ def build(destination: Path) -> None:
         # Each explicit host entrypoint supplies the native invocation mapping.
         for path in (package / 'templates').glob('*.md'):
             text = template_references(path.read_text())
-            path.write_text(text, encoding='utf-8')
+            if text != presentation_source(path.stem):
+                raise ValueError('Derived template input is not the reviewed source: ' + path.name)
+            path.write_text(presentation(path.stem), encoding='utf-8')
+        (package / 'references/PROJECT-README.md').write_text(resource('project-readme'), encoding='utf-8')
         for name in ('LICENSE', 'NOTICE'):
             shutil.copyfile(ROOT / name, package / name)
         (package / 'UPSTREAM.json').write_text(json.dumps({
@@ -235,7 +238,7 @@ def build(destination: Path) -> None:
             'included_commands': list(COMMANDS), 'excluded_commands': ['taskstoissues'],
             'local_commands': list(LOCAL_COMMANDS), 'init_implemented': True, 'native_host_verified': False,
             'layout': 'unified-public-skills', 'locale': 'zh-CN',
-            'template_language': 'English skeleton; Chinese natural-language fill',
+            'template_language': 'zh-CN prose and bilingual headings; preserved machine anchors',
             'source_to_skill': {name: SKILL_IDS[name] for name in COMMANDS},
             'local_to_skill': {name: SKILL_IDS[name] for name in LOCAL_COMMANDS},
         }, indent=2) + '\n')
@@ -243,7 +246,7 @@ def build(destination: Path) -> None:
         (package / 'README.md').write_text(
             '# SDLC AI SPEC v' + VERSION + '\n\n作者：' + AUTHOR['name'] + '\n\n仓库：' + REPOSITORY + '\n\n'
             '11 个公共入口位于 skills/，由 Codex、Claude Code 和 Cursor 共用；使用宿主默认展示与调用选择策略。'
-            '完整流程正文及摘要为简体中文；模板固定骨架保持英文，按原流程填入的自然语言内容使用中文。'
+            '完整流程正文及摘要为简体中文；模板说明和示例为中文，标题保留英文定位锚点并附中文释义，机器语法保持不变。'
             '不因升级或语言要求重写已有业务文档。\n\n'
             '安装不需要构建、uv、上游 CLI 或网络。Runtime requires Bash, Python 3.9+ and standard POSIX tools. '
             'No install-time build, uv, upstream CLI or network is required.\n\n'

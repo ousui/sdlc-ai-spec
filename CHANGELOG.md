@@ -77,3 +77,14 @@ history rather than copied into the current product tree.
   and existing INIT data behavior. STATUS adds no stage completion verdicts.
 - Expand synthetic path/format/read-only tests and retain deterministic build,
   localization freshness and upstream upgrade compatibility checks.
+
+## Review and document-localization corrections (1.0.0-beta)
+
+- REV-007: return an actual selected template path to SPEC, without changing the
+  content resolver used by other commands.
+- REV-008–010: correct STATUS example-title, nested-list and code/comment handling;
+  retain query nonmutation and explicit uncertainty for unsupported task formats.
+- Localize five default template presentations, the 16-item built-in requirements
+  checklist and new-project README; preserve machine anchors and user-owned files.
+- Prohibit artificial language-tag comments; extend incremental locale freshness,
+  whole-template baseline projection and negative-control regression tests.

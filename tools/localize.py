@@ -17,6 +17,8 @@ from render import ROOT, COMMANDS, HOSTS, render_source, relocate_body
 from naming import invocation
 
 LOCALES = ROOT / 'src/locales/zh-CN'
+TEMPLATES = ('checklist-template', 'constitution-template', 'plan-template', 'spec-template', 'tasks-template')
+RESOURCES = ('binding', 'init', 'output-language', 'status', 'project-readme')
 TOKEN = re.compile(r'\{\{SDLC:[A-Z_]+\}\}')
 
 
@@ -108,6 +110,16 @@ def translate_body(name: str, host: str) -> str:
     translated = (LOCALES / 'workflows' / (name + '.md')).read_text(encoding='utf-8')
     record = catalog()['commands'][name]
     validate_translation(name, source, translated, record)
+    # Only the reviewed document-example fragment may change inside a fence.
+    # All executable/JSON fences above remain protected byte-for-byte.
+    if name == 'specify':
+        original = presentation_source('requirements')
+        localized = presentation('requirements')
+        old = '\n'.join('      ' + line if line else '' for line in original.rstrip('\n').split('\n'))
+        new = '\n'.join('      ' + line if line else '' for line in localized.rstrip('\n').split('\n'))
+        if translated.count(old) != 1:
+            raise LocalizationError('Built-in requirements example anchor changed')
+        translated = translated.replace(old, new, 1)
     values = replacements(host)
     result = TOKEN.sub(lambda m: values[m[0]], translated)
     if '{{SDLC:' in result:
@@ -130,7 +142,7 @@ def translated_metadata(name: str, source_meta: dict) -> dict:
 
 
 def resource(name: str) -> str:
-    if name not in ('binding', 'init', 'output-language', 'status'):
+    if name not in RESOURCES:
         raise LocalizationError('Unknown local resource: ' + name)
     rec = catalog().get('resources', {}).get(name, {})
     text = (LOCALES / (name + '.md')).read_text(encoding='utf-8')
@@ -139,6 +151,102 @@ def resource(name: str) -> str:
     if 'source' in rec and rec.get('source_sha256') != sha((ROOT / rec['source']).read_text(encoding='utf-8')):
         raise LocalizationError('Stale localized resource: ' + name)
     return text
+
+
+def presentation_source(name: str) -> str:
+    """Read presentation inputs AFTER source path/name projection; never edit upstream."""
+    if name in TEMPLATES:
+        return (ROOT / 'src/templates' / (name + '.md')).read_text(encoding='utf-8')
+    if name == 'requirements':
+        source = canonical_source('specify')
+        match = re.search(r'(?m)^( +)```markdown\n\1(# Specification Quality Checklist:[\s\S]*?)^\1```', source)
+        if match is None:
+            raise LocalizationError('Upstream built-in requirements example changed')
+        # First line indentation was consumed by the match; strip only the
+        # exact fence indentation from subsequent lines, not semantic whitespace.
+        prefix, body = match[1], match[2]
+        return '\n'.join(line[len(prefix):] if line.startswith(prefix) else line
+                         for line in body.split('\n'))
+    raise LocalizationError('Unknown presentation: ' + name)
+
+
+def presentation_file(name: str) -> Path:
+    if name in TEMPLATES:
+        return LOCALES / 'templates' / (name + '.md')
+    if name == 'requirements':
+        return LOCALES / 'fragments/requirements.md'
+    raise LocalizationError('Unknown presentation: ' + name)
+
+
+def presentation_contract(text: str) -> dict:
+    """Structural/machine constraints, independent of a translation's stored digest.
+
+    This is not semantic equivalence proof. Natural-language conditions are
+    reviewed against the bound source; no blanket normalization of runtime output.
+    """
+    code = []
+    for match in re.finditer(r'(?m)^```([^\n]*)\n([\s\S]*?)^```\s*$', text):
+        payload = []
+        for line in match[2].splitlines():
+            # Here only template/example comments are presentation, not code.
+            line = re.split(r'(?<!\S)#', line, maxsplit=1)[0].rstrip()
+            if re.fullmatch(r'[│ └─├]*\[[^\]]+\]', line):
+                line = '<human-tree-placeholder>'
+            payload.append(line)
+        code.append((match[1], payload))
+    return {
+        'tokens': Counter(TOKEN.findall(text)),
+        'machine_slots': Counter(re.findall(r'\[[A-Z][A-Z0-9_ ?-]*\]|\[NEEDS CLARIFICATION(?=[:\]])', text)),
+        'inline': Counter(re.findall(r'`[^`\n]+`', text)),
+        'labels': re.findall(r'\*\*([^*\n]+)\*\*:', text),
+        'checkboxes': re.findall(r'(?m)^\s*- \[[ xX]\](?: (?:T\d+|TXXX|CHK\d+)(?: \[[A-Z0-9]+\])*)?', text),
+        'paths': Counter(re.findall(r'(?<![\w/])(?:\.sdlc|src|tests|backend|frontend|ios|android|api|docs|contracts)/(?:[A-Za-z0-9_./\[\]#-]*)', text)),
+        'task_refs': Counter(re.findall(r'\b(?:T\d{3,}|TXXX|CHK\d{3,}|FR-\d+|SC-\d+)\b', text)),
+        'code': code,
+        'levels': re.findall(r'(?m)^(#{1,6}) ', text),
+    }
+
+
+def validate_presentation(name: str, source: str, text: str, record: dict) -> None:
+    if record.get('status') != 'reviewed' or not record.get('reviewer'):
+        raise LocalizationError('Presentation requires review: ' + name)
+    if record.get('source_sha256') != sha(source):
+        raise LocalizationError('Stale presentation input: ' + name)
+    if record.get('translation_sha256') != sha(text):
+        raise LocalizationError('Presentation bytes changed without review: ' + name)
+    if presentation_contract(source) != presentation_contract(text):
+        raise LocalizationError('Presentation machine/structure contract changed: ' + name)
+    def headings(value):
+        value = re.sub(r'(?m)^```[^\n]*\n[\s\S]*?^```[^\n]*$', '', value)
+        return re.findall(r'(?m)^#{1,6} (.+)', value)
+    originals = headings(source)
+    translated = headings(text)
+    if any(not new.startswith(old) for old,new in zip(originals, translated)):
+        raise LocalizationError('Template heading anchor changed: ' + name)
+    if not re.search(r'[\u4e00-\u9fff]', text):
+        raise LocalizationError('Missing Chinese presentation: ' + name)
+    if re.search(r'中文(?:注释|说明|版本)', text) or '\ufffc' in text:
+        raise LocalizationError('Language label/object character in presentation: ' + name)
+
+
+def presentation(name: str) -> str:
+    source = presentation_source(name)
+    text = presentation_file(name).read_text(encoding='utf-8')
+    record = catalog().get('presentations', {}).get(name, {})
+    validate_presentation(name, source, text, record)
+    return text
+
+
+def restore_template(name: str, actual: str) -> str:
+    """Exact, whole-artifact comparison adapter; never rewrite arbitrary prose.
+
+    A mismatch is a failure, not a candidate for substring translation or an
+    ignore rule. The original English artifact still undergoes independent CLI
+    baseline comparison after this presentation-only projection.
+    """
+    if name not in TEMPLATES or actual != presentation(name):
+        raise LocalizationError('Deployed template differs from reviewed bytes: ' + name)
+    return presentation_source(name)
 
 
 def localized_binding(host: str) -> str:
@@ -155,8 +263,13 @@ def localized_workflow(name: str, host: str) -> str:
 
 def check_all() -> dict:
     data = catalog()
-    for item in ('binding', 'init', 'output-language', 'status'):
+    for item in RESOURCES:
         resource(item)
+    expected_presentations = set(TEMPLATES) | {'requirements'}
+    if set(data.get('presentations', {})) != expected_presentations:
+        raise LocalizationError('Presentation inventory differs from reviewed templates')
+    for name in sorted(expected_presentations):
+        presentation(name)
     checked = []
     for name in COMMANDS:
         for host in HOSTS:
@@ -167,11 +280,11 @@ def check_all() -> dict:
                 if key in meta:meta[key]=product_prose(meta[key])
             translated_metadata(name,meta)
         checked.append(name)
-    return {'status': 'PASS', 'locale': 'zh-CN', 'commands': checked,
+    return {'status': 'PASS', 'locale': 'zh-CN', 'commands': checked, 'templates': list(TEMPLATES), 'fragments': ['requirements'],
             'scope': 'source freshness, reviewed bytes, protected spans and structural checks; not proof of model behavior'}
 
 
-def record_review(name: str, reviewer: str, *, is_resource: bool = False) -> dict:
+def record_review(name: str, reviewer: str, *, is_resource: bool = False, is_presentation: bool = False) -> dict:
     """Explicit authoring step only; never called by build, install or upgrade.
 
     This records a maintainer/AI review declaration, not an authenticated identity.
@@ -180,8 +293,15 @@ def record_review(name: str, reviewer: str, *, is_resource: bool = False) -> dic
     if not reviewer.strip():
         raise LocalizationError('A nonempty review declaration is required')
     data = catalog()
-    if is_resource:
-        if name not in ('binding', 'init', 'output-language', 'status'):
+    if is_presentation:
+        source = presentation_source(name)
+        text = presentation_file(name).read_text(encoding='utf-8')
+        rec = dict(data.get('presentations', {}).get(name, {}))
+        rec.update(source_sha256=sha(source),translation_sha256=sha(text),status='reviewed',reviewer=reviewer)
+        validate_presentation(name,source,text,rec)
+        data.setdefault('presentations', {})[name] = rec
+    elif is_resource:
+        if name not in RESOURCES:
             raise LocalizationError('Unknown local resource')
         rec = dict(data['resources'][name])
         text = (LOCALES / (name + '.md')).read_text(encoding='utf-8')
@@ -220,12 +340,13 @@ def main() -> int:
     review = sub.add_parser('record', help='Record an explicit completed translation review; never auto-called')
     group = review.add_mutually_exclusive_group(required=True)
     group.add_argument('--command', choices=COMMANDS)
-    group.add_argument('--resource', choices=('binding','init','output-language','status'))
+    group.add_argument('--resource', choices=RESOURCES)
+    group.add_argument('--presentation', choices=(*TEMPLATES, 'requirements'))
     review.add_argument('--reviewer', required=True)
     review.add_argument('--reviewed', action='store_true', required=True)
     args = p.parse_args()
     if args.action == 'record':
-        print(json.dumps(record_review(args.command or args.resource,args.reviewer,is_resource=bool(args.resource)),ensure_ascii=False,indent=2))
+        print(json.dumps(record_review(args.command or args.resource or args.presentation,args.reviewer,is_resource=bool(args.resource),is_presentation=bool(args.presentation)),ensure_ascii=False,indent=2))
         return 0
     if args.action == 'check':
         print(json.dumps(check_all(), ensure_ascii=False, indent=2))
@@ -237,6 +358,9 @@ def main() -> int:
         for name in COMMANDS:
             text = canonical_source(name)
             (out / (name + '.md')).write_text(text, encoding='utf-8')
+        (out/'templates').mkdir()
+        for name in (*TEMPLATES,'requirements'):
+            (out/'templates'/(name+'.md')).write_text(presentation_source(name),encoding='utf-8')
         print('Exported current inputs; no catalog or accepted translation was changed:', out)
     return 0
 

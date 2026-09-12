@@ -15,11 +15,13 @@
 <!-- SDLC-OUTPUT-LANGUAGE:BEGIN -->
 ## 输出语言（仅呈现层）
 
-向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节定位名、占位符、状态值、任务语法、代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
+向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节层级和定位用英文锚点保留，标题可附中文释义；占位符、状态值、任务语法、实际代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
 
-例如保留 `User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记，业务描述、理由、测试说明和任务内容填写中文。代码块中的英文示例用于保留格式和定位约定，不要求将实际填写的自然语言也写成英文。刚复制且尚未填写的模板可以保持英文；不增加一次翻译回写动作。
+使用插件中已审查的本地化模板。`User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记保留；模板说明、业务描述、理由、测试说明和任务内容使用中文。代码块中的格式示例不强制自然语言使用英文；SPEC 的内置 requirements.md 清单采用流程中的本地化条目，条目顺序、数量、条件和勾选责任不变。用户自定义模板仍按原流程处理，不为本地化新增覆盖动作。
 
-此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。
+文档、注释与说明直接表达业务内容，不添加“中文注释”“中文说明”“中文版本”等语言标签。确需标签时使用“注释”或“说明”。不要为了标明语言新增 HTML 注释；只有原流程本来要求的注释才按其规则处理。保留有语义的注释，不做全文件删除或批量清理。不得插入 U+FFFC 等对象替换字符。
+
+此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。它是给执行者的指引，不是待复制进业务产物的正文。
 <!-- SDLC-OUTPUT-LANGUAGE:END -->
 
 
@@ -43,7 +45,7 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0045@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0047@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
 
@@ -75,7 +77,7 @@ $ARGUMENTS
 
 ## 目标
 
-缩小功能规格、方案和任务要求与当前代码实现之间的差距。将 `spec.md`、`plan.md`、`tasks.md` 作为**意图的唯一来源**，并以宪法作为治理约束；评估当前代码，确定哪些需求、验收标准、方案决策和既有任务尚未满足、未完成或仅部分满足。将**每项剩余工作作为可追溯的新任务追加**到 `tasks.md` 底部，供 `@@SDLC_BIND_0077@@sdlc-300-task` 已生成完整 `tasks.md` 之后执行。
+缩小功能规格、方案和任务要求与当前代码实现之间的差距。将 `spec.md`、`plan.md`、`tasks.md` 作为**意图的唯一来源**，并以宪法作为治理约束；评估当前代码，确定哪些需求、验收标准、方案决策和既有任务尚未满足、未完成或仅部分满足。将**每项剩余工作作为可追溯的新任务追加**到 `tasks.md` 底部，供 `@@SDLC_BIND_0079@@sdlc-300-task` 已生成完整 `tasks.md` 之后执行。
 
 这**不是**差异工具，也**不**追踪变更。它相对于功能产物评估代码的当前状态：不使用 Git，不比较分支，不查看历史。
 
@@ -85,7 +87,7 @@ $ARGUMENTS
 
 - 以任何方式修改 `spec.md` 或 `plan.md`。
 - 重写、重新编号、重排或删除任何既有任务，包括之前 Convergence 阶段的任务。
-- 修改、创建或删除任何应用代码；完成追加任务是 `@@SDLC_BIND_0087@@sdlc-400-impl` 的职责。
+- 修改、创建或删除任何应用代码；完成追加任务是 `@@SDLC_BIND_0089@@sdlc-400-impl` 的职责。
 
 代码已经满足全部要求时，必须保持 `tasks.md` **逐字节不变**，不能追加空的 Convergence 标题，并报告无差距结果。
 
@@ -95,13 +97,13 @@ $ARGUMENTS
 
 ### 1. 初始化收敛上下文
 
-在仓库根目录运行一次 `SDLC_HOST=c@@SDLC_BIND_0097@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --require-spec --require-tasks --include-tasks`，解析 JSON 中的 FEATURE_DIR 和 AVAILABLE_DOCS。推导绝对路径：
+在仓库根目录运行一次 `SDLC_HOST=c@@SDLC_BIND_0099@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --require-spec --require-tasks --include-tasks`，解析 JSON 中的 FEATURE_DIR 和 AVAILABLE_DOCS。推导绝对路径：
 
 - SPEC = FEATURE_DIR/spec.md
 - PLAN = FEATURE_DIR/plan.md
 - TASKS = FEATURE_DIR/tasks.md
 - CONSTITUTION = `.sdlc/memory/constitution.md`（如果存在）。
-如果 `spec.md`、`plan.md` 或 `tasks.md` 缺失，停止并给出明确、可执行的信息，指出需要运行的前置命令：缺规格用 `@@SDLC_BIND_0103@@sdlc-300-task`。不输出不完整结果。
+如果 `spec.md`、`plan.md` 或 `tasks.md` 缺失，停止并给出明确、可执行的信息，指出需要运行的前置命令：缺规格用 `@@SDLC_BIND_0105@@sdlc-300-task`。不输出不完整结果。
 参数包含单引号（如 "I'm Groot"）时，使用转义语法，如 'I'\''m Groot'；可以使用双引号时也可写作 "I'm Groot"。
 
 ### 2. 加载产物（渐进式读取）
@@ -208,7 +210,7 @@ $ARGUMENTS
 
 ### 8. 提供后续行动（交接）
 
-- 结果为 `tasks_appended`：说明在哪个阶段追加了多少任务，建议运行 `@@SDLC_BIND_0210@@sdlc-400-impl` 完成；说明后续再次收敛时，剩余项应减少或归零。
+- 结果为 `tasks_appended`：说明在哪个阶段追加了多少任务，建议运行 `@@SDLC_BIND_0212@@sdlc-400-impl` 完成；说明后续再次收敛时，剩余项应减少或归零。
 - 结果为 `converged`：建议进入评审／创建 PR。对于本功能已规定范围，不需要再次实施。
 
 ### 9. 检查扩展钩子
@@ -222,7 +224,7 @@ $ARGUMENTS
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
 - 列出任何钩子之前，先在会话中报告收敛结果（`converged` 或 `tasks_appended`），让用户决定是否执行可选的后续命令。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0224@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0226@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
 

@@ -18,7 +18,6 @@ import sys
 import tempfile
 
 LAYOUT = 1
-README = b'''# SDLC AI SPEC project data\n\nThis directory contains project-local SDLC AI SPEC workflow data.\n- memory/constitution.md: project principles; review with sdlc-010-rule.\n- init-options.json: project defaults, not a global Agent selection.\n- specs/: feature specifications, plans and tasks.\n- feature.json: written by sdlc-100-spec, not by initialization.\n\nSkills, scripts, applications and core templates stay in the user-installed\nplugin. Do not run the upstream initializer here or copy plugin resources into this directory.\nRe-running sdlc-000-init only completes missing compatible data; it does not reset\nfeatures or overwrite human documents. The local .gitignore excludes this data\nfrom new Git additions; files already tracked by Git remain tracked.\n'''
 ALLOWED = {'memory', 'specs', 'templates', 'feature.json', 'init-options.json',
            '.gitignore', 'README.md'}
 
@@ -163,10 +162,14 @@ def initialize(plugin: Path, project: Path, numbering: str | None = None,
     check_path(override)
     seed = override if override.is_file() else source
     constitution = seed.read_bytes()
+    readme = plugin / 'references/PROJECT-README.md'
+    if not readme.is_file() or not inside(readme.resolve(), plugin):
+        raise ValueError('Installed plugin lacks its project README; reinstall the plugin')
+    readme_content = readme.read_bytes()
     proposed = {
         options_file: (json.dumps(merged, ensure_ascii=False, indent=2) + '\n').encode(),
         state / 'memory/constitution.md': constitution,
-        state / 'README.md': README,
+        state / 'README.md': readme_content,
         state / '.gitignore': b'*\n',
     }
     writes = []

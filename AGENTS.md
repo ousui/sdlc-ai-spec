@@ -40,6 +40,9 @@ repository transfer from a metadata edit.
 - Preserve the nine pinned upstream English commands and the documented path,
   name and packaging deltas. Translation is permitted only in derived prose, not
   raw sources or machine contracts; no new process rules or legacy runtime.
+- Templates use reviewed Chinese presentations with preserved machine anchors;
+  keep English derivation in src/templates for independent upstream comparison.
+  Never add language-tag comments or translate existing project files implicitly.
 - STATUS is a local read-only utility, not an upstream stage. Never make it
   persist selection, initialize projects, run other Skills, or invent phase history.
   All 11 entries live in dist/skills; do not regenerate host-private wrappers.

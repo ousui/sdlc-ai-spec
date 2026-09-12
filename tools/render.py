@@ -116,7 +116,7 @@ def relocate_body(body: str, host: str) -> str:
                      'bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/')
     body = re.sub(r'\.sdlc/scripts/bash/([a-z-]+\.sh)', lambda m: script_prefix + m[1] + '"', body)
     body = body.replace('`specify preset resolve spec-template`',
-                        '`' + script_prefix + 'resolve-template.sh" spec-template`')
+                        '`' + script_prefix + 'resolve-template-path.sh" spec-template`')
     body = re.sub(r'\.sdlc/templates/(?!overrides/)([a-z-]+\.md)',
                   r'${SDLC_PLUGIN_ROOT}/templates/\1', body)
     return capability_references(product_prose(identifiers(body)))

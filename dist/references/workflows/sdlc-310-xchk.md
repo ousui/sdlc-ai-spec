@@ -15,11 +15,13 @@
 <!-- SDLC-OUTPUT-LANGUAGE:BEGIN -->
 ## 输出语言（仅呈现层）
 
-向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节定位名、占位符、状态值、任务语法、代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
+向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节层级和定位用英文锚点保留，标题可附中文释义；占位符、状态值、任务语法、实际代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
 
-例如保留 `User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记，业务描述、理由、测试说明和任务内容填写中文。代码块中的英文示例用于保留格式和定位约定，不要求将实际填写的自然语言也写成英文。刚复制且尚未填写的模板可以保持英文；不增加一次翻译回写动作。
+使用插件中已审查的本地化模板。`User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记保留；模板说明、业务描述、理由、测试说明和任务内容使用中文。代码块中的格式示例不强制自然语言使用英文；SPEC 的内置 requirements.md 清单采用流程中的本地化条目，条目顺序、数量、条件和勾选责任不变。用户自定义模板仍按原流程处理，不为本地化新增覆盖动作。
 
-此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。
+文档、注释与说明直接表达业务内容，不添加“中文注释”“中文说明”“中文版本”等语言标签。确需标签时使用“注释”或“说明”。不要为了标明语言新增 HTML 注释；只有原流程本来要求的注释才按其规则处理。保留有语义的注释，不做全文件删除或批量清理。不得插入 U+FFFC 等对象替换字符。
+
+此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。它是给执行者的指引，不是待复制进业务产物的正文。
 <!-- SDLC-OUTPUT-LANGUAGE:END -->
 
 
@@ -42,7 +44,7 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0044@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0046@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
@@ -70,19 +72,19 @@ $ARGUMENTS
 
 ## 目标
 
-在实施前，识别三个核心产物（`spec.md`、`plan.md`、`tasks.md`）之间的不一致、重复、歧义和定义不足。本命令**只能**在 `@@SDLC_BIND_0072@@sdlc-300-task` 成功生成完整 `tasks.md` 之后运行。
+在实施前，识别三个核心产物（`spec.md`、`plan.md`、`tasks.md`）之间的不一致、重复、歧义和定义不足。本命令**只能**在 `@@SDLC_BIND_0074@@sdlc-300-task` 成功生成完整 `tasks.md` 之后运行。
 
 ## 操作约束
 
 **严格只读（STRICTLY READ-ONLY）**：**不要**修改任何文件。输出结构化分析报告。可以提供可选的整改计划；后续编辑命令手动调用之前，必须获得用户明确批准。
 
-**宪法权威**：项目宪法（`.sdlc/memory/constitution.md`）在本分析范围内**不可协商**。宪法冲突自动归为 CRITICAL，必须调整规格、方案或任务，而不是弱化、重新解释或静默忽略原则。原则本身需要变更时，必须在 `@@SDLC_BIND_0078@@sdlc-310-xchk` 之外单独、明确地更新宪法。
+**宪法权威**：项目宪法（`.sdlc/memory/constitution.md`）在本分析范围内**不可协商**。宪法冲突自动归为 CRITICAL，必须调整规格、方案或任务，而不是弱化、重新解释或静默忽略原则。原则本身需要变更时，必须在 `@@SDLC_BIND_0080@@sdlc-310-xchk` 之外单独、明确地更新宪法。
 
 ## 执行步骤
 
 ### 1. 初始化分析上下文
 
-从仓库根目录运行一次 `SDLC_HOST=c@@SDLC_BIND_0084@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --require-spec --require-tasks --include-tasks`，解析 JSON 中的 FEATURE_DIR 和 AVAILABLE_DOCS。推导绝对路径：
+从仓库根目录运行一次 `SDLC_HOST=c@@SDLC_BIND_0086@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --require-spec --require-tasks --include-tasks`，解析 JSON 中的 FEATURE_DIR 和 AVAILABLE_DOCS。推导绝对路径：
 
 - SPEC = FEATURE_DIR/spec.md
 - PLAN = FEATURE_DIR/plan.md
@@ -212,9 +214,9 @@ $ARGUMENTS
 
 在报告末尾输出简洁的 Next Actions：
 
-- 存在 CRITICAL 时：建议在 `@@SDLC_BIND_0214@@sdlc-400-impl` 之前解决。
+- 存在 CRITICAL 时：建议在 `@@SDLC_BIND_0216@@sdlc-400-impl` 之前解决。
 - 只有 LOW／MEDIUM 时：用户可以继续，但仍应提供改进建议。
-- 给出明确命令建议，例如“运行 @@SDLC_BIND_0216@@sdlc-200-plan 调整架构”“手动编辑 tasks.md，补充 performance-metrics 的覆盖”。
+- 给出明确命令建议，例如“运行 @@SDLC_BIND_0218@@sdlc-200-plan 调整架构”“手动编辑 tasks.md，补充 performance-metrics 的覆盖”。
 
 ### 8. 提供整改建议
 
@@ -230,7 +232,7 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0232@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0234@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```

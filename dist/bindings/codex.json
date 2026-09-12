@@ -1,0 +1,102 @@
+{
+  "sdlc-010-rule": {
+    "@@SDLC_BIND_0004@@": "odex",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
+    "@@SDLC_BIND_0007@@": "odex",
+    "@@SDLC_BIND_0044@@": "$",
+    "@@SDLC_BIND_0057@@": "$",
+    "@@SDLC_BIND_0089@@": "odex",
+    "@@SDLC_BIND_0158@@": "$"
+  },
+  "sdlc-100-spec": {
+    "@@SDLC_BIND_0004@@": "odex",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
+    "@@SDLC_BIND_0007@@": "odex",
+    "@@SDLC_BIND_0046@@": "$",
+    "@@SDLC_BIND_0074@@": "$",
+    "@@SDLC_BIND_0112@@": "odex",
+    "@@SDLC_BIND_0122@@": "$sdlc-200-plan`、`$",
+    "@@SDLC_BIND_0125@@": "$",
+    "@@SDLC_BIND_0195@@": "$sdlc-110-clar` 或 `$",
+    "@@SDLC_BIND_0261@@": "$",
+    "@@SDLC_BIND_0290@@": "$sdlc-110-clar` 或 `$"
+  },
+  "sdlc-110-clar": {
+    "@@SDLC_BIND_0004@@": "odex",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
+    "@@SDLC_BIND_0007@@": "odex",
+    "@@SDLC_BIND_0046@@": "$",
+    "@@SDLC_BIND_0076@@": "$",
+    "@@SDLC_BIND_0080@@": "odex",
+    "@@SDLC_BIND_0084@@": "$",
+    "@@SDLC_BIND_0248@@": "$",
+    "@@SDLC_BIND_0269@@": "$",
+    "@@SDLC_BIND_0300@@": "$sdlc-200-plan`，或在规划后再次运行 `$"
+  },
+  "sdlc-200-plan": {
+    "@@SDLC_BIND_0004@@": "odex",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
+    "@@SDLC_BIND_0007@@": "odex",
+    "@@SDLC_BIND_0046@@": "$",
+    "@@SDLC_BIND_0074@@": "odex",
+    "@@SDLC_BIND_0098@@": "$"
+  },
+  "sdlc-300-task": {
+    "@@SDLC_BIND_0004@@": "odex",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
+    "@@SDLC_BIND_0007@@": "odex",
+    "@@SDLC_BIND_0046@@": "$",
+    "@@SDLC_BIND_0074@@": "odex",
+    "@@SDLC_BIND_0118@@": "$"
+  },
+  "sdlc-310-xchk": {
+    "@@SDLC_BIND_0004@@": "odex",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
+    "@@SDLC_BIND_0007@@": "odex",
+    "@@SDLC_BIND_0046@@": "$",
+    "@@SDLC_BIND_0074@@": "$",
+    "@@SDLC_BIND_0080@@": "$",
+    "@@SDLC_BIND_0086@@": "odex",
+    "@@SDLC_BIND_0216@@": "$",
+    "@@SDLC_BIND_0218@@": "$sdlc-100-spec 细化规格”“运行 $",
+    "@@SDLC_BIND_0234@@": "$"
+  },
+  "sdlc-320-huma": {
+    "@@SDLC_BIND_0004@@": "odex",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
+    "@@SDLC_BIND_0007@@": "odex",
+    "@@SDLC_BIND_0056@@": "$sdlc-100-spec` 和 `$",
+    "@@SDLC_BIND_0076@@": "$",
+    "@@SDLC_BIND_0104@@": "odex",
+    "@@SDLC_BIND_0278@@": "$",
+    "@@SDLC_BIND_0286@@": "$",
+    "@@SDLC_BIND_0379@@": "$"
+  },
+  "sdlc-400-impl": {
+    "@@SDLC_BIND_0004@@": "odex",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
+    "@@SDLC_BIND_0007@@": "odex",
+    "@@SDLC_BIND_0046@@": "$",
+    "@@SDLC_BIND_0074@@": "odex",
+    "@@SDLC_BIND_0078@@": "$sdlc-100-spec` 和 `$sdlc-110-clar` 维护的内置规格质量清单；`$",
+    "@@SDLC_BIND_0198@@": "$",
+    "@@SDLC_BIND_0212@@": "$"
+  },
+  "sdlc-500-conv": {
+    "@@SDLC_BIND_0004@@": "odex",
+    "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
+    "@@SDLC_BIND_0007@@": "odex",
+    "@@SDLC_BIND_0047@@": "$",
+    "@@SDLC_BIND_0079@@": "$sdlc-400-impl` 完成。本命令**只能**在 `$sdlc-400-impl` 已针对当前 `tasks.md` 运行，且 `$",
+    "@@SDLC_BIND_0089@@": "$",
+    "@@SDLC_BIND_0099@@": "odex",
+    "@@SDLC_BIND_0105@@": "$sdlc-100-spec`，缺方案用 `$sdlc-200-plan`，缺任务用 `$",
+    "@@SDLC_BIND_0212@@": "$",
+    "@@SDLC_BIND_0226@@": "$"
+  },
+  "sdlc-000-init": {
+    "@@SDLC_BIND_0002@@": "odex",
+    "@@SDLC_BIND_0030@@": "$sdlc-010-rule 批准项目原则，或 $"
+  },
+  "sdlc-status": {}
+}

@@ -1,1 +1,0 @@
-"""Shared ArtifactStore foundation tests."""

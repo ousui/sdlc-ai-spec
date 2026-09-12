@@ -1,163 +1,172 @@
-# sdlc-ai-spec
+# SDLC AI SPEC — v1.0.0-beta
 
-`sdlc-ai-spec` 定义软件研发与变更交付中的 Artifact、Reference、Evidence、
-Exception、Check 和 Gate，并提供 Cursor、Claude Code、Codex 共用的 Agent Plugin Runtime。
+## 上游行为等价宪法
 
-当前 Plugin 版本：**0.9.0**。Plugin Version 与领域 Spec Version 独立；当前稳定领域规范仍为 v1.1。
+SDLC AI SPEC 是锁定版本 Spec Kit 的产品化移植，不是独立演进的流程引擎。
+必须保留已纳入能力的上游业务行为、逻辑、流程顺序、条件、默认参数、询问、
+停止条件、写入对象及触发语义。原版缺陷只记录、上报或等待上游，不在移植层
+自行修复；本项目引入的偏差必须纠正或回退，不能以现有测试通过为由保留。
+只允许明确的产品名称、入口名、资源路径及自然语言等价映射；事件名、配置键、
+数据键、参数和机器标记不是普通产品文案。保持 src/upstream 原始字节，dist
+由生成器产生。中文呈现不授权新增业务写入或批量重写已有产物。
+本地 INIT 是独立项目初始化能力，不冒充完整原版安装器；本项目构建和升级
+工具的错误由本项目负责。执行后的业务逻辑仍保持等价。Agent 的菜单展示、hint 和调用选择策略不属于
+等价契约：公共入口不声明 user-invocable、disable-model-invocation、argument-hint，
+使用宿主默认行为。被模型选择不增加写入、跨阶段或发布授权；流程内权限不变。
 
-## Spec 与 Runtime
+## Web 交付及补丁回退
 
-项目采用两层模型：
+沿用用户指定分支，修改前记录准确基线，优先完成并核实远端提交。远端写入
+不能完成或无法核验时，直接提供可 git apply 的补丁、基线和验证记录，不再
+反复要求用户重连。成功推送后让用户拉取，不重复要求应用补丁。工具发现、
+单个 blob、局部测试、PR 评论不等于分支已经更新。没有准确证据不得宣称完成。
 
-```text
-docs/v1.x/**
-    设计、审查和追溯来源
-          ↓
-skills/** + packages/** + scripts/**
-    安装后的自包含执行 Runtime
-```
 
-正式 Skill 运行时不读取 `docs/v1.x/**`。规范文档用于设计和验证 Skill；发布后的 SOP、
-共享运行合约、模板和确定性程序随 Plugin 一起分发。
+Author: **Blade**. Declared repository: **https://github.com/goedgecloud/sdlc-ai-spec**.
+An independent, user-scoped source port of **Spec Kit by GitHub, Inc.**, MIT.
+Upstream remains pinned to `v1.0.5`, commit
+`a4e25ce6b96dc8e85f84206c6a54353fa9c5260b`.
 
-## Plugin 结构
+## Skill 命名与含义
 
-```text
-.cursor-plugin/       Cursor 入口
-.claude-plugin/       Claude Code 入口
-.codex-plugin/        Codex 入口
-skills/               正式 Skill 与共享运行合约
-packages/             共享确定性组件
-scripts/              运行时 CLI
-tools/                构建期工具
-docs/                 规范与开发治理
-tests/                自动化测试
-```
+**状态：已迁移生成入口，三个宿主各发现 10 个阶段 Skill 和 1 个只读辅助 Skill。** 下表名称对应当前
+生成包；原生客户端发现与模型执行仍须实际验证，不能仅由工程测试推定。
+`sdlc-status` 已实现为只读状态与产物导航。提交和验证记录见
+[PR #24](https://github.com/ousui/sdlc-ai-spec/pull/24)。
 
-三个 Agent 共用根目录 `skills/`，平台入口保持轻量。
+| Skill 名称 | 英文含义 | 中文职责 | 现有能力 / 来源 ID |
+| --- | --- | --- | --- |
+| `sdlc-000-init` | Initialize | 项目初始化 | `init` |
+| `sdlc-010-rule` | Project Rules | 项目宪法与规则 | `constitution` |
+| `sdlc-100-spec` | Specification | 需求规格 | `specify` |
+| `sdlc-110-clar` | Clarification | 需求澄清 | `clarify` |
+| `sdlc-200-plan` | Planning | 技术方案与实施规划 | `plan` |
+| `sdlc-300-task` | Task Breakdown | 任务分解 | `tasks` |
+| `sdlc-310-xchk` | Cross-artifact Consistency Check | 跨产物一致性检查 | `analyze` |
+| `sdlc-320-huma` | Human Review Checklist | 人工需求质量核对清单 | `checklist` |
+| `sdlc-400-impl` | Implementation | 实施 | `implement` |
+| `sdlc-500-conv` | Implementation Convergence | 实现结果收敛 | `converge` |
+| `sdlc-status` | Status | 状态与产物导航 | 本地 utility，已实现 |
 
-## Plugin 安装
+阶段能力采用 `sdlc-<三位编号>-<四字母代号>`，不要求机械截取英文单词前四个
+字母。000–099 是项目级前置能力，100–599 是需求级能力；编号用于分类与排序，
+不增加执行门禁或“执行一次后永远不能更新”的限制。`sdlc-status` 是跨阶段辅助
+能力，不编号、不缩写。
 
-### Codex
+三个容易混淆的阶段必须保持以下区别：
 
-将仓库添加为 Codex Marketplace，再安装其中的 `sdlc-ai-spec` Plugin：
+- **XCHK**：实施前交叉检查规格、方案、任务之间的冲突、矛盾、重复、歧义与
+  覆盖缺口。严格只读，不是版本 diff，不自动修复文档。
+- **HUMA**：生成或追加供评审者逐项核对的需求质量清单。清单生成不等于人工
+  审核完成，勾选不等于实现完成；Agent 不自行勾选新生成的条目。
+- **CONV**：对照规格、方案和任务检查实际实现，发现差距时仅向 `tasks.md`
+  追加剩余任务，再交回 IMPL。无差距时不改任务文件；不直接修改代码。
 
-```bash
-codex plugin marketplace add <marketplace-source> --ref main
-codex plugin add sdlc-ai-spec@sdlc-ai-spec
-```
+INIT 每个项目通常完成一次，重复执行保持幂等、保留已有数据；RULE 用于建立
+和显式更新项目原则。**公共化不新增 RULE 自动初始化或自动跨阶段
+执行；STATUS 是独立只读能力**；这些行为变更应在各自工作包中记录。
 
-Marketplace 元数据位于 `.agents/plugins/marketplace.json`，Plugin 展示与运行入口位于
-`.codex-plugin/plugin.json`。
+产品名称按语境使用 **SDLC AI SPEC**（显示名）、`sdlc-ai-spec`（机器标识）、
+`sdlc` / `SDLC_`（程序简称），项目目录继续使用 `.sdlc`。当前插件机器标识为
+`sdlc-ai-spec`，三个原生清单、marketplace 与调用命名空间已同步。详细转换、例外与升级规则见
+[命名与迁移契约](docs/NAMING.md)，机器可读映射见
+[docs/naming-map.json](docs/naming-map.json)。
 
-### Claude Code
+## 一个插件包，11 个公共 Skills
 
-```bash
-claude plugin marketplace add <marketplace-source>
-claude plugin install sdlc-ai-spec@sdlc-ai-spec
-```
+正式分发边界为 **dist/**，成员安装预构建插件，不运行构建、不安装上游 CLI。
+九个上游核心 Skill、INIT 和 STATUS 均位于 `dist/skills/`，正文与摘要为简体中文；三个宿主
+读取同一份入口和流程来源。宿主命令语法仍通过明确 bindings 绑定，不猜测模型身份。
 
-Marketplace 元数据位于 `.claude-plugin/marketplace.json`，Plugin 入口位于
-`.claude-plugin/plugin.json`。
-
-### Cursor
-
-本地开发时，将仓库链接到 Cursor 的本地 Plugin 目录，然后重启 Cursor 或执行
-`Developer: Reload Window`：
-
-```bash
-mkdir -p ~/.cursor/plugins/local
-ln -s <plugin-repository-root> ~/.cursor/plugins/local/sdlc-ai-spec
-```
-
-Cursor 入口位于 `.cursor-plugin/plugin.json`。公开 Marketplace 安装仍以实际审核结果为准。
-
-> 普通 Phase/Status Skill 由标准 Plugin 安装提供。`sdlc-github` 额外依赖官方 GitHub Remote MCP
-> 和锁定 Python 环境，必须先用 `tools/install_sdlc_github.py` 生成绑定解释器与稳定数据根的安装副本；
-> 源码树里的占位 MCP 配置不能直接当作完成安装。详见
-> [sdlc-github 安装说明](docs/plugin-development/work-items/sdlc-github/INSTALL.md)。
-
-## 正式 Skills
-
-### Phase Skills
-
-| Phase | Skill | 说明 |
-|---:|---|---|
-| 000 | `sdlc-000-ctx` | Project Context |
-| 100 | `sdlc-100-req` | Requirement |
-| 200 | `sdlc-200-dsn` | Design |
-| 300 | `sdlc-300-pln` | Plan |
-| 400 | `sdlc-400-imp` | Implementation |
-| 500 | `sdlc-500-vfy` | Verification |
-| 600 | `sdlc-600-rls` | Release |
-
-### Utility / Support Skills
-
-| Skill | 说明 | 外部效果 |
-|---|---|---|
-| `sdlc-status` | 只读生命周期状态与下一动作查询 | 无 |
-| `sdlc-github` | GitHub 仓库读取及受控 Issue / 评论 / Draft PR 协作 | 仅显式授权写入 |
-
-Support Skill 不参与 Phase Gate，也不会自动调用兄弟 Skill。
-
-## `sdlc-github` 快速使用
-
-先在目标宿主的安全环境中配置 `SDLC_GITHUB_TOKEN` 并重启对应 MCP 实例；Token 不进入命令、
-配置文件、证据或仓库。首次调用先核对当前账户：
+所有 11 项入口均只维护一份，已删除生成包的宿主包装层。菜单、提示及隐式/显式
+选择使用各宿主默认规则；不设置专用调用控制字段，不因自动选择而扩大执行授权。
 
 ```text
-/sdlc-github status
+src/upstream/                 锁定的原始上游，逐字节保留
+src/scripts/                  派生 Runtime 与本地辅助脚本
+src/templates/                英文模板骨架与已批准名称/路径映射
+src/locales/zh-CN/             中文正文、摘要、绑定说明及来源复核目录
+src/adapters/                 英文适配源、Runtime 代码适配片段及职责说明
+tools/                        构建、本地化检查、升级与验证工具
+dist/
+  .codex-plugin/plugin.json    唯一公共 skills 集合
+  .claude-plugin/plugin.json   默认 skills 扫描（不重复声明）
+  .cursor-plugin/plugin.json   唯一公共 skills 集合
+  skills/<id>/SKILL.md         11 个公共入口：九核心 + INIT + STATUS
+  references/workflows/       一份完整正文 + 按需宿主文本片段
+  references/TEMPLATE-LANGUAGE.md
+  bindings/                   明确的宿主差异
+  scripts/                    无 uv Runtime 依赖
+  templates/                  中文说明/示例与双语标题，机器锚点不变
+  BUILD.json                  确定性构建身份
 ```
 
-常见只读调用：
+本地化仅改变呈现。Skill 执行顺序、条件、提问数量、权限和上游既有缺陷不变。
+默认模板正文、说明、示例和 SPEC 内置 requirements.md 清单均已中文化；标题
+保留英文定位锚点并附中文释义，机器占位符、任务编号、路径、参数和事件键不变。
+INIT 为新项目复制中文默认宪法并生成中文数据 README；当本次确实新建宪法时，
+同时尝试记录 `.sdlc/memory/.constitution-template.json` 作为历史生成基线。该记录
+只保存实际生成字节摘要与来源，不是 RULE 完成、审批、签名或自动覆盖授权；旧项目
+缺记录不会补造。已有业务文档和自定义模板不因升级或重复 INIT 被覆盖。不额外
+生成“中文注释／中文说明”等语言标签。详见 [LOCALIZATION.md](docs/LOCALIZATION.md)。
 
-```text
-/sdlc-github read --repo owner/repo --kind repo.branches
-/sdlc-github read --repo owner/repo --kind issue.list --state open
-/sdlc-github read --repo owner/repo --kind pr.get --number 14
-/sdlc-github read --repo owner/repo --kind actions.jobs --run-id 123456
-```
+包内 loader 仅还原预编译全文，不运行流程、不读取项目状态、不写文件或访问网络。
+必须完整读取输出，截断时分页。公共入口从当前已加载Skill 目录向上两级
+定位包根，INIT 和 STATUS 使用相同规则；两者都不得把插件目录当作业务项目。
 
-常见写入：
+运行仍只需要 Bash、Python 3.9+ 和标准 POSIX 工具，无 uv、上游 CLI、后台服务。
+原生安装、模型执行和业务验收与程序回归是不同证据；此前用户验收不冒充新版本
+再次验证。STATUS 已实现；RULE 自动 INIT 不在本迭代范围。
 
-```text
-/sdlc-github issue-create --repo owner/repo --title "确认标题" --body "确认正文"
-/sdlc-github comment --repo owner/repo --subject-type issue --number 123 --body "确认评论"
-/sdlc-github pr-create --repo owner/repo --head feature/x --base main --title "Draft: feature/x"
-```
+## 查看当前状态
 
-写入前 Skill 会绑定 `status` 返回的真实 actor、展示准确目标并继续使用宿主原生权限确认；
-`request_id` 用于防重放。若结果为 `effect=unknown`，**只查询原回执/只读 reconcile，不换 UUID 重发**。
-首版不 merge PR、不推代码、不建分支、不创建 Tag/Release、不执行 Workflow。
+使用 `sdlc-status` 查看当前项目/需求、产物路径和任务勾选事实；可指定项目或
+需求，或要求列出本项目需求。查看其他需求不保存切换，不初始化、不修复配置、
+不运行其他阶段。宪法的文件状态、与历史生成基线的关系、占位符观察以及审批/
+阶段结论分开说明；空/不可读文件、无活动需求与未知历史也不会伪装成完成状态。
+详见 [STATUS.md](docs/STATUS.md)。
 
-完整命令与边界：[`skills/sdlc-github/SKILL.md`](skills/sdlc-github/SKILL.md)。
+## Development tooling
 
-## Shared Runtime
+Repository development, build, unit-test and upgrade-verification tooling uses
+**uv** with committed `pyproject.toml` and `uv.lock`. Start with `uv sync --locked`
+and run Python tools through `uv run --locked`. This tooling boundary is outside
+the installed plugin: `dist/` continues to require only Bash, Python 3.9+ and
+standard POSIX tools. See [Development](docs/DEVELOPMENT.md).
 
-多个 Skill 共同遵守的安装后合约位于 `skills/_shared/`；共享 Local SQLite ArtifactStore 位于
-`packages/sdlc_artifact_store/`。业务 Skill 不依赖兄弟 Skill，不直接 SQL，不重复实现 Store。
+## Documentation
 
-## 当前状态
+- [Project initialization and safe repeated calls](docs/INITIALIZATION.md)
+- [Installation and beta cache handling](docs/INSTALLATION.md)
+- [Build and independent engineering verification](docs/DEVELOPMENT.md)
+- [Naming contract and upgrade mapping](docs/NAMING.md)
+- [Exact migration differences](docs/MIGRATION.md)
+- [Controlled upstream upgrade candidates](docs/UPGRADING.md)
+- [Verification boundaries](docs/VERIFICATION.md)
+- [Codex/Cursor comparison project and requirement](docs/SMOKE-TEST.md)
 
-七阶段 CTX → REQ → DSN → PLN → IMP → VFY → RLS、`sdlc-status` 和 `sdlc-github` 均已实现。
-RLS 仅执行本地 Fake/Sandbox，生产发布不在当前能力范围。`sdlc-github` 的 GitHub Runtime 已完成
-真实 Hosted MCP 定向验证与 Linux/macOS 统一回归；缺少真实 Fixture 的 Tag 形态仍按调用时条件处理，
-不通过创建禁止对象补证。
+The presently authorized working repository can differ from the declared product
+address. Updating metadata is not a GitHub transfer. Install from an accessible
+repository/ref containing this implementation, not an old default branch.
 
-业务过程产物写入项目 ArtifactStore；开发测试日志和历史 Goal 不回填当前源码树。原生 Client 独立认证
-不作为当前门禁，实际宿主问题按具体版本与证据处理。
+## Attribution
 
-维护验证从 [docs/TESTING.md](docs/TESTING.md) 开始；格式遵守
-[Skill 样式约定](docs/plugin-development/SKILL-STYLE.md)。历史执行证据通过
-[归档索引](docs/maintenance/ARCHIVE.md) 恢复。
+Original Spec Kit copyright and MIT terms remain in LICENSE and NOTICE; original
+upstream files retain their attribution. Each package includes UPSTREAM.json.
+This is not an official release of GitHub, OpenAI, Anthropic or Cursor.
 
-## 文档入口
+## 命名迁移后的使用边界
 
-- [Plugin 开发标准](docs/plugin-development/DEVELOPMENT.md)
-- [Skill 开发流程](docs/plugin-development/SKILL-DEVELOPMENT-WORKFLOW.md)
-- [当前 Handoff](docs/plugin-development/HANDOFF.md)
-- [兼容性范围](docs/plugin-development/COMPATIBILITY.md)
-- [共享 Runtime 合约](skills/_shared/README.md)
-- [ArtifactStore 组件](docs/plugin-development/components/artifact-store/README.md)
-- [`sdlc-github` 当前工作项](docs/plugin-development/work-items/sdlc-github/README.md)
-- [Changelog](CHANGELOG.md)
+Codex 示例：`$sdlc-100-spec`；Claude Code 示例：
+`/sdlc-ai-spec:sdlc-100-spec`；Cursor 示例：`/sdlc-100-spec`（以客户端菜单
+实际入口为准）。Skill 名称、目录、共享工作流文件、加载参数和提示统一使用
+同一编号 ID。全部 11 个入口共用目录，不保留宿主私有 Skill。
+
+运行变量为 `SDLC_INIT_DIR`、`SDLC_FEATURE`、`SDLC_FEATURE_DIRECTORY`。
+已撤回对所有非空 `SPECIFY_*` 的整体拒绝；不相关旧前缀不影响选定项目。
+正式调用使用上述 `SDLC_*` 名称；没有新增旧变量别名。事件键 `before_specify` /
+`after_specify` 保持原名，不属于展示性品牌。
+`.sdlc`、`spec.md`、`plan.md`、`tasks.md` 等业务路径不变；旧项目的已有文档
+不自动重写。插件 ID 从旧 `sdlc` 改为 `sdlc-ai-spec` 后，请按
+[安装迁移说明](docs/INSTALLATION.md#naming-migration-in-pr-24)处理旧安装，
+避免重复入口。原始来源名称仅用于版权、来源映射和明确列出的兼容性边界。

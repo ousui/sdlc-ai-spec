@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "locale": "zh-CN",
+  "review_scope": "AI bilingual source review; source identity and protected spans checked separately; not runtime/maintainer acceptance",
+  "commands": {
+    "constitution": {
+      "source_path": "src/upstream/templates/commands/constitution.md",
+      "source_sha256": "b90c7e8f3f7a9e6291b445c87df6b9449f5c0c35f7f6b4de6c6eac500558676e",
+      "translation_sha256": "7e5e837cbc7449d4743dcf809c76bc6587d8159da341796021cc96b86e72d7d0",
+      "status": "reviewed",
+      "reviewer": "AI source-to-translation review",
+      "metadata": {
+        "description": {
+          "source": "Create or update the project constitution from interactive or provided principle inputs.",
+          "zh_CN": "根据交互输入或已提供的原则，创建或更新项目宪法。"
+        },
+        "argument-hint": {
+          "source": "Principles or values for the project constitution",
+          "zh_CN": "项目宪法的原则或价值观"
+        }
+      }
+    },
+    "specify": {
+      "source_path": "src/upstream/templates/commands/specify.md",
+      "source_sha256": "1725b095edf14bf9c373c0c3e040abb69e38ebaa5812e28790bf02f8b50c68e9",
+      "translation_sha256": "57da23ea27c9fedbdee26f8598daea1a18a8523954e674d27e458fc6115fcda7",
+      "status": "reviewed",
+      "reviewer": "AI review: REV-007 path producer-consumer repair",
+      "metadata": {
+        "description": {
+          "source": "Create or update the feature specification from a natural language feature description.",
+          "zh_CN": "根据自然语言功能描述，创建或更新功能规格。"
+        },
+        "argument-hint": {
+          "source": "Describe the feature you want to define",
+          "zh_CN": "描述要定义的功能"
+        }
+      }
+    },
+    "clarify": {
+      "source_path": "src/upstream/templates/commands/clarify.md",
+      "source_sha256": "2e048b3060106279f08b3a389d6978b90a1190503701ab80492e88a9e938a8bb",
+      "translation_sha256": "e78008cb5ba4e1a82fa19966ac89a6a6f119df2df3b0e4e80f9989c86d8a5587",
+      "status": "reviewed",
+      "reviewer": "AI source-to-translation review",
+      "metadata": {
+        "description": {
+          "source": "Identify underspecified areas in the current feature spec by asking up to 5 highly targeted clarification questions and encoding answers back into the spec.",
+          "zh_CN": "针对当前功能规格中说明不足的部分，提出最多 5 个高度聚焦的澄清问题，并将答案写回规格。"
+        },
+        "argument-hint": {
+          "source": "Optional areas to clarify in the spec",
+          "zh_CN": "可选：需要澄清的规格部分"
+        }
+      }
+    },
+    "plan": {
+      "source_path": "src/upstream/templates/commands/plan.md",
+      "source_sha256": "77bf505ca1b58d6bd9c941834037cc3de74457a5527c5f847226528342b2670a",
+      "translation_sha256": "857dfdc52034c5460fba650210ecec9b92b6b452e1eaac48883b80d20611ef49",
+      "status": "reviewed",
+      "reviewer": "AI source-to-translation review",
+      "metadata": {
+        "description": {
+          "source": "Execute the implementation planning workflow using the plan template to generate design artifacts.",
+          "zh_CN": "使用方案模板执行实施规划流程，生成设计产物。"
+        },
+        "argument-hint": {
+          "source": "Optional guidance for the planning phase",
+          "zh_CN": "可选：规划阶段的补充指导"
+        }
+      }
+    },
+    "tasks": {
+      "source_path": "src/upstream/templates/commands/tasks.md",
+      "source_sha256": "ac519e2f11fcf8b45360dbddedeccaaee7fb3c59fc8d93c82ffe66e969ba07cd",
+      "translation_sha256": "f8996f83da20facaee192d1e3c0a6325b4d9cd64e5cd9b478819739c655cd038",
+      "status": "reviewed",
+      "reviewer": "AI source-to-translation review",
+      "metadata": {
+        "description": {
+          "source": "Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts.",
+          "zh_CN": "根据已有设计产物，生成可执行且按依赖排序的 tasks.md。"
+        },
+        "argument-hint": {
+          "source": "Optional task generation constraints",
+          "zh_CN": "可选：任务生成约束"
+        }
+      }
+    },
+    "analyze": {
+      "source_path": "src/upstream/templates/commands/analyze.md",
+      "source_sha256": "fba3677bec609f5cf79c4e9d785f18f83b4c9b867e72a07d1825dceb0a834fd3",
+      "translation_sha256": "3586c74b49630c7a2e06aed6ab6e83b33b1dc12bb6fb4e8df42a6bdad32e8390",
+      "status": "reviewed",
+      "reviewer": "AI source-to-translation review",
+      "metadata": {
+        "description": {
+          "source": "Perform a non-destructive cross-artifact consistency and quality analysis across spec.md, plan.md, and tasks.md after task generation.",
+          "zh_CN": "在任务生成后，对 spec.md、plan.md 和 tasks.md 进行非破坏性的跨产物一致性与质量分析。"
+        },
+        "argument-hint": {
+          "source": "Optional focus areas for analysis",
+          "zh_CN": "可选：分析关注点"
+        }
+      }
+    },
+    "checklist": {
+      "source_path": "src/upstream/templates/commands/checklist.md",
+      "source_sha256": "c72f412f698b0fad6fb2f9687910ddb8087612265d78bf781ccaf1cb8237981e",
+      "translation_sha256": "72f467860bae64fa1d62f1e532be688d58cf12e1ec8daff75a967033b43e69e3",
+      "status": "reviewed",
+      "reviewer": "AI source-to-translation review",
+      "metadata": {
+        "description": {
+          "source": "Generate a custom checklist for the current feature based on user requirements.",
+          "zh_CN": "根据用户需求，为当前功能生成定制的需求质量核对清单。"
+        },
+        "argument-hint": {
+          "source": "Domain or focus area for the checklist",
+          "zh_CN": "清单领域或关注点"
+        }
+      }
+    },
+    "implement": {
+      "source_path": "src/upstream/templates/commands/implement.md",
+      "source_sha256": "5b00fa62b2912358e879fa847b139de866e9cdb391210b1be9ac796c84fe7417",
+      "translation_sha256": "aa86d2e0c62ab89f05be205115226769bcf126bc3b755d77cd39004e7c15ebcc",
+      "status": "reviewed",
+      "reviewer": "AI source-to-translation review",
+      "metadata": {
+        "description": {
+          "source": "Execute the implementation plan by processing and executing all tasks defined in tasks.md",
+          "zh_CN": "执行实施计划，处理并完成 tasks.md 中定义的所有任务。"
+        },
+        "argument-hint": {
+          "source": "Optional implementation guidance or task filter",
+          "zh_CN": "可选：实施指导或任务筛选"
+        }
+      }
+    },
+    "converge": {
+      "source_path": "src/upstream/templates/commands/converge.md",
+      "source_sha256": "f1d1eee0229e64cf876ce782edb3844dcfabda80a020b2e0a2ff11d193e93e00",
+      "translation_sha256": "f2a0ab276d6cbc52eb509d6f197194f921c57b2d6887c4c3d914995df2d40338",
+      "status": "reviewed",
+      "reviewer": "AI source-to-translation review",
+      "metadata": {
+        "description": {
+          "source": "Assess the current codebase against the feature's spec, plan, and tasks, then append any remaining unbuilt work as new tasks to tasks.md so implement can complete it.",
+          "zh_CN": "将实际实现与需求、方案及任务进行比较，识别剩余差距，并将修正任务追加到任务清单。"
+        }
+      }
+    }
+  },
+  "resources": {
+    "binding": {
+      "source": "src/adapters/BINDING.md",
+      "source_sha256": "c8470f5fe1b668de78c06adfbe821b066dc1a25e1f4d87d27162cb90fc0b3705",
+      "translation_sha256": "f4592174b0b8cd49a76ea4569fd6e0c3657a33703d2419dffd24d6571380e8a7",
+      "status": "reviewed",
+      "reviewer": "AI source-to-translation review"
+    },
+    "init": {
+      "source": "src/adapters/INIT.md",
+      "source_sha256": "e3bc611fd521b6cfce6ad0dc2308b072d84faccc7ed40efe8cc729e97c3f497c",
+      "translation_sha256": "347fd3fd6bc803860c3d197d51707bd28283ffb2df8273737a4774be9ea04b00",
+      "status": "reviewed",
+      "reviewer": "AI implementation review: constitution provenance semantics"
+    },
+    "output-language": {
+      "translation_sha256": "9543777de880ba7422490a275bf3fa245a9dd7665d746be24923daa6df62b3c0",
+      "status": "reviewed",
+      "reviewer": "AI source/approved language-scope review"
+    },
+    "status": {
+      "source": "src/adapters/STATUS.md",
+      "source_sha256": "aefe2d650f93b1f3b25bcbba25c23465d20c0e8f461493bad5b1099a7f14ee3f",
+      "translation_sha256": "cfba687112e155ebc4849f9f1f16ab5f65958f226bb2572f2c3d24fcbbd9c0d6",
+      "status": "reviewed",
+      "reviewer": "AI implementation review: constitution provenance semantics"
+    },
+    "project-readme": {
+      "source": "src/adapters/PROJECT-README.md",
+      "status": "reviewed",
+      "reviewer": "AI implementation review: constitution provenance semantics",
+      "source_sha256": "70d0fd77e39c9b3cf78334255ed37bfef9c7a014b74082c16a7efde97bc897a3",
+      "translation_sha256": "19837916e0a008bd58d4e44b60673201f462b02737f095f4c0e75986a0abcd59"
+    }
+  },
+  "presentations": {
+    "checklist-template": {
+      "source_sha256": "77929c61bdd183ca0ea122592a6c0ca93fb04707981f31acb7ae8257da2d0e91",
+      "translation_sha256": "43217fa1d3bd0534f8a1c4ddfa9ea2435fdc105f4e075c97e0a5154803fbec1f",
+      "status": "reviewed",
+      "reviewer": "AI line-by-line source translation review; not user authentication"
+    },
+    "constitution-template": {
+      "source_sha256": "ce7549540fa45543cca797a150201d868e64495fdff39dc38246fb17bd4024b3",
+      "translation_sha256": "02394b609211db73b2d5c3fb8721cfd152d7801a804bb3e0e73a0b7fd2ea310a",
+      "status": "reviewed",
+      "reviewer": "AI line-by-line source translation review; not user authentication"
+    },
+    "spec-template": {
+      "source_sha256": "ce298a5ea9d1d736dad6437230f54980fdb68a6d2bccbfe721ddc5866e386e01",
+      "translation_sha256": "429efda68967a50a54e2557921918e98a401626eb4b4923f4d7d74d0a12547e9",
+      "status": "reviewed",
+      "reviewer": "AI line-by-line source translation review; not user authentication"
+    },
+    "requirements": {
+      "source_sha256": "eeae1667afa4de0e1b2bd371ad217cef175505fe4bff020535ab19629de8fd5e",
+      "translation_sha256": "c6f7442779ee78451c64a668b56b2bf328548323dee7412cfe56bd4000b858a2",
+      "status": "reviewed",
+      "reviewer": "AI line-by-line source translation review; not user authentication"
+    },
+    "plan-template": {
+      "source_sha256": "617f3ef3a3d2a878c8c4539e897f7b20ce1bf0e04d5c64b6ebd78f1caa364465",
+      "translation_sha256": "c1e302b0ac36a6d95d8589004bc730f80c8ff698fee71874e01f98aa9f061a9a",
+      "status": "reviewed",
+      "reviewer": "AI line-by-line source translation review; not user authentication"
+    },
+    "tasks-template": {
+      "source_sha256": "2352303c003c9546874d55f75ee67e49ad8f9a85ddcebd7a258e4f4b7c1294e2",
+      "translation_sha256": "032d8f1b35eb862c8c6096561783b03446f10c455943b6ced1654fe061dbc284",
+      "status": "reviewed",
+      "reviewer": "AI line-by-line source translation review; not user authentication"
+    }
+  }
+}

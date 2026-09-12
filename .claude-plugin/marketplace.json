@@ -1,29 +1,13 @@
 {
   "name": "sdlc-ai-spec",
   "owner": {
-    "name": "Blade",
-    "url": "https://github.com/blade-cdn"
+    "name": "Blade"
   },
-  "description": "为软件研发与变更交付提供本地优先的 SDLC 规范、共享运行合约与执行基础。",
   "plugins": [
     {
       "name": "sdlc-ai-spec",
-      "source": "./",
-      "description": "为软件研发与变更交付提供本地优先的 SDLC 规范、共享运行合约与执行基础。",
-      "version": "0.9.0",
-      "author": {
-        "name": "Blade",
-        "url": "https://github.com/blade-cdn"
-      },
-      "homepage": "https://github.com/goedgecloud/sdlc-ai-spec",
-      "repository": "git@github.com:goedgecloud/sdlc-ai-spec.git",
-      "keywords": [
-        "codex",
-        "sdlc",
-        "software-delivery",
-        "artifact"
-      ],
-      "category": "Productivity"
+      "description": "SDLC AI SPEC: project initialization and spec-driven development workflows (beta)",
+      "source": "./dist"
     }
   ]
 }

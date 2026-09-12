@@ -1,0 +1,307 @@
+#!/usr/bin/env python3
+"""Controlled upstream candidates. No LLM, downloads, pushes or automatic merge.
+
+Naming projections are governed by docs/NAMING.md and docs/naming-map.json.
+Keep raw upstream identifiers in the lock; regenerate all public names and
+verify the exact candidate. Do not infer new aliases or edit accepted output.
+
+prepare creates a detached worktree and an external change record. Run the
+installed-CLI verifier independently; accept validates its exact-byte report and
+an explicit human review, then commits ONLY that candidate worktree. The current
+branch and current dist are never overwritten by prepare/accept.
+"""
+from __future__ import annotations
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import tomllib
+
+ROOT = Path(__file__).resolve().parents[1]
+IGNORED = {'.git', '.venv', '__pycache__', '.pytest_cache'}
+VERIFICATION_CONTRACT_VERSION = 1
+REQUIRED_VERIFICATION_GROUPS = frozenset({
+    'pinned_source', 'unchanged_source_command', 'source_renderer_vs_installed_cli',
+    'localized_workflow_source_binding', 'migrated_skill_vs_installed_cli',
+    'template_vs_installed_cli', 'native_manifest_documented_subset', 'bash_syntax',
+    'python_syntax', 'runtime_dependency_and_inventory', 'localization_freshness_and_protected_spans',
+    'installed_init_project_data', 'leaf_script_source_parity', 'reviewed_script_transform',
+    'tool_python_syntax', 'reproducible_build', 'engineering_unit_tests',
+    'installed_script_differential',
+})
+
+
+def run(*args: str, cwd: Path) -> str:
+    result = subprocess.run(list(args), cwd=cwd, text=True, capture_output=True, timeout=120)
+    if result.returncode:
+        raise ValueError(result.stderr.strip() or result.stdout.strip() or 'Command failed')
+    return result.stdout.strip()
+
+
+def source_digest(root: Path) -> str:
+    """Content AND executable modes; ignore only tool caches and Git internals."""
+    records = {}
+    for path in sorted(root.rglob('*')):
+        relative = path.relative_to(root)
+        if any(part in IGNORED for part in relative.parts) or path.suffix in ('.pyc', '.pyo'):
+            continue
+        if path.is_symlink():
+            raise ValueError('Source snapshot contains a symlink: '+str(relative))
+        if path.is_file():
+            records[relative.as_posix()] = [hashlib.sha256(path.read_bytes()).hexdigest(),
+                                            path.stat().st_mode & 0o111]
+    return hashlib.sha256(json.dumps(records, sort_keys=True).encode()).hexdigest()
+
+
+def localization_digest(root: Path) -> str:
+    return source_digest(root / 'src/locales/zh-CN')
+
+
+def frozen_localization_inputs(root: Path) -> str:
+    """Fingerprint EVERYTHING except the explicitly editable translation subtree.
+
+    A blocked candidate may be translated, not patched into another source version.
+    Generated dist is frozen too, until the reviewed refresh rebuilds it itself.
+    """
+    records = {}
+    for path in sorted(root.rglob('*')):
+        relative = path.relative_to(root)
+        if any(part in IGNORED for part in relative.parts) or path.suffix in ('.pyc', '.pyo'):
+            continue
+        if relative.parts[:3] == ('src', 'locales', 'zh-CN'):
+            continue
+        if path.is_symlink():
+            raise ValueError('Candidate contains a symlink: ' + str(relative))
+        if path.is_file():
+            records[relative.as_posix()] = [hashlib.sha256(path.read_bytes()).hexdigest(), path.stat().st_mode & 0o111]
+    return hashlib.sha256(json.dumps(records, sort_keys=True).encode()).hexdigest()
+
+
+def refresh_localization(record_path: Path, review: Path) -> dict:
+    """Resume only a localization-blocked candidate after an explicit text review.
+
+    Reviewer JSON is a local decision record, NOT authentication. No push, source
+    branch update, upstream switch, test approval or release occurs here.
+    """
+    record = json.loads(record_path.read_text())
+    if record.get('status') != 'LOCALIZATION_REQUIRED':
+        raise ValueError('Candidate is not awaiting localization')
+    candidate, source = Path(record['candidate_root']), Path(record['source_root'])
+    if git_clean(source) != record['base_sha'] or run('git', 'rev-parse', 'HEAD', cwd=candidate) != record['base_sha']:
+        raise ValueError('Source or candidate base moved; prepare again')
+    if subprocess.run(['git', 'symbolic-ref', '-q', 'HEAD'], cwd=candidate, capture_output=True).returncode == 0:
+        raise ValueError('Candidate must remain detached')
+    if frozen_localization_inputs(candidate) != record.get('localization_frozen_digest'):
+        raise ValueError('Non-localization candidate files changed; prepare again')
+    approval = json.loads(review.read_text())
+    if (approval.get('decision') != 'refresh-localization' or not approval.get('reviewer')
+            or approval.get('localization_digest') != localization_digest(candidate)
+            or approval.get('upstream_sha') != record['upstream_sha']):
+        raise ValueError('Review must bind exact translation bytes and upstream SHA')
+    # Validate first: never update recorded source hashes or auto-approve text.
+    run(sys.executable, '-B', str(candidate/'tools/localize.py'), 'check', cwd=candidate)
+    run(sys.executable, '-B', str(candidate/'tools/build.py'), '--marketplaces', cwd=candidate)
+    record.update(status='CANDIDATE_READY', candidate_digest=source_digest(candidate),
+                  localization_review=approval)
+    record.pop('error', None)
+    record_path.write_text(json.dumps(record, indent=2)+'\n')
+    return record
+
+
+def blob(data: bytes) -> dict:
+    return {'git_blob': hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest(),
+            'sha256': hashlib.sha256(data).hexdigest()}
+
+
+def git_clean(root: Path) -> str:
+    if Path(run('git', 'rev-parse', '--show-toplevel', cwd=root)).resolve() != root.resolve():
+        raise ValueError('Select the repository root')
+    if run('git', 'status', '--porcelain', '--untracked-files=all', cwd=root):
+        raise ValueError('Worktree must be clean')
+    return run('git', 'rev-parse', 'HEAD', cwd=root)
+
+
+def candidate_lock(upstream: Path, old: dict, commit: str, tag: str) -> tuple[dict, list[dict]]:
+    names = {'LICENSE'}
+    names.update('templates/commands/'+name+'.md' for name in old['commands'])
+    names.update('templates/'+p.name for p in (upstream/'templates').glob('*.md'))
+    names.update('scripts/bash/'+p.name for p in (upstream/'scripts/bash').glob('*.sh'))
+    selected = {name: blob((upstream/name).read_bytes()) for name in sorted(names)}
+    watched = {name: blob((upstream/name).read_bytes()) for name in old.get('watch_files', {})}
+    changes = []
+    for group, new in [('files', selected), ('watch_files', watched)]:
+        previous = old.get(group, {})
+        for path in sorted(set(previous) | set(new)):
+            if previous.get(path) != new.get(path):
+                changes.append({'group': group, 'path': path,
+                    'before': previous.get(path), 'after': new.get(path),
+                    'review_required': True})
+    # Discover newly added core commands; do not silently add or silently ignore.
+    upstream_commands = {p.stem for p in (upstream/'templates/commands').glob('*.md')}
+    supported = set(old['commands']) | set(old.get('excluded_commands', []))
+    if upstream_commands != supported:
+        raise ValueError('Core command inventory changed; review scope before preparing: '
+                         + repr(sorted(upstream_commands ^ supported)))
+    version = tomllib.loads((upstream/'pyproject.toml').read_text())['project']['version']
+    if not isinstance(version, str) or not version:
+        raise ValueError('Upstream package version is missing')
+    return dict(old, commit=commit, tag=tag, version=version, files=selected, watch_files=watched), changes
+
+
+def prepare(root: Path, upstream: Path, out: Path, ref: str) -> dict:
+    root, upstream, out = root.resolve(), upstream.resolve(), out.absolute()
+    if not ref or ref.startswith('-'):
+        raise ValueError('An explicit upstream commit or tag is required')
+    base = git_clean(root)
+    upstream_head = git_clean(upstream)
+    commit = run('git', 'rev-parse', '--verify', ref+'^{commit}', cwd=upstream)
+    if upstream_head != commit:
+        raise ValueError('Upstream checkout HEAD is not the selected ref')
+    # Resolve existing parent symlinks even though the candidate itself must not exist.
+    # Otherwise /tmp/link-to-source/candidate can bypass the lexical parents check.
+    resolved_out = out.resolve(strict=False)
+    if (out.exists() or out.is_symlink() or resolved_out == root or root in resolved_out.parents
+            or resolved_out == upstream or upstream in resolved_out.parents):
+        raise ValueError('Candidate must be a new directory outside the source and upstream repositories')
+    record_path = out.parent/(out.name+'.upgrade.json')
+    if record_path.exists():
+        raise ValueError('Candidate record already exists')
+    old = json.loads((root/'upstream.lock.json').read_text())
+    new, changes = candidate_lock(upstream, old, commit, ref)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    record = {'base_sha': base, 'base_lock_sha256': hashlib.sha256((root/'upstream.lock.json').read_bytes()).hexdigest(),
+              'source_root': str(root), 'candidate_root': str(out), 'upstream_root': str(upstream),
+              'upstream_sha': commit, 'changes': changes, 'status': 'PREPARING'}
+    run('git', 'worktree', 'add', '--detach', str(out), base, cwd=root)
+    try:
+        (out/'upstream.lock.json').write_text(json.dumps(new, indent=2)+'\n')
+        run(sys.executable, '-B', str(out/'tools/port.py'), '--upstream', str(upstream), cwd=out)
+        run(sys.executable, '-B', str(out/'tools/build.py'), '--marketplaces', cwd=out)
+        record.update(status='CANDIDATE_READY', candidate_digest=source_digest(out))
+    except Exception as error:
+        status = 'LOCALIZATION_REQUIRED' if 'LocalizationError:' in str(error) else 'BLOCKED'
+        record.update(status=status, error=str(error))
+        if status == 'LOCALIZATION_REQUIRED':
+            record['localization_frozen_digest'] = frozen_localization_inputs(out)
+            record['localization_digest'] = localization_digest(out)
+        raise
+    finally:
+        record_path.write_text(json.dumps(record, indent=2)+'\n')
+    return record
+
+
+def validate_verification_report(report: dict, actual: str, upstream_sha: str) -> None:
+    """Require a complete verifier contract, not merely a PASS-looking JSON fragment."""
+    if not isinstance(report, dict) or report.get('verification_contract_version') != VERIFICATION_CONTRACT_VERSION:
+        raise ValueError('Verification report contract is missing or unsupported')
+    if (report.get('status') != 'PASS' or report.get('source_digest') != actual
+            or report.get('upstream_sha') != upstream_sha):
+        raise ValueError('Verification does not attest the exact candidate')
+    checks = report.get('checks')
+    if not isinstance(checks, list) or not checks:
+        raise ValueError('Missing verification checks')
+    groups = set()
+    for check in checks:
+        if (not isinstance(check, dict) or not isinstance(check.get('group'), str)
+                or not isinstance(check.get('item'), str) or check.get('result') != 'PASS'):
+            raise ValueError('Malformed or failed verification checks')
+        groups.add(check['group'])
+    missing = sorted(REQUIRED_VERIFICATION_GROUPS - groups)
+    if missing:
+        raise ValueError('Incomplete verification report; missing groups: ' + ', '.join(missing))
+    unit = report.get('unit_test_methods')
+    runtime = report.get('runtime_test_methods')
+    differentials = report.get('differential_cases')
+    if (type(unit) is not int or unit <= 0 or type(runtime) is not int or runtime != unit
+            or type(differentials) is not int or differentials <= 0):
+        raise ValueError('Verification report has invalid test counts')
+    if sum(c['group'] == 'installed_script_differential' for c in checks) != differentials:
+        raise ValueError('Verification differential count does not match check evidence')
+    if not isinstance(report.get('distribution_inventory'), dict) or not report['distribution_inventory']:
+        raise ValueError('Verification report is missing the distribution inventory')
+    environment = report.get('environment')
+    if (not isinstance(environment, dict)
+            or not all(isinstance(environment.get(k), str) and environment[k] for k in ('python','platform','bash'))):
+        raise ValueError('Verification report is missing environment identity')
+    if not isinstance(report.get('scope'), str) or not report['scope']:
+        raise ValueError('Verification report is missing scope')
+    if (not isinstance(report.get('not_performed'), list)
+            or not all(isinstance(item, str) and item for item in report['not_performed'])):
+        raise ValueError('Verification report has invalid not_performed evidence')
+
+
+def check_accept(record_path: Path, evidence: Path, review: Path) -> tuple[Path, dict]:
+    record = json.loads(record_path.read_text())
+    if record.get('status') != 'CANDIDATE_READY':
+        raise ValueError('Candidate is not ready')
+    candidate, source = Path(record['candidate_root']), Path(record['source_root'])
+    if git_clean(source) != record['base_sha']:
+        raise ValueError('Accepted source advanced; prepare a fresh candidate')
+    if run('git', 'rev-parse', 'HEAD', cwd=candidate) != record['base_sha']:
+        raise ValueError('Candidate base changed')
+    # A prepared candidate remains detached; do not commit someone else's branch.
+    head = subprocess.run(['git','symbolic-ref','-q','HEAD'],cwd=candidate,capture_output=True)
+    if head.returncode == 0:
+        raise ValueError('Candidate must remain a detached worktree')
+    actual = source_digest(candidate)
+    if actual != record['candidate_digest']:
+        raise ValueError('Candidate was edited; prepare again with reviewed adapter changes')
+    report = json.loads(evidence.read_text())
+    validate_verification_report(report, actual, record['upstream_sha'])
+    approval = json.loads(review.read_text())
+    required = sorted({c['path'] for c in record['changes']})
+    if (approval.get('decision') != 'accept' or not approval.get('reviewer')
+            or approval.get('candidate_digest') != actual
+            or sorted(approval.get('reviewed_paths', [])) != required):
+        raise ValueError('Explicit review must bind this candidate and every changed upstream path')
+    return candidate, record
+
+
+def accept(record_path: Path, evidence: Path, review: Path, check_only: bool) -> dict:
+    candidate, record = check_accept(record_path, evidence, review)
+    if check_only:
+        return {'status': 'ACCEPT_CHECK_PASS', 'candidate_digest': record['candidate_digest']}
+    # Ordinary local Git commit; use the maintainer's configured identity.
+    run('git', 'add', '-A', '--', '.', cwd=candidate)
+    if run('git', 'diff', '--cached', '--name-only', cwd=candidate):
+        run('git', 'commit', '-m', 'build: accept Spec Kit '+record['upstream_sha'], cwd=candidate)
+    accepted = run('git', 'rev-parse', 'HEAD', cwd=candidate)
+    record.update(status='ACCEPTED', accepted_commit=accepted)
+    record_path.write_text(json.dumps(record, indent=2)+'\n')
+    return {'status': 'ACCEPTED', 'commit': accepted,
+            'note': 'Only the detached candidate was committed; source branch, remote refs and tags are unchanged.'}
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(description=__doc__)
+    sub = p.add_subparsers(dest='action', required=True)
+    q = sub.add_parser('prepare')
+    q.add_argument('--upstream', type=Path, required=True)
+    q.add_argument('--ref', required=True)
+    q.add_argument('--out', type=Path, required=True)
+    q = sub.add_parser('refresh-localization', help='Resume a candidate after reviewed incremental translation only')
+    q.add_argument('--record', type=Path, required=True)
+    q.add_argument('--review', type=Path, required=True)
+    q = sub.add_parser('accept')
+    q.add_argument('--record', type=Path, required=True)
+    q.add_argument('--evidence', type=Path, required=True, help='External verifier result.json')
+    q.add_argument('--review', type=Path, required=True, help='External explicit review JSON')
+    q.add_argument('--check', action='store_true')
+    args = p.parse_args()
+    try:
+        if args.action == 'prepare':
+            result = prepare(ROOT,args.upstream,args.out,args.ref)
+        elif args.action == 'refresh-localization':
+            result = refresh_localization(args.record,args.review)
+        else:
+            result = accept(args.record,args.evidence,args.review,args.check)
+        print(json.dumps(result, indent=2)); return 0
+    except (ValueError,OSError,KeyError,TypeError,subprocess.TimeoutExpired) as error:
+        print('ERROR: '+str(error),file=sys.stderr);return 1
+
+
+if __name__ == '__main__':
+    raise SystemExit(main())

@@ -1,0 +1,114 @@
+name: SDLC engineering
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: sdlc-engineering-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  engineering:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-15]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - name: Fetch exact product and upstream sources
+        shell: bash
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git init .
+          git remote add origin "${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}.git"
+          git fetch --depth=1 origin "$SOURCE_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+          mkdir -p "$RUNNER_TEMP/sdlc-source/upstream" "$RUNNER_TEMP/sdlc-source/baselines" "$RUNNER_TEMP/sdlc-source/logs"
+          UPSTREAM_SHA=$(python3 -c 'import json,re; s=json.load(open("upstream.lock.json"))["commit"]; assert re.fullmatch("[0-9a-f]{40}",s); print(s)')
+          cd "$RUNNER_TEMP/sdlc-source/upstream"
+          git init .
+          git remote add origin https://github.com/github/spec-kit.git
+          git fetch --depth=1 origin "$UPSTREAM_SHA"
+          git checkout --detach FETCH_HEAD
+          test "$(git rev-parse HEAD)" = "$UPSTREAM_SHA"
+
+      - name: Install pinned uv and Python
+        uses: astral-sh/setup-uv@20cfd1bf945f4377ade1205e4dbc17946fc9a30d # v10.0.1
+        with:
+          version: "0.12.13"
+          python-version: "3.12"
+          enable-cache: true
+
+      - name: Sync locked development environment
+        shell: bash
+        run: |
+          set -euo pipefail
+          uv --version
+          uv sync --locked
+          uv run --locked python --version
+
+      - name: Install pinned upstream and initialize three empty projects
+        shell: bash
+        run: |
+          set -euo pipefail
+          TOOL_ENV="$RUNNER_TEMP/sdlc-upstream-env"
+          uv venv "$TOOL_ENV" --python 3.12
+          uv pip install --python "$TOOL_ENV/bin/python" "$RUNNER_TEMP/sdlc-source/upstream" > "$RUNNER_TEMP/sdlc-source/logs/install.log" 2>&1
+          uv pip freeze --python "$TOOL_ENV/bin/python" > "$RUNNER_TEMP/sdlc-source/logs/uv-freeze.txt"
+          "$TOOL_ENV/bin/specify" version > "$RUNNER_TEMP/sdlc-source/logs/version.log" 2>&1
+          for agent in codex claude cursor-agent; do
+            mkdir -p "$RUNNER_TEMP/sdlc-source/baselines/$agent"
+            (cd "$RUNNER_TEMP/sdlc-source/baselines/$agent" && "$TOOL_ENV/bin/specify" init . --integration "$agent" --script sh --ignore-agent-tools --non-interactive --integration-options="--events=false") > "$RUNNER_TEMP/sdlc-source/logs/init-$agent.log" 2>&1
+          done
+          uv run --locked python - <<'PY'
+          import json, os, pathlib, hashlib
+          root = pathlib.Path(os.environ['RUNNER_TEMP'])/'sdlc-source'
+          records = {}
+          for f in sorted((root/'baselines').rglob('*')):
+              if f.is_file():
+                  records[str(f.relative_to(root))] = hashlib.sha256(f.read_bytes()).hexdigest()
+          (root/'baseline-manifest.json').write_text(json.dumps({'upstream_sha':json.loads(pathlib.Path('upstream.lock.json').read_text())['commit'],'source_sha':os.environ['GITHUB_SHA'],'files':records}, indent=2)+'\n')
+          print('UPSTREAM INSTALL AND THREE EMPTY INITIALIZATIONS: PASS')
+          print('Collected files:', len(records))
+          PY
+
+      - name: Verify committed product without rewriting generated packages
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f tools/verify.py
+          uv run --locked python -B tools/verify.py --upstream "$RUNNER_TEMP/sdlc-source/upstream" --baselines "$RUNNER_TEMP/sdlc-source/baselines" --evidence "$RUNNER_TEMP/sdlc-source/verification"
+          git diff --check
+          git diff --exit-code
+          test -z "$(git status --porcelain --untracked-files=all)"
+
+      - name: Rehearse a same-version isolated upgrade candidate
+        shell: bash
+        run: |
+          set -euo pipefail
+          uv run --locked python -B tools/rehearse_upgrade.py --upstream "$RUNNER_TEMP/sdlc-source/upstream" --baselines "$RUNNER_TEMP/sdlc-source/baselines" --out "$RUNNER_TEMP/sdlc-source/upgrade-rehearsal"
+          git diff --exit-code
+          test -z "$(git status --porcelain --untracked-files=all)"
+
+      - name: Package exact source and engineering evidence
+        if: always()
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/sdlc-export" "$RUNNER_TEMP/sdlc-source"
+          tar --exclude=.git -czf "$RUNNER_TEMP/sdlc-export/source-and-baselines.tar.gz" -C "$RUNNER_TEMP/sdlc-source" .
+          git archive HEAD | gzip > "$RUNNER_TEMP/sdlc-export/product-source.tar.gz"
+
+      - name: Upload engineering evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: sdlc-engineering-${{ matrix.os }}-${{ github.sha }}
+          path: ${{ runner.temp }}/sdlc-export/
+          retention-days: 7
+          if-no-files-found: error

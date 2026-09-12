@@ -1,1 +1,0 @@
-"""sdlc-status Skill tests."""

@@ -1,0 +1,10 @@
+{
+  "name": "sdlc-ai-spec",
+  "version": "1.0.0-beta",
+  "description": "SDLC AI SPEC: project initialization and spec-driven development workflows (beta)",
+  "author": {
+    "name": "Blade"
+  },
+  "repository": "https://github.com/goedgecloud/sdlc-ai-spec",
+  "license": "MIT"
+}

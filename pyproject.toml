@@ -1,0 +1,16 @@
+[project]
+name = "sdlc-ai-spec-tooling"
+version = "0.0.0"
+description = "Development, build, test, and verification tooling for SDLC AI SPEC. Not product metadata."
+requires-python = ">=3.11,<3.16"
+dependencies = []
+
+[dependency-groups]
+dev = [
+  "jsonschema==4.26.0",
+  "pyyaml==6.0.3",
+]
+
+[tool.uv]
+package = false
+required-version = ">=0.12.13,<0.13"

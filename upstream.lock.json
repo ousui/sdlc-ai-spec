@@ -1,0 +1,152 @@
+{
+  "repository": "https://github.com/github/spec-kit",
+  "tag": "v1.0.5",
+  "commit": "a4e25ce6b96dc8e85f84206c6a54353fa9c5260b",
+  "script": "sh",
+  "events": false,
+  "presets": [],
+  "extensions": [],
+  "commands": [
+    "constitution",
+    "specify",
+    "clarify",
+    "plan",
+    "tasks",
+    "analyze",
+    "checklist",
+    "implement",
+    "converge"
+  ],
+  "excluded_commands": [
+    "taskstoissues"
+  ],
+  "files": {
+    "templates/commands/constitution.md": {
+      "git_blob": "7b2f3684fbb74b32d2f8e5a614c74ade0fbea5cc",
+      "sha256": "b05aba827529c8c9863252625b12650ef8dfc75a7b02a0809163f145db9f8fb1"
+    },
+    "templates/commands/specify.md": {
+      "git_blob": "54151e8b423026a356e228eb04d1a6aa368c385c",
+      "sha256": "07de3d938def8407ccd30bd9a2c433bab8f299c10915fe86199bd10438b295ec"
+    },
+    "templates/commands/clarify.md": {
+      "git_blob": "ea2f20d519313f5a73824201b8e80f6006d53a33",
+      "sha256": "9fce9b3dfe037b67f52486df112f89377ff6c0c598698131cde65cec610b5bba"
+    },
+    "templates/commands/plan.md": {
+      "git_blob": "836e25070cd2108c76a57221d445477e4f64b9b1",
+      "sha256": "c77757f07025404647134ba32cfc126ddf145fe20155a787266156c9bca4ecb2"
+    },
+    "templates/commands/tasks.md": {
+      "git_blob": "99e276fa7af339c7d16645e76c1f3f6853ecbce0",
+      "sha256": "cf5f7f97557f4a4ba246fb8789b6433771859c63c9e9c7590225a8800e1c19f5"
+    },
+    "templates/commands/analyze.md": {
+      "git_blob": "2e13af58ae9a3ca5962224abb1f6e58f7fd0f0c3",
+      "sha256": "ef9850532cc69f972025e5e742d0dd833ba1d28c31e6798d5edd3c5af73b2e7c"
+    },
+    "templates/commands/checklist.md": {
+      "git_blob": "5ee239d30915fa03db77bca807262c4a3c958e98",
+      "sha256": "14bbede7273b147a39162d67801e5a9cecd23611f4d970be5e78a7cd770c73ca"
+    },
+    "templates/commands/implement.md": {
+      "git_blob": "742c45e185c917c3055bb51ef6427658148e6ae2",
+      "sha256": "d70c8b66470cfe8e9fe86a6eb3c75ae12ac4b44b2178932a146bf26eac4613b2"
+    },
+    "templates/commands/converge.md": {
+      "git_blob": "a177c31371b69c6be8f09d0b18ce78a8fca42e48",
+      "sha256": "a6dbe49b66ef34f421294e4148afce2af93ba02cb1b861bd80f72f753ee52eed"
+    },
+    "templates/checklist-template.md": {
+      "git_blob": "9d1e801c3e168869a04ab60c66ca0dae4a77614f",
+      "sha256": "c65b7f10aa9a965ea9c7f4e879d4ab0240665473731c5e9e638c4acb3ca9afc4"
+    },
+    "templates/constitution-template.md": {
+      "git_blob": "a4670ff46919b276a4c9663b4ca51830108fcfc0",
+      "sha256": "ce7549540fa45543cca797a150201d868e64495fdff39dc38246fb17bd4024b3"
+    },
+    "templates/plan-template.md": {
+      "git_blob": "36f2eab16880bac670fe43cbe7ef2b9bc8c3aa2f",
+      "sha256": "dfba43da2b2a207ff8c177a0fba03af074fd45e261696b4b64172041fad2e992"
+    },
+    "templates/spec-template.md": {
+      "git_blob": "ceb28776215a098e977650ac090c785dcbf53651",
+      "sha256": "3945437fc35cd30a5b2bf7beea680337c3516826d3efa5a6b92c4a7eca1ba28e"
+    },
+    "templates/tasks-template.md": {
+      "git_blob": "7fff087cc5a3c51a889d865fd9126607a032d233",
+      "sha256": "1e448e9153462e8c5b5a55231a54c756d870a82950d4dd9425a2bf5b7008a0d9"
+    },
+    "scripts/bash/check-prerequisites.sh": {
+      "git_blob": "7d6dba13533438e9dbe28e5c81e09a101ea18862",
+      "sha256": "5e5e3dbfe29d8ca0a6f06de80fb2042cd3d26f42cff475b3a097c4aa0d70f16d"
+    },
+    "scripts/bash/common.sh": {
+      "git_blob": "9efcfad5e6237b75505979212f6ec742760499be",
+      "sha256": "170e91ece502b88d83c715e427473843e0b358f550e86e3ff524546df405a9ca"
+    },
+    "scripts/bash/create-new-feature.sh": {
+      "git_blob": "06681d9b6e7691566594f3c0bb5d2a70014fe42e",
+      "sha256": "9f7a741d9766a6c1c5d5e44368f2c6bea6026b399ff6f0055870f760afdb8726"
+    },
+    "scripts/bash/resolve-template.sh": {
+      "git_blob": "da05d2df6d014fcc4b7cada4ea0a0a05752f075e",
+      "sha256": "829e227096abc8bf0889889ec9f792f503ca5d395b7836a8a7eb739ee75214e7"
+    },
+    "scripts/bash/setup-plan.sh": {
+      "git_blob": "aa394183cfc719fd65e145db8256bb328e3ac4eb",
+      "sha256": "d0bd298c026446f3c63167130d65e49e4aa4485de6bef18bcdfd57b19aa0de96"
+    },
+    "scripts/bash/setup-tasks.sh": {
+      "git_blob": "a5a685cd0e3a8ba74bf36e5c104858e29c16e650",
+      "sha256": "0f7d7e996ed4a26ab7bf09bf10540366ee402b930a4a9cbc0ee7bc6a8bd0013b"
+    },
+    "LICENSE": {
+      "git_blob": "28a50fa22639e32febe14e4ffc7a732b0ba8c90a",
+      "sha256": "2510b446bc1f0cf9702453075d20cd88631e20e5642658edb7325d9c1eb534f7"
+    }
+  },
+  "watch_files": {
+    "src/specify_cli/integrations/base.py": {
+      "git_blob": "e58d231d368ae7f0d9af96df12e9b7c44d7207fc",
+      "sha256": "d5fc9ccfe8bb23d1900e1300370fa5441276052fa828191b1e9f760a6a86ce12"
+    },
+    "src/specify_cli/agents.py": {
+      "git_blob": "dede50e0b135e73198c869e50fb6afcc7629c54a",
+      "sha256": "486fcc8e50730aba5efa34890aa3b1e4b99826811c9d68c76a85d19003849d29"
+    },
+    "src/specify_cli/integrations/codex/__init__.py": {
+      "git_blob": "2ffa59ca4b50e2bb257ca4c968e299dd0eccd37a",
+      "sha256": "121c9e59466576caaf25a05aa18da1a09de8582e79415ae025b6ccf50675525d"
+    },
+    "src/specify_cli/integrations/claude/__init__.py": {
+      "git_blob": "2ce7fb6dcc8cc92426b37666e2980e0fd7308596",
+      "sha256": "5c6a56c782f61a48e92ca747037c1143ad4951c0bdcd10ce86f5e03a73c0dd49"
+    },
+    "src/specify_cli/integrations/cursor_agent/__init__.py": {
+      "git_blob": "45c5522a0812f801ffa974ea0e1a22aa06522a4a",
+      "sha256": "9e904e50f8776a33c2aeb1e4cf1eca201b86db55d48393c2eb0ae015f0c93565"
+    },
+    "src/specify_cli/_invocation_style.py": {
+      "git_blob": "9fa115212f61ccc4462b5d3ac3affd4e772782f9",
+      "sha256": "d571b9aa12667dbd054eb32b39e2f21ef8c86b6855153f303923502a75479f66"
+    },
+    "src/specify_cli/events.py": {
+      "git_blob": "ba0a4f6363291b69baf0d9d29517d059145abc94",
+      "sha256": "10c9c8300369024b5aab19e0748204bbf0605a6c427a70feac4a91f002e987da"
+    },
+    "src/specify_cli/commands/init.py": {
+      "git_blob": "dfce1b3d106b54f524cac50fbedce62072d9da70",
+      "sha256": "f7c3fd2477179cd8903bcd9752da90d6decc44ddc6a26bc411b13a4d9bcf6926"
+    },
+    "src/specify_cli/shared_infra.py": {
+      "git_blob": "3aff73ae491b7a7762a963be640dd1575ce86eff",
+      "sha256": "d2cbd0b78ac66ac8aafbfa262c18ad186321a6a74045d8e8bb169df134184c3f"
+    },
+    "pyproject.toml": {
+      "git_blob": "c9eb3644ab9ab5d4335c86c826f45e6e2c43a359",
+      "sha256": "c7bb6567c2683dbb062ad68811560393c111b68918703f351b9a38c758c630d1"
+    }
+  },
+  "version": "1.0.5"
+}

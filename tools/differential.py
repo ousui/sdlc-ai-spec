@@ -1,0 +1,113 @@
+"""Compare installed upstream scripts with the port on synthetic fixtures.
+
+Only explicit address/name differences are projected. Return codes, stdout,
+stderr and generated spec/plan/task bytes otherwise have to agree.
+"""
+from __future__ import annotations
+import json
+import os
+import re
+import shutil
+import subprocess
+import tempfile
+from pathlib import Path
+from build import ROOT, HOSTS
+from naming_check import reverse_names
+from localize import restore_template
+
+
+def normalize_project_paths(text: str, project: Path) -> str:
+    """Collapse logical and physical spellings of one project to <PROJECT>.
+
+    macOS commonly exposes temporary directories as /var/... while physical
+    resolution returns /private/var/.... Upstream and ported scripts are both
+    allowed to canonicalize filesystem paths, so the differential verifier must
+    compare path identity rather than the platform-specific spelling. This only
+    normalizes the selected synthetic project root; unrelated paths are untouched.
+    """
+    forms={str(project)}
+    try:
+        forms.add(str(project.resolve()))
+    except OSError:
+        pass
+    # Replace only a complete path occurrence or a path prefix followed by a
+    # separator/output delimiter. Do not rewrite unrelated same-prefix paths such
+    # as /tmp/project-backup when the selected project is /tmp/project.
+    boundary = r'(?=$|[\/\s"\',;:)}\]])'
+    for value in sorted(forms,key=len,reverse=True):
+        text=re.sub(re.escape(value)+boundary,'<PROJECT>',text)
+    return text
+
+
+def compare(baselines: Path) -> list[dict]:
+    records=[]
+    cases=[
+        ('plan','setup-plan.sh',('--json',)),
+        ('tasks','setup-tasks.sh',('--json',)),
+        ('paths','check-prerequisites.sh',('--json','--paths-only')),
+        ('required','check-prerequisites.sh',('--json','--require-spec','--require-tasks','--include-tasks')),
+        ('missing-plan','check-prerequisites.sh',('--json',)),
+        ('template','resolve-template.sh',('checklist-template','--json')),
+        ('dry-run','create-new-feature.sh',('--json','--dry-run','--short-name','next','Next feature')),
+    ]
+    with tempfile.TemporaryDirectory(prefix='sdlc differential ') as temp:
+        root=Path(temp)
+        for host in HOSTS:
+            baseline=baselines/('cursor-agent' if host=='cursor' else host)
+            package=ROOT/'dist'
+            for case,script,args in cases:
+                output=[]
+                for ported in (False,True):
+                    project=root/(host+'-'+case+('-port' if ported else '-oracle'))
+                    project.mkdir()
+                    state=project/('.sdlc' if ported else '.specify')
+                    if ported:
+                        (state/'memory').mkdir(parents=True)
+                        (state/'init-options.json').write_text('{"script":"sh","feature_numbering":"sequential"}\n')
+                    else:
+                        shutil.copytree(baseline/'.specify',state)
+                    relative=('.sdlc/' if ported else '')+'specs/001-fixture'
+                    feature=project/relative;feature.mkdir(parents=True)
+                    (state/'feature.json').write_text(json.dumps({'feature_directory':relative})+'\n')
+                    (feature/'spec.md').write_text('Synthetic specification\n')
+                    if case not in ('plan','missing-plan'):
+                        (feature/'plan.md').write_text('Synthetic plan\n')
+                    if case=='required':
+                        (feature/'tasks.md').write_text('- [ ] T001 Synthetic task\n')
+                    env={k:v for k,v in os.environ.items() if not k.startswith(('SPECIFY_','SDLC_','PYTHON'))}
+                    env.update(SDLC_HOST=host,PYTHONDONTWRITEBYTECODE='1')
+                    script_dir=(package/'scripts/bash') if ported else state/'scripts/bash'
+                    result=subprocess.run(['bash',str(script_dir/script),*args],cwd=project,
+                        env=env,capture_output=True,text=True,timeout=20)
+                    def normalize(text):
+                        if ported: text=reverse_names(text, bare=True)
+                        text=text.replace(str(package)+'/templates/',str(project)+'/.specify/templates/')
+                        text=normalize_project_paths(text,project)
+                        text=text.replace('.sdlc/specs/','specs/').replace('.sdlc/','.specify/')
+                        text=re.sub(r'(?<![\w./])/?specs/','@SPECS@/',text)
+                        text=re.sub(r'(?<![\w:/\$-])sdlc-(constitution|specify|clarify|plan|tasks|analyze|checklist|implement|converge)\b',r'/speckit-\1',text)
+                        return text.replace('/sdlc:sdlc-','/speckit-').replace('$sdlc-','$speckit-').replace('/sdlc-','/speckit-').replace('$speckit-','/speckit-')
+                    files={}
+                    for p in feature.iterdir():
+                        if p.is_file():
+                            text=p.read_text()
+                            if ported and case == 'plan' and p.name == 'plan.md':
+                                text=restore_template('plan-template',text)
+                            files[p.name]=normalize(text)
+                    stdout=result.stdout
+                    if ported and result.returncode == 0 and case in ('tasks','template'):
+                        payload=json.loads(stdout)
+                        key='TASKS_TEMPLATE_CONTENT' if case == 'tasks' else 'TEMPLATE_CONTENT'
+                        name='tasks-template' if case == 'tasks' else 'checklist-template'
+                        payload[key]=restore_template(name,payload[key])
+                        # Compare JSON values, not encoder spacing/key order.
+                        stdout=json.dumps(payload,ensure_ascii=False,sort_keys=True)
+                    elif not ported and result.returncode == 0 and case in ('tasks','template'):
+                        stdout=json.dumps(json.loads(stdout),ensure_ascii=False,sort_keys=True)
+                    # Upstream script diagnostics use / even for Codex.
+                    stderr=normalize(result.stderr).replace('$speckit-','/speckit-')
+                    output.append((result.returncode,normalize(stdout),stderr,files))
+                if output[0]!=output[1]:
+                    raise AssertionError(f'Differential mismatch {host}/{case}: {output!r}')
+                records.append({'host':host,'case':case,'result':'PASS'})
+    return records

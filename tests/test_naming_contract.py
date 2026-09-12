@@ -3,7 +3,7 @@
 The source/target IDs are deliberately asserted independently from the README
 renderer. Generator integration uses the same contract; these tests must not count
 reserved skills as installed or approve unknown upstream names automatically.
-See docs/NAMING.md and PR #24.
+See docs/NAMING.md.
 """
 from __future__ import annotations
 
@@ -100,10 +100,9 @@ class NamingContractTests(unittest.TestCase):
         self.assertIn('已迁移生成入口', self.readme)
         self.assertEqual(self.data['status'], 'implemented-runtime-naming')
 
-    def test_contract_links_and_work_package_boundary(self):
+    def test_contract_links_and_deferred_behavior_boundary(self):
         self.assertIn('docs/NAMING.md', self.readme)
         self.assertIn('docs/naming-map.json', self.readme)
-        self.assertIn('https://github.com/ousui/sdlc-ai-spec/pull/24', self.policy)
         self.assertEqual(set(self.data['deferred_behaviors']), {
             'rule-auto-initialization',
             'legacy-project-data-migration',

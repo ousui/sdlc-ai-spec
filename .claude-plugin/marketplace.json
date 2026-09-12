@@ -3,11 +3,42 @@
   "owner": {
     "name": "Blade"
   },
+  "metadata": {
+    "description": "从需求到实施与收敛，11 个中文 Skill 串联规范驱动开发",
+    "version": "1.0.0-beta"
+  },
   "plugins": [
     {
       "name": "sdlc-ai-spec",
-      "description": "SDLC AI SPEC: project initialization and spec-driven development workflows (beta)",
-      "source": "./dist"
+      "description": "SDLC AI SPEC：面向 AI 编程助手的规范驱动开发插件，适配 Codex、Claude Code 和 Cursor。提供 11 个公共 Skill，涵盖项目初始化、项目规则、需求规格与澄清、技术方案、任务拆解、一致性检查、人工评审清单、实施、收敛及只读状态查询；内置简体中文流程与模板。当前为 Beta 版本。项目主页：https://github.com/goedgecloud/sdlc-ai-spec",
+      "version": "1.0.0-beta",
+      "author": {
+        "name": "Blade"
+      },
+      "homepage": "https://github.com/goedgecloud/sdlc-ai-spec",
+      "repository": "https://github.com/goedgecloud/sdlc-ai-spec",
+      "license": "MIT",
+      "keywords": [
+        "sdlc",
+        "spec-driven-development",
+        "requirements",
+        "planning",
+        "tasks",
+        "code-review",
+        "中文"
+      ],
+      "source": "./dist",
+      "category": "Productivity",
+      "tags": [
+        "sdlc",
+        "spec-driven-development",
+        "requirements",
+        "planning",
+        "tasks",
+        "code-review",
+        "中文"
+      ],
+      "displayName": "SDLC AI SPEC"
     }
   ]
 }

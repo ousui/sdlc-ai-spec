@@ -1,110 +1,62 @@
-# Engineering verification
+# 工程验证
 
-The CI run for the **exact source SHA** is authoritative for a particular build.
-Do not reuse a previous three-package PASS to claim the new single package passed.
+特定构建的状态以其**准确源码 SHA** 对应的 CI 运行结果为准。
+其他源码版本的证据不能证明所选构建的状态。
 
-The verifier installs no Agent and runs no business task. CI independently installs
-the pinned Spec Kit CLI and initializes three new empty projects, Bash, events
-false, no presets/extensions. It compares upstream-generated frontmatter and full
-English workflow bodies before localization. The localized loader is separately
-compared with reviewed Chinese assets for each host; translation identity alone
-is not semantic proof.
+验证器不安装 Agent，也不执行业务任务。CI 独立安装锁定的 Spec Kit CLI，并在
+三个新的空项目中初始化，使用 Bash、events false，不启用 presets/extensions。
+它比较上游生成的 frontmatter 和本地化前的完整英文工作流正文；本地化 loader
+则按宿主分别与已审查中文资源比较。译文字节一致本身不是语义等价证明。
 
-The package now uses native manifests and explicit component paths. The old
-portable-schema check is intentionally replaced by documented native-field/path
-checks and eleven-entry unified-inventory tests. This does NOT count as a native client test.
+包使用原生清单和显式组件路径，对照文档规定的原生字段/路径及统一 11 项入口清单
+检查。这不属于原生客户端测试。
 
-Checks cover raw source hashes and watched generator hashes; 27 original source
-renderer comparisons; 27 English migrated workflow comparisons; 27 localized resolved bodies; shared template
-reference projections; literal factoring, malformed binding failures, bounded
-output pages, relocation and symlink boundaries; one reproducible dist; three root
-marketplaces; existing synthetic filesystem behavior and 21 upstream-script
-differential cases; candidate preparation/acceptance rejection tests. The local INIT additionally
-compares its project data with three actual upstream CLI initializations and
-executes dedicated preservation, failure and downstream-script fixtures.
+检查覆盖原始源码摘要和受监视生成器摘要；27 项原始源码渲染比较、27 项英文移植
+工作流比较、27 项解析后中文正文；共享模板引用映射；字面片段提取、畸形绑定失败、
+有界输出分页、路径迁移和符号链接边界；单一可复现 dist；三个根 Marketplace；
+既有合成文件系统行为和 21 项上游脚本差分用例；候选准备/接受拒绝测试。
+本地 INIT 还将项目数据与三次真实上游 CLI 初始化比较，并执行专门的保留、失败和下游脚本夹具。
 
-Evidence contains an explicit verification contract version, source SHA, source content/mode digest,
-upstream SHA, declared and actual repositories, fixed product version, environment,
-individual results, unit-test output and package inventory. Upgrade acceptance rejects
-reports that omit required check groups, counts, environment identity or inventory. Evidence is outside the checkout. The
-read-only workflow checks that committed output is not rewritten during tests.
+证据包含显式验证契约版本、源码 SHA、源码内容/权限摘要、上游 SHA、声明仓库和
+实际仓库、固定产品版本、环境、逐项结果、单元测试输出及包清单。升级接受流程拒绝
+缺失必需检查组、数量、环境标识或清单的报告。证据位于 checkout 之外。
+只读工作流还检查测试期间已提交产物没有被重写。
 
-No automated native plugin install/discovery, LLM-driven end-to-end result,
-Windows, production or concurrent same-feature write guarantee is claimed.
-Synthetic scripts on macOS are covered when that platform job actually runs;
-this is not native-client or model acceptance.
-The user will run [SMOKE-TEST.md](SMOKE-TEST.md) independently in Codex and Cursor.
+不宣称自动完成原生插件安装/发现、LLM 驱动端到端结果、Windows、生产验证，或
+同一需求并发写入保证。macOS 合成脚本覆盖以该平台任务实际运行结果为准，不等于
+原生客户端或模型验收。人工宿主比较按 [SMOKE-TEST.md](SMOKE-TEST.md) 在 Codex 和 Cursor 独立进行。
 
-## Historical single-package engineering record (before INIT)
+## 项目初始化覆盖
 
-The materialization job for source event `fcf212aeb3148ce1e200c55e955fda481a99360b`
-produced the independently checked tree
-`6846f3d52066dc4acc85e964868cc33f7a3e4a26` and code commit
-`ffd8449cbd27da3c19cf4af45c2cce6c8e52063f` (Blade). It then verified the committed
-code again: 180 recorded checks, 35 unit-test methods and 21 script-differential
-cases passed on Ubuntu with Python 3.12.3 and Bash 5.2.21. Counts overlap by
-reporting level and must not be summed. The same-version detached candidate
-rehearsal also passed without modifying the accepted source or committing the
-candidate. This is an upgrade-mechanism rehearsal, not approval of a new upstream.
+INIT 入口有独立本地来源，并在不存在 `.sdlc` 时测试。全新初始化必须与各已安装
+上游 CLI 基线生成相同宪法字节，以及相同 `script`、`feature_numbering` 和
+`speckit_version`。不得从这些基线复制 Agent 注册表、工具或需求选择。
+合成测试覆盖人工状态补全、安全重复调用、配置和 JSON 冲突、模板覆盖、包隔离、
+只读 Git 警告、缺失依赖、中断恢复，以及全部宿主中 INIT 后调用既有核心脚本。
+夹具创建的任务文件用于测试脚本互操作性，不是 LLM 编写实现的证据。
 
-Evidence: https://github.com/ousui/sdlc-ai-spec/actions/runs/34500754265
-Artifact ID: `10161762096`. Its `verification/result.json` binds the post-commit
-check to the code commit above; `upgrade-rehearsal/result.json` records the
-accept-check result. The job's final push failed because the Actions credential
-could not modify workflow files. That delivery failure does not invalidate the
-recorded tests, but the overall materialization job must NOT be described as a
-successful delivery run. The verified Git objects were read back and the
-implementation branch is updated through the authorized GitHub connector instead.
+检查数量与状态以准确源码 SHA 的 CI 运行结果为准。
+原生 INIT 调用需要在已安装客户端中单独验证。
 
-The following documentation-only delivery commit must receive its own successful
-read-only `SDLC engineering` run. Always select that final exact SHA, not this
-historical event SHA, when checking delivery. The temporary transport/workflow is
-absent from the tested product tree. Product version remains `1.0.0-beta`.
+## 统一公共入口与 STATUS
 
-## Project initialization coverage
+当前包在 `dist/skills` 中恰好提供 11 个入口：九项上游核心 Skill 加本地 INIT 和
+STATUS，不保留宿主私有包装入口。所有公共入口省略 `user-invocable`、
+`disable-model-invocation` 和 `argument-hint`，使用宿主默认行为。INIT 保留已有项目数据。
+Claude 默认发现 `skills/`，不重复配置自定义路径；其他清单选择 `./skills/`。
+所有包装入口向上两级解析包根目录。
 
-The init entry has its own local source and is tested without an existing `.sdlc`.
-A fresh initialization must seed the same constitution bytes and the same `script`,
-`feature_numbering` and `speckit_version` as each installed upstream CLI baseline.
-No Agent registry, tools or feature selection may be copied from those baselines.
-The synthetic suite covers manual-state completion, safe repeated calls, profile
-and JSON conflicts, template overrides, package isolation, read-only Git warnings,
-missing dependencies, interruption recovery, and init followed by existing core
-scripts for all hosts. A fixture-created tasks file tests script interoperability;
-it is not LLM-authored implementation evidence.
+STATUS 是可选本地只读辅助能力，不是额外生命周期阶段或上游命令。它容忍未完成/
+未初始化状态，不持久化需求切换、不初始化、不执行建议的下一项 Skill。
+详见 [STATUS.md](STATUS.md)。不为 STATUS 保存历史而修改现有核心正文、模板或运行行为。
 
-Use the final exact source SHA CI run for counts and status; historical counts
-above describe only the previous implementation. Native INIT invocation remains
-for the user to verify in the installed clients.
+## 呈现与模板解析检查
 
-## Unified public inventory and STATUS
+默认模板和 SPEC 固定需求示例具有绑定来源的中文呈现。验证先要求完整分发产物
+与已审查中文字节相等，再将原始英文模板映射与独立上游基线比较。合成差分夹具中
+生成的 plan.md、INIT 宪法及已知模板内容 JSON 字段也遵循完整产物规则。
+不得将任意业务文本按子串归一化为译文。
 
-The current package exposes exactly eleven entries under `dist/skills`: nine
-upstream core Skills plus local INIT and STATUS. There are no private host Skill
-wrappers. All public entries omit user-invocable, disable-model-invocation and
-argument-hint; host defaults apply. This supersedes earlier descriptions of the
-INIT policy exception, not the existing INIT data-preservation contract.
-Claude uses default skills/ discovery without a duplicate custom path. Other
-manifests select ./skills/. All wrappers resolve the package two levels up.
-
-STATUS is an optional local read-only utility, not another lifecycle phase or an
-upstream command. It tolerates incomplete/uninitialized state, never persists a
-feature switch, never initializes, and never executes the suggested next Skill.
-See [STATUS.md](STATUS.md). Existing core bodies/templates and runtime behavior
-are not modified to store history for STATUS.
-
-## Presentation comparison and review fixes
-
-Default templates and SPEC's fixed requirements example now have source-bound
-Chinese presentations. Verification first requires the complete distributed
-artifact to equal its reviewed Chinese bytes; only then does it compare the
-original English template projection with the independent upstream baseline.
-The same whole-artifact rule applies to generated plan.md, init constitution and
-known template-content JSON fields in synthetic differential fixtures. Arbitrary
-business text is never substring-normalized as a translation.
-
-REV-007 tests execute both path and content resolvers and verify that the selected
-path can actually be read, including a project override. STATUS regressions test
-business titles containing “示例”, nested checklists and literal HTML comment
-openers in code. They verify both correct counts/line numbers and file nonmutation.
-These synthetic checks do not prove every Agent output or all Markdown grammar.
+模板解析测试执行路径及内容解析器，验证所选路径实际可读，包含项目覆盖情况。
+STATUS 回归测试覆盖含“示例”的业务标题、嵌套清单及代码中的 HTML 注释起始字面量，
+同时验证计数/行号正确且文件不变。这些合成检查不能证明每次 Agent 输出或完整 Markdown 语法。

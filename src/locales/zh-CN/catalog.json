@@ -25,7 +25,7 @@
       "source_sha256": "1725b095edf14bf9c373c0c3e040abb69e38ebaa5812e28790bf02f8b50c68e9",
       "translation_sha256": "57da23ea27c9fedbdee26f8598daea1a18a8523954e674d27e458fc6115fcda7",
       "status": "reviewed",
-      "reviewer": "AI review: REV-007 path producer-consumer repair",
+      "reviewer": "AI review: path producer-consumer repair",
       "metadata": {
         "description": {
           "source": "Create or update the feature specification from a natural language feature description.",

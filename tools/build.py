@@ -117,9 +117,33 @@ def wrapper(meta: dict, host: str | None, name: str) -> str:
         '不回退上游 CLI 或网络。每次 shell 调用显式传入上述变量。\n')
 
 
+def plugin_manifest(host: str) -> dict:
+    """Project shared identity into documented native presentation fields."""
+    if host not in HOSTS:
+        raise ValueError('Unknown host')
+    manifest = {key: value for key, value in METADATA.items() if key != 'presentation'}
+    presentation = METADATA['presentation']
+    if host == 'codex':
+        manifest['interface'] = dict(presentation, displayName=DISPLAY_NAME,
+            longDescription=METADATA['description'], developerName=AUTHOR['name'],
+            websiteURL=METADATA['homepage'])
+    elif host == 'claude':
+        manifest['displayName'] = DISPLAY_NAME
+    else:
+        manifest['logo'] = presentation['logo']
+    if manifest_skills(host) is not None:
+        manifest['skills'] = manifest_skills(host)
+    return manifest
+
+
 def marketplaces() -> dict[str, dict]:
     entry = {'name': METADATA['name'], 'description': METADATA['description']}
     owner = {'name': AUTHOR['name']}
+    metadata = {'description': METADATA['presentation']['shortDescription'], 'version': VERSION}
+    catalog_entry = {key: METADATA[key] for key in
+        ('name', 'description', 'version', 'author', 'homepage', 'repository', 'license', 'keywords')}
+    catalog_entry.update(source='./dist', category=METADATA['presentation']['category'],
+                         tags=METADATA['keywords'])
     return {
         '.agents/plugins/marketplace.json': {
             'name': 'sdlc-ai-spec', 'interface': {'displayName': DISPLAY_NAME},
@@ -127,9 +151,9 @@ def marketplaces() -> dict[str, dict]:
                 policy={'installation': 'AVAILABLE', 'authentication': 'ON_INSTALL'},
                 category='Productivity')]},
         '.claude-plugin/marketplace.json': {'name': 'sdlc-ai-spec', 'owner': owner,
-            'plugins': [dict(entry, source='./dist')]},
+            'metadata': metadata, 'plugins': [dict(catalog_entry, displayName=DISPLAY_NAME)]},
         '.cursor-plugin/marketplace.json': {'name': 'sdlc-ai-spec', 'owner': owner,
-            'plugins': [dict(entry, source='./dist')]},
+            'metadata': metadata, 'plugins': [dict(catalog_entry)]},
     }
 
 
@@ -137,7 +161,7 @@ def generate_markets(root: Path) -> None:
     for name, data in marketplaces().items():
         path = root / name
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(data, indent=2) + '\n')
+        path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + '\n')
 
 
 def build(destination: Path) -> None:
@@ -163,6 +187,7 @@ def build(destination: Path) -> None:
         shutil.copytree(ROOT / 'src/scripts', package / 'scripts',
                         ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
         shutil.copytree(ROOT / 'src/templates', package / 'templates')
+        shutil.copytree(ROOT / 'src/assets', package / 'assets')
         # Validate all translations before publishing any generated package.
         check_all()
         bindings = {host: {} for host in HOSTS}
@@ -215,12 +240,10 @@ def build(destination: Path) -> None:
         for host in HOSTS:
             (package / 'bindings' / (host + '.json')).write_text(
                 json.dumps(bindings[host], ensure_ascii=False, indent=2) + '\n')
-            manifest = dict(METADATA)
-            if manifest_skills(host) is not None:
-                manifest['skills'] = manifest_skills(host)
+            manifest = plugin_manifest(host)
             path = package / ('.' + host + '-plugin') / 'plugin.json'
             path.parent.mkdir()
-            path.write_text(json.dumps(manifest, indent=2) + '\n')
+            path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
         # Template references name logical capabilities, not shell commands.
         # Each explicit host entrypoint supplies the native invocation mapping.
         for path in (package / 'templates').glob('*.md'):

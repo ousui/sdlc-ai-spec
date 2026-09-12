@@ -1,33 +1,29 @@
-# Repeatable upstream upgrades
+# 可重复的上游升级
 
-## What is locked
+## 开发工具环境
 
-## Development-tool environment
+通过仓库锁定的 uv 项目运行升级工具：先执行 `uv sync --locked`，再使用
+`uv run --locked ...`。候选上游 CLI 仍按 DEVELOPMENT.md 在独立的
+`uv venv` / `uv pip` 环境中创建。uv 不进入安装后的 `dist` 运行时。
+`pyproject.toml`、`uv.lock` 和 `.python-version` 是需审查的构建输入，必须保持同步。
 
-Run upgrade tooling through the repository's locked uv project: `uv sync --locked`
-then `uv run --locked ...`. The candidate's upstream CLI remains an independently
-created `uv venv` / `uv pip` environment as documented in DEVELOPMENT.md. uv is
-never added to the installed `dist` runtime. Changes to `pyproject.toml`, `uv.lock`
-or `.python-version` are reviewed build inputs and must remain synchronized.
+## 锁定范围
 
-`upstream.lock.json` records the exact Spec Kit commit, the selected Bash/core-only
-profile, copied source identities and watched renderer/integration identities.
-`src/upstream/` retains those original bytes, including their original licenses.
-Derived source lives in `src/templates/` and `src/scripts/`; nine commands are
-read directly from `src/upstream/templates/commands/`. `src/adapters/` holds reviewed
-changes; `tools/port.py` applies strict anchors. `dist` is generated, not edited.
+`upstream.lock.json` 记录准确 Spec Kit 提交、所选 Bash/仅核心能力配置、复制的
+源码标识，以及受监视渲染器/集成标识。`src/upstream/` 保留原始字节和许可证。
+派生源码位于 `src/templates/` 和 `src/scripts/`；九项命令直接读取
+`src/upstream/templates/commands/`。`src/adapters/` 保存已审查的适配变更，
+`tools/port.py` 使用严格锚点应用这些变更。`dist` 由生成器产生，不手工编辑。
 
-Watched files include `integrations/base.py`, `agents.py`, the Codex/Claude/Cursor
-integrations, invocation styles, init, shared infrastructure, and events. A watch
-change requires review even when a patch still applies. Review the transitive
-imports if those files start depending on additional generator modules. This is
-not a claim that a fixed watch list can detect every future upstream architecture.
+受监视文件包含 `integrations/base.py`、`agents.py`、Codex/Claude/Cursor 集成、
+调用风格、init、共享基础设施和 events。即使补丁仍能应用，受监视文件变化也必须
+审查。若这些文件开始依赖其他生成器模块，还需审查传递导入。
+固定监视清单不能保证检测未来所有上游架构变化。
 
-## Prepare (no overwrite, no downloads)
+## 准备候选：不覆盖、不下载
 
-Use a clean checkout of this repository and a separately obtained, clean upstream
-Git checkout. The maintainer fetches/selects a release explicitly. Never follow
-`main` automatically or delete the accepted lock to bypass validation.
+使用本仓库干净 checkout 和单独获取的干净上游 Git checkout。维护者显式获取并
+选择版本；不得自动跟随 `main`，也不得删除已接受的锁文件来绕过验证。
 
 ```sh
 uv sync --locked
@@ -37,48 +33,36 @@ uv run --locked python -B tools/upgrade.py prepare \
   --out /absolute/path/outside/this-repo/sdlc-candidate
 ```
 
-The selected ref must equal upstream HEAD. Candidate placement is checked using the
-resolved filesystem path, so a symlinked parent cannot place it back inside either source
-checkout. The command creates a detached Git
-worktree from the current accepted commit, writes its candidate lock, materializes
-source, builds one package and generates marketplaces. A sibling file
-`sdlc-candidate.upgrade.json` records source/base identity, all changed watched or
-copied paths, readiness and exact content/mode fingerprint. The active worktree,
-its branch and accepted dist remain untouched. A failure leaves a BLOCKED
-candidate for inspection, not a half-updated accepted product.
+所选 ref 必须等于上游 HEAD。候选位置按解析后的文件系统路径检查，因此父目录
+符号链接不能将候选放回任一源码 checkout。命令从当前已接受提交创建 detached
+Git worktree，写入候选锁文件、生成派生源码、构建单包并生成 Marketplace。
+同级文件 `sdlc-candidate.upgrade.json` 记录来源/基线身份、所有变化的受监视或
+复制路径、就绪状态，以及准确内容/权限指纹。活动工作树、分支和已接受 dist 不变。
+失败时保留 BLOCKED 候选供检查，不留下更新一半的已接受产品。
 
-New core commands, changed patch anchors, host line-structure differences,
-missing watched modules or unknown source inventory are review events. Do not
-silently exclude them or loosen parity checks. If adapter code must change,
-review and commit that change first, then prepare a fresh candidate.
+新增核心命令、补丁锚点变化、宿主行结构差异、受监视模块缺失或未知来源清单都需要
+审查。不得静默排除或放宽等价检查。若必须变更适配代码，先审查并提交该变更，再准备新候选。
 
-## Verify independently
+## 独立验证
 
-Install the candidate's exact upstream in an isolated tool environment and
-initialize three NEW empty directories with Codex, Claude, Cursor, Bash,
-`--events=false`, no presets/extensions. Run the candidate's `tools/verify.py`
-against those outputs; use evidence outside both worktrees. See
-[DEVELOPMENT.md](DEVELOPMENT.md). Never build from these initialized directories;
-they are an independent oracle.
+在隔离工具环境安装候选的准确上游版本，使用 Codex、Claude、Cursor、Bash、
+`--events=false` 且无 presets/extensions，初始化三个新的空目录。使用候选自身的
+`tools/verify.py` 对照这些输出验证，证据保存在两个工作树之外。
+详见 [DEVELOPMENT.md](DEVELOPMENT.md)。不得从初始化目录构建；它们仅是独立比较基准。
 
-The report must bind `source_digest` to the complete candidate bytes and executable
-modes, including dist, not merely claim PASS at the previous source commit. It must also
-carry the supported verification contract version, all required check groups, test and
-differential counts, environment identity, and the distribution inventory; a truncated
-or hand-minimized PASS JSON is rejected. A
-same-version replay is an engineering regression, not acceptance of a new version.
-Existing synthetic project fixtures cover continued use of the established
-`.sdlc` format. A real format incompatibility requires a separate explicit project
-data migration; updating/installing the plugin must not rewrite users' projects.
+报告必须将 `source_digest` 绑定到包括 dist 在内的完整候选字节与可执行权限，不能
+仅凭上一源码提交的 PASS 声明通过。还必须包含受支持的验证契约版本、全部必需检查组、
+测试及差分数量、环境标识和分发清单；截断或手动精简的 PASS JSON 会被拒绝。
+同版本重放属于工程回归，不是新版本接受。既有合成项目夹具覆盖现行 `.sdlc` 格式
+的持续使用。真实格式不兼容需单独显式迁移项目数据；更新/安装插件不得重写用户项目。
 
-## Review and accept
+## 审查并接受
 
-Inspect ALL changed original code, especially whole functions replaced by port
-patches: an upstream function can keep its name while adding a necessary fix.
-Also inspect original new English instructions; do not normalize away behavioral,
-permission, checklist ownership or stop-condition changes.
+检查全部变化的原始代码，尤其是被移植补丁整体替换的函数：上游函数可能名称不变，
+但增加了必要修正。也要检查新增的原始英文指令；不得归一化掉行为、权限、清单所有权
+或停止条件变化。
 
-Create an external review JSON after that review:
+完成审查后，在外部创建审查 JSON：
 
 ```json
 {
@@ -96,110 +80,86 @@ uv run --locked python -B tools/upgrade.py accept \
   --review /absolute/path/review.json --check
 ```
 
-After a successful check, the same command without `--check` commits ONLY the
-candidate detached worktree using the maintainer's Git identity. It never pushes,
-merges, changes the current branch, or creates/moves tags. Integrate that exact
-candidate commit through the normal reviewed Git process. Until then members
-continue to install the accepted dist. `accept` rejects changed candidate bytes,
-stale reports, incomplete reviews, a moved source HEAD or a dirty source tree.
-The JSON review is an explicit local workflow record, not cryptographic identity
-or a security boundary against a developer who controls the machine.
+检查成功后，同一命令去掉 `--check`，仅使用维护者 Git 身份提交候选 detached
+worktree。它不推送、不合并、不改变当前分支，也不创建或移动 tag。通过正常审查的
+Git 流程集成该准确候选提交；此前成员继续安装已接受的 dist。`accept` 拒绝候选
+字节变化、过期报告、不完整审查、来源 HEAD 移动或来源工作树不干净的情况。
+JSON 审查是显式本地流程记录，不是加密身份证明，也不是防范控制本机开发者的安全边界。
 
-## Version and rollback
+## 版本与回退
 
-Product version stays `1.0.0-beta` in this debugging period. It is independent of
-the upstream tag; do not mix the two. Record commit and BUILD.json build_id.
-Rollback is selecting an earlier accepted source/distribution commit, followed by
-client-specific cache reload/reinstall verification. Do not delete project data.
+调试期间产品版本保持 `1.0.0-beta`，它独立于上游 tag，不得混用。记录提交和
+BUILD.json build_id。回退时选择较早的已接受源码/分发提交，再按客户端流程重新
+加载缓存或重装并验证。不得删除项目数据。
 
-## Source map
+## 来源映射
 
-| Upstream | Local derivation | Verification |
+| 上游 | 本地派生 | 验证 |
 | --- | --- | --- |
-| templates/commands/*.md | original source -> source renderer -> host factoring | resolved full bodies vs 3 installed CLI baselines |
-| templates/*-template.md | default feature path and logical capability IDs | exact text except explicit path/reference projection |
-| scripts/bash/*.sh | strict port anchors and global-resource binding | source deltas + return codes, output and files on fixtures |
-| integrations/base.py, agents.py, three integrations | watched original source -> reviewed renderer/adapters | each host's metadata and original generated body |
-| LICENSE | unchanged in source and dist | byte equality |
+| templates/commands/*.md | 原始源码 → 源码渲染器 → 宿主公共片段提取 | 完整解析正文与三个已安装 CLI 基线比较 |
+| templates/*-template.md | 默认需求路径和逻辑能力 ID | 除显式路径/引用映射外文本精确相等 |
+| scripts/bash/*.sh | 严格移植锚点及全局资源绑定 | 源码差异及夹具上的返回码、输出和文件 |
+| integrations/base.py, agents.py, three integrations | 受监视原始源码 → 已审查渲染器/适配器 | 各宿主元数据和原始生成正文 |
+| LICENSE | 源码及 dist 中保持原样 | 字节相等 |
 
-Source copying, rendering, factoring, manifests and comparison are deterministic.
-AI is not invoked by any tool. A future unsupported upstream change stops the
-candidate; it does not trigger an uncontrolled AI rewrite.
+源码复制、渲染、公共片段提取、清单和比较均为确定性过程，工具不调用 AI。
+未来不受支持的上游变化会阻止候选，不触发无控制的 AI 重写。
 
-## Local initializer across upgrades
+## 升级中的本地初始化器
 
-`init` is a local command, not part of the upstream command inventory. Preserve
-`src/adapters/INIT.md`, `src/scripts/python/init_project.py` and its tests during
-candidate generation. Changes to watched upstream `commands/init.py` require
-review of the project-data projection (template seeding and defaults), not a
-blind copy of the installer. Reinitialization does not rewrite an existing
-project to the new upstream version or reset documents; layout incompatibility
-needs a separate migration, never an implicit action of plugin installation.
+`init` 是本地命令，不属于上游命令清单。候选生成必须保留 `src/adapters/INIT.md`、
+`src/scripts/python/init_project.py` 及其测试。受监视上游 `commands/init.py`
+变化时，审查项目数据映射（模板初始化和默认值），不盲目复制安装器。
+重复初始化不将已有项目重写为新上游版本，也不重置文档；布局不兼容需单独迁移，
+绝不是插件安装的隐式动作。
 
-Upstream package version is read from watched `pyproject.toml` and recorded
-separately from the tag/ref. Preparing an upgrade by exact SHA must not write that
-SHA into project `speckit_version`. INIT retains existing project defaults; it
-does not silently run a data migration after a package update.
+上游包版本从受监视的 `pyproject.toml` 读取，与 tag/ref 分别记录。按准确 SHA
+准备升级时，不得把该 SHA 写入项目 `speckit_version`。INIT 保留已有项目默认值，
+不会在包更新后静默执行数据迁移。
 
-## Mandatory naming projection
+## 必须应用的命名映射
 
-Read [NAMING.md](NAMING.md) and [naming-map.json](naming-map.json) before changing
-the upstream version. `tools/naming.py` applies the reviewed mapping after raw
-source rendering; `tools/naming_check.py` is an independently maintained finite
-comparison oracle. The build identity includes the naming map. Upstream locks
-and copied source paths retain original names, while generated workflows use
-`references/workflows/<full-skill-id>.md` and loader calls use the same public ID.
-Unknown source references must stop preparation; never infer new abbreviations
-or weaken full-body parity to accept a candidate. See PR #24 for execution evidence.
+变更上游版本前，阅读 [NAMING.md](NAMING.md) 和 [naming-map.json](naming-map.json)。
+`tools/naming.py` 在原始源码渲染后应用已审查映射；`tools/naming_check.py` 是独立
+维护的有限比较基准。构建身份包含命名映射。上游锁与复制的源码路径保留原名，
+生成工作流使用 `references/workflows/<full-skill-id>.md`，loader 调用使用相同公共 ID。
+未知来源引用必须阻止准备；不得猜测新缩写，也不得削弱完整正文等价检查来接受候选。
 
-## Shared entrypoints and localized candidate resumption
+## 共享入口与本地化候选恢复
 
-Current distribution uses eleven public entries under `dist/skills/`, including
-local INIT and STATUS, with no host-private wrappers. Original English source rendering
-is still independently checked; Chinese source assets are version-bound in
-`src/locales/zh-CN`. No translation service runs during build or installation.
-Original English template projections remain available for independent comparison.
-Reviewed Chinese default-template presentations are regenerated; existing project data remains unchanged.
+当前分发包在 `dist/skills/` 中提供 11 个公共入口，包含本地 INIT 和 STATUS，
+不保留宿主私有包装入口。原始英文源码渲染仍独立检查；中文来源资源在
+`src/locales/zh-CN` 中绑定版本。构建和安装不运行翻译服务。原始英文模板映射
+继续供独立比较。已审查中文默认模板呈现会重新生成，已有项目数据保持不变。
 
-A changed upstream input can now stop preparation as `LOCALIZATION_REQUIRED`.
-Only the candidate translation subtree can be edited in this state. After explicit
-translation review, `tools/upgrade.py refresh-localization --record ... --review ...`
-validates frozen non-translation inputs, rechecks Chinese and rebuilds the candidate.
-It creates a new candidate digest, not a new accepted version. Old test evidence
-must not be reused. Full commands and the review record format are in
-[LOCALIZATION.md](LOCALIZATION.md). Review strings are workflow records, not auth.
+上游输入变化可能以 `LOCALIZATION_REQUIRED` 阻止准备。此状态下仅可编辑候选
+翻译子树。显式完成翻译审查后，`tools/upgrade.py refresh-localization --record ... --review ...`
+验证已冻结的非翻译输入，重新检查中文并构建候选，生成新候选摘要，而不是新的已接受
+版本。旧测试证据不得复用。完整命令和审查记录格式见 [LOCALIZATION.md](LOCALIZATION.md)。
+审查字符串是流程记录，不是身份认证。
 
-The original "candidate must not be edited" rule still applies outside this
-explicit, narrow translation-resumption path. Changed adapter/code requires a
-reviewed source update and freshly prepared candidate, not a digest edit.
+在这一明确、狭窄的翻译恢复路径之外，仍适用“不得编辑候选”规则。
+适配器/代码变化需要已审查的源码更新和重新准备候选，不能直接编辑摘要。
 
-## Unified public inventory and STATUS
+## 统一公共入口与 STATUS
 
-The current package exposes exactly eleven entries under `dist/skills`: nine
-upstream core Skills plus local INIT and STATUS. There are no private host Skill
-wrappers. All public entries omit user-invocable, disable-model-invocation and
-argument-hint; host defaults apply. This supersedes earlier descriptions of the
-INIT policy exception, not the existing INIT data-preservation contract.
-Claude uses default skills/ discovery without a duplicate custom path. Other
-manifests select ./skills/. All wrappers resolve the package two levels up.
+当前包在 `dist/skills` 中恰好提供 11 个入口：九项上游核心 Skill 加本地 INIT 和
+STATUS，不保留宿主私有包装入口。所有公共入口省略 `user-invocable`、
+`disable-model-invocation` 和 `argument-hint`，使用宿主默认行为。INIT 保留已有项目数据。
+Claude 默认发现 `skills/`，不重复配置自定义路径；其他清单选择 `./skills/`。
+所有包装入口向上两级解析包根目录。
 
-STATUS is an optional local read-only utility, not another lifecycle phase or an
-upstream command. It tolerates incomplete/uninitialized state, never persists a
-feature switch, never initializes, and never executes the suggested next Skill.
-See [STATUS.md](STATUS.md). Existing core bodies/templates and runtime behavior
-are not modified to store history for STATUS.
+STATUS 是可选本地只读辅助能力，不是额外生命周期阶段或上游命令。它容忍未完成/
+未初始化状态，不持久化需求切换、不初始化、不执行建议的下一项 Skill。
+详见 [STATUS.md](STATUS.md)。不为 STATUS 保存历史而修改现有核心正文、模板或运行行为。
 
-Upgrades must retain src/adapters/STATUS.md, src/locales/zh-CN/status.md and its local
-resource catalog record, src/scripts/python/project_status.py and its tests.
-These are local sources, not copied upstream commands. Materialization rebuilds
-the same eleven-entry package without overwriting this utility. Source changes
-that affect field interpretation require STATUS compatibility review and tests;
-do not silently migrate business data. The existing localization refresh path
-remains scoped to reviewed locale changes. No new release/permission platform
-is introduced in this iteration.
+升级必须保留 src/adapters/STATUS.md、src/locales/zh-CN/status.md 及其本地资源
+目录记录、src/scripts/python/project_status.py 和测试。这些是本地源码，不是
+复制的上游命令。派生源码生成重建同一 11 项入口包，不覆盖此辅助能力。影响字段
+解释的源码变化需进行 STATUS 兼容性审查和测试；不得静默迁移业务数据。
+既有本地化刷新路径仍仅限已审查的本地化资源变化。
 
-Template and requirements-example freshness participates in LOCALIZATION_REQUIRED.
-`localize.py export` includes those English inputs; `record --presentation NAME`
-records their completed source review before the existing localization-only
-refresh. The new locale templates live under the already-authorized locale subtree;
-refresh does not permit changes elsewhere or hand-edited candidate digests.
+模板和需求示例的新鲜度参与 LOCALIZATION_REQUIRED 检查。`localize.py export`
+包含这些英文输入；`record --presentation NAME` 在既有本地化专用刷新前记录已
+完成的来源审查。新本地化模板位于已授权的本地化子树；刷新不允许修改其他位置或
+手工编辑候选摘要。

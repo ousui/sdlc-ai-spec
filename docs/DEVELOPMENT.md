@@ -1,40 +1,36 @@
-# Development and engineering verification
+# 开发与工程验证
 
-## Metadata and layout
+## 元数据与目录布局
 
-`plugin-metadata.json` at the repository root is the single source for the plugin
-name, version (`1.0.0-beta`), author (Blade), declared repository and license.
-Use `v1.0.0-beta` as a display label; machine manifests use `1.0.0-beta`.
-Do not increment the version during this debugging period or create/move a tag
-as part of an ordinary code change. Use the exact commit SHA to identify builds.
+仓库根目录的 `plugin-metadata.json` 是插件名称、版本（`1.0.0-beta`）、作者
+（Blade）、声明仓库和许可证的唯一来源。`homepage` 和 `keywords` 是三个宿主
+共用的发现信息；`presentation` 是构建输入，不原样写入宿主清单。生成器将其
+映射为 Codex 的 `interface`、Claude 的 `displayName`、Cursor 的 `logo` 及
+Marketplace 展示字段。`src/assets/` 中的图标复制到 `dist/assets/`，并纳入构建摘要。
+显示标签使用 `v1.0.0-beta`，机器清单使用 `1.0.0-beta`。调试期间不递增版本，
+普通代码变更不创建或移动 tag；使用准确提交 SHA 标识构建。
 
-The root contains the implementation. `src/upstream/templates/commands` retains original English
-source; `src/templates` and `src/scripts` contain documented port deltas.
-`src/adapters/` supplies resource binding and host differences. `tools/build.py`
-generates one self-contained `dist` with 11 unique public entries (nine upstream cores, local INIT and STATUS),
-without importing the upstream CLI or reading initialized projects. Use `--marketplaces`
-to also regenerate the three repository-root catalogs.
-There is no root plugin manifest because the root is a source/build workspace.
+根目录保存实现源码。`src/upstream/templates/commands` 保留上游英文原文；
+`src/templates` 和 `src/scripts` 保存已记录的移植差异；`src/adapters/` 提供
+资源绑定和宿主差异。`tools/build.py` 生成一个自包含的 `dist`，含 11 个唯一公共
+入口（九项上游核心、本地 INIT 和 STATUS），不导入上游 CLI，也不读取已初始化的
+项目。加上 `--marketplaces` 可同时重新生成根目录的三个目录清单。
+根目录是源码与构建工作区，因此不放置根插件清单。
 
-All entries live under `dist/skills/`; no private entry directories remain.
-Claude uses its default skills/ scan; Codex/Cursor explicitly select ./skills/.
-The three approved UI/selection fields are omitted from every generated entry.
-Raw upstream metadata and execution contracts remain independently checked.
-The English source renderer remains independently compared with upstream output;
-Chinese complete bodies are validated against reviewed, source-bound locale assets.
-See [LOCALIZATION.md](LOCALIZATION.md) for incremental translation and protected tokens.
+所有入口位于 `dist/skills/`，不保留私有入口目录。Claude 默认扫描 `skills/`；
+Codex/Cursor 显式选择 `./skills/`。生成入口均省略三项已批准的展示/选择字段。
+原始上游元数据和执行契约仍独立检查。英文源码渲染结果继续与上游输出独立比较；
+完整中文正文则对照已审查、绑定来源的本地化资源验证。
+增量翻译和受保护 token 见 [LOCALIZATION.md](LOCALIZATION.md)。
 
-## Development environment: uv only
+## 开发环境：统一使用 uv
 
-Development, build, test and verification dependencies outside `dist/` are managed
-by **uv**. `pyproject.toml` declares direct development dependencies; committed
-`uv.lock` locks their transitive graph. `.python-version` selects Python 3.12 as
-the canonical development interpreter while the project accepts Python 3.11–3.15.
-The tooling project version `0.0.0` is not the plugin/product version; product
-metadata remains authoritative in `plugin-metadata.json`.
+`dist/` 之外的开发、构建、测试和验证依赖统一由 **uv** 管理。
+`pyproject.toml` 声明直接开发依赖，已提交的 `uv.lock` 锁定传递依赖图。
+`.python-version` 选择 Python 3.12 作为标准开发解释器，项目接受 Python 3.11–3.15。
+工具项目版本 `0.0.0` 不是插件或产品版本；产品元数据以 `plugin-metadata.json` 为准。
 
-Use uv `0.12.13` or another compatible `0.12.x` version allowed by
-`tool.uv.required-version`:
+使用 uv `0.12.13`，或 `tool.uv.required-version` 允许的其他兼容 `0.12.x` 版本：
 
 ```sh
 uv sync --locked
@@ -43,22 +39,19 @@ uv run --locked python -B -m unittest discover -s tests -v
 git diff --check
 ```
 
-`uv sync` creates/manages `.venv`; activation is unnecessary. CI pins uv exactly
-to `0.12.13` and uses `--locked`, so stale or missing lock changes fail closed.
-When dependencies change, update `pyproject.toml`, run `uv lock`, review `uv.lock`,
-and commit both together. `tools/requirements.txt` is intentionally absent; do
-not add a second dependency source of truth.
+`uv sync` 创建并管理 `.venv`，无需激活。CI 精确锁定 uv `0.12.13` 并使用
+`--locked`；锁文件过期或缺失时停止。依赖变化时，更新 `pyproject.toml`，运行
+`uv lock`，审查 `uv.lock`，再一起提交。项目不提供 `tools/requirements.txt`，
+不得引入第二个依赖权威来源。
 
-`dist/` does **not** use uv at runtime and does not ship `pyproject.toml`, `uv.lock`,
-`.python-version`, or a virtual environment. Installed plugin requirements remain
-Bash, Python 3.9+ and standard POSIX tools. Build metadata may record the hashes
-of the uv project files as reproducibility inputs; that is not a runtime dependency.
+`dist/` 运行时**不使用 uv**，不分发 `pyproject.toml`、`uv.lock`、
+`.python-version` 或虚拟环境。安装后的插件仍只需要 Bash、Python 3.9+ 和标准
+POSIX 工具。构建元数据可记录 uv 项目文件的摘要作为复现输入，这不构成运行时依赖。
 
-## Reproduce source materialization
+## 复现派生源码
 
-Obtain the upstream commit recorded in `upstream.lock.json` in a separate checkout.
-Run the commands below with its absolute path; the tool checks the selected source
-hashes against the lock.
+在独立 checkout 获取 `upstream.lock.json` 记录的上游提交。以下命令使用该目录的
+绝对路径；工具会根据锁文件核对所选源码的摘要。
 
 ```sh
 uv sync --locked
@@ -66,15 +59,15 @@ uv run --locked python -B tools/port.py --upstream "$UPSTREAM"
 uv run --locked python -B tools/build.py --marketplaces
 ```
 
-Do not use upstream initialized output to construct the port. It is an independent
-comparison baseline only. Do not introduce CLI callbacks into runtime scripts.
+不得使用上游初始化产物构造移植源码；这些产物仅作为独立比较基线。
+不得在运行时脚本中加入 CLI 回调。
 
-## Independent installed-tool comparison
+## 使用已安装工具独立比较
 
-Use three new empty directories and a separate uv-created upstream tool environment,
-all outside this repository and outside business projects. Set absolute paths for
-`UPSTREAM`, `TOOL_ENV`, `BASELINES` and `EVIDENCE` first. The upstream checkout must
-be exactly `a4e25ce6b96dc8e85f84206c6a54353fa9c5260b` (Spec Kit `v1.0.5`).
+在仓库和业务项目之外准备三个新的空目录，以及一个通过 uv 创建的独立上游工具
+环境。先为 `UPSTREAM`、`TOOL_ENV`、`BASELINES` 和 `EVIDENCE` 设置绝对路径。
+上游 checkout 必须准确为 `a4e25ce6b96dc8e85f84206c6a54353fa9c5260b`
+（Spec Kit `v1.0.5`）。
 
 ```sh
 test "$(git -C "$UPSTREAM" rev-parse HEAD)" = a4e25ce6b96dc8e85f84206c6a54353fa9c5260b
@@ -93,69 +86,54 @@ uv run --locked python -B tools/verify.py --upstream "$UPSTREAM" \
 git diff --check
 ```
 
-`uv pip` is used only for the explicitly isolated upstream CLI environment; it
-does not replace the repository project's lockfile. Use Bash with no events,
-presets or extensions. These upstream CLI calls do not launch Codex, Claude or
-Cursor. Their project settings and constitution are independently compared with
-our local `sdlc-000-init` output; host registries and installed tool resources are
-intentionally excluded. Always use new empty baseline directories.
+`uv pip` 仅用于上述明确隔离的上游 CLI 环境，不替代仓库项目的锁文件。
+使用 Bash，不启用 events、presets 或 extensions。这些 CLI 调用不会启动 Codex、
+Claude 或 Cursor。其项目设置和宪法与本地 `sdlc-000-init` 输出独立比较；宿主注册表
+和已安装工具资源明确排除在外。每次都使用新的空基线目录。
 
-## CI and evidence
+## CI 与证据
 
-`.github/workflows/engineering.yml` runs the same engineering contract on
-Ubuntu 24.04 and macOS 15 ARM64. Each job fetches the triggering repository's
-exact commit and the pinned upstream, installs the pinned uv version, runs
-`uv sync --locked`, creates an isolated upstream CLI environment with `uv venv` /
-`uv pip`, initializes three empty projects and verifies already committed packages.
-It must not regenerate and commit packages in CI or silently skip checks when
-files are absent.
+`.github/workflows/engineering.yml` 在 Ubuntu 24.04 和 macOS 15 ARM64 执行同一
+工程契约。每个任务获取触发仓库的准确提交和锁定上游，安装锁定 uv 版本，执行
+`uv sync --locked`，通过 `uv venv` / `uv pip` 创建隔离上游 CLI 环境，初始化
+三个空项目，再验证已提交的包。CI 不得重新生成并提交包，也不得因文件缺失静默跳过检查。
 
-The workflow has read-only repository permissions. Source transport uses
-`GITHUB_REPOSITORY`; package metadata uses the separately declared repository.
-This permits verification before or after an explicit repository transfer without
-claiming that the transfer happened. No production credentials are required.
+工作流对仓库只有读取权限。源码传输使用 `GITHUB_REPOSITORY`，包元数据使用单独
+声明的仓库。这允许在明确的仓库转移前后验证，但不代表转移已经发生。不需要生产凭据。
 
-Evidence is uploaded as `sdlc-engineering-<runner>-<source-sha>` and includes installed-tool
-logs, baseline hashes, the source snapshot and verifier results. The report records
-source SHA, actual source repository, declared repository, product version,
-environment, individual checks and distribution hashes. See VERIFICATION.md.
+证据以 `sdlc-engineering-<runner>-<source-sha>` 上传，包括已安装工具日志、基线
+摘要、源码快照和验证结果。报告记录源码 SHA、实际源码仓库、声明仓库、产品版本、
+环境、各项检查和分发包摘要。详见 VERIFICATION.md。
 
-## Upgrade a pinned upstream
+## 升级锁定上游
 
-Do not edit hashes to make a check pass. Follow [UPGRADING.md](UPGRADING.md): prepare
-a detached candidate, compare installed tool outputs, review changed original
-source and accept only exact verified bytes. BUILD.json identifies a reproducible
-build while the beta product version remains fixed.
+不得修改摘要来使检查通过。按 [UPGRADING.md](UPGRADING.md) 准备 detached 候选，
+比较已安装工具输出，审查变化的原始源码，仅接受已验证的准确字节。
+BUILD.json 标识可复现构建，产品 beta 版本保持固定。
 
-## Local project initializer
+## 本地项目初始化器
 
-`src/adapters/INIT.md` is a local workflow, not a tenth upstream command.
-`src/scripts/python/init_project.py` is its deterministic stdlib-only implementation.
-The build generates one public INIT entry and one shared init body, through the same
-loader as the nine upstream commands, but without the initialized-project gate.
-`COMMANDS` and the upstream lock stay at nine; `ALL_COMMANDS` adds local INIT and STATUS for
-package inventory. Upgrade preparation must retain this local source and its tests.
+`src/adapters/INIT.md` 是本地工作流，不是第十项上游命令。
+`src/scripts/python/init_project.py` 是仅依赖标准库的确定性实现。
+构建使用与九项上游命令相同的 loader，生成一个公共 INIT 入口和一份共享初始化
+正文，但不要求项目已经初始化。`COMMANDS` 和上游锁仍保留九项；`ALL_COMMANDS`
+加入本地 INIT 和 STATUS，用于包清单。升级准备必须保留这些本地源码及测试。
 
-`tests/test_init.py` covers initial setup, manual-state completion, byte/mode/mtime
-idempotence, safety failures, no CLI fallback, local ignore rules, and downstream
-script compatibility. These are synthetic script tests, not Agent executions.
+`tests/test_init.py` 覆盖首次初始化、人工状态补全、字节/权限/mtime 幂等、安全
+失败、不回退调用 CLI、本地忽略规则及下游脚本兼容性。这些是合成脚本测试，不是 Agent 执行。
 
-## Mandatory naming projection
+## 必须应用的命名映射
 
-Read [NAMING.md](NAMING.md) and [naming-map.json](naming-map.json) before changing
-the upstream version. `tools/naming.py` applies the reviewed mapping after raw
-source rendering; `tools/naming_check.py` is an independently maintained finite
-comparison oracle. The build identity includes the naming map. Upstream locks
-and copied source paths retain original names, while generated workflows use
-`references/workflows/<full-skill-id>.md` and loader calls use the same public ID.
-Unknown source references must stop preparation; never infer new abbreviations
-or weaken full-body parity to accept a candidate. See PR #24 for execution evidence.
+变更上游版本前，阅读 [NAMING.md](NAMING.md) 和 [naming-map.json](naming-map.json)。
+`tools/naming.py` 在原始源码渲染后应用已审查映射；`tools/naming_check.py` 是独立
+维护的有限比较基准。构建身份包含命名映射。上游锁与复制的源码路径保留原名，
+生成工作流使用 `references/workflows/<full-skill-id>.md`，loader 调用使用相同公共 ID。
+未知来源引用必须阻止准备；不得猜测新缩写，也不得削弱完整正文等价检查来接受候选。
 
-## Read-only STATUS utility
+## 只读 STATUS 辅助能力
 
-`src/adapters/STATUS.md` defines this local (not upstream) capability; its Chinese
-resource is `src/locales/zh-CN/status.md`. `project_status.py` uses Python 3.9+
-standard library only and writes solely to stdout. See [STATUS.md](STATUS.md).
-The local tests use synthetic directories, including empty, malformed, aliased,
-read-only and concurrently modified data. File contents/modes/mtime, directory
-inventory and Git index/config are compared; atime is not an immutability metric.
+`src/adapters/STATUS.md` 定义这项本地能力（不是上游能力）；中文资源为
+`src/locales/zh-CN/status.md`。`project_status.py` 仅使用 Python 3.9+ 标准库，
+只向 stdout 输出。详见 [STATUS.md](STATUS.md)。本地测试使用合成目录，覆盖空数据、
+格式错误、别名、只读和并发变更。比较文件内容/权限/mtime、目录清单及 Git index/config；
+atime 不作为不可变性指标。

@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256" viewBox="0 0 256 256" role="img" aria-labelledby="title">
+  <title id="title">SDLC AI SPEC</title>
+  <rect width="256" height="256" rx="56" fill="#2563EB"/>
+  <path d="M74 66 42 128l32 62M182 66l32 62-32 62" fill="none" stroke="#BFDBFE" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M103 75h48M103 109h48" fill="none" stroke="#FFFFFF" stroke-width="12" stroke-linecap="round"/>
+  <path d="m96 157 22 22 43-47" fill="none" stroke="#FFFFFF" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

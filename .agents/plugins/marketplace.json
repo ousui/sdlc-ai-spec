@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "sdlc-ai-spec",
-      "description": "SDLC AI SPEC: project initialization and spec-driven development workflows (beta)",
+      "description": "SDLC AI SPEC：面向 AI 编程助手的规范驱动开发插件，适配 Codex、Claude Code 和 Cursor。提供 11 个公共 Skill，涵盖项目初始化、项目规则、需求规格与澄清、技术方案、任务拆解、一致性检查、人工评审清单、实施、收敛及只读状态查询；内置简体中文流程与模板。当前为 Beta 版本。项目主页：https://github.com/goedgecloud/sdlc-ai-spec",
       "source": {
         "source": "local",
         "path": "./dist"

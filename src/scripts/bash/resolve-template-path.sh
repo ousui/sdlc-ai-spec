@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Local adapter for SPEC's file-path contract (REV-007).
+# Local adapter for SPEC's file-path contract.
 # resolve-template.sh remains unchanged: it emits content for its other callers.
 # The accepted profile has project replace overrides + bundled core templates;
 # optional presets/extensions remain outside the product's supported profile.

@@ -14,13 +14,6 @@ SDLC AI SPEC 是锁定版本 Spec Kit 的产品化移植，不是独立演进的
 等价契约：公共入口不声明 `user-invocable`、`disable-model-invocation`、`argument-hint`，
 使用宿主默认行为。被模型选择不增加写入、跨阶段或发布授权；流程内权限不变。
 
-## Web 交付及补丁回退
-
-沿用用户指定分支，修改前记录准确基线，优先完成并核实远端提交。远端写入
-不能完成或无法核验时，直接提供可 `git apply` 的补丁、基线和验证记录，不再
-反复要求用户重连。成功推送后让用户拉取，不重复要求应用补丁。工具发现、
-单个 blob、局部测试、PR 评论不等于分支已经更新。没有准确证据不得宣称完成。
-
 ## 仓库身份
 
 本仓库是面向用户作用域的 SDLC AI SPEC / Spec Kit 核心移植。产品元数据位于
@@ -45,7 +38,7 @@ SDLC AI SPEC 是锁定版本 Spec Kit 的产品化移植，不是独立演进的
   已有业务项目文件。
 - `src/adapters/` 保存本项目的显式移植适配源；其中 Markdown 保持英文 source baseline，
   对应中文呈现位于 `src/locales/zh-CN/`。该目录不是 Runtime 目录，不直接发布为
-  `dist/adapters/`。具体职责和未来演进结构见 `src/adapters/README.md`。
+  `dist/adapters/`。具体职责见 `src/adapters/README.md`。
 - STATUS 是本地只读 utility，不是上游阶段。不得让它持久化需求选择、初始化项目、
   执行其他 Skill 或虚构阶段历史。宪法 generation provenance 只描述可观察事实：
   hash 相等/不同都不能等同于 RULE 完成或审批结果，也不得根据当前模板为旧项目
@@ -87,7 +80,7 @@ checkout 之外，不得用历史 PASS 声明替代原始证据。
 合法 manifest 不等于原生宿主兼容；工程通过也不等于真实业务验收。必须准确说明环境、
 source SHA、检查数量及未执行项。保持 docs 与实现同步，但不要另造重复的流程平台。
 
-工作包 PR 是决策、实现和验证记录。保持 PR body 最新，并用 milestone comment 记录准确
-source SHA、实际测试、失败/修正和未执行项。README 与命名契约保存长期定义，不创建
-重复的进度平台。实际 Git author/committer 与产品作者身份分别记录。不得仅凭命名或
-文档检查宣称 merge-ready、原生宿主验收或真实业务验收。
+仓库文档只保存产品定义、使用方式、架构约束和可复用维护指南，不保存本项目的
+开发流水、个人工作记录或特定 PR/CI 批次记录。验证证据放在 checkout 之外，记录
+准确 source SHA、实际测试和未执行项。不得仅凭命名或文档检查宣称可合并、
+原生宿主验收或真实业务验收。

@@ -51,7 +51,16 @@ class RepositoryTests(unittest.TestCase):
         all_entries=[]
         for host in HOSTS:
             manifest=json.loads((ROOT/'dist'/('.'+host+'-plugin/plugin.json')).read_text())
-            expected = metadata if host == 'claude' else dict(metadata,skills='./skills/')
+            expected = {k:v for k,v in metadata.items() if k != 'presentation'}
+            if host == 'codex':
+                expected['interface'] = dict(metadata['presentation'], displayName='SDLC AI SPEC',
+                    longDescription=metadata['description'], developerName='Blade', websiteURL=metadata['homepage'])
+            elif host == 'claude':
+                expected['displayName'] = 'SDLC AI SPEC'
+            else:
+                expected['logo'] = metadata['presentation']['logo']
+            if host != 'claude':
+                expected['skills'] = './skills/'
             self.assertEqual(manifest,expected)
             paths = ['./skills/'] if host == 'claude' else [manifest['skills']]
             entries=[]
@@ -85,6 +94,32 @@ class RepositoryTests(unittest.TestCase):
         self.assertTrue(upstream['init_implemented'])
         self.assertEqual(upstream['local_commands'],['init', 'status'])
         self.assertFalse(upstream['native_host_verified'])
+
+    def test_native_presentation_links_and_assets(self):
+        package=ROOT/'dist'
+        manifests={host:json.loads((package/('.'+host+'-plugin/plugin.json')).read_text()) for host in HOSTS}
+        for host, manifest in manifests.items():
+            self.assertEqual(manifest['homepage'],'https://github.com/goedgecloud/sdlc-ai-spec')
+            self.assertTrue(manifest['keywords'])
+            self.assertNotIn('presentation',manifest)
+            for component in ('hooks','apps','mcpServers','agents','rules'):
+                self.assertNotIn(component,manifest)
+        ui=manifests['codex']['interface']
+        self.assertEqual(ui['websiteURL'],manifests['codex']['homepage'])
+        self.assertEqual(ui['capabilities'],['Read','Write'])
+        self.assertEqual(len(ui['defaultPrompt']),3)
+        self.assertTrue(all(0<len(prompt)<=128 for prompt in ui['defaultPrompt']))
+        self.assertNotIn('privacyPolicyURL',ui)
+        self.assertNotIn('termsOfServiceURL',ui)
+        self.assertNotIn('interface',manifests['claude'])
+        self.assertNotIn('logo',manifests['claude'])
+        self.assertNotIn('interface',manifests['cursor'])
+        import xml.etree.ElementTree as ET
+        for asset in (ui['logo'],ui['composerIcon'],manifests['cursor']['logo']):
+            target=(package/asset).resolve()
+            self.assertTrue(target.is_relative_to((package/'assets').resolve()))
+            self.assertEqual(ET.parse(target).getroot().tag,'{http://www.w3.org/2000/svg}svg')
+            self.assertEqual(target.read_bytes(),(ROOT/'src'/asset).read_bytes())
 
     def test_working_data_and_dev_sources_not_shipped(self):
         for path in ('src','tools','tests','docs','.sdlc','node_modules','pyproject.toml','uv.lock','.python-version','.venv'):

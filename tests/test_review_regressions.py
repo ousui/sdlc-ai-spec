@@ -1,4 +1,4 @@
-"""REV-007..010 and reported localization gaps; disposable fixtures only."""
+"""Template resolution, status parsing and localization; disposable fixtures only."""
 from __future__ import annotations
 import copy
 import json

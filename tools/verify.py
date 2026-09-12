@@ -145,7 +145,19 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
         require_equal(m['version'],VERSION,'Version')
         require_equal(m['author'],AUTHOR,'Plugin author')
         require_equal(m.get('skills'),manifest_skills(host),'One public Skill inventory')
-        require_equal(set(m),{'name','version','description','repository','license','author'} | ({'skills'} if host!='claude' else set()),'Native minimal manifest fields')
+        common_fields={'name','version','description','repository','homepage','license','author','keywords'}
+        host_fields={'codex': {'skills','interface'}, 'claude': {'displayName'}, 'cursor': {'skills','logo'}}
+        require_equal(set(m),common_fields | host_fields[host],'Native documented manifest fields')
+        require_equal(m['homepage'],REPOSITORY,'Project homepage')
+        if host=='codex':
+            require_equal(m['interface']['websiteURL'],REPOSITORY,'Codex website link')
+            asset_paths=[m['interface'][key] for key in ('logo','composerIcon')]
+        else:
+            asset_paths=[m['logo']] if host=='cursor' else []
+        for asset in asset_paths:
+            target=(package/asset).resolve()
+            if not asset.startswith('./assets/') or not target.is_relative_to((package/'assets').resolve()) or not target.is_file():
+                raise AssertionError('Missing or escaping presentation asset: '+asset)
         if (package/'plugin.json').exists() or (package/'adapters').exists() or not (package/'skills').is_dir():
             raise AssertionError('Missing shared core or ambiguous portable root manifest')
         passed('native_manifest_documented_subset',host)

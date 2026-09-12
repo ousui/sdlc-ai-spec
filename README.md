@@ -14,25 +14,17 @@ SDLC AI SPEC 是锁定版本 Spec Kit 的产品化移植，不是独立演进的
 等价契约：公共入口不声明 user-invocable、disable-model-invocation、argument-hint，
 使用宿主默认行为。被模型选择不增加写入、跨阶段或发布授权；流程内权限不变。
 
-## Web 交付及补丁回退
-
-沿用用户指定分支，修改前记录准确基线，优先完成并核实远端提交。远端写入
-不能完成或无法核验时，直接提供可 git apply 的补丁、基线和验证记录，不再
-反复要求用户重连。成功推送后让用户拉取，不重复要求应用补丁。工具发现、
-单个 blob、局部测试、PR 评论不等于分支已经更新。没有准确证据不得宣称完成。
-
-
-Author: **Blade**. Declared repository: **https://github.com/goedgecloud/sdlc-ai-spec**.
-An independent, user-scoped source port of **Spec Kit by GitHub, Inc.**, MIT.
-Upstream remains pinned to `v1.0.5`, commit
+作者：**Blade**。声明仓库：**https://github.com/goedgecloud/sdlc-ai-spec**。
+这是面向用户作用域的独立源码移植，来源为 **GitHub, Inc. 的 Spec Kit**，采用 MIT 许可证。
+上游锁定为 `v1.0.5`，提交
 `a4e25ce6b96dc8e85f84206c6a54353fa9c5260b`.
 
 ## Skill 命名与含义
 
 **状态：已迁移生成入口，三个宿主各发现 10 个阶段 Skill 和 1 个只读辅助 Skill。** 下表名称对应当前
 生成包；原生客户端发现与模型执行仍须实际验证，不能仅由工程测试推定。
-`sdlc-status` 已实现为只读状态与产物导航。提交和验证记录见
-[PR #24](https://github.com/ousui/sdlc-ai-spec/pull/24)。
+`sdlc-status` 已实现为只读状态与产物导航。命名迁移背景见
+[命名与迁移契约](docs/NAMING.md)。
 
 | Skill 名称 | 英文含义 | 中文职责 | 现有能力 / 来源 ID |
 | --- | --- | --- | --- |
@@ -64,7 +56,7 @@ Upstream remains pinned to `v1.0.5`, commit
 
 INIT 每个项目通常完成一次，重复执行保持幂等、保留已有数据；RULE 用于建立
 和显式更新项目原则。**公共化不新增 RULE 自动初始化或自动跨阶段
-执行；STATUS 是独立只读能力**；这些行为变更应在各自工作包中记录。
+执行；STATUS 是独立只读能力**。
 
 产品名称按语境使用 **SDLC AI SPEC**（显示名）、`sdlc-ai-spec`（机器标识）、
 `sdlc` / `SDLC_`（程序简称），项目目录继续使用 `.sdlc`。当前插件机器标识为
@@ -115,8 +107,7 @@ INIT 为新项目复制中文默认宪法并生成中文数据 README；当本�
 定位包根，INIT 和 STATUS 使用相同规则；两者都不得把插件目录当作业务项目。
 
 运行仍只需要 Bash、Python 3.9+ 和标准 POSIX 工具，无 uv、上游 CLI、后台服务。
-原生安装、模型执行和业务验收与程序回归是不同证据；此前用户验收不冒充新版本
-再次验证。STATUS 已实现；RULE 自动 INIT 不在本迭代范围。
+原生安装、模型执行和业务验收与程序回归是不同证据。RULE 不自动执行 INIT。
 
 ## 查看当前状态
 
@@ -126,34 +117,31 @@ INIT 为新项目复制中文默认宪法并生成中文数据 README；当本�
 阶段结论分开说明；空/不可读文件、无活动需求与未知历史也不会伪装成完成状态。
 详见 [STATUS.md](docs/STATUS.md)。
 
-## Development tooling
+## 开发工具
 
-Repository development, build, unit-test and upgrade-verification tooling uses
-**uv** with committed `pyproject.toml` and `uv.lock`. Start with `uv sync --locked`
-and run Python tools through `uv run --locked`. This tooling boundary is outside
-the installed plugin: `dist/` continues to require only Bash, Python 3.9+ and
-standard POSIX tools. See [Development](docs/DEVELOPMENT.md).
+仓库开发、构建、单元测试及升级验证使用 **uv**，依赖由已提交的 `pyproject.toml`
+和 `uv.lock` 管理。先执行 `uv sync --locked`，再通过 `uv run --locked` 运行
+Python 工具。此工具边界位于已安装插件之外；`dist/` 仍只需要 Bash、Python 3.9+
+和标准 POSIX 工具。详见 [开发说明](docs/DEVELOPMENT.md)。
 
-## Documentation
+## 文档
 
-- [Project initialization and safe repeated calls](docs/INITIALIZATION.md)
-- [Installation and beta cache handling](docs/INSTALLATION.md)
-- [Build and independent engineering verification](docs/DEVELOPMENT.md)
-- [Naming contract and upgrade mapping](docs/NAMING.md)
-- [Exact migration differences](docs/MIGRATION.md)
-- [Controlled upstream upgrade candidates](docs/UPGRADING.md)
-- [Verification boundaries](docs/VERIFICATION.md)
-- [Codex/Cursor comparison project and requirement](docs/SMOKE-TEST.md)
+- [项目初始化与安全重复调用](docs/INITIALIZATION.md)
+- [安装与 beta 缓存处理](docs/INSTALLATION.md)
+- [构建与独立工程验证](docs/DEVELOPMENT.md)
+- [命名契约与升级映射](docs/NAMING.md)
+- [准确的移植差异](docs/MIGRATION.md)
+- [受控上游升级候选](docs/UPGRADING.md)
+- [验证边界](docs/VERIFICATION.md)
+- [Codex/Cursor 对照项目与需求](docs/SMOKE-TEST.md)
 
-The presently authorized working repository can differ from the declared product
-address. Updating metadata is not a GitHub transfer. Install from an accessible
-repository/ref containing this implementation, not an old default branch.
+安装来源须包含目标构建，并以准确提交 SHA 和 `dist/BUILD.json` 核对版本。
 
-## Attribution
+## 版权与来源
 
-Original Spec Kit copyright and MIT terms remain in LICENSE and NOTICE; original
-upstream files retain their attribution. Each package includes UPSTREAM.json.
-This is not an official release of GitHub, OpenAI, Anthropic or Cursor.
+原始 Spec Kit 版权和 MIT 条款保留在 LICENSE 和 NOTICE 中；上游原始文件保留
+其署名。每个包均包含 UPSTREAM.json。本项目不是 GitHub、OpenAI、Anthropic
+或 Cursor 的官方发行版。
 
 ## 命名迁移后的使用边界
 
@@ -163,10 +151,10 @@ Codex 示例：`$sdlc-100-spec`；Claude Code 示例：
 同一编号 ID。全部 11 个入口共用目录，不保留宿主私有 Skill。
 
 运行变量为 `SDLC_INIT_DIR`、`SDLC_FEATURE`、`SDLC_FEATURE_DIRECTORY`。
-已撤回对所有非空 `SPECIFY_*` 的整体拒绝；不相关旧前缀不影响选定项目。
+不相关的 `SPECIFY_*` 环境变量不影响选定项目。
 正式调用使用上述 `SDLC_*` 名称；没有新增旧变量别名。事件键 `before_specify` /
 `after_specify` 保持原名，不属于展示性品牌。
 `.sdlc`、`spec.md`、`plan.md`、`tasks.md` 等业务路径不变；旧项目的已有文档
 不自动重写。插件 ID 从旧 `sdlc` 改为 `sdlc-ai-spec` 后，请按
-[安装迁移说明](docs/INSTALLATION.md#naming-migration-in-pr-24)处理旧安装，
+[安装迁移说明](docs/INSTALLATION.md#插件标识迁移)处理旧安装，
 避免重复入口。原始来源名称仅用于版权、来源映射和明确列出的兼容性边界。

@@ -1,5 +1,5 @@
 {
-  "build_id": "be6d4380138249666c97748cc02191005e4adc88d1b26b1871dba0b634881668",
+  "build_id": "78a252e9b3e4dcad3fa91ad50d5a4e4088e0fe56f0d000fcf8ded58b235622af",
   "product_version": "1.0.0-beta",
   "upstream_sha": "a4e25ce6b96dc8e85f84206c6a54353fa9c5260b",
   "inputs": {
@@ -7,7 +7,7 @@
     "src/adapters/BINDING.md": "c8470f5fe1b668de78c06adfbe821b066dc1a25e1f4d87d27162cb90fc0b3705",
     "src/adapters/INIT.md": "e3bc611fd521b6cfce6ad0dc2308b072d84faccc7ed40efe8cc729e97c3f497c",
     "src/adapters/PROJECT-README.md": "70d0fd77e39c9b3cf78334255ed37bfef9c7a014b74082c16a7efde97bc897a3",
-    "src/adapters/README.md": "328fb1468768395edd10654ff95ee9ceaf79b2e6dc2c10d7950fd384aa579c5e",
+    "src/adapters/README.md": "3d26b4e0f8b29710384d59e96f2e1032d29f01c1507c2375ff3f0615ca70ffb6",
     "src/adapters/STATUS.md": "aefe2d650f93b1f3b25bcbba25c23465d20c0e8f461493bad5b1099a7f14ee3f",
     "src/adapters/invocation-functions.sh": "f8d38f42c53b643e2a127c71b544d32dea9222aae8be7196096903e7f17b04f7",
     "src/adapters/path-functions.sh": "7460abb06244256446b74d876771543610435460d76700c043259c6c8d361dc5",

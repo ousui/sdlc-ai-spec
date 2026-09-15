@@ -61,7 +61,7 @@
     "@@SDLC_BIND_0218@@": "/sdlc-ai-spec:sdlc-100-spec 细化规格”“运行 /sdlc-ai-spec:",
     "@@SDLC_BIND_0234@@": "/sdlc-ai-spec:"
   },
-  "sdlc-320-huma": {
+  "sdlc-210-huma": {
     "@@SDLC_BIND_0004@@": "laude",
     "@@SDLC_BIND_0006@@": "优先使用宿主替换的 `${CLAUDE_PLUGIN_ROOT}`，或已加载 SKILL.md 的绝对路径",
     "@@SDLC_BIND_0007@@": "laude",

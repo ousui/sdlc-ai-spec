@@ -190,10 +190,10 @@
   },
   "presentations": {
     "checklist-template": {
-      "source_sha256": "77929c61bdd183ca0ea122592a6c0ca93fb04707981f31acb7ae8257da2d0e91",
-      "translation_sha256": "43217fa1d3bd0534f8a1c4ddfa9ea2435fdc105f4e075c97e0a5154803fbec1f",
+      "source_sha256": "be9276b3aaa5f8fccee7993a4472bbfbd4c3ffe76cebcc98bbb71729b1e9686f",
+      "translation_sha256": "34dac134e782aa29939e4c1d5885e15728b9ac7fe3b894cab5219da6f9f42a31",
       "status": "reviewed",
-      "reviewer": "AI line-by-line source translation review; not user authentication"
+      "reviewer": "AI source comparison: HUMA 210 public-ID-only migration"
     },
     "constitution-template": {
       "source_sha256": "ce7549540fa45543cca797a150201d868e64495fdff39dc38246fb17bd4024b3",

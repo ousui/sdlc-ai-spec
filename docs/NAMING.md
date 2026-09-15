@@ -60,13 +60,31 @@ resolve_specify_init_dir  -> resolve_sdlc_init_dir
 ```text
 sdlc-specify        -> sdlc-100-spec
 sdlc-analyze        -> sdlc-310-xchk
-sdlc-checklist      -> sdlc-320-huma
+sdlc-checklist      -> sdlc-210-huma
 sdlc-converge       -> sdlc-500-conv
 /sdlc:sdlc-plan     -> /sdlc-ai-spec:sdlc-200-plan
 ```
 
 最后一项是 Claude 插件调用身份随机器标识一起迁移的示例，不是三个宿主
 通用的调用字符串。产品显示名不能直接充当包含空格的机器标识。
+
+### 2.2.1 HUMA 的编号与语义
+
+上游 `checklist` 的公共 ID 为 `sdlc-210-huma`，替代历史入口 `sdlc-320-huma`。
+210 表达 PLAN 后、TASK 前的推荐位置，不是新增前置条件，也不改变锁定的上游
+命令集合和执行契约。只同步名称、入口路径、调用引用和展示顺序；不支持旧编号
+作为运行时别名，也不新增 510 后置验收能力。
+
+中文职责为“需求质量评审清单生成”。“Human”表示评审责任归属，不表示在实现后
+人工测试产品。HUMA 检查需求质量；XCHK 只读分析规格/方案/任务；CONV 检查实际
+实现并仅追加差距任务。三者不能相互替代为同一种验收。HUMA 不依赖完整任务清单，
+但继续遵守原版前置脚本；不强制 TASK 等待 HUMA。生成或追加的新条目保持未勾选；
+评审者明确要求后 Agent 才协助评估。IMPL 读取清单并在存在未勾选项时询问是否继续，
+不得改成自动打勾或不可人工决定继续的硬阻断。
+
+已有 `.sdlc`、自定义清单与模板、任务和历史文档不因改名自动改写；显式审查历史
+自定义覆盖中的命令引用。安装方式与固定 beta 的缓存核验见 [INSTALLATION.md](INSTALLATION.md)。
+推荐路径与后续评审边界见 [USAGE.md](USAGE.md)。
 
 ### 2.3 产品文案与英文正文
 

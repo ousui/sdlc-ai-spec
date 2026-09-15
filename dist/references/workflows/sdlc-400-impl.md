@@ -76,7 +76,7 @@ $ARGUMENTS
 
 2. **检查核对清单状态**（FEATURE_DIR/checklists/ 存在时）：
    - 把清单标记作为只读门禁：扫描复选框状态、报告状态，必要时询问是否继续；不得修改清单文件或标记。
-   - `checklists/requirements.md` 是由 `@@SDLC_BIND_0078@@sdlc-320-huma` 生成的自定义清单，是由评审者负责的需求质量评审产物。
+   - `checklists/requirements.md` 是由 `@@SDLC_BIND_0078@@sdlc-210-huma` 生成的自定义清单，是由评审者负责的需求质量评审产物。
    - 自定义清单中的 `[x]` 表示评审者判定需求质量条件已满足；**不**表示实现工作完成。
    - 扫描 checklists/ 中的全部清单文件。
    - 对每份清单统计：

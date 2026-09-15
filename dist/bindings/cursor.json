@@ -61,7 +61,7 @@
     "@@SDLC_BIND_0218@@": "/sdlc-100-spec 细化规格”“运行 /",
     "@@SDLC_BIND_0234@@": "/"
   },
-  "sdlc-320-huma": {
+  "sdlc-210-huma": {
     "@@SDLC_BIND_0004@@": "ursor",
     "@@SDLC_BIND_0006@@": "使用已加载 SKILL.md 的绝对路径，不假定宿主专用环境变量存在",
     "@@SDLC_BIND_0007@@": "ursor",

@@ -39,6 +39,9 @@ SDLC AI SPEC 是锁定版本 Spec Kit 的产品化移植，不是独立演进的
 - `src/adapters/` 保存本项目的显式移植适配源；其中 Markdown 保持英文 source baseline，
   对应中文呈现位于 `src/locales/zh-CN/`。该目录不是 Runtime 目录，不直接发布为
   `dist/adapters/`。具体职责见 `src/adapters/README.md`。
+- HUMA 的公共入口是 `sdlc-210-huma`，对应上游 checklist；推荐在 PLAN 后、TASK 前
+  生成需求质量评审清单，不是 CONV 后的功能验收。不得因编号调整改变清单的追加规则、
+  评审者责任或 IMPL 对未勾选项的询问/等待语义，不新增 TASK 前置门禁；详见 `docs/USAGE.md`。
 - STATUS 是本地只读 utility，不是上游阶段。不得让它持久化需求选择、初始化项目、
   执行其他 Skill 或虚构阶段历史。宪法 generation provenance 只描述可观察事实：
   hash 相等/不同都不能等同于 RULE 完成或审批结果，也不得根据当前模板为旧项目

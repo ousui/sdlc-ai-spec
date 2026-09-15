@@ -42,7 +42,7 @@
     "plan": "sdlc-200-plan",
     "tasks": "sdlc-300-task",
     "analyze": "sdlc-310-xchk",
-    "checklist": "sdlc-320-huma",
+    "checklist": "sdlc-210-huma",
     "implement": "sdlc-400-impl",
     "converge": "sdlc-500-conv"
   },

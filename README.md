@@ -33,9 +33,9 @@ SDLC AI SPEC 是锁定版本 Spec Kit 的产品化移植，不是独立演进的
 | `sdlc-100-spec` | Specification | 需求规格 | `specify` |
 | `sdlc-110-clar` | Clarification | 需求澄清 | `clarify` |
 | `sdlc-200-plan` | Planning | 技术方案与实施规划 | `plan` |
+| `sdlc-210-huma` | Human Review Checklist | 需求质量评审清单生成 | `checklist` |
 | `sdlc-300-task` | Task Breakdown | 任务分解 | `tasks` |
 | `sdlc-310-xchk` | Cross-artifact Consistency Check | 跨产物一致性检查 | `analyze` |
-| `sdlc-320-huma` | Human Review Checklist | 人工需求质量核对清单 | `checklist` |
 | `sdlc-400-impl` | Implementation | 实施 | `implement` |
 | `sdlc-500-conv` | Implementation Convergence | 实现结果收敛 | `converge` |
 | `sdlc-status` | Status | 状态与产物导航 | 本地 utility，已实现 |
@@ -49,8 +49,10 @@ SDLC AI SPEC 是锁定版本 Spec Kit 的产品化移植，不是独立演进的
 
 - **XCHK**：实施前交叉检查规格、方案、任务之间的冲突、矛盾、重复、歧义与
   覆盖缺口。严格只读，不是版本 diff，不自动修复文档。
-- **HUMA**：生成或追加供评审者逐项核对的需求质量清单。清单生成不等于人工
-  审核完成，勾选不等于实现完成；Agent 不自行勾选新生成的条目。
+- **HUMA**：生成或追加由评审者负责的需求质量清单，检查需求是否完整、清晰、
+  一致且可验证；推荐在 PLAN 后、TASK 前使用。它不是实施后的功能测试或业务
+  验收。生成不等于评审完成，勾选不等于实现完成；新生成的条目保持未勾选，
+  仅在评审者明确要求时 Agent 才协助评估。
 - **CONV**：对照规格、方案和任务检查实际实现，发现差距时仅向 `tasks.md`
   追加剩余任务，再交回 IMPL。无差距时不改任务文件；不直接修改代码。
 
@@ -63,6 +65,29 @@ INIT 每个项目通常完成一次，重复执行保持幂等、保留已有数
 `sdlc-ai-spec`，三个原生清单、marketplace 与调用命名空间已同步。详细转换、例外与升级规则见
 [命名与迁移契约](docs/NAMING.md)，机器可读映射见
 [docs/naming-map.json](docs/naming-map.json)。
+
+## 推荐使用顺序与完成边界
+
+项目通常先执行 INIT，再建立或显式更新 RULE。需求级推荐路径如下，方括号为按
+需求复杂度和风险选用的能力，不是新增的硬门禁或自动跨阶段授权：
+
+```text
+简化：SPEC → PLAN → TASK → IMPL → CONV
+完整：SPEC → [CLAR] → PLAN → [210 HUMA] → TASK → [310 XCHK] → IMPL → CONV
+有实现缺口：CONV 追加任务 → IMPL → 再次 CONV
+无实现缺口：进入项目要求的独立评审、业务验收或 PR
+```
+
+HUMA 对应上游 checklist；编号前移不改变它的前置检查、生成/追加规则、清单路径
+或评审责任。它可以在已有任务等上下文下再次使用，但始终检查需求质量，不要求
+TASK 必须先经过 HUMA，也不把 HUMA 放到 CONV 之后作为功能验收阶段。
+IMPL 读取已有清单：有未勾选项时先询问是否继续，并等待回答；不会自行勾选或
+修改清单。内置 `checklists/requirements.md` 仍由 SPEC/CLAR 维护。
+
+CONV 收敛表示本次对既定规格、方案、任务未发现可行动的实现缺口，不代表真实
+运行测试、人工验收或发布通过。团队可以要求适用的测试、构建、评审和验收均通过
+后才标记需求完成；这属于项目完成标准，不是新增的上游阶段。
+详见 [使用流程与评审职责](docs/USAGE.md) 和 [HTML 快速手册](docs/quickstart.html)。
 
 ## 一个插件包，11 个公共 Skills
 
@@ -126,6 +151,8 @@ Python 工具。此工具边界位于已安装插件之外；`dist/` 仍只需�
 
 ## 文档
 
+- [使用流程、评审职责与需求完成标准](docs/USAGE.md)
+- [HTML 开发者快速手册](docs/quickstart.html)
 - [项目初始化与安全重复调用](docs/INITIALIZATION.md)
 - [安装与 beta 缓存处理](docs/INSTALLATION.md)
 - [构建与独立工程验证](docs/DEVELOPMENT.md)

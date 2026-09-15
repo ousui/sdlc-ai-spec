@@ -23,24 +23,24 @@ $ARGUMENTS
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Pre-Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选前置钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
   - **必需钩子**（`optional: false`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Pre-Hook**: {extension}
-    Executing: `/{command}`
+    **自动前置钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
 
-    Wait for the result of the hook command before proceeding to the Outline.
+    等待钩子命令返回结果后，再继续执行概要。
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
 - 如果没有注册钩子，或 `.sdlc/extensions.yml` 不存在，静默跳过。
@@ -61,7 +61,7 @@ $ARGUMENTS
    - 创建状态表：
 
      ```text
-     | Checklist | Total | Checked | Unchecked | Status |
+     | 清单 | 总数 | 已勾选 | 未勾选 | 状态 |
      |-----------|-------|---------|-----------|--------|
      | ux.md     | 12    | 12      | 0         | ✓ PASS |
      | test.md   | 8     | 5       | 3         | ✗ FAIL |
@@ -74,10 +74,10 @@ $ARGUMENTS
 
    - **任一清单存在未勾选条目时**：
      - 展示包含未勾选数的表格。
-     - **停止**并询问：“部分清单还有未勾选项，是否仍然继续实施？（yes/no）”
+     - **停止**并询问：“部分清单还有未勾选项，是否仍然继续实施？（回复‘继续’或‘停止’；兼容 yes/no）”
      - 等待用户回答后再继续。
-     - 用户回答 no、wait 或 stop 时，停止执行。
-     - 用户回答 yes、proceed 或 continue 时，继续第 3 步。
+     - 用户回答 no、wait、stop 或“停止／等待”时，停止执行。
+     - 用户回答 yes、proceed、continue 或“继续”时，继续第 3 步。
 
    - **所有清单均已勾选时**：
      - 展示全部通过的表格。
@@ -189,23 +189,23 @@ $ARGUMENTS
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **必需钩子**（`optional: false`）——**必须为每个必需钩子输出 `EXECUTE_COMMAND:`**：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Hook**: {extension}
-    Executing: `/{command}`
+    **自动钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
 
 ## 完成报告

@@ -23,24 +23,24 @@ $ARGUMENTS
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Pre-Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选前置钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
   - **必需钩子**（`optional: false`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Pre-Hook**: {extension}
-    Executing: `/{command}`
+    **自动前置钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
 
-    Wait for the result of the hook command before proceeding to the Outline.
+    等待钩子命令返回结果后，再继续执行概要。
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
 - 如果没有注册钩子，或 `.sdlc/extensions.yml` 不存在，静默跳过。
@@ -95,23 +95,23 @@ $ARGUMENTS
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **必需钩子**（`optional: false`）——**必须为每个必需钩子输出 `EXECUTE_COMMAND:`**：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Hook**: {extension}
-    Executing: `/{command}`
+    **自动钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
 
 ## 完成报告
@@ -157,14 +157,14 @@ $ARGUMENTS
 
 **示例：**
 
-- ✅ 正确：`- [ ] T001 Create project structure per implementation plan`
-- ✅ 正确：`- [ ] T005 [P] Implement authentication middleware in src/middleware/auth.py`
-- ✅ 正确：`- [ ] T012 [P] [US1] Create User model in src/models/user.py`
-- ✅ 正确：`- [ ] T014 [US1] Implement UserService in src/services/user_service.py`
-- ❌ 错误：`- [ ] Create User model`（缺少 ID 和故事标签）。
-- ❌ 错误：`T001 [US1] Create model`（缺少复选框）。
-- ❌ 错误：`- [ ] [US1] Create User model`（缺少任务 ID）。
-- ❌ 错误：`- [ ] T001 [US1] Create model`（缺少文件路径）。
+- ✅ 正确：`- [ ] T001 按实施计划创建项目结构`
+- ✅ 正确：`- [ ] T005 [P] 在 src/middleware/auth.py 中实现认证中间件`
+- ✅ 正确：`- [ ] T012 [P] [US1] 在 src/models/user.py 中创建 User 模型`
+- ✅ 正确：`- [ ] T014 [US1] 在 src/services/user_service.py 中实现 UserService`
+- ❌ 错误：`- [ ] 创建 User 模型`（缺少 ID 和故事标签）。
+- ❌ 错误：`T001 [US1] 创建模型`（缺少复选框）。
+- ❌ 错误：`- [ ] [US1] 创建 User 模型`（缺少任务 ID）。
+- ❌ 错误：`- [ ] T001 [US1] 创建模型`（缺少文件路径）。
 
 ### 任务组织
 

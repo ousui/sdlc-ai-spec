@@ -83,7 +83,7 @@ sdlc-converge       -> sdlc-500-conv
 不得改成自动打勾或不可人工决定继续的硬阻断。
 
 已有 `.sdlc`、自定义清单与模板、任务和历史文档不因改名自动改写；显式审查历史
-自定义覆盖中的命令引用。安装方式与固定 beta 的缓存核验见 [INSTALLATION.md](INSTALLATION.md)。
+自定义覆盖中的命令引用。安装方式与版本/缓存核验见 [INSTALLATION.md](INSTALLATION.md)。
 推荐路径与后续评审边界见 [USAGE.md](USAGE.md)。
 
 ### 2.3 产品文案与英文正文

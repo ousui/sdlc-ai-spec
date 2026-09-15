@@ -1,6 +1,6 @@
 # 使用流程、评审职责与需求完成标准
 
-本指南面向使用已安装插件的开发者。安装与固定 beta 缓存核验见
+本指南面向使用已安装插件的开发者。安装与版本/缓存核验见
 [INSTALLATION.md](INSTALLATION.md)，项目初始化见 [INITIALIZATION.md](INITIALIZATION.md)，
 离线单页手册见 [quickstart.html](quickstart.html)。
 

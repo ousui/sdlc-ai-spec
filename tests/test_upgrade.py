@@ -9,7 +9,7 @@ import tempfile
 import unittest
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
-from upgrade import (source_digest,candidate_lock,check_accept,blob,prepare,
+from upgrade import (source_digest,candidate_lock,check_accept,blob,prepare,product_version,
                      VERIFICATION_CONTRACT_VERSION,REQUIRED_VERIFICATION_GROUPS)
 from port import replace_once,function
 
@@ -62,6 +62,13 @@ class UpgradeTests(unittest.TestCase):
             self.assertEqual(new['version'], '1.0.5')
             self.assertEqual(new['tag'], '1'*40)
             self.assertEqual(changes, [])
+
+    def test_product_version_aligns_upstream_and_local_revision(self):
+        self.assertEqual(product_version('1.0.5'), '1.0.5-sdlc.1')
+        self.assertEqual(product_version('1.0.5', 2), '1.0.5-sdlc.2')
+        self.assertEqual(product_version('1.0.6'), '1.0.6-sdlc.1')
+        with self.assertRaises(ValueError): product_version('',1)
+        with self.assertRaises(ValueError): product_version('1.0.5',0)
 
     def test_unknown_core_command_requires_scope_review(self):
         lock=json.loads((ROOT/'upstream.lock.json').read_text())

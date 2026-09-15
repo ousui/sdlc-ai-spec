@@ -53,24 +53,24 @@ $ARGUMENTS
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Pre-Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选前置钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
   - **必需钩子**（`optional: false`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Pre-Hook**: {extension}
-    Executing: `/{command}`
+    **自动前置钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
 
-    Wait for the result of the hook command before proceeding to the Execution Steps.
+    等待钩子命令返回结果后，再继续执行步骤。
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
 - 如果没有注册钩子，或 `.sdlc/extensions.yml` 不存在，静默跳过。
@@ -103,7 +103,7 @@ $ARGUMENTS
       - 场景类别缺口，例如“未发现恢复流程，回退／部分失败路径是否在范围内？”
 
    问题格式规则：
-   - 提供选项时，生成紧凑表格，列为 Option | Candidate | Why It Matters。
+   - 提供选项时，生成紧凑表格，列为 选项 | 候选答案 | 重要性。
    - 最多 A–E 选项；自由回答更清楚时省略表格。
    - 绝不要求用户重述已说过的内容。
    - 避免猜测类别；不确定时明确询问“请确认 X 是否属于范围”。
@@ -152,15 +152,15 @@ $ARGUMENTS
    - **覆盖度**：是否包含全部场景／边界情况？
 
    **类别结构**：按需求质量维度分组：
-   - Requirement Completeness：必要需求是否都已记录？
-   - Requirement Clarity：需求是否明确、无歧义？
-   - Requirement Consistency：需求是否对齐、无冲突？
-   - Acceptance Criteria Quality：成功标准是否可衡量？
-   - Scenario Coverage：是否覆盖全部流程／场景？
-   - Edge Case Coverage：边界条件是否定义？
-   - Non-Functional Requirements：性能、安全、无障碍等是否明确？
-   - Dependencies & Assumptions：是否记录并验证依赖与假设？
-   - Ambiguities & Conflicts：哪些内容需要澄清？
+   - 需求完整性：必要需求是否都已记录？
+   - 需求清晰度：需求是否明确、无歧义？
+   - 需求一致性：需求是否对齐、无冲突？
+   - 验收标准质量：成功标准是否可衡量？
+   - 场景覆盖：是否覆盖全部流程／场景？
+   - 边界情况覆盖：边界条件是否定义？
+   - 非功能需求：性能、安全、无障碍等是否明确？
+   - 依赖与假设：是否记录并验证依赖与假设？
+   - 歧义与冲突：哪些内容需要澄清？
 
    **条目写法——“自然语言的单元测试”：**
 
@@ -315,21 +315,21 @@ $ARGUMENTS
 **❌ 错误——这些检查实现，而非需求：**
 
 ```markdown
-- [ ] CHK001 - Verify landing page displays 3 episode cards [Spec §FR-001]
-- [ ] CHK002 - Test hover states work correctly on desktop [Spec §FR-003]
-- [ ] CHK003 - Confirm logo click navigates to home page [Spec §FR-010]
-- [ ] CHK004 - Check that related episodes section shows 3-5 items [Spec §FR-005]
+- [ ] CHK001 - 验证落地页展示 3 张剧集卡片 [Spec §FR-001]
+- [ ] CHK002 - 测试桌面端悬停状态正常工作 [Spec §FR-003]
+- [ ] CHK003 - 确认点击徽标跳转到首页 [Spec §FR-010]
+- [ ] CHK004 - 检查相关剧集区展示 3–5 项 [Spec §FR-005]
 ```
 
 **✅ 正确——这些检查需求质量：**
 
 ```markdown
-- [ ] CHK001 - Are the number and layout of featured episodes explicitly specified? [Completeness, Spec §FR-001]
-- [ ] CHK002 - Are hover state requirements consistently defined for all interactive elements? [Consistency, Spec §FR-003]
-- [ ] CHK003 - Are navigation requirements clear for all clickable brand elements? [Clarity, Spec §FR-010]
-- [ ] CHK004 - Is the selection criteria for related episodes documented? [Gap, Spec §FR-005]
-- [ ] CHK005 - Are loading state requirements defined for asynchronous episode data? [Gap]
-- [ ] CHK006 - Can "visual hierarchy" requirements be objectively measured? [Measurability, Spec §FR-001]
+- [ ] CHK001 - 是否明确规定精选剧集的数量与布局？ [Completeness, Spec §FR-001]
+- [ ] CHK002 - 是否为全部交互元素一致地定义悬停状态要求？ [Consistency, Spec §FR-003]
+- [ ] CHK003 - 全部可点击品牌元素的导航要求是否明确？ [Clarity, Spec §FR-010]
+- [ ] CHK004 - 是否记录相关剧集的选择标准？ [Gap, Spec §FR-005]
+- [ ] CHK005 - 是否为异步剧集数据定义加载状态要求？ [Gap]
+- [ ] CHK006 - “视觉层级”需求能否客观衡量？ [Measurability, Spec §FR-001]
 ```
 
 
@@ -356,21 +356,21 @@ $ARGUMENTS
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
   - **必需钩子**（`optional: false`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Hook**: {extension}
-    Executing: `/{command}`
+    **自动钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。

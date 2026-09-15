@@ -25,6 +25,10 @@ UPSTREAM_SHA = LOCK['commit']
 METADATA = json.loads((ROOT / 'plugin-metadata.json').read_text(encoding='utf-8'))
 REPOSITORY = METADATA['repository']
 VERSION = METADATA['version']
+_version_match = re.fullmatch(re.escape(str(LOCK['version'])) + r'-sdlc\.([1-9][0-9]*)', VERSION)
+if not _version_match:
+    raise ValueError('Product version must align with upstream as <upstream>-sdlc.<revision>')
+PORT_REVISION = int(_version_match[1])
 AUTHOR = METADATA['author']
 HINTS = {
     'specify': 'Describe the feature you want to specify',

@@ -35,7 +35,7 @@
 /plugin install sdlc-ai-spec@sdlc-ai-spec</code></pre></td><td><code>/sdlc-ai-spec:sdlc-100-spec</code></td></tr>
       <tr><td>Cursor</td><td>Dashboard → Plugins → Add Marketplace → Import from Repo；或本地诊断时把完整 <code>dist</code> 复制到 <code>~/.cursor/plugins/local/sdlc-ai-spec</code>。</td><td><code>/sdlc-100-spec</code></td></tr>
     </tbody></table></div>
-    <div class="card warn"><strong>版本更新常见坑：</strong>当前是固定 beta。不要只看版本字符串判断“已经更新”；应核对安装缓存中的 <code>BUILD.json</code> / <code>build_id</code>。如果客户端还在加载旧内容，优先走正常卸载、重装、Reload/New Session，不要把旧插件目录和新插件目录合并。</div>
+    <div class="card warn"><strong>版本更新常见坑：</strong>不要只看版本字符串判断“已经更新”；应核对安装缓存中的 <code>BUILD.json</code> / <code>build_id</code>。如果客户端还在加载旧内容，优先走正常卸载、重装、Reload/New Session，不要把旧插件目录和新插件目录合并。</div>
 
     <div class="card warn"><strong>HUMA 入口更新：</strong>本手册使用 <code>sdlc-210-huma</code>，替代历史 <code>sdlc-320-huma</code>。安装包应包含新入口、共 11 个公共 Skills；不保留旧编号别名。仅修改手册不会更新已安装插件，请核验实际缓存的 <code>build_id</code>，不要混装两版或删除项目数据。</div>
 

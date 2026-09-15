@@ -1,10 +1,10 @@
-# SDLC AI SPEC v1.0.0-beta
+# SDLC AI SPEC v1.0.5-sdlc.1
 
 作者：Blade
 
 仓库：https://github.com/goedgecloud/sdlc-ai-spec
 
-11 个公共入口位于 skills/，由 Codex、Claude Code 和 Cursor 共用；使用宿主默认展示与调用选择策略。完整流程正文及摘要为简体中文；模板说明和示例为中文，标题保留英文定位锚点并附中文释义，机器语法保持不变。不因升级或语言要求重写已有业务文档。
+11 个公共入口位于 skills/，由 Codex、Claude Code 和 Cursor 共用；使用宿主默认展示与调用选择策略。完整流程正文及摘要为简体中文；新生成模板使用中文 canonical 标题与字段，兼容读取旧英文/双语标题，机器语法保持不变。不因升级或语言要求重写已有业务文档。
 
 安装不需要构建、uv、上游 CLI 或网络。Runtime requires Bash, Python 3.9+ and standard POSIX tools. No install-time build, uv, upstream CLI or network is required.
 

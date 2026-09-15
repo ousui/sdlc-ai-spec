@@ -23,24 +23,24 @@ $ARGUMENTS
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Pre-Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选前置钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
   - **必需钩子**（`optional: false`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Pre-Hook**: {extension}
-    Executing: `/{command}`
+    **自动前置钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
 
-    Wait for the result of the hook command before proceeding to the Outline.
+    等待钩子命令返回结果后，再继续执行概要。
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
 - 如果没有注册钩子，或 `.sdlc/extensions.yml` 不存在，静默跳过。
@@ -132,9 +132,9 @@ $ARGUMENTS
 5. 顺序提问循环（交互式）：
     - 每次**只问一个问题**。
     - **提问质量要求，适用于选择题及简答题**：
-       - 以 `**Question:**` 开头，后接以 `?` 结尾的完整疑问句。`?` 前的问题本身必须能独立理解。
+       - 以 `**问题：**` 开头，后接以 `?` 结尾的完整疑问句。`?` 前的问题本身必须能独立理解。
        - **绝不**用主题标签、章节标题或需求 ID 充当问题。例如 `Acceptance device/runtime matrix (FR-023)` 无效：它是标签，不是问题。
-       - `?` 之后只允许可选的括号需求／问题 ID。准确格式为 `**Question:** <interrogative>?` 或 `**Question:** <interrogative>? (FR-023)`。绝不把 ID 放在 `?` 前，也不把 ID 单独或配合主题标签用作整段提问。
+       - `?` 之后只允许可选的括号需求／问题 ID。准确格式为 `**问题：** <interrogative>?` 或 `**问题：** <interrogative>? (FR-023)`。绝不把 ID 放在 `?` 前，也不把 ID 单独或配合主题标签用作整段提问。
        - 问题行之后、推荐／选项之前，立即用一句通俗语言解释“为何重要”，说明对验收或交付的影响。
        - 使用日常表达；术语只在同一句已定义时引入。自查：不了解 SDLC AI SPEC 的读者，仅凭问题行也应能回答。可以简短，不能只给晦涩标签。
     - 对选择题：
@@ -144,29 +144,29 @@ $ARGUMENTS
           - 降低安全、性能及可维护性风险。
           - 与规格中明确可见的项目目标或约束一致。
        - 在顶部**突出推荐选项**，并用 1–2 句话说明它为何最佳。
-       - 格式为 `**Recommended:** Option [X] - <reasoning>`。
+       - 格式为 `**推荐：** 选项 [X] — <reasoning>`。
        - 然后用 Markdown 表展示全部选项：
 
-       | Option | Description |
+       | 选项 | 说明 |
        |--------|-------------|
        | A | 选项 A 的说明 |
        | B | 选项 B 的说明 |
        | C | 选项 C 的说明；按需增加 D／E，总数最多 5 个 |
-       | Short | 其他简短答案，不超过 5 个词；仅在适合自由回答时提供 |
+       | 简答 | 其他简短答案，不超过 5 个词；仅在适合自由回答时提供 |
 
-       - 表格后添加以下回应说明：`You can reply with the option letter (e.g., "A"), accept the recommendation by saying "yes" or "recommended", or provide your own short answer.`
+       - 表格后添加以下回应说明：`可回复选项字母（如 A），回复“采用推荐”接受推荐方案，或提供自己的简短答案。`
     - 对没有合理离散选项的简答题：
        - 依据最佳实践和上下文给出**建议答案**。
-       - 格式为 `**Suggested:** <your proposed answer> - <brief reasoning>`。
-       - 然后说明简短答案格式：`Format: Short answer (<=5 words). You can accept the suggestion by saying "yes" or "suggested", or provide your own answer.`
+       - 格式为 `**建议：** <your proposed answer> — <brief reasoning>`。
+       - 然后说明简短答案格式：`**格式：** 简短答案（不超过 5 个词）。可回复“采用建议”接受上述答案，或提供自己的答案。`
     - 用户回答后：
-       - 用户回复 yes、recommended 或 suggested 时，使用此前明确提出的推荐／建议作为答案。
+       - 用户回复 yes、recommended、suggested、“采用推荐”或“采用建议”时，使用此前明确提出的推荐／建议作为答案。
        - 否则，验证答案对应某个选项，或满足不超过 5 个词的约束。
        - 答案有歧义时，简短追问以消除歧义；仍计为同一个问题，不推进队列。
        - 答案足够明确后，先记录在工作记忆中，暂不写盘，再移向下一个排队问题。
     - 以下任一条件满足就停止提问：
        - 关键歧义提前全部解决，剩余队列问题已无必要；或
-       - 用户表示完成，例如 done、good、no more；或
+       - 用户表示完成，例如 done、good、no more，或明确表示“完成／不再提问”；或
        - 已经提问 5 个问题。
     - 不得提前透露尚未轮到的问题。
     - 开始时没有有效问题，立即报告没有关键歧义。
@@ -174,8 +174,8 @@ $ARGUMENTS
 6. 每次接受答案后整合（增量更新）：
     - 保存规格的内存表示及原始文件内容，开始时只加载一次。
     - 本会话第一次整合答案时：
-       - 确保存在 `## Clarifications`；缺失时，按规格模板在最高层级的上下文／概述章节后创建。
-       - 在其下创建今天的 `### Session YYYY-MM-DD` 子标题；已有则不重复创建。
+       - 识别 `## 澄清记录`、旧 `## Clarifications` 或历史双语同义标题为同一章节；已有时继续使用，不重复创建。缺失时按规格模板在最高层级的上下文／概述章节后创建 `## 澄清记录`。
+       - 在其下创建今天的 `### 会话 YYYY-MM-DD` 子标题；旧 `### Session YYYY-MM-DD` 或历史双语同义标题视为同一会话标题，已有则不重复创建。
     - 接受答案后立即追加条目：`- Q: <question> → A: <final answer>`。
     - 然后立即把澄清应用到最合适的章节：
        - 功能歧义 → 更新或新增 Functional Requirements 条目。
@@ -190,11 +190,11 @@ $ARGUMENTS
     - 每项新增澄清应最小、可测试，避免扩写导致偏离。
 
 7. 验证：每次写入后执行，并在结束时再完整检查：
-   - Clarifications 会话对每个已接受答案恰好有一条记录，不重复。
+   - 澄清记录会话对每个已接受答案恰好有一条记录，不重复。
    - 已提问并接受的问题总数 ≤ 5。
    - 更新章节没有残留本次答案应解决的模糊占位。
    - 不存在相矛盾的旧陈述；检查失效的替代选项是否已移除。
-   - Markdown 结构有效；只允许新增 `## Clarifications` 和 `### Session YYYY-MM-DD` 标题。
+   - Markdown 结构有效；只允许新增 `## 澄清记录` 和 `### 会话 YYYY-MM-DD` 标题；已有旧英文／双语同义标题继续保留，不为本地化改名。
    - 术语一致：所有更新章节使用同一规范术语。
 
 8. 将更新后的规格写回 `FEATURE_SPEC`。
@@ -224,7 +224,7 @@ $ARGUMENTS
 - 规格文件缺失时，指导用户先运行 `{{SDLC:SPECIFY}}`；不要在此处创建新规格。
 - 总提问数绝不超过 5；同一问题的澄清追问不另计新问题。
 - 除非缺失技术栈信息阻塞功能清晰度，否则避免猜测性技术栈提问。
-- 尊重用户提前结束的信号，如 stop、done、proceed。
+- 尊重用户提前结束的信号，如 stop、done、proceed，以及明确的中文“停止／完成／继续”。
 - 覆盖完整而未提问时，输出紧凑覆盖摘要，全部类别为 Clear，然后建议进入下一步。
 - 用尽额度后仍有高影响未决类别时，在 Deferred 中明确指出并说明理由。
 
@@ -246,23 +246,23 @@ $ARGUMENTS
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **必需钩子**（`optional: false`）——**必须为每个必需钩子输出 `EXECUTE_COMMAND:`**：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Hook**: {extension}
-    Executing: `/{command}`
+    **自动钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
 
 ## 完成报告
@@ -272,7 +272,7 @@ $ARGUMENTS
 - 更新的规格路径。
 - 修改过的章节名称。
 - 规格质量清单状态：重新验证了 `FEATURE_DIR/checklists/requirements.md` 时，展示前后通过数，例如“规格质量清单：12/16 → 15/16 项通过”，并列出所有状态变化项，包括新增勾选和回退项。仍未勾选的条目列为待关注领域。
-- 覆盖汇总表：每个分类的状态为 Resolved（原 Partial／Missing，现已解决）、Deferred（超出提问额度或更适合规划）、Clear（本来已充分）、Outstanding（仍 Partial／Missing，但影响较低）。
+- 覆盖汇总表：每个分类展示中文状态，并保留稳定英文枚举：已解决（Resolved，原 Partial／Missing，现已解决）、已推迟（Deferred，超出提问额度或更适合规划）、已明确（Clear，本来已充分）、仍待明确（Outstanding，仍 Partial／Missing，但影响较低）。
 - 存在 Outstanding 或 Deferred 时，建议是否继续 `{{SDLC:PLAN}}`，或在规划后再次运行 `{{SDLC:CLARIFY}}`。
 - 建议的下一条命令。
 

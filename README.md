@@ -1,4 +1,4 @@
-# SDLC AI SPEC — v1.0.0-beta
+# SDLC AI SPEC — v1.0.5-sdlc.1
 
 ## 上游行为等价宪法
 
@@ -18,6 +18,8 @@ SDLC AI SPEC 是锁定版本 Spec Kit 的产品化移植，不是独立演进的
 这是面向用户作用域的独立源码移植，来源为 **GitHub, Inc. 的 Spec Kit**，采用 MIT 许可证。
 上游锁定为 `v1.0.5`，提交
 `a4e25ce6b96dc8e85f84206c6a54353fa9c5260b`.
+
+产品版本与上游版本对齐，格式为 `<上游版本>-sdlc.<本地迭代号>`。当前为 `1.0.5-sdlc.1`；`1.0.5` 表示锁定的 Spec Kit 版本，`sdlc.1` 表示基于该上游版本的第 1 次本地产品迭代。
 
 ## Skill 命名与含义
 
@@ -114,13 +116,12 @@ dist/
   references/TEMPLATE-LANGUAGE.md
   bindings/                   明确的宿主差异
   scripts/                    无 uv Runtime 依赖
-  templates/                  中文说明/示例与双语标题，机器锚点不变
+  templates/                  canonical 中文模板与示例，机器契约不变
   BUILD.json                  确定性构建身份
 ```
 
 本地化仅改变呈现。Skill 执行顺序、条件、提问数量、权限和上游既有缺陷不变。
-默认模板正文、说明、示例和 SPEC 内置 requirements.md 清单均已中文化；标题
-保留英文定位锚点并附中文释义，机器占位符、任务编号、路径、参数和事件键不变。
+默认模板正文、说明、示例和 SPEC 内置 requirements.md 清单均使用 canonical 简体中文呈现；新产物不再默认叠加英文标题。读取既有英文/双语产物时保持兼容，机器占位符、任务编号、路径、参数、状态枚举和事件键不变。
 INIT 为新项目复制中文默认宪法并生成中文数据 README；当本次确实新建宪法时，
 同时尝试记录 `.sdlc/memory/.constitution-template.json` 作为历史生成基线。该记录
 只保存实际生成字节摘要与来源，不是 RULE 完成、审批、签名或自动覆盖授权；旧项目
@@ -154,7 +155,7 @@ Python 工具。此工具边界位于已安装插件之外；`dist/` 仍只需�
 - [使用流程、评审职责与需求完成标准](docs/USAGE.md)
 - [HTML 开发者快速手册](docs/quickstart.html)
 - [项目初始化与安全重复调用](docs/INITIALIZATION.md)
-- [安装与 beta 缓存处理](docs/INSTALLATION.md)
+- [安装、版本与缓存处理](docs/INSTALLATION.md)
 - [构建与独立工程验证](docs/DEVELOPMENT.md)
 - [命名契约与升级映射](docs/NAMING.md)
 - [准确的移植差异](docs/MIGRATION.md)

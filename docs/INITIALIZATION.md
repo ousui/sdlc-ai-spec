@@ -27,7 +27,7 @@ uv/specify-cli/业务应用，不访问网络，也不会在项目内复制 Skil
 ```
 
 `init-options.json` 默认使用 Bash（`script: sh`）、顺序需求编号、锁定的上游版本、
-`sdlc_layout: 1` 和插件版本 `1.0.0-beta`。不会全局保存宿主选择、插件安装路径或
+`sdlc_layout: 1` 和当前插件版本 `1.0.5-sdlc.1`。不会全局保存宿主选择、插件安装路径或
 当前需求。`sdlc_version` 记录执行初始化时的插件版本；重复调用不会重写已有版本数据。
 它不是文档冻结标记，也不是 Runtime 版本门禁。
 
@@ -125,7 +125,7 @@ STATUS 是可选本地只读 utility，不是另一个生命周期阶段，也�
 ## 默认文档语言
 
 新 `.sdlc/README.md` 来自经过审查的中文 `references/PROJECT-README.md`。默认宪法包含
-中文示例文本和双语标题锚点。项目已有 override、README 或宪法继续按字节保留；重复 INIT
+canonical 中文示例文本和标题。项目已有 override、README 或宪法继续按字节保留；重复 INIT
 不是翻译工具。缺少打包 README 时会像缺少核心模板一样在写入前失败。
 输出语言指引禁止人为加入“中文注释”“中文说明”等语言标签，但不会删除合法业务注释，
 也不会因此增加额外写权限。

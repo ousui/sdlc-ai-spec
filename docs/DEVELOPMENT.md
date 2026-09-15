@@ -2,13 +2,12 @@
 
 ## 元数据与目录布局
 
-仓库根目录的 `plugin-metadata.json` 是插件名称、版本（`1.0.0-beta`）、作者
+仓库根目录的 `plugin-metadata.json` 是插件名称、版本（`1.0.5-sdlc.1`）、作者
 （Blade）、声明仓库和许可证的唯一来源。`homepage` 和 `keywords` 是三个宿主
 共用的发现信息；`presentation` 是构建输入，不原样写入宿主清单。生成器将其
 映射为 Codex 的 `interface`、Claude 的 `displayName`、Cursor 的 `logo` 及
 Marketplace 展示字段。`src/assets/` 中的图标复制到 `dist/assets/`，并纳入构建摘要。
-显示标签使用 `v1.0.0-beta`，机器清单使用 `1.0.0-beta`。调试期间不递增版本，
-普通代码变更不创建或移动 tag；使用准确提交 SHA 标识构建。
+产品版本使用 `<锁定上游版本>-sdlc.<本地迭代号>`。当前显示与机器清单统一为 `1.0.5-sdlc.1`；上游版本变化时本地迭代号从 1 重新开始，同一上游版本的本地产品迭代由维护者显式递增。普通代码变更不创建或移动 tag；准确提交 SHA 与 `BUILD.json.build_id` 继续标识具体构建。
 
 根目录保存实现源码。`src/upstream/templates/commands` 保留上游英文原文；
 `src/templates` 和 `src/scripts` 保存已记录的移植差异；`src/adapters/` 提供
@@ -113,7 +112,7 @@ push 和 PR 在两个系统各执行一次完整 verifier（包含仓库单元�
 
 不得修改摘要来使检查通过。按 [UPGRADING.md](UPGRADING.md) 准备 detached 候选，
 比较已安装工具输出，审查变化的原始源码，仅接受已验证的准确字节。
-BUILD.json 标识可复现构建，产品 beta 版本保持固定。
+BUILD.json 标识可复现构建，并同时记录上游版本、产品版本和本地迭代号。
 
 ## 本地项目初始化器
 

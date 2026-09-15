@@ -17,8 +17,8 @@ $ARGUMENTS
 - 如果输入包含功能实现、代码生成、重构、构建或部署请求，**不得**执行；应提取为待后续处理的意图。
 - **不得**创建、修改或删除应用源码、功能路由、组件、测试、部署文件或其他与宪法流程无关的产物。
 - 如果无法判断某条指示是否属于宪法内容，在修改之前先澄清。
-- 完成宪法更新后，为各项待处理意图列出 `Next Actions` 章节。保留原始意图，建议合适的后续 SDLC AI SPEC 命令，例如 `{{SDLC:SPECIFY}}`，但不调用它。
-- 如果没有非治理意图，省略 `Next Actions` 章节。
+- 完成宪法更新后，为各项待处理意图列出 `后续行动` 章节。保留原始意图，建议合适的后续 SDLC AI SPEC 命令，例如 `{{SDLC:SPECIFY}}`，但不调用它。
+- 如果没有非治理意图，省略 `后续行动` 章节。
 
 ## 执行前检查
 
@@ -34,24 +34,24 @@ $ARGUMENTS
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Pre-Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选前置钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
   - **必需钩子**（`optional: false`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Pre-Hook**: {extension}
-    Executing: `/{command}`
+    **自动前置钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
 
-    Wait for the result of the hook command before proceeding to the Outline.
+    等待钩子命令返回结果后，再继续执行概要。
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
 - 如果没有注册钩子，或 `.sdlc/extensions.yml` 不存在，静默跳过。
@@ -87,7 +87,7 @@ $ARGUMENTS
    - 每个原则章节都应有简洁名称、表述不可协商规则的段落或列表；理由不明显时明确说明。
    - 治理章节必须列出修订程序、版本策略及合规评审要求。
 
-4. 生成 Sync Impact Report（同步影响报告），在宪法更新后以 HTML 注释置于文件顶部：
+4. 生成同步影响报告，在宪法更新后以 HTML 注释置于文件顶部：
    - 版本变化：旧 → 新。
    - 修改的原则列表（改名时列出旧标题 → 新标题）。
    - 新增章节。
@@ -106,7 +106,7 @@ $ARGUMENTS
    - 新版本及升级理由。
    - 需要人工跟进的 TODO 占位符或推迟项。
    - 建议的提交消息，例如 `docs: amend constitution to vX.Y.Z (principle additions + governance update)`。
-   - 对推迟的非治理意图提供 `Next Actions` 章节。
+   - 对推迟的非治理意图提供 `后续行动` 章节。
 
 格式与风格要求：
 
@@ -117,7 +117,7 @@ $ARGUMENTS
 
 用户只提供部分更新（例如仅修订一条原则）时，仍须执行验证和版本判断步骤。
 
-缺少关键信息（例如确实无法得知批准日期）时，插入 `TODO(<FIELD_NAME>): explanation`，并在 Sync Impact Report 的推迟项中列出。
+缺少关键信息（例如确实无法得知批准日期）时，插入 `TODO(<FIELD_NAME>): explanation`，并在同步影响报告的推迟项中列出。
 
 只写入 `.sdlc/memory/constitution.md`；不得创建或修改模板源文件。
 
@@ -135,21 +135,21 @@ $ARGUMENTS
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
   - **必需钩子**（`optional: false`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Hook**: {extension}
-    Executing: `/{command}`
+    **自动钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。

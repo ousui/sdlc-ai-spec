@@ -76,3 +76,21 @@ class DistributionTests(unittest.TestCase):
             out=Path(temp)/'unknown';out.mkdir();(out/'user.txt').write_text('keep')
             with self.assertRaises(ValueError):build(out)
             self.assertEqual((out/'user.txt').read_text(),'keep')
+
+    def test_build_identity_ignores_macos_metadata(self):
+        junk = ROOT/'src/.DS_Store'
+        existed = junk.exists()
+        previous = junk.read_bytes() if existed else None
+        try:
+            junk.write_bytes(b'local macOS Finder metadata')
+            with tempfile.TemporaryDirectory() as temp:
+                out = Path(temp)/'package'
+                build(out)
+                manifest = json.loads((out/'BUILD.json').read_text())
+                self.assertNotIn('src/.DS_Store', manifest['inputs'])
+        finally:
+            if existed:
+                junk.write_bytes(previous)
+            elif junk.exists():
+                junk.unlink()
+

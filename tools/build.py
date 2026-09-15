@@ -286,7 +286,10 @@ def build(destination: Path) -> None:
         inputs = {}
         for folder in ('src', 'tools'):
             for path in sorted((ROOT / folder).rglob('*')):
-                if path.is_file() and '__pycache__' not in path.parts and path.suffix != '.pyc':
+                # Build identity must be reproducible from a clean checkout.
+                # macOS Finder metadata is local filesystem noise, not a product input.
+                if (path.is_file() and '__pycache__' not in path.parts and path.suffix != '.pyc'
+                        and path.name != '.DS_Store'):
                     inputs[path.relative_to(ROOT).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
         for name in ('plugin-metadata.json', 'upstream.lock.json', 'LICENSE', 'NOTICE', 'docs/naming-map.json',
                      'pyproject.toml', 'uv.lock', '.python-version'):

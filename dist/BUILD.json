@@ -1,11 +1,10 @@
 {
-  "build_id": "eb3396beb439eee6ac02b7c89dba8549160e1269a3dd6b7534f82ce25e554434",
+  "build_id": "b6f90fd6449e9f65cf0d4bb6f9399854eb00c7327703a93563f55689d8be3518",
   "product_version": "1.0.5-sdlc.1",
   "upstream_version": "1.0.5",
   "port_revision": 1,
   "upstream_sha": "a4e25ce6b96dc8e85f84206c6a54353fa9c5260b",
   "inputs": {
-    "src/.DS_Store": "1447704d521fe0be3c1e6a7c89174e0bca5f690c3929724bfe5e02de57f2da90",
     "src/LICENSE": "2510b446bc1f0cf9702453075d20cd88631e20e5642658edb7325d9c1eb534f7",
     "src/adapters/BINDING.md": "c8470f5fe1b668de78c06adfbe821b066dc1a25e1f4d87d27162cb90fc0b3705",
     "src/adapters/INIT.md": "e3bc611fd521b6cfce6ad0dc2308b072d84faccc7ed40efe8cc729e97c3f497c",
@@ -84,7 +83,7 @@
     "src/upstream/templates/plan-template.md": "dfba43da2b2a207ff8c177a0fba03af074fd45e261696b4b64172041fad2e992",
     "src/upstream/templates/spec-template.md": "3945437fc35cd30a5b2bf7beea680337c3516826d3efa5a6b92c4a7eca1ba28e",
     "src/upstream/templates/tasks-template.md": "1e448e9153462e8c5b5a55231a54c756d870a82950d4dd9425a2bf5b7008a0d9",
-    "tools/build.py": "d2e35dd0f5fb22eb108118fc3335c0bd0dc568be58dba829d3d6287b3d2b47fc",
+    "tools/build.py": "07d8d6fb7397d8549be85df6e256aa4f2624e89dc13935f011c9d3975234a501",
     "tools/differential.py": "891a39c480191d9fe52b16f017a145a0b1bad646396e2fa47718057ea1006e69",
     "tools/localize.py": "3cf09e72efd9eb3f326f01db64f422a85bd54991bd3b777f70a14893034d1e74",
     "tools/naming.py": "6794afb4c7eb98b2513f811ecb96e8e93df31032c32a439b1d29ff6e45a6639a",

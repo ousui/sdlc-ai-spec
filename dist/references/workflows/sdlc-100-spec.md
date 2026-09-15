@@ -15,13 +15,19 @@
 <!-- SDLC-OUTPUT-LANGUAGE:BEGIN -->
 ## 输出语言（仅呈现层）
 
-向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节层级和定位用英文锚点保留，标题可附中文释义；占位符、状态值、任务语法、实际代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
+向使用者解释流程、提问及总结时使用简体中文。仅在原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。
 
-使用插件中已审查的本地化模板。`User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记保留；模板说明、业务描述、理由、测试说明和任务内容使用中文。代码块中的格式示例不强制自然语言使用英文；SPEC 的内置 requirements.md 清单采用流程中的本地化条目，条目顺序、数量、条件和勾选责任不变。用户自定义模板仍按原流程处理，不为本地化新增覆盖动作。
+新生成的默认产物使用已审查的中文展示标题、字段标签和固定提示，不再在同一标题后重复附加另一种语言。章节层级、顺序、必填／可选含义和业务内容保持不变。定位标题只使用已审查的有限映射；读取已有产物时兼容上游英文、历史双语和当前中文标题，已有章节必须继续使用，不重复创建同义章节。
+
+默认写入采用中文 canonical presentation。机器契约保持原样：Skill/命令 ID、文件名与路径、JSON/YAML key、环境变量、CLI 参数、事件名、配置键、状态枚举、严重级别、任务／需求编号、复选框语法、`[US1]`、`[P]`、`[NEEDS CLARIFICATION: ...]` 标记、实际代码/API/schema 标识均不得因翻译改名。API Token、Cloudflare、DNS、HTTP、JSON、Python、Go 等必要技术术语按项目实际用法保留。
+
+固定交互文案属于本地化范围；输出使用中文，同时保留原流程已有英文输入，并可增加已审查的中文等价输入别名。例如 CLAR 可接受 `yes`／`recommended`／`suggested`，并兼容“采用推荐”／“采用建议”；IMPL 的继续／停止类回答同样保留旧英文词。新增别名不得改变问题数量、等待用户确认、停止条件或写入权限。
+
+使用插件中已审查的本地化模板。自然语言标题、字段、说明、理由、测试描述、任务内容和固定响应使用中文；机器语法按上段保留。代码块中的自然语言示例允许按已审查映射翻译，但可执行命令、参数、路径、变量、机器 token 及代码标识必须保持。用户自定义模板仍按原流程处理，不为本地化新增覆盖动作。
 
 文档、注释与说明直接表达业务内容，不添加“中文注释”“中文说明”“中文版本”等语言标签。确需标签时使用“注释”或“说明”。不要为了标明语言新增 HTML 注释；只有原流程本来要求的注释才按其规则处理。保留有语义的注释，不做全文件删除或批量清理。不得插入 U+FFFC 等对象替换字符。
 
-此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。它是给执行者的指引，不是待复制进业务产物的正文。
+此语言约定只改变呈现，不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。它是给执行者的指引，不是待复制进业务产物的正文。
 <!-- SDLC-OUTPUT-LANGUAGE:END -->
 
 
@@ -44,35 +50,35 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0046@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0052@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Pre-Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选前置钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
   - **必需钩子**（`optional: false`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Pre-Hook**: {extension}
-    Executing: `/{command}`
+    **自动前置钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
 
-    Wait for the result of the hook command before proceeding to the Outline.
+    等待钩子命令返回结果后，再继续执行概要。
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
 - 如果没有注册钩子，或 `.sdlc/extensions.yml` 不存在，静默跳过。
 
 ## 执行概要
 
-触发消息中，用户在 `@@SDLC_BIND_0074@@sdlc-100-spec` 后输入的文本**就是**功能描述。即使下面出现字面 `$ARGUMENTS`，也应视为本会话中已经有该输入。除非用户提交了空命令，否则不要要求重复描述。
+触发消息中，用户在 `@@SDLC_BIND_0080@@sdlc-100-spec` 后输入的文本**就是**功能描述。即使下面出现字面 `$ARGUMENTS`，也应视为本会话中已经有该输入。除非用户提交了空命令，否则不要要求重复描述。
 
 根据该功能描述执行：
 
@@ -110,7 +116,7 @@ $ARGUMENTS
 
    **创建目录和规格文件**：
    - `mkdir -p SDLC_FEATURE_DIRECTORY`
-   - 通过 SDLC AI SPEC 预设／模板解析栈解析当前生效的 `spec-template`，等价于 `SDLC_HOST=c@@SDLC_BIND_0112@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/resolve-template-path.sh" spec-template`。
+   - 通过 SDLC AI SPEC 预设／模板解析栈解析当前生效的 `spec-template`，等价于 `SDLC_HOST=c@@SDLC_BIND_0118@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/resolve-template-path.sh" spec-template`。
    - 将解析出的 `spec-template` 文件复制到 `SDLC_FEATURE_DIRECTORY/spec.md`，作为起点。
    - 把 `SPEC_FILE` 设置为 `SDLC_FEATURE_DIRECTORY/spec.md`。
    - 将解析后的路径持久化到 `.sdlc/feature.json`：
@@ -120,10 +126,10 @@ $ARGUMENTS
      }
      ```
      写入实际解析的目录路径，例如 `.sdlc/specs/003-user-auth`，而不是字面字符串 `SDLC_FEATURE_DIRECTORY`。
-     这样后续命令（`@@SDLC_BIND_0122@@sdlc-300-task` 等）无需依赖 Git 分支命名惯例即可定位功能目录。
+     这样后续命令（`@@SDLC_BIND_0128@@sdlc-300-task` 等）无需依赖 Git 分支命名惯例即可定位功能目录。
 
    **重要**：
-   - 每次 `@@SDLC_BIND_0125@@sdlc-100-spec` 调用只能创建一个功能。
+   - 每次 `@@SDLC_BIND_0131@@sdlc-100-spec` 调用只能创建一个功能。
    - 规格目录名称与 Git 分支名称互相独立；可以相同，但由用户选择。
    - 规格目录和文件始终由本命令创建，绝不由钩子创建。
 
@@ -160,20 +166,20 @@ $ARGUMENTS
    a. **创建规格质量清单**：在 `SDLC_FEATURE_DIRECTORY/checklists/requirements.md` 生成清单，采用清单模板结构和以下验证项：
 
       ```markdown
-      # Specification Quality Checklist: [FEATURE NAME]（规格质量清单）
+      # 规格质量清单：[FEATURE NAME]
 
-      **Purpose**: 进入规划之前，验证规格的完整性与质量
-      **Created**: [DATE]
-      **Feature**: [指向 spec.md 的链接]
+      **用途**: 进入规划之前，验证规格的完整性与质量
+      **创建日期**: [DATE]
+      **功能**: [指向 spec.md 的链接]
 
-      ## Content Quality（内容质量）
+      ## 内容质量
 
       - [ ] 不包含实现细节（语言、框架、API）
       - [ ] 聚焦用户价值和业务需求
       - [ ] 面向非技术利益相关方编写
       - [ ] 所有必需章节已填写
 
-      ## Requirement Completeness（需求完整性）
+      ## 需求完整性
 
       - [ ] 不再残留 [NEEDS CLARIFICATION] 标记
       - [ ] 需求可测试且无歧义
@@ -184,16 +190,16 @@ $ARGUMENTS
       - [ ] 范围边界清晰
       - [ ] 已识别依赖和假设
 
-      ## Feature Readiness（功能准备情况）
+      ## 功能准备情况
 
       - [ ] 所有功能需求都有明确验收标准
       - [ ] 用户场景覆盖主要流程
-      - [ ] 功能满足 Success Criteria 中定义的可衡量结果
+      - [ ] 功能满足 成功标准 中定义的可衡量结果
       - [ ] 规格没有混入实现细节
 
-      ## Notes（说明）
+      ## 说明
 
-      - 标记为未完成的条目必须在 `@@SDLC_BIND_0195@@sdlc-200-plan` 前通过更新规格解决
+      - 标记为未完成的条目必须在 `@@SDLC_BIND_0201@@sdlc-200-plan` 前通过更新规格解决
       ```
 
    b. **执行验证**：逐项检查规格。
@@ -216,22 +222,22 @@ $ARGUMENTS
         3. 对每个待澄清项（最多 3 个），按以下格式向用户提供选项：
 
            ```markdown
-           ## Question [N]: [Topic]
+           ## 问题 [N]：[Topic]
 
-           **Context**: [Quote relevant spec section]
+           **上下文**: [引用相关规格章节]
 
-           **What we need to know**: [Specific question from NEEDS CLARIFICATION marker]
+           **需要明确**: [NEEDS CLARIFICATION 标记中的具体问题]
 
-           **Suggested Answers**:
+           **建议答案**:
 
-           | Option | Answer | Implications |
+           | 选项 | 答案 | 影响 |
            |--------|--------|--------------|
            | A      | [First suggested answer] | [What this means for the feature] |
            | B      | [Second suggested answer] | [What this means for the feature] |
            | C      | [Third suggested answer] | [What this means for the feature] |
-           | Custom | Provide your own answer | [Explain how to provide custom input] |
+           | Custom | 提供自己的答案 | [说明如何提供自定义输入] |
 
-           **Your choice**: _[Wait for user response]_
+           **你的选择**: _[等待用户回答]_
            ```
 
         4. **关键——表格格式**：保证 Markdown 表格有效：
@@ -259,27 +265,27 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0261@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0267@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **必需钩子**（`optional: false`）——**必须为每个必需钩子输出 `EXECUTE_COMMAND:`**：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Hook**: {extension}
-    Executing: `/{command}`
+    **自动钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
 
 ## 完成报告
@@ -288,7 +294,7 @@ $ARGUMENTS
 - `SDLC_FEATURE_DIRECTORY`：功能目录路径。
 - `SPEC_FILE`：规格文件路径。
 - 清单结果摘要。
-- 是否准备好进入下一阶段（`@@SDLC_BIND_0290@@sdlc-200-plan`）。
+- 是否准备好进入下一阶段（`@@SDLC_BIND_0296@@sdlc-200-plan`）。
 
 **注意**：分支创建由 `before_specify` 钩子（Git 扩展）负责。规格目录和文件始终由本核心命令创建。
 

@@ -54,7 +54,7 @@ class SharedLocalizationTests(unittest.TestCase):
         for name in COMMANDS:
             en=localize.canonical_source(name)
             zh=(localize.LOCALES/'workflows'/f'{name}.md').read_text()
-            self.assertEqual(localize.protected_spans(en),localize.protected_spans(zh))
+            self.assertEqual(localize.machine_contract(en),localize.machine_contract(zh))
             self.assertEqual(re.findall(r'(?m)^#{1,6} ',en),re.findall(r'(?m)^#{1,6} ',zh))
 
     def test_source_freshness_blocks_stale_translation(self):
@@ -78,14 +78,14 @@ class SharedLocalizationTests(unittest.TestCase):
         self.assertIn('--require-tasks',zh)
         bad=zh.replace('--require-tasks','--ignore-tasks');rec=copy.deepcopy(localize.catalog()['commands']['analyze'])
         rec['translation_sha256']=localize.sha(bad)
-        with self.assertRaisesRegex(localize.LocalizationError,'Protected'):
+        with self.assertRaisesRegex(localize.LocalizationError,'machine/structure'):
             localize.validate_translation('analyze',source,bad,rec)
 
     def test_heading_removal_is_rejected_even_with_updated_digest(self):
         source=localize.canonical_source('plan');zh=(localize.LOCALES/'workflows/plan.md').read_text()
         bad=re.sub(r'(?m)^## ', '### ', zh,count=1);rec=copy.deepcopy(localize.catalog()['commands']['plan'])
         rec['translation_sha256']=localize.sha(bad)
-        with self.assertRaisesRegex(localize.LocalizationError,'hierarchy'):
+        with self.assertRaisesRegex(localize.LocalizationError,'machine/structure'):
             localize.validate_translation('plan',source,bad,rec)
 
     def test_host_binding_has_no_unresolved_or_wrong_host_invocations(self):
@@ -103,13 +103,44 @@ class SharedLocalizationTests(unittest.TestCase):
 
     def test_language_directive_does_not_authorize_extra_writes(self):
         text=localize.resource('output-language')
-        for phrase in ('不得为了翻译新增写入','模板固定骨架','只读阶段'):
+        for phrase in ('不得为了翻译新增写入','canonical presentation','只读阶段'):
             self.assertIn(phrase,text)
         for name in ('spec','plan','tasks','constitution','checklist'):
             source=(ROOT/f'src/templates/{name}-template.md').read_text()
             from naming import template_references
             deployed=(ROOT/f'dist/templates/{name}-template.md').read_text()
             self.assertEqual(localize.restore_template(name+'-template',deployed),template_references(source))
+
+    def test_localization_contract_v2_is_canonical_chinese_with_legacy_aliases(self):
+        data=localize.catalog();self.assertEqual(data['schema_version'],2)
+        contract=data['contract'];self.assertEqual(contract['version'],2)
+        self.assertEqual(contract['canonical_locale'],'zh-CN')
+        self.assertEqual(contract['structural_aliases']['Clarifications']['canonical'],'澄清记录')
+        self.assertIn('Clarifications',contract['structural_aliases']['Clarifications']['legacy'])
+        self.assertIn('采用推荐',contract['input_aliases']['accept_recommendation'])
+        self.assertIn('recommended',contract['input_aliases']['accept_recommendation'])
+
+    def test_new_default_templates_use_chinese_canonical_titles_not_bilingual_duplicates(self):
+        spec=(ROOT/'dist/templates/spec-template.md').read_text()
+        self.assertIn('## 用户场景与测试 *(必填)*',spec)
+        self.assertIn('### 用户故事 1',spec)
+        self.assertIn('**优先理由**:',spec)
+        self.assertIn('**独立测试**:',spec)
+        self.assertNotIn('User Scenarios & Testing',spec)
+        self.assertNotIn('User Story 1',spec)
+        plan=(ROOT/'dist/templates/plan-template.md').read_text()
+        for label in ('开发语言','存储方式','测试体系','相关约束','规模范围'):
+            self.assertIn('**'+label+'**:',plan)
+
+    def test_clar_fixed_prompts_are_chinese_but_old_inputs_remain_compatible(self):
+        text=localize.localized_workflow('clarify','codex')
+        self.assertIn('`**问题：** <interrogative>?`',text)
+        self.assertIn('`**推荐：** 选项 [X]',text)
+        self.assertIn('回复“采用推荐”接受推荐方案',text)
+        self.assertIn('yes、recommended、suggested、“采用推荐”或“采用建议”',text)
+        self.assertNotIn('You can reply with the option letter',text)
+        self.assertIn('旧 `## Clarifications`',text)
+        self.assertIn('`## 澄清记录`',text)
 
     def test_upstream_source_bytes_are_still_exact(self):
         import hashlib

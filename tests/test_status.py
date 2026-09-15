@@ -64,7 +64,7 @@ class StatusTests(unittest.TestCase):
 
     def test_current_plugin_identity_is_not_init_version(self):
         r = self.collect()
-        self.assertEqual(r['plugin']['version'], '1.0.0-beta')
+        self.assertEqual(r['plugin']['version'], '1.0.5-sdlc.1')
         self.assertEqual(r['initialization']['recorded_plugin_version'], 'older-record')
         self.assertEqual(r['initialization']['recorded_upstream_version'], 'older-upstream')
 

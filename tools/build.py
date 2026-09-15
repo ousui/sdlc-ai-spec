@@ -9,7 +9,7 @@ from pathlib import Path
 import yaml
 from naming import (skill_id, invocation, product_prose, template_references, SKILL_IDS, DISPLAY_NAME, audit_package)
 from render import (ROOT, COMMANDS, HOSTS, LOCK, UPSTREAM_SHA, METADATA, REPOSITORY,
-                    VERSION, AUTHOR, HINTS, render_source, split, relocate_body, binding)
+                    VERSION, PORT_REVISION, AUTHOR, HINTS, render_source, split, relocate_body, binding)
 
 from localize import (translate_body, translated_metadata, localized_workflow, resource, check_all, presentation, presentation_source)
 
@@ -256,12 +256,12 @@ def build(destination: Path) -> None:
             shutil.copyfile(ROOT / name, package / name)
         (package / 'UPSTREAM.json').write_text(json.dumps({
             'repository': LOCK['repository'], 'tag': LOCK['tag'], 'version': LOCK['version'], 'commit': UPSTREAM_SHA,
-            'port_repository': REPOSITORY, 'port_version': VERSION, 'port_author': AUTHOR['name'],
+            'port_repository': REPOSITORY, 'port_version': VERSION, 'port_revision': PORT_REVISION, 'port_author': AUTHOR['name'],
             'profile': {'script': 'sh', 'events': False, 'extensions': [], 'presets': []},
             'included_commands': list(COMMANDS), 'excluded_commands': ['taskstoissues'],
             'local_commands': list(LOCAL_COMMANDS), 'init_implemented': True, 'native_host_verified': False,
             'layout': 'unified-public-skills', 'locale': 'zh-CN',
-            'template_language': 'zh-CN prose and bilingual headings; preserved machine anchors',
+            'template_language': 'canonical zh-CN presentation; legacy English/bilingual headings remain readable; machine contracts preserved',
             'source_to_skill': {name: SKILL_IDS[name] for name in COMMANDS},
             'local_to_skill': {name: SKILL_IDS[name] for name in LOCAL_COMMANDS},
         }, indent=2) + '\n')
@@ -269,13 +269,17 @@ def build(destination: Path) -> None:
         (package / 'README.md').write_text(
             '# SDLC AI SPEC v' + VERSION + '\n\n作者：' + AUTHOR['name'] + '\n\n仓库：' + REPOSITORY + '\n\n'
             '11 个公共入口位于 skills/，由 Codex、Claude Code 和 Cursor 共用；使用宿主默认展示与调用选择策略。'
-            '完整流程正文及摘要为简体中文；模板说明和示例为中文，标题保留英文定位锚点并附中文释义，机器语法保持不变。'
+            '完整流程正文及摘要为简体中文；新生成模板使用中文 canonical 标题与字段，兼容读取旧英文/双语标题，机器语法保持不变。'
             '不因升级或语言要求重写已有业务文档。\n\n'
             '安装不需要构建、uv、上游 CLI 或网络。Runtime requires Bash, Python 3.9+ and standard POSIX tools. '
             'No install-time build, uv, upstream CLI or network is required.\n\n'
             '每个项目通常运行一次 sdlc-000-init；重复调用只补全兼容状态，不重置已有工作。'
             'sdlc-status 只读查看项目和产物，不初始化、不修改文件、不执行其他阶段。'
             '原生发现、模型行为与真实业务验收不由静态工程检查代替。\n\n'
+            'sdlc-210-huma 生成需求质量评审清单，推荐在 PLAN 后、TASK 前按需使用；'
+            '不新增 TASK 前置门禁，不是 CONV 后的功能验收。新清单条目保持未勾选，评审者明确要求后 Agent 才协助评估。'
+            'IMPL 读取清单，有未勾选项时询问是否继续并等待回答，不修改清单标记。'
+            'CONV 收敛不等于项目测试、业务验收或发布通过。\n\n'
             'Based on Spec Kit by GitHub, Inc. (MIT), an independent source port. See LICENSE, NOTICE, UPSTREAM.json and BUILD.json.\n', encoding='utf-8')
         for path in (package / 'scripts').rglob('*.sh'):
             path.chmod(0o755)
@@ -289,7 +293,8 @@ def build(destination: Path) -> None:
             inputs[name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
         build_id = hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest()
         (package / 'BUILD.json').write_text(json.dumps({
-            'build_id': build_id, 'product_version': VERSION, 'upstream_sha': UPSTREAM_SHA,
+            'build_id': build_id, 'product_version': VERSION, 'upstream_version': LOCK['version'],
+            'port_revision': PORT_REVISION, 'upstream_sha': UPSTREAM_SHA,
             'inputs': inputs,
         }, indent=2) + '\n')
         audit_package(package)

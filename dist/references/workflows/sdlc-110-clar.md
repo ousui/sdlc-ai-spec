@@ -15,13 +15,19 @@
 <!-- SDLC-OUTPUT-LANGUAGE:BEGIN -->
 ## 输出语言（仅呈现层）
 
-向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节层级和定位用英文锚点保留，标题可附中文释义；占位符、状态值、任务语法、实际代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
+向使用者解释流程、提问及总结时使用简体中文。仅在原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。
 
-使用插件中已审查的本地化模板。`User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记保留；模板说明、业务描述、理由、测试说明和任务内容使用中文。代码块中的格式示例不强制自然语言使用英文；SPEC 的内置 requirements.md 清单采用流程中的本地化条目，条目顺序、数量、条件和勾选责任不变。用户自定义模板仍按原流程处理，不为本地化新增覆盖动作。
+新生成的默认产物使用已审查的中文展示标题、字段标签和固定提示，不再在同一标题后重复附加另一种语言。章节层级、顺序、必填／可选含义和业务内容保持不变。定位标题只使用已审查的有限映射；读取已有产物时兼容上游英文、历史双语和当前中文标题，已有章节必须继续使用，不重复创建同义章节。
+
+默认写入采用中文 canonical presentation。机器契约保持原样：Skill/命令 ID、文件名与路径、JSON/YAML key、环境变量、CLI 参数、事件名、配置键、状态枚举、严重级别、任务／需求编号、复选框语法、`[US1]`、`[P]`、`[NEEDS CLARIFICATION: ...]` 标记、实际代码/API/schema 标识均不得因翻译改名。API Token、Cloudflare、DNS、HTTP、JSON、Python、Go 等必要技术术语按项目实际用法保留。
+
+固定交互文案属于本地化范围；输出使用中文，同时保留原流程已有英文输入，并可增加已审查的中文等价输入别名。例如 CLAR 可接受 `yes`／`recommended`／`suggested`，并兼容“采用推荐”／“采用建议”；IMPL 的继续／停止类回答同样保留旧英文词。新增别名不得改变问题数量、等待用户确认、停止条件或写入权限。
+
+使用插件中已审查的本地化模板。自然语言标题、字段、说明、理由、测试描述、任务内容和固定响应使用中文；机器语法按上段保留。代码块中的自然语言示例允许按已审查映射翻译，但可执行命令、参数、路径、变量、机器 token 及代码标识必须保持。用户自定义模板仍按原流程处理，不为本地化新增覆盖动作。
 
 文档、注释与说明直接表达业务内容，不添加“中文注释”“中文说明”“中文版本”等语言标签。确需标签时使用“注释”或“说明”。不要为了标明语言新增 HTML 注释；只有原流程本来要求的注释才按其规则处理。保留有语义的注释，不做全文件删除或批量清理。不得插入 U+FFFC 等对象替换字符。
 
-此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。它是给执行者的指引，不是待复制进业务产物的正文。
+此语言约定只改变呈现，不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。它是给执行者的指引，不是待复制进业务产物的正文。
 <!-- SDLC-OUTPUT-LANGUAGE:END -->
 
 
@@ -44,28 +50,28 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0046@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0052@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Pre-Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选前置钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
   - **必需钩子**（`optional: false`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Pre-Hook**: {extension}
-    Executing: `/{command}`
+    **自动前置钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
 
-    Wait for the result of the hook command before proceeding to the Outline.
+    等待钩子命令返回结果后，再继续执行概要。
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
 - 如果没有注册钩子，或 `.sdlc/extensions.yml` 不存在，静默跳过。
@@ -74,15 +80,15 @@ $ARGUMENTS
 
 目标：发现并减少当前功能规格的歧义或缺失决策点，将澄清内容直接记录到规格文件中。
 
-注意：此澄清流程预期在调用 `@@SDLC_BIND_0076@@sdlc-200-plan` 之前运行并完成。用户明确表示跳过澄清（例如探索性试验）时，可以继续，但必须提醒后续返工风险会上升。
+注意：此澄清流程预期在调用 `@@SDLC_BIND_0082@@sdlc-200-plan` 之前运行并完成。用户明确表示跳过澄清（例如探索性试验）时，可以继续，但必须提醒后续返工风险会上升。
 
 执行步骤：
 
-1. 在仓库根目录**只运行一次** `SDLC_HOST=c@@SDLC_BIND_0080@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --paths-only`，使用组合 `--json --paths-only` 模式／`-Json -PathsOnly`。解析最少 JSON 字段：
+1. 在仓库根目录**只运行一次** `SDLC_HOST=c@@SDLC_BIND_0086@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --paths-only`，使用组合 `--json --paths-only` 模式／`-Json -PathsOnly`。解析最少 JSON 字段：
    - `FEATURE_DIR`
    - `FEATURE_SPEC`
    - 可选地记录 `IMPL_PLAN`、`TASKS`，用于后续串联流程。
-   - JSON 解析失败时，中止并指导用户重新运行 `@@SDLC_BIND_0084@@sdlc-100-spec` 或检查功能分支环境。
+   - JSON 解析失败时，中止并指导用户重新运行 `@@SDLC_BIND_0090@@sdlc-100-spec` 或检查功能分支环境。
    - 参数包含单引号（如 "I'm Groot"）时，使用转义语法，如 'I'\''m Groot'；可以使用双引号时也可写作 "I'm Groot"。
 
 2. **如果存在**：加载 `.sdlc/memory/constitution.md`，获取项目原则和治理约束。
@@ -157,9 +163,9 @@ $ARGUMENTS
 5. 顺序提问循环（交互式）：
     - 每次**只问一个问题**。
     - **提问质量要求，适用于选择题及简答题**：
-       - 以 `**Question:**` 开头，后接以 `?` 结尾的完整疑问句。`?` 前的问题本身必须能独立理解。
+       - 以 `**问题：**` 开头，后接以 `?` 结尾的完整疑问句。`?` 前的问题本身必须能独立理解。
        - **绝不**用主题标签、章节标题或需求 ID 充当问题。例如 `Acceptance device/runtime matrix (FR-023)` 无效：它是标签，不是问题。
-       - `?` 之后只允许可选的括号需求／问题 ID。准确格式为 `**Question:** <interrogative>?` 或 `**Question:** <interrogative>? (FR-023)`。绝不把 ID 放在 `?` 前，也不把 ID 单独或配合主题标签用作整段提问。
+       - `?` 之后只允许可选的括号需求／问题 ID。准确格式为 `**问题：** <interrogative>?` 或 `**问题：** <interrogative>? (FR-023)`。绝不把 ID 放在 `?` 前，也不把 ID 单独或配合主题标签用作整段提问。
        - 问题行之后、推荐／选项之前，立即用一句通俗语言解释“为何重要”，说明对验收或交付的影响。
        - 使用日常表达；术语只在同一句已定义时引入。自查：不了解 SDLC AI SPEC 的读者，仅凭问题行也应能回答。可以简短，不能只给晦涩标签。
     - 对选择题：
@@ -169,29 +175,29 @@ $ARGUMENTS
           - 降低安全、性能及可维护性风险。
           - 与规格中明确可见的项目目标或约束一致。
        - 在顶部**突出推荐选项**，并用 1–2 句话说明它为何最佳。
-       - 格式为 `**Recommended:** Option [X] - <reasoning>`。
+       - 格式为 `**推荐：** 选项 [X] — <reasoning>`。
        - 然后用 Markdown 表展示全部选项：
 
-       | Option | Description |
+       | 选项 | 说明 |
        |--------|-------------|
        | A | 选项 A 的说明 |
        | B | 选项 B 的说明 |
        | C | 选项 C 的说明；按需增加 D／E，总数最多 5 个 |
-       | Short | 其他简短答案，不超过 5 个词；仅在适合自由回答时提供 |
+       | 简答 | 其他简短答案，不超过 5 个词；仅在适合自由回答时提供 |
 
-       - 表格后添加以下回应说明：`You can reply with the option letter (e.g., "A"), accept the recommendation by saying "yes" or "recommended", or provide your own short answer.`
+       - 表格后添加以下回应说明：`可回复选项字母（如 A），回复“采用推荐”接受推荐方案，或提供自己的简短答案。`
     - 对没有合理离散选项的简答题：
        - 依据最佳实践和上下文给出**建议答案**。
-       - 格式为 `**Suggested:** <your proposed answer> - <brief reasoning>`。
-       - 然后说明简短答案格式：`Format: Short answer (<=5 words). You can accept the suggestion by saying "yes" or "suggested", or provide your own answer.`
+       - 格式为 `**建议：** <your proposed answer> — <brief reasoning>`。
+       - 然后说明简短答案格式：`**格式：** 简短答案（不超过 5 个词）。可回复“采用建议”接受上述答案，或提供自己的答案。`
     - 用户回答后：
-       - 用户回复 yes、recommended 或 suggested 时，使用此前明确提出的推荐／建议作为答案。
+       - 用户回复 yes、recommended、suggested、“采用推荐”或“采用建议”时，使用此前明确提出的推荐／建议作为答案。
        - 否则，验证答案对应某个选项，或满足不超过 5 个词的约束。
        - 答案有歧义时，简短追问以消除歧义；仍计为同一个问题，不推进队列。
        - 答案足够明确后，先记录在工作记忆中，暂不写盘，再移向下一个排队问题。
     - 以下任一条件满足就停止提问：
        - 关键歧义提前全部解决，剩余队列问题已无必要；或
-       - 用户表示完成，例如 done、good、no more；或
+       - 用户表示完成，例如 done、good、no more，或明确表示“完成／不再提问”；或
        - 已经提问 5 个问题。
     - 不得提前透露尚未轮到的问题。
     - 开始时没有有效问题，立即报告没有关键歧义。
@@ -199,8 +205,8 @@ $ARGUMENTS
 6. 每次接受答案后整合（增量更新）：
     - 保存规格的内存表示及原始文件内容，开始时只加载一次。
     - 本会话第一次整合答案时：
-       - 确保存在 `## Clarifications`；缺失时，按规格模板在最高层级的上下文／概述章节后创建。
-       - 在其下创建今天的 `### Session YYYY-MM-DD` 子标题；已有则不重复创建。
+       - 识别 `## 澄清记录`、旧 `## Clarifications` 或历史双语同义标题为同一章节；已有时继续使用，不重复创建。缺失时按规格模板在最高层级的上下文／概述章节后创建 `## 澄清记录`。
+       - 在其下创建今天的 `### 会话 YYYY-MM-DD` 子标题；旧 `### Session YYYY-MM-DD` 或历史双语同义标题视为同一会话标题，已有则不重复创建。
     - 接受答案后立即追加条目：`- Q: <question> → A: <final answer>`。
     - 然后立即把澄清应用到最合适的章节：
        - 功能歧义 → 更新或新增 Functional Requirements 条目。
@@ -215,11 +221,11 @@ $ARGUMENTS
     - 每项新增澄清应最小、可测试，避免扩写导致偏离。
 
 7. 验证：每次写入后执行，并在结束时再完整检查：
-   - Clarifications 会话对每个已接受答案恰好有一条记录，不重复。
+   - 澄清记录会话对每个已接受答案恰好有一条记录，不重复。
    - 已提问并接受的问题总数 ≤ 5。
    - 更新章节没有残留本次答案应解决的模糊占位。
    - 不存在相矛盾的旧陈述；检查失效的替代选项是否已移除。
-   - Markdown 结构有效；只允许新增 `## Clarifications` 和 `### Session YYYY-MM-DD` 标题。
+   - Markdown 结构有效；只允许新增 `## 澄清记录` 和 `### 会话 YYYY-MM-DD` 标题；已有旧英文／双语同义标题继续保留，不为本地化改名。
    - 术语一致：所有更新章节使用同一规范术语。
 
 8. 将更新后的规格写回 `FEATURE_SPEC`。
@@ -246,10 +252,10 @@ $ARGUMENTS
 行为规则：
 
 - 未发现有意义歧义，或全部候选问题影响很低时，回复“未发现值得正式澄清的关键歧义”，并建议继续。
-- 规格文件缺失时，指导用户先运行 `@@SDLC_BIND_0248@@sdlc-100-spec`；不要在此处创建新规格。
+- 规格文件缺失时，指导用户先运行 `@@SDLC_BIND_0254@@sdlc-100-spec`；不要在此处创建新规格。
 - 总提问数绝不超过 5；同一问题的澄清追问不另计新问题。
 - 除非缺失技术栈信息阻塞功能清晰度，否则避免猜测性技术栈提问。
-- 尊重用户提前结束的信号，如 stop、done、proceed。
+- 尊重用户提前结束的信号，如 stop、done、proceed，以及明确的中文“停止／完成／继续”。
 - 覆盖完整而未提问时，输出紧凑覆盖摘要，全部类别为 Clear，然后建议进入下一步。
 - 用尽额度后仍有高影响未决类别时，在 Deferred 中明确指出并说明理由。
 
@@ -267,27 +273,27 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0269@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0275@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **必需钩子**（`optional: false`）——**必须为每个必需钩子输出 `EXECUTE_COMMAND:`**：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Hook**: {extension}
-    Executing: `/{command}`
+    **自动钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
 
 ## 完成报告
@@ -297,8 +303,8 @@ $ARGUMENTS
 - 更新的规格路径。
 - 修改过的章节名称。
 - 规格质量清单状态：重新验证了 `FEATURE_DIR/checklists/requirements.md` 时，展示前后通过数，例如“规格质量清单：12/16 → 15/16 项通过”，并列出所有状态变化项，包括新增勾选和回退项。仍未勾选的条目列为待关注领域。
-- 覆盖汇总表：每个分类的状态为 Resolved（原 Partial／Missing，现已解决）、Deferred（超出提问额度或更适合规划）、Clear（本来已充分）、Outstanding（仍 Partial／Missing，但影响较低）。
-- 存在 Outstanding 或 Deferred 时，建议是否继续 `@@SDLC_BIND_0300@@sdlc-110-clar`。
+- 覆盖汇总表：每个分类展示中文状态，并保留稳定英文枚举：已解决（Resolved，原 Partial／Missing，现已解决）、已推迟（Deferred，超出提问额度或更适合规划）、已明确（Clear，本来已充分）、仍待明确（Outstanding，仍 Partial／Missing，但影响较低）。
+- 存在 Outstanding 或 Deferred 时，建议是否继续 `@@SDLC_BIND_0306@@sdlc-110-clar`。
 - 建议的下一条命令。
 
 ## 完成条件

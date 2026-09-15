@@ -23,7 +23,7 @@ class UvToolingTests(unittest.TestCase):
         self.assertFalse(data['tool']['uv']['package'])
         self.assertEqual(data['tool']['uv']['required-version'], '>=0.12.13,<0.13')
         self.assertEqual((ROOT / '.python-version').read_text(), '3.12\n')
-        self.assertEqual(json.loads((ROOT / 'plugin-metadata.json').read_text())['version'], '1.0.0-beta')
+        self.assertEqual(json.loads((ROOT / 'plugin-metadata.json').read_text())['version'], '1.0.5-sdlc.1')
 
     def test_lockfile_contains_exact_accepted_tool_versions(self):
         lock = (ROOT / 'uv.lock').read_text()

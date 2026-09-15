@@ -25,26 +25,26 @@ $ARGUMENTS
   - **可选钩子**（`optional: true`）：
 
     ```text
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Pre-Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选前置钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
 
   - **必需钩子**（`optional: false`）：
 
     ```text
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Pre-Hook**: {extension}
-    Executing: `/{command}`
+    **自动前置钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
 
-    Wait for the result of the hook command before proceeding to the Goal.
+    等待钩子命令返回结果后，再继续执行目标。
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
 
@@ -58,7 +58,7 @@ $ARGUMENTS
 
 ## 操作约束
 
-**只追加，绝不重写（APPEND-ONLY, NEVER REWRITE）**：本命令**唯一**的写入，是向 `tasks.md` 追加新的 `## Phase N: Convergence` 章节。**不得**：
+**只追加，绝不重写（APPEND-ONLY, NEVER REWRITE）**：本命令**唯一**的写入，是向 `tasks.md` 追加新的 `## 阶段 N：收敛` 章节。**不得**：
 
 - 以任何方式修改 `spec.md` 或 `plan.md`。
 - 重写、重新编号、重排或删除任何既有任务，包括之前 Convergence 阶段的任务。
@@ -163,7 +163,7 @@ $ARGUMENTS
 按照追加契约，在 `tasks.md` **末尾**追加：
 
 1. 扫描全部既有任务 ID，令 `M` 为最大值。确定下一阶段编号 `N`，即已有最大阶段号加 1。
-2. 写入单个新章节标题 `## Phase N: Convergence`。
+2. 写入单个新章节标题 `## 阶段 N：收敛`。
 3. 每项可执行发现生成一个清单条目，优先排列 CRITICAL／HIGH，分配补零的 ID：`T{M+1:03d}, T{M+2:03d}, …`：
 
    ```markdown
@@ -204,23 +204,23 @@ $ARGUMENTS
   - **可选钩子**（`optional: true`）：
 
     ```text
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
 
   - **必需钩子**（`optional: false`）：
 
     ```text
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Hook**: {extension}
-    Executing: `/{command}`
+    **自动钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。

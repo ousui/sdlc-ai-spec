@@ -267,7 +267,7 @@ format_sdlc_command() {
         *) echo 'ERROR: Unsupported SDLC_HOST' >&2; return 1 ;;
     esac
     case "$name" in
-        sdlc-000-init|sdlc-010-rule|sdlc-100-spec|sdlc-110-clar|sdlc-200-plan|sdlc-300-task|sdlc-310-xchk|sdlc-320-huma|sdlc-400-impl|sdlc-500-conv) ;;
+        sdlc-000-init|sdlc-010-rule|sdlc-100-spec|sdlc-110-clar|sdlc-200-plan|sdlc-210-huma|sdlc-300-task|sdlc-310-xchk|sdlc-400-impl|sdlc-500-conv) ;;
         *) echo 'ERROR: Unsupported SDLC AI SPEC capability' >&2; return 1 ;;
     esac
     printf '%s%s\n' "$prefix" "$name"

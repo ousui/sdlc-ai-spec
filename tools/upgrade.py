@@ -151,6 +151,14 @@ def candidate_lock(upstream: Path, old: dict, commit: str, tag: str) -> tuple[di
     return dict(old, commit=commit, tag=tag, version=version, files=selected, watch_files=watched), changes
 
 
+def product_version(upstream_version: str, revision: int = 1) -> str:
+    if not isinstance(upstream_version, str) or not upstream_version.strip():
+        raise ValueError('Upstream package version is missing')
+    if type(revision) is not int or revision < 1:
+        raise ValueError('Local product revision must be a positive integer')
+    return upstream_version + '-sdlc.' + str(revision)
+
+
 def prepare(root: Path, upstream: Path, out: Path, ref: str) -> dict:
     root, upstream, out = root.resolve(), upstream.resolve(), out.absolute()
     if not ref or ref.startswith('-'):
@@ -178,6 +186,14 @@ def prepare(root: Path, upstream: Path, out: Path, ref: str) -> dict:
     run('git', 'worktree', 'add', '--detach', str(out), base, cwd=root)
     try:
         (out/'upstream.lock.json').write_text(json.dumps(new, indent=2)+'\n')
+        # Product versions track the locked upstream package plus an SDLC-local
+        # revision. A new upstream version resets the local revision to 1;
+        # same-upstream local iterations are deliberate maintainer changes.
+        if new['version'] != old.get('version'):
+            metadata_path = out / 'plugin-metadata.json'
+            metadata = json.loads(metadata_path.read_text(encoding='utf-8'))
+            metadata['version'] = product_version(new['version'])
+            metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
         run(sys.executable, '-B', str(out/'tools/port.py'), '--upstream', str(upstream), cwd=out)
         run(sys.executable, '-B', str(out/'tools/build.py'), '--marketplaces', cwd=out)
         record.update(status='CANDIDATE_READY', candidate_digest=source_digest(out))

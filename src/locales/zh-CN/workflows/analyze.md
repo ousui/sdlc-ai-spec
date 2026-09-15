@@ -23,24 +23,24 @@ $ARGUMENTS
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Pre-Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选前置钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
   - **必需钩子**（`optional: false`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Pre-Hook**: {extension}
-    Executing: `/{command}`
+    **自动前置钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
 
-    Wait for the result of the hook command before proceeding to the Goal.
+    等待钩子命令返回结果后，再继续执行目标。
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
 - 如果没有注册钩子，或 `.sdlc/extensions.yml` 不存在，静默跳过。
@@ -187,7 +187,7 @@ $ARGUMENTS
 
 ### 7. 提供后续行动
 
-在报告末尾输出简洁的 Next Actions：
+在报告末尾输出简洁的“后续行动”：
 
 - 存在 CRITICAL 时：建议在 `{{SDLC:IMPLEMENT}}` 之前解决。
 - 只有 LOW／MEDIUM 时：用户可以继续，但仍应提供改进建议。
@@ -211,21 +211,21 @@ $ARGUMENTS
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
   - **必需钩子**（`optional: false`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Hook**: {extension}
-    Executing: `/{command}`
+    **自动钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。

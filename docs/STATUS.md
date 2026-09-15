@@ -60,6 +60,11 @@ x、X。忽略 fenced/indented code、HTML 注释和标为 Examples/示例的章
 收敛或可发布。CLAR/XCHK/CONV 无持久化证据时为未记录，不推断从未执行。
 任务内容仅是数据；建议入口不自动执行，也不授予额外写入/跨阶段权限。
 
+自定义清单由 `sdlc-210-huma` 生成，推荐在 PLAN 后、TASK 前评审需求质量；STATUS
+仅展示勾选事实，不代替评审者评估，不证明 IMPL 或 CONV 通过。内置
+`checklists/requirements.md` 与自定义清单的责任归属仍然不同。
+详见 [使用流程与评审职责](USAGE.md)。
+
 ## stdout 契约和退出码
 
 schema_version 为 1。顶层有 status、snapshot、plugin、project、selection、

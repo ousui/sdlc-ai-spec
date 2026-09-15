@@ -17,7 +17,7 @@ SDLC AI SPEC 是锁定版本 Spec Kit 的产品化移植，不是独立演进的
 ## 仓库身份
 
 本仓库是面向用户作用域的 SDLC AI SPEC / Spec Kit 核心移植。产品元数据位于
-`plugin-metadata.json`；调试阶段保持版本 `1.0.0-beta`。声明的插件仓库是
+`plugin-metadata.json`；当前产品版本为 `1.0.5-sdlc.1`。版本必须使用 `<锁定上游版本>-sdlc.<本地迭代号>`，上游版本变化时本地迭代号从 1 重新开始；同一上游版本的本地迭代由维护者显式递增。声明的插件仓库是
 `https://github.com/goedgecloud/sdlc-ai-spec`，移植作者为 Blade。Git 传输可以使用
 不同的已授权工作仓库；不得因为修改元数据而静默改变声明仓库，也不得把元数据
 修改描述成仓库迁移。
@@ -33,12 +33,14 @@ SDLC AI SPEC 是锁定版本 Spec Kit 的产品化移植，不是独立演进的
 - 保留九个锁定的上游英文 command 及已记录的路径、名称和打包差异。翻译只允许
   发生在派生自然语言呈现层，不能修改原始来源或机器契约；不得因此引入新流程规则
   或 legacy Runtime。
-- 默认模板使用经过审查的中文呈现并保留机器锚点；`src/templates` 保持英文派生
-  基线，用于独立上游比较。不得加入“中文说明/中文注释”等语言标签，也不得隐式翻译
-  已有业务项目文件。
+- 默认模板使用经过审查的简体中文 canonical 呈现并保留机器契约；新产物不再默认输出“英文标题（中文）”双语标题。`src/templates` 保持英文派生基线，用于独立上游比较。读取已有产物时兼容上游英文、历史双语和 canonical 中文标题；不得因本地化批量改写已有业务项目文件。不得加入“中文说明/中文注释”等语言标签。
+- 本地化只允许改变自然语言呈现。Skill/命令 ID、文件名和路径、JSON/YAML key、环境变量、CLI 参数、事件/配置键、状态/严重级别枚举、FR/SC/T/CHK 编号、`[US1]`、`[P]`、复选框语法、`[NEEDS CLARIFICATION: ...]` 标记及实际代码/API/schema 标识不是普通文案。固定交互文案可翻译；已审查中文输入别名必须保留原英文输入兼容，不得改变提问数量、等待、停止或写入语义。
 - `src/adapters/` 保存本项目的显式移植适配源；其中 Markdown 保持英文 source baseline，
   对应中文呈现位于 `src/locales/zh-CN/`。该目录不是 Runtime 目录，不直接发布为
   `dist/adapters/`。具体职责见 `src/adapters/README.md`。
+- HUMA 的公共入口是 `sdlc-210-huma`，对应上游 checklist；推荐在 PLAN 后、TASK 前
+  生成需求质量评审清单，不是 CONV 后的功能验收。不得因编号调整改变清单的追加规则、
+  评审者责任或 IMPL 对未勾选项的询问/等待语义，不新增 TASK 前置门禁；详见 `docs/USAGE.md`。
 - STATUS 是本地只读 utility，不是上游阶段。不得让它持久化需求选择、初始化项目、
   执行其他 Skill 或虚构阶段历史。宪法 generation provenance 只描述可观察事实：
   hash 相等/不同都不能等同于 RULE 完成或审批结果，也不得根据当前模板为旧项目

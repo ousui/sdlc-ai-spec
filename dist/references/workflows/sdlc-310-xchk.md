@@ -15,13 +15,19 @@
 <!-- SDLC-OUTPUT-LANGUAGE:BEGIN -->
 ## 输出语言（仅呈现层）
 
-向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节层级和定位用英文锚点保留，标题可附中文释义；占位符、状态值、任务语法、实际代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
+向使用者解释流程、提问及总结时使用简体中文。仅在原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。
 
-使用插件中已审查的本地化模板。`User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记保留；模板说明、业务描述、理由、测试说明和任务内容使用中文。代码块中的格式示例不强制自然语言使用英文；SPEC 的内置 requirements.md 清单采用流程中的本地化条目，条目顺序、数量、条件和勾选责任不变。用户自定义模板仍按原流程处理，不为本地化新增覆盖动作。
+新生成的默认产物使用已审查的中文展示标题、字段标签和固定提示，不再在同一标题后重复附加另一种语言。章节层级、顺序、必填／可选含义和业务内容保持不变。定位标题只使用已审查的有限映射；读取已有产物时兼容上游英文、历史双语和当前中文标题，已有章节必须继续使用，不重复创建同义章节。
+
+默认写入采用中文 canonical presentation。机器契约保持原样：Skill/命令 ID、文件名与路径、JSON/YAML key、环境变量、CLI 参数、事件名、配置键、状态枚举、严重级别、任务／需求编号、复选框语法、`[US1]`、`[P]`、`[NEEDS CLARIFICATION: ...]` 标记、实际代码/API/schema 标识均不得因翻译改名。API Token、Cloudflare、DNS、HTTP、JSON、Python、Go 等必要技术术语按项目实际用法保留。
+
+固定交互文案属于本地化范围；输出使用中文，同时保留原流程已有英文输入，并可增加已审查的中文等价输入别名。例如 CLAR 可接受 `yes`／`recommended`／`suggested`，并兼容“采用推荐”／“采用建议”；IMPL 的继续／停止类回答同样保留旧英文词。新增别名不得改变问题数量、等待用户确认、停止条件或写入权限。
+
+使用插件中已审查的本地化模板。自然语言标题、字段、说明、理由、测试描述、任务内容和固定响应使用中文；机器语法按上段保留。代码块中的自然语言示例允许按已审查映射翻译，但可执行命令、参数、路径、变量、机器 token 及代码标识必须保持。用户自定义模板仍按原流程处理，不为本地化新增覆盖动作。
 
 文档、注释与说明直接表达业务内容，不添加“中文注释”“中文说明”“中文版本”等语言标签。确需标签时使用“注释”或“说明”。不要为了标明语言新增 HTML 注释；只有原流程本来要求的注释才按其规则处理。保留有语义的注释，不做全文件删除或批量清理。不得插入 U+FFFC 等对象替换字符。
 
-此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。它是给执行者的指引，不是待复制进业务产物的正文。
+此语言约定只改变呈现，不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。它是给执行者的指引，不是待复制进业务产物的正文。
 <!-- SDLC-OUTPUT-LANGUAGE:END -->
 
 
@@ -44,47 +50,47 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0046@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0052@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Pre-Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选前置钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
   - **必需钩子**（`optional: false`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Pre-Hook**: {extension}
-    Executing: `/{command}`
+    **自动前置钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
 
-    Wait for the result of the hook command before proceeding to the Goal.
+    等待钩子命令返回结果后，再继续执行目标。
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
 - 如果没有注册钩子，或 `.sdlc/extensions.yml` 不存在，静默跳过。
 
 ## 目标
 
-在实施前，识别三个核心产物（`spec.md`、`plan.md`、`tasks.md`）之间的不一致、重复、歧义和定义不足。本命令**只能**在 `@@SDLC_BIND_0074@@sdlc-300-task` 成功生成完整 `tasks.md` 之后运行。
+在实施前，识别三个核心产物（`spec.md`、`plan.md`、`tasks.md`）之间的不一致、重复、歧义和定义不足。本命令**只能**在 `@@SDLC_BIND_0080@@sdlc-300-task` 成功生成完整 `tasks.md` 之后运行。
 
 ## 操作约束
 
 **严格只读（STRICTLY READ-ONLY）**：**不要**修改任何文件。输出结构化分析报告。可以提供可选的整改计划；后续编辑命令手动调用之前，必须获得用户明确批准。
 
-**宪法权威**：项目宪法（`.sdlc/memory/constitution.md`）在本分析范围内**不可协商**。宪法冲突自动归为 CRITICAL，必须调整规格、方案或任务，而不是弱化、重新解释或静默忽略原则。原则本身需要变更时，必须在 `@@SDLC_BIND_0080@@sdlc-310-xchk` 之外单独、明确地更新宪法。
+**宪法权威**：项目宪法（`.sdlc/memory/constitution.md`）在本分析范围内**不可协商**。宪法冲突自动归为 CRITICAL，必须调整规格、方案或任务，而不是弱化、重新解释或静默忽略原则。原则本身需要变更时，必须在 `@@SDLC_BIND_0086@@sdlc-310-xchk` 之外单独、明确地更新宪法。
 
 ## 执行步骤
 
 ### 1. 初始化分析上下文
 
-从仓库根目录运行一次 `SDLC_HOST=c@@SDLC_BIND_0086@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --require-spec --require-tasks --include-tasks`，解析 JSON 中的 FEATURE_DIR 和 AVAILABLE_DOCS。推导绝对路径：
+从仓库根目录运行一次 `SDLC_HOST=c@@SDLC_BIND_0092@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --require-spec --require-tasks --include-tasks`，解析 JSON 中的 FEATURE_DIR 和 AVAILABLE_DOCS。推导绝对路径：
 
 - SPEC = FEATURE_DIR/spec.md
 - PLAN = FEATURE_DIR/plan.md
@@ -212,11 +218,11 @@ $ARGUMENTS
 
 ### 7. 提供后续行动
 
-在报告末尾输出简洁的 Next Actions：
+在报告末尾输出简洁的“后续行动”：
 
-- 存在 CRITICAL 时：建议在 `@@SDLC_BIND_0216@@sdlc-400-impl` 之前解决。
+- 存在 CRITICAL 时：建议在 `@@SDLC_BIND_0222@@sdlc-400-impl` 之前解决。
 - 只有 LOW／MEDIUM 时：用户可以继续，但仍应提供改进建议。
-- 给出明确命令建议，例如“运行 @@SDLC_BIND_0218@@sdlc-200-plan 调整架构”“手动编辑 tasks.md，补充 performance-metrics 的覆盖”。
+- 给出明确命令建议，例如“运行 @@SDLC_BIND_0224@@sdlc-200-plan 调整架构”“手动编辑 tasks.md，补充 performance-metrics 的覆盖”。
 
 ### 8. 提供整改建议
 
@@ -232,25 +238,25 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0234@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0240@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
   - **必需钩子**（`optional: false`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Hook**: {extension}
-    Executing: `/{command}`
+    **自动钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。

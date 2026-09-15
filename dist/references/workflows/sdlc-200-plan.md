@@ -15,13 +15,19 @@
 <!-- SDLC-OUTPUT-LANGUAGE:BEGIN -->
 ## 输出语言（仅呈现层）
 
-向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节层级和定位用英文锚点保留，标题可附中文释义；占位符、状态值、任务语法、实际代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
+向使用者解释流程、提问及总结时使用简体中文。仅在原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。
 
-使用插件中已审查的本地化模板。`User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记保留；模板说明、业务描述、理由、测试说明和任务内容使用中文。代码块中的格式示例不强制自然语言使用英文；SPEC 的内置 requirements.md 清单采用流程中的本地化条目，条目顺序、数量、条件和勾选责任不变。用户自定义模板仍按原流程处理，不为本地化新增覆盖动作。
+新生成的默认产物使用已审查的中文展示标题、字段标签和固定提示，不再在同一标题后重复附加另一种语言。章节层级、顺序、必填／可选含义和业务内容保持不变。定位标题只使用已审查的有限映射；读取已有产物时兼容上游英文、历史双语和当前中文标题，已有章节必须继续使用，不重复创建同义章节。
+
+默认写入采用中文 canonical presentation。机器契约保持原样：Skill/命令 ID、文件名与路径、JSON/YAML key、环境变量、CLI 参数、事件名、配置键、状态枚举、严重级别、任务／需求编号、复选框语法、`[US1]`、`[P]`、`[NEEDS CLARIFICATION: ...]` 标记、实际代码/API/schema 标识均不得因翻译改名。API Token、Cloudflare、DNS、HTTP、JSON、Python、Go 等必要技术术语按项目实际用法保留。
+
+固定交互文案属于本地化范围；输出使用中文，同时保留原流程已有英文输入，并可增加已审查的中文等价输入别名。例如 CLAR 可接受 `yes`／`recommended`／`suggested`，并兼容“采用推荐”／“采用建议”；IMPL 的继续／停止类回答同样保留旧英文词。新增别名不得改变问题数量、等待用户确认、停止条件或写入权限。
+
+使用插件中已审查的本地化模板。自然语言标题、字段、说明、理由、测试描述、任务内容和固定响应使用中文；机器语法按上段保留。代码块中的自然语言示例允许按已审查映射翻译，但可执行命令、参数、路径、变量、机器 token 及代码标识必须保持。用户自定义模板仍按原流程处理，不为本地化新增覆盖动作。
 
 文档、注释与说明直接表达业务内容，不添加“中文注释”“中文说明”“中文版本”等语言标签。确需标签时使用“注释”或“说明”。不要为了标明语言新增 HTML 注释；只有原流程本来要求的注释才按其规则处理。保留有语义的注释，不做全文件删除或批量清理。不得插入 U+FFFC 等对象替换字符。
 
-此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。它是给执行者的指引，不是待复制进业务产物的正文。
+此语言约定只改变呈现，不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。它是给执行者的指引，不是待复制进业务产物的正文。
 <!-- SDLC-OUTPUT-LANGUAGE:END -->
 
 
@@ -44,35 +50,35 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0046@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0052@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Pre-Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选前置钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
   - **必需钩子**（`optional: false`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Pre-Hook**: {extension}
-    Executing: `/{command}`
+    **自动前置钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
 
-    Wait for the result of the hook command before proceeding to the Outline.
+    等待钩子命令返回结果后，再继续执行概要。
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
 - 如果没有注册钩子，或 `.sdlc/extensions.yml` 不存在，静默跳过。
 
 ## 执行概要
 
-1. **准备**：在仓库根目录运行 `SDLC_HOST=c@@SDLC_BIND_0074@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/setup-plan.sh" --json`，从 JSON 解析 FEATURE_SPEC、IMPL_PLAN、FEATURE_DIR、BRANCH。参数包含单引号（如 "I'm Groot"）时，使用转义语法，如 'I'\''m Groot'；可以使用双引号时也可写作 "I'm Groot"。
+1. **准备**：在仓库根目录运行 `SDLC_HOST=c@@SDLC_BIND_0080@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/setup-plan.sh" --json`，从 JSON 解析 FEATURE_SPEC、IMPL_PLAN、FEATURE_DIR、BRANCH。参数包含单引号（如 "I'm Groot"）时，使用转义语法，如 'I'\''m Groot'；可以使用双引号时也可写作 "I'm Groot"。
 
 2. **加载上下文**：读取 FEATURE_SPEC 和 `.sdlc/memory/constitution.md`。加载已经复制好的 IMPL_PLAN 模板。
 
@@ -80,8 +86,8 @@ $ARGUMENTS
    - 填写 Technical Context，将未知项标为 "NEEDS CLARIFICATION"。
    - 依据宪法填写 Constitution Check 章节。
    - 评估门禁，违规且没有充分理由时返回 ERROR。
-   - Phase 0：生成 research.md，解决全部 NEEDS CLARIFICATION。
-   - Phase 1：生成 data-model.md、contracts/、quickstart.md。
+   - 阶段 0：生成 research.md，解决全部 NEEDS CLARIFICATION。
+   - 阶段 1：生成 data-model.md、contracts/、quickstart.md。
    - 设计完成后重新评估 Constitution Check。
 
 ## 必需的执行后钩子
@@ -96,36 +102,36 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0098@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0104@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **必需钩子**（`optional: false`）——**必须为每个必需钩子输出 `EXECUTE_COMMAND:`**：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Hook**: {extension}
-    Executing: `/{command}`
+    **自动钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
 
 ## 完成报告
 
-命令在 Phase 1 设计完成后结束。报告分支、IMPL_PLAN 路径及生成的产物。
+命令在阶段 1 设计完成后结束。报告分支、IMPL_PLAN 路径及生成的产物。
 
 ## 各阶段
 
-### Phase 0：概要与研究
+### 阶段 0：概要与研究
 
 1. **从上面的 Technical Context 提取未知项**：
    - 每个 NEEDS CLARIFICATION → 一项研究任务。
@@ -142,28 +148,31 @@ $ARGUMENTS
    ```
 
 3. 在 `research.md` 中**汇总发现**，使用以下格式：
-   - Decision：[选定的方案]。
-   - Rationale：[选择理由]。
-   - Alternatives considered：[还评估过哪些方案]。
+   - 决策：[选定的方案]。
+   - 理由：[选择理由]。
+   - 替代方案：[还评估过哪些方案]。
 
 **输出**：research.md，全部 NEEDS CLARIFICATION 均已解决。
 
-### Phase 1：设计与契约
+### 阶段 1：设计与契约
 
 **前置条件：**`research.md` 已完成。
 
 1. **从功能规格提取实体** → `data-model.md`：
+   - 新生成的自然语言标题、字段说明、关系说明使用中文；实体名、字段名、代码类型和其他项目真实标识保持项目原样。
    - 实体名称、字段、关系。
    - 需求中的验证规则。
    - 适用时的状态转换。
 
 2. **定义接口契约**（项目存在外部接口时）→ `/contracts/`：
+   - 新生成的自然语言标题和说明使用中文；HTTP 方法、路径、schema、字段名、协议及代码标识保持原样。
    - 识别项目向用户或其他系统暴露的接口。
    - 使用适合项目类型的契约格式记录。
    - 例如：库的公共 API、CLI 工具的命令模式、Web 服务端点、解析器的语法、应用的 UI 契约。
    - 纯内部项目（构建脚本、一次性工具等）跳过此项。
 
 3. **创建快速开始验证指南** → `quickstart.md`：
+   - 新生成的自然语言标题和说明使用中文；命令、路径、参数和代码保持原样。
    - 记录可运行的验证场景，以证明功能端到端可用。
    - 包含前置条件、准备命令、测试／运行命令及预期结果。
    - 使用链接或引用指向契约与数据模型细节，不重复它们。

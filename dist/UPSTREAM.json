@@ -4,7 +4,8 @@
   "version": "1.0.5",
   "commit": "a4e25ce6b96dc8e85f84206c6a54353fa9c5260b",
   "port_repository": "https://github.com/goedgecloud/sdlc-ai-spec",
-  "port_version": "1.0.0-beta",
+  "port_version": "1.0.5-sdlc.1",
+  "port_revision": 1,
   "port_author": "Blade",
   "profile": {
     "script": "sh",
@@ -34,7 +35,7 @@
   "native_host_verified": false,
   "layout": "unified-public-skills",
   "locale": "zh-CN",
-  "template_language": "zh-CN prose and bilingual headings; preserved machine anchors",
+  "template_language": "canonical zh-CN presentation; legacy English/bilingual headings remain readable; machine contracts preserved",
   "source_to_skill": {
     "constitution": "sdlc-010-rule",
     "specify": "sdlc-100-spec",
@@ -42,7 +43,7 @@
     "plan": "sdlc-200-plan",
     "tasks": "sdlc-300-task",
     "analyze": "sdlc-310-xchk",
-    "checklist": "sdlc-320-huma",
+    "checklist": "sdlc-210-huma",
     "implement": "sdlc-400-impl",
     "converge": "sdlc-500-conv"
   },

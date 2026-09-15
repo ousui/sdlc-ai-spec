@@ -11,7 +11,7 @@ EXPECTED = {
     'init': 'sdlc-000-init', 'constitution': 'sdlc-010-rule',
     'specify': 'sdlc-100-spec', 'clarify': 'sdlc-110-clar',
     'plan': 'sdlc-200-plan', 'tasks': 'sdlc-300-task',
-    'analyze': 'sdlc-310-xchk', 'checklist': 'sdlc-320-huma',
+    'analyze': 'sdlc-310-xchk', 'checklist': 'sdlc-210-huma',
     'implement': 'sdlc-400-impl', 'converge': 'sdlc-500-conv',
     'status': 'sdlc-status',  # locally authored utility, not a source CLI command
 }

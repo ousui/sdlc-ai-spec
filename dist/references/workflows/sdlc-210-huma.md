@@ -15,13 +15,19 @@
 <!-- SDLC-OUTPUT-LANGUAGE:BEGIN -->
 ## 输出语言（仅呈现层）
 
-向使用者解释流程、提问及总结时使用简体中文。仅在下面原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。模板固定骨架、章节层级和定位用英文锚点保留，标题可附中文释义；占位符、状态值、任务语法、实际代码、路径、变量、参数、事件名及配置键保持原样。用户明确指定其他语言的内容按其要求保留。
+向使用者解释流程、提问及总结时使用简体中文。仅在原流程要求创建或修改产物时，以简体中文填写自然语言内容；不得为了翻译新增写入或重写其他已有内容。
 
-使用插件中已审查的本地化模板。`User Story`、`Success Criteria`、`NEEDS CLARIFICATION`、`FR-001`、`T001`、`[US1]`、`[P]` 等机器或结构标记保留；模板说明、业务描述、理由、测试说明和任务内容使用中文。代码块中的格式示例不强制自然语言使用英文；SPEC 的内置 requirements.md 清单采用流程中的本地化条目，条目顺序、数量、条件和勾选责任不变。用户自定义模板仍按原流程处理，不为本地化新增覆盖动作。
+新生成的默认产物使用已审查的中文展示标题、字段标签和固定提示，不再在同一标题后重复附加另一种语言。章节层级、顺序、必填／可选含义和业务内容保持不变。定位标题只使用已审查的有限映射；读取已有产物时兼容上游英文、历史双语和当前中文标题，已有章节必须继续使用，不重复创建同义章节。
+
+默认写入采用中文 canonical presentation。机器契约保持原样：Skill/命令 ID、文件名与路径、JSON/YAML key、环境变量、CLI 参数、事件名、配置键、状态枚举、严重级别、任务／需求编号、复选框语法、`[US1]`、`[P]`、`[NEEDS CLARIFICATION: ...]` 标记、实际代码/API/schema 标识均不得因翻译改名。API Token、Cloudflare、DNS、HTTP、JSON、Python、Go 等必要技术术语按项目实际用法保留。
+
+固定交互文案属于本地化范围；输出使用中文，同时保留原流程已有英文输入，并可增加已审查的中文等价输入别名。例如 CLAR 可接受 `yes`／`recommended`／`suggested`，并兼容“采用推荐”／“采用建议”；IMPL 的继续／停止类回答同样保留旧英文词。新增别名不得改变问题数量、等待用户确认、停止条件或写入权限。
+
+使用插件中已审查的本地化模板。自然语言标题、字段、说明、理由、测试描述、任务内容和固定响应使用中文；机器语法按上段保留。代码块中的自然语言示例允许按已审查映射翻译，但可执行命令、参数、路径、变量、机器 token 及代码标识必须保持。用户自定义模板仍按原流程处理，不为本地化新增覆盖动作。
 
 文档、注释与说明直接表达业务内容，不添加“中文注释”“中文说明”“中文版本”等语言标签。确需标签时使用“注释”或“说明”。不要为了标明语言新增 HTML 注释；只有原流程本来要求的注释才按其规则处理。保留有语义的注释，不做全文件删除或批量清理。不得插入 U+FFFC 等对象替换字符。
 
-此语言约定不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。它是给执行者的指引，不是待复制进业务产物的正文。
+此语言约定只改变呈现，不改变后续步骤、条件、数量限制、权限、停止条件或上游既有缺陷；尤其不授权只读阶段修改文件。它是给执行者的指引，不是待复制进业务产物的正文。
 <!-- SDLC-OUTPUT-LANGUAGE:END -->
 
 
@@ -54,7 +60,7 @@
 - `[x]` **不**表示实现工作已经完成。
 - 本命令生成或追加清单条目；**不得**把新生成条目标为 `[x]`。
 - 只有评审者明确要求时，Agent 才能协助评估条目。
-- `checklists/requirements.md` 是独立的内置规格质量清单，由 `@@SDLC_BIND_0056@@sdlc-110-clar` 维护；不能将这一例外套用于此处生成的自定义清单。
+- `checklists/requirements.md` 是独立的内置规格质量清单，由 `@@SDLC_BIND_0062@@sdlc-110-clar` 维护；不能将这一例外套用于此处生成的自定义清单。
 
 ## 用户输入
 
@@ -74,35 +80,35 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0076@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0082@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Pre-Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选前置钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
   - **必需钩子**（`optional: false`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Pre-Hook**: {extension}
-    Executing: `/{command}`
+    **自动前置钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
 
-    Wait for the result of the hook command before proceeding to the Execution Steps.
+    等待钩子命令返回结果后，再继续执行步骤。
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。
 - 如果没有注册钩子，或 `.sdlc/extensions.yml` 不存在，静默跳过。
 
 ## 执行步骤
 
-1. **准备**：在仓库根目录运行 `SDLC_HOST=c@@SDLC_BIND_0104@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --template checklist-template`，解析 JSON 中的 FEATURE_DIR、AVAILABLE_DOCS 列表及 TEMPLATE_CONTENT。
+1. **准备**：在仓库根目录运行 `SDLC_HOST=c@@SDLC_BIND_0110@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --template checklist-template`，解析 JSON 中的 FEATURE_DIR、AVAILABLE_DOCS 列表及 TEMPLATE_CONTENT。
    - 全部文件路径必须为绝对路径。
    - 参数包含单引号（如 "I'm Groot"）时，使用转义语法，如 'I'\''m Groot'；可以使用双引号时也可写作 "I'm Groot"。
 
@@ -128,7 +134,7 @@ $ARGUMENTS
       - 场景类别缺口，例如“未发现恢复流程，回退／部分失败路径是否在范围内？”
 
    问题格式规则：
-   - 提供选项时，生成紧凑表格，列为 Option | Candidate | Why It Matters。
+   - 提供选项时，生成紧凑表格，列为 选项 | 候选答案 | 重要性。
    - 最多 A–E 选项；自由回答更清楚时省略表格。
    - 绝不要求用户重述已说过的内容。
    - 避免猜测类别；不确定时明确询问“请确认 X 是否属于范围”。
@@ -177,15 +183,15 @@ $ARGUMENTS
    - **覆盖度**：是否包含全部场景／边界情况？
 
    **类别结构**：按需求质量维度分组：
-   - Requirement Completeness：必要需求是否都已记录？
-   - Requirement Clarity：需求是否明确、无歧义？
-   - Requirement Consistency：需求是否对齐、无冲突？
-   - Acceptance Criteria Quality：成功标准是否可衡量？
-   - Scenario Coverage：是否覆盖全部流程／场景？
-   - Edge Case Coverage：边界条件是否定义？
-   - Non-Functional Requirements：性能、安全、无障碍等是否明确？
-   - Dependencies & Assumptions：是否记录并验证依赖与假设？
-   - Ambiguities & Conflicts：哪些内容需要澄清？
+   - 需求完整性：必要需求是否都已记录？
+   - 需求清晰度：需求是否明确、无歧义？
+   - 需求一致性：需求是否对齐、无冲突？
+   - 验收标准质量：成功标准是否可衡量？
+   - 场景覆盖：是否覆盖全部流程／场景？
+   - 边界情况覆盖：边界条件是否定义？
+   - 非功能需求：性能、安全、无障碍等是否明确？
+   - 依赖与假设：是否记录并验证依赖与假设？
+   - 歧义与冲突：哪些内容需要澄清？
 
    **条目写法——“自然语言的单元测试”：**
 
@@ -276,7 +282,7 @@ $ARGUMENTS
    - ✅ “需求是否覆盖 [边界情况／场景]？”
    - ✅ “规格是否定义了 [缺失方面]？”
 
-7. **结构参考**：遵循 `${SDLC_PLUGIN_ROOT}/templates/checklist-template.md` 的规范模板，生成标题、元数据区、类别标题、责任说明、备注及 ID 格式。模板不可用时采用：H1 标题、用途／创建日期元数据行、解释 `[x]` 代表评审者认可需求质量的责任说明、包含 `- [ ] CHK### <requirement item>` 行的 `##` 类别章节；ID 从 CHK001 开始全局递增；备注说明 `@@SDLC_BIND_0278@@sdlc-400-impl` 读取清单状态但不修改标记。
+7. **结构参考**：遵循 `${SDLC_PLUGIN_ROOT}/templates/checklist-template.md` 的规范模板，生成标题、元数据区、类别标题、责任说明、备注及 ID 格式。模板不可用时采用：H1 标题、用途／创建日期元数据行、解释 `[x]` 代表评审者认可需求质量的责任说明、包含 `- [ ] CHK### <requirement item>` 行的 `##` 类别章节；ID 从 CHK001 开始全局递增；备注说明 `@@SDLC_BIND_0284@@sdlc-400-impl` 读取清单状态但不修改标记。
 
 8. **报告**：输出清单完整路径、条目数，说明本次新建了文件还是追加到已有文件，并汇总：
    - 选定重点领域。
@@ -284,7 +290,7 @@ $ARGUMENTS
    - 使用者／使用时机。
    - 已纳入的用户明确必需项。
 
-**重要**：每次 `@@SDLC_BIND_0286@@sdlc-320-huma` 调用使用简短、描述性文件名，新建或追加至已有清单。这样可以：
+**重要**：每次 `@@SDLC_BIND_0292@@sdlc-210-huma` 调用使用简短、描述性文件名，新建或追加至已有清单。这样可以：
 
 - 保存不同类型清单，例如 `ux.md`、`test.md`、`security.md`。
 - 使用简单易记、表明用途的文件名。
@@ -340,21 +346,21 @@ $ARGUMENTS
 **❌ 错误——这些检查实现，而非需求：**
 
 ```markdown
-- [ ] CHK001 - Verify landing page displays 3 episode cards [Spec §FR-001]
-- [ ] CHK002 - Test hover states work correctly on desktop [Spec §FR-003]
-- [ ] CHK003 - Confirm logo click navigates to home page [Spec §FR-010]
-- [ ] CHK004 - Check that related episodes section shows 3-5 items [Spec §FR-005]
+- [ ] CHK001 - 验证落地页展示 3 张剧集卡片 [Spec §FR-001]
+- [ ] CHK002 - 测试桌面端悬停状态正常工作 [Spec §FR-003]
+- [ ] CHK003 - 确认点击徽标跳转到首页 [Spec §FR-010]
+- [ ] CHK004 - 检查相关剧集区展示 3–5 项 [Spec §FR-005]
 ```
 
 **✅ 正确——这些检查需求质量：**
 
 ```markdown
-- [ ] CHK001 - Are the number and layout of featured episodes explicitly specified? [Completeness, Spec §FR-001]
-- [ ] CHK002 - Are hover state requirements consistently defined for all interactive elements? [Consistency, Spec §FR-003]
-- [ ] CHK003 - Are navigation requirements clear for all clickable brand elements? [Clarity, Spec §FR-010]
-- [ ] CHK004 - Is the selection criteria for related episodes documented? [Gap, Spec §FR-005]
-- [ ] CHK005 - Are loading state requirements defined for asynchronous episode data? [Gap]
-- [ ] CHK006 - Can "visual hierarchy" requirements be objectively measured? [Measurability, Spec §FR-001]
+- [ ] CHK001 - 是否明确规定精选剧集的数量与布局？ [Completeness, Spec §FR-001]
+- [ ] CHK002 - 是否为全部交互元素一致地定义悬停状态要求？ [Consistency, Spec §FR-003]
+- [ ] CHK003 - 全部可点击品牌元素的导航要求是否明确？ [Clarity, Spec §FR-010]
+- [ ] CHK004 - 是否记录相关剧集的选择标准？ [Gap, Spec §FR-005]
+- [ ] CHK005 - 是否为异步剧集数据定义加载状态要求？ [Gap]
+- [ ] CHK006 - “视觉层级”需求能否客观衡量？ [Measurability, Spec §FR-001]
 ```
 
 
@@ -377,25 +383,25 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0379@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0385@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Optional Hook**: {extension}
-    Command: `/{command}`
-    Description: {description}
+    **可选钩子**: {extension}
+    命令：`/{command}`
+    说明：{description}
 
-    Prompt: {prompt}
-    To execute: `/{command}`
+    提示：{prompt}
+    执行：`/{command}`
     ```
   - **必需钩子**（`optional: false`）：
     ```
-    ## Extension Hooks
+    ## 扩展钩子
 
-    **Automatic Hook**: {extension}
-    Executing: `/{command}`
+    **自动钩子**: {extension}
+    正在执行：`/{command}`
     EXECUTE_COMMAND: {command}
     ```
     输出以上内容后，必须实际调用钩子，等待执行完成后才能继续。按照在当前 Agent／会话中自行执行命令的方式调用（调用方式可能不同于上面显示的字面 `{command}` 标识，例如 Skills 模式的 Agent 使用 `/skill:sdlc-...` 或 `$sdlc-...`）。仅输出代码块并不会执行钩子。

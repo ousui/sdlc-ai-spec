@@ -63,16 +63,61 @@ def canonical_source(name: str) -> str:
     return sources[0]
 
 
-def protected_spans(text: str) -> Counter:
-    """Keep code fences and inline-code contracts byte-for-byte, including order counts."""
-    spans = []
-    def fence(match):
-        spans.append(('fence', match[0]))
-        return '\n'
-    rest = re.sub(r'(?m)^([ \t]*)```[^\n]*\n[\s\S]*?^\1```[^\n]*(?:\n|$)', fence, text)
-    spans.extend(('inline', x) for x in re.findall(r'`[^`\n]+`', rest))
-    spans.extend(('token', x) for x in TOKEN.findall(text))
-    return Counter(spans)
+def _fence_languages(text: str) -> tuple[str, ...]:
+    return tuple(m[1].strip() for m in re.finditer(r'(?m)^```([^\n]*)\n[\s\S]*?^```\s*$', text))
+
+
+MACHINE_ENUMS = (
+    'PASS', 'FAIL', 'ERROR', 'CRITICAL', 'HIGH', 'MEDIUM', 'LOW',
+    'LOCALIZATION_REQUIRED', 'missing', 'partial', 'contradicts', 'unrequested',
+    'converged', 'tasks_appended', 'EXECUTE_COMMAND',
+)
+
+
+def _machine_inline(text: str) -> Counter:
+    """Protect inline code only when it looks like an executable/data contract.
+
+    Backticks are Markdown presentation, not a machine boundary by themselves.
+    Natural-language examples and fixed user prompts may therefore be localized,
+    while paths, commands, variables, ids and config tokens remain exact.
+    """
+    items = []
+    for raw in re.findall(r'`([^`\n]+)`', text):
+        if (re.search(r'(?:^|\s)(?:\$|/|--|\.sdlc/|src/|tests/|docs/|contracts/)', raw)
+                or re.fullmatch(r'(?:sdlc-[a-z0-9-]+|FR-\d+|SC-\d+|T\d+|CHK\d+)', raw)
+                or re.search(r'\$\{?[A-Z][A-Z0-9_]*', raw)
+                or re.fullmatch(r'[A-Z][A-Z0-9_]+', raw)
+                or raw in MACHINE_ENUMS
+                or raw.endswith(('.md', '.json', '.yml', '.yaml', '.sh', '.py'))):
+            items.append(raw)
+    return Counter(items)
+
+
+def machine_contract(text: str) -> dict:
+    """Finite machine/structure contract shared by workflows and templates.
+
+    This intentionally does not preserve human-language labels byte-for-byte.
+    It preserves identifiers, paths, command syntax, ids, placeholders, fence
+    structure and Markdown heading levels. Source hashes + explicit review still
+    gate semantic translation changes.
+    """
+    return {
+        'tokens': Counter(TOKEN.findall(text)),
+        'curly_slots': Counter(re.findall(r'\{[a-z_][a-z0-9_]*\}', text)),
+        'machine_slots': Counter(re.findall(r'\[[A-Z][A-Z0-9_ ?-]*\]|\[NEEDS CLARIFICATION(?=[:\]])', text)),
+        'story_markers': Counter(re.findall(r'\[(?:US\d+|P|ID|TaskID|P\?|Story\??)\]', text)),
+        'checkboxes': Counter(re.findall(r'(?m)^\s*- \[[ xX]\](?: (?:T\d+|TXXX|CHK\d+)(?: \[[A-Z0-9]+\])*)?', text)),
+        'refs': Counter(re.findall(r'\b(?:T\d{3,}|TXXX|CHK\d{3,}|FR-\d+|SC-\d+)\b', text)),
+        'paths': Counter(re.findall(r'(?<![\w/])(?:\.sdlc|src|tests|backend|frontend|ios|android|api|docs|contracts)/(?:[A-Za-z0-9_./\[\]#-]*)', text)),
+        'files': Counter(re.findall(r'(?<![\w./-])(?:spec|plan|tasks|research|data-model|quickstart|requirements|constitution)\.md\b', text)),
+        'commands': Counter(re.findall(r'(?<![\w-])sdlc-(?:\d{3}-[a-z0-9-]+|status)\b', text)),
+        'cli_args': Counter(re.findall(r'(?<![\w-])--[a-z][a-z0-9-]*', text)),
+        'variables': Counter(re.findall(r'\$\{?[A-Z][A-Z0-9_]*\}?|(?<![A-Z0-9_])(?:FEATURE_DIR|FEATURE_SPEC|IMPL_PLAN|AVAILABLE_DOCS|SDLC_HOST|SDLC_PROJECT_ROOT|SDLC_PLUGIN_ROOT|SDLC_FEATURE_DIRECTORY|SDLC_FEATURE)\b', text)),
+        'hook_keys': Counter(re.findall(r'\bhooks\.(?:before|after)_[a-z0-9_]+\b', text)),
+        'json_keys': Counter(re.findall(r'"([A-Za-z_][A-Za-z0-9_-]*)"\s*:', text)),
+        'fence_languages': _fence_languages(text),
+        'levels': tuple(re.findall(r'(?m)^(#{1,6}) ', text)),
+    }
 
 
 def validate_translation(name: str, source: str, translated: str, record: dict) -> None:
@@ -82,15 +127,8 @@ def validate_translation(name: str, source: str, translated: str, record: dict) 
         raise LocalizationError('Stale translation input: ' + name + '; run tools/localize.py export')
     if record.get('translation_sha256') != sha(translated):
         raise LocalizationError('Translation bytes changed without review: ' + name)
-    fences = r'(?m)^([ \t]*)```[^\n]*\n[\s\S]*?^\1```[^\n]*(?:\n|$)'
-    if [m[0] for m in re.finditer(fences,source)] != [m[0] for m in re.finditer(fences,translated)]:
-        raise LocalizationError('Protected code block order changed: ' + name)
-    if protected_spans(source) != protected_spans(translated):
-        raise LocalizationError('Protected code/placeholder mismatch: ' + name)
-    source_levels = re.findall(r'(?m)^(#{1,6}) ', source)
-    target_levels = re.findall(r'(?m)^(#{1,6}) ', translated)
-    if source_levels != target_levels:
-        raise LocalizationError('Workflow heading hierarchy changed: ' + name)
+    if machine_contract(source) != machine_contract(translated):
+        raise LocalizationError('Workflow machine/structure contract changed: ' + name)
     if not re.search(r'[\u4e00-\u9fff]', translated):
         raise LocalizationError('Missing Chinese workflow prose: ' + name)
 
@@ -100,8 +138,15 @@ def catalog() -> dict:
         data = json.loads((LOCALES / 'catalog.json').read_text(encoding='utf-8'))
     except (OSError, ValueError) as error:
         raise LocalizationError('Missing or invalid zh-CN catalog') from error
-    if data.get('schema_version') != 1 or set(data.get('commands', {})) != set(COMMANDS):
+    if data.get('schema_version') != 2 or set(data.get('commands', {})) != set(COMMANDS):
         raise LocalizationError('Localization inventory differs from upstream core profile')
+    contract = data.get('contract', {})
+    if contract.get('version') != 2 or contract.get('canonical_locale') != 'zh-CN':
+        raise LocalizationError('Missing localization contract v2')
+    aliases = contract.get('structural_aliases', {})
+    for source, entry in aliases.items():
+        if not source or not isinstance(entry, dict) or not entry.get('canonical') or not isinstance(entry.get('legacy'), list):
+            raise LocalizationError('Invalid structural alias contract: ' + str(source))
     return data
 
 
@@ -179,32 +224,12 @@ def presentation_file(name: str) -> Path:
 
 
 def presentation_contract(text: str) -> dict:
-    """Structural/machine constraints, independent of a translation's stored digest.
+    """Presentation structure plus machine identifiers, independent of language.
 
-    This is not semantic equivalence proof. Natural-language conditions are
-    reviewed against the bound source; no blanket normalization of runtime output.
+    Human-readable headings, field labels and example prose may be localized after
+    source review. The exact source and translated bytes are still hash-bound.
     """
-    code = []
-    for match in re.finditer(r'(?m)^```([^\n]*)\n([\s\S]*?)^```\s*$', text):
-        payload = []
-        for line in match[2].splitlines():
-            # Here only template/example comments are presentation, not code.
-            line = re.split(r'(?<!\S)#', line, maxsplit=1)[0].rstrip()
-            if re.fullmatch(r'[│ └─├]*\[[^\]]+\]', line):
-                line = '<human-tree-placeholder>'
-            payload.append(line)
-        code.append((match[1], payload))
-    return {
-        'tokens': Counter(TOKEN.findall(text)),
-        'machine_slots': Counter(re.findall(r'\[[A-Z][A-Z0-9_ ?-]*\]|\[NEEDS CLARIFICATION(?=[:\]])', text)),
-        'inline': Counter(re.findall(r'`[^`\n]+`', text)),
-        'labels': re.findall(r'\*\*([^*\n]+)\*\*:', text),
-        'checkboxes': re.findall(r'(?m)^\s*- \[[ xX]\](?: (?:T\d+|TXXX|CHK\d+)(?: \[[A-Z0-9]+\])*)?', text),
-        'paths': Counter(re.findall(r'(?<![\w/])(?:\.sdlc|src|tests|backend|frontend|ios|android|api|docs|contracts)/(?:[A-Za-z0-9_./\[\]#-]*)', text)),
-        'task_refs': Counter(re.findall(r'\b(?:T\d{3,}|TXXX|CHK\d{3,}|FR-\d+|SC-\d+)\b', text)),
-        'code': code,
-        'levels': re.findall(r'(?m)^(#{1,6}) ', text),
-    }
+    return machine_contract(text)
 
 
 def validate_presentation(name: str, source: str, text: str, record: dict) -> None:
@@ -216,13 +241,6 @@ def validate_presentation(name: str, source: str, text: str, record: dict) -> No
         raise LocalizationError('Presentation bytes changed without review: ' + name)
     if presentation_contract(source) != presentation_contract(text):
         raise LocalizationError('Presentation machine/structure contract changed: ' + name)
-    def headings(value):
-        value = re.sub(r'(?m)^```[^\n]*\n[\s\S]*?^```[^\n]*$', '', value)
-        return re.findall(r'(?m)^#{1,6} (.+)', value)
-    originals = headings(source)
-    translated = headings(text)
-    if any(not new.startswith(old) for old,new in zip(originals, translated)):
-        raise LocalizationError('Template heading anchor changed: ' + name)
     if not re.search(r'[\u4e00-\u9fff]', text):
         raise LocalizationError('Missing Chinese presentation: ' + name)
     if re.search(r'中文(?:注释|说明|版本)', text) or '\ufffc' in text:
@@ -281,14 +299,14 @@ def check_all() -> dict:
             translated_metadata(name,meta)
         checked.append(name)
     return {'status': 'PASS', 'locale': 'zh-CN', 'commands': checked, 'templates': list(TEMPLATES), 'fragments': ['requirements'],
-            'scope': 'source freshness, reviewed bytes, protected spans and structural checks; not proof of model behavior'}
+            'scope': 'source freshness, reviewed bytes and localization-contract-v2 machine/structure checks; not proof of model behavior'}
 
 
 def record_review(name: str, reviewer: str, *, is_resource: bool = False, is_presentation: bool = False) -> dict:
     """Explicit authoring step only; never called by build, install or upgrade.
 
     This records a maintainer/AI review declaration, not an authenticated identity.
-    All protected spans and metadata input correspondences are still enforced.
+    Machine/structure contracts and metadata input correspondences are still enforced.
     """
     if not reviewer.strip():
         raise LocalizationError('A nonempty review declaration is required')

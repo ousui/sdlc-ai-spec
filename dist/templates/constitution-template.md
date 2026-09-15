@@ -1,7 +1,7 @@
-# [PROJECT_NAME] Constitution（项目宪法）
-<!-- 示例：Spec Constitution、TaskFlow Constitution 等。 -->
+# [PROJECT_NAME] 项目宪法
+<!-- 示例：Spec 项目宪法、TaskFlow 项目宪法等。 -->
 
-## Core Principles（核心原则）
+## 核心原则
 
 ### [PRINCIPLE_1_NAME]
 <!-- 示例：I. 库优先 -->
@@ -40,11 +40,11 @@
 [SECTION_3_CONTENT]
 <!-- 示例：代码评审要求、测试门禁、部署审批流程等。 -->
 
-## Governance（治理）
+## 治理
 <!-- 示例：宪法优先于其他实践；修订须有文档、批准和迁移计划。 -->
 
 [GOVERNANCE_RULES]
 <!-- 示例：所有 PR／评审都必须核查合规性；复杂性必须说明理由；使用 [GUIDANCE_FILE] 作为运行时开发指导。 -->
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
+**版本**: [CONSTITUTION_VERSION] | **批准日期**: [RATIFICATION_DATE] | **最后修订日期**: [LAST_AMENDED_DATE]
 <!-- 示例：版本 2.1.1；批准日期 2025-06-13；最后修订日期 2025-07-16。 -->

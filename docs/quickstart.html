@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>SDLC AI SPEC 开发者快速使用手册</title>
+<style>
+:root{--bg:#0b1020;--panel:#11182d;--panel2:#161f39;--text:#e8edf7;--muted:#aab5ca;--line:#26324d;--accent:#7fb3ff;--ok:#72d59a;--warn:#ffd479;--bad:#ff8f8f;--code:#090e1b}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font:15px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;background:var(--bg);color:var(--text)}a{color:var(--accent);text-decoration:none}a:hover{text-decoration:underline}.layout{display:grid;grid-template-columns:260px minmax(0,1fr);min-height:100vh}.side{position:sticky;top:0;height:100vh;padding:26px 20px;border-right:1px solid var(--line);background:#0d1325;overflow:auto}.brand{font-weight:800;font-size:20px;line-height:1.3;margin-bottom:6px}.sub{font-size:12px;color:var(--muted);margin-bottom:24px}.nav a{display:block;padding:7px 10px;border-radius:7px;color:#cbd5e8}.nav a:hover{background:var(--panel2);text-decoration:none}.main{max-width:1100px;padding:48px 58px 80px}.hero{padding:30px;border:1px solid var(--line);border-radius:16px;background:linear-gradient(145deg,#121a32,#0f162b);margin-bottom:34px}.hero h1{font-size:34px;margin:0 0 10px}.hero p{color:var(--muted);margin:8px 0}.badges{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}.badge{padding:4px 9px;border-radius:999px;background:#1c2948;border:1px solid #31466f;font-size:12px}h2{margin-top:44px;font-size:25px;border-bottom:1px solid var(--line);padding-bottom:10px}h3{margin-top:28px;font-size:19px}p,li{color:#dce3f0}.muted{color:var(--muted)}.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin:14px 0}.ok{border-left:4px solid var(--ok)}.warn{border-left:4px solid var(--warn)}.bad{border-left:4px solid var(--bad)}code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:#19223b;padding:2px 5px;border-radius:5px;color:#dce8ff}pre{background:var(--code);border:1px solid var(--line);padding:16px;border-radius:10px;overflow:auto;line-height:1.55}pre code{background:none;padding:0}.table-wrap{overflow:auto;border:1px solid var(--line);border-radius:10px}table{width:100%;border-collapse:collapse;min-width:720px;background:var(--panel)}th,td{padding:11px 12px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}th{background:#18213a;color:#fff}tr:last-child td{border-bottom:0}.flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:18px 0}.step{background:#17213b;border:1px solid #314262;border-radius:9px;padding:8px 10px;font-size:13px}.arrow{color:#6f7f9f}.check li{margin:5px 0}.small{font-size:13px}.footer{margin-top:55px;color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:18px}.kbd{border:1px solid #475574;border-bottom-width:2px;border-radius:5px;padding:1px 5px;background:#151d31;font-family:ui-monospace,monospace;font-size:12px}.cols{display:grid;grid-template-columns:1fr 1fr;gap:14px}@media(max-width:900px){.layout{display:block}.side{position:relative;height:auto;border-right:0;border-bottom:1px solid var(--line)}.main{padding:28px 20px}.cols{grid-template-columns:1fr}.hero h1{font-size:28px}}
+@media print{.side{display:none}.layout{display:block}.main{max-width:none;padding:0}body{background:white;color:#111}p,li,td,th,.muted,.footer{color:#222}.hero,.card,table,th,code,pre{background:white;color:#111}h2,h3{break-after:avoid}.card,tr,pre{break-inside:avoid}a{color:#111}}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="side">
+    <div class="brand">SDLC AI SPEC</div>
+    <div class="sub">开发者快速使用手册 · 210 HUMA 版</div>
+    <nav class="nav">
+      <a href="#start">1. 先看这个</a><a href="#install">2. 安装</a><a href="#init">3. 初始化项目</a><a href="#flow">4. Skill 怎么用</a><a href="#examples">5. 常用调用示例</a><a href="#done">6. 什么算需求完成</a><a href="#status">7. 查看状态</a><a href="#trouble">8. 出问题怎么办</a><a href="#faq">9. FAQ</a><a href="#cheat">10. 一页速查</a>
+    </nav>
+  </aside>
+  <main class="main">
+    <section class="hero" id="start">
+      <h1>SDLC AI SPEC 开发者快速使用手册</h1>
+      <p>从安装和初始化开始，了解每个 Skill 的职责、问题处理方式，以及需求完成与业务验收的区别。</p>
+      <div class="badges"><span class="badge">Codex</span><span class="badge">Claude Code</span><span class="badge">Cursor</span><span class="badge">Python 3.9+</span><span class="badge">Bash</span><span class="badge">11 个公共 Skills</span></div>
+    </section>
+
+    <div class="card ok"><strong>最短结论：</strong>安装插件 → 每个项目执行一次 <code>sdlc-000-init</code> → 建立/确认项目规则 <code>sdlc-010-rule</code> → 每个需求从 <code>SPEC</code> 开始 → PLAN → 按需 HUMA（需求评审）→ TASK → 按需 XCHK → IMPL → CONV。团队可把“范围内实现收敛 + 项目验证及要求的评审/验收通过”作为需求完成标准；这不是新增的插件门禁。</div>
+
+    <h2 id="install">2. 安装</h2>
+    <p>插件正式分发内容在仓库的 <code>dist/</code>。安装插件时不需要构建源码，也不需要安装 Spec Kit CLI；运行已安装插件只依赖 Bash、Python 3.9+ 和常见 POSIX 工具。</p>
+    <div class="table-wrap"><table><thead><tr><th>宿主</th><th>推荐安装方式</th><th>Skill 调用格式</th></tr></thead><tbody>
+      <tr><td>Codex</td><td>通过 Marketplace 管理界面添加 Git 仓库/ref 或本地 checkout，在 Marketplace 中安装 <code>sdlc-ai-spec</code>，用户作用域，随后新开会话。</td><td><code>$sdlc-100-spec</code></td></tr>
+      <tr><td>Claude Code</td><td>本地 checkout 可执行：<pre><code>/plugin marketplace add /absolute/path/to/sdlc-ai-spec
+/plugin install sdlc-ai-spec@sdlc-ai-spec</code></pre></td><td><code>/sdlc-ai-spec:sdlc-100-spec</code></td></tr>
+      <tr><td>Cursor</td><td>Dashboard → Plugins → Add Marketplace → Import from Repo；或本地诊断时把完整 <code>dist</code> 复制到 <code>~/.cursor/plugins/local/sdlc-ai-spec</code>。</td><td><code>/sdlc-100-spec</code></td></tr>
+    </tbody></table></div>
+    <div class="card warn"><strong>版本更新常见坑：</strong>不要只看版本字符串判断“已经更新”；应核对安装缓存中的 <code>BUILD.json</code> / <code>build_id</code>。如果客户端还在加载旧内容，优先走正常卸载、重装、Reload/New Session，不要把旧插件目录和新插件目录合并。</div>
+
+    <div class="card warn"><strong>HUMA 入口更新：</strong>本手册使用 <code>sdlc-210-huma</code>，替代历史 <code>sdlc-320-huma</code>。安装包应包含新入口、共 11 个公共 Skills；不保留旧编号别名。仅修改手册不会更新已安装插件，请核验实际缓存的 <code>build_id</code>，不要混装两版或删除项目数据。</div>
+
+    <h2 id="init">3. 初始化项目</h2>
+    <p>插件只需要安装一次，但<strong>每个业务项目</strong>通常需要执行一次 <code>sdlc-000-init</code>。多根工作区务必指向真正的业务项目根目录，不要误选外层 Git 根。</p>
+    <div class="cols"><div class="card"><h3>初始化调用</h3><p>Codex：<code>$sdlc-000-init</code><br>Claude：<code>/sdlc-ai-spec:sdlc-000-init</code><br>Cursor：<code>/sdlc-000-init</code></p></div><div class="card"><h3>初始化后主要目录</h3><pre><code>.sdlc/
+├── init-options.json
+├── README.md
+├── memory/constitution.md
+└── specs/</code></pre></div></div>
+    <p>INIT 不会生成需求、方案或任务；第一个需求由 <code>sdlc-100-spec</code> 创建。重复 INIT 是按“保留已有数据、补缺失内容”的思路设计的，不是 reset，也不会自动清空已有文档。</p>
+
+    <h2 id="flow">4. Skill 怎么用</h2>
+    <div class="flow"><span class="step">000 INIT</span><span class="arrow">→</span><span class="step">010 RULE</span><span class="arrow">→</span><span class="step">100 SPEC</span><span class="arrow">→</span><span class="step">[110 CLAR]</span><span class="arrow">→</span><span class="step">200 PLAN</span><span class="arrow">→</span><span class="step">[210 HUMA]</span><span class="arrow">→</span><span class="step">300 TASK</span><span class="arrow">→</span><span class="step">[310 XCHK]</span><span class="arrow">→</span><span class="step">400 IMPL</span><span class="arrow">↔</span><span class="step">500 CONV</span></div>
+    <p class="small muted">方括号表示按风险选用；HUMA 推荐在 PLAN 后、TASK 前，但不是 TASK 的强制前置步骤。编号不授予自动跨阶段执行权限。</p>
+    <div class="table-wrap"><table><thead><tr><th>Skill</th><th>什么时候用</th><th>你期望得到什么</th></tr></thead><tbody>
+      <tr><td><code>sdlc-000-init</code></td><td>项目第一次接入插件时</td><td>建立 <code>.sdlc</code> 工作区与项目级基础数据</td></tr>
+      <tr><td><code>sdlc-010-rule</code></td><td>新项目，或项目规则需要显式更新时</td><td>项目宪法/规则，后续需求都受它约束</td></tr>
+      <tr><td><code>sdlc-100-spec</code></td><td>开始一个新需求</td><td>明确“要做什么、用户价值、边界、验收要求”</td></tr>
+      <tr><td><code>sdlc-110-clar</code></td><td>需求存在明显歧义、缺口、关键决策不清时</td><td>通过有限澄清降低规格歧义；简单需求可不必机械执行</td></tr>
+      <tr><td><code>sdlc-200-plan</code></td><td>规格已足够稳定</td><td>技术方案、架构、实现路径和工程约束</td></tr>
+      <tr><td><code>sdlc-210-huma</code></td><td>PLAN 后、TASK 前按需使用；已有任务时也可再次评审需求</td><td>需求质量评审清单生成；新条目未勾选，评审者判断需求质量，不是功能验收</td></tr>
+      <tr><td><code>sdlc-300-task</code></td><td>方案确定后</td><td>可执行的 <code>tasks.md</code> 实施任务清单</td></tr>
+      <tr><td><code>sdlc-310-xchk</code></td><td>复杂需求、准备实现前</td><td>只读检查 SPEC / PLAN / TASK 的冲突、重复、遗漏和覆盖缺口</td></tr>
+      <tr><td><code>sdlc-400-impl</code></td><td>任务已经可执行</td><td>真正修改业务代码，执行并完成 <code>tasks.md</code></td></tr>
+      <tr><td><code>sdlc-500-conv</code></td><td>一轮实现完成后</td><td>把“实际代码”重新与 SPEC / PLAN / TASK 对照；有差距则追加剩余任务，再回 IMPL</td></tr>
+      <tr><td><code>sdlc-status</code></td><td>任何时候需要查看当前事实</td><td>只读展示当前需求、产物路径、任务勾选和诊断，不自动修复或推进流程</td></tr>
+    </tbody></table></div>
+
+    <h3>推荐使用原则</h3>
+    <ul class="check"><li><strong>不要把所有 Skill 当流水线按钮机械全点一遍。</strong> CLAR、XCHK、HUMA 是否需要，取决于需求复杂度和风险。</li><li>每个阶段都应把当前业务需求自然语言直接告诉 Agent，不需要人为拼接 shell 参数。</li><li>需求级主线一般是：<strong>SPEC → PLAN → TASK → IMPL → CONV</strong>。</li><li>复杂/高风险需求，先用 <strong>CLAR</strong> 澄清，在 PLAN 后用 <strong>HUMA</strong> 评审需求质量，在 TASK 后用 <strong>XCHK</strong> 检查跨文档一致性。</li></ul>
+
+    <h3>三类检查，不是同一种验收</h3>
+    <div class="table-wrap"><table><thead><tr><th>能力</th><th>要回答的问题</th><th>不代表什么</th></tr></thead><tbody>
+      <tr><td>210 HUMA</td><td>需求是否写清权限、边界、异常行为及可衡量的验收要求？</td><td>不是功能测试；生成清单不等于评审完成</td></tr>
+      <tr><td>310 XCHK</td><td>规格、方案、任务是否矛盾或缺少覆盖？</td><td>不列出或补齐全部实施操作；它是只读分析</td></tr>
+      <tr><td>500 CONV</td><td>代码是否满足既定规格、方案和任务？</td><td>不是业务验收或发布批准；有缺口只追加任务</td></tr>
+    </tbody></table></div>
+    <div class="card warn"><strong>谁来打勾：</strong>HUMA 新生成或追加的自定义条目必须保持未勾选；评审者明确要求后，AI 才协助评估需求质量。内置 <code>checklists/requirements.md</code> 由 SPEC/CLAR 维护，是独立例外。<br><strong>400 开始前：</strong>IMPL 读取已有清单；存在未勾选项时先询问是否继续并等待回答，不修改清单标记。它不是自动全勾选，也不是无论用户如何回答都禁止实施。</div>
+
+    <h2 id="examples">5. 常用调用示例</h2>
+    <h3>新项目第一次使用</h3><pre><code>1. sdlc-000-init
+   “初始化当前项目用于 SDLC AI SPEC。”
+
+2. sdlc-010-rule
+   “根据当前项目技术栈、代码规范和发布约束建立项目规则。”</code></pre>
+    <h3>开始一个普通需求</h3><pre><code>sdlc-100-spec
+“新增登录失败次数限制：同一账户 10 分钟内连续失败 5 次后锁定 30 分钟，
+后台管理员可以手动解锁；需要兼容现有登录 API，不修改客户端协议。”
+
+sdlc-200-plan
+“基于已确认的规格制定实现方案，优先复用现有 Redis 和用户状态模型。”
+
+sdlc-300-task
+“将当前方案拆成可实施任务。”
+
+sdlc-400-impl
+“按 tasks.md 实施并执行必要测试。”
+
+sdlc-500-conv
+“对当前实现做收敛检查，确认是否仍有规格或任务差距。”</code></pre>
+    <h3>需求比较复杂时</h3><pre><code>SPEC → [CLAR] → PLAN → [210 HUMA：评审需求质量]
+    → TASK → [310 XCHK：跨文档只读分析] → IMPL → CONV
+
+CONV 有实现缺口 → 追加任务 → IMPL → 再次 CONV
+CONV 无实现缺口 → 项目要求的独立评审 / 运行验证 / 业务验收 / PR</code></pre>
+
+    <h3>生成清单与协助评审是两个动作</h3><pre><code># HUMA 生成需求质量清单（不是 shell 命令）
+Codex：$sdlc-210-huma
+Claude Code：/sdlc-ai-spec:sdlc-210-huma
+Cursor：/sdlc-210-huma
+“为当前需求生成 API 权限与数据一致性的需求质量评审清单。
+重点检查规格是否明确权限、并发、失败恢复和可衡量验收标准，
+不要生成接口执行步骤或功能测试用例。”
+
+# 之后，评审者可明确要求 AI 协助评估
+“逐项评审 checklists/security.md，给出规格/方案依据，
+区分已满足、未满足、证据不足；本轮只报告，不修改勾选。”</code></pre>
+
+    <h2 id="done">6. 什么场景算“一个需求完成了”</h2>
+    <div class="card bad"><strong>以下都不能单独证明需求完成：</strong> <code>spec.md</code> 存在、<code>plan.md</code> 存在、<code>tasks.md</code> 全部打勾、STATUS 显示 ok、Agent 说“已经完成”、代码能编译。</div>
+    <p>以下是<strong>团队可采用的完成标准建议</strong>，不是 Spec Kit 新增的阶段或硬门禁。项目是否需要人工验收，应按项目规则与风险决定：</p>
+    <ol class="check">
+      <li><strong>规格闭合：</strong>需求边界、关键行为和验收要求已经明确，没有阻塞性的待澄清项。</li>
+      <li><strong>实现与计划一致：</strong>代码实现覆盖已确认规格和方案，没有偷偷扩大/缩小范围。</li>
+      <li><strong>任务已处理：</strong><code>tasks.md</code> 中本需求应做的任务均已完成；如有取消/替代，需要有清晰原因，而不是简单勾选。</li>
+      <li><strong>CONV 无剩余差距：</strong>执行 <code>sdlc-500-conv</code> 后，不再发现需要追加到 <code>tasks.md</code> 的实现缺口；如果 CONV 新增任务，就回到 IMPL，直到再次收敛。</li>
+      <li><strong>工程验证通过：</strong>项目自身适用的测试、静态检查、构建、必要的人工验收通过。SDLC Skill 不替代项目真实测试体系。</li>
+      <li><strong>没有未解决的阻塞问题：</strong>例如安全风险、数据迁移问题、兼容性失败、关键人工验收未完成等。</li>
+    </ol>
+    <div class="card ok"><strong>一句话判定：</strong>“该做的已经实现 + 实现和规格一致 + 收敛检查没有新缺口 + 项目自己的验证通过”，这时才可以把需求标记为完成。</div>
+
+    <div class="card"><strong>验收发现问题后，先分类：</strong><br>
+    规格明确但代码错误：将证据交给 CONV 对照原意图复核，追加任务后再 IMPL、验证、CONV。<br>
+    规格有歧义或遗漏：先确认并修订当前需求，按需同步方案/任务，不让 IMPL 猜需求。<br>
+    新增范围：按需求变更或新需求处理，不让 CONV 悄悄扩展原范围。<br>
+    <strong>实现完成、业务验收完成、发布上线完成应分别说明；收敛不授予 commit/push/合并/发布权限。</strong></div>
+
+    <h2 id="status">7. 查看状态：优先用 sdlc-status</h2>
+    <p><code>sdlc-status</code> 是只读辅助 Skill，适合回答“我现在做到哪了”“当前需求目录在哪里”“还剩哪些任务”。它不会自动切换需求、不会初始化、不会改任务、不会执行下一阶段。</p>
+    <pre><code># 在 Agent 中直接调用：
+sdlc-status
+
+# 常见意图：
+“查看当前项目和当前需求状态。”
+“列出当前项目所有需求。”
+“查看 001-login-lock 这个需求还有哪些未完成任务。”</code></pre>
+    <div class="card warn"><strong>注意：</strong>STATUS 的 <code>ok</code> 只表示“可观察事实读取正常”，不表示业务验收通过；任务 100% 勾选也不表示测试、CONV 或发布准备已经通过。</div>
+
+    <h2 id="trouble">8. 出问题怎么办</h2>
+    <div class="table-wrap"><table><thead><tr><th>现象</th><th>优先检查</th><th>处理建议</th></tr></thead><tbody>
+      <tr><td>找不到 Skill / 菜单没有命令</td><td>插件是否安装到正确用户作用域；是否新开会话/Reload；是否加载了旧 ID <code>sdlc</code></td><td>正常卸载旧插件，重新安装 <code>sdlc-ai-spec</code>，确认 <code>dist/skills</code> 能看到 11 个入口。</td></tr>
+      <tr><td>更新后行为还是旧的</td><td>实际安装缓存中的 <code>BUILD.json</code> / <code>build_id</code></td><td>不要只看仓库 checkout；卸载/重装并重新加载客户端，核对安装副本。</td></tr>
+      <tr><td>提示项目未初始化</td><td>当前工作目录是否真的是业务项目根；是否存在正确的 <code>.sdlc</code></td><td>明确项目目录后执行 <code>sdlc-000-init</code>。多根工作区不要误选父目录。</td></tr>
+      <tr><td>INIT 因旧数据/异常目录停止</td><td>是否存在 <code>.specify</code>、无效 JSON、未知 layout、symlink 或异常文件类型</td><td>不要删数据硬绕过。先审查异常来源；修复具体状态后再重跑 INIT。</td></tr>
+      <tr><td>不知道当前需求是哪一个</td><td><code>sdlc-status</code> 的 selection / feature 信息</td><td>先 STATUS，不要靠 Git 分支名或文件修改时间猜当前需求。</td></tr>
+      <tr><td>HUMA 刚生成清单，400 就询问是否继续</td><td>自定义清单中的未勾选项</td><td>这是原版实施前检查。先评审需求质量；或明确决定是否仍继续。不要让 Agent 为通过检查自行打勾。</td></tr>
+      <tr><td>任务都勾了但感觉没做完</td><td>是否执行过 CONV；项目测试是否实际通过</td><td>执行 <code>sdlc-500-conv</code>；若追加任务，回 <code>sdlc-400-impl</code>。</td></tr>
+      <tr><td>某阶段突然要求额外写文件/跨阶段操作</td><td>是否超出了该 Skill 原有职责和本次用户授权</td><td>停止并复核。Skill 被模型自动选择不等于获得额外写入、发布或跨阶段权限。</td></tr>
+      <tr><td>Claude/Cursor/Codex 三端表现不一致</td><td>调用格式、插件来源/ref、build_id、客户端版本</td><td>先确认三端是否实际加载同一个构建，再判断是否是宿主差异。</td></tr>
+    </tbody></table></div>
+
+    <h3>不要这样修</h3><ul><li>不要为了“重新初始化”删除整个 <code>.sdlc</code>。</li><li>不要把旧版插件目录直接覆盖/合并到新版目录。</li><li>不要看到 STATUS partial/error 就让 Agent 自动改文件来“修状态”。</li><li>不要跳过业务测试，只凭 Skill 流程结果宣布完成。</li></ul>
+
+    <h2 id="faq">9. FAQ</h2>
+    <div class="card"><strong>Q：每个需求都必须跑 110 / 210 / 310 吗？</strong><br>A：不必机械执行。简单、低歧义需求可以走 SPEC → PLAN → TASK → IMPL → CONV；复杂需求、高风险变更或多人协作时，CLAR / HUMA / XCHK 更有价值。</div>
+    <div class="card"><strong>Q：210 HUMA 是否应在 500 后作为人工验收？</strong><br>A：不是。HUMA 检查需求写作质量，推荐在 PLAN 后、TASK 前。CONV 后的功能测试、独立评审和业务验收使用项目自己的机制；即使后期重跑 HUMA，它仍然检查需求质量。</div>
+    <div class="card"><strong>Q：RULE 每次需求都要执行吗？</strong><br>A：不用。RULE 是项目级能力，用于建立或显式更新项目原则，不是每个需求的固定前置步骤。</div>
+    <div class="card"><strong>Q：INIT 会不会覆盖项目已有文件？</strong><br>A：设计目标是保留已有数据并补缺失内容，不是 reset；已有宪法等文件应保留。</div>
+    <div class="card"><strong>Q：CONV 会改业务代码吗？</strong><br>A：不会直接改代码。它比较实际实现与规格/方案/任务；发现差距时向 <code>tasks.md</code> 追加剩余任务，再交回 IMPL。</div>
+    <div class="card"><strong>Q：STATUS 能不能帮我自动继续下一阶段？</strong><br>A：不能。STATUS 只读，不调度流程，也不授予新的写权限。</div>
+
+    <h2 id="cheat">10. 一页速查</h2>
+    <pre><code>项目第一次接入
+  sdlc-000-init
+  sdlc-010-rule          # 项目规则尚未建立时
+
+普通需求
+  sdlc-100-spec          # 定义需求
+  [sdlc-110-clar]        # 有歧义时
+  sdlc-200-plan          # 技术方案
+  [sdlc-210-huma]        # 按需生成需求质量评审清单，由评审者评估
+  sdlc-300-task          # 拆任务；HUMA 不是强制前置阶段
+  [sdlc-310-xchk]        # 任务齐备后，跨文档只读分析
+  sdlc-400-impl          # 写代码 / 完成任务
+  sdlc-500-conv          # 对照实际实现做收敛
+       ↓ 有剩余任务
+  sdlc-400-impl
+       ↓
+  sdlc-500-conv          # 直到没有剩余实现差距
+  项目要求的独立评审 / 运行验证 / 业务验收 / PR
+
+任何时候
+  sdlc-status            # 只读查看状态
+
+团队完成标准建议
+  规格闭合
+  + 任务完成
+  + CONV 无新增差距
+  + 项目自身测试/构建/检查通过
+  + 无阻塞问题
+  = 一个需求完成</code></pre>
+
+    <div class="footer">本手册对应采用 <code>sdlc-210-huma</code> 入口的修订包；锁定来源为 Spec Kit v1.0.5（<code>a4e25ce6b96dc8e85f84206c6a54353fa9c5260b</code>）。入口是否已部署以实际安装包为准，不依据本手册推断远端提交或客户端升级已完成。<br>依据：README、INSTALLATION、INITIALIZATION、STATUS 与上游 checklist / analyze / implement / converge 定义。公开与私有仓库只有在加载相同修订构建时才使用相同入口；详见仓库 <code>docs/USAGE.md</code>。</div>
+  </main>
+</div>
+</body>
+</html>

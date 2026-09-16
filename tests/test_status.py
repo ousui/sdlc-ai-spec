@@ -64,7 +64,7 @@ class StatusTests(unittest.TestCase):
 
     def test_current_plugin_identity_is_not_init_version(self):
         r = self.collect()
-        self.assertEqual(r['plugin']['version'], '1.0.5-sdlc.1')
+        self.assertEqual(r['plugin']['version'], json.loads((ROOT/'plugin-metadata.json').read_text())['version'])
         self.assertEqual(r['initialization']['recorded_plugin_version'], 'older-record')
         self.assertEqual(r['initialization']['recorded_upstream_version'], 'older-upstream')
 
@@ -175,7 +175,10 @@ class StatusTests(unittest.TestCase):
         self.assertNotIn('100%',status.markdown(r))
 
     def test_actual_tasks_exclude_fences_comments_and_examples(self):
-        text='''<!-- ignored\n- [ ] T900 comment\n-->\n```md
+        text='''<!-- ignored
+- [ ] T900 comment
+-->
+```md
 - [ ] T901 code
 ```
 ~~~

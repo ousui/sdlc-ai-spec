@@ -1,7 +1,7 @@
 # 安装、版本与缓存更新
 
-产品：**SDLC AI SPEC**，插件 ID `sdlc-ai-spec`，版本 `1.0.5-sdlc.1`，作者 Blade。
-版本规则为 `<锁定上游版本>-sdlc.<本地迭代号>`；当前 `1.0.5-sdlc.1` 对应 Spec Kit 1.0.5 的第 1 次本地产品迭代。展示版本与机器 manifest 使用同一字符串。
+产品：**SDLC AI SPEC**，插件 ID `sdlc-ai-spec`，作者 Blade。
+版本规则为 `<锁定上游版本>-sdlc.<本地迭代号>`；当前版本以安装包 manifest、`UPSTREAM.json` 和 `BUILD.json` 为准，展示版本与机器 manifest 使用同一字符串。发布历史见根目录 `CHANGELOG.md`。
 Marketplace：`sdlc-ai-spec`。声明仓库：https://github.com/goedgecloud/sdlc-ai-spec。
 安装时选择可访问且包含目标构建的仓库与准确 ref，并核对提交 SHA 和
 `dist/BUILD.json`。仓库元数据不代表仓库迁移或目标分支已经交付。
@@ -121,8 +121,7 @@ STATUS 是可选本地只读辅助能力，不是额外生命周期阶段或上�
 既有项目数据不变。详见 [USAGE.md](USAGE.md)。
 
 通过客户端正常更新或卸载/重装流程加载包含新编号的完整 `dist`，不要混合两版
-插件目录，也不要只复制一个 Skill。产品版本当前为 `1.0.5-sdlc.1`，须核验实际安装缓存
-的 `BUILD.json.build_id`：11 个公共入口中应有 `sdlc-210-huma`，不应同时发现旧编号。
+插件目录，也不要只复制一个 Skill。须核验实际安装缓存的当前版本和 `BUILD.json.build_id`：11 个公共入口中应有 `sdlc-210-huma`，不应同时发现旧编号。
 Codex 使用 `$sdlc-210-huma`，Claude Code 使用 `/sdlc-ai-spec:sdlc-210-huma`，Cursor
 使用 `/sdlc-210-huma`（以原生菜单实际入口为准）。不要删除 `.sdlc` 来刷新插件。
 已有自定义模板或提示中的旧调用需要显式审查，安装/更新不自动重写它们。

@@ -44,7 +44,6 @@ class UpgradeTests(unittest.TestCase):
         lock=json.loads((ROOT/'upstream.lock.json').read_text())
         with tempfile.TemporaryDirectory() as temp:
             copy=Path(temp)/'upstream';shutil.copytree(original,copy)
-            # taskstoissues was intentionally excluded from the vendored runtime core.
             (copy/'templates/commands/taskstoissues.md').write_text('not in supported runtime')
             path=next(iter(lock['watch_files']))
             with (copy/path).open('a') as f:f.write('\n# new generator logic\n')
@@ -59,16 +58,18 @@ class UpgradeTests(unittest.TestCase):
             copy=Path(temp)/'upstream';shutil.copytree(ROOT/'src/upstream',copy)
             (copy/'templates/commands/taskstoissues.md').write_text('excluded')
             new,changes=candidate_lock(copy,lock,'1'*40,'1'*40)
-            self.assertEqual(new['version'], '1.0.5')
+            self.assertEqual(new['version'], lock['version'])
             self.assertEqual(new['tag'], '1'*40)
             self.assertEqual(changes, [])
 
     def test_product_version_aligns_upstream_and_local_revision(self):
-        self.assertEqual(product_version('1.0.5'), '1.0.5-sdlc.1')
-        self.assertEqual(product_version('1.0.5', 2), '1.0.5-sdlc.2')
-        self.assertEqual(product_version('1.0.6'), '1.0.6-sdlc.1')
+        upstream=json.loads((ROOT/'upstream.lock.json').read_text())['version']
+        self.assertEqual(product_version(upstream), upstream+'-sdlc.1')
+        self.assertEqual(product_version(upstream, 2), upstream+'-sdlc.2')
+        sample='9.8.7'
+        self.assertEqual(product_version(sample), sample+'-sdlc.1')
         with self.assertRaises(ValueError): product_version('',1)
-        with self.assertRaises(ValueError): product_version('1.0.5',0)
+        with self.assertRaises(ValueError): product_version(upstream,0)
 
     def test_unknown_core_command_requires_scope_review(self):
         lock=json.loads((ROOT/'upstream.lock.json').read_text())

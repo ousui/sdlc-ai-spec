@@ -112,8 +112,7 @@ commit、push、合并、发布或上线权限，也不能替代真实测试结�
 
 ## 上游定义依据
 
-本指南对应锁定 Spec Kit v1.0.5（`a4e25ce6b96dc8e85f84206c6a54353fa9c5260b`），
-其 Quick Start 推荐 checklist 在 plan 后、tasks 前。原始命令正文保留在仓库内：
+本指南对应 `upstream.lock.json` 当前锁定的 Spec Kit；其 Quick Start 推荐 checklist 在 plan 后、tasks 前。原始命令正文保留在仓库内：
 [checklist](../src/upstream/templates/commands/checklist.md)、
 [analyze](../src/upstream/templates/commands/analyze.md)、
 [implement](../src/upstream/templates/commands/implement.md)、

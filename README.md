@@ -1,4 +1,4 @@
-# SDLC AI SPEC — v1.0.5-sdlc.1
+# SDLC AI SPEC
 
 ## 上游行为等价宪法
 
@@ -16,10 +16,9 @@ SDLC AI SPEC 是锁定版本 Spec Kit 的产品化移植，不是独立演进的
 
 作者：**Blade**。声明仓库：**https://github.com/goedgecloud/sdlc-ai-spec**。
 这是面向用户作用域的独立源码移植，来源为 **GitHub, Inc. 的 Spec Kit**，采用 MIT 许可证。
-上游锁定为 `v1.0.5`，提交
-`a4e25ce6b96dc8e85f84206c6a54353fa9c5260b`.
+准确上游来源、版本与提交由 `upstream.lock.json` 锁定。
 
-产品版本与上游版本对齐，格式为 `<上游版本>-sdlc.<本地迭代号>`。当前为 `1.0.5-sdlc.1`；`1.0.5` 表示锁定的 Spec Kit 版本，`sdlc.1` 表示基于该上游版本的第 1 次本地产品迭代。
+产品版本与锁定上游版本对齐，格式为 `<上游版本>-sdlc.<本地迭代号>`。当前版本以机器元数据和构建产物为准，发布历史见 [CHANGELOG.md](CHANGELOG.md)。同一上游版本的本地迭代使用 `tools/version-tool.sh` 设置。
 
 ## Skill 命名与含义
 

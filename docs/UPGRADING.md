@@ -100,9 +100,9 @@ JSON 审查是显式本地流程记录，不是加密身份证明，也不是防
 
 ## 版本与回退
 
-产品版本与锁定的上游 package version 对齐，格式固定为 `<上游版本>-sdlc.<本地迭代号>`。当前 `1.0.5-sdlc.1` 表示基于上游 `1.0.5` 的第 1 次本地产品迭代。`plugin-metadata.json` 是产品版本来源，构建时必须与 `upstream.lock.json.version` 匹配；不匹配直接失败。
+产品版本与锁定的上游 package version 对齐，格式固定为 `<上游版本>-sdlc.<本地迭代号>`。`plugin-metadata.json` 是机器版本来源，构建时必须与 `upstream.lock.json.version` 匹配；不匹配直接失败。具体发布版本与时间记录在 `CHANGELOG.md`。
 
-上游 package version 发生变化时，`tools/upgrade.py prepare` 在 detached 候选中把产品版本重置为 `<新上游版本>-sdlc.1`。同一上游版本内的本地功能/本地化迭代不由升级工具自动猜测，由维护者显式把末尾迭代号递增。版本字符串不能替代准确提交 SHA 和 `BUILD.json.build_id`。
+上游 package version 发生变化时，`tools/upgrade.py prepare` 在 detached 候选中把产品版本重置为 `<新上游版本>-sdlc.1`。同一上游版本内的本地功能/本地化迭代不由升级工具自动猜测，由维护者使用 `tools/version-tool.sh sdlc.N` 显式设置本地迭代号。版本字符串不能替代准确提交 SHA 和 `BUILD.json.build_id`。
 
 回退时选择较早的已接受源码/分发提交，再按客户端流程重新加载缓存或重装并验证。不得删除项目数据。
 

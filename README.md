@@ -151,7 +151,7 @@ INIT 为新项目复制中文默认宪法并生成中文数据 README；当本�
 - Cursor：`/sdlc-maintain-upgrade vX.Y.Z`
 - Claude Code：`/sdlc-maintain-upgrade vX.Y.Z`
 
-该能力默认只完成上游获取、实际差异审查、候选生成、必要的增量中文本地化、独立三宿主 baseline 与完整 verifier，并输出最终差异；不默认执行正式 `accept`、提交、push、merge、tag 或 Release。维护实现与流程图见 [maintenance/README.md](maintenance/README.md)。
+该能力默认完成上游获取、实际差异审查、候选生成、必要的增量中文本地化、独立三宿主 baseline 与完整 verifier，并输出最终差异；默认终点为未提交的 verified candidate，不执行正式 `accept`、提交、push、merge、tag 或 Release。维护入口与运行手册见 [maintenance/README.md](maintenance/README.md)，确定性实现位于 `tools/`。
 
 ## 开发工具
 

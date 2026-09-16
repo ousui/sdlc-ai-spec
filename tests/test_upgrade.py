@@ -10,6 +10,7 @@ import unittest
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
 from upgrade import (source_digest,candidate_lock,check_accept,blob,prepare,product_version,
+                     promote_unreleased_changelog,
                      VERIFICATION_CONTRACT_VERSION,REQUIRED_VERIFICATION_GROUPS)
 from port import replace_once,function
 
@@ -61,6 +62,22 @@ class UpgradeTests(unittest.TestCase):
             self.assertEqual(new['version'], lock['version'])
             self.assertEqual(new['tag'], '1'*40)
             self.assertEqual(changes, [])
+
+    def test_prepare_promotes_unreleased_notes_when_upstream_version_resets(self):
+        sample = (
+            '# log\n\n## Unreleased\n\n- 锁定上游并重置产品版本。\n\n'
+            '## 9.9.9-sdlc.2 — 2026-09-16\n\n- old\n'
+        )
+        promoted = promote_unreleased_changelog(sample, '8.8.8-sdlc.1', '2026-09-16 22:30:00 +08:00')
+        self.assertIn('## Unreleased\n\n## 8.8.8-sdlc.1 — 2026-09-16\n', promoted)
+        self.assertIn('最后发版时间：2026-09-16 22:30:00 +08:00', promoted)
+        self.assertIn('- 锁定上游并重置产品版本。', promoted)
+        self.assertIn('## 9.9.9-sdlc.2 — 2026-09-16', promoted)
+        with self.assertRaisesRegex(ValueError, 'Unreleased CHANGELOG notes'):
+            promote_unreleased_changelog('# log\n\n## Unreleased\n\n## 9.9.9-sdlc.2 — 2026-09-16\n',
+                                         '8.8.8-sdlc.1', '2026-09-16 22:30:00 +08:00')
+        with self.assertRaisesRegex(ValueError, 'SDLC_RELEASE_TIME'):
+            promote_unreleased_changelog(sample, '8.8.8-sdlc.1', '')
 
     def test_product_version_aligns_upstream_and_local_revision(self):
         upstream=json.loads((ROOT/'upstream.lock.json').read_text())['version']

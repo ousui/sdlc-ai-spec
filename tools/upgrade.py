@@ -16,6 +16,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 import tomllib
@@ -154,6 +155,34 @@ def candidate_lock(upstream: Path, old: dict, commit: str, tag: str) -> tuple[di
     return dict(old, commit=commit, tag=tag, version=version, files=selected, watch_files=watched), changes
 
 
+_RELEASE_TIME = re.compile(r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2} \+08:00\Z')
+
+
+def promote_unreleased_changelog(text: str, new_version: str, release_time: str) -> str:
+    """Move accepted Unreleased notes into the candidate's first released heading.
+
+    prepare resets the machine version on an upstream package change, and
+    engineering checks require CHANGELOG to match that version. The notes must
+    already exist on the accepted source; this helper does not invent them.
+    """
+    if not _RELEASE_TIME.fullmatch(release_time):
+        raise ValueError('SDLC_RELEASE_TIME must use YYYY-MM-DD HH:MM:SS +08:00')
+    if re.search(rf'^## {re.escape(new_version)} — ', text, re.M):
+        raise ValueError('CHANGELOG already contains release ' + new_version)
+    match = re.search(r'(?ms)^## Unreleased\n(?P<body>.*?)(?=^## )', text)
+    if not match:
+        raise ValueError('CHANGELOG must contain an Unreleased section before released versions')
+    body = match.group('body').strip()
+    if not body or not re.search(r'(?m)^-\s+\S', body):
+        raise ValueError('Upstream version reset requires Unreleased CHANGELOG notes on the accepted source')
+    release_date = release_time[:10]
+    replacement = (
+        f'## Unreleased\n\n## {new_version} — {release_date}\n\n'
+        f'最后发版时间：{release_time}\n\n{body}\n\n'
+    )
+    return text[:match.start()] + replacement + text[match.end():]
+
+
 def product_version(upstream_version: str, revision: int = 1) -> str:
     if not isinstance(upstream_version, str) or not upstream_version.strip():
         raise ValueError('Upstream package version is missing')
@@ -197,6 +226,15 @@ def prepare(root: Path, upstream: Path, out: Path, ref: str) -> dict:
             metadata = json.loads(metadata_path.read_text(encoding='utf-8'))
             metadata['version'] = product_version(new['version'])
             metadata_path.write_text(json.dumps(metadata, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+            changelog_path = out / 'CHANGELOG.md'
+            changelog_path.write_text(
+                promote_unreleased_changelog(
+                    changelog_path.read_text(encoding='utf-8'),
+                    metadata['version'],
+                    os.environ.get('SDLC_RELEASE_TIME', ''),
+                ),
+                encoding='utf-8',
+            )
         run(sys.executable, '-B', str(out/'tools/port.py'), '--upstream', str(upstream), cwd=out)
         run(sys.executable, '-B', str(out/'tools/build.py'), '--marketplaces', cwd=out)
         record.update(status='CANDIDATE_READY', candidate_digest=source_digest(out))

@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SDLC AI SPEC 上游升级运行流程</title>
+<style>
+:root{--bg:#f6f8fb;--panel:#fff;--text:#172033;--muted:#667085;--line:#d8dee9;--blue:#315bc5;--green:#177d5b;--amber:#9a6700;--red:#b42318;--purple:#6941c6;--code:#f1f4f8}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}
+main{max-width:1180px;margin:auto;padding:36px 22px 64px}.hero,.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;box-shadow:0 8px 26px rgba(16,24,40,.05)}
+.hero{padding:34px}.eyebrow{font-size:12px;font-weight:800;letter-spacing:.12em;color:var(--blue)}h1{margin:6px 0 12px;font-size:34px;line-height:1.2}h2{margin:0 0 18px;font-size:24px}h3{margin:24px 0 8px;font-size:18px}p{margin:8px 0}.muted{color:var(--muted)}code{background:var(--code);padding:2px 6px;border-radius:5px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:.92em}
+.panel{margin-top:22px;padding:28px}.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}.card{border:1px solid var(--line);border-radius:13px;padding:15px;background:#fff}.card strong{display:block;margin-bottom:6px}.arrow{text-align:center;color:#98a2b3;font-weight:800;font-size:18px;margin:6px 0}
+.flow{display:grid;grid-template-columns:1fr;gap:0;max-width:850px;margin:auto}.node{border:1px solid var(--line);border-left:5px solid var(--blue);border-radius:13px;padding:15px 18px;background:#fff}.node.tool{border-left-color:var(--green)}.node.state{border-left-color:var(--purple)}.node.stop{border-left-color:var(--red)}.node.auth{border-left-color:var(--amber)}.node b{display:block;font-size:16px}.tag{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.04em;padding:2px 7px;border-radius:999px;background:#eef3ff;color:var(--blue);margin-bottom:5px}.tool .tag{background:#ecfdf3;color:var(--green)}.state .tag{background:#f4f3ff;color:var(--purple)}.stop .tag{background:#fef3f2;color:var(--red)}.auth .tag{background:#fffaeb;color:var(--amber)}
+.branch{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin:12px 0}.branch .node{min-height:120px}.table{width:100%;border-collapse:collapse}.table th,.table td{border-bottom:1px solid var(--line);padding:10px 8px;text-align:left;vertical-align:top}.table th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.callout{border-left:4px solid var(--blue);background:#f5f8ff;padding:13px 15px;border-radius:8px;margin:14px 0}.danger{border-left-color:var(--red);background:#fff6f5}.ok{border-left-color:var(--green);background:#f3fbf7}
+ul{margin:8px 0 8px 22px;padding:0}@media(max-width:820px){.grid{grid-template-columns:1fr}.branch{grid-template-columns:1fr}h1{font-size:28px}.panel,.hero{padding:20px}}
+@media print{body{background:#fff}.hero,.panel{box-shadow:none;break-inside:avoid}.node{break-inside:avoid}}
+</style>
+</head>
+<body><main>
+<section class="hero">
+  <div class="eyebrow">SDLC AI SPEC · MAINTAINER RUNBOOK</div>
+  <h1>上游升级运行流程</h1>
+  <p><code>sdlc-maintain-upgrade</code> 负责把确定性升级工具编排为一个显式维护流程。默认终点是已验证、未提交的 detached candidate；产品接收、Git 集成和发布属于独立授权操作。</p>
+  <div class="callout ok"><b>固定边界：</b>维护 Skill 不属于 000–500 业务生命周期，不进入 <code>dist/skills</code>，不修改真实业务项目 <code>.sdlc</code> 数据，也不通过修改 checker、测试、adapter 或忽略规则来使升级通过。</div>
+</section>
+
+<section class="panel">
+<h2>组件边界</h2>
+<div class="grid">
+  <div class="card"><strong>Agent 维护入口</strong><code>.agents/skills/sdlc-maintain-upgrade/</code><p class="muted">唯一 canonical Skill 与执行期 references。</p></div>
+  <div class="card"><strong>Claude Code 适配</strong><code>.claude/commands/...</code><p class="muted">只加载 canonical Skill。</p></div>
+  <div class="card"><strong>确定性工具</strong><code>tools/</code><p class="muted">prepare、localize、build、verify、digest。</p></div>
+  <div class="card"><strong>维护运行手册</strong><code>maintenance/</code><p class="muted">长期流程和可视化说明，不含执行定义。</p></div>
+  <div class="card"><strong>用户产品</strong><code>dist/</code><p class="muted">安装后的 11 个公共 Skill 与 Runtime。</p></div>
+</div>
+</section>
+
+<section class="panel">
+<h2>完整升级主链</h2>
+<div class="flow">
+  <div class="node"><span class="tag">SKILL</span><b>1. 显式调用 <code>sdlc-maintain-upgrade TARGET</code></b>确认目标仓库为 SDLC AI SPEC，读取仓库维护规范并保留用户工作。</div><div class="arrow">↓</div>
+  <div class="node"><span class="tag">SKILL</span><b>2. 仓库预检</b>记录 source HEAD、分支、产品版本、锁定上游、Python/uv 身份；源工作树必须满足升级工具的清洁要求。</div><div class="arrow">↓</div>
+  <div class="node"><span class="tag">SKILL</span><b>3. 固定一个准确目标上游</b><code>latest</code>、tag 或 commit 最终解析成唯一 target ref、exact SHA 和 package version；不隐式跟随 upstream <code>main</code>。</div><div class="arrow">↓</div>
+  <div class="node"><span class="tag">SKILL</span><b>4. 审查准确 upstream delta</b>检查核心命令、模板/Bash、watch files、宿主集成、初始化、事件、版本和许可证。结构性变化直接进入 <code>REVIEW_REQUIRED</code>。</div><div class="arrow">↓</div>
+  <div class="node tool"><span class="tag">TOOL</span><b>5. <code>upgrade.py prepare</code></b>从已接受源基线创建新的 detached candidate，生成 lock、port 和 dist；当前源分支保持不变。</div><div class="arrow">↓</div>
+  <div class="branch">
+    <div class="node state"><span class="tag">STATE</span><b><code>CANDIDATE_READY</code></b>候选可以进入独立验证。</div>
+    <div class="node state"><span class="tag">STATE</span><b><code>LOCALIZATION_REQUIRED</code></b>仅在确认错误可由本地化恢复时进入本地化闭环。</div>
+    <div class="node stop"><span class="tag">STOP</span><b><code>BLOCKED</code> / 无 record</b>保留证据，输出 <code>REVIEW_REQUIRED</code> 或环境故障；不修改候选规则求通过。</div>
+  </div>
+  <div class="arrow">↓</div>
+  <div class="node tool"><span class="tag">TOOL</span><b>6. 创建目标准确上游的三宿主 baseline</b>在新的隔离环境安装 exact target，分别生成 Codex、Claude、Cursor 空项目基线；不以本项目生成物作为 oracle。</div><div class="arrow">↓</div>
+  <div class="node tool"><span class="tag">TOOL</span><b>7. 运行候选自身 <code>tools/verify.py</code></b>验证来源、宿主输出、中文绑定、模板、脚本、Runtime、仓库测试、差分和可复现构建；证据绑定 exact candidate digest 与 target SHA。</div><div class="arrow">↓</div>
+  <div class="node state"><span class="tag">RESULT</span><b><code>VERIFIED_CANDIDATE_READY</code></b>输出 candidate 路径、digest、上游差异、本地化变化、完整验证结果和未执行项。默认流程在这里结束。</div>
+</div>
+<div class="callout">同版本目标执行同一主链，结果用于 rehearsal；它不改变正式锁定版本。</div>
+</section>
+
+<section class="panel">
+<h2><code>LOCALIZATION_REQUIRED</code> 恢复闭环</h2>
+<div class="flow">
+  <div class="node tool"><span class="tag">TOOL</span><b>1. <code>localize.py export</code></b>从 candidate 导出当前 canonical English inputs 到外部目录。</div><div class="arrow">↓</div>
+  <div class="node"><span class="tag">SKILL</span><b>2. 增量补译</b>对比旧英文、新英文、旧中文，仅修改 <code>&lt;CANDIDATE&gt;/src/locales/zh-CN/**</code> 中受影响的自然语言内容。</div><div class="arrow">↓</div>
+  <div class="node tool"><span class="tag">TOOL</span><b>3. <code>localize.py precheck</code></b>在写 review record 前只读检查 command、presentation 或 resource 的机器/结构契约。</div><div class="arrow">↓</div>
+  <div class="node"><span class="tag">REVIEW</span><b>4. 完整语义复核</b>核对义务/禁止、责任主体、条件、数量、布尔和状态、等待/停止、写入目标、命令/路径/标识及兼容输入。</div><div class="arrow">↓</div>
+  <div class="node tool"><span class="tag">TOOL</span><b>5. <code>localize.py record</code> → <code>check</code></b>只记录实际完成审查的变化项，再运行全量本地化检查。reviewer 字段记录真实审查身份。</div><div class="arrow">↓</div>
+  <div class="node tool"><span class="tag">TOOL</span><b>6. <code>upgrade.py refresh-localization</code></b>验证非本地化冻结摘要，重新构建并生成新的 candidate digest。refresh 前的 verifier 证据全部失效。</div><div class="arrow">↓</div>
+  <div class="node state"><span class="tag">STATE</span><b>7. 回到 <code>CANDIDATE_READY</code></b>重新创建 baseline 并对新 digest 执行完整 verifier。</div>
+</div>
+<div class="callout danger">出现新结构别名、机器契约变化、adapter/code 变化或非本地化冻结内容变化时，本地化恢复立即停止。此类变化属于独立维护修改，并从新的已接受源基线重新 prepare。</div>
+</section>
+
+<section class="panel">
+<h2>状态语义</h2>
+<table class="table">
+<tr><th>状态</th><th>含义</th><th>允许继续</th></tr>
+<tr><td><code>CANDIDATE_READY</code></td><td>候选已生成并拥有确定 candidate digest；不代表 verifier 已通过。</td><td>创建独立 baseline，运行完整 verifier。</td></tr>
+<tr><td><code>LOCALIZATION_REQUIRED</code></td><td>prepare 因本地化检查阻止候选就绪。</td><td>只有实际错误确认属于受控本地化恢复范围时。</td></tr>
+<tr><td><code>BLOCKED</code></td><td>候选无法在当前受支持契约下继续。</td><td>停止自动升级，保留证据并进入独立维护审查。</td></tr>
+<tr><td><code>VERIFIED_CANDIDATE_READY</code></td><td>维护 Skill 的结果状态：exact candidate 已完成独立工程验证。</td><td>默认停止；后续接收需要独立授权。</td></tr>
+<tr><td><code>REVIEW_REQUIRED</code></td><td>结构、机器契约、权限、映射或语义需要维护者决策。</td><td>不能在当前升级运行中通过修改 checker/tests 绕过。</td></tr>
+</table>
+</section>
+
+<section class="panel">
+<h2>授权分界</h2>
+<div class="branch">
+  <div class="node state"><span class="tag">DEFAULT</span><b>候选验证完成</b>保留 detached candidate、外部证据和最终差异报告；源分支不变。</div>
+  <div class="node auth"><span class="tag">SEPARATE AUTHORIZATION</span><b>候选接收 / Git 集成</b><code>upgrade.py accept</code>、候选提交、接收进升级分支、维护文档收尾和最终字节验证。</div>
+  <div class="node auth"><span class="tag">SEPARATE AUTHORIZATION</span><b>合并 / 发布 / 客户端验收</b>main 合并、tag、Release、客户端重新加载与真实项目验收分别记录，互不替代。</div>
+</div>
+</section>
+
+<section class="panel">
+<h2>确定性来源</h2>
+<table class="table">
+<tr><th>领域</th><th>权威位置</th></tr>
+<tr><td>维护编排</td><td><code>.agents/skills/sdlc-maintain-upgrade/SKILL.md</code></td></tr>
+<tr><td>候选状态与接收</td><td><code>tools/upgrade.py</code>、<code>docs/UPGRADING.md</code></td></tr>
+<tr><td>本地化契约</td><td><code>tools/localize.py</code>、<code>docs/LOCALIZATION.md</code></td></tr>
+<tr><td>构建</td><td><code>tools/build.py</code>、<code>docs/DEVELOPMENT.md</code></td></tr>
+<tr><td>独立工程验证</td><td><code>tools/verify.py</code>、CI 工程契约</td></tr>
+<tr><td>产品分发</td><td><code>dist/</code>；固定为 11 个公共产品 Skill，不包含维护 Skill</td></tr>
+</table>
+</section>
+</main></body></html>

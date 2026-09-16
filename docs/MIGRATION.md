@@ -1,7 +1,6 @@
 # 上游移植差异与行为边界
 
-源码基线为 Spec Kit v1.0.5，提交 `a4e25ce6b96dc8e85f84206c6a54353fa9c5260b`，
-配置为 Bash，不启用 events、presets 或 extensions。这不表示与完整 CLI 等价。
+源码基线由 `upstream.lock.json` 锁定，配置为 Bash，不启用 events、presets 或 extensions。这不表示与完整 CLI 等价。
 
 | 变更 | 原因 / 保留的行为 |
 | --- | --- |

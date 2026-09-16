@@ -17,7 +17,7 @@ SDLC AI SPEC 是锁定版本 Spec Kit 的产品化移植，不是独立演进的
 ## 仓库身份
 
 本仓库是面向用户作用域的 SDLC AI SPEC / Spec Kit 核心移植。产品元数据位于
-`plugin-metadata.json`；当前产品版本为 `1.0.5-sdlc.1`。版本必须使用 `<锁定上游版本>-sdlc.<本地迭代号>`，上游版本变化时本地迭代号从 1 重新开始；同一上游版本的本地迭代由维护者显式递增。声明的插件仓库是
+`plugin-metadata.json`；版本必须使用 `<锁定上游版本>-sdlc.<本地迭代号>`，上游版本变化时本地迭代号从 1 重新开始；同一上游版本的本地迭代由维护者显式递增。具体发布版本只记录在 `CHANGELOG.md`、机器元数据和生成产物中；通用工程文档使用“当前版本”“本版本”等相对表述，避免随发布迭代失效。声明的插件仓库是
 `https://github.com/goedgecloud/sdlc-ai-spec`，移植作者为 Blade。Git 传输可以使用
 不同的已授权工作仓库；不得因为修改元数据而静默改变声明仓库，也不得把元数据
 修改描述成仓库迁移。
@@ -57,6 +57,12 @@ SDLC AI SPEC 是锁定版本 Spec Kit 的产品化移植，不是独立演进的
 - `dist/` 之外的开发/构建/测试/升级工具统一由 uv 管理。保持 `pyproject.toml` 与
   `uv.lock` 同步，使用 `uv sync --locked` / `uv run --locked`，不要重新引入
   `requirements.txt` 作为第二依赖来源。`dist/` Runtime 必须保持 uv-independent。
+- `sdlc-maintain-upgrade` 是仓库维护能力，不是业务阶段。唯一 canonical Skill 位于
+  `.agents/skills/sdlc-maintain-upgrade/`；Claude 的 `.claude/commands/sdlc-maintain-upgrade.md`
+  只加载同一 canonical 指令。`maintenance/**` 只保存维护运行手册和可视化说明。维护 Skill、
+  `maintenance/**` 及宿主适配不得进入 `dist`、Marketplace 或现有 11 个公共 Skill 清单，也不得
+  改变这些 Skill 的执行正文或 Runtime。该维护 Skill 只能显式调用，默认停在已验证、未提交的
+  detached candidate；正式 accept、commit、push、merge、tag、Release 和真实业务项目迁移均需独立授权。
 
 ## 仓库文档语言
 

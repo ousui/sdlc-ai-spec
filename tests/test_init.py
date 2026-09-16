@@ -61,8 +61,10 @@ class InitTests(unittest.TestCase):
         self.assertEqual((state / 'memory/constitution.md').read_bytes(),
                          (PACKAGE / 'templates/constitution-template.md').read_bytes())
         opts = json.loads((state / 'init-options.json').read_text())
+        upstream = json.loads((PACKAGE/'UPSTREAM.json').read_text())
+        metadata = json.loads((ROOT/'plugin-metadata.json').read_text())
         self.assertEqual(opts, {'script': 'sh', 'feature_numbering': 'sequential',
-            'speckit_version': '1.0.5', 'sdlc_layout': 1, 'sdlc_version': '1.0.5-sdlc.1'})
+            'speckit_version': upstream['version'], 'sdlc_layout': 1, 'sdlc_version': metadata['version']})
         self.assertFalse((state / 'feature.json').exists())
         self.assertEqual((self.project / 'server.go').read_text(), 'user code')
         self.assertEqual(snapshot(PACKAGE), before)

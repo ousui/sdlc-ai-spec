@@ -19,6 +19,7 @@ from pathlib import Path
 import subprocess
 import sys
 import tomllib
+from source_files import is_local_metadata
 
 ROOT = Path(__file__).resolve().parents[1]
 IGNORED = {'.git', '.venv', '__pycache__', '.pytest_cache'}
@@ -42,11 +43,12 @@ def run(*args: str, cwd: Path) -> str:
 
 
 def source_digest(root: Path) -> str:
-    """Content AND executable modes; ignore only tool caches and Git internals."""
+    """Content AND executable modes, excluding caches, Git internals and Finder files."""
     records = {}
     for path in sorted(root.rglob('*')):
         relative = path.relative_to(root)
-        if any(part in IGNORED for part in relative.parts) or path.suffix in ('.pyc', '.pyo'):
+        if (any(part in IGNORED for part in relative.parts)
+                or path.suffix in ('.pyc', '.pyo') or is_local_metadata(path)):
             continue
         if path.is_symlink():
             raise ValueError('Source snapshot contains a symlink: '+str(relative))
@@ -69,7 +71,8 @@ def frozen_localization_inputs(root: Path) -> str:
     records = {}
     for path in sorted(root.rglob('*')):
         relative = path.relative_to(root)
-        if any(part in IGNORED for part in relative.parts) or path.suffix in ('.pyc', '.pyo'):
+        if (any(part in IGNORED for part in relative.parts)
+                or path.suffix in ('.pyc', '.pyo') or is_local_metadata(path)):
             continue
         if relative.parts[:3] == ('src', 'locales', 'zh-CN'):
             continue

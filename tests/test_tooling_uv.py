@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+import re
 import tomllib
 import unittest
 import yaml
@@ -23,7 +24,9 @@ class UvToolingTests(unittest.TestCase):
         self.assertFalse(data['tool']['uv']['package'])
         self.assertEqual(data['tool']['uv']['required-version'], '>=0.12.13,<0.13')
         self.assertEqual((ROOT / '.python-version').read_text(), '3.12\n')
-        self.assertEqual(json.loads((ROOT / 'plugin-metadata.json').read_text())['version'], '1.0.5-sdlc.1')
+        metadata = json.loads((ROOT / 'plugin-metadata.json').read_text())
+        upstream = json.loads((ROOT / 'upstream.lock.json').read_text())
+        self.assertRegex(metadata['version'], rf"^{re.escape(str(upstream['version']))}-sdlc\.[1-9][0-9]*$")
 
     def test_lockfile_contains_exact_accepted_tool_versions(self):
         lock = (ROOT / 'uv.lock').read_text()

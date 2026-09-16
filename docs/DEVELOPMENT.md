@@ -2,12 +2,11 @@
 
 ## 元数据与目录布局
 
-仓库根目录的 `plugin-metadata.json` 是插件名称、版本（`1.0.5-sdlc.1`）、作者
-（Blade）、声明仓库和许可证的唯一来源。`homepage` 和 `keywords` 是三个宿主
+仓库根目录的 `plugin-metadata.json` 是插件名称、机器版本、作者（Blade）、声明仓库和许可证的唯一来源。`homepage` 和 `keywords` 是三个宿主
 共用的发现信息；`presentation` 是构建输入，不原样写入宿主清单。生成器将其
 映射为 Codex 的 `interface`、Claude 的 `displayName`、Cursor 的 `logo` 及
 Marketplace 展示字段。`src/assets/` 中的图标复制到 `dist/assets/`，并纳入构建摘要。
-产品版本使用 `<锁定上游版本>-sdlc.<本地迭代号>`。当前显示与机器清单统一为 `1.0.5-sdlc.1`；上游版本变化时本地迭代号从 1 重新开始，同一上游版本的本地产品迭代由维护者显式递增。普通代码变更不创建或移动 tag；准确提交 SHA 与 `BUILD.json.build_id` 继续标识具体构建。
+产品版本使用 `<锁定上游版本>-sdlc.<本地迭代号>`。上游版本变化时本地迭代号从 1 重新开始，同一上游版本的本地产品迭代由维护者显式递增。使用 `tools/version-tool.sh sdlc.N` 设置本地迭代号并重新生成构建产物；发布历史维护在 `CHANGELOG.md`。普通代码变更不创建或移动 tag；准确提交 SHA 与 `BUILD.json.build_id` 继续标识具体构建。
 
 根目录保存实现源码。`src/upstream/templates/commands` 保留上游英文原文；
 `src/templates` 和 `src/scripts` 保存已记录的移植差异；`src/adapters/` 提供
@@ -65,11 +64,10 @@ uv run --locked python -B tools/build.py --marketplaces
 
 在仓库和业务项目之外准备三个新的空目录，以及一个通过 uv 创建的独立上游工具
 环境。先为 `UPSTREAM`、`TOOL_ENV`、`BASELINES` 和 `EVIDENCE` 设置绝对路径。
-上游 checkout 必须准确为 `a4e25ce6b96dc8e85f84206c6a54353fa9c5260b`
-（Spec Kit `v1.0.5`）。
+上游 checkout 必须准确匹配当前 `upstream.lock.json` 中记录的 commit。
 
 ```sh
-test "$(git -C "$UPSTREAM" rev-parse HEAD)" = a4e25ce6b96dc8e85f84206c6a54353fa9c5260b
+test "$(git -C "$UPSTREAM" rev-parse HEAD)" = "$(python3 -c 'import json; print(json.load(open("upstream.lock.json"))["commit"])')"
 uv sync --locked
 uv venv "$TOOL_ENV" --python 3.12
 uv pip install --python "$TOOL_ENV/bin/python" "$UPSTREAM"
@@ -113,6 +111,12 @@ push 和 PR 在两个系统各执行一次完整 verifier（包含仓库单元�
 不得修改摘要来使检查通过。按 [UPGRADING.md](UPGRADING.md) 准备 detached 候选，
 比较已安装工具输出，审查变化的原始源码，仅接受已验证的准确字节。
 BUILD.json 标识可复现构建，并同时记录上游版本、产品版本和本地迭代号。
+
+本地化维护另有记录前只读预检：`tools/localize.py precheck` 对 command、presentation、
+resource 使用与正式检查相同的机器/结构底层规则，但不写 catalog、不替代语义审查。
+`tests/test_localization_machine_contract.py` 包含状态值、shell 退出码、JSON 标量关联、
+表格状态绑定、未闭合围栏、本地资源关键职责及预检只读性的失败对照。工程回归必须
+保留这些负向用例；不能通过修改测试期望或扩大忽略规则接受未知上游变化。
 
 ## 本地项目初始化器
 

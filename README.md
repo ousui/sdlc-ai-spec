@@ -1,4 +1,4 @@
-# SDLC AI SPEC — v1.0.5-sdlc.1
+# SDLC AI SPEC
 
 ## 上游行为等价宪法
 
@@ -16,10 +16,9 @@ SDLC AI SPEC 是锁定版本 Spec Kit 的产品化移植，不是独立演进的
 
 作者：**Blade**。声明仓库：**https://github.com/goedgecloud/sdlc-ai-spec**。
 这是面向用户作用域的独立源码移植，来源为 **GitHub, Inc. 的 Spec Kit**，采用 MIT 许可证。
-上游锁定为 `v1.0.5`，提交
-`a4e25ce6b96dc8e85f84206c6a54353fa9c5260b`.
+准确上游来源、版本与提交由 `upstream.lock.json` 锁定。
 
-产品版本与上游版本对齐，格式为 `<上游版本>-sdlc.<本地迭代号>`。当前为 `1.0.5-sdlc.1`；`1.0.5` 表示锁定的 Spec Kit 版本，`sdlc.1` 表示基于该上游版本的第 1 次本地产品迭代。
+产品版本与锁定上游版本对齐，格式为 `<上游版本>-sdlc.<本地迭代号>`。当前版本以机器元数据和构建产物为准，发布历史见 [CHANGELOG.md](CHANGELOG.md)。同一上游版本的本地迭代使用 `tools/version-tool.sh` 设置。
 
 ## Skill 命名与含义
 
@@ -142,6 +141,16 @@ INIT 为新项目复制中文默认宪法并生成中文数据 README；当本�
 不运行其他阶段。宪法的文件状态、与历史生成基线的关系、占位符观察以及审批/
 阶段结论分开说明；空/不可读文件、无活动需求与未知历史也不会伪装成完成状态。
 详见 [STATUS.md](docs/STATUS.md)。
+
+## 维护者上游升级
+
+源码仓库提供显式维护 Skill `sdlc-maintain-upgrade`，用于把锁定 Spec Kit 上游升级整理为可审查、可验证的 detached candidate。它不属于 000–500 业务流程，也不进入安装后的 11 个公共 Skill。
+
+- Codex：`$sdlc-maintain-upgrade vX.Y.Z`
+- Cursor：`/sdlc-maintain-upgrade vX.Y.Z`
+- Claude Code：`/sdlc-maintain-upgrade vX.Y.Z`
+
+该能力默认完成上游获取、实际差异审查、候选生成、必要的增量中文本地化、独立三宿主 baseline 与完整 verifier，并输出最终差异；默认终点为未提交的 verified candidate，不执行正式 `accept`、提交、push、merge、tag 或 Release。维护入口与运行手册见 [maintenance/README.md](maintenance/README.md)，确定性实现位于 `tools/`。
 
 ## 开发工具
 

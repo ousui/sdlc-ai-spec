@@ -109,7 +109,47 @@ uv run --locked python -B -m unittest discover -s tests -v
 单元测试包括过期原文、篡改译文、即使重算摘要仍损坏的机器 token/参数/ID、标题层级漂移等失败对照，并覆盖旧英文、历史双语和新中文结构的读取兼容。
 源码英文渲染仍保留与独立原版 CLI 产物的完整比较，不能用中文摘要取代。
 这些程序检查不证明语义完全等价或模型实际输出；译文还需要逐条对照审查。
-catalog 的 reviewer 记录源文对照审查者；本轮 48 项呈现已由用户逐项评审。后续来源变化仍需按当次实际审查重新记录，旧 reviewer 不自动批准新字节。
+catalog 的 reviewer 绑定精确来源与译文字节的实际审查者；任何来源或译文字节变化都必须重新审查并更新记录，旧 reviewer 不自动批准新字节。
+
+### 记录前只读预检
+
+增量补译完成后，先使用 `precheck` 对**当前待记录字节**执行只读机器/结构检查。
+它不要求旧的 source/translation 摘要仍匹配，因此适合在 `record` 之前发现机器值、
+命令、路径、参数、围栏结构或本地资源关键职责的损坏：
+
+```sh
+uv run --locked python -B tools/localize.py precheck --command constitution
+uv run --locked python -B tools/localize.py precheck --presentation spec-template
+uv run --locked python -B tools/localize.py precheck --resource binding
+```
+
+`precheck` 不写 `catalog.json`、不把译文标记为 reviewed，也不代表语义审查完成。
+正确顺序是：**补译 → precheck → 源文/译文语义复核 → record → 全量 check**。
+`record` 和 `check` 继续调用同一底层机器/结构检查，不能因为预检通过而跳过。
+
+机器契约保护采用有限结构而不是“所有英文逐字节冻结”：行内代码只抽取命令、路径、
+参数、变量、ID、状态等机器原子；Markdown 表格把机器值与稳定行标识绑定；JSON 类
+标量保留 key/value 对应；实际 shell 命令及结构化代码围栏保持机器语义。自然语言标题、
+注释和伪代码式任务说明仍可按已审查规则本地化。遇到无法可靠分类的新结构时应停止
+并审查，不通过增加忽略规则让升级继续。
+
+## 关键职责与有限别名的回归边界
+
+`tests/test_localization_review.py` 独立固定当前已审查的结构别名、历史读取形式
+和输入别名。日常增量补译不得自行增加、删除或重解释这些映射；上游确需新映射时，
+先报告差异并取得显式审查，再同步 catalog 与独立测试期望。测试失败不能通过
+读取同一份 catalog 作为期望值、自动接受新别名或删掉负向用例来绕过。
+
+关键职责同时检查中文源文及经 loader 完整还原的 Codex、Claude、Cursor 正文：
+`checklists/requirements.md` 由 SPEC/CLAR 维护，自定义清单由 HUMA 生成且归评审者；
+HUMA 新条目未勾选，IMPL 对未勾选项先询问并等待、不修改清单；CONV 只追加缺口任务，
+不改代码、规格或方案，无缺口时保持 `tasks.md` 字节不变。
+不要把包含 binding 占位符的共享片段当成完整执行正文来判断职责丢失。
+
+这些是有限的关键条款回归，包含机器 token 不变但“不得”被改为“必须”的负向对照；
+它们不是通用语义证明，也不能证明模型真实执行。合理的上游条款变化应重新对照来源
+审查后调整期望，不能为让升级通过而机械更新断言。新的 AI 补译审查必须记录实际
+AI 审查标识，不沿用历史 `User-approved` 或冒记人工已经批准新字节。
 
 ## 升级与增量补译
 
@@ -119,10 +159,14 @@ catalog 的 reviewer 记录源文对照审查者；本轮 48 项呈现已由用�
    `LOCALIZATION_REQUIRED`，现有正式源码与 dist 不变；不回退英文伪装成功。
 4. 使用候选自身的 `tools/localize.py export --out <新的外部目录>` 导出当前
    英文待译输入。只在候选的 `src/locales/zh-CN/` 更新受影响的译文和元数据。
-5. 完成原文逐条审查后，以显式命令更新来源/译文摘要，不手算或直接改候选摘要：
+5. 补译后先只读预检，再完成原文/译文逐条语义审查；确认无误后才以显式命令
+   更新来源/译文摘要，不手算或直接改候选摘要：
 
 ```sh
-# 在候选目录内；该操作记录已完成的审查，不是自动翻译或身份认证
+# 在候选目录内；precheck 不写 catalog，也不构成审批
+uv run --locked python -B tools/localize.py precheck --command constitution
+
+# record 只记录已经完成的审查，不是自动翻译或身份认证
 uv run --locked python -B tools/localize.py record \
   --command constitution --reviewer '<实际审查人或 AI 审查标识>' --reviewed
 uv run --locked python -B tools/localize.py check
@@ -130,7 +174,10 @@ uv run --locked python -B tools/localize.py check
 
 若 description 原文变化，先在 catalog 对应 metadata 中明确更新
 source 与 zh_CN；record 不会替新原文自动批准旧译文。未交付的 argument-hint 不作为翻译门禁，原始来源仍保留。绑定/INIT 说明变更可以用
-`--resource binding` 或 `--resource init`，同样先完成对照审查。
+`--resource binding` 或 `--resource init`，同样先运行对应 `precheck --resource ...` 并完成对照审查。
+有英文 adapter source 的资源比较有限机器契约；STATUS 和 output-language 属于本地维护策略，
+以独立固定的高风险职责条款保护，不伪造上游翻译来源。资源 `record` 也会执行这些检查，
+不能只靠重算摘要接受职责漂移。
 
 模板或固定清单变更后，分别完成逐条语义审查，再记录：
 

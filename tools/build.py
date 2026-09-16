@@ -7,6 +7,7 @@ import re
 import shutil
 from pathlib import Path
 import yaml
+from source_files import is_local_metadata, ignore_local_metadata
 from naming import (skill_id, invocation, product_prose, template_references, SKILL_IDS, DISPLAY_NAME, audit_package)
 from render import (ROOT, COMMANDS, HOSTS, LOCK, UPSTREAM_SHA, METADATA, REPOSITORY,
                     VERSION, PORT_REVISION, AUTHOR, HINTS, render_source, split, relocate_body, binding)
@@ -185,9 +186,11 @@ def build(destination: Path) -> None:
         package.mkdir()
         (package / '.sdlc-build').write_text(UPSTREAM_SHA + '\n')
         shutil.copytree(ROOT / 'src/scripts', package / 'scripts',
-                        ignore=shutil.ignore_patterns('__pycache__', '*.pyc'))
-        shutil.copytree(ROOT / 'src/templates', package / 'templates')
-        shutil.copytree(ROOT / 'src/assets', package / 'assets')
+                        ignore=lambda directory, names: (
+                            set(shutil.ignore_patterns('__pycache__', '*.pyc')(directory, names))
+                            | ignore_local_metadata(directory, names)))
+        shutil.copytree(ROOT / 'src/templates', package / 'templates', ignore=ignore_local_metadata)
+        shutil.copytree(ROOT / 'src/assets', package / 'assets', ignore=ignore_local_metadata)
         # Validate all translations before publishing any generated package.
         check_all()
         bindings = {host: {} for host in HOSTS}
@@ -289,9 +292,9 @@ def build(destination: Path) -> None:
                 # Build identity must be reproducible from a clean checkout.
                 # macOS Finder metadata is local filesystem noise, not a product input.
                 if (path.is_file() and '__pycache__' not in path.parts and path.suffix != '.pyc'
-                        and path.name != '.DS_Store'):
+                        and not is_local_metadata(path)):
                     inputs[path.relative_to(ROOT).as_posix()] = hashlib.sha256(path.read_bytes()).hexdigest()
-        for name in ('plugin-metadata.json', 'upstream.lock.json', 'LICENSE', 'NOTICE', 'docs/naming-map.json',
+        for name in ('plugin-metadata.json', 'upstream.lock.json', 'CHANGELOG.md', 'LICENSE', 'NOTICE', 'docs/naming-map.json',
                      'pyproject.toml', 'uv.lock', '.python-version'):
             inputs[name] = hashlib.sha256((ROOT / name).read_bytes()).hexdigest()
         build_id = hashlib.sha256(json.dumps(inputs, sort_keys=True).encode()).hexdigest()

@@ -2,6 +2,8 @@
 from __future__ import annotations
 import json
 from pathlib import Path
+import os
+import re
 import shutil
 import subprocess
 import sys
@@ -78,6 +80,155 @@ class UpgradeTests(unittest.TestCase):
                                          '8.8.8-sdlc.1', '2026-09-16 22:30:00 +08:00')
         with self.assertRaisesRegex(ValueError, 'SDLC_RELEASE_TIME'):
             promote_unreleased_changelog(sample, '8.8.8-sdlc.1', '')
+
+    def _git(self, cwd: Path, *args: str) -> str:
+        return subprocess.run(['git', *args], cwd=cwd, check=True, text=True,
+                              capture_output=True).stdout.strip()
+
+    def _write_fixture_changelog(self, path: Path, *, version: str, unreleased: str) -> None:
+        body = unreleased.strip()
+        section = f'## Unreleased\n\n{body}\n\n' if body else '## Unreleased\n\n'
+        path.write_text(
+            '# 变更记录\n\n'
+            + section
+            + f'## {version} — 2026-09-16\n\n'
+            '最后发版时间：2026-09-16 11:15:56 +08:00\n\n'
+            '- fixture baseline\n',
+            encoding='utf-8',
+        )
+
+    def _make_prepare_fixture(self, temp: str, *, unreleased: str, bump_version: str | None):
+        source = Path(temp) / 'source'
+        ignore = shutil.ignore_patterns('.git', '.venv', '__pycache__', '.pytest_cache')
+        shutil.copytree(ROOT, source, ignore=ignore)
+        meta = json.loads((source / 'plugin-metadata.json').read_text(encoding='utf-8'))
+        self._write_fixture_changelog(source / 'CHANGELOG.md', version=meta['version'], unreleased=unreleased)
+        self._git(source, 'init', '-q')
+        self._git(source, 'config', 'user.name', 'Fixture')
+        self._git(source, 'config', 'user.email', 'fixture@example.invalid')
+        self._git(source, 'add', '.')
+        self._git(source, 'commit', '-qm', 'fixture source')
+        source_digest_before = source_digest(source)
+
+        upstream = Path(temp) / 'upstream'
+        shutil.copytree(ROOT / 'src/upstream', upstream)
+        excluded = upstream / 'templates/commands/taskstoissues.md'
+        if not excluded.exists():
+            excluded.write_text('excluded from supported runtime\n', encoding='utf-8')
+        if bump_version is not None:
+            text = (upstream / 'pyproject.toml').read_text(encoding='utf-8')
+            text = re.sub(r'(?m)^version = "[^"]+"', f'version = "{bump_version}"', text, count=1)
+            (upstream / 'pyproject.toml').write_text(text, encoding='utf-8')
+        self._git(upstream, 'init', '-q')
+        self._git(upstream, 'config', 'user.name', 'Fixture')
+        self._git(upstream, 'config', 'user.email', 'fixture@example.invalid')
+        self._git(upstream, 'add', '.')
+        self._git(upstream, 'commit', '-qm', 'fixture upstream')
+        return source, upstream, source_digest_before
+
+    def _cleanup_prepare_out(self, source: Path, out: Path) -> None:
+        if out.exists():
+            subprocess.run(['git', 'worktree', 'remove', '--force', str(out)],
+                           cwd=source, check=False, capture_output=True)
+        record = out.parent / (out.name + '.upgrade.json')
+        if record.exists():
+            record.unlink()
+
+    def test_prepare_cross_version_binds_changelog_with_documented_env(self):
+        with tempfile.TemporaryDirectory() as temp:
+            source, upstream, before = self._make_prepare_fixture(
+                temp, unreleased='- 跨版本升级说明。\n', bump_version='9.9.9')
+            out = Path(temp) / 'candidate'
+            env_backup = os.environ.get('SDLC_RELEASE_TIME')
+            os.environ.pop('RELEASE_TIME', None)
+            os.environ['SDLC_RELEASE_TIME'] = '2026-09-16 23:25:00 +08:00'
+            try:
+                record = prepare(source, upstream, out, 'HEAD')
+                self.assertEqual(record['status'], 'CANDIDATE_READY')
+                self.assertEqual(record['candidate_digest'], source_digest(out))
+                self.assertEqual(json.loads((out / 'plugin-metadata.json').read_text())['version'],
+                                 '9.9.9-sdlc.1')
+                changelog = (out / 'CHANGELOG.md').read_text(encoding='utf-8')
+                self.assertIn('## 9.9.9-sdlc.1 — 2026-09-16', changelog)
+                self.assertIn('最后发版时间：2026-09-16 23:25:00 +08:00', changelog)
+                self.assertIn('- 跨版本升级说明。', changelog)
+                build = json.loads((out / 'dist/BUILD.json').read_text(encoding='utf-8'))
+                self.assertEqual(build['product_version'], '9.9.9-sdlc.1')
+                self.assertEqual(build['inputs']['CHANGELOG.md'],
+                                 __import__('hashlib').sha256(
+                                     (out / 'CHANGELOG.md').read_bytes()).hexdigest())
+                self.assertEqual(before, source_digest(source))
+                self.assertEqual((source / 'CHANGELOG.md').read_text(encoding='utf-8').count('9.9.9-sdlc.1'), 0)
+            finally:
+                if env_backup is None:
+                    os.environ.pop('SDLC_RELEASE_TIME', None)
+                else:
+                    os.environ['SDLC_RELEASE_TIME'] = env_backup
+                self._cleanup_prepare_out(source, out)
+
+    def test_prepare_cross_version_fails_closed_without_notes_or_time(self):
+        with tempfile.TemporaryDirectory() as temp:
+            source, upstream, before = self._make_prepare_fixture(
+                temp, unreleased='', bump_version='9.9.9')
+            out = Path(temp) / 'candidate-missing-notes'
+            env_backup = os.environ.get('SDLC_RELEASE_TIME')
+            os.environ['SDLC_RELEASE_TIME'] = '2026-09-16 23:25:00 +08:00'
+            try:
+                with self.assertRaisesRegex(ValueError, 'Unreleased CHANGELOG notes'):
+                    prepare(source, upstream, out, 'HEAD')
+                record = json.loads((out.parent / (out.name + '.upgrade.json')).read_text())
+                self.assertEqual(record['status'], 'BLOCKED')
+                self.assertEqual(before, source_digest(source))
+            finally:
+                if env_backup is None:
+                    os.environ.pop('SDLC_RELEASE_TIME', None)
+                else:
+                    os.environ['SDLC_RELEASE_TIME'] = env_backup
+                self._cleanup_prepare_out(source, out)
+
+            time_root = Path(temp) / 'missing-time'
+            time_root.mkdir()
+            source2, upstream2, before2 = self._make_prepare_fixture(
+                str(time_root), unreleased='- 有说明但缺时间。\n', bump_version='9.9.9')
+            out2 = time_root / 'candidate-missing-time'
+            env_backup = os.environ.get('SDLC_RELEASE_TIME')
+            os.environ.pop('SDLC_RELEASE_TIME', None)
+            os.environ.pop('RELEASE_TIME', None)
+            try:
+                with self.assertRaisesRegex(ValueError, 'SDLC_RELEASE_TIME'):
+                    prepare(source2, upstream2, out2, 'HEAD')
+                record = json.loads((out2.parent / (out2.name + '.upgrade.json')).read_text())
+                self.assertEqual(record['status'], 'BLOCKED')
+                self.assertEqual(before2, source_digest(source2))
+            finally:
+                if env_backup is None:
+                    os.environ.pop('SDLC_RELEASE_TIME', None)
+                else:
+                    os.environ['SDLC_RELEASE_TIME'] = env_backup
+                self._cleanup_prepare_out(source2, out2)
+
+    def test_prepare_same_version_rehearsal_skips_changelog_promotion(self):
+        with tempfile.TemporaryDirectory() as temp:
+            source, upstream, before = self._make_prepare_fixture(
+                temp, unreleased='', bump_version=None)
+            out = Path(temp) / 'candidate-same'
+            env_backup = os.environ.get('SDLC_RELEASE_TIME')
+            os.environ.pop('SDLC_RELEASE_TIME', None)
+            try:
+                record = prepare(source, upstream, out, 'HEAD')
+                self.assertEqual(record['status'], 'CANDIDATE_READY')
+                meta = json.loads((out / 'plugin-metadata.json').read_text(encoding='utf-8'))
+                self.assertEqual(meta['version'],
+                                 json.loads((source / 'plugin-metadata.json').read_text())['version'])
+                self.assertNotIn('最后发版时间：2026-09-16 23:25:00 +08:00',
+                                 (out / 'CHANGELOG.md').read_text(encoding='utf-8'))
+                self.assertEqual(before, source_digest(source))
+            finally:
+                if env_backup is None:
+                    os.environ.pop('SDLC_RELEASE_TIME', None)
+                else:
+                    os.environ['SDLC_RELEASE_TIME'] = env_backup
+                self._cleanup_prepare_out(source, out)
 
     def test_product_version_aligns_upstream_and_local_revision(self):
         upstream=json.loads((ROOT/'upstream.lock.json').read_text())['version']

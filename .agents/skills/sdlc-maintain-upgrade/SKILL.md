@@ -78,11 +78,14 @@ Do not classify risk from line count alone.
 
 From the clean accepted source checkout, run the repository's locked environment and existing prepare command:
 
-If the frozen target package version differs from the locked upstream version, the accepted source `CHANGELOG.md` Unreleased section must already contain the release notes, and `SDLC_RELEASE_TIME` must be set to `YYYY-MM-DD HH:MM:SS +08:00`. `prepare` promotes those notes into the candidate; it does not invent them. Same-upstream rehearsals do not promote CHANGELOG.
+If the frozen target package version differs from the locked upstream version, the accepted source `CHANGELOG.md` Unreleased section must already contain the release notes on a **clean** worktree, and `SDLC_RELEASE_TIME` must already be set in the environment to `YYYY-MM-DD HH:MM:SS +08:00`. `prepare` reads that exact variable from the process environment and promotes those notes into the candidate; it does not invent notes or invent a time. If Unreleased notes are missing, stop for a separate authorized source update before prepare. Same-upstream rehearsals do not promote CHANGELOG and do not require `SDLC_RELEASE_TIME`.
 
 ```sh
+# Cross-version only. Do not alias through another variable name.
+export SDLC_RELEASE_TIME='YYYY-MM-DD HH:MM:SS +08:00'
+
 uv sync --locked
-SDLC_RELEASE_TIME="$RELEASE_TIME" uv run --locked python -B tools/upgrade.py prepare \
+uv run --locked python -B tools/upgrade.py prepare \
   --upstream "$UPSTREAM" \
   --ref "$TARGET_REF" \
   --out "$CANDIDATE"

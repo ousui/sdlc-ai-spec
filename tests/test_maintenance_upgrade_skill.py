@@ -87,6 +87,9 @@ class MaintenanceUpgradeSkillTests(unittest.TestCase):
             'tools/verify.py',
         ):
             self.assertIn(item, text)
+        self.assertIn('export SDLC_RELEASE_TIME=', text)
+        self.assertNotIn('SDLC_RELEASE_TIME="$RELEASE_TIME"', text)
+        self.assertIn('Do not alias through another variable name', text)
         stages = [
             '## 4. Generate the detached candidate',
             '## 5. Incremental localization recovery',

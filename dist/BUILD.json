@@ -1,5 +1,5 @@
 {
-  "build_id": "0f5b6bb7418ca4d91cd7ddfc750d1f6fb497aa7ad44237e6093339bb5a591213",
+  "build_id": "8693b45596d3d45e38a16e5711090d5ea071074cfac208a08b346aee3730c70f",
   "product_version": "1.0.7-sdlc.1",
   "upstream_version": "1.0.7",
   "port_revision": 1,
@@ -97,7 +97,7 @@
     "tools/version-tool.sh": "4a68ff1312f4b3cdf7b8ca441b646c91ea97efdc1ab7912e07c4a097d6115f82",
     "plugin-metadata.json": "98853444a333fedfe1b18c4a6b9944d7d8e5617550d961e7d3df6a2a8b1c44b3",
     "upstream.lock.json": "83bb20a59b0dc5b00d188080150eb85343c3bb95764e256e6834f1cb469053a3",
-    "CHANGELOG.md": "63fa0e5fe94d96cdf24c3d3dff57a6632ae78019ccfca32bf675a04e0ce71360",
+    "CHANGELOG.md": "2af4ac585f2a858518780aeef640a8934373f7df772ea3027c5cd2cbc551098b",
     "LICENSE": "2510b446bc1f0cf9702453075d20cd88631e20e5642658edb7325d9c1eb534f7",
     "NOTICE": "f688f41949f50df11ee89c3e7ca44c380e621c532b21a2ae43f1cadb517ddb69",
     "docs/naming-map.json": "ea959332e0c84381043dba8652716d66870177511524be973526e9305b26d324",

@@ -57,6 +57,12 @@ SDLC AI SPEC 是锁定版本 Spec Kit 的产品化移植，不是独立演进的
 - `dist/` 之外的开发/构建/测试/升级工具统一由 uv 管理。保持 `pyproject.toml` 与
   `uv.lock` 同步，使用 `uv sync --locked` / `uv run --locked`，不要重新引入
   `requirements.txt` 作为第二依赖来源。`dist/` Runtime 必须保持 uv-independent。
+- `sdlc-maintain-upgrade` 是仓库维护能力，不是业务阶段。唯一 canonical Skill 位于
+  `.agents/skills/sdlc-maintain-upgrade/`；Claude 的 `.claude/commands/sdlc-maintain-upgrade.md`
+  只负责加载同一 canonical 指令。维护 Skill、`maintenance/**` 及其宿主发现适配不得进入
+  `dist`、Marketplace 或现有 11 个公共 Skill 清单，也不得改变这些 Skill 的执行正文或 Runtime。
+  该维护 Skill 只能显式调用，默认停在已验证、未提交的 detached candidate；正式 accept、
+  commit、push、merge、tag、Release 和真实业务项目迁移均需独立授权。
 
 ## 仓库文档语言
 

@@ -143,6 +143,16 @@ INIT 为新项目复制中文默认宪法并生成中文数据 README；当本�
 阶段结论分开说明；空/不可读文件、无活动需求与未知历史也不会伪装成完成状态。
 详见 [STATUS.md](docs/STATUS.md)。
 
+## 维护者上游升级
+
+源码仓库提供显式维护 Skill `sdlc-maintain-upgrade`，用于把锁定 Spec Kit 上游升级整理为可审查、可验证的 detached candidate。它不属于 000–500 业务流程，也不进入安装后的 11 个公共 Skill。
+
+- Codex：`$sdlc-maintain-upgrade vX.Y.Z`
+- Cursor：`/sdlc-maintain-upgrade vX.Y.Z`
+- Claude Code：`/sdlc-maintain-upgrade vX.Y.Z`
+
+该能力默认只完成上游获取、实际差异审查、候选生成、必要的增量中文本地化、独立三宿主 baseline 与完整 verifier，并输出最终差异；不默认执行正式 `accept`、提交、push、merge、tag 或 Release。维护实现与流程图见 [maintenance/README.md](maintenance/README.md)。
+
 ## 开发工具
 
 仓库开发、构建、单元测试及升级验证使用 **uv**，依赖由已提交的 `pyproject.toml`

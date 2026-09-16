@@ -114,6 +114,12 @@ push 和 PR 在两个系统各执行一次完整 verifier（包含仓库单元�
 比较已安装工具输出，审查变化的原始源码，仅接受已验证的准确字节。
 BUILD.json 标识可复现构建，并同时记录上游版本、产品版本和本地迭代号。
 
+本地化维护另有记录前只读预检：`tools/localize.py precheck` 对 command、presentation、
+resource 使用与正式检查相同的机器/结构底层规则，但不写 catalog、不替代语义审查。
+`tests/test_localization_machine_contract.py` 包含状态值、shell 退出码、JSON 标量关联、
+表格状态绑定、未闭合围栏、本地资源关键职责及预检只读性的失败对照。工程回归必须
+保留这些负向用例；不能通过修改测试期望或扩大忽略规则接受未知上游变化。
+
 ## 本地项目初始化器
 
 `src/adapters/INIT.md` 是本地工作流，不是第十项上游命令。

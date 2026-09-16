@@ -111,6 +111,28 @@ uv run --locked python -B -m unittest discover -s tests -v
 这些程序检查不证明语义完全等价或模型实际输出；译文还需要逐条对照审查。
 catalog 的 reviewer 记录源文对照审查者；本轮 48 项呈现已由用户逐项评审。后续来源变化仍需按当次实际审查重新记录，旧 reviewer 不自动批准新字节。
 
+### 记录前只读预检
+
+增量补译完成后，先使用 `precheck` 对**当前待记录字节**执行只读机器/结构检查。
+它不要求旧的 source/translation 摘要仍匹配，因此适合在 `record` 之前发现机器值、
+命令、路径、参数、围栏结构或本地资源关键职责的损坏：
+
+```sh
+uv run --locked python -B tools/localize.py precheck --command constitution
+uv run --locked python -B tools/localize.py precheck --presentation spec-template
+uv run --locked python -B tools/localize.py precheck --resource binding
+```
+
+`precheck` 不写 `catalog.json`、不把译文标记为 reviewed，也不代表语义审查完成。
+正确顺序是：**补译 → precheck → 源文/译文语义复核 → record → 全量 check**。
+`record` 和 `check` 继续调用同一底层机器/结构检查，不能因为预检通过而跳过。
+
+机器契约保护采用有限结构而不是“所有英文逐字节冻结”：行内代码只抽取命令、路径、
+参数、变量、ID、状态等机器原子；Markdown 表格把机器值与稳定行标识绑定；JSON 类
+标量保留 key/value 对应；实际 shell 命令及结构化代码围栏保持机器语义。自然语言标题、
+注释和伪代码式任务说明仍可按已审查规则本地化。遇到无法可靠分类的新结构时应停止
+并审查，不通过增加忽略规则让升级继续。
+
 ## 关键职责与有限别名的回归边界
 
 `tests/test_localization_review.py` 独立固定当前已审查的结构别名、历史读取形式
@@ -137,10 +159,14 @@ AI 审查标识，不沿用历史 `User-approved` 或冒记人工已经批准新
    `LOCALIZATION_REQUIRED`，现有正式源码与 dist 不变；不回退英文伪装成功。
 4. 使用候选自身的 `tools/localize.py export --out <新的外部目录>` 导出当前
    英文待译输入。只在候选的 `src/locales/zh-CN/` 更新受影响的译文和元数据。
-5. 完成原文逐条审查后，以显式命令更新来源/译文摘要，不手算或直接改候选摘要：
+5. 补译后先只读预检，再完成原文/译文逐条语义审查；确认无误后才以显式命令
+   更新来源/译文摘要，不手算或直接改候选摘要：
 
 ```sh
-# 在候选目录内；该操作记录已完成的审查，不是自动翻译或身份认证
+# 在候选目录内；precheck 不写 catalog，也不构成审批
+uv run --locked python -B tools/localize.py precheck --command constitution
+
+# record 只记录已经完成的审查，不是自动翻译或身份认证
 uv run --locked python -B tools/localize.py record \
   --command constitution --reviewer '<实际审查人或 AI 审查标识>' --reviewed
 uv run --locked python -B tools/localize.py check
@@ -148,7 +174,10 @@ uv run --locked python -B tools/localize.py check
 
 若 description 原文变化，先在 catalog 对应 metadata 中明确更新
 source 与 zh_CN；record 不会替新原文自动批准旧译文。未交付的 argument-hint 不作为翻译门禁，原始来源仍保留。绑定/INIT 说明变更可以用
-`--resource binding` 或 `--resource init`，同样先完成对照审查。
+`--resource binding` 或 `--resource init`，同样先运行对应 `precheck --resource ...` 并完成对照审查。
+有英文 adapter source 的资源比较有限机器契约；STATUS 和 output-language 属于本地维护策略，
+以独立固定的高风险职责条款保护，不伪造上游翻译来源。资源 `record` 也会执行这些检查，
+不能只靠重算摘要接受职责漂移。
 
 模板或固定清单变更后，分别完成逐条语义审查，再记录：
 

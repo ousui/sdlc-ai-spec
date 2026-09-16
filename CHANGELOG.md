@@ -6,6 +6,10 @@ SDLC AI SPEC 是对锁定版本 GitHub Spec Kit 的产品化移植：保留上�
 
 ## Unreleased
 
+## 1.0.5-sdlc.2 — 2026-09-16
+
+最后发版时间：2026-09-16 11:15:56 +08:00
+
 - 收紧本地化机器契约，增加记录前只读 `precheck`，并补齐 command / presentation / resource 的负向回归。
 - 新增仓库维护 Skill `sdlc-maintain-upgrade`，把上游差异审查、detached candidate、本地化恢复和独立 verifier 串成显式维护流程；默认不执行 accept、提交、合并或发布。
 - 收口产品版本信息：通用工程文档不再硬编码具体产品版本，新增统一版本工具并将变更记录纳入构建身份。

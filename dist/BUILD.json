@@ -1,5 +1,5 @@
 {
-  "build_id": "8a215c131ebfb31dd01e24a95a8f0f37d83f89ca9de396693025c687afb8710d",
+  "build_id": "c7e6bbb695c9c316ced4f20483830d205267ac1703ad1cb75f5d5da9b87daa17",
   "product_version": "1.0.5-sdlc.1",
   "upstream_version": "1.0.5",
   "port_revision": 1,
@@ -85,7 +85,7 @@
     "src/upstream/templates/tasks-template.md": "1e448e9153462e8c5b5a55231a54c756d870a82950d4dd9425a2bf5b7008a0d9",
     "tools/build.py": "b1239d78c9479d729297c90f7bab18e95a9c01c248d5738039da33d75347c924",
     "tools/differential.py": "891a39c480191d9fe52b16f017a145a0b1bad646396e2fa47718057ea1006e69",
-    "tools/localize.py": "3cf09e72efd9eb3f326f01db64f422a85bd54991bd3b777f70a14893034d1e74",
+    "tools/localize.py": "50a14156f82be3b2d675508640c693cdbfd22425585fece1b2df5c60ba432890",
     "tools/naming.py": "6794afb4c7eb98b2513f811ecb96e8e93df31032c32a439b1d29ff6e45a6639a",
     "tools/naming_check.py": "842599a5890ea0e64a06b89b6b7c972f478586b1114a127a490a4835ced52875",
     "tools/port.py": "55f3a52add4c4028e0d5284d51a6ee9d752b9cab4d9744c81b07ec5a63b17592",

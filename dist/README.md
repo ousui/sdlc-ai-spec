@@ -1,4 +1,4 @@
-# SDLC AI SPEC v1.0.5-sdlc.2
+# SDLC AI SPEC v1.0.7-sdlc.1
 
 作者：Blade
 

@@ -45,7 +45,7 @@ $ARGUMENTS
 **检查扩展钩子（分析前）**：
 - 检查项目根目录是否存在 `.sdlc/extensions.yml`。
 - 如果存在，读取文件并查找 `hooks.before_analyze` 键下的条目。
-- 如果 YAML 无法解析或无效，静默跳过钩子检查，正常继续。
+- 如果 YAML 无法解析或无效，不得静默跳过：告知用户 `.sdlc/extensions.yml` 无法读取（包含解析器错误），并且未检查任何钩子，包括其中登记的任何强制（`optional: false`）钩子，然后正常继续。
 - 排除 `enabled` 明确为 `false` 的钩子。未包含 `enabled` 字段的钩子默认启用。
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
@@ -233,7 +233,7 @@ $ARGUMENTS
 报告后，检查项目根目录是否存在 `.sdlc/extensions.yml`。
 
 - 如果存在，读取文件并查找 `hooks.after_analyze` 键下的条目。
-- 如果 YAML 无法解析或无效，静默跳过钩子检查，正常继续。
+- 如果 YAML 无法解析或无效，不得静默跳过：告知用户 `.sdlc/extensions.yml` 无法读取（包含解析器错误），并且未检查任何钩子，包括其中登记的任何强制（`optional: false`）钩子，然后正常继续。
 - 排除 `enabled` 明确为 `false` 的钩子。未包含 `enabled` 字段的钩子默认启用。
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。

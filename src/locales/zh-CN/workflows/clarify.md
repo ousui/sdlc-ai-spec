@@ -14,7 +14,7 @@ $ARGUMENTS
 **检查扩展钩子（需求澄清前）**：
 - 检查项目根目录是否存在 `.sdlc/extensions.yml`。
 - 如果存在，读取文件并查找 `hooks.before_clarify` 键下的条目。
-- 如果 YAML 无法解析或无效，静默跳过钩子检查，正常继续。
+- 如果 YAML 无法解析或无效，不得静默跳过：告知用户 `.sdlc/extensions.yml` 无法读取（包含解析器错误），并且未检查任何钩子，包括其中登记的任何强制（`optional: false`）钩子，然后正常继续。
 - 排除 `enabled` 明确为 `false` 的钩子。未包含 `enabled` 字段的钩子默认启用。
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
@@ -116,7 +116,7 @@ $ARGUMENTS
 
    对每个 Partial 或 Missing 类别，生成候选澄清问题，除非：
    - 澄清不会实质影响实施或验证策略。
-   - 信息更适合留到规划阶段处理，在内部注明。
+   - 该项专门关于实现方法、技术栈比较或任务拆解（在内部注明）。
 
 4. 在内部生成按优先级排序的候选澄清问题队列，最多 5 个。**不要**一次输出全部问题。遵循：
     - 整个会话最多提问 5 个问题。
@@ -237,7 +237,7 @@ $ARGUMENTS
 检查项目根目录是否存在 `.sdlc/extensions.yml`。
 - 如果不存在，或 `hooks.after_clarify` 下没有注册钩子，跳转到完成报告。
 - 如果存在，读取文件并查找 `hooks.after_clarify` 键下的条目。
-- 如果 YAML 无法解析或无效，静默跳过钩子检查，继续到完成报告。
+- 如果 YAML 无法解析或无效，不得静默跳过：告知用户 `.sdlc/extensions.yml` 无法读取（包含解析器错误），并且未检查任何钩子，包括其中登记的任何强制（`optional: false`）钩子，然后继续到完成报告。
 - 排除 `enabled` 明确为 `false` 的钩子。未包含 `enabled` 字段的钩子默认启用。
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
@@ -272,7 +272,7 @@ $ARGUMENTS
 - 更新的规格路径。
 - 修改过的章节名称。
 - 规格质量清单状态：重新验证了 `FEATURE_DIR/checklists/requirements.md` 时，展示前后通过数，例如“规格质量清单：12/16 → 15/16 项通过”，并列出所有状态变化项，包括新增勾选和回退项。仍未勾选的条目列为待关注领域。
-- 覆盖汇总表：每个分类展示中文状态，并保留稳定英文枚举：已解决（Resolved，原 Partial／Missing，现已解决）、已推迟（Deferred，超出提问额度或更适合规划）、已明确（Clear，本来已充分）、仍待明确（Outstanding，仍 Partial／Missing，但影响较低）。
+- 覆盖汇总表：每个分类展示中文状态，并保留稳定英文枚举：已解决（Resolved，原 Partial／Missing，现已解决）、已推迟（Deferred，超出提问额度，或剩余项专门关于实现方法、技术栈比较或任务拆解）、已明确（Clear，本来已充分）、仍待明确（Outstanding，仍 Partial／Missing，但影响较低）。
 - 存在 Outstanding 或 Deferred 时，建议是否继续 `{{SDLC:PLAN}}`，或在规划后再次运行 `{{SDLC:CLARIFY}}`。
 - 建议的下一条命令。
 

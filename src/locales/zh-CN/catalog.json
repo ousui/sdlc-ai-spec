@@ -5,10 +5,10 @@
   "commands": {
     "constitution": {
       "source_path": "src/upstream/templates/commands/constitution.md",
-      "source_sha256": "b90c7e8f3f7a9e6291b445c87df6b9449f5c0c35f7f6b4de6c6eac500558676e",
-      "translation_sha256": "ecb69a7e9d533ced3da3a1474acdbca4df9ea08f2344ecf3af7dd38ceef679c0",
+      "source_sha256": "0e71d67f0bc172e455526662e63c65e91f51d674f53bf06128e62f404bff4118",
+      "translation_sha256": "5f97134c8ecda4c3abc687829c56f2a4273bc7b6ef0577040fab637080faab6c",
       "status": "reviewed",
-      "reviewer": "User-approved localization preview 2026-09-15",
+      "reviewer": "sdlc-maintain-upgrade AI review",
       "metadata": {
         "description": {
           "source": "Create or update the project constitution from interactive or provided principle inputs.",
@@ -22,10 +22,10 @@
     },
     "specify": {
       "source_path": "src/upstream/templates/commands/specify.md",
-      "source_sha256": "1725b095edf14bf9c373c0c3e040abb69e38ebaa5812e28790bf02f8b50c68e9",
-      "translation_sha256": "7eddddb117a7649dd0005913078019f9dcaa7c2751f178667ca1992ad9514ab5",
+      "source_sha256": "ac88105eb167b9fadce2b704a109ce51642f7f65d0d07ed648b4259be051fa21",
+      "translation_sha256": "e2edf7f26bea9482229753989fd58b4cb2c5a6f3c02c9b67d11e5371c8a18c81",
       "status": "reviewed",
-      "reviewer": "User-approved localization preview 2026-09-15",
+      "reviewer": "sdlc-maintain-upgrade AI review",
       "metadata": {
         "description": {
           "source": "Create or update the feature specification from a natural language feature description.",
@@ -39,10 +39,10 @@
     },
     "clarify": {
       "source_path": "src/upstream/templates/commands/clarify.md",
-      "source_sha256": "2e048b3060106279f08b3a389d6978b90a1190503701ab80492e88a9e938a8bb",
-      "translation_sha256": "61182dc4f0b852a6148103fba843dd8893fb02af3dd6c21dfe04fdcb1f5e5fbc",
+      "source_sha256": "8836f4fe11b1826a542962858a5df2a6123f9d7a0d207a39e9372de2fdcedf1f",
+      "translation_sha256": "83e191a3e336980f5c760497c1677f03e75386641afe8173d916bf17cd93c784",
       "status": "reviewed",
-      "reviewer": "User-approved localization preview 2026-09-15",
+      "reviewer": "sdlc-maintain-upgrade AI review",
       "metadata": {
         "description": {
           "source": "Identify underspecified areas in the current feature spec by asking up to 5 highly targeted clarification questions and encoding answers back into the spec.",
@@ -56,10 +56,10 @@
     },
     "plan": {
       "source_path": "src/upstream/templates/commands/plan.md",
-      "source_sha256": "77bf505ca1b58d6bd9c941834037cc3de74457a5527c5f847226528342b2670a",
-      "translation_sha256": "ff05bbaf930199ac109f8b4baebf00b07abd6f002c5c6e945c3452b6febb2d43",
+      "source_sha256": "a6b2d9a4e78987e50eda6744321fd2c1990f9e7a37d64eac6d3cfb0f1b60c6e6",
+      "translation_sha256": "311a7b597eec14a1432e910172d92a3ce531bd95a42b91c1636ce427e7786d8f",
       "status": "reviewed",
-      "reviewer": "User-approved localization preview 2026-09-15",
+      "reviewer": "sdlc-maintain-upgrade AI review",
       "metadata": {
         "description": {
           "source": "Execute the implementation planning workflow using the plan template to generate design artifacts.",
@@ -73,10 +73,10 @@
     },
     "tasks": {
       "source_path": "src/upstream/templates/commands/tasks.md",
-      "source_sha256": "ac519e2f11fcf8b45360dbddedeccaaee7fb3c59fc8d93c82ffe66e969ba07cd",
-      "translation_sha256": "a22e2fab17d52b2c308ce6cbd6a8c2ce9cd9414054b5a85d800a623147b1fee0",
+      "source_sha256": "a64431d5f688ebc9310dcccfef55fb10d850b78bac82276fa8c5a895cde0c20a",
+      "translation_sha256": "8e40bda95df1ba1b0a877533d60902302b1b08ecdd064d939b5c83b0816dc4a1",
       "status": "reviewed",
-      "reviewer": "User-approved localization preview 2026-09-15",
+      "reviewer": "sdlc-maintain-upgrade AI review",
       "metadata": {
         "description": {
           "source": "Generate an actionable, dependency-ordered tasks.md for the feature based on available design artifacts.",
@@ -90,10 +90,10 @@
     },
     "analyze": {
       "source_path": "src/upstream/templates/commands/analyze.md",
-      "source_sha256": "fba3677bec609f5cf79c4e9d785f18f83b4c9b867e72a07d1825dceb0a834fd3",
-      "translation_sha256": "a3e8665babad52fbd80fa3c5628e39d874b06477f42d551b1b991d7caab38ffb",
+      "source_sha256": "434b0317c42d033ebb9ddd5795837c740339d587770b78b14d723512e9147ca3",
+      "translation_sha256": "db05e99aabb63134ae5eb0be6598a191a08c71f0349f1d305e7a5216a6a313dc",
       "status": "reviewed",
-      "reviewer": "User-approved localization preview 2026-09-15",
+      "reviewer": "sdlc-maintain-upgrade AI review",
       "metadata": {
         "description": {
           "source": "Perform a non-destructive cross-artifact consistency and quality analysis across spec.md, plan.md, and tasks.md after task generation.",
@@ -107,10 +107,10 @@
     },
     "checklist": {
       "source_path": "src/upstream/templates/commands/checklist.md",
-      "source_sha256": "c72f412f698b0fad6fb2f9687910ddb8087612265d78bf781ccaf1cb8237981e",
-      "translation_sha256": "af73454a5e683bf310cb61674b745cca0830c5e0cc4cd4b64ff48082c89b0a98",
+      "source_sha256": "6edc6b8624f14d7df8a0f81cb429af14dc8b902ff1c2a367c73629202e19a938",
+      "translation_sha256": "8c2c1e3e4a3f1035cb5829d7c77ea85ef76ea2f51e9c4f9c3a3c7203325f9e6e",
       "status": "reviewed",
-      "reviewer": "User-approved localization preview 2026-09-15",
+      "reviewer": "sdlc-maintain-upgrade AI review",
       "metadata": {
         "description": {
           "source": "Generate a custom checklist for the current feature based on user requirements.",
@@ -124,10 +124,10 @@
     },
     "implement": {
       "source_path": "src/upstream/templates/commands/implement.md",
-      "source_sha256": "5b00fa62b2912358e879fa847b139de866e9cdb391210b1be9ac796c84fe7417",
-      "translation_sha256": "eac15b219166b7f3d75c270ebcc48829024da020c6815791759f88d694c72b97",
+      "source_sha256": "3f9c286ad7a35431a184b7f223dd3da92c173e39dfa7c28ebf4b6f0b09ef168d",
+      "translation_sha256": "9f0270cccd7612667c7c71a2e96cfcfeb9449285f1710875985a7ebb9d306a59",
       "status": "reviewed",
-      "reviewer": "User-approved localization preview 2026-09-15",
+      "reviewer": "sdlc-maintain-upgrade AI review",
       "metadata": {
         "description": {
           "source": "Execute the implementation plan by processing and executing all tasks defined in tasks.md",
@@ -141,10 +141,10 @@
     },
     "converge": {
       "source_path": "src/upstream/templates/commands/converge.md",
-      "source_sha256": "f1d1eee0229e64cf876ce782edb3844dcfabda80a020b2e0a2ff11d193e93e00",
-      "translation_sha256": "7fff29fd7be6b120042afb8043e1e04a26ba47ec711d8d70cf61ccdd9eb1a80e",
+      "source_sha256": "93c76d953289adfca3c8921cd6fc82faa8cc2c1bb34d236465bff98b643bf7e0",
+      "translation_sha256": "1a2adc00824f4a27a037bb41374f33e36627008e137a1d201f7be981ea346260",
       "status": "reviewed",
-      "reviewer": "User-approved localization preview 2026-09-15",
+      "reviewer": "sdlc-maintain-upgrade AI review",
       "metadata": {
         "description": {
           "source": "Assess the current codebase against the feature's spec, plan, and tasks, then append any remaining unbuilt work as new tasks to tasks.md so implement can complete it.",

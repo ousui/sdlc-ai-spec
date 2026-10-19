@@ -1,6 +1,7 @@
 """Reviewed source moves and names preserve provenance and machine behavior."""
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 import shutil
@@ -15,6 +16,12 @@ sys.path.insert(0, str(ROOT / 'tools'))
 from naming import identifiers
 from upgrade import candidate_lock, blob, source_digest
 
+
+FIXTURES = Path(__file__).resolve().parent / 'fixtures/upstream-maintenance'
+FIXTURE_SHA256 = {
+    'legacy': '14f36668e6e580af46e98d7501a2f4bfae541e2ea3d1bd1a5b4d33882ad2d4d4',
+    'reorganized': 'd9c9ea2bb7875070e3e2245aa018577ca282376ee47a839ea880dc289cc2dea5',
+}
 
 MOVES = (
     ('src/specify_cli/commands/init.py', 'src/specify_cli/command_init.py'),
@@ -40,11 +47,83 @@ CORE_INIT_SOURCES = (
 
 
 class UpstreamMaintenanceTests(unittest.TestCase):
-    def fixture(self, root: Path):
+    def fixture(self, root: Path, profile: str = 'legacy'):
+        raw = (FIXTURES / (profile + '.json')).read_bytes()
+        self.assertEqual(hashlib.sha256(raw).hexdigest(), FIXTURE_SHA256[profile])
+        data = json.loads(raw)
         upstream = root / 'upstream'
-        shutil.copytree(ROOT / 'src/upstream', upstream)
-        (upstream / 'templates/commands/taskstoissues.md').write_text('excluded\n')
-        return upstream, json.loads((ROOT / 'upstream.lock.json').read_text())
+        for relative, text in data['sources'].items():
+            path = upstream / relative
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(text, encoding='utf-8')
+        return upstream, data['lock']
+
+    def test_fixed_profiles_have_independent_consistent_source_identities(self):
+        for profile, watch_count in (('legacy', 10), ('reorganized', 34)):
+            with self.subTest(profile=profile), tempfile.TemporaryDirectory() as temp:
+                upstream, lock = self.fixture(Path(temp), profile)
+                data = json.loads((FIXTURES / (profile + '.json')).read_bytes())
+                self.assertEqual(data['schema_version'], 1)
+                self.assertEqual(data['provenance']['kind'], 'synthetic')
+                self.assertEqual(data['provenance']['profile'], profile)
+                self.assertEqual(len(lock['files']), 21)
+                self.assertEqual(len(lock['watch_files']), watch_count)
+                self.assertEqual(set(data['sources']),
+                                 set(lock['files']) | set(lock['watch_files'])
+                                 | {'templates/commands/taskstoissues.md'})
+                for relative, record in {**lock['files'], **lock['watch_files']}.items():
+                    content = (upstream / relative).read_bytes()
+                    self.assertEqual(record, {
+                        'git_blob': hashlib.sha1(b'blob ' + str(len(content)).encode()
+                                                + b'\0' + content).hexdigest(),
+                        'sha256': hashlib.sha256(content).hexdigest(),
+                    })
+                for old, new in MOVES:
+                    present, absent = (old, new) if profile == 'legacy' else (new, old)
+                    self.assertIn(present, lock['watch_files'])
+                    self.assertNotIn(absent, lock['watch_files'])
+                updated, changes = candidate_lock(upstream, lock, lock['commit'], lock['tag'])
+                self.assertEqual(updated, lock)
+                self.assertEqual(changes, [])
+
+    def test_profiles_ignore_active_upstream_and_lock(self):
+        with tempfile.TemporaryDirectory() as temp:
+            root = Path(temp)
+            active = root / 'active'
+            (active / 'src/upstream/templates/commands').mkdir(parents=True)
+            (active / 'src/upstream/templates/commands/unreviewed.md').write_text('unreviewed\n')
+            (active / 'upstream.lock.json').write_text('not a fixture lock\n')
+            before = source_digest(active)
+            with patch.object(sys.modules[__name__], 'ROOT', active):
+                for profile, version in (('legacy', '0.0.1'), ('reorganized', '0.0.2')):
+                    with self.subTest(profile=profile):
+                        upstream, lock = self.fixture(root / profile, profile)
+                        updated, changes = candidate_lock(upstream, lock, lock['commit'], lock['tag'])
+                        self.assertEqual(updated, lock)
+                        self.assertEqual(changes, [])
+                        self.assertEqual(lock['tag'], 'fixture-' + profile)
+                        self.assertEqual(lock['version'], version)
+            self.assertEqual(source_digest(active), before)
+
+    def test_reorganized_profile_changes_and_missing_watches_remain_required(self):
+        with tempfile.TemporaryDirectory() as temp:
+            upstream, lock = self.fixture(Path(temp), 'reorganized')
+            for relative in lock['watch_files']:
+                with self.subTest(path=relative):
+                    path = upstream / relative
+                    original = path.read_bytes()
+                    path.write_bytes(original + b'# changed reviewed source\n')
+                    _, changes = candidate_lock(upstream, lock, lock['commit'], lock['tag'])
+                    self.assertEqual([item['path'] for item in changes], [relative])
+                    self.assertEqual(changes[0]['before'], lock['watch_files'][relative])
+                    self.assertEqual(changes[0]['after'], blob(path.read_bytes()))
+                    self.assertTrue(changes[0]['review_required'])
+                    path.unlink()
+                    error = ('exactly one reviewed watched source' if relative in {new for _, new in MOVES}
+                             else 'Watched source missing')
+                    with self.assertRaisesRegex(ValueError, error):
+                        candidate_lock(upstream, lock, lock['commit'], lock['tag'])
+                    path.write_bytes(original)
 
     def move(self, root: Path, old: str, new: str):
         (root / new).parent.mkdir(parents=True, exist_ok=True)
@@ -75,21 +154,23 @@ class UpstreamMaintenanceTests(unittest.TestCase):
             self.assertEqual(changes, [])
 
     def test_ambiguous_missing_and_unreviewed_moves_still_fail_closed(self):
-        for old, new in MOVES:
-            for case in ('both', 'neither', 'unknown'):
-                with self.subTest(path=old, case=case), tempfile.TemporaryDirectory() as temp:
-                    upstream, lock = self.fixture(Path(temp))
-                    if case == 'both':
-                        (upstream / new).parent.mkdir(parents=True, exist_ok=True)
-                        shutil.copyfile(upstream / old, upstream / new)
-                    elif case == 'neither':
-                        (upstream / old).unlink()
-                    else:
-                        self.move(upstream, old, new + '.unreviewed')
-                    before = source_digest(upstream)
-                    with self.assertRaisesRegex(ValueError, 'exactly one reviewed watched source'):
-                        candidate_lock(upstream, lock, '1' * 40, 'target')
-                    self.assertEqual(before, source_digest(upstream))
+        for profile in ('legacy', 'reorganized'):
+            for old, new in MOVES:
+                present, other = (old, new) if profile == 'legacy' else (new, old)
+                for case in ('both', 'neither', 'unknown'):
+                    with self.subTest(profile=profile, path=present, case=case), tempfile.TemporaryDirectory() as temp:
+                        upstream, lock = self.fixture(Path(temp), profile)
+                        if case == 'both':
+                            (upstream / other).parent.mkdir(parents=True, exist_ok=True)
+                            shutil.copyfile(upstream / present, upstream / other)
+                        elif case == 'neither':
+                            (upstream / present).unlink()
+                        else:
+                            self.move(upstream, present, other + '.unreviewed')
+                        before = source_digest(upstream)
+                        with self.assertRaisesRegex(ValueError, 'exactly one reviewed watched source'):
+                            candidate_lock(upstream, lock, '1' * 40, 'target')
+                        self.assertEqual(before, source_digest(upstream))
 
     def test_other_watches_cannot_be_silently_dropped(self):
         with tempfile.TemporaryDirectory() as temp:

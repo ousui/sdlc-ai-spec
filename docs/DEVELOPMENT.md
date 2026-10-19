@@ -103,6 +103,12 @@ mtime 不变。Unicode 创建会执行真实脚本并记录所选解释器，其
 不能用派生输出构造 oracle，不能为消除失败而改写原始夹具或重算期望。更新来源需
 单独审查，许可证和 provenance 必须一并保留。
 
+来源监视回归另使用 `tests/fixtures/upstream-maintenance/` 的固定合成 legacy/
+reorganized 输入及独立锁，不读取活动 `src/upstream` 和 `upstream.lock.json`。
+这些输入只验证路径、来源摘要和审查记录契约，不冒充上游 Runtime 或 CLI 基线。
+产品升级不得刷新这两套夹具；旧/新布局的歧义、缺失、未知迁移、逐来源变异及
+核心初始化行为负向断言均需保留。
+
 ## CI 与证据
 
 `.github/workflows/engineering.yml` 在 Ubuntu 24.04 和 macOS 15 ARM64 执行同一

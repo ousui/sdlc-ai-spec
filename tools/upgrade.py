@@ -21,6 +21,7 @@ import subprocess
 import sys
 import tomllib
 from source_files import is_local_metadata
+from upstream_watch import resolve_watch_paths
 
 ROOT = Path(__file__).resolve().parents[1]
 IGNORED = {'.git', '.venv', '__pycache__', '.pytest_cache'}
@@ -134,7 +135,8 @@ def candidate_lock(upstream: Path, old: dict, commit: str, tag: str) -> tuple[di
     names.update('templates/'+p.name for p in (upstream/'templates').glob('*.md'))
     names.update('scripts/bash/'+p.name for p in (upstream/'scripts/bash').glob('*.sh'))
     selected = {name: blob((upstream/name).read_bytes()) for name in sorted(names)}
-    watched = {name: blob((upstream/name).read_bytes()) for name in old.get('watch_files', {})}
+    watched = {name: blob((upstream/name).read_bytes())
+               for name in resolve_watch_paths(upstream, old.get('watch_files', {}))}
     changes = []
     for group, new in [('files', selected), ('watch_files', watched)]:
         previous = old.get(group, {})

@@ -37,6 +37,9 @@
 SPECIFY_INIT_DIR          -> SDLC_INIT_DIR
 SPECIFY_FEATURE          -> SDLC_FEATURE
 SPECIFY_FEATURE_DIRECTORY -> SDLC_FEATURE_DIRECTORY
+SPECIFY_FEATURE_NO_PERSIST -> SDLC_FEATURE_NO_PERSIST
+SPECKIT_PYTHON_EXECUTABLE  -> SDLC_PYTHON_EXECUTABLE
+SPECKIT_PYTHON            -> SDLC_PYTHON
 find_specify_root         -> find_sdlc_root
 resolve_specify_init_dir  -> resolve_sdlc_init_dir
 ```
@@ -44,6 +47,12 @@ resolve_specify_init_dir  -> resolve_sdlc_init_dir
 程序可以执行批量转换，但必须基于明确的标识边界和适用文件分类。实际实施前
 先清点完整的声明与引用；示例不是“除此之外都可以忽略”的清单。新上游出现
 未识别的运行标识时，升级候选必须报告待审项，而不是猜一个目标名称后继续。
+
+`FEATURE_NO_PERSIST` 只投影名称，不改变上游仅接受 `1` / `true` 的条件和默认
+持久化行为。Python 覆盖保留上游 `${SPECKIT_PYTHON_EXECUTABLE:-${SPECKIT_PYTHON:-}}`
+的优先级、空值回退及解释器检测，仅将变量名投影为对应 `SDLC_*`。
+这些映射不会给当前锁定的旧版 Runtime 注入尚不存在的逻辑；是否生效取决于
+实际锁定来源。旧 `SPECIFY_*` / `SPECKIT_*` 名称不因此成为运行时输入别名。
 
 若保留旧环境变量兼容性，必须另行记录别名范围、优先级和冲突处理；新旧值
 冲突不能悄悄选一个。不得在普通产品提示中继续推荐旧变量。

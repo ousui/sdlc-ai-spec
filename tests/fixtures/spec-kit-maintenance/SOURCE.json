@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/github/spec-kit",
+  "tag": "v1.2.1",
+  "commit": "9dca9bf42a031765ee5e5f2371137f2f26967e11",
+  "purpose": "仅用于离线维护回归的原始源码夹具；不进入产品 Runtime，不代表锁定上游已升级",
+  "files": {
+    "scripts/bash/common.sh": "53cb1c23e349db4586c272436ce35c6e2f36a9c0b5351a85e0b216d9887a26b7",
+    "scripts/bash/create-new-feature.sh": "972f03ed8ca5ee17b7baad6d56d821d46269d77abc337496beafb0fe85a725f2",
+    "scripts/bash/check-prerequisites.sh": "38f5e2c8150ee35ee62a5ae3aec66be8bdb15a9805ba20cc3974acdecb6c5e10",
+    "LICENSE": "2510b446bc1f0cf9702453075d20cd88631e20e5642658edb7325d9c1eb534f7"
+  }
+}

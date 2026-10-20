@@ -1,0 +1,194 @@
+{
+  "schema_version": 1,
+  "provenance": {
+    "kind": "synthetic",
+    "profile": "legacy",
+    "purpose": "Reviewed source-path monitoring contract; not upstream runtime code or an installed CLI oracle"
+  },
+  "sources": {
+    "LICENSE": "# Synthetic maintenance fixture: LICENSE\n",
+    "pyproject.toml": "[project]\nname = \"synthetic-maintenance-upstream\"\nversion = \"0.0.1\"\n",
+    "scripts/bash/check-prerequisites.sh": "# Synthetic maintenance fixture: scripts/bash/check-prerequisites.sh\n",
+    "scripts/bash/common.sh": "# Synthetic maintenance fixture: scripts/bash/common.sh\n",
+    "scripts/bash/create-new-feature.sh": "# Synthetic maintenance fixture: scripts/bash/create-new-feature.sh\n",
+    "scripts/bash/resolve-template.sh": "# Synthetic maintenance fixture: scripts/bash/resolve-template.sh\n",
+    "scripts/bash/setup-plan.sh": "# Synthetic maintenance fixture: scripts/bash/setup-plan.sh\n",
+    "scripts/bash/setup-tasks.sh": "# Synthetic maintenance fixture: scripts/bash/setup-tasks.sh\n",
+    "src/specify_cli/_invocation_style.py": "# Synthetic maintenance fixture: src/specify_cli/_invocation_style.py\n",
+    "src/specify_cli/agents.py": "# Synthetic maintenance fixture: src/specify_cli/agents.py\n",
+    "src/specify_cli/commands/init.py": "# Synthetic maintenance fixture: src/specify_cli/commands/init.py\n",
+    "src/specify_cli/events.py": "# Synthetic maintenance fixture: src/specify_cli/events.py\n",
+    "src/specify_cli/integrations/base.py": "# Synthetic maintenance fixture: src/specify_cli/integrations/base.py\n",
+    "src/specify_cli/integrations/claude/__init__.py": "# Synthetic maintenance fixture: src/specify_cli/integrations/claude/__init__.py\n",
+    "src/specify_cli/integrations/codex/__init__.py": "# Synthetic maintenance fixture: src/specify_cli/integrations/codex/__init__.py\n",
+    "src/specify_cli/integrations/cursor_agent/__init__.py": "# Synthetic maintenance fixture: src/specify_cli/integrations/cursor_agent/__init__.py\n",
+    "src/specify_cli/shared_infra.py": "# Synthetic maintenance fixture: src/specify_cli/shared_infra.py\n",
+    "templates/checklist-template.md": "# Synthetic maintenance fixture: templates/checklist-template.md\n",
+    "templates/commands/analyze.md": "# Synthetic maintenance fixture: templates/commands/analyze.md\n",
+    "templates/commands/checklist.md": "# Synthetic maintenance fixture: templates/commands/checklist.md\n",
+    "templates/commands/clarify.md": "# Synthetic maintenance fixture: templates/commands/clarify.md\n",
+    "templates/commands/constitution.md": "# Synthetic maintenance fixture: templates/commands/constitution.md\n",
+    "templates/commands/converge.md": "# Synthetic maintenance fixture: templates/commands/converge.md\n",
+    "templates/commands/implement.md": "# Synthetic maintenance fixture: templates/commands/implement.md\n",
+    "templates/commands/plan.md": "# Synthetic maintenance fixture: templates/commands/plan.md\n",
+    "templates/commands/specify.md": "# Synthetic maintenance fixture: templates/commands/specify.md\n",
+    "templates/commands/tasks.md": "# Synthetic maintenance fixture: templates/commands/tasks.md\n",
+    "templates/constitution-template.md": "# Synthetic maintenance fixture: templates/constitution-template.md\n",
+    "templates/plan-template.md": "# Synthetic maintenance fixture: templates/plan-template.md\n",
+    "templates/spec-template.md": "# Synthetic maintenance fixture: templates/spec-template.md\n",
+    "templates/tasks-template.md": "# Synthetic maintenance fixture: templates/tasks-template.md\n",
+    "templates/commands/taskstoissues.md": "# Synthetic excluded command\n"
+  },
+  "lock": {
+    "repository": "https://example.invalid/synthetic-maintenance-upstream",
+    "tag": "fixture-legacy",
+    "commit": "0000000000000000000000000000000000000000",
+    "script": "sh",
+    "events": false,
+    "presets": [],
+    "extensions": [],
+    "commands": [
+      "constitution",
+      "specify",
+      "clarify",
+      "plan",
+      "tasks",
+      "analyze",
+      "checklist",
+      "implement",
+      "converge"
+    ],
+    "excluded_commands": [
+      "taskstoissues"
+    ],
+    "files": {
+      "LICENSE": {
+        "git_blob": "87244ee2bcd2b0f06a4ca54caa0a0ddeaec6cf98",
+        "sha256": "1eb8ebf6fdcfc22b23d405f8abc737a0f2f1d38147c61be34730959268a1ffdb"
+      },
+      "scripts/bash/check-prerequisites.sh": {
+        "git_blob": "fd6e1d354f50ce20ee7ba36d4f42af4a800d8b0e",
+        "sha256": "581b9ff725aa21edd61bc36bc75e8107523c51e49da3e2681d2cb15cac1d43cf"
+      },
+      "scripts/bash/common.sh": {
+        "git_blob": "9f247af94712d79f22572c068c1a94a5325ee4cb",
+        "sha256": "7368a57e97ae3ce9abdc5cbcda460021e30629b7c00f9dd050be5c645c32be33"
+      },
+      "scripts/bash/create-new-feature.sh": {
+        "git_blob": "e0aaafc34721940c23f855c71afe5cb6cc86d88b",
+        "sha256": "d46bd691b45ea29563251e1373f5301cb535614903c167dca99811347f4cfa1c"
+      },
+      "scripts/bash/resolve-template.sh": {
+        "git_blob": "931b0521c91bb5023055cda911d7f3f1e2d9cc4c",
+        "sha256": "d45d91e43ba9d213074378707b45ad7edfeadc6f3cc5744e501749f02c000e79"
+      },
+      "scripts/bash/setup-plan.sh": {
+        "git_blob": "be20037a6ed6ec5583b7e89354f53ed85f02df41",
+        "sha256": "58406ba49859863ff3306dc6b87362be4e1dd020d8584436d59f48ced2f61ada"
+      },
+      "scripts/bash/setup-tasks.sh": {
+        "git_blob": "81e923ae7a5bdacf27b6a73e0e061b1e011bf491",
+        "sha256": "dee99a2674956b68c04b4974e8f755f9b6c313ded9f36108f19465ffad359342"
+      },
+      "templates/checklist-template.md": {
+        "git_blob": "0242420f3b7661544fccad85fafc007dd00faf6a",
+        "sha256": "64bdf63029539f6a23de2d662212965d1e3e3fda34edd287b75c358dc9a12e67"
+      },
+      "templates/commands/analyze.md": {
+        "git_blob": "8fb822c7d801e30ad398cc623de648a2fdfc708d",
+        "sha256": "5edc190532a457705694935e3da0296faa8d419922d87509541281d9bdd62bf6"
+      },
+      "templates/commands/checklist.md": {
+        "git_blob": "ce4008b62312e713b0b5307ea8eb628792927900",
+        "sha256": "d93e78822b6e579ac946407098fb5d23611228fb8768794c47a0c82455c5d809"
+      },
+      "templates/commands/clarify.md": {
+        "git_blob": "6f4e9bc9e8e576b7256e307be26d3ceff9995280",
+        "sha256": "d791743f9e155cf85ec7a23b1fb8338a74f7b1aab1f9b83c47caf2e140154035"
+      },
+      "templates/commands/constitution.md": {
+        "git_blob": "938e1bbb7f9606a302c57e4bb8a99f54f6998757",
+        "sha256": "3c4c2aa352e7bb6c18b6938a3750b59ddd1f09287850d8f7fc30ef45acb054b6"
+      },
+      "templates/commands/converge.md": {
+        "git_blob": "80cef8050aab74ca1c0b390a71366a1529872787",
+        "sha256": "c97a84da5df47b2a37a6afcd1911aef2ad97bdbc7804a5b9d2981a818fdf6c14"
+      },
+      "templates/commands/implement.md": {
+        "git_blob": "6969b21b870cdb79647eeb046e0acbcf8e2da6fb",
+        "sha256": "c371ba9072a3d8762380ed57d735a1b8b1bcd893f5e04adc82446c52727ce529"
+      },
+      "templates/commands/plan.md": {
+        "git_blob": "e9d97c5fdc9aa024b1b4a22bae341096cd22db44",
+        "sha256": "ea23412f8bc1d42574d95e431ed9d29490e0fc4fa83ef4066c1bec007f223af5"
+      },
+      "templates/commands/specify.md": {
+        "git_blob": "d97a0817101dc0e3fe8788afe7e521b38d2bf39e",
+        "sha256": "a402f09798fd8bde2ad8684f1b6ff9ae5244ba748dbcc52be11a5b563b618015"
+      },
+      "templates/commands/tasks.md": {
+        "git_blob": "8339c3085bd4f84a7401a1092875ee47b719e30f",
+        "sha256": "412f98850a913382fefc82792a1660a61548bff2e97ceaedc74884b429e824e9"
+      },
+      "templates/constitution-template.md": {
+        "git_blob": "1b423b04d49c1583cdb7f6f6f8a18b91f11c7b2e",
+        "sha256": "89415b57cc05ee456b87d6fd6a64f5bd0f41ed508c88dd4614c187ee02faec82"
+      },
+      "templates/plan-template.md": {
+        "git_blob": "87687b70842f9cea6e70aa832563b9632783297d",
+        "sha256": "7a8949e2bdca09315aff05bef6886893644e749b6a36d551d4ff323ac9c6d9b5"
+      },
+      "templates/spec-template.md": {
+        "git_blob": "c4bab757fd732e4a79440bed816e783bb97bf4f3",
+        "sha256": "24f74dd4d8e9a6f0f443574c3c7b4d60054c42c3eb729a09e55585ae8e677ee7"
+      },
+      "templates/tasks-template.md": {
+        "git_blob": "e18ca5a452e9bf24a1d9f56f778c9f14bc7cd9ca",
+        "sha256": "60cb90129368ecc5f15127c5237222a423d98290d9478bddaa6eb470a8ef48a3"
+      }
+    },
+    "watch_files": {
+      "pyproject.toml": {
+        "git_blob": "0cc987e67cdabfd748a1e3552b87624ed09d439b",
+        "sha256": "985e007f62c9d26bda3765f2c6c355bf20fdf9d8630efed669e3090cf721d206"
+      },
+      "src/specify_cli/_invocation_style.py": {
+        "git_blob": "b2d43566efe0579c5e9e5852dd64e3f95de8b618",
+        "sha256": "1cfd741ed4de6e6f39a7cf029acc24864a7a1184981a13d55b0cf1d25254a8c0"
+      },
+      "src/specify_cli/agents.py": {
+        "git_blob": "fa030766f9240125298bcc851e61e54050b6420d",
+        "sha256": "d897f71ddcba24253aba028b2916752a680632cbd448d2e8c6556533bf8e1889"
+      },
+      "src/specify_cli/commands/init.py": {
+        "git_blob": "4f732a0a9f9ab84ddef1613f1887ad58d43cff3b",
+        "sha256": "a52c9ef0cdc7e76515546c0a6f4d7930496b0a34f7a1bca4539be96632db15b4"
+      },
+      "src/specify_cli/events.py": {
+        "git_blob": "81346a863ce2d910dd4a751109449def9f4c8618",
+        "sha256": "796acba5e03c6bacb3b081b24f4567a2c1f9e1354186e940d5b71a700d950599"
+      },
+      "src/specify_cli/integrations/base.py": {
+        "git_blob": "c09a1c06fc31576860abd58f5adb5b62e164f26d",
+        "sha256": "0735643c4b7f5e796ac17bbaee50ce79209bca1fe9ebbd231441d8bc2feb84bb"
+      },
+      "src/specify_cli/integrations/claude/__init__.py": {
+        "git_blob": "77a80edf92a29c009bd22aa7c22273a6e97dd1ae",
+        "sha256": "007a8ab8c30695f3d74c87a5422204c29fbf7bd0ccf83a1e5db0b5370b22ad72"
+      },
+      "src/specify_cli/integrations/codex/__init__.py": {
+        "git_blob": "aa3e9febdd90d22d4940163418c854eb2c978f54",
+        "sha256": "3c2fa8870f3990cfef175f8c9a5d65b676ab210366253df447948eaf88a919d1"
+      },
+      "src/specify_cli/integrations/cursor_agent/__init__.py": {
+        "git_blob": "8dfbe1d2f9021b0abe77fed50af17013510af1fe",
+        "sha256": "3d683dec9070d7f66212de1360588b7f46fc1836748e8445162b13fd54daaf60"
+      },
+      "src/specify_cli/shared_infra.py": {
+        "git_blob": "b3b720bf7c8652577d5b0e79f4edf4b361ced877",
+        "sha256": "4c556b7409162422dd4b113e29fe599a6c498e32df66e3a251ada401118d54ba"
+      }
+    },
+    "version": "0.0.1"
+  }
+}

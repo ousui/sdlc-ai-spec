@@ -1,10 +1,10 @@
 {
   "repository": "https://github.com/github/spec-kit",
-  "tag": "v1.0.7",
-  "version": "1.0.7",
-  "commit": "fe1d00e3ccaf495880aaf90fb0e17679e82f065b",
+  "tag": "v1.2.1",
+  "version": "1.2.1",
+  "commit": "9dca9bf42a031765ee5e5f2371137f2f26967e11",
   "port_repository": "https://github.com/goedgecloud/sdlc-ai-spec",
-  "port_version": "1.0.7-sdlc.1",
+  "port_version": "1.2.1-sdlc.1",
   "port_revision": 1,
   "port_author": "Blade",
   "profile": {

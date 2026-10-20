@@ -18,6 +18,9 @@ EXPECTED = {
 IDENTIFIERS = {
     'SPECIFY_INIT_DIR': 'SDLC_INIT_DIR', 'SPECIFY_FEATURE': 'SDLC_FEATURE',
     'SPECIFY_FEATURE_DIRECTORY': 'SDLC_FEATURE_DIRECTORY',
+    'SPECIFY_FEATURE_NO_PERSIST': 'SDLC_FEATURE_NO_PERSIST',
+    'SPECKIT_PYTHON_EXECUTABLE': 'SDLC_PYTHON_EXECUTABLE',
+    'SPECKIT_PYTHON': 'SDLC_PYTHON',
     'find_specify_root': 'find_sdlc_root', 'resolve_specify_init_dir': 'resolve_sdlc_init_dir',
     'format_speckit_command': 'format_sdlc_command',
     'SPECKIT_EXTENSIONS': 'SDLC_EXTENSIONS', 'SPECKIT_REGISTRY': 'SDLC_REGISTRY',

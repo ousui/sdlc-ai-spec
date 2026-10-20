@@ -88,6 +88,27 @@ git diff --check
 Claude 或 Cursor。其项目设置和宪法与本地 `sdlc-000-init` 输出独立比较；宿主注册表
 和已安装工具资源明确排除在外。每次都使用新的空基线目录。
 
+`tests/fixtures/spec-kit-maintenance/` 是带 MIT 许可证、准确来源提交及字节摘要的
+离线上游 Bash 夹具，仅用于维护回归，不改变锁定上游或产品 Runtime。测试通过真实
+`port_script` 生成临时脚本，与原始脚本比较返回码、stdout、stderr、需求选择写入
+及生成文件，并覆盖解释器选择与失败分支。持久化字段在路径呈现投影前精确验证其
+实际目标，随后移除目录覆盖变量并再次读取需求上下文；只读场景继续检查字节与
+mtime 不变。Unicode 创建会执行真实脚本并记录所选解释器，其 Python 3 快速路径
+不要求 PyYAML，不能与公共 helper 的 YAML 探测条件混同。
+
+另有故意破坏不持久化开关、存储路径、后续读取、两处解释器优先级和 YAML 探测的
+负向用例，证明这些偏差确实会使对应契约断言失败。
+
+这些源码夹具不代替已安装 CLI 的独立基线。夹具来源与期望摘要在测试中分别固定，
+不能用派生输出构造 oracle，不能为消除失败而改写原始夹具或重算期望。更新来源需
+单独审查，许可证和 provenance 必须一并保留。
+
+来源监视回归另使用 `tests/fixtures/upstream-maintenance/` 的固定合成 legacy/
+reorganized 输入及独立锁，不读取活动 `src/upstream` 和 `upstream.lock.json`。
+这些输入只验证路径、来源摘要和审查记录契约，不冒充上游 Runtime 或 CLI 基线。
+产品升级不得刷新这两套夹具；旧/新布局的歧义、缺失、未知迁移、逐来源变异及
+核心初始化行为负向断言均需保留。
+
 ## CI 与证据
 
 `.github/workflows/engineering.yml` 在 Ubuntu 24.04 和 macOS 15 ARM64 执行同一

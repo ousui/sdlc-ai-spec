@@ -91,8 +91,8 @@
     "@@SDLC_BIND_0095@@": "/sdlc-ai-spec:",
     "@@SDLC_BIND_0105@@": "laude",
     "@@SDLC_BIND_0111@@": "/sdlc-ai-spec:sdlc-100-spec`，缺方案用 `/sdlc-ai-spec:sdlc-200-plan`，缺任务用 `/sdlc-ai-spec:",
-    "@@SDLC_BIND_0218@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0232@@": "/sdlc-ai-spec:"
+    "@@SDLC_BIND_0220@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0234@@": "/sdlc-ai-spec:"
   },
   "sdlc-000-init": {
     "@@SDLC_BIND_0002@@": "laude",

@@ -55,16 +55,6 @@ def port_script(name: str,text: str) -> str:
     return script_projection(text)
 
 
-WATCHED = (
-    'pyproject.toml', 'src/specify_cli/integrations/base.py', 'src/specify_cli/agents.py',
-    'src/specify_cli/integrations/codex/__init__.py',
-    'src/specify_cli/integrations/claude/__init__.py',
-    'src/specify_cli/integrations/cursor_agent/__init__.py',
-    'src/specify_cli/_invocation_style.py', 'src/specify_cli/events.py',
-    'src/specify_cli/commands/init.py', 'src/specify_cli/shared_infra.py',
-)
-
-
 def record(data: bytes) -> dict:
     return {'git_blob': hashlib.sha1(b'blob '+str(len(data)).encode()+b'\0'+data).hexdigest(),
             'sha256': hashlib.sha256(data).hexdigest()}

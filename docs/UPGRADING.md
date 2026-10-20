@@ -146,7 +146,7 @@ JSON 审查是显式本地流程记录，不是加密身份证明，也不是防
 ## 升级中的本地初始化器
 
 `init` 是本地命令，不属于上游命令清单。候选生成必须保留 `src/adapters/INIT.md`、
-`src/scripts/python/init_project.py` 及其测试。受监视上游 `commands/init.py`
+`src/scripts/python/init_project.py` 及其测试。受监视上游 `src/specify_cli/command_init.py`
 变化时，审查项目数据映射（模板初始化和默认值），不盲目复制安装器。
 重复初始化不将已有项目重写为新上游版本，也不重置文档；布局不兼容需单独迁移，
 绝不是插件安装的隐式动作。

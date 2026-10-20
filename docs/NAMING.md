@@ -51,8 +51,8 @@ resolve_specify_init_dir  -> resolve_sdlc_init_dir
 `FEATURE_NO_PERSIST` 只投影名称，不改变上游仅接受 `1` / `true` 的条件和默认
 持久化行为。Python 覆盖保留上游 `${SPECKIT_PYTHON_EXECUTABLE:-${SPECKIT_PYTHON:-}}`
 的优先级、空值回退及解释器检测，仅将变量名投影为对应 `SDLC_*`。
-这些映射不会给当前锁定的旧版 Runtime 注入尚不存在的逻辑；是否生效取决于
-实际锁定来源。旧 `SPECIFY_*` / `SPECKIT_*` 名称不因此成为运行时输入别名。
+这些映射只作用于实际锁定来源中已存在的逻辑，不向 Runtime 注入其他版本行为。
+旧 `SPECIFY_*` / `SPECKIT_*` 名称不因此成为运行时输入别名。
 
 若保留旧环境变量兼容性，必须另行记录别名范围、优先级和冲突处理；新旧值
 冲突不能悄悄选一个。不得在普通产品提示中继续推荐旧变量。

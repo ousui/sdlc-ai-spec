@@ -66,7 +66,7 @@ Windows/PowerShell；同一需求的并发写入；旧数据迁移；GitHub 操�
 
 ## 本地 INIT 来源依据
 
-参考来源是锁定的 `src/specify_cli/commands/init.py`：其
+参考来源是锁定的 `src/specify_cli/command_init.py`：其
 `ensure_constitution_from_template` 只创建缺失的宪法，`init_opts` 持久化脚本、
 编号和上游版本默认值。本项目保留这些项目数据行为及项目覆盖优先级。Agent 注册表、
 CLI/集成设置、共享脚本/模板、presets、events 和 Git 创建明确不纳入项目初始化移植。

@@ -79,6 +79,28 @@ class CutContractTests(unittest.TestCase):
         result = json.loads(proc.stdout)
         self.assertEqual(Path(result["operation_directory"]).parent, self.project / "cut-work")
 
+    def test_build_excludes_existing_independent_skill_python_cache(self):
+        candidate = Path(self.temp.name) / "isolated-build"
+        candidate.mkdir()
+        for directory in ("src", "tools"):
+            shutil.copytree(ROOT / directory, candidate / directory,
+                            ignore=shutil.ignore_patterns("__pycache__", "*.pyc"))
+        (candidate / "docs").mkdir()
+        shutil.copyfile(ROOT / "docs/naming-map.json", candidate / "docs/naming-map.json")
+        for name in ("plugin-metadata.json", "upstream.lock.json", "CHANGELOG.md", "LICENSE",
+                     "NOTICE", "pyproject.toml", "uv.lock", ".python-version"):
+            shutil.copyfile(ROOT / name, candidate / name)
+        cache = candidate / "src/skills/sdlc-cut/scripts/__pycache__"
+        cache.mkdir()
+        (cache / "cut.cpython-312.pyc").write_bytes(b"\x00\xff\x80 synthetic cache")
+        (candidate / "src/skills/sdlc-cut/scripts/stray.pyc").write_bytes(b"\x00\xff stray cache")
+        proc = subprocess.run([sys.executable, "-B", str(candidate / "tools/build.py")],
+                              cwd=candidate, text=True, capture_output=True, check=False)
+        self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertTrue((candidate / "dist/skills/sdlc-cut/scripts/cut.py").is_file())
+        self.assertFalse(any("__pycache__" in p.parts or p.suffix == ".pyc"
+                             for p in (candidate / "dist").rglob("*")))
+
     def _record(self, op):
         return json.loads((op / "cut.json").read_text())
 
@@ -90,6 +112,12 @@ class CutContractTests(unittest.TestCase):
         write(path, content)
         record["draft_files"].append({"target": key, "path": name,
                                       "sha256": CUT.digest(path.read_bytes())})
+
+    def _replace_draft(self, op, record, key, name, content):
+        path = op / "draft" / key / name
+        write(path, content)
+        entry = next(x for x in record["draft_files"] if x["target"] == key and x["path"] == name)
+        entry["sha256"] = CUT.digest(path.read_bytes())
 
     def make_intake(self):
         write(self.project / "input/requirements.md", "先交付明细。\n后交付汇总并核对整体结果。\n")
@@ -120,14 +148,19 @@ class CutContractTests(unittest.TestCase):
         self._save(op, record)
         return op
 
-    def make_feature(self, with_tasks=False, observe_code=()):
+    def make_feature(self, with_tasks=False, observe_code=(), task_suffix="", checklist_text=None,
+                     binary_attachment=None):
         source = self.project / ".sdlc/specs/002-demo"
         source.mkdir(parents=True)
         write(source / "spec.md", "# 服务范围\nFR-001 明细查询。\nFR-002 汇总。\nSC-001 整体一致性。\n")
         write(self.project / ".sdlc/feature.json", '{"feature_directory":".sdlc/specs/002-demo"}\n')
+        if binary_attachment is not None:
+            path = source / "diagram.png"
+            path.write_bytes(binary_attachment)
         if with_tasks:
-            write(source / "tasks.md", "- [x] T001 已完成明细基础。\n- [ ] T002 汇总未完成。\n")
-            write(source / "checklists/review.md", "- [x] 已核对明细条件。\n- [ ] 整体发布仍待评审。\n")
+            write(source / "tasks.md", "- [x] T001 已完成明细基础。\n- [ ] T002 汇总未完成。\n" + task_suffix)
+            write(source / "checklists/review.md", checklist_text or
+                  "- [x] 已核对明细条件。\n- [ ] 整体发布仍待评审。\n")
             write(source / "plan.md", "# 原方案\n明细与汇总共用数据接口。\n")
         code, output = invoke("inspect", "--project", self.project, "--kind", "feature",
                               "--source", ".sdlc/specs/002-demo", "--workspace", ".sdlc/cuts/cut-demo",
@@ -262,6 +295,183 @@ class CutContractTests(unittest.TestCase):
                          [{"line": 6, "anchor": "T001", "checked": False}])
         self.assertEqual(CUT.boxes(checklist_text, False),
                          [{"line": 6, "anchor": None, "checked": False}])
+
+    def test_checked_mapping_requires_matching_source_and_target_evidence(self):
+        op = self.make_feature(with_tasks=True)
+        record = self._record(op)
+        self._replace_draft(op, record, "B", "tasks.md", "- [x] T001 汇总实现已承接。\n")
+        record["task_mapping"][1]["destinations"][0]["checked"] = True
+        tasks_id = self._file_id(record, "tasks.md")
+        record["carryover"].append({
+            "id": "C003", "source_ref": {"file": tasks_id, "anchor": "T002"}, "targets": ["A"],
+            "claim": "汇总已实现", "evidence": ["合成证据"], "applicability": "仅 A", "remaining": "待核验"})
+        record["task_mapping"][1]["carryover_ids"] = ["C003"]
+        self._save(op, record)
+        code, result = invoke("validate", "--operation", op)
+        self.assertEqual(code, 3, result)
+        self.assertIn("缺少适用的 carryover", result["errors"][0])
+
+        record["carryover"][-1]["targets"] = ["B"]
+        record["carryover"][-1]["source_ref"]["anchor"] = "T001"
+        self._save(op, record)
+        code, result = invoke("validate", "--operation", op)
+        self.assertEqual(code, 3, result)
+        self.assertIn("不对应来源条目", result["errors"][0])
+
+        record["carryover"][-1]["source_ref"]["anchor"] = "T002"
+        self._save(op, record)
+        self._validated_sha(op)
+
+    def test_explicitly_shared_carryover_can_support_two_successors(self):
+        op = self.make_feature(with_tasks=True)
+        record = self._record(op)
+        self._replace_draft(op, record, "B", "checklists/review.md",
+                            "- [ ] 整体发布仍待评审。\n- [x] 已核对明细条件。\n")
+        record["items"][5]["targets"] = ["A", "B"]
+        record["items"][5]["disposition"] = "shared"
+        record["carryover"][1]["targets"] = ["A", "B"]
+        record["checklist_mapping"][0]["destinations"].append({
+            "target": "B", "path": "checklists/review.md", "lines": [2, 2], "checked": True})
+        self._save(op, record)
+        self._validated_sha(op)
+
+    def test_unmapped_checked_successor_task_and_checklist_are_rejected(self):
+        op = self.make_feature(with_tasks=True)
+        record = self._record(op)
+        self._replace_draft(op, record, "A", "tasks.md",
+                            "- [x] T001 承接明细基础。\n- [x] T999 发布隔离已完成。\n")
+        self._save(op, record)
+        code, result = invoke("validate", "--operation", op)
+        self.assertEqual(code, 3, result)
+        self.assertIn("已勾选但未映射", result["errors"][0])
+        code, result = invoke("apply", "--operation", op,
+                              "--expected-plan-sha", CUT.plan_manifest(op)[0])
+        self.assertEqual((code, result["status"]), (3, "not_applied"), result)
+        self.assertFalse((self.project / ".sdlc/specs/003-a").exists())
+
+        self._replace_draft(op, record, "A", "tasks.md", "- [x] T001 承接明细基础。\n")
+        self._replace_draft(op, record, "A", "checklists/review.md",
+                            "- [x] 已核对明细条件。\n- [x] 新增评审已通过。\n")
+        self._save(op, record)
+        code, result = invoke("validate", "--operation", op)
+        self.assertEqual(code, 3, result)
+        self.assertIn("已勾选但未映射", result["errors"][0])
+
+    def test_inline_comment_and_story_heading_require_real_mapping(self):
+        extra = "## User Story 3 - 示例 查询\n- [ ] T003 校验导出权限。 <!-- 后续补充说明 -->\n"
+        op = self.make_feature(with_tasks=True, task_suffix=extra)
+        record = self._record(op)
+        code, result = invoke("validate", "--operation", op)
+        self.assertEqual(code, 3, result)
+        self.assertIn("未映射", result["errors"][0])
+
+        self._replace_draft(op, record, "B", "tasks.md",
+                            "- [ ] T001 实施汇总并验收整体。\n- [ ] T002 校验导出权限。\n")
+        tasks_id = self._file_id(record, "tasks.md")
+        record["items"].append({"id": "I008", "source_ref": {"file": tasks_id, "anchor": "T003"},
+                                "kind": "task", "targets": ["B"], "disposition": "assigned",
+                                "reason": "B 继续权限校验"})
+        record["task_mapping"].append({
+            "source_ref": {"file": tasks_id, "anchor": "T003"}, "source_checked": False,
+            "destinations": [{"target": "B", "path": "tasks.md", "anchor": "T002", "checked": False}],
+            "carryover_ids": [], "reason": "可见任务继续由 B 处理"})
+        self._save(op, record)
+        self._validated_sha(op)
+
+    def test_multiline_comments_and_fences_preserve_only_visible_boxes(self):
+        text = "\n".join([
+            "- [ ] T001 可见 <!-- 行内说明 -->", "<!-- 多行注释", "- [x] T999 隐藏",
+            "--> - [ ] T002 可见", "```md", "- [x] T998 代码示例", "```",
+            "## Examples", "- [x] T997 文档示例", "## User Story 3 - 示例 查询",
+            "- [ ] T003 真实任务 <!-- 说明", "延续说明 -->", "",
+        ])
+        self.assertEqual(CUT.boxes(text, True), [
+            {"line": 1, "anchor": "T001", "checked": False},
+            {"line": 4, "anchor": "T002", "checked": False},
+            {"line": 11, "anchor": "T003", "checked": False},
+        ])
+
+    def test_numbered_checklist_anchors_and_line_fallback(self):
+        numbered = "- [x] CHK001 已核对明细条件。\n- [ ] CHK002 整体发布仍待评审。\n"
+        op = self.make_feature(with_tasks=True, checklist_text=numbered)
+        record = self._record(op)
+        self._replace_draft(op, record, "A", "checklists/review.md", "- [x] CHK001 已核对明细条件。\n")
+        self._replace_draft(op, record, "B", "checklists/review.md", "- [ ] CHK002 整体发布仍待评审。\n")
+        record["checklist_mapping"][0]["source_ref"] = {
+            "file": self._file_id(record, "checklists/review.md"), "anchor": "CHK001"}
+        record["checklist_mapping"][0]["destinations"][0].pop("lines")
+        record["checklist_mapping"][0]["destinations"][0]["anchor"] = "CHK001"
+        record["checklist_mapping"][1]["destinations"][0].pop("lines")
+        record["checklist_mapping"][1]["destinations"][0]["anchor"] = "CHK002"
+        record["carryover"][1]["source_ref"] = {
+            "file": self._file_id(record, "checklists/review.md"), "anchor": "CHK001"}
+        self._save(op, record)
+        self._validated_sha(op)
+
+        self._replace_draft(op, record, "A", "checklists/review.md",
+                            "- [x] CHK001 已核对明细条件。\n- [ ] CHK001 重复编号。\n")
+        self._save(op, record)
+        code, result = invoke("validate", "--operation", op)
+        self.assertEqual(code, 3, result)
+        self.assertIn("ID 重复", result["errors"][0])
+
+    def test_duplicate_source_checklist_id_is_rejected(self):
+        op = self.make_feature(with_tasks=True,
+                               checklist_text="- [x] CHK001 已核对。\n- [ ] CHK001 待评审。\n")
+        code, result = invoke("validate", "--operation", op)
+        self.assertEqual(code, 3, result)
+        self.assertIn("ID 重复", result["errors"][0])
+
+    def test_binary_attachment_whole_file_reference_only(self):
+        op = self.make_feature(binary_attachment=b"\x89PNG\r\n\x1a\n\xff")
+        record = self._record(op)
+        fid = self._file_id(record, "diagram.png")
+        record["items"].append({"id": "I999", "source_ref": {"file": fid}, "kind": "artifact",
+                                "targets": ["A"], "disposition": "assigned", "reason": "A 承接原图"})
+        self._save(op, record)
+        self._validated_sha(op)
+        for locator in ({"anchor": "FR-001"}, {"lines": [1, 1]}):
+            with self.subTest(locator=locator):
+                record["items"][-1]["source_ref"] = {"file": fid, **locator}
+                self._save(op, record)
+                code, result = invoke("validate", "--operation", op)
+                self.assertEqual(code, 3, result)
+                self.assertIn("不是 UTF-8 文本", result["errors"][0])
+
+    def test_failed_initial_feature_preview_does_not_block_retries(self):
+        for name in ("002-demo", "005-another"):
+            write(self.project / ".sdlc/specs" / name / "spec.md", "# 合成来源\n")
+        args = ("inspect", "--project", self.project, "--kind", "feature",
+                "--source", ".sdlc/specs/002-demo", "--workspace", ".sdlc/cuts/cut-invalid")
+        code, result = invoke(*args, "--observe-code", "missing.py")
+        self.assertEqual(code, 2, result)
+        self.assertFalse((self.project / ".sdlc/cuts/cut-invalid").exists())
+        self.assertEqual([p.name for p in (self.project / ".sdlc/cuts").iterdir()], [".apply.lock"])
+        code, result = invoke(*args)
+        self.assertEqual((code, result["status"]), (0, "preview_created"), result)
+        code, result = invoke("inspect", "--project", self.project, "--kind", "feature",
+                              "--source", ".sdlc/specs/005-another", "--workspace", ".sdlc/cuts/cut-other")
+        self.assertEqual((code, result["status"]), (0, "preview_created"), result)
+
+    def test_failed_staged_preview_write_leaves_no_operation(self):
+        write(self.project / ".sdlc/specs/002-demo/spec.md", "# 合成来源\n")
+        op = self.project / ".sdlc/cuts/cut-failed-write"
+        original = CUT.write_new
+
+        def fail_template(path, data):
+            if path.name == "cut.md":
+                raise OSError("injected initial write failure")
+            return original(path, data)
+
+        with CUT.locked(self.project, "feature", op):
+            with patch.object(CUT, "write_new", side_effect=fail_template):
+                with self.assertRaises(OSError):
+                    CUT.create_preview(self.project, "feature", op, [".sdlc/specs/002-demo"], [])
+        self.assertFalse(op.exists())
+        self.assertEqual(list((self.project / ".sdlc").glob(".cut-preview-*")), [])
+        code, result = invoke("inspect", "--project", self.project, "--kind", "feature",
+                              "--source", ".sdlc/specs/002-demo", "--workspace", ".sdlc/cuts/cut-retry")
+        self.assertEqual((code, result["status"]), (0, "preview_created"), result)
 
     def test_drift_and_target_conflict(self):
         for change in ("source", "new-source", "draft", "target"):

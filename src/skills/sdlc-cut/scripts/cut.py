@@ -28,6 +28,7 @@ KEY = re.compile(r"^[A-Za-z][A-Za-z0-9_-]*$")
 ANCHOR = re.compile(r"^(?:NFR|FR|SC|US|CHK)-?\d+[A-Za-z0-9_-]*$|^T\d{3,}$")
 BOX = re.compile(r"^\s*[-*+]\s+\[([ xX])\]\s+")
 TASK = re.compile(r"^\s*[-*+]\s+\[([ xX])\]\s+(T\d{3,})\b")
+CHECKLIST = re.compile(r"^\s*[-*+]\s+\[([ xX])\]\s+(CHK-?\d+[A-Za-z0-9_-]*)(?![A-Za-z0-9_-])")
 
 
 class CutError(Exception):
@@ -416,12 +417,18 @@ def refresh_preview(project: Path, kind: str, operation: Path, names: list[str],
 def create_preview(project: Path, kind: str, operation: Path, names: list[str], code_names: list[str]) -> dict[str, Any]:
     check(not operation.exists() and not operation.is_symlink(), f"操作目录已占用：{operation}")
     source, files, snapshots = collect(project, kind, names, operation, "initial")
-    operation.mkdir()
-    save_snapshots(operation, snapshots)
     record = initial_record(project, kind, operation, source, files, code_info(project, code_names))
-    write_new(operation / "cut.json", json_data(record))
     template = Path(__file__).resolve().parent.parent / "assets" / "cut-plan.md"
-    write_new(operation / "cut.md", raw_file(template))
+    template_data = raw_file(template)
+    # Publish the initial record only after every input and file write succeeds.
+    # A failed preview must not leave a recordless child under .sdlc/cuts.
+    with tempfile.TemporaryDirectory(prefix=".cut-preview-", dir=operation.parent.parent) as tmp:
+        stage = Path(tmp)
+        save_snapshots(stage, snapshots)
+        write_new(stage / "cut.json", json_data(record))
+        write_new(stage / "cut.md", template_data)
+        check(not operation.exists() and not operation.is_symlink(), f"操作目录已占用：{operation}")
+        os.rename(stage, operation)
     return {"command": "inspect", "status": "preview_created", "operation_directory": str(operation),
             "source_files": files, "errors": [], "limitations": record["observed_code"]["limitations"]}
 
@@ -760,8 +767,11 @@ def source_ref(value: Any, sources: dict[str, tuple[dict[str, Any], bytes]], lab
     check(set(value) in ({"file"}, {"file", "anchor"}, {"file", "lines"}), f"{label} 定位字段无效", 2)
     fid = nonempty(value.get("file"), f"{label}.file")
     check(fid in sources, f"{label} 引用未知来源文件：{fid}")
-    data = sources[fid][1]
-    check(data, f"{label} 引用的来源没有快照")
+    entry, data = sources[fid]
+    check(entry["snapshot_path"] is not None, f"{label} 引用的来源没有快照")
+    if set(value) == {"file"}:
+        return fid, None
+    check(data, f"{label} 引用的来源没有可定位文本")
     try:
         text = data.decode("utf-8")
     except UnicodeError as exc:
@@ -777,7 +787,7 @@ def source_ref(value: Any, sources: dict[str, tuple[dict[str, Any], bytes]], lab
         check(isinstance(lines, list) and len(lines) == 2 and all(type(x) is int for x in lines), f"{label}.lines 格式错误", 2)
         check(1 <= lines[0] <= lines[1] <= len(text.splitlines()), f"{label}.lines 越界")
         return fid, lines[0]
-    return fid, None
+    raise CutError(f"{label} 定位字段无效", 2)
 
 
 def check_items(record: dict[str, Any], sources: dict[str, tuple[dict[str, Any], bytes]],
@@ -811,32 +821,46 @@ def boxes(text: str, task_mode: bool) -> list[dict[str, Any]]:
     comment = False
     example_level = None
     for number, raw in enumerate(text.splitlines(), 1):
-        line = raw
-        stripped = line.lstrip()
-        opening = re.match(r"^(`{3,}|~{3,})", stripped)
-        if opening and fence is None:
-            token = opening.group(1)
-            fence = (token[0], len(token))
-            continue
         if fence is not None:
+            stripped = raw.lstrip()
+            opening = re.match(r"^(`{3,}|~{3,})", stripped)
             if opening:
                 token = opening.group(1)
                 if (token[0] == fence[0] and len(token) >= fence[1]
                         and not stripped[opening.end():].strip()):
                     fence = None
             continue
-        if "<!--" in line:
-            comment = True
-        if comment:
-            if "-->" in line:
+        visible = []
+        pos = 0
+        while pos < len(raw):
+            if comment:
+                end = raw.find("-->", pos)
+                if end < 0:
+                    break
                 comment = False
+                pos = end + 3
+            else:
+                start = raw.find("<!--", pos)
+                if start < 0:
+                    visible.append(raw[pos:])
+                    break
+                visible.append(raw[pos:start])
+                comment = True
+                pos = start + 4
+        line = "".join(visible)
+        stripped = line.lstrip()
+        opening = re.match(r"^(`{3,}|~{3,})", stripped)
+        if opening:
+            token = opening.group(1)
+            fence = (token[0], len(token))
             continue
         heading = re.match(r"^(#{1,6})\s+(.+)", line)
         if heading:
             level = len(heading.group(1))
             if example_level is not None and level <= example_level:
                 example_level = None
-            if re.search(r"(?:^|\s)(?:Examples?|示例)(?:\s|:|：|$)", heading.group(2), re.I):
+            if re.match(r"^(?:\d+[.)]\s*)?(?:parallel\s+examples?|usage\s+examples?|Examples?|示例|用法示例|并行示例)(?:\s|:|：|$)",
+                        heading.group(2).strip(), re.I):
                 example_level = level
             continue
         if example_level is not None:
@@ -844,24 +868,24 @@ def boxes(text: str, task_mode: bool) -> list[dict[str, Any]]:
         match = BOX.match(line)
         if not match:
             continue
-        task = TASK.match(line) if task_mode else None
-        result.append({"line": number, "anchor": task.group(2) if task else None,
+        anchored = (TASK if task_mode else CHECKLIST).match(line)
+        result.append({"line": number, "anchor": anchored.group(2) if anchored else None,
                        "checked": match.group(1).lower() == "x"})
     return result
 
 
 def check_carryover(record: dict[str, Any], sources: dict[str, tuple[dict[str, Any], bytes]],
-                    targets: dict[str, Path]) -> set[str]:
-    ids: set[str] = set()
+                    targets: dict[str, Path]) -> dict[str, tuple[str, int | str | None, set[str]]]:
+    entries: dict[str, tuple[str, int | str | None, set[str]]] = {}
     for item in record["carryover"]:
         object_fields(item, {"id", "source_ref", "targets", "claim", "evidence", "applicability", "remaining"}, "carryover")
         name = nonempty(item["id"], "carryover.id")
-        check(name not in ids, "carryover ID 重复", 2)
-        ids.add(name)
-        source_ref(item["source_ref"], sources, f"carryover {name}")
+        check(name not in entries, "carryover ID 重复", 2)
+        source = source_ref(item["source_ref"], sources, f"carryover {name}")
         values = array(item["targets"], f"carryover {name}.targets")
         check(values and len(values) == len(set(values)) and all(x in targets for x in values),
               f"carryover {name} 目标无效")
+        entries[name] = (source[0], source[1], set(values))
         for key in ("claim", "applicability", "remaining"):
             nonempty(item[key], f"carryover {name}.{key}")
         evidence = item["evidence"]
@@ -873,12 +897,13 @@ def check_carryover(record: dict[str, Any], sources: dict[str, tuple[dict[str, A
                     source_ref(value, sources, f"carryover {name}.evidence")
                 else:
                     nonempty(value, f"carryover {name}.evidence")
-    return ids
+    return entries
 
 
 def check_mappings(record: dict[str, Any], operation: Path,
                    sources: dict[str, tuple[dict[str, Any], bytes]], targets: dict[str, Path],
-                   item_refs: set[tuple[str, int | str | None, str]], carry_ids: set[str]) -> None:
+                   item_refs: set[tuple[str, int | str | None, str]],
+                   carryovers: dict[str, tuple[str, int | str | None, set[str]]]) -> None:
     source_boxes: dict[tuple[str, str], list[dict[str, Any]]] = {}
     for fid, (entry, data) in sources.items():
         path = entry["path"]
@@ -890,8 +915,24 @@ def check_mappings(record: dict[str, Any], operation: Path,
                 source_boxes[(fid, category)] = boxes(data.decode("utf-8"), category == "task")
             except UnicodeError as exc:
                 raise CutError(f"任务或清单不是 UTF-8：{path}") from exc
+    for (fid, category), rows in source_boxes.items():
+        ids = [x["anchor"] for x in rows if x["anchor"]]
+        check(len(ids) == len(set(ids)), f"来源 {fid} {category} ID 重复")
     covered: set[tuple[str, str, int]] = set()
     dest_cache: dict[tuple[str, str, str], list[dict[str, Any]]] = {}
+    for draft in record["draft_files"]:
+        key, name = draft["target"], draft["path"]
+        category = "task" if name == "tasks.md" else "checklist" if name.startswith("checklists/") and name.endswith(".md") else None
+        if category:
+            draft_name = f"draft/{key}/{name}"
+            try:
+                dest_cache[(key, name, category)] = boxes(raw_file(within(operation, draft_name, "draft_files.path")).decode("utf-8"),
+                                                         category == "task")
+            except UnicodeError as exc:
+                raise CutError(f"目标任务或清单不是 UTF-8：{draft_name}") from exc
+            ids = [x["anchor"] for x in dest_cache[(key, name, category)] if x["anchor"]]
+            check(len(ids) == len(set(ids)), f"后继 {key}/{name} {category} ID 重复")
+    checked_destinations: set[tuple[str, str, str, int]] = set()
     for category, rows in (("task", record["task_mapping"]), ("checklist", record["checklist_mapping"])):
         for row in rows:
             object_fields(row, {"source_ref", "source_checked", "destinations", "carryover_ids", "reason"}, f"{category}_mapping")
@@ -910,7 +951,13 @@ def check_mappings(record: dict[str, Any], operation: Path,
                   f"来源 {category} 条目缺少 items 处置：{fid}/{locator}")
             nonempty(row["reason"], f"{category}_mapping.reason")
             carry = array(row["carryover_ids"], f"{category}_mapping.carryover_ids")
-            check(all(x in carry_ids for x in carry), "mapping 引用未知 carryover")
+            check(len(carry) == len(set(carry)) and all(x in carryovers for x in carry),
+                  "mapping 引用未知或重复 carryover")
+            for carry_id in carry:
+                evidence_fid, evidence_locator, _ = carryovers[carry_id]
+                check(evidence_fid == fid and evidence_locator is not None and
+                      evidence_locator in (source_box["line"], source_box["anchor"]),
+                      f"{category}_mapping 引用的 carryover {carry_id} 不对应来源条目")
             destinations = array(row["destinations"], f"{category}_mapping.destinations")
             for dest in destinations:
                 check(isinstance(dest, dict) and set(dest) in ({"target", "path", "anchor", "checked"},
@@ -927,11 +974,7 @@ def check_mappings(record: dict[str, Any], operation: Path,
                 else:
                     check(name.startswith("checklists/") and name.endswith(".md"), "清单目标必须位于 checklists/")
                 cache_key = (key, name, category)
-                if cache_key not in dest_cache:
-                    try:
-                        dest_cache[cache_key] = boxes(raw_file(path).decode("utf-8"), category == "task")
-                    except UnicodeError as exc:
-                        raise CutError(f"目标任务或清单不是 UTF-8：{draft_name}") from exc
+                check(cache_key in dest_cache, f"mapping destination 未登记为草稿：{draft_name}")
                 dest_boxes = dest_cache[cache_key]
                 if "anchor" in dest:
                     anchor = nonempty(dest["anchor"], "destination.anchor")
@@ -946,7 +989,9 @@ def check_mappings(record: dict[str, Any], operation: Path,
                 bool_value(dest["checked"], "destination.checked")
                 check(dest["checked"] == found_dest[0]["checked"], "目标勾选值不符")
                 if dest["checked"]:
-                    check(carry, "继承已勾选任务或清单必须有 carryover")
+                    check(any(key in carryovers[carry_id][2] for carry_id in carry),
+                          f"后继 {key}/{name} 已勾选条目缺少适用的 carryover")
+                    checked_destinations.add((key, name, category, found_dest[0]["line"]))
             if not destinations:
                 item = [x for x in record["items"] if x["kind"] == category and x["source_ref"] == row["source_ref"]]
                 check(item and item[0]["disposition"] == "excluded", "无目标的 mapping 须有明确排除决定")
@@ -955,9 +1000,11 @@ def check_mappings(record: dict[str, Any], operation: Path,
             check((fid, category, row["line"]) in covered,
                   f"来源 {category} 复选框未映射：{fid} 第 {row['line']} 行")
     for (key, name, category), rows in dest_cache.items():
+        for row in rows:
+            if row["checked"]:
+                check((key, name, category, row["line"]) in checked_destinations,
+                      f"后继 {key}/{name} 第 {row['line']} 行已勾选但未映射或缺少 carryover")
         if category == "task":
-            ids = [x["anchor"] for x in rows if x["anchor"]]
-            check(len(ids) == len(set(ids)), f"后继 {key}/{name} 任务 ID 重复")
             check(all(x["anchor"] for x in rows), f"后继 {key}/{name} 存在未知任务格式")
 
 

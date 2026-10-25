@@ -159,7 +159,7 @@ observed_code：
 
 旧记录没有 vcs 分层时不补造历史状态：已完成操作的成功重试仍按原回执处理；含相关代码观察的旧预览须重新 `inspect` 并复核方案，已开始发布的旧操作须保留原回执并人工核查写入范围。重新观察会改变方案摘要并撤销旧的应用授权和内容复核结论。
 
-carryover 每项含 id、source_ref、targets、claim、evidence、applicability、remaining。evidence 是可定位的文字/路径或来源引用列表。适用已完成任务或评审勾选必须引用对应 carryover；有记录不等于程序认定证据充分。
+carryover 每项含 id、source_ref、targets、claim、evidence、applicability、remaining。evidence 是可定位的文字/路径或来源引用列表。适用已完成任务或评审勾选必须引用对应 carryover：来源须定位到同一原条目，targets 须包含该后继。共享证据通过明确列出多个 targets 承接。后继草稿中所有已勾选任务和清单项都须登记映射；只在草稿中新增勾选不能绕过检查。有记录不等于程序认定证据充分。
 
 dependencies 每项含 from、requires、external、kind、reason。from 是目标 key；external=false 时 requires 也是目标 key。kind 固定 implementation、release、sequence。分别检查两种硬依赖图，不把序列或代码调用图并入。外部条件使用 external=true 并给出可理解的前置对象。
 

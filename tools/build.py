@@ -20,6 +20,10 @@ HOST_UI_FIELDS = frozenset(('user-invocable', 'disable-model-invocation', 'argum
 ALL_COMMANDS = COMMANDS + LOCAL_COMMANDS
 CORE_COMPATIBILITY = 'Requires an initialized .sdlc project, Bash and Python 3.9+; run sdlc-000-init once per project'
 
+def ignore_package_cache(directory: str, names: list[str]) -> set[str]:
+    return (set(shutil.ignore_patterns('__pycache__', '*.pyc')(directory, names))
+            | ignore_local_metadata(directory, names))
+
 def init_body(host: str) -> str:
     return (resource('init')
             .replace('@HOST@', host)
@@ -186,10 +190,7 @@ def build(destination: Path) -> None:
         package = Path(tmp) / 'package'
         package.mkdir()
         (package / '.sdlc-build').write_text(UPSTREAM_SHA + '\n')
-        shutil.copytree(ROOT / 'src/scripts', package / 'scripts',
-                        ignore=lambda directory, names: (
-                            set(shutil.ignore_patterns('__pycache__', '*.pyc')(directory, names))
-                            | ignore_local_metadata(directory, names)))
+        shutil.copytree(ROOT / 'src/scripts', package / 'scripts', ignore=ignore_package_cache)
         shutil.copytree(ROOT / 'src/templates', package / 'templates', ignore=ignore_local_metadata)
         shutil.copytree(ROOT / 'src/assets', package / 'assets', ignore=ignore_local_metadata)
         # Validate all translations before publishing any generated package.
@@ -246,7 +247,7 @@ def build(destination: Path) -> None:
             source = ROOT / 'src' / 'skills' / name
             if any(path.is_symlink() for path in source.rglob('*')):
                 raise ValueError('Independent Skill source contains symlinks: ' + name)
-            shutil.copytree(source, package / 'skills' / name, ignore=ignore_local_metadata)
+            shutil.copytree(source, package / 'skills' / name, ignore=ignore_package_cache)
         (package / 'bindings').mkdir()
         for host in HOSTS:
             (package / 'bindings' / (host + '.json')).write_text(

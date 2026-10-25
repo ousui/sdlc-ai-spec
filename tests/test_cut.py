@@ -475,6 +475,42 @@ class CutContractTests(unittest.TestCase):
         code, result = invoke(*args)
         self.assertEqual((code, result["status"]), (0, "preview_created"), result)
 
+    def test_preexisting_empty_intake_workspace_rolls_back_initial_failures(self):
+        write(self.project / "input/requirements.md", "拆成两个后继。\n")
+        op = self.project / "cut-work/cut-existing-failure"
+        op.mkdir(parents=True)
+        original_write = CUT.write_new
+
+        def fail_template(path, data):
+            if path.name == "cut.md":
+                raise OSError("injected staged write failure")
+            return original_write(path, data)
+
+        with CUT.locked(self.project, "intake", op):
+            with patch.object(CUT, "write_new", side_effect=fail_template):
+                with self.assertRaises(OSError):
+                    CUT.create_preview(self.project, "intake", op, ["input/requirements.md"], [],
+                                       reuse_empty_intake=True)
+        self.assertEqual([p.name for p in op.iterdir()], [".apply.lock"])
+
+        original_rename = CUT.os.rename
+
+        def fail_record_move(source, destination):
+            if destination == op / "cut.json":
+                raise OSError("injected publish move failure")
+            return original_rename(source, destination)
+
+        with CUT.locked(self.project, "intake", op):
+            with patch.object(CUT.os, "rename", side_effect=fail_record_move):
+                with self.assertRaises(OSError):
+                    CUT.create_preview(self.project, "intake", op, ["input/requirements.md"], [],
+                                       reuse_empty_intake=True)
+        self.assertEqual([p.name for p in op.iterdir()], [".apply.lock"])
+        self.assertEqual(list(op.parent.glob(".cut-preview-*")), [])
+        code, result = invoke("inspect", "--project", self.project, "--kind", "intake",
+                              "--source", "input/requirements.md", "--workspace", "cut-work/cut-existing-failure")
+        self.assertEqual((code, result["status"]), (0, "preview_created"), result)
+
     def test_failed_staged_intake_write_leaves_no_operation(self):
         write(self.project / "input/requirements.md", "拆成两个后继。\n")
         op = self.project / "cut-work/cut-failed-write"

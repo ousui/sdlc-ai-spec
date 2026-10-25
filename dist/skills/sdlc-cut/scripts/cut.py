@@ -414,8 +414,13 @@ def refresh_preview(project: Path, kind: str, operation: Path, names: list[str],
             "source_files": old["source_files"], "errors": [], "limitations": ["来源或代码观察已变化；草稿和边界须重新复核"]}
 
 
-def create_preview(project: Path, kind: str, operation: Path, names: list[str], code_names: list[str]) -> dict[str, Any]:
-    check(not operation.exists() and not operation.is_symlink(), f"操作目录已占用：{operation}")
+def create_preview(project: Path, kind: str, operation: Path, names: list[str], code_names: list[str],
+                   reuse_empty_intake: bool = False) -> dict[str, Any]:
+    if reuse_empty_intake:
+        check(kind == "intake" and operation.is_dir() and not operation.is_symlink() and
+              [p.name for p in operation.iterdir()] == [".apply.lock"], "intake 操作目录已被其他内容占用")
+    else:
+        check(not operation.exists() and not operation.is_symlink(), f"操作目录已占用：{operation}")
     source, files, snapshots = collect(project, kind, names, operation, "initial")
     record = initial_record(project, kind, operation, source, files, code_info(project, code_names))
     template = Path(__file__).resolve().parent.parent / "assets" / "cut-plan.md"
@@ -428,10 +433,24 @@ def create_preview(project: Path, kind: str, operation: Path, names: list[str], 
         save_snapshots(stage, snapshots)
         write_new(stage / "cut.json", json_data(record))
         write_new(stage / "cut.md", template_data)
-        if kind == "intake":
+        if kind == "intake" and not reuse_empty_intake:
             write_new(stage / ".apply.lock", b"")
-        check(not operation.exists() and not operation.is_symlink(), f"操作目录已占用：{operation}")
-        os.rename(stage, operation)
+        if reuse_empty_intake:
+            check([p.name for p in operation.iterdir()] == [".apply.lock"],
+                  "intake 操作目录在准备期间已改变")
+            moved = []
+            try:
+                for name in ("source", "cut.md", "cut.json"):
+                    if (stage / name).exists():
+                        os.rename(stage / name, operation / name)
+                        moved.append(name)
+            except BaseException:
+                for name in reversed(moved):
+                    os.rename(operation / name, stage / name)
+                raise
+        else:
+            check(not operation.exists() and not operation.is_symlink(), f"操作目录已占用：{operation}")
+            os.rename(stage, operation)
     return {"command": "inspect", "status": "preview_created", "operation_directory": str(operation),
             "source_files": files, "errors": [], "limitations": record["observed_code"]["limitations"]}
 
@@ -481,16 +500,7 @@ def inspect(args: argparse.Namespace) -> dict[str, Any]:
             return refresh_preview(project, "intake", operation, args.source, args.observe_code, old)
         check(not any(operation.iterdir()) or [p.name for p in operation.iterdir()] == [".apply.lock"],
               "intake 操作目录已被其他内容占用")
-        # create_preview requires an absent operation; initial intake already owns its empty directory.
-        source, files, snapshots = collect(project, "intake", args.source, operation, "initial")
-        record = initial_record(project, "intake", operation, source, files, code_info(project, args.observe_code))
-        template = Path(__file__).resolve().parent.parent / "assets" / "cut-plan.md"
-        template_data = raw_file(template)
-        save_snapshots(operation, snapshots)
-        write_new(record_file, json_data(record))
-        write_new(operation / "cut.md", template_data)
-        return {"command": "inspect", "status": "preview_created", "operation_directory": str(operation),
-                "source_files": files, "errors": [], "limitations": record["observed_code"]["limitations"]}
+        return create_preview(project, "intake", operation, args.source, args.observe_code, reuse_empty_intake=True)
 
 
 class SourceChanged(CutError):

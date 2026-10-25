@@ -2,15 +2,15 @@
 
 STATUS is an explicitly local utility, not an upstream core command. It collects
 file observations without modifying a project, running another Skill, executing
-project code, importing project modules, accessing a network, or invoking Git.
+project code, importing project modules, accessing a network, or invoking Git writes. Read-only Git worktree discovery uses the common storage resolver.
 
-Project selection: explicit --project > SDLC_INIT_DIR > nearest .sdlc marker above
-the business working directory. An explicit invalid target never falls back.
+Project selection: explicit --project > SDLC_INIT_DIR > common workspace discovery.
+Use local storage when present, otherwise authority; keep the code project separate. An explicit invalid target never falls back.
 No marker means uninitialized, not permission to initialize. A malformed nearest
 marker must not be bypassed in favour of a different enclosing project.
 
 Feature selection: explicit --feature > SDLC_FEATURE_DIRECTORY > the selected
-project's feature.json.feature_directory. Relative paths are relative to that
+workspace's feature.json.feature_directory (isolated per shared worktree). Relative paths are relative to that
 project. SDLC_FEATURE is only a label. Listing and inspecting another feature
 never persists selection. Neither branch names nor timestamps select a feature.
 

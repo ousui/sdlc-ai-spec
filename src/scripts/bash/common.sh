@@ -60,6 +60,26 @@ _sdlc_plugin_root() {
     printf '%s\n' "$dir"
 }
 
+_sdlc_store() {
+    command -v python3 >/dev/null 2>&1 || {
+        echo 'ERROR: Python 3.9+ is required for SDLC path validation' >&2
+        return 1
+    }
+    python3 -I -B "$(_sdlc_plugin_root)/scripts/python/sdlc_store.py" "$@"
+}
+
+_sdlc_state_dir() {
+    _sdlc_store resolve --project "$1" --field SDLC_DIR
+}
+
+_sdlc_feature_json() {
+    _sdlc_store resolve --project "$1" --field FEATURE_JSON
+}
+
+_sdlc_feature_path() {
+    _sdlc_store feature --project "$1" --value "$2" --field FEATURE_DIR
+}
+
 _sdlc_validate_paths() {
     local root
     root=$(_sdlc_plugin_root) || return 1
@@ -75,15 +95,7 @@ _sdlc_validate_paths() {
 }
 
 get_repo_root() {
-    local root
-    if [[ -n "${SDLC_INIT_DIR:-}" ]]; then
-        root=$(resolve_sdlc_init_dir) || return 1
-    elif ! root=$(find_sdlc_root); then
-        echo 'ERROR: No initialized .sdlc project found; run sdlc-000-init in the selected project first' >&2
-        return 1
-    fi
-    _sdlc_validate_paths "$root" || return 1
-    printf '%s\n' "$root"
+    _sdlc_store resolve --field PROJECT_ROOT
 }
 
 # Get current feature name from explicit state only.
@@ -108,7 +120,8 @@ get_current_branch() {
 # Parser order mirrors the historical get_feature_paths behavior: jq -> python3 -> grep/sed.
 read_feature_json_feature_directory() {
     local repo_root="$1"
-    local fj="$repo_root/.sdlc/feature.json"
+    local fj
+    fj=$(_sdlc_feature_json "$repo_root") || return 1
     [[ -f "$fj" ]] || { printf '%s' ''; return 0; }
 
     # Try parsers in order (jq -> python3 -> grep/sed), falling through on
@@ -149,30 +162,15 @@ read_feature_json_feature_directory() {
 _persist_feature_json() {
     local repo_root="$1"
     local feature_dir_value="$2"
-    local fj="$repo_root/.sdlc/feature.json"
     _sdlc_validate_paths "$repo_root" "$feature_dir_value" || return 1
-
-    # Strip repo_root prefix if the value is absolute and under repo_root
-    if [[ "$feature_dir_value" == "$repo_root/"* ]]; then
-        feature_dir_value="${feature_dir_value#"$repo_root/"}"
-    fi
-
-    # Read current value (if any) and skip write when unchanged
+    feature_dir_value=$(_sdlc_store feature --project "$repo_root" --value "$feature_dir_value" --field FEATURE_VALUE) || return 1
+    # Preserve upstream parser fallback and unchanged-selection no-op semantics.
     local current_val
     current_val=$(read_feature_json_feature_directory "$repo_root")
     if [[ "$current_val" == "$feature_dir_value" ]]; then
         return 0
     fi
-
-    # Ensure .sdlc/ directory exists
-    mkdir -p "$repo_root/.sdlc"
-
-    # Write feature.json — prefer jq for safe JSON, fall back to printf
-    if command -v jq >/dev/null 2>&1; then
-        jq -cn --arg fd "$feature_dir_value" '{feature_directory:$fd}' > "$fj"
-    else
-        printf '{"feature_directory":"%s"}\n' "$(json_escape "$feature_dir_value")" > "$fj"
-    fi
+    _sdlc_store feature --project "$repo_root" --value "$feature_dir_value" --persist >/dev/null
 }
 
 get_feature_paths() {
@@ -207,19 +205,19 @@ get_feature_paths() {
     if [[ -n "${SDLC_FEATURE_DIRECTORY:-}" ]]; then
         feature_dir="$SDLC_FEATURE_DIRECTORY"
         # Normalize relative paths to absolute under repo root
-        [[ "$feature_dir" != /* ]] && feature_dir="$repo_root/$feature_dir"
+        feature_dir=$(_sdlc_feature_path "$repo_root" "$feature_dir") || return 1
         # Persist to feature.json so future sessions without the env var still
         # work — unless the caller opted out for read-only resolution (#3025).
         if [[ "$no_persist" != true ]]; then
             _persist_feature_json "$repo_root" "$SDLC_FEATURE_DIRECTORY" || return 1
         fi
-    elif [[ -f "$repo_root/.sdlc/feature.json" ]]; then
+    elif [[ -f "$(_sdlc_feature_json "$repo_root")" ]]; then
         local _fd
         _fd=$(read_feature_json_feature_directory "$repo_root")
         if [[ -n "$_fd" ]]; then
             feature_dir="$_fd"
             # Normalize relative paths to absolute under repo root
-            [[ "$feature_dir" != /* ]] && feature_dir="$repo_root/$feature_dir"
+            feature_dir=$(_sdlc_feature_path "$repo_root" "$feature_dir") || return 1
         else
             echo "ERROR: Feature directory not found. Set SDLC_FEATURE_DIRECTORY or ensure .sdlc/feature.json contains feature_directory." >&2
             return 1
@@ -423,7 +421,7 @@ for _, ext_id in sorted(ranked):
 resolve_template() {
     local template_name="$1"
     local repo_root="$2"
-    local base="$repo_root/.sdlc/templates"
+    local base="$(_sdlc_state_dir "$repo_root")/templates"
 
     case "$template_name" in ""|*[!a-z0-9-]*) return 1 ;; esac
 
@@ -432,7 +430,7 @@ resolve_template() {
     [ -f "$override" ] && echo "$override" && return 0
 
     # Priority 2: Installed presets (sorted by priority from .registry)
-    local presets_dir="$repo_root/.sdlc/presets"
+    local presets_dir="$(_sdlc_state_dir "$repo_root")/presets"
     if [ -d "$presets_dir" ]; then
         local registry_file="$presets_dir/.registry"
         local -a python_cmd=()
@@ -498,7 +496,7 @@ except Exception:
     fi
 
     # Priority 3: Extension-provided templates
-    local ext_dir="$repo_root/.sdlc/extensions"
+    local ext_dir="$(_sdlc_state_dir "$repo_root")/extensions"
     if [ -d "$ext_dir" ]; then
         local sorted_extensions=""
         if ! sorted_extensions=$(_sorted_extension_ids "$ext_dir"); then
@@ -532,7 +530,7 @@ except Exception:
 resolve_template_content() {
     local template_name="$1"
     local repo_root="$2"
-    local base="$repo_root/.sdlc/templates"
+    local base="$(_sdlc_state_dir "$repo_root")/templates"
 
     case "$template_name" in ""|*[!a-z0-9-]*) return 1 ;; esac
 
@@ -553,7 +551,7 @@ resolve_template_content() {
     local effective_base_found=false
 
     # Priority 2: Installed presets (sorted by priority from .registry)
-    local presets_dir="$repo_root/.sdlc/presets"
+    local presets_dir="$(_sdlc_state_dir "$repo_root")/presets"
     if [ -d "$presets_dir" ]; then
         local registry_file="$presets_dir/.registry"
         local sorted_presets=""
@@ -720,7 +718,7 @@ except Exception as exc:
     fi
 
     # Priority 3: Extension-provided templates (always "replace")
-    local ext_dir="$repo_root/.sdlc/extensions"
+    local ext_dir="$(_sdlc_state_dir "$repo_root")/extensions"
     if [ "$effective_base_found" = false ] && [ -d "$ext_dir" ]; then
         local sorted_extensions=""
         if ! sorted_extensions=$(_sorted_extension_ids "$ext_dir"); then

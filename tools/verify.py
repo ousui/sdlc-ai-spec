@@ -204,7 +204,14 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
     # Unmodified leaf scripts remain exact except the project marker.
     for name in ('check-prerequisites.sh','resolve-template.sh','setup-plan.sh'):
         expected=leaf_projection((upstream/'scripts/bash'/name).read_text())
-        require_equal((ROOT/'src/scripts/bash'/name).read_text(),expected,'Leaf script preservation '+name)
+        actual = (ROOT/'src/scripts/bash'/name).read_text()
+        if name == 'setup-plan.sh':
+            # Independent exact allowance for the authorized store-lock wrapper.
+            # Everything else in this leaf remains byte-equivalent to upstream.
+            wrapper = '\n\nif [[ -z "${SDLC_STORE_LOCK_TOKEN:-}" ]]; then\n    exec python3 -I -B "$(_sdlc_plugin_root)/scripts/python/sdlc_store.py" run --script setup-plan.sh -- "$@"\nfi\n_sdlc_store check-lock || exit 1'
+            require_equal(actual.count(wrapper), 1, 'Exact setup-plan storage wrapper')
+            actual = actual.replace(wrapper, '', 1)
+        require_equal(actual,expected,'Leaf script preservation '+name)
         passed('leaf_script_source_parity',name)
     from port import port_script
     for script in (upstream/'scripts/bash').glob('*.sh'):

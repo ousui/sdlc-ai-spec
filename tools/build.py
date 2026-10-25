@@ -218,7 +218,7 @@ def build(destination: Path) -> None:
         core, fragments = factor(init_bodies)
         (package / 'references/workflows/sdlc-000-init.md').write_text(core, encoding='utf-8')
         meta = {'name': skill_id('init'),
-                'description': '初始化或补全项目本地 .sdlc 数据，不安装工具、不覆盖已有工作。',
+                'description': '初始化或补全项目资料库，选择共享或本地存储，并显式导入或归拢资料。',
                 'compatibility': 'Requires Python 3.9+, Bash and an existing project directory; no upstream CLI required',
                 'metadata': {'author': AUTHOR['name'], 'source': 'src/adapters/INIT.md'}}
         path = skill_entry(package, 'codex', 'init')

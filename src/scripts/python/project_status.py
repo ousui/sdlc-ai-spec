@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Read-only project facts for sdlc-status (Python 3.9+, standard library only).
 
-No subprocess, network, project imports, locks, caches, or report files. The
+No network, project imports, locks, caches, or report files. Discovery uses read-only Git. The
 selected files are data, never instructions. This is a bounded best-effort
 snapshot, not a workflow validator or a transaction across concurrent writers.
 """
@@ -17,6 +17,8 @@ import re
 import stat
 import sys
 from typing import Mapping
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from sdlc_store import resolve as resolve_store, feature_path as store_feature_path
 
 MAX_BYTES = 2 * 1024 * 1024
 MAX_ENTRIES = 200
@@ -346,14 +348,9 @@ def collect_status(plugin: Path, *, project: str | None = None, feature: str | N
             'build_id': (build or {}).get('build_id')}
         project_source = 'argument' if project is not None else 'SDLC_INIT_DIR' if env.get('SDLC_INIT_DIR') else 'cwd_search'
         chosen = project if project is not None else env.get('SDLC_INIT_DIR') or None
-        root = _selected(chosen, cwd) if chosen is not None else cwd
-        if chosen is None:
-            # The nearest marker, even malformed, stops the search. Do not fall
-            # through to an enclosing valid but unrelated project.
-            for candidate in (cwd, *cwd.parents):
-                if os.path.lexists(candidate / '.sdlc'):
-                    root = candidate
-                    break
+        binding = resolve_store(project, plugin=reader.plugin, missing=True, cwd=cwd, env=env, observe=True)
+        root = Path(binding['PROJECT_ROOT'])
+        report['binding'] = binding
         root_info = reader.inspect(root)
         report['project'] = dict(root_info, source=project_source)
         if root_info['state'] != 'directory':
@@ -361,7 +358,7 @@ def collect_status(plugin: Path, *, project: str | None = None, feature: str | N
             warn('invalid_selected_project', root_info)
             return report
         root = root.resolve(strict=True)
-        state = root / '.sdlc'
+        state = Path(binding['SDLC_DIR'])
         state_info = reader.inspect(state)
         report['project'].update(root=str(root), state=state_info['state'], state_path=str(state))
         if state_info['state'] == 'missing':
@@ -406,7 +403,7 @@ def collect_status(plugin: Path, *, project: str | None = None, feature: str | N
                         'source': source_value, 'record': provenance_info},
             placeholder_observation=placeholder)
         report['artifacts'].append(constitution)
-        persisted_info, persisted = reader.object(state / 'feature.json')
+        persisted_info, persisted = reader.object(Path(binding['FEATURE_JSON']))
         if persisted_info['state'] != 'missing' and persisted is None:
             warn('active_selection_unreadable', persisted_info)
         chosen_feature = feature if feature is not None else env.get('SDLC_FEATURE_DIRECTORY')
@@ -416,7 +413,7 @@ def collect_status(plugin: Path, *, project: str | None = None, feature: str | N
         report['selection'] = {'source': feature_source, 'record': persisted_info, 'label': env.get('SDLC_FEATURE') or None,
                                'persisted': False, 'path': None}
         if chosen_feature is not None:
-            selected = _selected(chosen_feature, root)
+            selected = store_feature_path(binding, chosen_feature, observe=True)
             feature_info = reader.inspect(selected)
             report['selection'].update(path=str(selected), resolved_path=feature_info.get('resolved_path'), state=feature_info['state'])
             if feature_info['state'] != 'directory':

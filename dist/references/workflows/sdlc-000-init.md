@@ -1,31 +1,59 @@
-# 初始化项目数据
+# 初始化项目资料库
 
-这是 SDLC AI SPEC 的项目级初始化能力，不是上游 CLI 安装器。本次调用位于 **c@@SDLC_BIND_0002@@**。沿用原始用户输入和当前授权；不要求事先存在 `.sdlc` 或安装上游 CLI。
+这是运行于 **c@@SDLC_BIND_0002@@** 的本地 INIT 能力。保留原始输入与授权。它不安装上游 CLI，也不执行其他业务阶段。
 
-## 1. 选择项目与已安装插件
+## 1. 选择与发现
 
-按入口说明，从已经加载的 Skill/插件确定 `SDLC_PLUGIN_ROOT`。选择用户明确指定的项目目录或当前工作区根目录，将其解析后的绝对路径作为 `SDLC_PROJECT_ROOT`。不得用父级 Git 根替代：`helloserver` 一类嵌套模块可能就是目标项目。未明确指定目录、且当前目录处于已初始化工作区的子目录时，使用该工作区的 `.sdlc` 根。在多根工作区或确有歧义时询问应使用哪个根。不得猜测插件目录、用户主目录或文件系统根目录。
-
-读取适用的项目指令；不得为了臆造项目原则遍历全部业务代码。确认 Python 3.9+、Bash 和内置脚本可用。缺少执行依赖时报告，不安装依赖，也不回退到上游 CLI、`uv`、网络或临时拼凑的 shell 初始化。
-
-## 2. 调用一次确定性初始化器
-
-本次工具调用显式传入选定的绝对路径，不依赖调用间的变量持久化。保持引号，不将自然语言用户输入拼接进 shell 命令。
+从已加载 Skill 确定 `SDLC_PLUGIN_ROOT`。选择显式项目或当前工作区作为 `SDLC_PROJECT_ROOT`，保留嵌套模块边界。仅在项目有歧义时询问。读取适用项目指令；不遍历全部代码来臆造原则。要求 Python 3.9+ 与 Bash；不安装依赖或替换初始化器。
 
 ```sh
-python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/init_project.py" --project "${SDLC_PROJECT_ROOT:?}" --json
+python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/init_project.py" --project "${SDLC_PROJECT_ROOT:?}" --discover --json
 ```
 
-仅当用户要求预览时使用 `--dry-run`。仅当用户明确要求时使用 `--feature-numbering timestamp`；默认 sequential，并保留已有合法编号方式。不存在 `--force` 或 reset。
+发现过程只读。说明 `SDLC_DIR`、`AUTHORITY_DIR`、`mode`、`local_exists`、`authority_exists`、`can_collect` 和 `sources`。main 是主工作区，不是分支名称。有本地副本就优先本地；没有本地时，普通命令可以读写权威库。只有 main 发起归拢。本地损坏时不回退。
 
-脚本创建 `.sdlc/memory/`、`.sdlc/specs/`、`init-options.json`、项目宪法模板副本、数据 README 和 `.sdlc/.gitignore`。当本次调用确实新建 `memory/constitution.md` 时，还会尝试在 `memory/.constitution-template.json` 记录这次实际生成字节的 SHA-256 与来源。该记录只表示生成基线：内容与基线相同或不同，都不能证明 RULE 是否完成、宪法是否批准或治理质量如何。已有宪法不会被覆盖，也不会因为恰好与当前模板一致就补造历史来源；仅来源记录失败时保留已创建宪法并明确提示。
+## 2. 选择存储并初始化
 
-不会把 Skills、脚本、应用、集成或核心模板目录复制到项目。兼容的部分/人工 `.sdlc` 状态会被补全，已有文档和需求选择会被保留。损坏、符号链接、旧版或不受支持的 profile 以诊断停止，不自动转换；不为了中文化额外改写已有宪法。
+main 没有权威库且没有来源时，初始化权威库。存在其他副本时，提供归拢或空白初始化选择。已有权威库保留文档并补缺；归拢须单独明确选择。worktree 已有本地资料时补全本地；没有本地时告知权威路径，询问共享使用还是新建本地副本，建议共享。两处都没有时，提供建立空白权威库并共享或本地初始化的选择。其他副本只能从 main 发起归拢。沿用用户已经明确提供的选择。
 
-退出非零时，报告诊断并停止。不得伪造成功、手工修补旧布局、删除 `.sdlc` 或调用其他初始化器。成功时用中文说明 `initialized`、`completed` 或 `unchanged`，列出选定项目、创建/更新/保留路径及警告。成功的 dry-run 不等于项目已初始化。忽略规则不会将已在 Git 中的文件取消跟踪。
+```sh
+python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/init_project.py" --project "${SDLC_PROJECT_ROOT:?}" --mode shared --json
+```
 
-## 3. 停在初始化边界
+独立 worktree 副本使用 `--mode local`。默认 `--seed knowledge` 导入宪法及存在的项目 `memory/long-term.md`；重复传入 `--feature` 和准确目录名称，可纳入选定需求及关联产物。`--seed none` 选择空白初始化。已有本地文件会保留，重复 INIT 不刷新它们。不复制 `feature.json` 或其他工作区的当前需求选择。项目长期记忆是可选项目信息，不是个人记忆或聊天历史。
 
-不得创建需求、`feature.json`、规格、方案或任务清单。不得实施业务代码、改变用户/系统/Agent 配置、初始化 Git、创建或切换分支、提交、推送或安装工具。Git 检查仅只读。
+仅用户要求预览时使用 `--dry-run`。仅明确要求时使用 `--feature-numbering timestamp`；默认 sequential，并保留已有合法编号方式。没有 force 或 reset。`needs_choice` 不代表初始化成功。需要选择时必须等待选择后再继续。
 
-通常每个项目初始化一次，而不是每个 Agent 或会话一次。重复调用是安全补全或无操作，不是重置。建议 @@SDLC_BIND_0030@@sdlc-100-spec 继续已请求的规格工作。除非本次用户请求明确授权继续超出初始化范围，否则不得自动启动二者。
+初始化器创建缺失的数据目录、配置、宪法、README 和忽略文件，保留已有资料并拒绝不支持的布局。只有本次真正从模板生成的宪法才记录新的 `memory/.constitution-template.json` 来源。存在的导入历史会保留，缺失历史不补造。仅来源记录失败不授权覆盖宪法。忽略规则不会将已有 Git 文件取消跟踪。
+
+登记指定权威路径或额外来源时，在 main 使用已解析的绝对路径：
+
+```sh
+python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/sdlc_store.py" register --project "${SDLC_PROJECT_ROOT:?}" --authority '<absolute-authority-directory>' --source '<absolute-source-directory>'
+```
+
+省略不需要的选项，按需重复 `--source`。已有权威库不能被静默改向。登记必须明确指定，不等于归拢或资料迁移。登记后重新发现。
+
+## 3. 显式导入或归拢
+
+仅在 main 使用 `--kind collect`，并明确选择来源目录。worktree 使用 `--kind import` 从权威库刷新本地副本。通过来源建立权威库时，先应用归拢，再补齐模板初始化，避免混淆生成来源与导入历史。
+
+```sh
+python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/store_changes.py" prepare --project "${SDLC_PROJECT_ROOT:?}" --kind collect --source '<absolute-source-directory>'
+```
+
+默认范围为宪法及项目长期记忆。重复传入 `--feature` 可明确纳入准确的需求目录。检查返回的文件差异及 `manifest.json` 中的来源快照。`multiple_sources` 为 true 时，必须明确提示有多个来源贡献差异，并列出 `changed_sources`。不能把扫描工作区数量误报为参与归拢数量。
+
+只编辑返回的 `proposal.json`。相同文件跳过，唯一新增文件默认复制。其余每一项须解决为 `{"action":"copy","source":"<prepared-source>"}`、`{"action":"replace","text":"complete candidate text"}` 或 `{"action":"skip"}`。比较语义、需求身份及已有证据。未决原则选择交给用户；不反复确认已授权且无冲突的导入。不虚构共同祖先，不按文件新旧选胜者，不合并任务勾选并集，不因来源缺少文件推断删除。资料导入不证明代码集成或任务验证。
+
+```sh
+python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/store_changes.py" apply --project "${SDLC_PROJECT_ROOT:?}" --transaction '<returned-transaction-directory>'
+```
+
+程序重新检查绑定及来源/目标快照，取得资料库锁，记录恢复资料，发布并校验选定变更。输入变化或仍有未决项时停止发布。应用中断后检查诊断，以同一项目及事务使用 `recover`。不得通过复制整个目录或直接编辑权威库绕过流程。保留来源副本，不自动分发或删除。
+
+## 4. 报告并结束
+
+报告有效资料库、动作、创建/更新/保留/导入或跳过文件及警告。退出非零意味着停止，不手工修复或回退。预览不等于写入完成。导入应用后可以继续已经授权的初始化来补缺；不因此获得新建需求或执行其他业务阶段的授权。
+
+不得新建需求、实施代码、安装工具、初始化 Git、切换分支、提交或推送。Git 发现只读。按需建议 @@SDLC_BIND_0058@@sdlc-100-spec；没有已有用户授权时不自动执行。

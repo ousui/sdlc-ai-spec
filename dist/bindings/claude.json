@@ -3,100 +3,100 @@
     "@@SDLC_BIND_0004@@": "laude",
     "@@SDLC_BIND_0006@@": "优先使用宿主替换的 `${CLAUDE_PLUGIN_ROOT}`，或已加载 SKILL.md 的绝对路径",
     "@@SDLC_BIND_0007@@": "laude",
-    "@@SDLC_BIND_0050@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0063@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0095@@": "laude",
-    "@@SDLC_BIND_0165@@": "/sdlc-ai-spec:"
+    "@@SDLC_BIND_0078@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0091@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0123@@": "laude",
+    "@@SDLC_BIND_0193@@": "/sdlc-ai-spec:"
   },
   "sdlc-100-spec": {
     "@@SDLC_BIND_0004@@": "laude",
     "@@SDLC_BIND_0006@@": "优先使用宿主替换的 `${CLAUDE_PLUGIN_ROOT}`，或已加载 SKILL.md 的绝对路径",
     "@@SDLC_BIND_0007@@": "laude",
-    "@@SDLC_BIND_0052@@": "/sdlc-ai-spec:",
     "@@SDLC_BIND_0080@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0118@@": "laude",
-    "@@SDLC_BIND_0128@@": "/sdlc-ai-spec:sdlc-200-plan`、`/sdlc-ai-spec:",
-    "@@SDLC_BIND_0131@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0201@@": "/sdlc-ai-spec:sdlc-110-clar` 或 `/sdlc-ai-spec:",
-    "@@SDLC_BIND_0267@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0296@@": "/sdlc-ai-spec:sdlc-110-clar` 或 `/sdlc-ai-spec:"
+    "@@SDLC_BIND_0108@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0146@@": "laude",
+    "@@SDLC_BIND_0156@@": "/sdlc-ai-spec:sdlc-200-plan`、`/sdlc-ai-spec:",
+    "@@SDLC_BIND_0159@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0229@@": "/sdlc-ai-spec:sdlc-110-clar` 或 `/sdlc-ai-spec:",
+    "@@SDLC_BIND_0295@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0324@@": "/sdlc-ai-spec:sdlc-110-clar` 或 `/sdlc-ai-spec:"
   },
   "sdlc-110-clar": {
     "@@SDLC_BIND_0004@@": "laude",
     "@@SDLC_BIND_0006@@": "优先使用宿主替换的 `${CLAUDE_PLUGIN_ROOT}`，或已加载 SKILL.md 的绝对路径",
     "@@SDLC_BIND_0007@@": "laude",
-    "@@SDLC_BIND_0052@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0082@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0086@@": "laude",
-    "@@SDLC_BIND_0090@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0254@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0275@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0306@@": "/sdlc-ai-spec:sdlc-200-plan`，或在规划后再次运行 `/sdlc-ai-spec:"
+    "@@SDLC_BIND_0080@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0110@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0114@@": "laude",
+    "@@SDLC_BIND_0118@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0282@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0303@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0334@@": "/sdlc-ai-spec:sdlc-200-plan`，或在规划后再次运行 `/sdlc-ai-spec:"
   },
   "sdlc-200-plan": {
     "@@SDLC_BIND_0004@@": "laude",
     "@@SDLC_BIND_0006@@": "优先使用宿主替换的 `${CLAUDE_PLUGIN_ROOT}`，或已加载 SKILL.md 的绝对路径",
     "@@SDLC_BIND_0007@@": "laude",
-    "@@SDLC_BIND_0052@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0080@@": "laude",
-    "@@SDLC_BIND_0104@@": "/sdlc-ai-spec:"
+    "@@SDLC_BIND_0080@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0108@@": "laude",
+    "@@SDLC_BIND_0132@@": "/sdlc-ai-spec:"
   },
   "sdlc-300-task": {
     "@@SDLC_BIND_0004@@": "laude",
     "@@SDLC_BIND_0006@@": "优先使用宿主替换的 `${CLAUDE_PLUGIN_ROOT}`，或已加载 SKILL.md 的绝对路径",
     "@@SDLC_BIND_0007@@": "laude",
-    "@@SDLC_BIND_0052@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0080@@": "laude",
-    "@@SDLC_BIND_0124@@": "/sdlc-ai-spec:"
+    "@@SDLC_BIND_0080@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0108@@": "laude",
+    "@@SDLC_BIND_0152@@": "/sdlc-ai-spec:"
   },
   "sdlc-310-xchk": {
     "@@SDLC_BIND_0004@@": "laude",
     "@@SDLC_BIND_0006@@": "优先使用宿主替换的 `${CLAUDE_PLUGIN_ROOT}`，或已加载 SKILL.md 的绝对路径",
     "@@SDLC_BIND_0007@@": "laude",
-    "@@SDLC_BIND_0052@@": "/sdlc-ai-spec:",
     "@@SDLC_BIND_0080@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0086@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0092@@": "laude",
-    "@@SDLC_BIND_0222@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0224@@": "/sdlc-ai-spec:sdlc-100-spec 细化规格”“运行 /sdlc-ai-spec:",
-    "@@SDLC_BIND_0240@@": "/sdlc-ai-spec:"
+    "@@SDLC_BIND_0108@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0114@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0120@@": "laude",
+    "@@SDLC_BIND_0250@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0252@@": "/sdlc-ai-spec:sdlc-100-spec 细化规格”“运行 /sdlc-ai-spec:",
+    "@@SDLC_BIND_0268@@": "/sdlc-ai-spec:"
   },
   "sdlc-210-huma": {
     "@@SDLC_BIND_0004@@": "laude",
     "@@SDLC_BIND_0006@@": "优先使用宿主替换的 `${CLAUDE_PLUGIN_ROOT}`，或已加载 SKILL.md 的绝对路径",
     "@@SDLC_BIND_0007@@": "laude",
-    "@@SDLC_BIND_0062@@": "/sdlc-ai-spec:sdlc-100-spec` 和 `/sdlc-ai-spec:",
-    "@@SDLC_BIND_0082@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0110@@": "laude",
-    "@@SDLC_BIND_0284@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0292@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0385@@": "/sdlc-ai-spec:"
+    "@@SDLC_BIND_0090@@": "/sdlc-ai-spec:sdlc-100-spec` 和 `/sdlc-ai-spec:",
+    "@@SDLC_BIND_0110@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0138@@": "laude",
+    "@@SDLC_BIND_0312@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0320@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0413@@": "/sdlc-ai-spec:"
   },
   "sdlc-400-impl": {
     "@@SDLC_BIND_0004@@": "laude",
     "@@SDLC_BIND_0006@@": "优先使用宿主替换的 `${CLAUDE_PLUGIN_ROOT}`，或已加载 SKILL.md 的绝对路径",
     "@@SDLC_BIND_0007@@": "laude",
-    "@@SDLC_BIND_0052@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0080@@": "laude",
-    "@@SDLC_BIND_0084@@": "/sdlc-ai-spec:sdlc-100-spec` 和 `/sdlc-ai-spec:sdlc-110-clar` 维护的内置规格质量清单；`/sdlc-ai-spec:",
-    "@@SDLC_BIND_0204@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0218@@": "/sdlc-ai-spec:"
+    "@@SDLC_BIND_0080@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0108@@": "laude",
+    "@@SDLC_BIND_0112@@": "/sdlc-ai-spec:sdlc-100-spec` 和 `/sdlc-ai-spec:sdlc-110-clar` 维护的内置规格质量清单；`/sdlc-ai-spec:",
+    "@@SDLC_BIND_0232@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0246@@": "/sdlc-ai-spec:"
   },
   "sdlc-500-conv": {
     "@@SDLC_BIND_0004@@": "laude",
     "@@SDLC_BIND_0006@@": "优先使用宿主替换的 `${CLAUDE_PLUGIN_ROOT}`，或已加载 SKILL.md 的绝对路径",
     "@@SDLC_BIND_0007@@": "laude",
-    "@@SDLC_BIND_0053@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0085@@": "/sdlc-ai-spec:sdlc-400-impl` 完成。本命令**只能**在 `/sdlc-ai-spec:sdlc-400-impl` 已针对当前 `tasks.md` 运行，且 `/sdlc-ai-spec:",
-    "@@SDLC_BIND_0095@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0105@@": "laude",
-    "@@SDLC_BIND_0111@@": "/sdlc-ai-spec:sdlc-100-spec`，缺方案用 `/sdlc-ai-spec:sdlc-200-plan`，缺任务用 `/sdlc-ai-spec:",
-    "@@SDLC_BIND_0220@@": "/sdlc-ai-spec:",
-    "@@SDLC_BIND_0234@@": "/sdlc-ai-spec:"
+    "@@SDLC_BIND_0081@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0113@@": "/sdlc-ai-spec:sdlc-400-impl` 完成。本命令**只能**在 `/sdlc-ai-spec:sdlc-400-impl` 已针对当前 `tasks.md` 运行，且 `/sdlc-ai-spec:",
+    "@@SDLC_BIND_0123@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0133@@": "laude",
+    "@@SDLC_BIND_0139@@": "/sdlc-ai-spec:sdlc-100-spec`，缺方案用 `/sdlc-ai-spec:sdlc-200-plan`，缺任务用 `/sdlc-ai-spec:",
+    "@@SDLC_BIND_0248@@": "/sdlc-ai-spec:",
+    "@@SDLC_BIND_0262@@": "/sdlc-ai-spec:"
   },
   "sdlc-000-init": {
     "@@SDLC_BIND_0002@@": "laude",
-    "@@SDLC_BIND_0030@@": "/sdlc-ai-spec:sdlc-010-rule 批准项目原则，或 /sdlc-ai-spec:"
+    "@@SDLC_BIND_0058@@": "/sdlc-ai-spec:sdlc-010-rule 或 /sdlc-ai-spec:"
   },
   "sdlc-status": {}
 }

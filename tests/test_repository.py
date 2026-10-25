@@ -9,7 +9,7 @@ from urllib.parse import urlsplit,unquote
 import yaml
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
-from build import marketplaces,COMMANDS,HOSTS,ALL_COMMANDS
+from build import marketplaces,COMMANDS,HOSTS,ALL_COMMANDS,INDEPENDENT_SKILLS
 
 from naming_check import EXPECTED
 
@@ -17,7 +17,7 @@ class RepositoryTests(unittest.TestCase):
     def test_single_installation_boundary(self):
         package=ROOT/'dist'
         self.assertFalse((package/'plugin.json').exists())
-        self.assertEqual({p.name for p in (package/'skills').iterdir()}, set(EXPECTED.values()))
+        self.assertEqual({p.name for p in (package/'skills').iterdir()}, set(EXPECTED.values()) | set(INDEPENDENT_SKILLS))
         for host in HOSTS:self.assertFalse((package/host).exists())
         self.assertEqual(len(list((package/'references/workflows').glob('*.md'))),len(ALL_COMMANDS))
         self.assertEqual(len(list(package.rglob('common.sh'))),1)
@@ -68,10 +68,10 @@ class RepositoryTests(unittest.TestCase):
                 folder=(ROOT/'dist'/path).resolve()
                 self.assertTrue(folder.is_relative_to((ROOT/'dist').resolve()))
                 entries.extend(folder.glob('*/SKILL.md'))
-            self.assertEqual(len(entries),len(ALL_COMMANDS))
-            self.assertEqual({p.parent.name for p in entries},set(EXPECTED.values()))
+            self.assertEqual(len(entries),len(ALL_COMMANDS)+len(INDEPENDENT_SKILLS))
+            self.assertEqual({p.parent.name for p in entries},set(EXPECTED.values()) | set(INDEPENDENT_SKILLS))
             all_entries.extend(entries)
-        self.assertEqual(len(set(all_entries)),len(ALL_COMMANDS))
+        self.assertEqual(len(set(all_entries)),len(ALL_COMMANDS)+len(INDEPENDENT_SKILLS))
 
     def test_marketplaces_are_generated_and_point_to_dist(self):
         for path,expected in marketplaces().items():
@@ -102,6 +102,7 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual(build['port_revision'],revision)
         self.assertTrue(upstream['init_implemented'])
         self.assertEqual(upstream['local_commands'],['init', 'status'])
+        self.assertEqual(upstream['independent_skills'],['sdlc-cut'])
         self.assertFalse(upstream['native_host_verified'])
 
     def test_native_presentation_links_and_assets(self):

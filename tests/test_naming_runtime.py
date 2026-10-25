@@ -17,23 +17,25 @@ from naming import audit_package, identifiers, invocation, skill_id, template_re
 from naming_check import EXPECTED
 from render import command_refs, HOSTS
 from verify import normalize
-from build import binding
+from build import binding, INDEPENDENT_SKILLS
 from localize import english_body
 
 
 class NamingRuntimeTests(unittest.TestCase):
     def test_exact_public_inventory_and_no_stale_paths(self):
         wanted = set(EXPECTED.values())
+        public = wanted | set(INDEPENDENT_SKILLS)
         package = ROOT / 'dist'
         for host in HOSTS:
             self.assertFalse((package/'adapters'/host/'skills').exists())
-            self.assertEqual({p.name for p in (package/'skills').iterdir()}, wanted)
+            self.assertEqual({p.name for p in (package/'skills').iterdir()}, public)
             self.assertEqual(set(json.loads((package / 'bindings' / (host + '.json')).read_text())), wanted)
         self.assertEqual({p.stem for p in (package / 'references/workflows').glob('*.md')}, wanted)
         self.assertIn('sdlc-status', wanted)
         spec = importlib.util.spec_from_file_location('naming_loader', package / 'scripts/python/load_workflow.py')
         mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
         self.assertEqual(set(mod.SKILLS), wanted)
+        self.assertNotIn('sdlc-cut', mod.SKILLS)
         with self.assertRaises(ValueError): mod.load(package, 'codex', 'specify')
         with self.assertRaises(ValueError): mod.load(package, 'codex', 'sdlc-999-status')
 

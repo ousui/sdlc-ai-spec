@@ -2,11 +2,12 @@
 
 ## 当前交付
 
-九核心、INIT 和 STATUS 共 11 个入口全部位于 `dist/skills/<id>/SKILL.md`。
+九核心、INIT、STATUS 和独立 CUT 共 12 个入口全部位于 `dist/skills/<id>/SKILL.md`。
 不保留生成包内宿主私有 Skill，不输出 `user-invocable`、
 `disable-model-invocation`、`argument-hint`；使用宿主默认选择行为。
 Claude 默认扫描 skills/，不重复声明；Codex/Cursor 显式指向 ./skills/。
-所有入口从已加载 Skill 目录向上两级定位插件；不从模型名猜宿主。
+原有 11 个包装入口从已加载 Skill 目录向上两级定位插件；CUT 从自身目录定位随附程序。
+不从模型名猜宿主。
 展示与选择策略不改变流程中的写入与授权要求。
 
 ## 中文范围与等价宪法
@@ -22,6 +23,8 @@ Claude 默认扫描 skills/，不重复声明；Codex/Cursor 显式指向 ./skil
 
 1. `src/upstream/**` 是锁定 Spec Kit 原始来源，保持原始字节，不翻译。
 2. `src/templates/**` 是经过产品名称/路径适配后的英文模板基线，用于独立上游对照。
+   独立 CUT 的中文原始正文和程序位于 `src/skills/sdlc-cut/`，构建时直接复制，
+   不参与上游命令正文的英中翻译链。
 3. `src/adapters/*.md` 是本项目原创绑定、INIT/STATUS 和项目 README 的英文 source baseline；对应中文审查版本位于 `src/locales/zh-CN/`。
 4. `src/locales/zh-CN/**` 保存面向 Agent/使用者的中文 canonical 呈现；机器契约保持原样。
 5. `dist/**` 是最终插件产品，由构建器生成，不手工翻译或编辑。

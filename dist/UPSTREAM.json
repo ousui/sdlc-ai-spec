@@ -31,6 +31,9 @@
     "init",
     "status"
   ],
+  "independent_skills": [
+    "sdlc-cut"
+  ],
   "init_implemented": true,
   "native_host_verified": false,
   "layout": "unified-public-skills",

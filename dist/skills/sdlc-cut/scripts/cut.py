@@ -421,12 +421,15 @@ def create_preview(project: Path, kind: str, operation: Path, names: list[str], 
     template = Path(__file__).resolve().parent.parent / "assets" / "cut-plan.md"
     template_data = raw_file(template)
     # Publish the initial record only after every input and file write succeeds.
-    # A failed preview must not leave a recordless child under .sdlc/cuts.
-    with tempfile.TemporaryDirectory(prefix=".cut-preview-", dir=operation.parent.parent) as tmp:
+    # A failed preview must not leave a recordless operation directory.
+    stage_parent = operation.parent.parent if kind == "feature" else operation.parent
+    with tempfile.TemporaryDirectory(prefix=".cut-preview-", dir=stage_parent) as tmp:
         stage = Path(tmp)
         save_snapshots(stage, snapshots)
         write_new(stage / "cut.json", json_data(record))
         write_new(stage / "cut.md", template_data)
+        if kind == "intake":
+            write_new(stage / ".apply.lock", b"")
         check(not operation.exists() and not operation.is_symlink(), f"操作目录已占用：{operation}")
         os.rename(stage, operation)
     return {"command": "inspect", "status": "preview_created", "operation_directory": str(operation),
@@ -463,7 +466,7 @@ def inspect(args: argparse.Namespace) -> dict[str, Any]:
     check(args.kind == "intake", "kind 无效", 2)
     if not operation.exists():
         operation.parent.mkdir(parents=True, exist_ok=True)
-        operation.mkdir()
+        return create_preview(project, "intake", operation, args.source, args.observe_code)
     with locked(project, "intake", operation):
         record_file = operation / "cut.json"
         if record_file.exists():
@@ -480,11 +483,12 @@ def inspect(args: argparse.Namespace) -> dict[str, Any]:
               "intake 操作目录已被其他内容占用")
         # create_preview requires an absent operation; initial intake already owns its empty directory.
         source, files, snapshots = collect(project, "intake", args.source, operation, "initial")
-        save_snapshots(operation, snapshots)
         record = initial_record(project, "intake", operation, source, files, code_info(project, args.observe_code))
-        write_new(record_file, json_data(record))
         template = Path(__file__).resolve().parent.parent / "assets" / "cut-plan.md"
-        write_new(operation / "cut.md", raw_file(template))
+        template_data = raw_file(template)
+        save_snapshots(operation, snapshots)
+        write_new(record_file, json_data(record))
+        write_new(operation / "cut.md", template_data)
         return {"command": "inspect", "status": "preview_created", "operation_directory": str(operation),
                 "source_files": files, "errors": [], "limitations": record["observed_code"]["limitations"]}
 

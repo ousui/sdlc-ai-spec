@@ -1,5 +1,5 @@
 {
-  "build_id": "0ab88b6a219e902e560c341687894487a193ca69be710ac6921f889e8b90d333",
+  "build_id": "ae4d0ad7b5b3b25e7e2446b919f0e38f04f635bd0018460e504f52c20b1e67cd",
   "product_version": "1.2.1-sdlc.1",
   "upstream_version": "1.2.1",
   "port_revision": 1,
@@ -55,7 +55,7 @@
     "src/skills/sdlc-cut/references/output-contract.md": "1bc6ebbe14d76f126f220b1d757c7a2e876f7ee4a9c456ba5fd7b16926ad5691",
     "src/skills/sdlc-cut/references/sdlc-compatibility.md": "b942628644f6d443b43c682e29d3d91666ae167efe2743dd7d4b0a623ce14d67",
     "src/skills/sdlc-cut/references/splitting-rules.md": "f2408e3fae7e27757596d8c1d57f23104566b1e24ddaabf31ee6296385bbfd8b",
-    "src/skills/sdlc-cut/scripts/cut.py": "e86f7eb83b011b4114a228c0c76a378049e2a92a01859982395b8f2851cf0e9f",
+    "src/skills/sdlc-cut/scripts/cut.py": "4ccc342e270a1e12d7f9617a7be0116947d26c3ef2495abe00154813a10097a4",
     "src/templates/checklist-template.md": "be9276b3aaa5f8fccee7993a4472bbfbd4c3ffe76cebcc98bbb71729b1e9686f",
     "src/templates/constitution-template.md": "ce7549540fa45543cca797a150201d868e64495fdff39dc38246fb17bd4024b3",
     "src/templates/plan-template.md": "617f3ef3a3d2a878c8c4539e897f7b20ce1bf0e04d5c64b6ebd78f1caa364465",

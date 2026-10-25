@@ -453,6 +453,45 @@ class CutContractTests(unittest.TestCase):
                               "--source", ".sdlc/specs/005-another", "--workspace", ".sdlc/cuts/cut-other")
         self.assertEqual((code, result["status"]), (0, "preview_created"), result)
 
+    def test_failed_initial_intake_preview_does_not_block_retry(self):
+        write(self.project / "input/requirements.md", "拆成两个后继。\n")
+        args = ("inspect", "--project", self.project, "--kind", "intake",
+                "--source", "input/requirements.md", "--workspace", "cut-work/cut-intake")
+        code, result = invoke(*args, "--observe-code", "missing.py")
+        self.assertEqual(code, 2, result)
+        self.assertFalse((self.project / "cut-work/cut-intake").exists())
+        code, result = invoke(*args)
+        self.assertEqual((code, result["status"]), (0, "preview_created"), result)
+
+    def test_preexisting_empty_intake_workspace_preflights_observation(self):
+        write(self.project / "input/requirements.md", "拆成两个后继。\n")
+        op = self.project / "cut-work/cut-existing"
+        op.mkdir(parents=True)
+        args = ("inspect", "--project", self.project, "--kind", "intake",
+                "--source", "input/requirements.md", "--workspace", "cut-work/cut-existing")
+        code, result = invoke(*args, "--observe-code", "missing.py")
+        self.assertEqual(code, 2, result)
+        self.assertEqual([p.name for p in op.iterdir()], [".apply.lock"])
+        code, result = invoke(*args)
+        self.assertEqual((code, result["status"]), (0, "preview_created"), result)
+
+    def test_failed_staged_intake_write_leaves_no_operation(self):
+        write(self.project / "input/requirements.md", "拆成两个后继。\n")
+        op = self.project / "cut-work/cut-failed-write"
+        op.parent.mkdir()
+        original = CUT.write_new
+
+        def fail_template(path, data):
+            if path.name == "cut.md":
+                raise OSError("injected initial write failure")
+            return original(path, data)
+
+        with patch.object(CUT, "write_new", side_effect=fail_template):
+            with self.assertRaises(OSError):
+                CUT.create_preview(self.project, "intake", op, ["input/requirements.md"], [])
+        self.assertFalse(op.exists())
+        self.assertEqual(list(op.parent.glob(".cut-preview-*")), [])
+
     def test_failed_staged_preview_write_leaves_no_operation(self):
         write(self.project / ".sdlc/specs/002-demo/spec.md", "# 合成来源\n")
         op = self.project / ".sdlc/cuts/cut-failed-write"

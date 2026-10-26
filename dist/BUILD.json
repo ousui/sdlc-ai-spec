@@ -1,5 +1,5 @@
 {
-  "build_id": "9b881daecd305b118510ee755f71e935376585f156928086bb9f9306bba454ec",
+  "build_id": "222d7c8ca0e4a05f96dbb1126cdf2b4ea40624bf2e3d8a02f67f25c8b38a074f",
   "product_version": "1.2.1-sdlc.1",
   "upstream_version": "1.2.1",
   "port_revision": 1,
@@ -43,7 +43,7 @@
     "src/scripts/bash/resolve-template.sh": "829e227096abc8bf0889889ec9f792f503ca5d395b7836a8a7eb739ee75214e7",
     "src/scripts/bash/setup-plan.sh": "edbb5aba76749dc64e7a0271b82da4de25fe9f116919c3e4ba121acdf921a565",
     "src/scripts/bash/setup-tasks.sh": "7570d2fd46966480d7c052e1767804dcdf6b1c320002c3c455badc3fc06c26d2",
-    "src/scripts/python/init_project.py": "d573943db9517636f20bda4816b8c7dfd3dc02a4ed86f4481534d78bb966c527",
+    "src/scripts/python/init_project.py": "d6af00ce5138b5e41674b7412ab0a894335dc3726153d348e8397572ce3219f9",
     "src/scripts/python/load_workflow.py": "35b18c4a7368802245ba7297b6ba5a6ce34bd7c22194bb64e0d39daa984c106b",
     "src/scripts/python/path_guard.py": "a2f278d4474d9b2c56a6df9fc921aea036607f24e499f374e13d0d720df1126a",
     "src/scripts/python/project_status.py": "dd34dbf2a52e001e07c90a00e37b6151951e513e4d2efb1ed8a42dbdfa27a734",

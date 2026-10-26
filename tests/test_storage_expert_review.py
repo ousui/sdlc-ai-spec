@@ -267,6 +267,61 @@ class ExpertReviewTests(unittest.TestCase):
         self.assertEqual(self.f.apply(refresh, self.f.a)['status'], 'applied')
         self.assertEqual((actual / names[0]).read_text(), 'New authority version: ' + names[0])
 
+    def test_external_root_alias_init_receipts_match_created_and_imported_files(self):
+        source = self.f.main / '.sdlc'
+        (source / 'memory/.constitution-template.json').unlink()
+        authority_before = storage.files(source)
+        number = 0
+        for mode in ('auto', 'local'):
+            for existing in (False, True):
+                for seed in ('knowledge', 'none'):
+                    with self.subTest(mode=mode, existing=existing, seed=seed):
+                        number += 1
+                        project = self.f.base / ('receipt-' + str(number))
+                        self.f.git('worktree', 'add', '-q', '-b', project.name, str(project))
+                        actual = self.f.base / ('external state-' + str(number))
+                        if existing:
+                            actual.mkdir()
+                        logical = project / '.sdlc'
+                        logical.symlink_to(actual, target_is_directory=True)
+                        identity = (os.readlink(logical), logical.lstat().st_ino, logical.lstat().st_mtime_ns)
+                        result = self.f.init(project, '--mode', mode, '--seed', seed)
+                        self.assertEqual(result['status'], 'completed' if existing else 'initialized')
+                        self.assertEqual(result['SDLC_DIR'], str(actual))
+                        self.assertEqual(result['binding']['SDLC_DIR'], str(actual))
+                        expected = {'memory/constitution.md', 'memory/long-term.md'} if not existing and seed == 'knowledge' else set()
+                        self.assertEqual(set(result['imported']), expected)
+                        self.assertEqual(result['preserved_imports'], [])
+                        self.assertEqual(result['updated'], [])
+                        self.assertTrue(result['created'])
+                        for name in result['created']:
+                            self.assertTrue(Path(name).is_absolute(), name)
+                            self.assertTrue(Path(name).exists(), name)
+                        created = {str(p) + ('/' if p.is_dir() else '') for p in actual.rglob('*')}
+                        if not existing:
+                            created.add(str(actual) + '/')
+                        self.assertEqual(set(result['created']), created)
+                        for name in expected:
+                            self.assertIn(str(actual / name), result['created'])
+                            self.assertEqual((actual / name).read_bytes(), (source / name).read_bytes())
+                        if expected:
+                            self.assertEqual(result['constitution_source'], 'authority-import')
+                        else:
+                            self.assertEqual((actual / 'memory/constitution.md').read_bytes(),
+                                             (storage.PACKAGE / 'templates/constitution-template.md').read_bytes())
+                            self.assertFalse((actual / 'memory/long-term.md').exists())
+                        self.assertFalse((actual / '.init-pending.json').exists())
+                        before_retry = {str(p.relative_to(actual)): (p.read_bytes(), p.stat().st_mtime_ns)
+                                        for p in actual.rglob('*') if p.is_file()}
+                        retry = self.f.init(project, '--mode', mode, '--seed', seed)
+                        self.assertEqual(retry['status'], 'unchanged')
+                        self.assertEqual(retry['created'], [])
+                        self.assertEqual(retry['imported'], [])
+                        self.assertEqual({str(p.relative_to(actual)): (p.read_bytes(), p.stat().st_mtime_ns)
+                                          for p in actual.rglob('*') if p.is_file()}, before_retry)
+                        self.assertEqual((os.readlink(logical), logical.lstat().st_ino, logical.lstat().st_mtime_ns), identity)
+        self.assertEqual(storage.files(source), authority_before)
+
 
 if __name__ == '__main__':
     unittest.main()

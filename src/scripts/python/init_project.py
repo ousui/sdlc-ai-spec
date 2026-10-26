@@ -32,6 +32,10 @@ def inside(path: Path, root: Path) -> bool:
     return path == root or root in path.parents
 
 
+def display_path(path: Path, project: Path) -> str:
+    return path.relative_to(project).as_posix() if inside(path, project) else str(path)
+
+
 def read_json(path: Path) -> dict:
     def unique(pairs):
         result = {}
@@ -195,7 +199,7 @@ def initialize(plugin: Path, project: Path, numbering: str | None = None,
     feature_json = Path(binding['FEATURE_JSON']) if binding is not None else state / 'feature.json'
     seed_files = dict(seed_files or {})
     def display(path):
-        return path.relative_to(root).as_posix() if inside(path, root) else str(path)
+        return display_path(path, root)
     def check_target(path):
         if binding is not None:
             from sdlc_store import document_path
@@ -491,11 +495,9 @@ def initialize_selected(args) -> dict:
         raise
     if preview['status'] == 'initialized':
         result['status'] = 'initialized'
-        root = project
-        created_directory = state.relative_to(root).as_posix() if inside(state, root) else str(state)
+        created_directory = display_path(state, project)
         result['created'] = sorted(set(result['created']) | {created_directory + '/'})
-    root = project
-    imported = [name for name in seeds if (state / name).relative_to(root).as_posix() in result['created']]
+    imported = [name for name in seeds if display_path(state / name, project) in result['created']]
     if 'memory/constitution.md' in seeds:
         result['constitution_source'] = 'authority-import' if 'memory/constitution.md' in imported else 'preserved'
         if 'memory/' + PROVENANCE_NAME in imported:

@@ -61,7 +61,8 @@ class PortScriptBehaviorTests(unittest.TestCase):
         (package / 'scripts/bash').mkdir(parents=True)
         (package / 'scripts/python').mkdir()
         (package / 'templates').mkdir()
-        shutil.copyfile(ROOT / 'src/scripts/python/path_guard.py', package / 'scripts/python/path_guard.py')
+        for helper in ('path_guard.py', 'sdlc_store.py'):
+            shutil.copyfile(ROOT / 'src/scripts/python' / helper, package / 'scripts/python' / helper)
         for raw in (FIXTURE / 'scripts/bash').glob('*.sh'):
             # Always exercise the production entry point, including its adapters.
             (package / 'scripts/bash' / raw.name).write_text(port.port_script(raw.name, raw.read_text()))
@@ -83,7 +84,7 @@ class PortScriptBehaviorTests(unittest.TestCase):
                          'feature.json selected directory contract')
         self.assertTrue(feature.is_dir())
 
-    def no_persist_case(self, operation, value, expected_preserved, host='claude'):
+    def no_persist_case(self, operation, value, expected_preserved, host='claude', initial_record=None):
         package = self.package()
         observations = []
         for ported in (False, True):
@@ -96,7 +97,8 @@ class PortScriptBehaviorTests(unittest.TestCase):
             (feature / 'spec.md').write_text('Synthetic spec\n')
             (feature / 'plan.md').write_text('Synthetic plan\n')
             record = state / 'feature.json'
-            record.write_text('{"feature_directory":"previous"}\n')
+            record.write_text(initial_record.replace('<feature>', feature.relative_to(project).as_posix())
+                              if initial_record is not None else '{"feature_directory":"previous"}\n')
             before = record.read_bytes(), record.stat().st_mtime_ns
             if not ported:
                 shutil.copytree(ROOT / 'src/upstream/templates', state / 'templates')
@@ -153,6 +155,123 @@ class PortScriptBehaviorTests(unittest.TestCase):
                     with self.subTest(host=host, operation=operation, value=value):
                         preserved = operation == 'paths-only' or value in ('1', 'true')
                         self.no_persist_case(operation, value, preserved, host)
+
+    def test_explicit_selection_and_new_feature_ignore_malformed_previous_selection(self):
+        for host in ('codex', 'claude', 'cursor'):
+            for operation in ('prerequisites', 'paths-only', 'create'):
+                for value in (None, '1'):
+                    with self.subTest(host=host, operation=operation, value=value):
+                        self.no_persist_case(operation, value, operation == 'paths-only' or value == '1',
+                                             host, initial_record='{invalid\n')
+
+    def test_unchanged_selection_preserves_upstream_parser_fallback_noop(self):
+        for host in ('codex', 'claude', 'cursor'):
+            with self.subTest(host=host):
+                self.no_persist_case('prerequisites', None, True, host,
+                                     initial_record='{"feature_directory":"<feature>"\n')
+
+    def test_explicit_feature_spelling_and_saved_followup_match_upstream(self):
+        for host in ('codex', 'claude', 'cursor'):
+            for spelling in ('<feature>/.', './<feature>/.', '<feature>/', '<feature>//', '<absolute>/.'):
+                with self.subTest(host=host, spelling=spelling):
+                    package = self.package()
+                    observations = []
+                    for ported in (False, True):
+                        project = self.base / (str(self.sequence) + ('-port' if ported else '-raw'))
+                        state = project / ('.sdlc' if ported else '.specify')
+                        relative = ('.sdlc/' if ported else '') + 'specs/001-selected'
+                        feature = project / relative
+                        feature.mkdir(parents=True)
+                        state.mkdir(exist_ok=True)
+                        (state / 'init-options.json').write_text('{"script":"sh"}\n')
+                        (feature / 'spec.md').write_text('Selected specification\n')
+                        (feature / 'plan.md').write_text('Selected plan\n')
+                        pointer = state / 'feature.json'
+                        pointer.write_text('{"feature_directory":"previous"}\n')
+                        prefix = 'SDLC_' if ported else 'SPECIFY_'
+                        value = spelling.replace('<feature>', relative).replace('<absolute>', str(feature))
+                        env = dict(self.env, SDLC_HOST=host, **{prefix + 'INIT_DIR': str(project),
+                                   prefix + 'FEATURE_DIRECTORY': value})
+                        scripts = package / 'scripts/bash' if ported else FIXTURE / 'scripts/bash'
+                        command = [self.shell, str(scripts / 'check-prerequisites.sh'), '--json']
+                        results = []
+                        # Explicit input wins the old selection; read-only and no-persist leave it intact.
+                        for mode in ('paths', 'no-persist', 'persist', 'saved'):
+                            args = command + (['--paths-only'] if mode in ('paths', 'saved') else [])
+                            current = dict(env)
+                            if mode == 'no-persist':
+                                current[prefix + 'FEATURE_NO_PERSIST'] = '1'
+                            if mode == 'saved':
+                                current.pop(prefix + 'FEATURE_DIRECTORY')
+                            before = pointer.read_bytes(), pointer.stat().st_mtime_ns
+                            result = subprocess.run(args, cwd=project, env=current, capture_output=True,
+                                                    text=True, timeout=20)
+                            self.assertEqual(result.returncode, 0, result.stderr)
+                            if mode != 'persist':
+                                self.assertEqual((pointer.read_bytes(), pointer.stat().st_mtime_ns), before)
+                            self.assertEqual(Path(json.loads(result.stdout)['FEATURE_DIR']).resolve(), feature.resolve())
+                            results.append((self.normalize(result.stdout, project),
+                                            self.normalize(result.stderr, project),
+                                            self.normalize(pointer.read_text(), project)))
+                        observations.append(results)
+                    self.assertEqual(observations[1], observations[0], 'path spelling / selection differential')
+
+    def test_absolute_alias_selection_preserves_upstream_noop_and_explicit_prefix_rules(self):
+        for host in ('codex', 'claude', 'cursor'):
+            for override, spelling, logical_cwd in (
+                    (None, 'alias', False), ('physical', 'alias', False),
+                    ('alias', 'alias', False), ('alias', 'physical', False),
+                    (None, 'alias', True), (None, 'physical', True)):
+                for initial in ('same', 'previous'):
+                    with self.subTest(host=host, override=override, spelling=spelling, logical_cwd=logical_cwd, initial=initial):
+                        package = self.package()
+                        observations = []
+                        for ported in (False, True):
+                            project = (self.base / (str(self.sequence) + ('-port' if ported else '-raw'))).resolve()
+                            state = project / ('.sdlc' if ported else '.specify')
+                            relative = ('.sdlc/' if ported else '') + 'specs/001-selected'
+                            feature = project / relative
+                            feature.mkdir(parents=True)
+                            state.mkdir(exist_ok=True)
+                            (state / 'init-options.json').write_text('{"script":"sh"}\n')
+                            (feature / 'spec.md').write_text('Selected specification\n')
+                            (feature / 'plan.md').write_text('Selected plan\n')
+                            alias = project.with_name(project.name + '-alias')
+                            alias.symlink_to(project, target_is_directory=True)
+                            value = str((alias if spelling == 'alias' else project) / relative) + '/.'
+                            pointer = state / 'feature.json'
+                            pointer.write_text(json.dumps({'feature_directory': value if initial == 'same' else initial}) + '\n')
+                            prefix = 'SDLC_' if ported else 'SPECIFY_'
+                            env = dict(self.env, SDLC_HOST=host, PWD=str(alias if logical_cwd else project),
+                                       **{prefix + 'FEATURE_DIRECTORY': value})
+                            if override:
+                                env[prefix + 'INIT_DIR'] = str(alias if override == 'alias' else project)
+                            scripts = package / 'scripts/bash' if ported else FIXTURE / 'scripts/bash'
+                            results = []
+                            for mode in ('paths', 'no-persist', 'persist', 'saved'):
+                                current = dict(env)
+                                if mode == 'no-persist':
+                                    current[prefix + 'FEATURE_NO_PERSIST'] = '1'
+                                if mode == 'saved':
+                                    current.pop(prefix + 'FEATURE_DIRECTORY')
+                                before = pointer.read_bytes(), pointer.stat().st_mtime_ns
+                                result = subprocess.run([self.shell, str(scripts / 'check-prerequisites.sh'), '--json',
+                                                         *(['--paths-only'] if mode in ('paths', 'saved') else [])],
+                                                        cwd=project, env=current, capture_output=True, text=True, timeout=20)
+                                self.assertEqual(result.returncode, 0, result.stderr)
+                                after = pointer.read_bytes(), pointer.stat().st_mtime_ns
+                                if mode != 'persist':
+                                    self.assertEqual(before, after)
+                                selection_root = alias if override == 'alias' or (not override and logical_cwd) else project
+                                if mode == 'persist' and initial == 'same' and not value.startswith(str(selection_root) + '/'):
+                                    self.assertEqual(before, after, 'identical absolute alias selection must be a no-op')
+                                self.assertEqual(Path(json.loads(result.stdout)['FEATURE_DIR']).resolve(), feature)
+                                def normalized(text):
+                                    return self.normalize(text.replace(str(alias), str(project)), project)
+                                results.append((normalized(result.stdout), normalized(result.stderr),
+                                                normalized(pointer.read_text()), before == after))
+                            observations.append(results)
+                        self.assertEqual(observations[1], observations[0], 'absolute alias / raw source persistence differential')
 
     def interpreter(self, directory, name, *, reject_yaml=False, invalid=False, launcher=False, log=None):
         path = directory / name
@@ -301,9 +420,9 @@ class PortScriptBehaviorTests(unittest.TestCase):
         def broken(name, text):
             result = original(name, text)
             if name == 'common.sh':
-                anchor = '    # Read current value (if any) and skip write when unchanged\n'
+                anchor = '    _sdlc_store feature --project "$repo_root" --value "$feature_dir_value" --persist >/dev/null'
                 self.assertEqual(result.count(anchor), 1)
-                result = result.replace(anchor, '    feature_dir_value="${feature_dir_value#.sdlc/}"\n' + anchor)
+                result = result.replace(anchor, '    _sdlc_store feature --project "$repo_root" --value ".sdlc/specs/wrong" --persist >/dev/null')
             return result
 
         for operation in ('prerequisites', 'create'):
@@ -317,7 +436,7 @@ class PortScriptBehaviorTests(unittest.TestCase):
         def broken(name, text):
             result = original(name, text)
             if name == 'common.sh':
-                anchor = '    elif [[ -f "$repo_root/.sdlc/feature.json" ]]; then'
+                anchor = '    elif [[ -f "$(_sdlc_feature_json "$repo_root")" ]]; then'
                 self.assertEqual(result.count(anchor), 1)
                 result = result.replace(anchor, '    elif false; then')
             return result

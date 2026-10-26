@@ -5,6 +5,26 @@ _sdlc_plugin_root() {
     printf '%s\n' "$dir"
 }
 
+_sdlc_store() {
+    command -v python3 >/dev/null 2>&1 || {
+        echo 'ERROR: Python 3.9+ is required for SDLC path validation' >&2
+        return 1
+    }
+    python3 -I -B "$(_sdlc_plugin_root)/scripts/python/sdlc_store.py" "$@"
+}
+
+_sdlc_state_dir() {
+    _sdlc_store resolve --project "$1" --field SDLC_DIR
+}
+
+_sdlc_feature_json() {
+    _sdlc_store resolve --project "$1" --field FEATURE_JSON
+}
+
+_sdlc_feature_path() {
+    _sdlc_store feature --project "$1" --value "$2" --field FEATURE_DIR
+}
+
 _sdlc_validate_paths() {
     local root
     root=$(_sdlc_plugin_root) || return 1
@@ -20,13 +40,5 @@ _sdlc_validate_paths() {
 }
 
 get_repo_root() {
-    local root
-    if [[ -n "${SPECIFY_INIT_DIR:-}" ]]; then
-        root=$(resolve_specify_init_dir) || return 1
-    elif ! root=$(find_specify_root); then
-        echo 'ERROR: No initialized .sdlc project found; run sdlc-000-init in the selected project first' >&2
-        return 1
-    fi
-    _sdlc_validate_paths "$root" || return 1
-    printf '%s\n' "$root"
+    _sdlc_store resolve --field PROJECT_ROOT
 }

@@ -272,11 +272,19 @@ shell_quote() {
 SCRIPT_DIR="$(CDPATH="" cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/common.sh"
 
+if [[ "$DRY_RUN" != true ]]; then
+
+if [[ -z "${SDLC_STORE_LOCK_TOKEN:-}" ]]; then
+    exec python3 -I -B "$(_sdlc_plugin_root)/scripts/python/sdlc_store.py" run --script create-new-feature.sh -- "$@"
+fi
+_sdlc_store check-lock || exit 1
+fi
+
 REPO_ROOT=$(get_repo_root) || exit 1
 
 cd "$REPO_ROOT"
 
-SPECS_DIR="$REPO_ROOT/.sdlc/specs"
+SPECS_DIR="$(_sdlc_state_dir "$REPO_ROOT")/specs"
 if [ "$DRY_RUN" != true ]; then
     mkdir -p "$SPECS_DIR"
 fi
@@ -464,7 +472,7 @@ if [ "$DRY_RUN" != true ]; then
     # Persist to .sdlc/feature.json so downstream commands can find the
     # feature, unless the orchestrator opted out via SDLC_FEATURE_NO_PERSIST (#4129).
     if [[ "${SDLC_FEATURE_NO_PERSIST:-}" != "1" && "${SDLC_FEATURE_NO_PERSIST:-}" != "true" ]]; then
-        _persist_feature_json "$REPO_ROOT" "$FEATURE_DIR"
+        _persist_feature_json "$REPO_ROOT" "${FEATURE_DIR#"$REPO_ROOT/"}"
     fi
 
     # Inform the user how to set feature state in their own shell

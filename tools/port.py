@@ -51,6 +51,44 @@ def port_script(name: str,text: str) -> str:
     elif name=='setup-tasks.sh':
         text=replace_once(text,"or run 'specify init' / reinstall shared infra to restore the core .sdlc/templates/tasks-template.md template.",
             'or reinstall the SDLC AI SPEC plugin to restore its templates/tasks-template.md template.')
+    # Explicit storage extension: code root stays local; only state addresses move.
+    if name == 'common.sh':
+        text = text.replace('local fj="$repo_root/.sdlc/feature.json"',
+                            'local fj\n    fj=$(_sdlc_feature_json "$repo_root") || return 1')
+        text = text.replace('[[ -f "$repo_root/.sdlc/feature.json" ]]',
+                            '[[ -f "$(_sdlc_feature_json "$repo_root")" ]]')
+        text = replace_once(text, '[[ "$feature_dir" != /* ]] && feature_dir="$repo_root/$feature_dir"',
+                            'feature_dir=$(_sdlc_feature_path "$repo_root" "$feature_dir") || return 1', count=2)
+        text = replace_once(text, 'mkdir -p "$repo_root/.sdlc"', 'mkdir -p "$(dirname -- "$fj")"')
+    if name == 'common.sh':
+        text = function(text, '_persist_feature_json', '''_persist_feature_json() {
+    local repo_root="$1"
+    local feature_dir_value="$2"
+    _sdlc_validate_paths "$repo_root" "$feature_dir_value" || return 1
+    feature_dir_value=$(_sdlc_store feature --project "$repo_root" --value "$feature_dir_value" --field FEATURE_VALUE) || return 1
+    # Preserve upstream parser fallback and unchanged-selection no-op semantics.
+    local current_val
+    current_val=$(read_feature_json_feature_directory "$repo_root")
+    if [[ "$current_val" == "$feature_dir_value" ]]; then
+        return 0
+    fi
+    _sdlc_store feature --project "$repo_root" --value "$feature_dir_value" --persist >/dev/null
+}''')
+    for var in ('repo_root', 'REPO_ROOT'):
+        text = text.replace('$' + var + '/.sdlc', '$(_sdlc_state_dir "$' + var + '")')
+    if name in ('create-new-feature.sh', 'setup-plan.sh', 'setup-tasks.sh'):
+        if name == 'create-new-feature.sh':
+            # This value was generated from the canonical code root, rather than
+            # supplied by the caller. Retain upstream's project-relative record.
+            text = replace_once(text, '_persist_feature_json "$REPO_ROOT" "$FEATURE_DIR"',
+                                '_persist_feature_json "$REPO_ROOT" "${FEATURE_DIR#"$REPO_ROOT/"}"')
+        # The child re-enters only with a lock token issued by the packaged runner.
+        marker = 'source "$SCRIPT_DIR/common.sh"'
+        wrapper = marker + '\n\nif [[ -z "${SDLC_STORE_LOCK_TOKEN:-}" ]]; then\n    exec python3 -I -B "$(_sdlc_plugin_root)/scripts/python/sdlc_store.py" run --script ' + name + ' -- "$@"\nfi\n_sdlc_store check-lock || exit 1'
+        if name == 'create-new-feature.sh':
+            wrapper = marker + '\n\nif [[ "$DRY_RUN" != true ]]; then' + wrapper[len(marker):] + '\nfi'
+        text = replace_once(text, marker, wrapper)
+
     # docs/NAMING.md: preserve raw inputs; project all declarations and callers.
     return script_projection(text)
 

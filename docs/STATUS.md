@@ -15,7 +15,7 @@ python3 -I -B "$SDLC_PLUGIN_ROOT/scripts/python/project_status.py" --project "$P
 python3 -I -B "$SDLC_PLUGIN_ROOT/scripts/python/project_status.py" --project "$PROJECT" --feature .sdlc/specs/001-example --json
 ```
 
-只需 Python 3.9+ 标准库，不依赖 Bash、uv、Git 或上游 CLI。不带 `--json` 时
+只需 Python 3.9+ 标准库，不依赖 Bash、uv 或上游 CLI；跨工作区发现使用 Git，只读查询不写 Git。不带 `--json` 时
 直接输出中文 Markdown。没有输出文件、修改或修复参数；路径作为独立参数引用。
 
 | 参数 | 意义 |
@@ -26,8 +26,8 @@ python3 -I -B "$SDLC_PLUGIN_ROOT/scripts/python/project_status.py" --project "$P
 | `--limit N` | 目录结果展示上限，默认 20，允许 1–200 |
 | `--json` | 一个结构化 stdout 对象，不写 status.json |
 
-项目：明确参数 > `SDLC_INIT_DIR` > 业务 cwd 向上最近的 `.sdlc` 标记。
-需求：明确参数 > `SDLC_FEATURE_DIRECTORY` > `feature.json.feature_directory`。
+项目：明确参数 > `SDLC_INIT_DIR` > 公共解析器的工作区发现。有效资料库有本地用本地，否则使用权威库。
+需求：明确参数 > `SDLC_FEATURE_DIRECTORY` > 当前工作区的 `feature.json.feature_directory`。共享 worktree 的选择记录位于权威库的 `workspaces/`。
 `SDLC_FEATURE` 仅标签。不用 Git 分支或修改时间选择需求。无标记报告未初始化；
 最近标记损坏时不跳过它。显式未初始化子目录不会改查父项目。查看其他需求不
 保存切换。允许合法外部状态/需求路径；业务路径指向插件资源时拒绝读取。
@@ -85,6 +85,8 @@ null，不是零。reliable 只描述已识别格式，不表示实现正确。
 
 参数错误由 argparse 报告，退出码 2。partial/error 仍有 JSON，Skill 应说明诊断，
 不靠修改文件或换另一个项目来消除错误。
+只读 Git 工作区查询超时时同样返回 error 和结构化诊断，不输出 traceback 或改查其他项目。
+存在 `.git` 标记但 Git 缺失或身份查询失败时也返回 error，不能按独立非 Git 项目报告绑定。
 
 ## 只读、范围与上限
 
@@ -109,3 +111,10 @@ src/adapters/STATUS.md 和中文资源，不冒充原版命令。构建身份覆
 内容的相对位置解释，因此真正的缩进代码仍会排除。先处理代码围栏，再处理 HTML
 注释；代码中的字面量不能隐藏后续任务。保留物理行号。
 这是有界的勾选框扫描器，不是完整 Markdown 渲染器。
+
+## 工作区共享资料的观察
+
+公共解析器采用有本地用本地、无本地使用权威库的规则，报告中分别给出当前代码
+项目与有效资料路径。共享 worktree 使用各自的需求选择；不回退到 main 的当前
+需求。发现工作区可以调用只读 Git 命令，仍不写 Git、资料库、选择、锁或缓存。
+本地异常不会转读权威库，资料归拢也不属于 STATUS 的职责。

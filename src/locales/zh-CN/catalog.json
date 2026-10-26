@@ -156,17 +156,17 @@
   "resources": {
     "binding": {
       "source": "src/adapters/BINDING.md",
-      "source_sha256": "c8470f5fe1b668de78c06adfbe821b066dc1a25e1f4d87d27162cb90fc0b3705",
-      "translation_sha256": "f4592174b0b8cd49a76ea4569fd6e0c3657a33703d2419dffd24d6571380e8a7",
+      "source_sha256": "ecf003f262912dc4410ef7fed14d924facbd5ff58a9615d7b008da3b762f93d7",
+      "translation_sha256": "3a95bbac20db74117962bb0fa2185c69229ce0b66903edb7aacbd21d86ae228d",
       "status": "reviewed",
-      "reviewer": "User-approved localization preview 2026-09-15"
+      "reviewer": "Codex AI: explicit selection precedence and disjoint storage boundary review"
     },
     "init": {
       "source": "src/adapters/INIT.md",
-      "source_sha256": "e3bc611fd521b6cfce6ad0dc2308b072d84faccc7ed40efe8cc729e97c3f497c",
-      "translation_sha256": "347fd3fd6bc803860c3d197d51707bd28283ffb2df8273737a4774be9ea04b00",
+      "source_sha256": "55bb9457d7e2e3658b579e50aeaf813b3fd1a9d3c79e4f06b5a5fac8aa458723",
+      "translation_sha256": "b304709805aeae08e1f77636a535f8d2280ead64b6947e13ba31539eeb7ccf84",
       "status": "reviewed",
-      "reviewer": "User-approved localization preview 2026-09-15"
+      "reviewer": "Codex AI: workspace storage source/translation review"
     },
     "output-language": {
       "translation_sha256": "5d3682e6c0dda308f4610b747fbf47e8069c41ff5c289d9043f1c3f7b8e2e613",
@@ -175,17 +175,17 @@
     },
     "status": {
       "source": "src/adapters/STATUS.md",
-      "source_sha256": "aefe2d650f93b1f3b25bcbba25c23465d20c0e8f461493bad5b1099a7f14ee3f",
-      "translation_sha256": "cfba687112e155ebc4849f9f1f16ab5f65958f226bb2572f2c3d24fcbbd9c0d6",
+      "source_sha256": "36ae1709477b3767e0e44771d393b8861980abde1de43b2bbe40a71a7cc0bd22",
+      "translation_sha256": "219374ce406ecf6226f95a39e41586c3b1e293f00edf7748b1baa0a038e751f8",
       "status": "reviewed",
-      "reviewer": "User-approved localization preview 2026-09-15"
+      "reviewer": "Codex AI: read-only shared storage review"
     },
     "project-readme": {
       "source": "src/adapters/PROJECT-README.md",
       "status": "reviewed",
-      "reviewer": "User-approved localization preview 2026-09-15",
-      "source_sha256": "70d0fd77e39c9b3cf78334255ed37bfef9c7a014b74082c16a7efde97bc897a3",
-      "translation_sha256": "19837916e0a008bd58d4e44b60673201f462b02737f095f4c0e75986a0abcd59"
+      "reviewer": "Codex AI: storage README source/translation review",
+      "source_sha256": "399973bb0ad64a8eb93c99bf8dd89aed0de5d4d5c101914e95c85cf12fb13c07",
+      "translation_sha256": "4c64a45e527681b2e8d6ef6f02cc60f8362659a4ce4a83040af29db867253965"
     }
   },
   "presentations": {

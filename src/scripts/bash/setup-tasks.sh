@@ -22,6 +22,11 @@ done
 SCRIPT_DIR="$(CDPATH="" cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 source "$SCRIPT_DIR/common.sh"
 
+if [[ -z "${SDLC_STORE_LOCK_TOKEN:-}" ]]; then
+    exec python3 -I -B "$(_sdlc_plugin_root)/scripts/python/sdlc_store.py" run --script setup-tasks.sh -- "$@"
+fi
+_sdlc_store check-lock || exit 1
+
 # Get feature paths
 _paths_output=$(get_feature_paths) || { echo "ERROR: Failed to resolve feature paths" >&2; exit 1; }
 eval "$_paths_output"

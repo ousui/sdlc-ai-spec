@@ -49,6 +49,27 @@ def compare(baselines: Path) -> list[dict]:
         ('missing-plan','check-prerequisites.sh',('--json',)),
         ('template','resolve-template.sh',('checklist-template','--json')),
         ('dry-run','create-new-feature.sh',('--json','--dry-run','--short-name','next','Next feature')),
+        ('explicit-plan','setup-plan.sh',('--json',)),
+        ('explicit-plan-no-persist','setup-plan.sh',('--json',)),
+        ('dot-paths','check-prerequisites.sh',('--json','--paths-only')),
+        ('dot-slash-paths','check-prerequisites.sh',('--json','--paths-only')),
+        ('dot-plan','setup-plan.sh',('--json',)),
+        ('dot-slash-plan','setup-plan.sh',('--json',)),
+        ('invalid-selection','check-prerequisites.sh',('--json','--paths-only')),
+        ('explicit-missing-feature','check-prerequisites.sh',('--json','--require-spec')),
+        ('store-dot-paths','check-prerequisites.sh',('--json','--paths-only')),
+        ('store-dot-plan','setup-plan.sh',('--json',)),
+        ('store-dot-no-persist','setup-plan.sh',('--json',)),
+        ('store-absolute-dot-plan','setup-plan.sh',('--json',)),
+        ('store-leading-dot-plan','setup-plan.sh',('--json',)),
+        ('store-trailing-slash-plan','setup-plan.sh',('--json',)),
+        ('store-repeated-slash-plan','setup-plan.sh',('--json',)),
+        ('alias-prerequisite-noop','check-prerequisites.sh',('--json',)),
+        ('alias-plan-noop','setup-plan.sh',('--json',)),
+        ('alias-explicit-root-plan','setup-plan.sh',('--json',)),
+        ('alias-physical-plan','setup-plan.sh',('--json',)),
+        ('alias-no-persist','setup-plan.sh',('--json',)),
+        ('alias-paths-only','check-prerequisites.sh',('--json','--paths-only')),
     ]
     with tempfile.TemporaryDirectory(prefix='sdlc differential ') as temp:
         root=Path(temp)
@@ -67,15 +88,42 @@ def compare(baselines: Path) -> list[dict]:
                     else:
                         shutil.copytree(baseline/'.specify',state)
                     relative=('.sdlc/' if ported else '')+'specs/001-fixture'
-                    feature=project/relative;feature.mkdir(parents=True)
-                    (state/'feature.json').write_text(json.dumps({'feature_directory':relative})+'\n')
+                    if case.startswith('dot-'):
+                        relative = './' if case.startswith('dot-slash-') else '.'
+                    if case.startswith('store-'):
+                        relative += ('/' if case == 'store-trailing-slash-plan' else
+                                     '//' if case == 'store-repeated-slash-plan' else '/.')
+                        if case == 'store-leading-dot-plan':
+                            relative = './' + relative
+                        if case == 'store-absolute-dot-plan':
+                            # Auto-discovery uses the physical cwd. Keep this explicit
+                            # absolute value in the same spelling for the upstream oracle.
+                            relative = str(project.resolve()) + '/' + relative
+                    alias = project.with_name(project.name + '-alias')
+                    if case.startswith('alias-'):
+                        alias.symlink_to(project, target_is_directory=True)
+                        prefix_path = project.resolve() if case == 'alias-physical-plan' else alias
+                        relative = str(prefix_path) + '/' + relative + '/.'
+                    feature=project/relative;feature.mkdir(parents=True, exist_ok=True)
+                    selection = state/'feature.json'
+                    previous = case.startswith('store-') or case in ('alias-explicit-root-plan', 'alias-no-persist', 'alias-paths-only')
+                    selection.write_text('{invalid\n' if case.startswith('explicit-plan') or case == 'invalid-selection'
+                                         else json.dumps({'feature_directory':'previous' if previous else relative})+'\n')
+                    selection_before = selection.read_bytes(), selection.stat().st_mtime_ns
                     (feature/'spec.md').write_text('Synthetic specification\n')
-                    if case not in ('plan','missing-plan'):
+                    if (script != 'setup-plan.sh' and case != 'missing-plan') or case.startswith('alias-'):
                         (feature/'plan.md').write_text('Synthetic plan\n')
                     if case=='required':
                         (feature/'tasks.md').write_text('- [ ] T001 Synthetic task\n')
                     env={k:v for k,v in os.environ.items() if not k.startswith(('SPECIFY_','SDLC_','PYTHON'))}
                     env.update(SDLC_HOST=host,PYTHONDONTWRITEBYTECODE='1')
+                    prefix = 'SDLC_' if ported else 'SPECIFY_'
+                    if case.startswith(('explicit-', 'dot-', 'store-', 'alias-')):
+                        env[prefix + 'FEATURE_DIRECTORY'] = relative + '-missing' if case == 'explicit-missing-feature' else relative
+                    if case in ('alias-explicit-root-plan', 'alias-physical-plan'):
+                        env[prefix + 'INIT_DIR'] = str(alias)
+                    if case in ('explicit-plan-no-persist', 'store-dot-no-persist', 'alias-no-persist'):
+                        env[prefix + 'FEATURE_NO_PERSIST'] = '1'
                     script_dir=(package/'scripts/bash') if ported else state/'scripts/bash'
                     result=subprocess.run(['bash',str(script_dir/script),*args],cwd=project,
                         env=env,capture_output=True,text=True,timeout=20)
@@ -83,6 +131,8 @@ def compare(baselines: Path) -> list[dict]:
                         if ported: text=reverse_names(text, bare=True)
                         text=text.replace(str(package)+'/templates/',str(project)+'/.specify/templates/')
                         text=normalize_project_paths(text,project)
+                        if case.startswith('alias-'):
+                            text=normalize_project_paths(text,alias)
                         text=text.replace('.sdlc/specs/','specs/').replace('.sdlc/','.specify/')
                         text=re.sub(r'(?<![\w./])/?specs/','@SPECS@/',text)
                         text=re.sub(r'(?<![\w:/\$-])sdlc-(constitution|specify|clarify|plan|tasks|analyze|checklist|implement|converge)\b',r'/speckit-\1',text)
@@ -91,7 +141,9 @@ def compare(baselines: Path) -> list[dict]:
                     for p in feature.iterdir():
                         if p.is_file():
                             text=p.read_text()
-                            if ported and case == 'plan' and p.name == 'plan.md':
+                            # Alias cases start with an existing synthetic plan;
+                            # only newly copied templates need localization reversal.
+                            if ported and script == 'setup-plan.sh' and p.name == 'plan.md' and not case.startswith('alias-'):
                                 text=restore_template('plan-template',text)
                             files[p.name]=normalize(text)
                     stdout=result.stdout
@@ -106,7 +158,9 @@ def compare(baselines: Path) -> list[dict]:
                         stdout=json.dumps(json.loads(stdout),ensure_ascii=False,sort_keys=True)
                     # Upstream script diagnostics use / even for Codex.
                     stderr=normalize(result.stderr).replace('$speckit-','/speckit-')
-                    output.append((result.returncode,normalize(stdout),stderr,files))
+                    selection_preserved = (selection.read_bytes(), selection.stat().st_mtime_ns) == selection_before
+                    output.append((result.returncode,normalize(stdout),stderr,files,
+                                   normalize(selection.read_text()),selection_preserved))
                 if output[0]!=output[1]:
                     raise AssertionError(f'Differential mismatch {host}/{case}: {output!r}')
                 records.append({'host':host,'case':case,'result':'PASS'})

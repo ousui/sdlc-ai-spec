@@ -5,13 +5,13 @@
   },
   "metadata": {
     "description": "从需求到实施与收敛，12 个中文 Skill 支持规范驱动开发",
-    "version": "1.2.1-sdlc.2"
+    "version": "1.2.1-sdlc.3"
   },
   "plugins": [
     {
       "name": "sdlc-ai-spec",
       "description": "SDLC AI SPEC：面向 AI 编程助手的规范驱动开发插件，适配 Codex、Claude Code 和 Cursor。提供 12 个公共 Skill，涵盖项目初始化、项目规则、需求规格与澄清、技术方案、任务拆解、一致性检查、人工评审清单、实施、收敛、只读状态查询及独立需求拆分；内置简体中文流程与模板。产品版本按锁定上游版本与 sdlc 本地迭代号管理。项目主页：https://github.com/goedgecloud/sdlc-ai-spec",
-      "version": "1.2.1-sdlc.2",
+      "version": "1.2.1-sdlc.3",
       "author": {
         "name": "Blade"
       },

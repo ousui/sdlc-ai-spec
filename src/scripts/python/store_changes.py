@@ -132,7 +132,7 @@ def authority_action(context: dict, kind: str) -> Path:
             raise ValueError('Import is authority-to-local; main uses collect')
         if not context['local_exists']:
             raise ValueError('Import refresh requires an existing local store; run INIT with --mode local first')
-        return Path(context['PROJECT_ROOT']) / '.sdlc'
+        return Path(context['SDLC_DIR'])
     return Path(context['SDLC_DIR'])
 
 

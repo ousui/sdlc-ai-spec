@@ -394,6 +394,7 @@ class StorageTests(unittest.TestCase):
         manifest_path.write_text(json.dumps(manifest))
         lock = self.main / '.sdlc/.write-lock'
         lock.mkdir(); (lock / 'owner').write_text('dead-owner'); (lock / 'pid').write_text('2147483647')
+        (lock / 'lease').write_bytes(b'')
         result = self.runpy('store_changes.py', 'recover', '--transaction', plan['transaction'])
         self.assertEqual(result['status'], 'recovered')
         self.assertEqual((self.main / '.sdlc/memory/long-term.md').read_text(), 'Shared project fact\n')

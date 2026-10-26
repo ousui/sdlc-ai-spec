@@ -307,7 +307,7 @@ def worktrees(project: Path) -> tuple[Path, list[Path]]:
         return project, [project]
     raw = git_output(project, 'rev-parse', '--show-toplevel')
     if raw is None:
-        return project, [project]
+        raise ValueError('Cannot discover Git workspace identity for a project with a Git marker')
     # Git appends one LF; whitespace belonging to the pathname must survive.
     repo = project_directory(Path(os.fsdecode(raw).removesuffix('\n')).resolve())
     listing = git_output(project, 'worktree', 'list', '--porcelain', '-z')
@@ -868,29 +868,128 @@ def document_path(context: dict, path: Path, *, allowed_control: Path | None = N
     return actual
 
 
+def _native_lease_module():
+    try:
+        import fcntl
+    except ImportError as error:
+        raise ValueError('Native inherited file leases are required for store writes') from error
+    return fcntl
+
+
+def _open_lock_lease(lock: Path, *, create=False) -> int:
+    path = lock / 'lease'
+    safe(path)
+    flags = os.O_RDWR | getattr(os, 'O_NOFOLLOW', 0)
+    if create:
+        flags |= os.O_CREAT | os.O_EXCL
+    descriptor = os.open(path, flags, 0o600)
+    try:
+        # Shell redirections may replace stdin/stdout/stderr; keep the lease separate.
+        if descriptor < 3:
+            native = _native_lease_module()
+            replacement = native.fcntl(descriptor, native.F_DUPFD, 3)
+            os.close(descriptor)
+            descriptor = replacement
+        os.set_inheritable(descriptor, False)
+        return descriptor
+    except BaseException:
+        os.close(descriptor)
+        raise
+
+
+def _check_lock_lease(lock: Path, descriptor: int) -> None:
+    safe(lock / 'lease')
+    current, opened = (lock / 'lease').stat(), os.fstat(descriptor)
+    if not stat.S_ISREG(opened.st_mode) or (current.st_dev, current.st_ino) != (opened.st_dev, opened.st_ino):
+        raise ValueError('Store writer lease binding changed')
+
+
+def _acquire_lock_lease(descriptor: int) -> None:
+    native = _native_lease_module()
+    try:
+        native.flock(descriptor, native.LOCK_EX | native.LOCK_NB)
+    except BlockingIOError as error:
+        raise ValueError('Store has an active writer lease; lock retained') from error
+
+
+@contextmanager
+def _exclusive_lock_lease(lock: Path):
+    descriptor = _open_lock_lease(lock)
+    try:
+        _check_lock_lease(lock, descriptor)
+        _acquire_lock_lease(descriptor)
+        yield descriptor
+    finally:
+        os.close(descriptor)
+
+
+def inherited_lock(state: Path) -> tuple[str, int]:
+    lock = state / '.write-lock'
+    token = os.environ.get('SDLC_STORE_LOCK_TOKEN')
+    try:
+        descriptor = int(os.environ['SDLC_STORE_LOCK_FD'])
+    except (KeyError, ValueError) as error:
+        raise ValueError('Missing or invalid store writer lease') from error
+    safe(lock / 'owner')
+    if not token or (lock / 'owner').read_text() != token:
+        raise ValueError('Missing or invalid store write token')
+    _check_lock_lease(lock, descriptor)
+    _acquire_lock_lease(descriptor)
+    return token, descriptor
+
+
+def _clear_lock(lock: Path, descriptor: int, identity: tuple, owner: bytes, pid: bytes) -> None:
+    current = lock.stat()
+    _check_lock_lease(lock, descriptor)
+    for name in ('owner', 'pid'):
+        safe(lock / name)
+    if ((current.st_dev, current.st_ino) != identity or (lock / 'owner').read_bytes() != owner
+            or (lock / 'pid').read_bytes() != pid):
+        raise ValueError('Lock ownership changed')
+    for name in ('pid', 'owner', 'lease'):
+        (lock / name).unlink()
+    lock.rmdir()
+
+
 @contextmanager
 def write_lock(state: Path):
     safe(state)
     lock = state / '.write-lock'
     safe(lock)
-    token = os.environ.get('SDLC_STORE_LOCK_TOKEN')
-    if token and lock.is_dir() and (lock / 'owner').read_text() == token:
-        yield token
+    if os.environ.get('SDLC_STORE_LOCK_TOKEN'):
+        yield inherited_lock(state)
         return
+    _native_lease_module()
     try:
         lock.mkdir()
     except FileExistsError:
         raise ValueError('Store has an active write lock; inspect the interrupted operation before recovery') from None
-    token = uuid.uuid4().hex
+    info = lock.stat()
+    identity = info.st_dev, info.st_ino
+    token, pid = uuid.uuid4().hex, str(os.getpid()).encode()
+    descriptor, issued = None, False
     try:
+        descriptor = _open_lock_lease(lock, create=True)
+        _acquire_lock_lease(descriptor)
         (lock / 'owner').write_text(token)
-        (lock / 'pid').write_text(str(os.getpid()))
-        yield token
+        (lock / 'pid').write_bytes(pid)
+        issued = True
+        yield token, descriptor
     finally:
-        (lock / 'owner').unlink(missing_ok=True)
-        (lock / 'pid').unlink(missing_ok=True)
-        lock.rmdir()
-
+        if descriptor is not None:
+            # Do not LOCK_UN: Bash and its descendants share this open-file lease.
+            os.close(descriptor)
+        if issued:
+            with _exclusive_lock_lease(lock) as cleanup:
+                _clear_lock(lock, cleanup, identity, token.encode(), pid)
+        else:
+            # No writer received the lease. Only discard this newly created lock.
+            current = lock.stat()
+            if (current.st_dev, current.st_ino) == identity:
+                for name in ('owner', 'pid', 'lease'):
+                    safe(lock / name)
+                    (lock / name).unlink(missing_ok=True)
+                lock.rmdir()
 
 
 def release_stale_lock(state: Path) -> dict:
@@ -898,7 +997,7 @@ def release_stale_lock(state: Path) -> dict:
     safe(lock)
     if not lock.exists():
         return {'status': 'not_locked'}
-    if not lock.is_dir() or {p.name for p in lock.iterdir()} != {'owner', 'pid'}:
+    if not lock.is_dir() or {p.name for p in lock.iterdir()} != {'owner', 'pid', 'lease'}:
         raise ValueError('Incomplete lock ownership; inspect manually without changing project data')
     safe(lock / 'pid')
     safe(lock / 'owner')
@@ -909,11 +1008,9 @@ def release_stale_lock(state: Path) -> dict:
     try:
         os.kill(pid, 0)
     except ProcessLookupError:
-        if (lock / 'pid').read_bytes() != pid_bytes or (lock / 'owner').read_bytes() != owner:
-            raise ValueError('Lock ownership changed')
-        (lock / 'pid').unlink()
-        (lock / 'owner').unlink()
-        lock.rmdir()
+        info = lock.stat()
+        with _exclusive_lock_lease(lock) as descriptor:
+            _clear_lock(lock, descriptor, (info.st_dev, info.st_ino), owner, pid_bytes)
         return {'status': 'stale_lock_released'}
     raise ValueError('Lock owner is still running; recovery refused')
 
@@ -922,29 +1019,39 @@ def register(context: dict, authority: Path | None, sources: list[Path], dry_run
     if not context['can_collect']:
         raise ValueError('Only main may register authority or additional sources')
     path = Path(context['STORE_REGISTRY'])
-    old = read_object(path) if path.exists() else {}
-    target = authority.expanduser().absolute() if authority else Path(context['AUTHORITY_DIR'])
-    safe(target)
-    if target.exists() and not target.is_dir():
-        raise ValueError('Authority must be a directory: ' + str(target))
-    if not target.parent.is_dir():
-        raise ValueError('Authority parent directory must exist')
-    target = target.resolve()
-    if target == Path(target.anchor) or target_inside(Path(context['PROJECT_ROOT']), target) or target_inside(PLUGIN, target):
-        raise ValueError('Authority must be a separate data directory')
-    if target != Path(context['AUTHORITY_DIR']):
-        previous = Path(context['AUTHORITY_DIR'])
-        if old or (previous.is_dir() and any(previous.iterdir())):
-            raise ValueError('Existing authority cannot be redirected; explicit migration is required')
-    for source in sources:
-        safe(source)
-        if not source.is_dir():
-            raise ValueError('Registered source must exist')
-    data = {'schema': 1, 'authority': str(target),
-            'sources': sorted(set(old.get('sources', []) + [str(p.resolve()) for p in sources]))}
-    if not dry_run and data != old:
-        path.parent.mkdir(exist_ok=True)
-        with write_lock(path.parent):
+    def proposal(current):
+        if (not current['can_collect'] or current['PROJECT_ROOT'] != context['PROJECT_ROOT']
+                or current['STORE_REGISTRY'] != str(path)):
+            raise ValueError('Registration workspace binding changed')
+        old = read_object(path) if path.exists() else {}
+        target = authority.expanduser().absolute() if authority else Path(current['AUTHORITY_DIR'])
+        safe(target)
+        if target.exists() and not target.is_dir():
+            raise ValueError('Authority must be a directory: ' + str(target))
+        if not target.parent.is_dir():
+            raise ValueError('Authority parent directory must exist')
+        target = target.resolve()
+        if target == Path(target.anchor) or target_inside(Path(current['PROJECT_ROOT']), target) or target_inside(PLUGIN, target):
+            raise ValueError('Authority must be a separate data directory')
+        if target != Path(current['AUTHORITY_DIR']):
+            previous = Path(current['AUTHORITY_DIR'])
+            if old or (previous.is_dir() and any(p.name != '.write-lock' for p in previous.iterdir())):
+                raise ValueError('Existing authority cannot be redirected; explicit migration is required')
+        for source in sources:
+            safe(source)
+            if not source.is_dir():
+                raise ValueError('Registered source must exist')
+        return old, {'schema': 1, 'authority': str(target),
+                     'sources': sorted(set(old.get('sources', []) + [str(p.resolve()) for p in sources]))}
+    # Reject invalid input without creating a state directory, including previews.
+    _, data = proposal(context)
+    if dry_run:
+        return data
+    path.parent.mkdir(exist_ok=True)
+    with write_lock(path.parent):
+        current = resolve(Path(context['PROJECT_ROOT']), missing=True)
+        old, data = proposal(current)
+        if data != old:
             atomic(path, json_bytes(data))
     return data
 
@@ -1024,18 +1131,17 @@ def main() -> int:
         elif args.action == 'recover-lock':
             result = release_stale_lock(Path(context['SDLC_DIR']))
         elif args.action == 'check-lock':
-            lock = Path(context['SDLC_DIR']) / '.write-lock'
-            if not os.environ.get('SDLC_STORE_LOCK_TOKEN') or (lock / 'owner').read_text() != os.environ['SDLC_STORE_LOCK_TOKEN']:
-                raise ValueError('Missing or invalid store write token')
+            inherited_lock(Path(context['SDLC_DIR']))
             return 0
         elif args.action == 'run':
             if args.script not in ('create-new-feature.sh', 'setup-plan.sh', 'setup-tasks.sh'):
                 raise ValueError('Only packaged data-writing helpers may run under the store lock')
             validate_state(context, selection=False, knowledge_aliases=True)
-            with write_lock(Path(context['SDLC_DIR'])) as token:
+            with write_lock(Path(context['SDLC_DIR'])) as (token, descriptor):
                 arguments = args.arguments[1:] if args.arguments[:1] == ['--'] else args.arguments
                 return subprocess.run(['bash', str(PLUGIN / 'scripts/bash' / args.script), *arguments],
-                    env=dict(os.environ, SDLC_INIT_DIR=project_spelling(context), SDLC_STORE_LOCK_TOKEN=token)).returncode
+                    env=dict(os.environ, SDLC_INIT_DIR=project_spelling(context), SDLC_STORE_LOCK_TOKEN=token,
+                             SDLC_STORE_LOCK_FD=str(descriptor)), pass_fds=(descriptor,)).returncode
         else:
             if args.action == 'resolve':
                 validate_state(context, selection=False, knowledge_aliases=True)

@@ -24,6 +24,8 @@ uv/specify-cli/业务应用，不访问网络，也不会在项目内复制 Skil
 不复制。main 的显式归拢与 worktree 的显式导入使用 `store_changes.py` 的
 prepare/apply/recover 流程。指定权威路径及额外来源由 main 使用 `sdlc_store.py register`
 登记；不能借登记静默移动已有权威资料。
+已有且与权威库分离的本地根目录软链接会解析为实际资料目录；默认初始化及显式
+`--mode local` 均在该目录补缺，保留根目录链接。
 
 ## 初始化会创建什么
 
@@ -58,7 +60,8 @@ provenance sidecar 是可选的观察数据，不是新的生命周期门禁。�
 新加入 Git；已经被跟踪的文件仍然保持跟踪。初始化器可以用只读 Git 命令检查 tracking
 状态并给出提醒，但不会修改 Git index、配置、分支或 repository excludes。已有
 `.gitignore` 会被保留，并提醒人工确认其现有策略。非 Git 项目不需要 `git init`；
-没有 Git 不会阻塞初始化。
+没有 `.git` 标记时，Git 缺失不会阻塞初始化。已有 `.git` 标记时，Git 不可用、查询失败
+或超时会停止工作区身份发现；修复 Git 访问后重试，不创建会遮蔽权威资料的本地模板库。
 
 INIT 不新建需求或 `feature.json`；明确选择导入时可以复制已有需求的规格、方案及任务。后续核心 `sdlc-100-spec` 才会在
 `.sdlc/specs` 下创建并选择第一个需求。

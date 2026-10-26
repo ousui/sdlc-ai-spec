@@ -384,7 +384,7 @@ def initialize_selected(args) -> dict:
         raise ValueError('Local data takes precedence; shared mode cannot bypass a local store')
     state = Path(context['SDLC_DIR'])
     binding = context
-    if args.mode == 'local' and not context['can_collect']:
+    if args.mode == 'local' and not context['can_collect'] and not context['local_exists']:
         state = project / '.sdlc'
         if state != Path(context['SDLC_DIR']):
             binding = dict(context, SDLC_DIR=str(state), FEATURE_JSON=str(state / 'feature.json'), mode='local')

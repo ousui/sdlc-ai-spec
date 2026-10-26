@@ -403,7 +403,7 @@ def resolve(project: Path | None = None, *, plugin: Path = PLUGIN,
         selected = next((p for p in candidates if os.path.lexists(p / '.sdlc')), None)
         if selected is None and len(roots) > 1:
             selected = next((p for p in candidates
-                             if (roots[0] / p.relative_to(repo) / '.sdlc').exists()), None)
+                             if os.path.lexists(roots[0] / p.relative_to(repo) / '.sdlc')), None)
         root = selected or repo
         repo, roots = worktrees(root)
     relative = root.relative_to(repo)
@@ -425,8 +425,9 @@ def resolve(project: Path | None = None, *, plugin: Path = PLUGIN,
     try:
         if not observe:
             safe((main / '.sdlc').resolve(), plugin)
-        config = read_object(registry) if os.path.lexists(registry) else {}
-        if config and (type(config.get('schema')) is not int or config.get('schema') != 1 or not isinstance(config.get('sources', []), list)):
+        registered = os.path.lexists(registry)
+        config = read_object(registry) if registered else {}
+        if registered and (type(config.get('schema')) is not int or config.get('schema') != 1 or not isinstance(config.get('sources', []), list)):
             raise ValueError('Unsupported store registry')
         raw_authority = config.get('authority', str(main / '.sdlc'))
         if not isinstance(raw_authority, str) or not Path(raw_authority).is_absolute():
@@ -481,6 +482,14 @@ def require_authority(context: dict) -> Path:
     return Path(context['AUTHORITY_DIR'])
 
 
+def validate_options(data: dict) -> None:
+    """Keep accepted edit candidates consistent with ordinary configuration reads."""
+    if data.get('script', 'sh') != 'sh' or type(data.get('sdlc_layout', 1)) is not int or data.get('sdlc_layout', 1) != 1:
+        raise ValueError('Unsupported project profile/layout')
+    if data.get('feature_numbering', data.get('branch_numbering', 'sequential')) not in ('sequential', 'timestamp'):
+        raise ValueError('Invalid feature_numbering')
+
+
 def validate_state(context: dict, *, selection=True, knowledge_aliases=False) -> None:
     state = Path(context['SDLC_DIR'])
     if os.path.lexists(state / '.init-pending.json'):
@@ -492,11 +501,7 @@ def validate_state(context: dict, *, selection=True, knowledge_aliases=False) ->
             raise ValueError('Expected data directory: ' + str(path))
     options = state / 'init-options.json'
     if options.exists():
-        data = read_object(options)
-        if data.get('script', 'sh') != 'sh' or type(data.get('sdlc_layout', 1)) is not int or data.get('sdlc_layout', 1) != 1:
-            raise ValueError('Unsupported project profile/layout')
-        if data.get('feature_numbering', data.get('branch_numbering', 'sequential')) not in ('sequential', 'timestamp'):
-            raise ValueError('Invalid feature_numbering')
+        validate_options(read_object(options))
     for name in ('extensions.yml', 'extensions', 'presets'):
         if os.path.lexists(state / name):
             raise ValueError('Unsupported optional project profile: ' + name)

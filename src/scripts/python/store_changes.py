@@ -14,7 +14,7 @@ import uuid
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from sdlc_store import (PLUGIN, KNOWLEDGE, alias_directory, atomic, document_path, entry_identity, feature_path, json_bytes, name_key, project_directory,
-                        read_object, parse_object, release_stale_lock, require_authority, resolve, safe, same_path, same_target, target_inside, validate_state, worktrees, write_lock)
+                        read_object, parse_object, release_stale_lock, require_authority, resolve, safe, same_path, same_target, target_inside, validate_options, validate_state, worktrees, write_lock)
 
 from init_project import publish as publish_data, published_identity
 
@@ -333,8 +333,8 @@ def edit_bindings(context: dict, target: Path, paths: list[str]) -> dict:
     destinations = []
     for item in result.values():
         path = Path(item['path'])
-        if any(same_target(path, other) for other in destinations):
-            raise ValueError('Ordinary edit paths must have distinct destinations')
+        if any(target_inside(path, other) or target_inside(other, path) for other in destinations):
+            raise ValueError('Ordinary edit file destinations must not overlap')
         destinations.append(path)
     return result
 
@@ -506,8 +506,10 @@ def planned_bytes(context: dict, manifest: dict, proposal: dict) -> dict:
             if not isinstance(data, dict):
                 raise ValueError('Candidate JSON must be an object')
             if name == 'init-options.json':
-                if data.get('script', 'sh') != 'sh' or type(data.get('sdlc_layout', 1)) is not int or data.get('sdlc_layout', 1) != 1 or data.get('feature_numbering', 'sequential') not in ('sequential', 'timestamp'):
-                    raise ValueError('Candidate has unsupported initialization settings')
+                try:
+                    validate_options(data)
+                except ValueError as error:
+                    raise ValueError('Candidate has unsupported initialization settings') from error
             else:
                 if not isinstance(data.get('feature_directory'), str):
                     raise ValueError('Candidate selection needs feature_directory')

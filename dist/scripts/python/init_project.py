@@ -299,9 +299,12 @@ def initialize(plugin: Path, project: Path, numbering: str | None = None,
             if parent not in directories:
                 directories.append(parent)
     directories.sort(key=lambda p: len(p.parts))
+    for path in directories:
+        check_path(path, True)
     writes = []
     preserved = []
     for path, data in proposed.items():
+        check_path(path)
         if not path.exists():
             writes.append((path, data, None))
         elif path == options_file and merged != options:

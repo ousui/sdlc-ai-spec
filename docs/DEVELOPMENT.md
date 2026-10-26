@@ -10,12 +10,13 @@ Marketplace 展示字段。`src/assets/` 中的图标复制到 `dist/assets/`，
 
 根目录保存实现源码。`src/upstream/templates/commands` 保留上游英文原文；
 `src/templates` 和 `src/scripts` 保存已记录的移植差异；`src/adapters/` 提供
-资源绑定和宿主差异。`tools/build.py` 生成一个自包含的 `dist`，含 11 个唯一公共
-入口（九项上游核心、本地 INIT 和 STATUS），不导入上游 CLI，也不读取已初始化的
+资源绑定和宿主差异。`tools/build.py` 生成一个自包含的 `dist`，含 12 个唯一公共
+入口（九项上游核心、本地 INIT、STATUS 和独立 CUT），不导入上游 CLI，也不读取已初始化的
 项目。加上 `--marketplaces` 可同时重新生成根目录的三个目录清单。
 根目录是源码与构建工作区，因此不放置根插件清单。
 
-所有入口位于 `dist/skills/`，不保留私有入口目录。Claude 默认扫描 `skills/`；
+所有入口位于 `dist/skills/`，不保留私有入口目录。CUT 从 `src/skills/sdlc-cut/`
+直接打包，原有 11 个入口继续使用既有生成路径。Claude 默认扫描 `skills/`；
 Codex/Cursor 显式选择 `./skills/`。生成入口均省略三项已批准的展示/选择字段。
 原始上游元数据和执行契约仍独立检查。英文源码渲染结果继续与上游输出独立比较；
 完整中文正文则对照已审查、绑定来源的本地化资源验证。

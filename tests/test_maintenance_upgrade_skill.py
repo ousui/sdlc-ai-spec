@@ -1,4 +1,4 @@
-"""Repository-maintenance Skill contract; never part of the installed 11-Skill product."""
+"""Repository-maintenance Skill contract; never part of the installed product."""
 from __future__ import annotations
 
 import json
@@ -12,7 +12,7 @@ import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / 'tools'))
-from build import ALL_COMMANDS, build
+from build import ALL_COMMANDS, INDEPENDENT_SKILLS, build
 from naming import skill_id
 
 SKILL_DIR = ROOT / '.agents/skills/sdlc-maintain-upgrade'
@@ -59,11 +59,11 @@ class MaintenanceUpgradeSkillTests(unittest.TestCase):
         self.assertEqual(data['interface']['display_name'], 'sdlc-maintain-upgrade')
         self.assertEqual(data['policy']['allow_implicit_invocation'], False)
 
-    def test_product_distribution_stays_exactly_eleven_skills(self):
-        expected = {skill_id(name) for name in ALL_COMMANDS}
+    def test_product_distribution_includes_independent_cut_but_not_maintenance(self):
+        expected = {skill_id(name) for name in ALL_COMMANDS} | set(INDEPENDENT_SKILLS)
         actual = {p.parent.name for p in (ROOT / 'dist/skills').glob('*/SKILL.md')}
         self.assertEqual(actual, expected)
-        self.assertEqual(len(actual), 11)
+        self.assertEqual(len(actual), 12)
         self.assertNotIn('sdlc-maintain-upgrade', actual)
         self.assertFalse((ROOT / 'dist/skills/sdlc-maintain-upgrade').exists())
 

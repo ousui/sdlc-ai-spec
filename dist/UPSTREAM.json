@@ -4,8 +4,8 @@
   "version": "1.2.1",
   "commit": "9dca9bf42a031765ee5e5f2371137f2f26967e11",
   "port_repository": "https://github.com/goedgecloud/sdlc-ai-spec",
-  "port_version": "1.2.1-sdlc.1",
-  "port_revision": 1,
+  "port_version": "1.2.1-sdlc.2",
+  "port_revision": 2,
   "port_author": "Blade",
   "profile": {
     "script": "sh",
@@ -30,6 +30,9 @@
   "local_commands": [
     "init",
     "status"
+  ],
+  "independent_skills": [
+    "sdlc-cut"
   ],
   "init_implemented": true,
   "native_host_verified": false,

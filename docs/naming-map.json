@@ -100,6 +100,15 @@
       "local_id": "status"
     }
   ],
+  "independent_skills": [
+    {
+      "target_id": "sdlc-cut",
+      "english": "Split",
+      "chinese": "需求拆分与后继材料承接",
+      "scope": "utility",
+      "source_path": "src/skills/sdlc-cut/SKILL.md"
+    }
+  ],
   "identifier_examples": {
     "SPECIFY_INIT_DIR": "SDLC_INIT_DIR",
     "SPECIFY_FEATURE": "SDLC_FEATURE",

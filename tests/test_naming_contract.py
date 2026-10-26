@@ -56,9 +56,19 @@ class NamingContractTests(unittest.TestCase):
                 name = cells[0].strip('`')
                 self.assertNotIn(name, rows)
                 rows[name] = cells
-        self.assertEqual(set(rows), {target for _, target in EXPECTED})
+        self.assertEqual(set(rows), {target for _, target in EXPECTED} | {'sdlc-cut'})
         for item in self.data['skills']:
             self.assertEqual(rows[item['target_id']][1:3], [item['english'], item['chinese']])
+        for item in self.data['independent_skills']:
+            self.assertEqual(rows[item['target_id']][1:3], [item['english'], item['chinese']])
+
+    def test_cut_is_independent_public_skill(self):
+        self.assertEqual(self.data['independent_skills'], [{
+            'target_id': 'sdlc-cut', 'english': 'Split',
+            'chinese': '需求拆分与后继材料承接', 'scope': 'utility',
+            'source_path': 'src/skills/sdlc-cut/SKILL.md',
+        }])
+        self.assertNotIn('sdlc-cut', {item['target_id'] for item in self.data['skills']})
 
     def test_product_names_do_not_force_a_project_directory_rename(self):
         product = self.data['product']

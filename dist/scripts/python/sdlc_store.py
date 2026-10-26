@@ -294,8 +294,11 @@ def git_output(project: Path, *args: str) -> bytes | None:
         return None
     env = {k: v for k, v in os.environ.items() if not k.startswith('GIT_')}
     env['GIT_OPTIONAL_LOCKS'] = '0'
-    process = subprocess.run(['git', '-C', str(project), *args], env=env,
-                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=10)
+    try:
+        process = subprocess.run(['git', '-C', str(project), *args], env=env,
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=10)
+    except subprocess.TimeoutExpired as error:
+        raise ValueError(f'Git workspace discovery timed out after {error.timeout} seconds') from error
     return process.stdout if process.returncode == 0 else None
 
 
@@ -922,6 +925,8 @@ def register(context: dict, authority: Path | None, sources: list[Path], dry_run
     old = read_object(path) if path.exists() else {}
     target = authority.expanduser().absolute() if authority else Path(context['AUTHORITY_DIR'])
     safe(target)
+    if target.exists() and not target.is_dir():
+        raise ValueError('Authority must be a directory: ' + str(target))
     if not target.parent.is_dir():
         raise ValueError('Authority parent directory must exist')
     target = target.resolve()

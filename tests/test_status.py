@@ -1,7 +1,9 @@
 """STATUS file facts and nonmutation: disposable data, no business execution."""
 from __future__ import annotations
+from contextlib import redirect_stderr, redirect_stdout
 import hashlib
 import importlib.util
+import io
 import json
 import os
 from pathlib import Path
@@ -316,6 +318,31 @@ class StatusTests(unittest.TestCase):
         self.assertEqual(p.returncode,1);self.assertEqual(json.loads(p.stdout)['status'],'error')
         p=subprocess.run([sys.executable,'-I','-B',str(SCRIPT),'--limit','0'],cwd=self.project,capture_output=True,text=True,timeout=10)
         self.assertEqual(p.returncode,2)
+
+    def test_git_discovery_timeouts_return_json_errors_without_writing(self):
+        env = {k: v for k, v in os.environ.items() if not k.startswith('GIT_')}
+        subprocess.run(['git', 'init', '-q', str(self.project)], env=env,
+                       capture_output=True, check=True, timeout=10)
+        before = snapshot(self.project)
+        original_run = subprocess.run
+        for command in ('rev-parse', 'worktree'):
+            with self.subTest(command=command):
+                def timed_out(args, *positional, **kwargs):
+                    if args[0] == 'git' and command in args:
+                        raise subprocess.TimeoutExpired(args, 10)
+                    return original_run(args, *positional, **kwargs)
+                stdout, stderr = io.StringIO(), io.StringIO()
+                with patch.object(sys, 'argv', [str(SCRIPT), '--project', str(self.project), '--json']), \
+                        patch.object(subprocess, 'run', side_effect=timed_out), \
+                        redirect_stdout(stdout), redirect_stderr(stderr):
+                    code = status.main()
+                self.assertEqual(code, 1)
+                report = json.loads(stdout.getvalue())
+                self.assertEqual(report['status'], 'error')
+                self.assertEqual(report['warnings'][-1]['code'], 'invalid_context')
+                self.assertIn('Git workspace discovery timed out', report['warnings'][-1]['message'])
+                self.assertEqual(stderr.getvalue(), '')
+                self.assertEqual(snapshot(self.project), before)
 
     def test_markdown_escapes_task_text_as_data(self):
         (self.feature/'tasks.md').write_text('- [ ] T001 `<img>` | text\n')

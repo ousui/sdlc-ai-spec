@@ -85,6 +85,7 @@ null，不是零。reliable 只描述已识别格式，不表示实现正确。
 
 参数错误由 argparse 报告，退出码 2。partial/error 仍有 JSON，Skill 应说明诊断，
 不靠修改文件或换另一个项目来消除错误。
+只读 Git 工作区查询超时时同样返回 error 和结构化诊断，不输出 traceback 或改查其他项目。
 
 ## 只读、范围与上限
 

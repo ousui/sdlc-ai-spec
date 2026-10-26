@@ -192,6 +192,38 @@ class StorageTests(unittest.TestCase):
         self.assertIn(str(source), binding['sources'])
         self.runpy('sdlc_store.py', 'register', '--authority', str(self.base / 'other'), project=project, ok=False)
 
+    def test_registration_rejects_file_authority_without_leaving_a_registry(self):
+        target = self.base / 'existing-document.md'
+        target.write_bytes(b'Preserve this document\n')
+        before = target.read_bytes(), target.stat().st_mode, target.stat().st_mtime_ns
+        for dry_run in (False, True):
+            with self.subTest(dry_run=dry_run):
+                project = self.base / ('register-' + str(dry_run))
+                project.mkdir()
+                args = ['--dry-run'] if dry_run else []
+                result = self.runpy('sdlc_store.py', 'register', '--authority', str(target),
+                                    *args, project=project, ok=False)
+                self.assertIn('Authority must be a directory', result.stderr)
+                self.assertFalse((project / '.sdlc').exists())
+                self.assertEqual((target.read_bytes(), target.stat().st_mode, target.stat().st_mtime_ns), before)
+                # A rejected path must not poison the next valid registration.
+                authority = self.base / ('valid-authority-' + str(dry_run))
+                self.runpy('sdlc_store.py', 'register', '--authority', str(authority), project=project)
+                self.init(project, '--mode', 'shared')
+                self.assertEqual(self.binding(project)['SDLC_DIR'], str(authority))
+
+    def test_registration_accepts_an_existing_authority_directory(self):
+        project = self.base / 'existing-authority-project'
+        project.mkdir()
+        authority = self.base / 'existing-authority'
+        (authority / 'memory').mkdir(parents=True)
+        constitution = authority / 'memory/constitution.md'
+        constitution.write_bytes(b'Existing designated principles\n')
+        self.runpy('sdlc_store.py', 'register', '--authority', str(authority), project=project)
+        self.init(project, '--mode', 'shared')
+        self.assertEqual(self.binding(project)['SDLC_DIR'], str(authority))
+        self.assertEqual(constitution.read_bytes(), b'Existing designated principles\n')
+
     def test_worktree_can_initialize_blank_authority_without_import(self):
         shutil.rmtree(self.main / '.sdlc')
         self.init(self.a, '--mode', 'shared')
@@ -253,6 +285,24 @@ class StorageTests(unittest.TestCase):
         plan = self.prepare(sources=[self.a / '.sdlc'], features=['001-one'])
         self.apply(plan)
         self.assertTrue((self.main / '.sdlc/specs/001-one/spec.md').exists())
+
+    def test_import_prepare_requires_local_store_without_switching_shared_binding(self):
+        self.feature(self.main)
+        self.runpy('sdlc_store.py', 'feature', '--value', '.sdlc/specs/001-one', '--persist', project=self.a)
+        binding = self.binding(self.a)
+        state = self.main / '.sdlc'
+        before = files(state)
+        metadata = {p: (p.stat().st_mode, p.stat().st_mtime_ns) for p in (state, *state.rglob('*'))}
+        result = self.runpy('store_changes.py', 'prepare', '--kind', 'import', project=self.a, ok=False)
+        self.assertIn('existing local store', result.stderr)
+        self.assertFalse((self.a / '.sdlc').exists())
+        self.assertEqual(self.binding(self.a), binding)
+        self.assertEqual(files(state), before)
+        self.assertEqual({p: (p.stat().st_mode, p.stat().st_mtime_ns) for p in (state, *state.rglob('*'))}, metadata)
+        # First import still uses INIT's saved-intent publication, not a blank store.
+        initialized = self.init(self.a, '--mode', 'local')
+        self.assertEqual(initialized['constitution_source'], 'authority-import')
+        self.assertEqual((self.a / '.sdlc/memory/constitution.md').read_bytes(), before['memory/constitution.md'])
 
     def test_import_refresh_is_authority_to_local_only(self):
         self.init(self.a, '--mode', 'local')

@@ -21,7 +21,7 @@ import tempfile
 import unittest
 from pathlib import Path
 
-from build import ROOT,COMMANDS,HOSTS,UPSTREAM_SHA,REPOSITORY,VERSION,AUTHOR,render_source,split,build,binding,ALL_COMMANDS,CORE_COMPATIBILITY,skill_entry,manifest_skills
+from build import ROOT,COMMANDS,HOSTS,UPSTREAM_SHA,REPOSITORY,VERSION,AUTHOR,render_source,split,build,binding,ALL_COMMANDS,INDEPENDENT_SKILLS,CORE_COMPATIBILITY,skill_entry,manifest_skills
 from localize import english_body,localized_workflow,translated_metadata,check_all,restore_template
 from naming import product_prose
 
@@ -101,7 +101,7 @@ def verify(upstream:Path,baselines:Path,evidence:Path)->dict:
         base=baselines/integ
         package=ROOT/'dist'
         actual_skills={p.parent.name for p in (package/'skills').glob('*/SKILL.md')}
-        require_equal(actual_skills,set(EXPECTED.values()),'Skill inventory '+host)
+        require_equal(actual_skills,set(EXPECTED.values()) | set(INDEPENDENT_SKILLS),'Skill inventory '+host)
         for name in COMMANDS:
             native=base/folder/'skills'/('speckit-'+name)/'SKILL.md'
             oracle_meta,oracle_body=split(native.read_text())

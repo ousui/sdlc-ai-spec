@@ -18,7 +18,7 @@ from unittest.mock import patch
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
 import localize
-from build import ALL_COMMANDS,COMMANDS,HOSTS,skill_entry,init_body,split,build
+from build import ALL_COMMANDS,COMMANDS,HOSTS,INDEPENDENT_SKILLS,skill_entry,init_body,split,build
 from naming import skill_id,invocation
 from render import render_source
 import upgrade
@@ -26,8 +26,9 @@ import upgrade
 class SharedLocalizationTests(unittest.TestCase):
     def test_all_public_skills_have_one_entry_without_exceptions(self):
         package=ROOT/'dist'
-        self.assertEqual({p.name for p in (package/'skills').iterdir()}, {skill_id(n) for n in ALL_COMMANDS})
-        self.assertEqual(len(list(package.rglob('SKILL.md'))),11)
+        self.assertEqual({p.name for p in (package/'skills').iterdir()},
+                         {skill_id(n) for n in ALL_COMMANDS} | set(INDEPENDENT_SKILLS))
+        self.assertEqual(len(list(package.rglob('SKILL.md'))),12)
         for name in ALL_COMMANDS:
             self.assertEqual(len({skill_entry(package,h,name) for h in HOSTS}),1)
         self.assertFalse((package/'adapters').exists())

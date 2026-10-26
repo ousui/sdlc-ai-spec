@@ -1,8 +1,8 @@
 {
-  "build_id": "064487284abb99c5f92a438af00b5bdefb8d7d35d453888f0ec34b6e73f5a840",
-  "product_version": "1.2.1-sdlc.1",
+  "build_id": "2dbd45dc1088514c8cb19cd3df84e436e636bed8d6b47864b024a0f52571395b",
+  "product_version": "1.2.1-sdlc.2",
   "upstream_version": "1.2.1",
-  "port_revision": 1,
+  "port_revision": 2,
   "upstream_sha": "9dca9bf42a031765ee5e5f2371137f2f26967e11",
   "inputs": {
     "src/LICENSE": "2510b446bc1f0cf9702453075d20cd88631e20e5642658edb7325d9c1eb534f7",
@@ -129,9 +129,9 @@
     "tools/upstream_watch.py": "4294c053d75fd01d34b6d6bf0bcacc0d9fd3ec8d7959f5d1ad49d555f8dc381d",
     "tools/verify.py": "dba20cea3a7edf30d24d111b42ab3b058a2da9ee79c0a1b863659da5779294fa",
     "tools/version-tool.sh": "4a68ff1312f4b3cdf7b8ca441b646c91ea97efdc1ab7912e07c4a097d6115f82",
-    "plugin-metadata.json": "bc257a941c88b77423a12dc04cf505689cfc4a3385cd64ef7f265caa6657c406",
+    "plugin-metadata.json": "7487a460d58aebf8a51d13bcc28a239607f674ed9e6500751134dcf3bda9f710",
     "upstream.lock.json": "9b4de2cdd140f31ebab858a04c3678f1e05f172dba7d0085d1b6e5ca5b8b2d8a",
-    "CHANGELOG.md": "08c5b6d63694a16832f3af1b1848957a3a0f07f25f17c2ecb58ef79795034baf",
+    "CHANGELOG.md": "2060e4eac7953d35172c9e1a29b875a90abda410ded5c46b0514abc03ce73fee",
     "LICENSE": "2510b446bc1f0cf9702453075d20cd88631e20e5642658edb7325d9c1eb534f7",
     "NOTICE": "f688f41949f50df11ee89c3e7ca44c380e621c532b21a2ae43f1cadb517ddb69",
     "docs/naming-map.json": "2c68a8f5df893deee6a2338101159e82b4030c3ef2e399e4b63b2f93a6565dba",

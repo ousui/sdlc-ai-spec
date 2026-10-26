@@ -425,7 +425,18 @@ def resolve(project: Path | None = None, *, plugin: Path = PLUGIN,
     try:
         if root != main:
             identity = git_identity(repo)
-            if identity is None or git_identity(main) != (roots[0], identity[1]):
+            probe = main
+            while True:
+                try:
+                    probe.lstat()
+                    break
+                except FileNotFoundError:
+                    if probe == roots[0] or not inside(probe, roots[0]):
+                        raise
+                    probe = probe.parent
+            if not stat.S_ISDIR(probe.stat().st_mode):
+                raise ValueError('Corresponding main project ancestor is not a directory: ' + str(probe))
+            if identity is None or git_identity(probe) != (roots[0], identity[1]):
                 raise ValueError('Corresponding main project Git identity is unavailable or belongs to another repository: ' + str(main))
         if not observe:
             safe((main / '.sdlc').resolve(), plugin)

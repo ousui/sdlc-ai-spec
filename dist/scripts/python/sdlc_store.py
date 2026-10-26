@@ -423,6 +423,10 @@ def resolve(project: Path | None = None, *, plugin: Path = PLUGIN,
     authority_error = None
     registered_sources = []
     try:
+        if root != main:
+            identity = git_identity(repo)
+            if identity is None or git_identity(main) != (roots[0], identity[1]):
+                raise ValueError('Corresponding main project Git identity is unavailable or belongs to another repository: ' + str(main))
         if not observe:
             safe((main / '.sdlc').resolve(), plugin)
         registered = os.path.lexists(registry)

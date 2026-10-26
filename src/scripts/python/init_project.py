@@ -220,7 +220,7 @@ def initialize(plugin: Path, project: Path, numbering: str | None = None,
             if path.is_symlink():
                 raise ValueError(f'Refusing symlink project data: {path}')
     directories = [state, state / 'memory', state / 'specs']
-    for path in directories:
+    for path in [*directories, state / 'workspaces', state / 'transactions']:
         check_path(path, True)
     files = [state / name for name in ('init-options.json', 'README.md', '.gitignore',
                                       'memory/constitution.md')] + [feature_json]

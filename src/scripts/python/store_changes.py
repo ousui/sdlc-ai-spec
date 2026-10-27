@@ -15,7 +15,7 @@ import uuid
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from sdlc_store import (PLUGIN, KNOWLEDGE, alias_directory, atomic, document_path, entry_identity, feature_path, json_bytes, name_key, project_directory,
-                        read_object, parse_object, release_stale_lock, require_authority, resolve, safe, same_path, same_target, target_inside, validate_options, validate_state, worktrees, write_lock)
+                        read_object, parse_object, release_stale_lock, require_authority, resolve, resolve_alias, safe, same_path, same_target, target_inside, validate_options, validate_state, worktrees, write_lock)
 
 from init_project import publish as publish_data, published_identity
 import task_ids
@@ -212,20 +212,20 @@ def task_histories(context: dict, target: Path, paths: list[str]) -> dict:
             roots.extend(path for path in (target / 'specs').iterdir() if path.is_dir())
         task_owners = []
         for root in dict.fromkeys(roots):
-            try:
-                tasks = (root / 'tasks.md').resolve()
-            except RuntimeError:  # A link loop has no resolved file target.
-                tasks = None
-            try:
-                history = (root / task_ids.LEDGER).resolve()
-            except RuntimeError:
-                history = None
+            # resolve_alias proves a stable cycle before excluding an entry;
+            # Path.resolve() reports loops differently across Python versions.
+            tasks = resolve_alias(root / 'tasks.md')
+            history = resolve_alias(root / task_ids.LEDGER)
             if history is not None and same_target(actual, history):
                 raise ValueError('Task ID history is maintained with tasks; direct edits are unsupported: ' + name)
             if tasks is not None and same_target(actual, tasks):
                 task_owners.append((root / task_ids.LEDGER).relative_to(target).as_posix())
         if task_owners:
-            locations = {(target / value).resolve() for value in task_owners}
+            locations = []
+            for value in task_owners:
+                location = target / value
+                if not any(same_target(location, known) for known in locations):
+                    locations.append(location)
             if len(locations) != 1:
                 raise ValueError('Task file has ambiguous requirement ownership: ' + name)
             result[name] = task_owners[0]

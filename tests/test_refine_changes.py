@@ -258,6 +258,45 @@ class RefineChangesTests(unittest.TestCase):
         self.f.apply(self.plan({name: {'action': 'replace', 'text': 'Revised scope\n'}}))
         self.assertEqual((self.feature/'spec.md').read_text(), 'Revised scope\n')
 
+    def test_unrelated_looped_history_entry_does_not_block_document_edit(self):
+        other = self.f.feature(self.f.main, '002-two')
+        (other/'.task-ids.json').symlink_to('.task-ids.json')
+        name = self.prefix+'spec.md'
+        self.f.apply(self.plan({name: {'action': 'replace', 'text': 'Revised scope\n'}}))
+        self.assertEqual((self.feature/'spec.md').read_text(), 'Revised scope\n')
+
+    def test_case_variant_task_path_has_one_history_owner(self):
+        variant = self.feature.parent/'001-ONE'
+        if not variant.exists() or not variant.samefile(self.feature):
+            self.skipTest('Requires a native case-insensitive filesystem')
+        tasks = self.feature/'tasks.md'
+        history = self.feature/'.task-ids.json'
+        name = 'specs/001-ONE/tasks.md'
+        for existing in (False, True):
+            with self.subTest(history_exists=existing):
+                tasks.write_text('- [x] T049 Valid\n- [ ] T050 Retired\n')
+                history.unlink(missing_ok=True)
+                if existing:
+                    history.write_text('{"schema":1,"high_water":50}')
+                plan = self.plan({name: {'action': 'replace', 'text': '- [x] T049 Valid\n'}})
+                self.f.apply(plan)
+                self.assertEqual(self.numbering()['next_id'], 'T051')
+                self.assertEqual(json.loads(history.read_text())['high_water'], 50)
+
+    def test_shared_task_body_with_distinct_histories_remains_ambiguous(self):
+        other = self.f.feature(self.f.main, '002-two')
+        third = self.f.feature(self.f.main, '003-three')
+        contracts = other/'contracts'
+        contracts.mkdir()
+        body = contracts/'task-body.md'
+        body.write_text('- [ ] T050 Shared body\n')
+        (self.feature/'tasks.md').symlink_to('../002-two/contracts/task-body.md')
+        (third/'tasks.md').symlink_to('../002-two/contracts/task-body.md')
+        name = 'specs/002-two/contracts/task-body.md'
+        result = self.f.runpy('store_changes.py', 'prepare', '--kind', 'edit', '--path', name, ok=False)
+        self.assertIn('ambiguous requirement ownership', result.stderr)
+        self.assertEqual(body.read_text(), '- [ ] T050 Shared body\n')
+
     def test_external_requirement_task_alias_uses_the_requirement_history(self):
         external = self.f.base/'external feature'
         contracts = external/'contracts'

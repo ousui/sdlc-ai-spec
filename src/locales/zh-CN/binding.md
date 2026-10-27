@@ -4,7 +4,7 @@
 
 本次调用宿主为 @HOST@。先完成路径绑定，再执行下面的原有流程。
 
-- @ROOT_DETAIL@ `SDLC_PLUGIN_ROOT` 是已加载核心 Skill 目录向上两级的插件包目录（`skills/<name>/SKILL.md`）。不得从业务工作目录推断、扫描其他安装版本，或假定变量已导出。
+- @ROOT_DETAIL@ `SDLC_PLUGIN_ROOT` 是已加载核心 Skill 目录向上两级的插件包目录（`skills/<name>/SKILL.md`）。不得从业务工作目录推断或假定变量已导出。正常执行期间使用同一完整包。更新移除该包时，从宿主当前 Skill 清单、安装记录或用户明确路径定位当前包，不按缓存版本排序猜选。读取其入口和 `skills/sdlc-refine/references/compatibility.md`，评估兼容性及先前操作结果，再从选定包完整重载流程。不得混用包或重放未经核实的写入。版本不同或旧包缺失本身不要求迁移或用户重新调用。
 - 保持 shell 工作目录位于选定的业务项目。执行 `SDLC_HOST=@HOST@ bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/project-paths.sh"` 解析选定代码项目及其有效 `.sdlc` 资料库。用户明确选定项目时，以命令局部变量 `SDLC_INIT_DIR` 传入其绝对路径。将返回的 `PROJECT_ROOT` 作为 `SDLC_PROJECT_ROOT`。项目不存在或无效时停止，明确运行 `sdlc-000-init` 初始化或补全；不得回退到其他工具。
 - 每次使用这些变量的 shell 调用都显式传入已解析的绝对值；工具调用之间不保证 shell 状态持久化。`${VAR:?}` 有意在变量未解析时失败。非 shell 文件工具使用实际绝对路径，不把 `${VAR}` 字面量传给工具。不得通过切换到插件目录来修复资源定位。
 - 创建或更新需求文件前，通过命令局部 `SDLC_INIT_DIR` 调用同一 `project-paths.sh --feature <resolved-feature-directory>`，检查显式路径和符号链接不会指向本插件。该脚本只读，不执行初始化。项目状态、当前需求和宪法不得写到插件内。

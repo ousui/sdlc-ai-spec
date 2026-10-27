@@ -156,10 +156,10 @@
   "resources": {
     "binding": {
       "source": "src/adapters/BINDING.md",
-      "source_sha256": "ecf003f262912dc4410ef7fed14d924facbd5ff58a9615d7b008da3b762f93d7",
-      "translation_sha256": "3a95bbac20db74117962bb0fa2185c69229ce0b66903edb7aacbd21d86ae228d",
+      "source_sha256": "9d5a03877ff8b117fc7f56b66cee11933538b50016049ba6f1ee4b58d4c3822a",
+      "translation_sha256": "54c8098f184c041ed2fafbc73719de3edd22d010dfa038fd699854fe1e5ae741",
       "status": "reviewed",
-      "reviewer": "Codex AI: explicit selection precedence and disjoint storage boundary review"
+      "reviewer": "AI: Codex session 01a17b27-620b-70d0-b663-491029e6a32f; reviewed sdlc-refine naming in EN/zh-CN binding"
     },
     "init": {
       "source": "src/adapters/INIT.md",

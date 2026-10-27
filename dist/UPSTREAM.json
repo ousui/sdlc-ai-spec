@@ -32,7 +32,8 @@
     "status"
   ],
   "independent_skills": [
-    "sdlc-cut"
+    "sdlc-cut",
+    "sdlc-refine"
   ],
   "init_implemented": true,
   "native_host_verified": false,

@@ -53,10 +53,16 @@ INIT 负责发现、选择与补缺；归拢为其显式动作，不增加公共
 - STATUS 是本地只读 utility，不是上游阶段。不得让它持久化需求选择、初始化项目、
   执行其他 Skill 或虚构阶段历史。宪法 generation provenance 只描述可观察事实：
   hash 相等/不同都不能等同于 RULE 完成或审批结果，也不得根据当前模板为旧项目
-  回填缺失的历史 provenance。12 个公共入口全部位于 `dist/skills`；不得恢复宿主私有 wrapper。
+  回填缺失的历史 provenance。13 个公共入口全部位于 `dist/skills`；不得恢复宿主私有 wrapper。
 - `sdlc-cut` 是与 INIT、STATUS 同级的独立公开 Skill，源码位于 `src/skills/sdlc-cut/`，
   构建后位于 `dist/skills/sdlc-cut/`。它不进入上游命令映射、loader 能力清单或原版状态映射；
   不因拆分操作自动执行后续阶段。
+- `sdlc-refine` 是独立公开的资料梳理与修订 Skill，源码位于
+  `src/skills/sdlc-refine/`，不进入上游命令映射、loader 能力清单或阶段状态。
+  按明确范围处理规范整理、内容校正、依据核对、补全与结构重梳，复用现有资料库
+  事务，保留业务义务、稳定引用及历史证据；未决业务冲突不由模板或代码现状裁定。
+  版本适配与中断恢复是其使用场景，版本号和旧包缺失不单独构成阻断。恢复只续办
+  已授权的原调用，不改变九阶段业务语义或从其调用自动取得全面修订授权。
 - 项目级 INIT 由 `src/adapters/INIT.md` 和打包的标准库初始化器实现。只有本次真实
   创建宪法时，才可以记录一次准确的生成字节基线/来源；已有宪法和记录必须保留。
   provenance 单独失败不得授权覆盖或修复用户数据。保留已有项目数据，不安装工具。
@@ -72,7 +78,7 @@ INIT 负责发现、选择与补缺；归拢为其显式动作，不增加公共
 - `sdlc-maintain-upgrade` 是仓库维护能力，不是业务阶段。唯一 canonical Skill 位于
   `.agents/skills/sdlc-maintain-upgrade/`；Claude 的 `.claude/commands/sdlc-maintain-upgrade.md`
   只加载同一 canonical 指令。`maintenance/**` 只保存维护运行手册和可视化说明。维护 Skill、
-  `maintenance/**` 及宿主适配不得进入 `dist`、Marketplace 或现有 12 个公共 Skill 清单，也不得
+  `maintenance/**` 及宿主适配不得进入 `dist`、Marketplace 或现有 13 个公共 Skill 清单，也不得
   改变这些 Skill 的执行正文或 Runtime。该维护 Skill 只能显式调用，默认停在已验证、未提交的
   detached candidate；正式 accept、commit、push、merge、tag、Release 和真实业务项目迁移均需独立授权。
 

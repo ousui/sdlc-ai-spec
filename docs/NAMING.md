@@ -23,6 +23,7 @@
 | 阶段 Skill | `sdlc-<三位编号>-<四字母代号>` | 以命名映射为准，不猜测缩写 |
 | 非阶段导航 | `sdlc-status` | 本地 utility，已实现 |
 | 独立需求拆分 | `sdlc-cut` | 本地公开 Skill，不占用编号或上游命令 ID |
+| 资料梳理与修订 | `sdlc-refine` | 本地公开 Skill，整理、校正和重梳资料，也支持版本适配与调用恢复 |
 
 000–099 表示项目级前置能力，其余已定义编号表示需求级能力。编号不是
 状态机，也不表示阶段只能调用一次。`xchk`、`huma` 是本项目代号，不宣称为
@@ -169,9 +170,9 @@ XCHK 严格只读；HUMA 生成评审者拥有的需求质量清单；CONV 仅�
 生成实现集中在 `tools/naming.py`，消费本目录的映射；`port.py` 在保留原始
 锚点校验后转换程序声明与调用，`render.py` 先复现原文再转换产品名称，
 `build.py` 使用编号 ID 生成 Skill、工作流文件及 binding 键。loader 接收
-完整公开 Skill ID，不再接收上游 capability ID。11 个既有入口与独立 CUT 共用
-`dist/skills/`；CUT 来源于 `src/skills/sdlc-cut/`，不进入上游命令映射或 loader 绑定。
-12 个入口均使用宿主默认展示和调用选择策略，
+完整公开 Skill ID，不再接收上游 capability ID。11 个既有入口与独立 CUT/REFINE 共用
+`dist/skills/`；独立入口来源于 `src/skills/` 对应目录，不进入上游命令映射或 loader 绑定。
+13 个入口均使用宿主默认展示和调用选择策略，
 不增加执行后的写入或跨阶段授权。
 
 除前文示例，运行标识还包括 `format_speckit_command -> format_sdlc_command`、

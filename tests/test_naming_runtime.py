@@ -36,6 +36,7 @@ class NamingRuntimeTests(unittest.TestCase):
         mod = importlib.util.module_from_spec(spec); spec.loader.exec_module(mod)
         self.assertEqual(set(mod.SKILLS), wanted)
         self.assertNotIn('sdlc-cut', mod.SKILLS)
+        self.assertNotIn('sdlc-refine', mod.SKILLS)
         with self.assertRaises(ValueError): mod.load(package, 'codex', 'specify')
         with self.assertRaises(ValueError): mod.load(package, 'codex', 'sdlc-999-status')
 

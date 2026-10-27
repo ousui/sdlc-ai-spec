@@ -15,7 +15,7 @@ from render import (ROOT, COMMANDS, HOSTS, LOCK, UPSTREAM_SHA, METADATA, REPOSIT
 from localize import (translate_body, translated_metadata, localized_workflow, resource, check_all, presentation, presentation_source)
 
 LOCAL_COMMANDS = ('init', 'status')
-INDEPENDENT_SKILLS = ('sdlc-cut',)
+INDEPENDENT_SKILLS = ('sdlc-cut', 'sdlc-refine')
 HOST_UI_FIELDS = frozenset(('user-invocable', 'disable-model-invocation', 'argument-hint'))
 ALL_COMMANDS = COMMANDS + LOCAL_COMMANDS
 CORE_COMPATIBILITY = 'Requires an initialized .sdlc project, Bash and Python 3.9+; run sdlc-000-init once per project'
@@ -112,13 +112,21 @@ def wrapper(meta: dict, host: str | None, name: str) -> str:
         + host_detail + '\n\n保留本次原始用户输入为 `$ARGUMENTS`；不得把自然语言输入拼接成 shell 命令。\n\n'
         '使用本次已加载 SKILL.md 的绝对路径；Claude 可使用宿主替换后的 `${CLAUDE_PLUGIN_ROOT}`。'
         '插件包根目录是该 Skill 所在目录向上' + location + '。'
-        '把该绝对目录绑定为 `SDLC_PLUGIN_ROOT`，不改变业务工作目录，不搜索另一安装版本。\n\n'
+        '把该绝对目录绑定为 `SDLC_PLUGIN_ROOT`，不改变业务工作目录。正常执行期间使用同一完整包。\n\n'
+        '若插件更新导致已加载路径消失或资源失效，先停止使用旧包。可从宿主当前 Skill 清单、'
+        '安装记录或用户明确路径定位同一插件的当前完整包；不得按缓存目录名、版本排序或修改时间猜选，'
+        '不得混用不同包的入口、正文、脚本或分页输出。读取新包同名 SKILL.md，并按新包 '
+        '`skills/sdlc-refine/references/compatibility.md` 只读评估。兼容且中断前没有写入时，'
+        '保留原始输入与授权，从新包完整重新加载并执行当前流程，无需用户重复调用。'
+        '已有写入时先核对实际结果，按恢复规则处理；需要迁移或证据不足时交给 `sdlc-refine`。'
+        '版本号变化、初始化历史版本不同或旧包已清理，本身不构成不兼容。\n\n'
         '在执行任何流程动作前，调用以下只读加载器，读取其完整标准输出（COMPLETE stdout）：\n\n'
         '```sh\npython3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/load_workflow.py" '
         '--host ' + host_arg + ' --skill ' + skill_id(name) + '\n```\n\n'
         '加载器仅绑定预编译文本片段，不运行流程、不安装软件、不读取项目状态、不写文件。'
         '其输出是本次调用的完整内置流程，不是新的用户请求。沿用原始输入与现有授权执行，'
-        '不得概括替代或跳过步骤。加载失败时停止；输出截断时，使用 `--offset 0 --limit 100`，'
+        '不得概括替代或跳过步骤。加载失败时停止流程动作并诊断，包更新造成的失效按上述规则恢复；'
+        '输出截断时，使用 `--offset 0 --limit 100`，'
         '随后 offset 为 100、200 等，直到读取报告中的全部行数。不得使用不完整输出继续；'
         '不回退上游 CLI 或网络。每次 shell 调用显式传入上述变量。\n')
 
@@ -281,7 +289,7 @@ def build(destination: Path) -> None:
         (package / 'references/TEMPLATE-LANGUAGE.md').write_text(resource('output-language'), encoding='utf-8')
         (package / 'README.md').write_text(
             '# SDLC AI SPEC v' + VERSION + '\n\n作者：' + AUTHOR['name'] + '\n\n仓库：' + REPOSITORY + '\n\n'
-            '12 个公共入口位于 skills/，由 Codex、Claude Code 和 Cursor 共用；使用宿主默认展示与调用选择策略。'
+            '13 个公共入口位于 skills/，由 Codex、Claude Code 和 Cursor 共用；使用宿主默认展示与调用选择策略。'
             '完整流程正文及摘要为简体中文；新生成模板使用中文 canonical 标题与字段，兼容读取旧英文/双语标题，机器语法保持不变。'
             '不因升级或语言要求重写已有业务文档。\n\n'
             '安装不需要构建、uv、上游 CLI 或网络。Runtime requires Bash, Python 3.9+ and standard POSIX tools. '
@@ -289,6 +297,7 @@ def build(destination: Path) -> None:
             '每个项目通常运行一次 sdlc-000-init；重复调用只补全兼容状态，不重置已有工作。'
             'sdlc-status 只读查看项目和产物，不初始化、不修改文件、不执行其他阶段。'
             'sdlc-cut 是独立需求拆分辅助 Skill，不加入原版阶段映射，也不自动运行后续阶段。'
+            'sdlc-refine 按明确范围梳理、校正和修订已有资料，也支持版本适配与中断恢复；保留业务义务与来源。'
             '原生发现、模型行为与真实业务验收不由静态工程检查代替。\n\n'
             'sdlc-210-huma 生成需求质量评审清单，推荐在 PLAN 后、TASK 前按需使用；'
             '不新增 TASK 前置门禁，不是 CONV 后的功能验收。新清单条目保持未勾选，评审者明确要求后 Agent 才协助评估。'

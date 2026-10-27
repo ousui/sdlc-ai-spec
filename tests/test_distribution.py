@@ -1,8 +1,10 @@
 """Lossless factoring and read-only loader; no native host is simulated as PASS."""
 from __future__ import annotations
 import importlib.util
+import hashlib
 import json
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -10,7 +12,7 @@ import tempfile
 import unittest
 ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT/'tools'))
-from build import factor,render_source,relocate_body,binding,COMMANDS,HOSTS,split,build,skill_entry
+from build import factor,render_source,relocate_body,binding,COMMANDS,HOSTS,split,build,skill_entry,INDEPENDENT_SKILLS
 from localize import localized_workflow
 spec=importlib.util.spec_from_file_location('sdlc_workflow',ROOT/'dist/scripts/python/load_workflow.py')
 loader=importlib.util.module_from_spec(spec);spec.loader.exec_module(loader)
@@ -18,6 +20,28 @@ loader=importlib.util.module_from_spec(spec);spec.loader.exec_module(loader)
 from naming_check import EXPECTED
 
 class DistributionTests(unittest.TestCase):
+    def test_independent_skill_resources_are_packaged_and_fingerprinted(self):
+        package = ROOT / 'dist'
+        inputs = json.loads((package / 'BUILD.json').read_text())['inputs']
+        for name in INDEPENDENT_SKILLS:
+            source = ROOT / 'src/skills' / name
+            target = package / 'skills' / name
+            files = {p.relative_to(source) for p in source.rglob('*')
+                     if p.is_file() and '__pycache__' not in p.parts and p.suffix != '.pyc'}
+            self.assertEqual(files, {p.relative_to(target) for p in target.rglob('*') if p.is_file()})
+            for relative in files:
+                original, installed = source / relative, target / relative
+                self.assertEqual(installed.read_bytes(), original.read_bytes())
+                self.assertEqual(inputs[original.relative_to(ROOT).as_posix()],
+                                 hashlib.sha256(installed.read_bytes()).hexdigest())
+                if installed.suffix == '.md':
+                    for link in re.findall(r'\]\(([^)#]+)(?:#[^)]*)?\)', installed.read_text()):
+                        if '://' in link:
+                            continue
+                        resolved = (installed.parent / link).resolve()
+                        self.assertTrue(resolved.is_relative_to(package.resolve()), link)
+                        self.assertTrue(resolved.is_file(), link)
+
     def test_exact_reconstruction_of_all_host_prompts(self):
         for host in HOSTS:
             for name in COMMANDS:

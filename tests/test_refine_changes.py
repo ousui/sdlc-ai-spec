@@ -211,6 +211,53 @@ class RefineChangesTests(unittest.TestCase):
         self.assertEqual(history.read_bytes(), original)
         self.assertEqual(self.numbering()['next_id'], 'T051')
 
+    def test_direct_task_body_edit_observes_other_requirements_task_entry(self):
+        other = self.f.feature(self.f.main, '002-two')
+        contracts = other/'contracts'
+        contracts.mkdir()
+        body = contracts/'task-body.md'
+        body.write_text('- [x] T049 Valid\n- [ ] T050 Retired\n')
+        (self.feature/'tasks.md').symlink_to('../002-two/contracts/task-body.md')
+        self.assertEqual(self.numbering()['next_id'], 'T051')
+
+        name = 'specs/002-two/contracts/task-body.md'
+        plan = self.plan({name: {'action': 'replace', 'text': '- [x] T049 Valid\n'}})
+        self.f.apply(plan)
+        self.assertEqual(self.numbering()['next_id'], 'T051')
+        self.assertEqual(plan['task_histories'], {name: self.prefix+'.task-ids.json'})
+        self.assertIn('Retired task IDs cannot be reused',
+                      self.f.apply(self.tasks('- [x] T049 Valid\n- [ ] T050 Different\n'), ok=False).stderr)
+
+    def test_direct_history_body_edit_cannot_lower_other_requirements_record(self):
+        other = self.f.feature(self.f.main, '002-two')
+        contracts = other/'contracts'
+        contracts.mkdir()
+        history = contracts/'history.json'
+        (self.feature/'.task-ids.json').symlink_to('../002-two/contracts/history.json')
+        (self.feature/'tasks.md').write_text('- [x] T049 Valid\n- [ ] T050 Retired\n')
+        self.f.apply(self.tasks('- [x] T049 Valid\n'))
+        original = history.read_bytes()
+        self.assertEqual(self.numbering()['next_id'], 'T051')
+
+        name = 'specs/002-two/contracts/history.json'
+        try:
+            plan = self.f.prepare(kind='edit', paths=[name])
+        except AssertionError as error:
+            self.assertIn('Task ID history is maintained with tasks', str(error))
+        else:
+            Path(plan['proposal']).write_text(json.dumps({name: {
+                'action': 'replace', 'text': '{"schema":1,"high_water":0}'}}))
+            self.f.apply(plan, ok=False)
+        self.assertEqual(history.read_bytes(), original)
+        self.assertEqual(self.numbering()['next_id'], 'T051')
+
+    def test_unrelated_looped_task_entry_does_not_block_document_edit(self):
+        other = self.f.feature(self.f.main, '002-two')
+        (other/'tasks.md').symlink_to('tasks.md')
+        name = self.prefix+'spec.md'
+        self.f.apply(self.plan({name: {'action': 'replace', 'text': 'Revised scope\n'}}))
+        self.assertEqual((self.feature/'spec.md').read_text(), 'Revised scope\n')
+
     def test_external_requirement_task_alias_uses_the_requirement_history(self):
         external = self.f.base/'external feature'
         contracts = external/'contracts'

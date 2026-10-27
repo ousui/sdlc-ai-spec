@@ -206,17 +206,23 @@ def task_histories(context: dict, target: Path, paths: list[str]) -> dict:
             physical = None
         if physical is not None and len(physical.parts) >= 2:
             roots.append(target / 'specs' / physical.parts[0])
-        if binding['links'] and (target / 'specs').is_dir():
-            # An external feature can own a task file whose physical parent is
-            # outside this store. Inspect feature roots only for alias edits.
+        if (target / 'specs').is_dir():
+            # A standard task or history entry in another requirement can link
+            # to this edited file even when the edit address itself has no links.
             roots.extend(path for path in (target / 'specs').iterdir() if path.is_dir())
         task_owners = []
         for root in dict.fromkeys(roots):
-            tasks = (root / 'tasks.md').resolve()
-            history = (root / task_ids.LEDGER).resolve()
-            if same_target(actual, history):
+            try:
+                tasks = (root / 'tasks.md').resolve()
+            except RuntimeError:  # A link loop has no resolved file target.
+                tasks = None
+            try:
+                history = (root / task_ids.LEDGER).resolve()
+            except RuntimeError:
+                history = None
+            if history is not None and same_target(actual, history):
                 raise ValueError('Task ID history is maintained with tasks; direct edits are unsupported: ' + name)
-            if same_target(actual, tasks):
+            if tasks is not None and same_target(actual, tasks):
                 task_owners.append((root / task_ids.LEDGER).relative_to(target).as_posix())
         if task_owners:
             locations = {(target / value).resolve() for value in task_owners}

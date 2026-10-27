@@ -179,6 +179,89 @@ class RefineChangesTests(unittest.TestCase):
         self.f.apply(self.tasks('- [x] T049 Keep valid work\n- [x] T051 New gap\n'))
         self.assertEqual(self.numbering()['next_id'], 'T052')
 
+    def test_nested_task_alias_retires_id_with_the_real_tasks_file(self):
+        tasks = self.feature/'tasks.md'
+        tasks.write_text('- [x] T049 Valid\n- [ ] T050 Retired\n')
+        contracts = self.feature/'contracts'
+        contracts.mkdir()
+        alias = contracts/'task-view.md'
+        alias.symlink_to('../tasks.md')
+        name = self.prefix+'contracts/task-view.md'
+        plan = self.plan({name: {'action': 'replace', 'text': '- [x] T049 Valid\n'}})
+        self.assertEqual(plan['task_histories'], {name: self.prefix+'.task-ids.json'})
+        self.f.apply(plan)
+        self.assertTrue(alias.is_symlink())
+        self.assertEqual(self.numbering()['next_id'], 'T051')
+        self.assertTrue((self.feature/'.task-ids.json').is_file())
+        self.assertIn('Retired task IDs cannot be reused',
+                      self.f.apply(self.tasks('- [x] T049 Valid\n- [ ] T050 Different\n'), ok=False).stderr)
+
+    def test_nested_history_alias_cannot_lower_numbering(self):
+        (self.feature/'tasks.md').write_text('- [x] T049 Valid\n- [ ] T050 Retired\n')
+        self.f.apply(self.tasks('- [x] T049 Valid\n'))
+        history = self.feature/'.task-ids.json'
+        original = history.read_bytes()
+        contracts = self.feature/'contracts'
+        contracts.mkdir()
+        alias = contracts/'history.json'
+        alias.symlink_to('../.task-ids.json')
+        name = self.prefix+'contracts/history.json'
+        result = self.f.runpy('store_changes.py', 'prepare', '--kind', 'edit', '--path', name, ok=False)
+        self.assertIn('Task ID history is maintained with tasks', result.stderr)
+        self.assertEqual(history.read_bytes(), original)
+        self.assertEqual(self.numbering()['next_id'], 'T051')
+
+    def test_external_requirement_task_alias_uses_the_requirement_history(self):
+        external = self.f.base/'external feature'
+        contracts = external/'contracts'
+        contracts.mkdir(parents=True)
+        (external/'tasks.md').write_text('- [x] T049 Valid\n- [ ] T050 Retired\n')
+        (contracts/'task-view.md').symlink_to('../tasks.md')
+        (self.root/'specs/002-external').symlink_to(external, target_is_directory=True)
+        name = 'specs/002-external/contracts/task-view.md'
+        plan = self.plan({name: {'action': 'replace', 'text': '- [x] T049 Valid\n'}})
+        self.assertEqual(plan['task_histories'], {name: 'specs/002-external/.task-ids.json'})
+        self.f.apply(plan)
+        self.assertTrue((contracts/'task-view.md').is_symlink())
+        self.assertTrue((external/'.task-ids.json').is_file())
+        self.assertEqual(self.f.runpy('task_ids.py', '--feature', str(external))['next_id'], 'T051')
+
+    def test_history_alias_to_another_requirement_is_protected(self):
+        other = self.f.feature(self.f.main, '002-two')
+        (other/'tasks.md').write_text('- [ ] T050 Retired\n')
+        self.f.apply(self.plan({'specs/002-two/tasks.md': {'action': 'replace', 'text': ''}}))
+        original = (other/'.task-ids.json').read_bytes()
+        contracts = self.feature/'contracts'
+        contracts.mkdir()
+        (contracts/'other-history.json').symlink_to('../../002-two/.task-ids.json')
+        name = self.prefix+'contracts/other-history.json'
+        self.f.runpy('store_changes.py', 'prepare', '--kind', 'edit', '--path', name, ok=False)
+        self.assertEqual((other/'.task-ids.json').read_bytes(), original)
+
+    def test_task_alias_failure_restores_tasks_and_history_together(self):
+        tasks = self.feature/'tasks.md'
+        tasks.write_text('- [ ] T050 Retired\n')
+        contracts = self.feature/'contracts'
+        contracts.mkdir()
+        alias = contracts/'task-view.md'
+        alias.symlink_to('../tasks.md')
+        name = self.prefix+'contracts/task-view.md'
+        plan = self.plan({name: {'action': 'replace', 'text': ''},
+                          self.prefix+'spec.md': {'action': 'replace', 'text': 'Unpublished\n'}})
+        original_spec = (self.feature/'spec.md').read_text()
+        publish = storage.changes.publish_data
+        def fail(path, data, expected):
+            if path.name == '.task-ids.json':
+                raise OSError('fixture interruption')
+            return publish(path, data, expected)
+        with mock.patch.object(storage.changes, 'publish_data', side_effect=fail):
+            with self.assertRaises(OSError):
+                storage.changes.apply(self.f.main, Path(plan['transaction']))
+        self.assertEqual(tasks.read_text(), '- [ ] T050 Retired\n')
+        self.assertEqual((self.feature/'spec.md').read_text(), original_spec)
+        self.assertFalse((self.feature/'.task-ids.json').exists())
+        self.assertTrue(alias.is_symlink())
+
     def test_delete_entire_task_file_preserves_numbers_and_other_requirements_are_independent(self):
         (self.feature/'tasks.md').write_text('- [ ] T050 Retired\n')
         self.f.apply(self.plan({self.prefix+'tasks.md': {'action': 'delete'}}))

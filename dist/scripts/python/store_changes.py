@@ -185,22 +185,46 @@ def source_files(root: Path, files: dict, features: list[str]) -> dict:
 
 def editable(name: str, context: dict) -> bool:
     relative(name)
-    path = Path(name)
-    if (len(path.parts) == 3 and path.parts[0] == 'specs' and
-            same_path(Path(context['SDLC_DIR']) / path, Path(context['SDLC_DIR']) / path.parent / task_ids.LEDGER)):
-        return False  # Maintained with task edits, never manually reset or deleted.
     pointer = Path(context['FEATURE_JSON']).relative_to(context['SDLC_DIR']).as_posix()
     return (name in ('init-options.json', 'README.md', '.gitignore', pointer) or
             name.startswith(('specs/', 'templates/overrides/')) or name in KNOWLEDGE)
 
 
-def task_histories(target: Path, paths: list[str]) -> dict:
+def task_histories(context: dict, target: Path, paths: list[str]) -> dict:
+    """Associate edited file identities with their requirement's canonical tasks."""
     result = {}
     for name in paths:
-        path = Path(name)
-        if (len(path.parts) == 3 and path.parts[0] == 'specs' and
-                same_path(target / path, target / path.parent / 'tasks.md')):
-            result[name] = (path.parent / task_ids.LEDGER).as_posix()
+        binding = edit_binding(context, target, name)
+        actual = Path(binding['path'])
+        roots = []
+        parts = Path(name).parts
+        if len(parts) >= 3 and parts[0] == 'specs':
+            roots.append(target / 'specs' / parts[1])
+        try:
+            physical = actual.relative_to(target / 'specs')
+        except ValueError:
+            physical = None
+        if physical is not None and len(physical.parts) >= 2:
+            roots.append(target / 'specs' / physical.parts[0])
+        if binding['links'] and (target / 'specs').is_dir():
+            # An external feature can own a task file whose physical parent is
+            # outside this store. Inspect feature roots only for alias edits.
+            roots.extend(path for path in (target / 'specs').iterdir() if path.is_dir())
+        task_owners = []
+        for root in dict.fromkeys(roots):
+            tasks = (root / 'tasks.md').resolve()
+            history = (root / task_ids.LEDGER).resolve()
+            if same_target(actual, history):
+                raise ValueError('Task ID history is maintained with tasks; direct edits are unsupported: ' + name)
+            if same_target(actual, tasks):
+                task_owners.append((root / task_ids.LEDGER).relative_to(target).as_posix())
+        if task_owners:
+            locations = {(target / value).resolve() for value in task_owners}
+            if len(locations) != 1:
+                raise ValueError('Task file has ambiguous requirement ownership: ' + name)
+            result[name] = task_owners[0]
+        elif binding['links'] and actual.name in ('tasks.md', task_ids.LEDGER):
+            raise ValueError('Cannot determine task file ownership: ' + name)
     return result
 
 
@@ -412,7 +436,7 @@ def prepare(project: Path, kind: str, sources: list[Path], features: list[str], 
         validate_state({'SDLC_DIR': str(target)}, selection=False)
     # Watch only this edit and its workspace binding. Other requirements and
     # other worktrees' selections must not invalidate an ordinary edit.
-    histories = task_histories(target, paths) if kind == 'edit' else {}
+    histories = task_histories(context, target, paths) if kind == 'edit' else {}
     watch_paths = (sorted(set(paths + list(histories.values()) + ['init-options.json',
                     Path(context['FEATURE_JSON']).relative_to(target).as_posix()]))
                    if kind == 'edit' else None)
@@ -547,11 +571,12 @@ def planned_bytes(context: dict, manifest: dict, proposal: dict) -> dict:
                     base64.b64decode(previous) if previous is not None else None):
                 raise ValueError('Task ID history cannot decrease: ' + name)
     if manifest['kind'] == 'edit':
-        for name, history in task_histories(Path(manifest['target']), manifest['paths']).items():
+        histories = task_histories(context, Path(manifest['target']), manifest['paths'])
+        if histories != manifest.get('task_histories', {}):
+            raise ValueError('Task edit roles changed; prepare again')
+        for name, history in histories.items():
             if name not in output:
                 continue
-            if manifest.get('task_histories', {}).get(name) != history:
-                raise ValueError('Task edit needs a history snapshot; prepare again')
             old, saved = original_bytes(manifest, name), original_bytes(manifest, history)
             revised = task_ids.transition(base64.b64decode(old) if old is not None else None,
                                           base64.b64decode(output[name]) if output[name] is not None else None,

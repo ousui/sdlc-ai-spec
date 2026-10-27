@@ -10,6 +10,7 @@ import os
 from pathlib import Path
 import stat
 import sys
+import tempfile
 import uuid
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -17,6 +18,7 @@ from sdlc_store import (PLUGIN, KNOWLEDGE, alias_directory, atomic, document_pat
                         read_object, parse_object, release_stale_lock, require_authority, resolve, safe, same_path, same_target, target_inside, validate_options, validate_state, worktrees, write_lock)
 
 from init_project import publish as publish_data, published_identity
+import task_ids
 
 MAX_FILE = 8 * 1024 * 1024
 MAX_TOTAL = 64 * 1024 * 1024
@@ -183,9 +185,23 @@ def source_files(root: Path, files: dict, features: list[str]) -> dict:
 
 def editable(name: str, context: dict) -> bool:
     relative(name)
+    path = Path(name)
+    if (len(path.parts) == 3 and path.parts[0] == 'specs' and
+            same_path(Path(context['SDLC_DIR']) / path, Path(context['SDLC_DIR']) / path.parent / task_ids.LEDGER)):
+        return False  # Maintained with task edits, never manually reset or deleted.
     pointer = Path(context['FEATURE_JSON']).relative_to(context['SDLC_DIR']).as_posix()
     return (name in ('init-options.json', 'README.md', '.gitignore', pointer) or
             name.startswith(('specs/', 'templates/overrides/')) or name in KNOWLEDGE)
+
+
+def task_histories(target: Path, paths: list[str]) -> dict:
+    result = {}
+    for name in paths:
+        path = Path(name)
+        if (len(path.parts) == 3 and path.parts[0] == 'specs' and
+                same_path(target / path, target / path.parent / 'tasks.md')):
+            result[name] = (path.parent / task_ids.LEDGER).as_posix()
+    return result
 
 
 def copy_targets(target: Path, names: list[str]) -> dict:
@@ -396,7 +412,8 @@ def prepare(project: Path, kind: str, sources: list[Path], features: list[str], 
         validate_state({'SDLC_DIR': str(target)}, selection=False)
     # Watch only this edit and its workspace binding. Other requirements and
     # other worktrees' selections must not invalidate an ordinary edit.
-    watch_paths = (sorted(set(paths + ['init-options.json',
+    histories = task_histories(target, paths) if kind == 'edit' else {}
+    watch_paths = (sorted(set(paths + list(histories.values()) + ['init-options.json',
                     Path(context['FEATURE_JSON']).relative_to(target).as_posix()]))
                    if kind == 'edit' else None)
     bindings = edit_bindings(context, target, watch_paths) if kind == 'edit' else None
@@ -451,15 +468,16 @@ def prepare(project: Path, kind: str, sources: list[Path], features: list[str], 
         folder = target / 'transactions' / identifier
         safe(folder.parent)
         folder.mkdir(parents=True)
-        manifest = {'schema': 1, 'kind': kind, 'project': context['PROJECT_ROOT'],
+        manifest = {'schema': 2 if histories else 1, 'kind': kind, 'project': context['PROJECT_ROOT'],
                     'authority': context['AUTHORITY_DIR'], 'target': str(target),
                     'features': features, 'paths': paths, 'watch_paths': watch_paths, 'before': before,
-                    'edit_bindings': bindings, 'copy_targets': target_names,
+                    'edit_bindings': bindings, 'copy_targets': target_names, 'task_histories': histories,
                     'sources': originals, 'variants': variants, 'status': 'prepared'}
         atomic(folder / 'manifest.json', json_bytes(manifest))
         atomic(folder / 'proposal.json', json_bytes(proposal))
     return {'transaction': str(folder), 'proposal': str(folder / 'proposal.json'),
             'changed_sources': changed_sources, 'multiple_sources': len(changed_sources) > 1,
+            'task_histories': histories,
             'files': list(proposal), 'unresolved': [n for n, v in proposal.items() if v['action'] == 'unresolved']}
 
 
@@ -467,7 +485,7 @@ def load_transaction(project: Path, folder: Path, *, check_sources=True) -> tupl
     context = resolve(project, missing=True)
     safe(folder)
     manifest = read_object(folder / 'manifest.json')
-    if manifest.get('schema') != 1 or manifest.get('kind') not in ('collect', 'import', 'edit'):
+    if manifest.get('schema') not in (1, 2) or manifest.get('kind') not in ('collect', 'import', 'edit'):
         raise ValueError('Unsupported transaction')
     target = authority_action(context, manifest['kind'])
     local_edit = manifest['kind'] == 'edit' and context['mode'] == 'local'
@@ -499,6 +517,12 @@ def planned_bytes(context: dict, manifest: dict, proposal: dict) -> dict:
             output[name] = manifest['variants'][name][decision['source']]
         elif action == 'replace' and isinstance(decision.get('text'), str):
             output[name] = base64.b64encode(decision['text'].encode()).decode()
+        elif action == 'delete' and manifest['kind'] == 'edit':
+            if (not (name.startswith(('specs/', 'templates/overrides/')) or name in KNOWLEDGE) or
+                    (Path(manifest['target']) / name).is_symlink()):
+                raise ValueError('Delete requires a document file, not a control file or leaf alias: ' + name)
+            output[name] = None
+            continue
         else:
             raise ValueError('Unresolved or invalid proposal: ' + name)
         if manifest['kind'] == 'edit' and name in ('init-options.json', Path(context['FEATURE_JSON']).relative_to(context['SDLC_DIR']).as_posix()):
@@ -516,6 +540,24 @@ def planned_bytes(context: dict, manifest: dict, proposal: dict) -> dict:
                 feature_path(context, data['feature_directory'])
         if len(base64.b64decode(output[name])) > MAX_FILE:
             raise ValueError('Candidate file is too large')
+        if Path(name).name == task_ids.LEDGER:
+            # Copying an older worktree may not lower an existing reservation.
+            previous = original_bytes(manifest, name)
+            if task_ids.high_water(base64.b64decode(output[name])) < task_ids.high_water(
+                    base64.b64decode(previous) if previous is not None else None):
+                raise ValueError('Task ID history cannot decrease: ' + name)
+    if manifest['kind'] == 'edit':
+        for name, history in task_histories(Path(manifest['target']), manifest['paths']).items():
+            if name not in output:
+                continue
+            if manifest.get('task_histories', {}).get(name) != history:
+                raise ValueError('Task edit needs a history snapshot; prepare again')
+            old, saved = original_bytes(manifest, name), original_bytes(manifest, history)
+            revised = task_ids.transition(base64.b64decode(old) if old is not None else None,
+                                          base64.b64decode(output[name]) if output[name] is not None else None,
+                                          base64.b64decode(saved) if saved is not None else None)
+            if revised is not None:
+                output[history] = base64.b64encode(revised).decode()
     # Preserve genuine source generation history only when copying a new constitution.
     constitution = 'memory/constitution.md'
     record = 'memory/.constitution-template.json'
@@ -552,6 +594,11 @@ def rollback(context: dict, target: Path, manifest: dict) -> None:
         now = base64.b64encode(file_bytes(path)).decode() if path.exists() else None
         if now == original_bytes(manifest, name):
             return False
+        if now is None and manifest['after'][name] is None:
+            receipt = manifest.get('published', {}).get(name, {})
+            if receipt.get('action') == 'delete' and isinstance(receipt.get('mode'), int):
+                return True
+            raise ValueError('Recovery cannot verify deletion ownership: ' + name)
         if (now != manifest['after'][name] or now is None or
                 published_identity(path.stat()) != manifest.get('published', {}).get(name)):
             raise ValueError('Recovery cannot verify publication ownership or would overwrite a later edit: ' + name)
@@ -565,8 +612,36 @@ def rollback(context: dict, target: Path, manifest: dict) -> None:
         old = original_bytes(manifest, name)
         if old is None:
             path.unlink(missing_ok=True)
+        elif manifest['after'][name] is None:
+            restore_deleted(path, base64.b64decode(old), manifest['published'][name]['mode'])
         else:
             atomic(path, base64.b64decode(old))
+
+
+def delete_data(path: Path, expected: bytes) -> dict:
+    """Delete only a verified regular document and record the successful removal."""
+    safe(path)
+    before = path.lstat()
+    if (not stat.S_ISREG(before.st_mode) or before.st_nlink != 1 or
+            file_bytes(path) != expected or published_identity(path.lstat()) != published_identity(before) or
+            path.lstat().st_ctime_ns != before.st_ctime_ns):
+        raise ValueError('Document changed before deletion: ' + str(path))
+    path.unlink()
+    return {'action': 'delete', 'original': published_identity(before), 'mode': stat.S_IMODE(before.st_mode)}
+
+
+def restore_deleted(path: Path, data: bytes, mode: int) -> None:
+    # Create-if-absent also protects a manual recreation racing with recovery.
+    fd, temporary = tempfile.mkstemp(prefix='.store-restore-', dir=path.parent)
+    try:
+        with os.fdopen(fd, 'wb') as stream:
+            stream.write(data)
+            stream.flush()
+            os.fsync(stream.fileno())
+            os.fchmod(stream.fileno(), mode)
+        os.link(temporary, path)
+    finally:
+        Path(temporary).unlink(missing_ok=True)
 
 
 def apply(project: Path, folder: Path) -> dict:
@@ -588,6 +663,8 @@ def apply(project: Path, folder: Path) -> dict:
         if transaction_snapshot(context, target, manifest) != manifest['before']:
             raise ValueError('Target changed; prepare and review again')
         output = planned_bytes(context, manifest, proposal)
+        if any(data is None for data in output.values()):
+            manifest['schema'] = 2
         manifest.update(status='applying', after=output, published={})
         atomic(folder / 'manifest.json', json_bytes(manifest))
         try:
@@ -597,16 +674,20 @@ def apply(project: Path, folder: Path) -> dict:
                 now = base64.b64encode(file_bytes(path)).decode() if path.exists() else None
                 if now != old:
                     raise ValueError('Destination changed before publication: ' + name)
-                path.parent.mkdir(parents=True, exist_ok=True)
+                if data is not None:
+                    path.parent.mkdir(parents=True, exist_ok=True)
                 transaction_path(context, target, manifest, name)
-                manifest['published'][name] = publish_data(path, base64.b64decode(data),
-                                                         base64.b64decode(old) if old is not None else None)
+                manifest['published'][name] = (delete_data(path, base64.b64decode(old)) if data is None else
+                    publish_data(path, base64.b64decode(data), base64.b64decode(old) if old is not None else None))
                 atomic(folder / 'manifest.json', json_bytes(manifest))
             for name, data in output.items():
-                if file_bytes(transaction_path(context, target, manifest, name)) != base64.b64decode(data):
+                path = transaction_path(context, target, manifest, name)
+                if ((path.exists() or path.is_symlink()) if data is None else file_bytes(path) != base64.b64decode(data)):
                     raise ValueError('Written data failed verification: ' + name)
             published = {(manifest.get('copy_targets') or {}).get(n, n): data for n, data in output.items()}
-            if transaction_snapshot(context, target, manifest) != dict(manifest['before'], **published):
+            expected = dict(manifest['before'], **published)
+            expected = {name: data for name, data in expected.items() if data is not None}
+            if transaction_snapshot(context, target, manifest) != expected:
                 raise ValueError('Target changed during publication')
         except BaseException:
             try:
@@ -618,7 +699,8 @@ def apply(project: Path, folder: Path) -> dict:
             raise
         manifest['status'] = 'applied'
         atomic(folder / 'manifest.json', json_bytes(manifest))
-    return {'status': 'applied', 'written': list(output),
+    return {'status': 'applied', 'written': [n for n, data in output.items() if data is not None],
+            'deleted': [n for n, data in output.items() if data is None],
             'skipped': [n for n, v in proposal.items() if v['action'] == 'skip'], 'transaction': str(folder)}
 
 

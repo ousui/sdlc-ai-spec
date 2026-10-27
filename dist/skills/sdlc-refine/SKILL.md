@@ -74,7 +74,9 @@ python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/store_changes.py" prepare --
 ```
 
 对同一变更的全部目标重复 `--path`。只编辑返回的 `proposal.json`，对应文件设置为
-`{"action":"replace","text":"complete candidate text"}` 或 `{"action":"skip"}`，不直接覆盖正式资料。
+`{"action":"replace","text":"complete candidate text"}`、`{"action":"skip"}`，或对已明确废弃的整份普通文档使用 `{"action":"delete"}`，不直接覆盖正式资料。
+删除与活动引用清理、合并后的目标文件放入同一事务；空文本替换、废弃占位正文不算删除完成。
+删除不适用于控制文件或末级软链接，也不把来源缺失解释为导入/归拢的删除授权。
 保留准备时的包 build_id、实际读取依赖摘要和原始输入；应用前重读依赖，发生相关变化则重新评估和准备。
 跨文件修订需要同步范围外文件时先说明影响；已有授权不覆盖时先形成具体候选，再请求扩展到这些文件。
 新存储/控制 schema 或没有可验证转换规则的差异停在具体方案，不凭文档整理授权搬迁资料或改写控制记录。
@@ -85,8 +87,16 @@ python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/store_changes.py" prepare --
 python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/store_changes.py" apply --project "${SDLC_PROJECT_ROOT:?}" --transaction '<returned-transaction-directory>'
 ```
 
-回读实际写入，检查原始义务、来源、术语、编号、引用、状态和未改文件；结构重梳逐项核对去向，兼容适配复核目标入口的读取条件。
+回读实际写入，逐项确认删除目标不存在且活动引用已清理；检查原始义务、来源、术语、编号、引用、状态和未改文件。当前活动资料只保留有效内容；废弃正文退出活动输入，恢复依据留在事务中。结构重梳逐项核对去向，兼容适配复核目标入口的读取条件。
 保留事务来源快照和恢复记录。失败时报告已写/未写项，按该包 `store_changes.py recover` 恢复，不能覆盖后续编辑或删除锁强行继续。
 包再次变化、事务格式不同或归属不明时先评估恢复兼容性，不能用新包盲目 apply/recover 旧事务。
+
+修订 `tasks.md` 时，事务自动观察同目录的 `.task-ids.json`。移除任务编号后保留已用编号上界；即使整份任务文件删除，该记录也保留。它不保存废弃正文，不是待实施任务，不手动填写或清理。分配新任务编号前执行：
+
+```sh
+python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/task_ids.py" --project "${SDLC_PROJECT_ROOT:?}" --feature '<selected-feature-directory>'
+```
+
+保留有效义务的原编号，新增义务从返回的 `next_id` 起分配。TASK 与 CONV 的绑定适配同样读取该记录；IMPL 只执行活动复选框，不从历史快照或编号占用重新补回废弃任务。删除 `T050` 后新增任务应使用 `T051` 或更高未使用编号。未知或损坏的编号历史先处理，不以重置编号绕过。
 
 交付实际修订或未改的文件、主要依据、尚未解决项、事务位置与适用继续入口。说明未核实的实现、测试和验收；不将文字一致称为业务正确或阶段已完成。

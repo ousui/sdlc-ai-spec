@@ -28,13 +28,21 @@ main 的登记不可用时，有效的独立本地工作可以继续：`AUTHORIT
 python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/store_changes.py" prepare --project "${SDLC_PROJECT_ROOT:?}" --kind edit --path '<store-relative-file>'
 ```
 
-本次涉及多个文件时重复传入 `--path`。只编辑返回的 `proposal.json`：每个已准备文件使用 `{"action":"replace","text":"complete candidate text"}` 或 `{"action":"skip"}`。随后通过程序发布：
+本次涉及多个文件时重复传入 `--path`。只编辑返回的 `proposal.json`：每个已准备文件使用 `{"action":"replace","text":"complete candidate text"}`、`{"action":"skip"}`，或对已明确授权废弃的文档使用 `{"action":"delete"}`。删除移除普通文档，不删除控制文件或末级软链接；空文本替换仍会保留文件。把活动引用纳入同一项已审查变更。导入和归拢不因来源缺文件推导删除。随后通过程序发布：
 
 ```sh
 python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/store_changes.py" apply --project "${SDLC_PROJECT_ROOT:?}" --transaction '<returned-transaction-directory>'
 ```
 
-普通编辑的快照只包含选定文件、`init-options.json` 和当前工作区的 `FEATURE_JSON`。无关产物及其他 worktree 的需求选择不使候选失效；本次目标或必要绑定变化仍阻止应用。导入和归拢保留来源与目标快照检查。
+普通编辑的快照只包含选定文件、编辑 `tasks.md` 时对应的任务编号记录、`init-options.json` 和当前工作区的 `FEATURE_JSON`。无关产物及其他 worktree 的需求选择不使候选失效；本次目标或必要绑定变化仍阻止应用。导入和归拢保留来源与目标快照检查。
+
+梳理后的任务编号续接是明确的本地存储扩展。TASK、CONV 或已授权修订在分配新任务编号前，读取选定需求的活动编号和保留上界：
+
+```sh
+python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/task_ids.py" --project "${SDLC_PROJECT_ROOT:?}" --feature '<resolved-feature-directory>'
+```
+
+以返回的 `high_water` 作为分配最大值（CONV 中的 `M`），新编号从 `next_id` 开始。保留仍然有效的义务编号，不得把已退役编号分配给不同工作。没有历史的新需求仍从 `T001` 开始。只读工具会计入 `tasks.md` 同目录的 `.task-ids.json`；它是编号元数据，不是活动任务或完成证据。不得从事务快照恢复废弃任务，也不把保留编号视为实现缺口。TASK 重新生成既有需求时保留该记录；IMPL 只执行活动任务复选框。编辑事务在移除编号时及此后维护上界，即使删除整个任务文件也保留，并拒绝复用已退役编号。它不保存废弃业务正文，也不为编号集合未变的任务创建历史记录。不得手动重置或删除编号记录；它随任务变更一起应用或恢复。记录不可读时停止分配，不能重新从 `T001` 开始。
 
 沿用既有流程授权，不增加改动其他产物的权限。未决事项或输入变化阻止发布；重新准备，不强行应用过期变更。包内写入脚本使用同一把资料库锁。显式外部需求目录保留既有路径检查；存在本地副本时，不得将其指向权威库。只读阶段不准备或应用写入候选。应用中断后先诊断，可使用同一程序的 `recover` 动作恢复；不得删除其他操作的锁或覆盖后来的编辑以强行恢复。
 
@@ -78,7 +86,7 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0080@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0088@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
@@ -108,15 +116,15 @@ $ARGUMENTS
 
 目标：发现并减少当前功能规格的歧义或缺失决策点，将澄清内容直接记录到规格文件中。
 
-注意：此澄清流程预期在调用 `@@SDLC_BIND_0110@@sdlc-200-plan` 之前运行并完成。用户明确表示跳过澄清（例如探索性试验）时，可以继续，但必须提醒后续返工风险会上升。
+注意：此澄清流程预期在调用 `@@SDLC_BIND_0118@@sdlc-200-plan` 之前运行并完成。用户明确表示跳过澄清（例如探索性试验）时，可以继续，但必须提醒后续返工风险会上升。
 
 执行步骤：
 
-1. 在仓库根目录**只运行一次** `SDLC_HOST=c@@SDLC_BIND_0114@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --paths-only`，使用组合 `--json --paths-only` 模式／`-Json -PathsOnly`。解析最少 JSON 字段：
+1. 在仓库根目录**只运行一次** `SDLC_HOST=c@@SDLC_BIND_0122@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --paths-only`，使用组合 `--json --paths-only` 模式／`-Json -PathsOnly`。解析最少 JSON 字段：
    - `FEATURE_DIR`
    - `FEATURE_SPEC`
    - 可选地记录 `IMPL_PLAN`、`TASKS`，用于后续串联流程。
-   - JSON 解析失败时，中止并指导用户重新运行 `@@SDLC_BIND_0118@@sdlc-100-spec` 或检查功能分支环境。
+   - JSON 解析失败时，中止并指导用户重新运行 `@@SDLC_BIND_0126@@sdlc-100-spec` 或检查功能分支环境。
    - 参数包含单引号（如 "I'm Groot"）时，使用转义语法，如 'I'\''m Groot'；可以使用双引号时也可写作 "I'm Groot"。
 
 2. **如果存在**：加载 `.sdlc/memory/constitution.md`，获取项目原则和治理约束。
@@ -280,7 +288,7 @@ $ARGUMENTS
 行为规则：
 
 - 未发现有意义歧义，或全部候选问题影响很低时，回复“未发现值得正式澄清的关键歧义”，并建议继续。
-- 规格文件缺失时，指导用户先运行 `@@SDLC_BIND_0282@@sdlc-100-spec`；不要在此处创建新规格。
+- 规格文件缺失时，指导用户先运行 `@@SDLC_BIND_0290@@sdlc-100-spec`；不要在此处创建新规格。
 - 总提问数绝不超过 5；同一问题的澄清追问不另计新问题。
 - 除非缺失技术栈信息阻塞功能清晰度，否则避免猜测性技术栈提问。
 - 尊重用户提前结束的信号，如 stop、done、proceed，以及明确的中文“停止／完成／继续”。
@@ -301,7 +309,7 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0303@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0311@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **必需钩子**（`optional: false`）——**必须为每个必需钩子输出 `EXECUTE_COMMAND:`**：
     ```
@@ -332,7 +340,7 @@ $ARGUMENTS
 - 修改过的章节名称。
 - 规格质量清单状态：重新验证了 `FEATURE_DIR/checklists/requirements.md` 时，展示前后通过数，例如“规格质量清单：12/16 → 15/16 项通过”，并列出所有状态变化项，包括新增勾选和回退项。仍未勾选的条目列为待关注领域。
 - 覆盖汇总表：每个分类展示中文状态，并保留稳定英文枚举：已解决（Resolved，原 Partial／Missing，现已解决）、已推迟（Deferred，超出提问额度，或剩余项专门关于实现方法、技术栈比较或任务拆解）、已明确（Clear，本来已充分）、仍待明确（Outstanding，仍 Partial／Missing，但影响较低）。
-- 存在 Outstanding 或 Deferred 时，建议是否继续 `@@SDLC_BIND_0334@@sdlc-110-clar`。
+- 存在 Outstanding 或 Deferred 时，建议是否继续 `@@SDLC_BIND_0342@@sdlc-110-clar`。
 - 建议的下一条命令。
 
 ## 完成条件

@@ -28,13 +28,21 @@ main 的登记不可用时，有效的独立本地工作可以继续：`AUTHORIT
 python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/store_changes.py" prepare --project "${SDLC_PROJECT_ROOT:?}" --kind edit --path '<store-relative-file>'
 ```
 
-本次涉及多个文件时重复传入 `--path`。只编辑返回的 `proposal.json`：每个已准备文件使用 `{"action":"replace","text":"complete candidate text"}` 或 `{"action":"skip"}`。随后通过程序发布：
+本次涉及多个文件时重复传入 `--path`。只编辑返回的 `proposal.json`：每个已准备文件使用 `{"action":"replace","text":"complete candidate text"}`、`{"action":"skip"}`，或对已明确授权废弃的文档使用 `{"action":"delete"}`。删除移除普通文档，不删除控制文件或末级软链接；空文本替换仍会保留文件。把活动引用纳入同一项已审查变更。导入和归拢不因来源缺文件推导删除。随后通过程序发布：
 
 ```sh
 python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/store_changes.py" apply --project "${SDLC_PROJECT_ROOT:?}" --transaction '<returned-transaction-directory>'
 ```
 
-普通编辑的快照只包含选定文件、`init-options.json` 和当前工作区的 `FEATURE_JSON`。无关产物及其他 worktree 的需求选择不使候选失效；本次目标或必要绑定变化仍阻止应用。导入和归拢保留来源与目标快照检查。
+普通编辑的快照只包含选定文件、编辑 `tasks.md` 时对应的任务编号记录、`init-options.json` 和当前工作区的 `FEATURE_JSON`。无关产物及其他 worktree 的需求选择不使候选失效；本次目标或必要绑定变化仍阻止应用。导入和归拢保留来源与目标快照检查。
+
+梳理后的任务编号续接是明确的本地存储扩展。TASK、CONV 或已授权修订在分配新任务编号前，读取选定需求的活动编号和保留上界：
+
+```sh
+python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/task_ids.py" --project "${SDLC_PROJECT_ROOT:?}" --feature '<resolved-feature-directory>'
+```
+
+以返回的 `high_water` 作为分配最大值（CONV 中的 `M`），新编号从 `next_id` 开始。保留仍然有效的义务编号，不得把已退役编号分配给不同工作。没有历史的新需求仍从 `T001` 开始。只读工具会计入 `tasks.md` 同目录的 `.task-ids.json`；它是编号元数据，不是活动任务或完成证据。不得从事务快照恢复废弃任务，也不把保留编号视为实现缺口。TASK 重新生成既有需求时保留该记录；IMPL 只执行活动任务复选框。编辑事务在移除编号时及此后维护上界，即使删除整个任务文件也保留，并拒绝复用已退役编号。它不保存废弃业务正文，也不为编号集合未变的任务创建历史记录。不得手动重置或删除编号记录；它随任务变更一起应用或恢复。记录不可读时停止分配，不能重新从 `T001` 开始。
 
 沿用既有流程授权，不增加改动其他产物的权限。未决事项或输入变化阻止发布；重新准备，不强行应用过期变更。包内写入脚本使用同一把资料库锁。显式外部需求目录保留既有路径检查；存在本地副本时，不得将其指向权威库。只读阶段不准备或应用写入候选。应用中断后先诊断，可使用同一程序的 `recover` 动作恢复；不得删除其他操作的锁或覆盖后来的编辑以强行恢复。
 
@@ -78,7 +86,7 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0080@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0088@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```
@@ -106,19 +114,19 @@ $ARGUMENTS
 
 ## 目标
 
-在实施前，识别三个核心产物（`spec.md`、`plan.md`、`tasks.md`）之间的不一致、重复、歧义和定义不足。本命令**只能**在 `@@SDLC_BIND_0108@@sdlc-300-task` 成功生成完整 `tasks.md` 之后运行。
+在实施前，识别三个核心产物（`spec.md`、`plan.md`、`tasks.md`）之间的不一致、重复、歧义和定义不足。本命令**只能**在 `@@SDLC_BIND_0116@@sdlc-300-task` 成功生成完整 `tasks.md` 之后运行。
 
 ## 操作约束
 
 **严格只读（STRICTLY READ-ONLY）**：**不要**修改任何文件。输出结构化分析报告。可以提供可选的整改计划；后续编辑命令手动调用之前，必须获得用户明确批准。
 
-**宪法权威**：项目宪法（`.sdlc/memory/constitution.md`）在本分析范围内**不可协商**。宪法冲突自动归为 CRITICAL，必须调整规格、方案或任务，而不是弱化、重新解释或静默忽略原则。原则本身需要变更时，必须在 `@@SDLC_BIND_0114@@sdlc-310-xchk` 之外单独、明确地更新宪法。
+**宪法权威**：项目宪法（`.sdlc/memory/constitution.md`）在本分析范围内**不可协商**。宪法冲突自动归为 CRITICAL，必须调整规格、方案或任务，而不是弱化、重新解释或静默忽略原则。原则本身需要变更时，必须在 `@@SDLC_BIND_0122@@sdlc-310-xchk` 之外单独、明确地更新宪法。
 
 ## 执行步骤
 
 ### 1. 初始化分析上下文
 
-从仓库根目录运行一次 `SDLC_HOST=c@@SDLC_BIND_0120@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --require-spec --require-tasks --include-tasks`，解析 JSON 中的 FEATURE_DIR 和 AVAILABLE_DOCS。推导绝对路径：
+从仓库根目录运行一次 `SDLC_HOST=c@@SDLC_BIND_0128@@ SDLC_INIT_DIR="${SDLC_PROJECT_ROOT:?}" bash "${SDLC_PLUGIN_ROOT:?}/scripts/bash/check-prerequisites.sh" --json --require-spec --require-tasks --include-tasks`，解析 JSON 中的 FEATURE_DIR 和 AVAILABLE_DOCS。推导绝对路径：
 
 - SPEC = FEATURE_DIR/spec.md
 - PLAN = FEATURE_DIR/plan.md
@@ -248,9 +256,9 @@ $ARGUMENTS
 
 在报告末尾输出简洁的“后续行动”：
 
-- 存在 CRITICAL 时：建议在 `@@SDLC_BIND_0250@@sdlc-400-impl` 之前解决。
+- 存在 CRITICAL 时：建议在 `@@SDLC_BIND_0258@@sdlc-400-impl` 之前解决。
 - 只有 LOW／MEDIUM 时：用户可以继续，但仍应提供改进建议。
-- 给出明确命令建议，例如“运行 @@SDLC_BIND_0252@@sdlc-200-plan 调整架构”“手动编辑 tasks.md，补充 performance-metrics 的覆盖”。
+- 给出明确命令建议，例如“运行 @@SDLC_BIND_0260@@sdlc-200-plan 调整架构”“手动编辑 tasks.md，补充 performance-metrics 的覆盖”。
 
 ### 8. 提供整改建议
 
@@ -266,7 +274,7 @@ $ARGUMENTS
 - 对每个剩余钩子，**不要**尝试解释或求值其 `condition` 表达式：
   - 如果钩子没有 `condition` 字段，或该字段为 null／空，将其视为可执行。
   - 如果钩子定义了非空 `condition`，跳过该钩子，将条件求值留给 HookExecutor 实现。
-- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0268@@sdlc-git-commit`。
+- 根据钩子命令名构造调用时，将点号（`.`）替换为连字符（`-`）。例如，`sdlc.git.commit` → `@@SDLC_BIND_0276@@sdlc-git-commit`。
 - 对每个可执行钩子，根据其 `optional` 标志输出以下内容：
   - **可选钩子**（`optional: true`）：
     ```

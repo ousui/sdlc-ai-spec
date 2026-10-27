@@ -28,13 +28,21 @@ For model-authored writes inside the effective store, prepare a candidate before
 python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/store_changes.py" prepare --project "${SDLC_PROJECT_ROOT:?}" --kind edit --path '<store-relative-file>'
 ```
 
-Repeat `--path` for all files in this change. Edit only the returned `proposal.json`: each prepared file uses `{"action":"replace","text":"complete candidate text"}` or `{"action":"skip"}`. Then publish through the program:
+Repeat `--path` for all files in this change. Edit only the returned `proposal.json`: each prepared file uses `{"action":"replace","text":"complete candidate text"}`, `{"action":"skip"}`, or `{"action":"delete"}` for an explicitly authorized retired document. Delete removes a regular document, not a control file or leaf symlink; an empty replacement is still a file. Include active references in the same reviewed change. Import/collection never infer deletion from missing source files. Then publish through the program:
 
 ```sh
 python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/store_changes.py" apply --project "${SDLC_PROJECT_ROOT:?}" --transaction '<returned-transaction-directory>'
 ```
 
-Ordinary edit snapshots cover only the selected files, `init-options.json` and the current workspace's `FEATURE_JSON`. Unrelated artifacts and other worktrees' selections do not invalidate the candidate; changes to these targets or required bindings do. Import and collection retain their source/target snapshot checks.
+Ordinary edit snapshots cover only the selected files, their task ID history when editing `tasks.md`, `init-options.json` and the current workspace's `FEATURE_JSON`. Unrelated artifacts and other worktrees' selections do not invalidate the candidate; changes to these targets or required bindings do. Import and collection retain their source/target snapshot checks.
+
+Task numbering after refinement is an explicit local storage extension. Before TASK, CONV or an authorized revision allocates new task IDs, read the selected requirement's active IDs and reserved maximum:
+
+```sh
+python3 -I -B "${SDLC_PLUGIN_ROOT:?}/scripts/python/task_ids.py" --project "${SDLC_PROJECT_ROOT:?}" --feature '<resolved-feature-directory>'
+```
+
+Use the returned `high_water` as the allocation maximum (`M` in CONV), starting new IDs at `next_id`. Keep IDs for retained obligations; never assign a retired ID to different work. A new requirement with no history still starts at `T001`. The read-only helper includes `.task-ids.json` beside `tasks.md`; this is numbering metadata, not active work or evidence of completion. Do not restore retired tasks from transaction snapshots or treat reserved numbers as implementation gaps. TASK preserves this history when regenerating an existing requirement; IMPL executes only active task checkboxes. The edit transaction maintains the maximum when removing IDs and thereafter, even when deleting the entire task file, and rejects reuse of retired IDs. It does not retain discarded business text or create history for unchanged task sets. Never manually reset or delete the history; apply/recover it with the task change. An unreadable record stops allocation rather than restarting at `T001`.
 
 This applies existing workflow authorization, not new permission to change other artifacts. Unresolved decisions or changed inputs stop publication; prepare again rather than forcing stale changes. Packaged writing helpers acquire the same store lock. Explicit external feature directories retain their existing path checks; do not redirect them into authority when a local copy exists. Read-only stages do not prepare or apply candidates. An interrupted application is diagnosed and can be restored with the same program's `recover` action; never delete another operation's lock or overwrite later edits to force recovery.
 

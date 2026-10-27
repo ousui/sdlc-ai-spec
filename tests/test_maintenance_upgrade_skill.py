@@ -141,6 +141,7 @@ class MaintenanceUpgradeSkillTests(unittest.TestCase):
             self.assertTrue((SKILL_DIR / relative).is_file(), relative)
         flow = (ROOT / 'maintenance/UPGRADE-FLOW.html').read_text(encoding='utf-8')
         self.assertIn('sdlc-maintain-upgrade', flow)
+        self.assertNotRegex(flow, r'(?<!maintain-)sdlc-upgrade\b')
         self.assertNotRegex(flow, r'(?<!maintain-)sdlc-refine\b')
 
     def test_repository_metadata_does_not_advertise_maintenance_skill_as_product(self):

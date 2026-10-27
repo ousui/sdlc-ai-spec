@@ -297,6 +297,72 @@ class RefineChangesTests(unittest.TestCase):
         self.assertIn('ambiguous requirement ownership', result.stderr)
         self.assertEqual(body.read_text(), '- [ ] T050 Shared body\n')
 
+    def test_shared_task_and_missing_history_alias_retire_id_once(self):
+        other = self.f.feature(self.f.main, '002-two')
+        tasks = other/'tasks.md'
+        tasks.write_text('- [x] T049 Valid\n- [ ] T050 Retired\n')
+        (self.feature/'tasks.md').symlink_to('../002-two/tasks.md')
+        (self.feature/'.task-ids.json').symlink_to('../002-two/.task-ids.json')
+        history = other/'.task-ids.json'
+        self.assertFalse(os.path.lexists(history))
+
+        name = 'specs/002-two/tasks.md'
+        plan = self.plan({name: {'action': 'replace', 'text': '- [x] T049 Valid\n'}})
+        self.assertEqual(plan['task_histories'], {name: 'specs/002-two/.task-ids.json'})
+        self.f.apply(plan)
+        self.assertEqual(json.loads(history.read_text()), {'schema': 1, 'high_water': 50})
+        self.assertEqual(self.numbering()['next_id'], 'T051')
+        self.assertEqual(self.f.runpy('task_ids.py', '--feature', str(other))['next_id'], 'T051')
+        self.assertEqual(os.readlink(self.feature/'tasks.md'), '../002-two/tasks.md')
+        self.assertEqual(os.readlink(self.feature/'.task-ids.json'), '../002-two/.task-ids.json')
+        self.assertIn('Retired task IDs cannot be reused',
+                      self.f.apply(self.plan({name: {'action': 'replace',
+                                                     'text': '- [x] T049 Valid\n- [ ] T050 Different\n'}}), ok=False).stderr)
+
+    def test_shared_task_and_existing_history_alias_retire_id_once(self):
+        other = self.f.feature(self.f.main, '002-two')
+        (other/'tasks.md').write_text('- [x] T049 Valid\n- [ ] T050 Retired\n')
+        history = other/'.task-ids.json'
+        history.write_text('{"schema":1,"high_water":50}')
+        (self.feature/'tasks.md').symlink_to('../002-two/tasks.md')
+        (self.feature/'.task-ids.json').symlink_to('../002-two/.task-ids.json')
+
+        name = 'specs/002-two/tasks.md'
+        self.f.apply(self.plan({name: {'action': 'replace', 'text': '- [x] T049 Valid\n'}}))
+        self.assertEqual(json.loads(history.read_text())['high_water'], 50)
+        self.assertEqual(self.numbering()['next_id'], 'T051')
+        self.assertEqual(self.f.runpy('task_ids.py', '--feature', str(other))['next_id'], 'T051')
+        self.assertTrue((self.feature/'tasks.md').is_symlink())
+        self.assertTrue((self.feature/'.task-ids.json').is_symlink())
+
+    def test_owned_looped_history_entry_explicitly_stops_task_edit(self):
+        tasks = self.feature/'tasks.md'
+        tasks.write_text('- [ ] T050 Retired\n')
+        history = self.feature/'.task-ids.json'
+        history.symlink_to('.task-ids.json')
+        result = self.f.runpy('store_changes.py', 'prepare', '--kind', 'edit',
+                              '--path', self.prefix+'tasks.md', ok=False)
+        self.assertIn('Cannot resolve task ID history for task owner', result.stderr)
+        self.assertEqual(tasks.read_text(), '- [ ] T050 Retired\n')
+        self.assertEqual(os.readlink(history), '.task-ids.json')
+
+    def test_shared_history_owner_change_after_prepare_stops_apply(self):
+        other = self.f.feature(self.f.main, '002-two')
+        third = self.f.feature(self.f.main, '003-three')
+        tasks = other/'tasks.md'
+        tasks.write_text('- [x] T049 Valid\n- [ ] T050 Retired\n')
+        (self.feature/'tasks.md').symlink_to('../002-two/tasks.md')
+        alias = self.feature/'.task-ids.json'
+        alias.symlink_to('../002-two/.task-ids.json')
+        name = 'specs/002-two/tasks.md'
+        plan = self.plan({name: {'action': 'replace', 'text': '- [x] T049 Valid\n'}})
+        alias.unlink()
+        alias.symlink_to('../003-three/.task-ids.json')
+        self.assertIn('ambiguous requirement ownership', self.f.apply(plan, ok=False).stderr)
+        self.assertEqual(tasks.read_text(), '- [x] T049 Valid\n- [ ] T050 Retired\n')
+        self.assertFalse((other/'.task-ids.json').exists())
+        self.assertFalse((third/'.task-ids.json').exists())
+
     def test_external_requirement_task_alias_uses_the_requirement_history(self):
         external = self.f.base/'external feature'
         contracts = external/'contracts'

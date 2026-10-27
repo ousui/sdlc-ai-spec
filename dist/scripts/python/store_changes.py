@@ -219,16 +219,17 @@ def task_histories(context: dict, target: Path, paths: list[str]) -> dict:
             if history is not None and same_target(actual, history):
                 raise ValueError('Task ID history is maintained with tasks; direct edits are unsupported: ' + name)
             if tasks is not None and same_target(actual, tasks):
-                task_owners.append((root / task_ids.LEDGER).relative_to(target).as_posix())
+                if history is None:
+                    raise ValueError('Cannot resolve task ID history for task owner: ' + str(root))
+                task_owners.append(((root / task_ids.LEDGER).relative_to(target).as_posix(), history))
         if task_owners:
             locations = []
-            for value in task_owners:
-                location = target / value
+            for _, location in task_owners:
                 if not any(same_target(location, known) for known in locations):
                     locations.append(location)
             if len(locations) != 1:
                 raise ValueError('Task file has ambiguous requirement ownership: ' + name)
-            result[name] = task_owners[0]
+            result[name] = task_owners[0][0]
         elif binding['links'] and actual.name in ('tasks.md', task_ids.LEDGER):
             raise ValueError('Cannot determine task file ownership: ' + name)
     return result

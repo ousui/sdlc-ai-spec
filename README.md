@@ -31,7 +31,7 @@ INIT 负责发现、选择与补缺；归拢为其显式动作，不增加公共
 
 ## Skill 命名与含义
 
-**状态：已迁移生成入口，三个宿主各有 10 个编号入口、STATUS 与独立 CUT。** 下表名称对应当前
+**状态：已迁移生成入口，三个宿主各有 10 个编号入口、STATUS、独立 CUT 与 REFINE。** 下表名称对应当前
 生成包；原生客户端发现与模型执行仍须实际验证，不能仅由工程测试推定。
 `sdlc-status` 已实现为只读状态与产物导航。命名迁移背景见
 [命名与迁移契约](docs/NAMING.md)。
@@ -50,12 +50,16 @@ INIT 负责发现、选择与补缺；归拢为其显式动作，不增加公共
 | `sdlc-500-conv` | Implementation Convergence | 实现结果收敛 | `converge` |
 | `sdlc-status` | Status | 状态与产物导航 | 本地 utility，已实现 |
 | `sdlc-cut` | Split | 需求拆分与后继材料承接 | 独立本地 Skill |
+| `sdlc-refine` | Refine | 资料梳理与修订 | 独立本地 Skill |
 
 阶段能力采用 `sdlc-<三位编号>-<四字母代号>`，不要求机械截取英文单词前四个
 字母。000–099 是项目级前置能力，100–599 是需求级能力；编号用于分类与排序，
 不增加执行门禁或“执行一次后永远不能更新”的限制。`sdlc-status` 是跨阶段辅助
 能力，不编号、不缩写。`sdlc-cut` 同样不编号；它只在明确需要拆分需求时使用，
 不加入原版阶段顺序或状态映射。
+`sdlc-refine` 同样独立于阶段，用于规范整理、内容校正、依据核对、补全已确认信息和结构重梳，
+也承接版本适配与中断恢复。按用户范围修订资料，保留业务义务和来源；兼容时不强制迁移。
+使用与判断标准见 [资料梳理与修订](docs/REFINEMENT.md)。
 
 三个容易混淆的阶段必须保持以下区别：
 
@@ -101,14 +105,14 @@ CONV 收敛表示本次对既定规格、方案、任务未发现可行动的实
 后才标记需求完成；这属于项目完成标准，不是新增的上游阶段。
 详见 [使用流程与评审职责](docs/USAGE.md) 和 [HTML 快速手册](docs/quickstart.html)。
 
-## 一个插件包，12 个公共 Skills
+## 一个插件包，13 个公共 Skills
 
 正式分发边界为 **dist/**，成员安装预构建插件，不运行构建、不安装上游 CLI。
-九个上游核心 Skill、INIT、STATUS 和独立 CUT 均位于 `dist/skills/`，正文与摘要为简体中文；三个宿主
+九个上游核心 Skill、INIT、STATUS、独立 CUT 和 REFINE 均位于 `dist/skills/`，正文与摘要为简体中文；三个宿主
 读取同一份入口和流程来源。宿主命令语法仍通过明确 bindings 绑定，不猜测模型身份。
 
-所有 12 项入口均只维护一份，已删除生成包的宿主包装层。CUT 的源码位于
-`src/skills/sdlc-cut/`，构建时直接复制到公开目录，不加入原版工作流绑定。
+所有 13 项入口均只维护一份，已删除生成包的宿主包装层。独立 CUT 和 REFINE 的源码位于
+`src/skills/` 对应目录，构建时直接复制到公开目录，不加入原版工作流绑定。
 菜单、提示及隐式/显式
 选择使用各宿主默认规则；不设置专用调用控制字段，不因自动选择而扩大执行授权。
 
@@ -119,12 +123,13 @@ src/templates/                英文模板骨架与已批准名称/路径映射
 src/locales/zh-CN/             中文正文、摘要、绑定说明及来源复核目录
 src/adapters/                 英文适配源、Runtime 代码适配片段及职责说明
 src/skills/sdlc-cut/          独立 CUT 的正文、规则、程序和模板
+src/skills/sdlc-refine/       资料梳理与修订 Skill、内容标准与兼容恢复标准
 tools/                        构建、本地化检查、升级与验证工具
 dist/
   .codex-plugin/plugin.json    唯一公共 skills 集合
   .claude-plugin/plugin.json   默认 skills 扫描（不重复声明）
   .cursor-plugin/plugin.json   唯一公共 skills 集合
-  skills/<id>/SKILL.md         12 个公共入口：九核心 + INIT + STATUS + CUT
+  skills/<id>/SKILL.md         13 个公共入口：九核心 + INIT + STATUS + CUT + REFINE
   references/workflows/       一份完整正文 + 按需宿主文本片段
   references/TEMPLATE-LANGUAGE.md
   bindings/                   明确的宿主差异
@@ -158,7 +163,7 @@ INIT 为新项目复制中文默认宪法并生成中文数据 README；当本�
 
 ## 维护者上游升级
 
-源码仓库提供显式维护 Skill `sdlc-maintain-upgrade`，用于把锁定 Spec Kit 上游升级整理为可审查、可验证的 detached candidate。它不属于 000–500 业务流程，也不进入安装后的 12 个公共 Skill。
+源码仓库提供显式维护 Skill `sdlc-maintain-upgrade`，用于把锁定 Spec Kit 上游升级整理为可审查、可验证的 detached candidate。它不属于 000–500 业务流程，也不进入安装后的 13 个公共 Skill。
 
 - Codex：`$sdlc-maintain-upgrade vX.Y.Z`
 - Cursor：`/sdlc-maintain-upgrade vX.Y.Z`
@@ -179,6 +184,7 @@ Python 工具。此工具边界位于已安装插件之外；`dist/` 仍只需�
 - [HTML 开发者快速手册](docs/quickstart.html)
 - [项目初始化与安全重复调用](docs/INITIALIZATION.md)
 - [安装、版本与缓存处理](docs/INSTALLATION.md)
+- [资料梳理与修订、版本适配及调用恢复](docs/REFINEMENT.md)
 - [构建与独立工程验证](docs/DEVELOPMENT.md)
 - [命名契约与升级映射](docs/NAMING.md)
 - [准确的移植差异](docs/MIGRATION.md)
@@ -199,7 +205,7 @@ Python 工具。此工具边界位于已安装插件之外；`dist/` 仍只需�
 Codex 示例：`$sdlc-100-spec`；Claude Code 示例：
 `/sdlc-ai-spec:sdlc-100-spec`；Cursor 示例：`/sdlc-100-spec`（以客户端菜单
 实际入口为准）。Skill 名称、目录、共享工作流文件、加载参数和提示统一使用
-同一编号 ID。全部 12 个入口共用目录，不保留宿主私有 Skill。
+同一编号 ID。全部 13 个入口共用目录，不保留宿主私有 Skill。
 
 运行变量为 `SDLC_INIT_DIR`、`SDLC_FEATURE`、`SDLC_FEATURE_DIRECTORY`。
 不相关的 `SPECIFY_*` 环境变量不影响选定项目。

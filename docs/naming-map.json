@@ -107,6 +107,13 @@
       "chinese": "需求拆分与后继材料承接",
       "scope": "utility",
       "source_path": "src/skills/sdlc-cut/SKILL.md"
+    },
+    {
+      "target_id": "sdlc-refine",
+      "english": "Refine",
+      "chinese": "资料梳理与修订",
+      "scope": "utility",
+      "source_path": "src/skills/sdlc-refine/SKILL.md"
     }
   ],
   "identifier_examples": {

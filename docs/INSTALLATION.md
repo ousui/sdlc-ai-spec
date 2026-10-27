@@ -1,5 +1,9 @@
 # 安装、版本与缓存更新
 
+插件更新导致旧入口路径失效时，可按 [既有需求升级与调用恢复](REFINEMENT.md)
+重新定位当前完整包、检查兼容性并继续原调用。版本号变化不要求重建需求；
+安装包不能混用，已有写入需要先核对再恢复。
+
 产品：**SDLC AI SPEC**，插件 ID `sdlc-ai-spec`，作者 Blade。
 版本规则为 `<锁定上游版本>-sdlc.<本地迭代号>`；当前版本以安装包 manifest、`UPSTREAM.json` 和 `BUILD.json` 为准，展示版本与机器 manifest 使用同一字符串。发布历史见根目录 `CHANGELOG.md`。
 Marketplace：`sdlc-ai-spec`。声明仓库：https://github.com/goedgecloud/sdlc-ai-spec。
@@ -26,8 +30,8 @@ Codex 的“网站”使用 `interface.websiteURL`，描述中的链接不能替
 [Claude Code](https://code.claude.com/docs/en/plugins-reference#metadata-fields)、
 [Cursor](https://cursor.com/docs/reference/plugins)。
 
-三个仓库根 Marketplace 目录清单都指向 `./dist`。12 个入口（九项上游核心、
-本地 INIT、STATUS 和独立 CUT）均位于 `dist/skills/`，不保留宿主私有包装入口或选择策略覆盖。
+三个仓库根 Marketplace 目录清单都指向 `./dist`。13 个入口（九项上游核心、
+本地 INIT、STATUS、独立 CUT 和 REFINE）均位于 `dist/skills/`，不保留宿主私有包装入口或选择策略覆盖。
 
 Codex 和 Cursor 使用 `skills: "./skills/"`，Claude 自动扫描 `skills/`，无需
 冗余自定义路径。不提供通用根 plugin.json。不要将根工作区和 dist 包分别安装两次。
@@ -66,7 +70,7 @@ Bash 和 Python 3.9+；安装时不构建或翻译。中文内容已预编译，
 
 ## 核验实际安装内容
 
-插件必须从公共 skills/ 目录准确暴露预期的 12 项 Skill。读取安装目录中的
+插件必须从公共 skills/ 目录准确暴露预期的 13 项 Skill。读取安装目录中的
 `UPSTREAM.json` 和 `BUILD.json`。产品版本固定时，`BUILD.json.build_id` 标识
 源码派生字节。每次测试记录源码提交、build_id、客户端版本、模型和加载的插件目录。
 不要只检查 checkout；必须检查已安装的缓存副本。
@@ -94,17 +98,17 @@ Claude 可能在显式版本字符串不变时跳过更新。不要只凭界面�
 ## 插件标识迁移
 
 插件 ID 从 `sdlc` 改为 `sdlc-ai-spec`，显示名为 **SDLC AI SPEC**。十个编号入口
-目录采用 README 中的 ID；sdlc-status 与 sdlc-cut 是无编号本地辅助能力。12 个入口均位于
+目录采用 README 中的 ID；sdlc-status、sdlc-cut 与 sdlc-refine 是无编号本地辅助能力。13 个入口均位于
 dist/skills，三个清单通过原生发现语义选择同一组能力。生成入口省略三项获准的
 展示/选择字段；业务执行与显式宿主绑定不变。
 
 旧 ID 和新 ID 应视为不同安装。通过客户端正常管理流程移除/禁用旧插件，从准确
-目标来源安装新 ID，再核验 12 个入口和新 build_id。不要合并两个包目录树，也不要假定版本字符串本身会使缓存失效。不执行自动缓存移除或业务数据迁移，不宣传或安装
+目标来源安装新 ID，再核验 13 个入口和新 build_id。不要合并两个包目录树，也不要假定版本字符串本身会使缓存失效。不执行自动缓存移除或业务数据迁移，不宣传或安装
 旧公共命令别名。安装/更新插件不重写已有文档；用户自定义覆盖中的历史命令引用需显式审查。
 
 ## 统一公共入口与 STATUS
 
-当前包在 `dist/skills` 中恰好提供 12 个入口：九项上游核心 Skill 加本地 INIT、STATUS 和独立 CUT，不保留宿主私有包装入口。所有公共入口省略 `user-invocable`、
+当前包在 `dist/skills` 中恰好提供 13 个入口：九项上游核心 Skill 加本地 INIT、STATUS、独立 CUT 和 REFINE，不保留宿主私有包装入口。所有公共入口省略 `user-invocable`、
 `disable-model-invocation` 和 `argument-hint`，使用宿主默认行为。INIT 保留已有项目数据。
 Claude 默认发现 `skills/`，不重复配置自定义路径；其他清单选择 `./skills/`。
 原有 11 个包装入口向上两级解析包根目录；CUT 从自身 Skill 目录定位随附程序。
@@ -120,7 +124,7 @@ STATUS 是可选本地只读辅助能力，不是额外生命周期阶段或上�
 既有项目数据不变。详见 [USAGE.md](USAGE.md)。
 
 通过客户端正常更新或卸载/重装流程加载包含新编号的完整 `dist`，不要混合两版
-插件目录，也不要只复制一个 Skill。须核验实际安装缓存的当前版本和 `BUILD.json.build_id`：12 个公共入口中应有 `sdlc-210-huma`，不应同时发现旧编号。
+插件目录，也不要只复制一个 Skill。须核验实际安装缓存的当前版本和 `BUILD.json.build_id`：13 个公共入口中应有 `sdlc-210-huma`，不应同时发现旧编号。
 Codex 使用 `$sdlc-210-huma`，Claude Code 使用 `/sdlc-ai-spec:sdlc-210-huma`，Cursor
 使用 `/sdlc-210-huma`（以原生菜单实际入口为准）。不要删除 `.sdlc` 来刷新插件。
 已有自定义模板或提示中的旧调用需要显式审查，安装/更新不自动重写它们。

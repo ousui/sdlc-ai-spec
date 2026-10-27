@@ -165,7 +165,7 @@ JSON 审查是显式本地流程记录，不是加密身份证明，也不是防
 
 ## 共享入口与本地化候选恢复
 
-当前分发包在 `dist/skills/` 中提供 12 个公共入口，包含本地 INIT、STATUS 和独立 CUT，
+当前分发包在 `dist/skills/` 中提供 13 个公共入口，包含本地 INIT、STATUS、独立 CUT 和 REFINE，
 不保留宿主私有包装入口。原始英文源码渲染仍独立检查；中文来源资源在
 `src/locales/zh-CN` 中绑定版本。构建和安装不运行翻译服务。原始英文模板映射
 继续供独立比较。已审查中文默认模板呈现会重新生成，已有项目数据保持不变。
@@ -186,7 +186,7 @@ JSON 审查是显式本地流程记录，不是加密身份证明，也不是防
 
 ## 统一公共入口与 STATUS
 
-当前包在 `dist/skills` 中恰好提供 12 个入口：九项上游核心 Skill 加本地 INIT、STATUS 和独立 CUT，不保留宿主私有包装入口。所有公共入口省略 `user-invocable`、
+当前包在 `dist/skills` 中恰好提供 13 个入口：九项上游核心 Skill 加本地 INIT、STATUS、独立 CUT 和 REFINE，不保留宿主私有包装入口。所有公共入口省略 `user-invocable`、
 `disable-model-invocation` 和 `argument-hint`，使用宿主默认行为。INIT 保留已有项目数据。
 Claude 默认发现 `skills/`，不重复配置自定义路径；其他清单选择 `./skills/`。
 原有 11 个包装入口向上两级解析包根目录；CUT 从自身 Skill 目录定位随附程序。
@@ -197,10 +197,12 @@ STATUS 是可选本地只读辅助能力，不是额外生命周期阶段或上�
 
 升级必须保留 src/adapters/STATUS.md、src/locales/zh-CN/status.md 及其本地资源
 目录记录、src/scripts/python/project_status.py 和测试。这些是本地源码，不是
-复制的上游命令。派生源码生成重建同一 12 项入口包，不覆盖此辅助能力。CUT 的
-原始源码来自 `src/skills/sdlc-cut/`，不参与上游命令改名或本地化候选刷新。影响字段
+复制的上游命令。派生源码生成重建同一 13 项入口包，不覆盖此辅助能力。CUT 与 REFINE 的
+原始源码来自 `src/skills/` 对应目录，不参与上游命令改名或本地化候选刷新。影响字段
 解释的源码变化需进行 STATUS 兼容性审查和测试；不得静默迁移业务数据。
 既有本地化刷新路径仍仅限已审查的本地化资源变化。
+已安装插件的业务项目适配由独立 `sdlc-refine` 处理，见 [既有需求升级](REFINEMENT.md)；
+上游源码候选通过不等于业务项目已完成迁移。
 
 模板、固定响应及需求示例的新鲜度参与 LOCALIZATION_REQUIRED 检查。Localization Contract v2 把自然语言呈现与机器契约分开：英文标题/标签可以映射为 canonical 中文，但命令、路径、ID、配置 token、状态枚举和结构层级仍必须通过机器契约检查。`catalog.json` 同时保存 canonical 结构映射、历史英文/双语读取别名和已审查输入别名；升级不得把未知标题或新机器 token 静默当作普通文案。
 

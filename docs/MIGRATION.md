@@ -13,7 +13,10 @@
 | `specify preset resolve spec-template` 指令改用本地 `resolve-template-path.sh` | SPEC 获得供复制/读取使用的已有路径；原内容解析器不变；所选配置下项目覆盖优先于包内核心模板 |
 | 原生命令提示使用本次调用宿主，不使用保存的默认集成 | 同一项目可由不同宿主先后使用 |
 | 生成 Skill 增加绑定前言 | 标识资源、解析项目、每次工具调用传递变量，并在所选支持范围之外明确失败 |
-| 插件打包与来源记录 | 三个原生清单发现同一组 12 个共享入口，其中 CUT 独立于上游命令 |
+| 包更新后的兼容评估与恢复 | 从当前安装来源绑定完整包，核对原调用副作用，兼容时续办；独立 REFINE 复用资料库事务适配必要材料 |
+| 独立资料梳理与修订 | 按明确范围整理、校正、补全及重梳已有资料，保留业务义务和证据；不改变九阶段的职责与授权 |
+| 整文件删除与修订后的编号续接 | 本地 edit 事务提供显式 delete；编号移除后保留需求内上界，TASK/CONV 分配时读取，防止复用退役 ID；不修改上游原文或阶段顺序 |
+| 插件打包与来源记录 | 三个原生清单发现同一组 13 个共享入口，其中 CUT/REFINE 独立于上游命令 |
 
 `check-prerequisites.sh`、`resolve-template.sh` 除标记路径迁移外与上游逐字节一致。
 `setup-plan.sh` 增加精确验证的资料库锁包装，其余正文保持一致。`common.sh`、`create-new-feature.sh` 和一处 setup-tasks 诊断
@@ -39,7 +42,7 @@
 并通过来源新鲜度及机器片段检查。共享包装入口仅省略获准的展示/选择字段，保留
 显式调用宿主、原始用户输入及完整读取输出要求。截断必须通过有界分页处理，不得静默接受。
 
-12 项能力仅位于 `skills/`，包含本地 INIT、STATUS 和独立 CUT。Claude 默认扫描该目录；
+13 项能力仅位于 `skills/`，包含本地 INIT、STATUS、独立 CUT 和 REFINE。Claude 默认扫描该目录；
 Codex/Cursor 显式选择相同目录。不分发通用根清单。路径规则参考：
 
 - https://developers.openai.com/plugins/build/plugins
@@ -103,7 +106,7 @@ Runtime 声明/调用方及输出提示使用 SDLC 标识。三个宿主均保�
 
 ## 统一公共入口与 STATUS
 
-当前包在 `dist/skills` 中恰好提供 12 个入口：九项上游核心 Skill 加本地 INIT、STATUS 和独立 CUT，不保留宿主私有包装入口。所有公共入口省略 `user-invocable`、
+当前包在 `dist/skills` 中恰好提供 13 个入口：九项上游核心 Skill 加本地 INIT、STATUS、独立 CUT 和 REFINE，不保留宿主私有包装入口。所有公共入口省略 `user-invocable`、
 `disable-model-invocation` 和 `argument-hint`，使用宿主默认行为。INIT 保留已有项目数据。
 Claude 默认发现 `skills/`，不重复配置自定义路径；其他清单选择 `./skills/`。
 原有 11 个包装入口向上两级解析包根目录；CUT 从自身 Skill 目录定位随附程序。

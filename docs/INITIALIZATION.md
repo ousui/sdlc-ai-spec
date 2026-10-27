@@ -172,7 +172,7 @@ legacy `.specify` 检测仍拒绝隐式转换。Runtime Bash override 使用 `SD
 
 ## 统一公共入口与 STATUS
 
-当前包在 `dist/skills` 下准确提供 12 个入口：九个上游核心 Skill，加本地 INIT、STATUS 和独立 CUT。
+当前包在 `dist/skills` 下准确提供 13 个入口：九个上游核心 Skill，加本地 INIT、STATUS、独立 CUT 和 REFINE。
 不再生成宿主私有 Skill wrapper。所有公共入口都不声明 `user-invocable`、
 `disable-model-invocation` 和 `argument-hint`，使用宿主默认行为；这只取代旧的 INIT UI
 例外说明，不改变 INIT 已有的数据保留契约。Claude 使用默认 `skills/` 扫描，不再重复配置

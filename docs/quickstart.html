@@ -22,7 +22,7 @@
     <section class="hero" id="start">
       <h1>SDLC AI SPEC 开发者快速使用手册</h1>
       <p>从安装和初始化开始，了解每个 Skill 的职责、问题处理方式，以及需求完成与业务验收的区别。</p>
-      <div class="badges"><span class="badge">Codex</span><span class="badge">Claude Code</span><span class="badge">Cursor</span><span class="badge">Python 3.9+</span><span class="badge">Bash</span><span class="badge">12 个公共 Skills</span></div>
+      <div class="badges"><span class="badge">Codex</span><span class="badge">Claude Code</span><span class="badge">Cursor</span><span class="badge">Python 3.9+</span><span class="badge">Bash</span><span class="badge">13 个公共 Skills</span></div>
     </section>
 
     <div class="card ok"><strong>最短结论：</strong>安装插件 → 每个项目执行一次 <code>sdlc-000-init</code> → 建立/确认项目规则 <code>sdlc-010-rule</code> → 每个需求从 <code>SPEC</code> 开始 → PLAN → 按需 HUMA（需求评审）→ TASK → 按需 XCHK → IMPL → CONV。团队可把“范围内实现收敛 + 项目验证及要求的评审/验收通过”作为需求完成标准；这不是新增的插件门禁。</div>
@@ -37,7 +37,7 @@
     </tbody></table></div>
     <div class="card warn"><strong>版本更新常见坑：</strong>不要只看版本字符串判断“已经更新”；应核对安装缓存中的 <code>BUILD.json</code> / <code>build_id</code>。如果客户端还在加载旧内容，优先走正常卸载、重装、Reload/New Session，不要把旧插件目录和新插件目录合并。</div>
 
-    <div class="card warn"><strong>HUMA 入口更新：</strong>本手册使用 <code>sdlc-210-huma</code>，替代历史 <code>sdlc-320-huma</code>。安装包应包含新入口、共 12 个公共 Skills；不保留旧编号别名。仅修改手册不会更新已安装插件，请核验实际缓存的 <code>build_id</code>，不要混装两版或删除项目数据。</div>
+    <div class="card warn"><strong>HUMA 入口更新：</strong>本手册使用 <code>sdlc-210-huma</code>，替代历史 <code>sdlc-320-huma</code>。安装包应包含新入口、共 13 个公共 Skills；不保留旧编号别名。仅修改手册不会更新已安装插件，请核验实际缓存的 <code>build_id</code>，不要混装两版或删除项目数据。</div>
 
     <h2 id="init">3. 初始化项目</h2>
     <p>插件只需要安装一次，但<strong>每个业务项目</strong>通常需要执行一次 <code>sdlc-000-init</code>。多根工作区务必指向真正的业务项目根目录，不要误选外层 Git 根。</p>
@@ -64,6 +64,7 @@
       <tr><td><code>sdlc-500-conv</code></td><td>一轮实现完成后</td><td>把“实际代码”重新与 SPEC / PLAN / TASK 对照；有差距则追加剩余任务，再回 IMPL</td></tr>
       <tr><td><code>sdlc-status</code></td><td>任何时候需要查看当前事实</td><td>只读展示当前需求、产物路径、任务勾选和诊断，不自动修复或推进流程</td></tr>
       <tr><td><code>sdlc-cut</code></td><td>一个原始需求或既有需求需要拆成分别推进的后继需求时</td><td>先形成范围与来源承接方案；确认执行后发布后继材料，不自动运行原版阶段</td></tr>
+      <tr><td><code>sdlc-refine</code></td><td>需要规范、校正或重梳已有资料，以及版本适配、调用恢复时</td><td>按明确依据和授权修订，保留业务义务与来源，使用现有资料库事务。<a href="REFINEMENT.md">查看修订标准</a></td></tr>
     </tbody></table></div>
 
     <h3>推荐使用原则</h3>
@@ -148,7 +149,7 @@ sdlc-status
 
     <h2 id="trouble">8. 出问题怎么办</h2>
     <div class="table-wrap"><table><thead><tr><th>现象</th><th>优先检查</th><th>处理建议</th></tr></thead><tbody>
-      <tr><td>找不到 Skill / 菜单没有命令</td><td>插件是否安装到正确用户作用域；是否新开会话/Reload；是否加载了旧 ID <code>sdlc</code></td><td>正常卸载旧插件，重新安装 <code>sdlc-ai-spec</code>，确认 <code>dist/skills</code> 能看到 12 个入口。</td></tr>
+      <tr><td>找不到 Skill / 菜单没有命令</td><td>插件是否安装到正确用户作用域；是否新开会话/Reload；是否加载了旧 ID <code>sdlc</code></td><td>正常卸载旧插件，重新安装 <code>sdlc-ai-spec</code>，确认 <code>dist/skills</code> 能看到 13 个入口。</td></tr>
       <tr><td>更新后行为还是旧的</td><td>实际安装缓存中的 <code>BUILD.json</code> / <code>build_id</code></td><td>不要只看仓库 checkout；卸载/重装并重新加载客户端，核对安装副本。</td></tr>
       <tr><td>提示项目未初始化</td><td>当前工作目录是否真的是业务项目根；是否存在正确的 <code>.sdlc</code></td><td>明确项目目录后执行 <code>sdlc-000-init</code>。多根工作区不要误选父目录。</td></tr>
       <tr><td>INIT 因旧数据/异常目录停止</td><td>是否存在 <code>.specify</code>、无效 JSON、未知 layout、symlink 或异常文件类型</td><td>不要删数据硬绕过。先审查异常来源；修复具体状态后再重跑 INIT。</td></tr>

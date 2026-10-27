@@ -28,7 +28,7 @@ class SharedLocalizationTests(unittest.TestCase):
         package=ROOT/'dist'
         self.assertEqual({p.name for p in (package/'skills').iterdir()},
                          {skill_id(n) for n in ALL_COMMANDS} | set(INDEPENDENT_SKILLS))
-        self.assertEqual(len(list(package.rglob('SKILL.md'))),12)
+        self.assertEqual(len(list(package.rglob('SKILL.md'))),13)
         for name in ALL_COMMANDS:
             self.assertEqual(len({skill_entry(package,h,name) for h in HOSTS}),1)
         self.assertFalse((package/'adapters').exists())

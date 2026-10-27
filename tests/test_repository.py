@@ -102,7 +102,7 @@ class RepositoryTests(unittest.TestCase):
         self.assertEqual(build['port_revision'],revision)
         self.assertTrue(upstream['init_implemented'])
         self.assertEqual(upstream['local_commands'],['init', 'status'])
-        self.assertEqual(upstream['independent_skills'],['sdlc-cut'])
+        self.assertEqual(upstream['independent_skills'],['sdlc-cut', 'sdlc-refine'])
         self.assertFalse(upstream['native_host_verified'])
 
     def test_native_presentation_links_and_assets(self):

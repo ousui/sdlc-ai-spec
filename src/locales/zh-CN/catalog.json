@@ -156,10 +156,10 @@
   "resources": {
     "binding": {
       "source": "src/adapters/BINDING.md",
-      "source_sha256": "ecf003f262912dc4410ef7fed14d924facbd5ff58a9615d7b008da3b762f93d7",
-      "translation_sha256": "3a95bbac20db74117962bb0fa2185c69229ce0b66903edb7aacbd21d86ae228d",
+      "source_sha256": "6b6c64ebb617f4776eb9a290a94ce2f3695a890e8217e5acf4e04b290be42727",
+      "translation_sha256": "d9f7f5bbc53e38cd5c292cc7de165503f475ca204c6bb928363b5f784a25fd52",
       "status": "reviewed",
-      "reviewer": "Codex AI: explicit selection precedence and disjoint storage boundary review"
+      "reviewer": "AI: Codex session 01a17b27-620b-70d0-b663-491029e6a32f; reviewed explicit deletion and task ID continuation EN/zh-CN binding"
     },
     "init": {
       "source": "src/adapters/INIT.md",

@@ -59,11 +59,11 @@ class MaintenanceUpgradeSkillTests(unittest.TestCase):
         self.assertEqual(data['interface']['display_name'], 'sdlc-maintain-upgrade')
         self.assertEqual(data['policy']['allow_implicit_invocation'], False)
 
-    def test_product_distribution_includes_independent_cut_but_not_maintenance(self):
+    def test_product_distribution_includes_independent_utilities_but_not_maintenance(self):
         expected = {skill_id(name) for name in ALL_COMMANDS} | set(INDEPENDENT_SKILLS)
         actual = {p.parent.name for p in (ROOT / 'dist/skills').glob('*/SKILL.md')}
         self.assertEqual(actual, expected)
-        self.assertEqual(len(actual), 12)
+        self.assertEqual(len(actual), 13)
         self.assertNotIn('sdlc-maintain-upgrade', actual)
         self.assertFalse((ROOT / 'dist/skills/sdlc-maintain-upgrade').exists())
 
@@ -142,6 +142,7 @@ class MaintenanceUpgradeSkillTests(unittest.TestCase):
         flow = (ROOT / 'maintenance/UPGRADE-FLOW.html').read_text(encoding='utf-8')
         self.assertIn('sdlc-maintain-upgrade', flow)
         self.assertNotRegex(flow, r'(?<!maintain-)sdlc-upgrade\b')
+        self.assertNotRegex(flow, r'(?<!maintain-)sdlc-refine\b')
 
     def test_repository_metadata_does_not_advertise_maintenance_skill_as_product(self):
         metadata = json.loads((ROOT / 'plugin-metadata.json').read_text(encoding='utf-8'))

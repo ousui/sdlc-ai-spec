@@ -76,18 +76,24 @@ fi
 BACKUP="$(mktemp -d "${TMPDIR:-/tmp}/sdlc-version.XXXXXX")"
 cleanup() { rm -rf "$BACKUP"; }
 rollback() {
+  local status="$1" restore_failed=0
+  trap - ERR INT TERM EXIT
   set +e
-  cp -a "$BACKUP/plugin-metadata.json" plugin-metadata.json
-  cp -a "$BACKUP/CHANGELOG.md" CHANGELOG.md
-  rm -rf dist
-  cp -a "$BACKUP/dist" dist
-  cp -a "$BACKUP/marketplace.agents.json" .agents/plugins/marketplace.json
-  cp -a "$BACKUP/marketplace.claude.json" .claude-plugin/marketplace.json
-  cp -a "$BACKUP/marketplace.cursor.json" .cursor-plugin/marketplace.json
-  echo "ERROR: version update failed; touched version/build files were restored" >&2
-  cleanup
+  cp -a "$BACKUP/plugin-metadata.json" plugin-metadata.json || restore_failed=1
+  cp -a "$BACKUP/CHANGELOG.md" CHANGELOG.md || restore_failed=1
+  (rm -rf dist && cp -a "$BACKUP/dist" dist) || restore_failed=1
+  cp -a "$BACKUP/marketplace.agents.json" .agents/plugins/marketplace.json || restore_failed=1
+  cp -a "$BACKUP/marketplace.claude.json" .claude-plugin/marketplace.json || restore_failed=1
+  cp -a "$BACKUP/marketplace.cursor.json" .cursor-plugin/marketplace.json || restore_failed=1
+  if [[ "$restore_failed" -eq 0 ]]; then
+    echo "ERROR: version update failed; touched version/build files were restored" >&2
+    cleanup
+  else
+    echo "ERROR: version update failed; restore incomplete, backup retained at $BACKUP" >&2
+  fi
+  exit "$status"
 }
-trap rollback ERR INT TERM
+trap cleanup EXIT
 
 cp -a plugin-metadata.json "$BACKUP/plugin-metadata.json"
 cp -a CHANGELOG.md "$BACKUP/CHANGELOG.md"
@@ -95,6 +101,9 @@ cp -a dist "$BACKUP/dist"
 cp -a .agents/plugins/marketplace.json "$BACKUP/marketplace.agents.json"
 cp -a .claude-plugin/marketplace.json "$BACKUP/marketplace.claude.json"
 cp -a .cursor-plugin/marketplace.json "$BACKUP/marketplace.cursor.json"
+trap 'rollback $?' ERR
+trap 'rollback 130' INT
+trap 'rollback 143' TERM
 
 TARGET="$TARGET" python3 - <<'PY'
 from datetime import datetime, timezone, timedelta
@@ -150,6 +159,5 @@ uv run --locked python -B -m unittest tests.test_versioning tests.test_repositor
 git diff --check
 
 trap - ERR INT TERM
-cleanup
 printf 'Version ready: %s\n' "$TARGET"
 printf 'Run full verification before release: uv run --locked python -B -m unittest discover -s tests -v\n'
